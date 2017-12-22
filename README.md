@@ -34,7 +34,9 @@ where `X.X.X` is the release you want to install.
 ### Examples
 
 <div style="border:1px gray solid">
+
 ![sasoptpy demo gif](img/sasoptpy-demo.gif)
+
 </div>
 
 ```python
