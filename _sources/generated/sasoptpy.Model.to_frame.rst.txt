@@ -1,0 +1,6 @@
+sasoptpy\.Model\.to\_frame
+==========================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.to_frame

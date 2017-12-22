@@ -1,0 +1,6 @@
+sasoptpy\.Model\.upload\_user\_blocks
+=====================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.upload_user_blocks

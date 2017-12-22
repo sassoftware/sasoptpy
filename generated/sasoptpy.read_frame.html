@@ -1,0 +1,181 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>sasoptpy.read_frame &#8212; sasoptpy 0.1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/url.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="sasoptpy.register_name" href="sasoptpy.register_name.html" />
+    <link rel="prev" title="sasoptpy.print_model_mps" href="sasoptpy.print_model_mps.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="sasoptpy.register_name.html" title="sasoptpy.register_name"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="sasoptpy.print_model_mps.html" title="sasoptpy.print_model_mps"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../sasoptpy.html" accesskey="U">API Reference</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="sasoptpy-read-frame">
+<h1>sasoptpy.read_frame<a class="headerlink" href="#sasoptpy-read-frame" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="sasoptpy.read_frame">
+<code class="descclassname">sasoptpy.</code><code class="descname">read_frame</code><span class="sig-paren">(</span><em>df</em>, <em>cols=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sasoptpy/methods.html#read_frame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.read_frame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads each column in <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.21.1)"><code class="xref py py-class docutils literal"><span class="pre">pandas.DataFrame</span></code></a> into a list of <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.html#pandas.Series" title="(in pandas v0.21.1)"><code class="xref py py-class docutils literal"><span class="pre">pandas.Series</span></code></a> objects</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>df</strong> : <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.21.1)"><code class="xref py py-class docutils literal"><span class="pre">pandas.DataFrame</span></code></a> object</p>
+<blockquote>
+<div><p>DataFrame to be read</p>
+</div></blockquote>
+<p><strong>cols</strong> : list of strings, optional</p>
+<blockquote>
+<div><p>Column names to be read. By default, it reads all columns</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list</p>
+<blockquote class="last">
+<div><p>List of <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.html#pandas.Series" title="(in pandas v0.21.1)"><code class="xref py py-class docutils literal"><span class="pre">pandas.Series</span></code></a> objects</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">price</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">]],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;period1&#39;</span><span class="p">,</span> <span class="s1">&#39;period2&#39;</span><span class="p">,</span> <span class="s1">&#39;period3&#39;</span><span class="p">])</span><span class="o">.</span>\
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">set_index</span><span class="p">([[</span><span class="s1">&#39;coal&#39;</span><span class="p">,</span> <span class="s1">&#39;steel&#39;</span><span class="p">,</span> <span class="s1">&#39;copper&#39;</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">period2</span><span class="p">,</span> <span class="n">period3</span><span class="p">]</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">read_frame</span><span class="p">(</span><span class="n">price</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;period2&#39;</span><span class="p">,</span> <span class="s1">&#39;period3&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">period2</span><span class="p">)</span>
+<span class="go">coal      5</span>
+<span class="go">steel     4</span>
+<span class="go">copper    7</span>
+<span class="go">Name: period2, dtype: int64</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../whatsnew.html">What’s New</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../input-data.html">Handling Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../models.html">Sessions and Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">Model components</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../sasoptpy.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../sasoptpy.html#classes">Classes</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../sasoptpy.html#methods">Methods</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="sasoptpy.check_name.html">sasoptpy.check_name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sasoptpy.dict_to_frame.html">sasoptpy.dict_to_frame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sasoptpy.extract_list_value.html">sasoptpy.extract_list_value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sasoptpy.flatten_frame.html">sasoptpy.flatten_frame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sasoptpy.get_counter.html">sasoptpy.get_counter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sasoptpy.get_namespace.html">sasoptpy.get_namespace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sasoptpy.get_obj_by_name.html">sasoptpy.get_obj_by_name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sasoptpy.get_solution_table.html">sasoptpy.get_solution_table</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sasoptpy.list_length.html">sasoptpy.list_length</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sasoptpy.print_model_mps.html">sasoptpy.print_model_mps</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">sasoptpy.read_frame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sasoptpy.register_name.html">sasoptpy.register_name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sasoptpy.reset_globals.html">sasoptpy.reset_globals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sasoptpy.tuple_pack.html">sasoptpy.tuple_pack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sasoptpy.tuple_unpack.html">sasoptpy.tuple_unpack</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="sasoptpy.register_name.html" title="sasoptpy.register_name"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="sasoptpy.print_model_mps.html" title="sasoptpy.print_model_mps"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../sasoptpy.html" >API Reference</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, SAS.
+      Last updated on Dec 22, 2017 (Timestamp: 0.1.0-20171222145159).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
+    </div>
+  </body>
+</html>

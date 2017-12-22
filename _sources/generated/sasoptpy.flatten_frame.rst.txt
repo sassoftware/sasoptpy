@@ -1,0 +1,6 @@
+sasoptpy\.flatten\_frame
+========================
+
+.. currentmodule:: sasoptpy
+
+.. autofunction:: flatten_frame

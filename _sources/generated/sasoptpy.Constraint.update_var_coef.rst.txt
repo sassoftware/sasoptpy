@@ -1,0 +1,6 @@
+sasoptpy\.Constraint\.update\_var\_coef
+=======================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Constraint.update_var_coef

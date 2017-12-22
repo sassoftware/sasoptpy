@@ -1,0 +1,6 @@
+sasoptpy\.Model\.get\_objective\_value
+======================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.get_objective_value

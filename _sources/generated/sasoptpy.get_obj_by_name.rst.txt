@@ -1,0 +1,6 @@
+sasoptpy\.get\_obj\_by\_name
+============================
+
+.. currentmodule:: sasoptpy
+
+.. autofunction:: get_obj_by_name

@@ -1,0 +1,6 @@
+sasoptpy\.Model\.print\_solution
+================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.print_solution

@@ -1,0 +1,6 @@
+sasoptpy\.Model\.get\_variable\_coef
+====================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.get_variable_coef

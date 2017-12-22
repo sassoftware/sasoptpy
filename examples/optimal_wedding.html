@@ -1,0 +1,333 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Optimal Wedding &#8212; sasoptpy 0.1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/url.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Kidney Exchange" href="kidney_exchange.html" />
+    <link rel="prev" title="Economic Planning" href="economic_planning.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="kidney_exchange.html" title="Kidney Exchange"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="economic_planning.html" title="Economic Planning"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="optimal-wedding">
+<h1>Optimal Wedding<a class="headerlink" href="#optimal-wedding" title="Permalink to this headline">¶</a></h1>
+<p>Blog: <a class="reference external" href="https://blogs.sas.com/content/operations/2014/11/10/do-you-have-an-uncle-louie-optimal-wedding-seat-assignments/">https://blogs.sas.com/content/operations/2014/11/10/do-you-have-an-uncle-louie-optimal-wedding-seat-assignments/</a></p>
+<div class="section" id="model">
+<h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">swat</span> <span class="k">import</span> <span class="n">CAS</span>
+<span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+
+<span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">,</span> <span class="n">num_guests</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">max_table_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">max_tables</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="n">m</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="s2">&quot;wedding&quot;</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="n">cas_conn</span><span class="p">)</span>
+
+    <span class="c1"># Check max. tables</span>
+    <span class="k">if</span> <span class="n">max_tables</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">max_tables</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">num_guests</span><span class="o">/</span><span class="n">max_table_size</span><span class="p">)</span>
+
+    <span class="c1"># Sets</span>
+    <span class="n">guests</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_guests</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">tables</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_tables</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">guest_pairs</span> <span class="o">=</span> <span class="p">[[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">guests</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_guests</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+
+    <span class="c1"># Variables</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">guests</span><span class="p">,</span> <span class="n">tables</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">BIN</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+    <span class="n">unhappy</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">tables</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;unhappy&quot;</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Objective</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">unhappy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">),</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MIN</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;obj&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Constraints</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">x</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">guests</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;assigncon&quot;</span><span class="p">)</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">x</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">max_table_size</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tables</span><span class="p">),</span>
+                      <span class="n">name</span><span class="o">=</span><span class="s2">&quot;tablesizecon&quot;</span><span class="p">)</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">unhappy</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">g</span><span class="o">-</span><span class="n">h</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">t</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="n">h</span><span class="p">,</span> <span class="n">t</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                       <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tables</span> <span class="k">for</span> <span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">h</span><span class="p">]</span> <span class="ow">in</span> <span class="n">guest_pairs</span><span class="p">),</span>
+                      <span class="n">name</span><span class="o">=</span><span class="s2">&quot;measurecon&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Solve</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">milp</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;decomp&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;set&#39;</span><span class="p">},</span> <span class="s1">&#39;presolver&#39;</span><span class="p">:</span> <span class="s1">&#39;none&#39;</span><span class="p">})</span>
+
+    <span class="k">if</span> <span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+
+        <span class="c1"># Print assignments</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tables</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Table </span><span class="si">{}</span><span class="s1"> : [ &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">guests</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="n">g</span><span class="p">,</span> <span class="n">t</span><span class="p">]</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;]&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="n">get_objective_value</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="output">
+<h2>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-ipython"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">examples.sas_optimal_wedding</span> <span class="kn">import</span> <span class="n">test</span>
+
+<span class="gp">In [2]: </span><span class="n">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">)</span>
+<span class="go">NOTE: Initialized model wedding</span>
+<span class="go">NOTE: Converting model wedding to data frame</span>
+<span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
+<span class="go">NOTE: Uploading the problem data frame to the server.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMP0HHRL21G in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMP0HHRL21G has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: The problem wedding has 44 variables (40 binary, 0 integer, 0 free, 0 fixed).</span>
+<span class="go">NOTE: The problem has 194 constraints (4 LE, 10 EQ, 180 GE, 0 range).</span>
+<span class="go">NOTE: The problem has 620 constraint coefficients.</span>
+<span class="go">NOTE: The initial MILP heuristics are applied.</span>
+<span class="go">NOTE: The MILP presolver value NONE is applied.</span>
+<span class="go">NOTE: The MILP solver is called.</span>
+<span class="go">NOTE: The Decomposition algorithm is used.</span>
+<span class="go">NOTE: The Decomposition algorithm is executing in the distributed computing environment in single-machine mode.</span>
+<span class="go">NOTE: The DECOMP method value SET is applied.</span>
+<span class="go">NOTE: The number of block threads has been reduced to 4 threads.</span>
+<span class="go">NOTE: The problem has a decomposable structure with 4 blocks. The largest block covers 23.71% of the constraints in the problem.</span>
+<span class="go">NOTE: The decomposition subproblems cover 44 (100%) variables and 184 (94.85%) constraints.</span>
+<span class="go">NOTE: The deterministic parallel mode is enabled.</span>
+<span class="go">NOTE: The Decomposition algorithm is using up to 32 threads.</span>
+<span class="go">         Iter         Best       Master         Best       LP       IP  CPU Real</span>
+<span class="go">                     Bound    Objective      Integer      Gap      Gap Time Time</span>
+<span class="go">            .       0.0000      13.0000      13.0000 1.30e+01 1.30e+01    0    0</span>
+<span class="go">            7       0.0000       6.0000       6.0000 6.00e+00 6.00e+00    3    5</span>
+<span class="go">            .       0.0000       6.0000       6.0000 6.00e+00 6.00e+00    6    9</span>
+<span class="go">           10       0.0000       6.0000       6.0000 6.00e+00 6.00e+00    6   10</span>
+<span class="go">           16       2.0000       6.0000       6.0000  200.00%  200.00%   13   15</span>
+<span class="go">           17       6.0000       6.0000       6.0000    0.00%    0.00%   14   16</span>
+<span class="go">            Node  Active   Sols         Best         Best      Gap    CPU   Real</span>
+<span class="go">                                     Integer        Bound            Time   Time</span>
+<span class="go">               0       0      5       6.0000       6.0000    0.00%     14     16</span>
+<span class="go">NOTE: The Decomposition algorithm used 32 threads.</span>
+<span class="go">NOTE: The Decomposition algorithm time is 16.75 seconds.</span>
+<span class="go">NOTE: Optimal.</span>
+<span class="go">NOTE: Objective = 6.</span>
+<span class="go">NOTE: Data length = 671 rows</span>
+<span class="go">NOTE: Conversion to MPS =   0.0064 secs</span>
+<span class="go">NOTE: Upload to CAS time =  0.2259 secs</span>
+<span class="go">NOTE: Solution parse time = 0.0890 secs</span>
+<span class="go">NOTE: Server solve time =   16.9523 secs</span>
+<span class="go">NOTE: Cloud Analytic Services dropped table TMP0HHRL21G from caslib CASUSERHDFS(casuser).</span>
+<span class="go">Problem Summary</span>
+
+<span class="go">                                Value</span>
+<span class="go">Label                                </span>
+<span class="go">Problem Name                  wedding</span>
+<span class="go">Objective Sense          Minimization</span>
+<span class="go">Objective Function                obj</span>
+<span class="go">RHS                               RHS</span>
+<span class="go">                                     </span>
+<span class="go">Number of Variables                44</span>
+<span class="go">Bounded Above                       0</span>
+<span class="go">Bounded Below                       4</span>
+<span class="go">Bounded Above and Below            40</span>
+<span class="go">Free                                0</span>
+<span class="go">Fixed                               0</span>
+<span class="go">Binary                             40</span>
+<span class="go">Integer                             0</span>
+<span class="go">                                     </span>
+<span class="go">Number of Constraints             194</span>
+<span class="go">LE (&lt;=)                             4</span>
+<span class="go">EQ (=)                             10</span>
+<span class="go">GE (&gt;=)                           180</span>
+<span class="go">Range                               0</span>
+<span class="go">                                     </span>
+<span class="go">Constraint Coefficients           620</span>
+<span class="go">Solution Summary</span>
+
+<span class="go">                                Value</span>
+<span class="go">Label                                </span>
+<span class="go">Solver                           MILP</span>
+<span class="go">Algorithm               Decomposition</span>
+<span class="go">Objective Function                obj</span>
+<span class="go">Solution Status               Optimal</span>
+<span class="go">Objective Value                     6</span>
+<span class="go">                                     </span>
+<span class="go">Relative Gap                        0</span>
+<span class="go">Absolute Gap                        0</span>
+<span class="go">Primal Infeasibility     1.065814E-14</span>
+<span class="go">Bound Infeasibility                 0</span>
+<span class="go">Integer Infeasibility    1.065814E-14</span>
+<span class="go">                                     </span>
+<span class="go">Best Bound                          6</span>
+<span class="go">Nodes                               1</span>
+<span class="go">Iterations                         17</span>
+<span class="go">                                     </span>
+<span class="go">Presolve Time                    0.01</span>
+<span class="go">Solution Time                   16.76</span>
+<span class="go">                 x</span>
+<span class="go">1  2              </span>
+<span class="go">1  1  0.000000e+00</span>
+<span class="go">1  2  1.000000e+00</span>
+<span class="go">1  3  0.000000e+00</span>
+<span class="go">1  4  0.000000e+00</span>
+<span class="go">2  1  0.000000e+00</span>
+<span class="go">2  2  1.000000e+00</span>
+<span class="go">2  3  0.000000e+00</span>
+<span class="go">2  4  0.000000e+00</span>
+<span class="go">3  1  0.000000e+00</span>
+<span class="go">3  2  0.000000e+00</span>
+<span class="go">3  3  0.000000e+00</span>
+<span class="go">3  4  1.000000e+00</span>
+<span class="go">4  1  0.000000e+00</span>
+<span class="go">4  2  0.000000e+00</span>
+<span class="go">4  3  1.065814e-14</span>
+<span class="go">4  4  1.000000e+00</span>
+<span class="go">5  1  1.000000e+00</span>
+<span class="go">5  2  0.000000e+00</span>
+<span class="go">5  3  0.000000e+00</span>
+<span class="go">5  4  0.000000e+00</span>
+<span class="go">6  1  1.000000e+00</span>
+<span class="go">6  2  0.000000e+00</span>
+<span class="go">6  3  0.000000e+00</span>
+<span class="go">6  4  0.000000e+00</span>
+<span class="go">7  1  1.000000e+00</span>
+<span class="go">7  2  0.000000e+00</span>
+<span class="go">7  3  0.000000e+00</span>
+<span class="go">7  4  0.000000e+00</span>
+<span class="go">8  1  0.000000e+00</span>
+<span class="go">8  2  0.000000e+00</span>
+<span class="go">8  3  1.000000e+00</span>
+<span class="go">8  4  0.000000e+00</span>
+<span class="go">9  1  0.000000e+00</span>
+<span class="go">9  2  0.000000e+00</span>
+<span class="go">9  3  1.000000e+00</span>
+<span class="go">9  4  0.000000e+00</span>
+<span class="go">10 1  0.000000e+00</span>
+<span class="go">10 2  0.000000e+00</span>
+<span class="go">10 3  1.000000e+00</span>
+<span class="go">10 4  0.000000e+00</span>
+<span class="go">Table 1 : [ 5 6 7 ]</span>
+<span class="go">Table 2 : [ 1 2 ]</span>
+<span class="go">Table 3 : [ 8 9 10 ]</span>
+<span class="go">Table 4 : [ 3 4 ]</span>
+<span class="gh">Out[2]: </span><span class="go">6.000000000000005</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../whatsnew.html">What’s New</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../input-data.html">Handling Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../models.html">Sessions and Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">Model components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sasoptpy.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="food_manufacture_1.html">Food Manufacture 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="food_manufacture_2.html">Food Manufacture 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="factory_planning_1.html">Factory Planning 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="factory_planning_2.html">Factory Planning 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manpower_planning.html">Manpower Planning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="refinery_optimization.html">Refinery Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mining_optimization.html">Mining Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="farm_planning.html">Farm Planning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="economic_planning.html">Economic Planning</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">SAS/OR Blog: Optimal Wedding</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#model">Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output">Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="kidney_exchange.html">SAS/OR Blog: Kidney Exchange</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="kidney_exchange.html" title="Kidney Exchange"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="economic_planning.html" title="Economic Planning"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, SAS.
+      Last updated on Dec 22, 2017 (Timestamp: 0.1.0-20171222145159).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
+    </div>
+  </body>
+</html>

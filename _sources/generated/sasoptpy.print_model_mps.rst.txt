@@ -1,0 +1,6 @@
+sasoptpy\.print\_model\_mps
+===========================
+
+.. currentmodule:: sasoptpy
+
+.. autofunction:: print_model_mps

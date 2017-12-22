@@ -1,0 +1,565 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Food Manufacture 1 &#8212; sasoptpy 0.1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/url.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Food Manufacture 2" href="food_manufacture_2.html" />
+    <link rel="prev" title="Examples" href="../examples.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="food_manufacture_2.html" title="Food Manufacture 2"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../examples.html" title="Examples"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="food-manufacture-1">
+<h1>Food Manufacture 1<a class="headerlink" href="#food-manufacture-1" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="model">
+<h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">swat</span> <span class="k">import</span> <span class="n">CAS</span>
+<span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+
+<span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">):</span>
+
+    <span class="c1"># Problem data</span>
+    <span class="n">OILS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;veg1&#39;</span><span class="p">,</span> <span class="s1">&#39;veg2&#39;</span><span class="p">,</span> <span class="s1">&#39;oil1&#39;</span><span class="p">,</span> <span class="s1">&#39;oil2&#39;</span><span class="p">,</span> <span class="s1">&#39;oil3&#39;</span><span class="p">]</span>
+    <span class="n">PERIODS</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+    <span class="n">cost_data</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">[</span><span class="mi">110</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">130</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">115</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">130</span><span class="p">,</span> <span class="mi">130</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">115</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">110</span><span class="p">,</span> <span class="mi">140</span><span class="p">,</span> <span class="mi">130</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span>  <span class="mi">95</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">120</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">125</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">105</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">90</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">140</span><span class="p">,</span>  <span class="mi">80</span><span class="p">,</span> <span class="mi">135</span><span class="p">]]</span>
+    <span class="n">cost</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">cost_data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">OILS</span><span class="p">)</span>
+    <span class="n">hardness_data</span> <span class="o">=</span> <span class="p">[</span><span class="mf">8.8</span><span class="p">,</span> <span class="mf">6.1</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">]</span>
+    <span class="n">hardness</span> <span class="o">=</span> <span class="p">{</span><span class="n">OILS</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span> <span class="n">hardness_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">OILS</span><span class="p">))}</span>
+
+    <span class="n">revenue_per_ton</span> <span class="o">=</span> <span class="mi">150</span>
+    <span class="n">veg_ub</span> <span class="o">=</span> <span class="mi">200</span>
+    <span class="n">nonveg_ub</span> <span class="o">=</span> <span class="mi">250</span>
+    <span class="n">store_ub</span> <span class="o">=</span> <span class="mi">1000</span>
+    <span class="n">storage_cost_per_ton</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">hardness_lb</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">hardness_ub</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">init_storage</span> <span class="o">=</span> <span class="mi">500</span>
+
+    <span class="c1"># Problem initialization</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;food_manufacture_1&#39;</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="n">cas_conn</span><span class="p">)</span>
+
+    <span class="c1"># Problem definition</span>
+    <span class="n">buy</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">OILS</span><span class="p">,</span> <span class="n">PERIODS</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;buy&#39;</span><span class="p">)</span>
+    <span class="n">use</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">OILS</span><span class="p">,</span> <span class="n">PERIODS</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;use&#39;</span><span class="p">)</span>
+    <span class="n">manufacture</span> <span class="o">=</span> <span class="p">[</span><span class="n">use</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">]</span>
+    <span class="n">last_period</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">PERIODS</span><span class="p">)</span>
+    <span class="n">store</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">OILS</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">PERIODS</span><span class="p">),</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">store_ub</span><span class="p">,</span>
+                            <span class="n">name</span><span class="o">=</span><span class="s1">&#39;store&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">oil</span> <span class="ow">in</span> <span class="n">OILS</span><span class="p">:</span>
+        <span class="n">store</span><span class="p">[</span><span class="n">oil</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_bounds</span><span class="p">(</span><span class="n">lb</span><span class="o">=</span><span class="n">init_storage</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">init_storage</span><span class="p">)</span>
+        <span class="n">store</span><span class="p">[</span><span class="n">oil</span><span class="p">,</span> <span class="n">last_period</span><span class="p">]</span><span class="o">.</span><span class="n">set_bounds</span><span class="p">(</span><span class="n">lb</span><span class="o">=</span><span class="n">init_storage</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">init_storage</span><span class="p">)</span>
+    <span class="n">VEG</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">OILS</span> <span class="k">if</span> <span class="s1">&#39;veg&#39;</span> <span class="ow">in</span> <span class="n">i</span><span class="p">]</span>
+    <span class="n">NONVEG</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">OILS</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">VEG</span><span class="p">]</span>
+    <span class="n">revenue</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">revenue_per_ton</span> <span class="o">*</span> <span class="n">manufacture</span><span class="p">[</span><span class="n">p</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">)</span>
+    <span class="n">rawcost</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">cost</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">p</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">o</span><span class="p">]</span> <span class="o">*</span> <span class="n">buy</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">OILS</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">)</span>
+    <span class="n">storagecost</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">storage_cost_per_ton</span> <span class="o">*</span> <span class="n">store</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">OILS</span>
+                      <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">)</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">revenue</span> <span class="o">-</span> <span class="n">rawcost</span> <span class="o">-</span> <span class="n">storagecost</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MAX</span><span class="p">,</span>
+                    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;profit&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Constraints</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">use</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">VEG</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">veg_ub</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">),</span>
+                      <span class="n">name</span><span class="o">=</span><span class="s1">&#39;veg_ub&#39;</span><span class="p">)</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">use</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">NONVEG</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">nonveg_ub</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">),</span>
+                      <span class="n">name</span><span class="o">=</span><span class="s1">&#39;nonveg_ub&#39;</span><span class="p">)</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">store</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">buy</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="o">==</span> <span class="n">use</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="o">+</span> <span class="n">store</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span>
+                      <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">OILS</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">),</span>
+                      <span class="n">name</span><span class="o">=</span><span class="s1">&#39;flow_balance&#39;</span><span class="p">)</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="nb">sum</span><span class="p">(</span><span class="n">hardness</span><span class="p">[</span><span class="n">o</span><span class="p">]</span><span class="o">*</span><span class="n">use</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">OILS</span><span class="p">)</span> <span class="o">&gt;=</span>
+                      <span class="n">hardness_lb</span> <span class="o">*</span> <span class="n">manufacture</span><span class="p">[</span><span class="n">p</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">),</span>
+                      <span class="n">name</span><span class="o">=</span><span class="s1">&#39;hardness_ub&#39;</span><span class="p">)</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="nb">sum</span><span class="p">(</span><span class="n">hardness</span><span class="p">[</span><span class="n">o</span><span class="p">]</span><span class="o">*</span><span class="n">use</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">OILS</span><span class="p">)</span> <span class="o">&lt;=</span>
+                      <span class="n">hardness_ub</span> <span class="o">*</span> <span class="n">manufacture</span><span class="p">[</span><span class="n">p</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">),</span>
+                      <span class="n">name</span><span class="o">=</span><span class="s1">&#39;hardness_lb&#39;</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+
+    <span class="c1"># With other solve options</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">lp</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;algorithm&#39;</span><span class="p">:</span> <span class="s1">&#39;PS&#39;</span><span class="p">})</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">lp</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;algorithm&#39;</span><span class="p">:</span> <span class="s1">&#39;IP&#39;</span><span class="p">})</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">lp</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;algorithm&#39;</span><span class="p">:</span> <span class="s1">&#39;NS&#39;</span><span class="p">})</span>
+
+    <span class="k">if</span> <span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">buy</span><span class="p">,</span> <span class="n">use</span><span class="p">,</span> <span class="n">store</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="n">get_objective_value</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="output">
+<h2>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-ipython"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">examples.food_manufacture_1</span> <span class="kn">import</span> <span class="n">test</span>
+
+<span class="gp">In [2]: </span><span class="n">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">)</span>
+<span class="go">NOTE: Initialized model food_manufacture_1</span>
+<span class="go">NOTE: Converting model food_manufacture_1 to data frame</span>
+<span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
+<span class="go">NOTE: Uploading the problem data frame to the server.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPTB6OZWN7 in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMPTB6OZWN7 has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: The problem food_manufacture_1 has 95 variables (0 free, 10 fixed).</span>
+<span class="go">NOTE: The problem has 54 constraints (18 LE, 30 EQ, 6 GE, 0 range).</span>
+<span class="go">NOTE: The problem has 210 constraint coefficients.</span>
+<span class="go">NOTE: The LP presolver value AUTOMATIC is applied.</span>
+<span class="go">NOTE: The LP presolver removed 10 variables and 0 constraints.</span>
+<span class="go">NOTE: The LP presolver removed 10 constraint coefficients.</span>
+<span class="go">NOTE: The presolved problem has 85 variables, 54 constraints, and 200 constraint coefficients.</span>
+<span class="go">NOTE: The LP solver is called.</span>
+<span class="go">NOTE: The Dual Simplex algorithm is used.</span>
+<span class="go">                              Objective</span>
+<span class="go">         Phase Iteration        Value         Time</span>
+<span class="go">          D 2          1    1.019986E+06         0</span>
+<span class="go">          D 2         54    1.253907E+05         0</span>
+<span class="go">          P 2         71    1.078426E+05         0</span>
+<span class="go">NOTE: Optimal.</span>
+<span class="go">NOTE: Objective = 107842.59259.</span>
+<span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
+<span class="go">NOTE: Data length = 293 rows</span>
+<span class="go">NOTE: Conversion to MPS =   0.0015 secs</span>
+<span class="go">NOTE: Upload to CAS time =  0.2168 secs</span>
+<span class="go">NOTE: Solution parse time = 0.0868 secs</span>
+<span class="go">NOTE: Server solve time =   0.1123 secs</span>
+<span class="go">NOTE: Cloud Analytic Services dropped table TMPTB6OZWN7 from caslib CASUSERHDFS(casuser).</span>
+<span class="go">Problem Summary</span>
+
+<span class="go">                                      Value</span>
+<span class="go">Label                                      </span>
+<span class="go">Problem Name             food_manufacture_1</span>
+<span class="go">Objective Sense                Maximization</span>
+<span class="go">Objective Function                   profit</span>
+<span class="go">RHS                                     RHS</span>
+<span class="go">                                           </span>
+<span class="go">Number of Variables                      95</span>
+<span class="go">Bounded Above                             0</span>
+<span class="go">Bounded Below                            60</span>
+<span class="go">Bounded Above and Below                  25</span>
+<span class="go">Free                                      0</span>
+<span class="go">Fixed                                    10</span>
+<span class="go">                                           </span>
+<span class="go">Number of Constraints                    54</span>
+<span class="go">LE (&lt;=)                                  18</span>
+<span class="go">EQ (=)                                   30</span>
+<span class="go">GE (&gt;=)                                   6</span>
+<span class="go">Range                                     0</span>
+<span class="go">                                           </span>
+<span class="go">Constraint Coefficients                 210</span>
+<span class="go">Solution Summary</span>
+
+<span class="go">                               Value</span>
+<span class="go">Label                               </span>
+<span class="go">Solver                            LP</span>
+<span class="go">Algorithm               Dual Simplex</span>
+<span class="go">Objective Function            profit</span>
+<span class="go">Solution Status              Optimal</span>
+<span class="go">Objective Value         107842.59259</span>
+<span class="go">                                    </span>
+<span class="go">Primal Infeasibility    4.289902E-13</span>
+<span class="go">Dual Infeasibility                 0</span>
+<span class="go">Bound Infeasibility                0</span>
+<span class="go">                                    </span>
+<span class="go">Iterations                        71</span>
+<span class="go">Presolve Time                   0.00</span>
+<span class="go">Solution Time                   0.01</span>
+<span class="go">NOTE: Converting model food_manufacture_1 to data frame</span>
+<span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
+<span class="go">NOTE: Uploading the problem data frame to the server.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMP17CJK2YO in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMP17CJK2YO has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: The problem food_manufacture_1 has 95 variables (0 free, 10 fixed).</span>
+<span class="go">NOTE: The problem has 54 constraints (18 LE, 30 EQ, 6 GE, 0 range).</span>
+<span class="go">NOTE: The problem has 210 constraint coefficients.</span>
+<span class="go">NOTE: The LP presolver value AUTOMATIC is applied.</span>
+<span class="go">NOTE: The LP presolver removed 10 variables and 0 constraints.</span>
+<span class="go">NOTE: The LP presolver removed 10 constraint coefficients.</span>
+<span class="go">NOTE: The presolved problem has 85 variables, 54 constraints, and 200 constraint coefficients.</span>
+<span class="go">NOTE: The LP solver is called.</span>
+<span class="go">NOTE: The Primal Simplex algorithm is used.</span>
+<span class="go">                              Objective</span>
+<span class="go">         Phase Iteration        Value         Time</span>
+<span class="go">          P 1          1    2.310290E+03         0</span>
+<span class="go">          P 2         47    4.276988E+04         0</span>
+<span class="go">          P 2         56    8.634295E+04         0</span>
+<span class="go">          D 2         70    1.078426E+05         0</span>
+<span class="go">NOTE: Optimal.</span>
+<span class="go">NOTE: Objective = 107842.59259.</span>
+<span class="go">NOTE: The Primal Simplex solve time is 0.01 seconds.</span>
+<span class="go">NOTE: Data length = 293 rows</span>
+<span class="go">NOTE: Conversion to MPS =   0.0015 secs</span>
+<span class="go">NOTE: Upload to CAS time =  0.2104 secs</span>
+<span class="go">NOTE: Solution parse time = 0.0868 secs</span>
+<span class="go">NOTE: Server solve time =   0.1680 secs</span>
+<span class="go">NOTE: Cloud Analytic Services dropped table TMP17CJK2YO from caslib CASUSERHDFS(casuser).</span>
+<span class="go">Problem Summary</span>
+
+<span class="go">                                      Value</span>
+<span class="go">Label                                      </span>
+<span class="go">Problem Name             food_manufacture_1</span>
+<span class="go">Objective Sense                Maximization</span>
+<span class="go">Objective Function                   profit</span>
+<span class="go">RHS                                     RHS</span>
+<span class="go">                                           </span>
+<span class="go">Number of Variables                      95</span>
+<span class="go">Bounded Above                             0</span>
+<span class="go">Bounded Below                            60</span>
+<span class="go">Bounded Above and Below                  25</span>
+<span class="go">Free                                      0</span>
+<span class="go">Fixed                                    10</span>
+<span class="go">                                           </span>
+<span class="go">Number of Constraints                    54</span>
+<span class="go">LE (&lt;=)                                  18</span>
+<span class="go">EQ (=)                                   30</span>
+<span class="go">GE (&gt;=)                                   6</span>
+<span class="go">Range                                     0</span>
+<span class="go">                                           </span>
+<span class="go">Constraint Coefficients                 210</span>
+<span class="go">Solution Summary</span>
+
+<span class="go">                               Value</span>
+<span class="go">Label                               </span>
+<span class="go">Solver                            LP</span>
+<span class="go">Algorithm             Primal Simplex</span>
+<span class="go">Objective Function            profit</span>
+<span class="go">Solution Status              Optimal</span>
+<span class="go">Objective Value         107842.59259</span>
+<span class="go">                                    </span>
+<span class="go">Primal Infeasibility    9.947598E-14</span>
+<span class="go">Dual Infeasibility      3.552714E-15</span>
+<span class="go">Bound Infeasibility                0</span>
+<span class="go">                                    </span>
+<span class="go">Iterations                        70</span>
+<span class="go">Presolve Time                   0.00</span>
+<span class="go">Solution Time                   0.01</span>
+<span class="go">NOTE: Converting model food_manufacture_1 to data frame</span>
+<span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
+<span class="go">NOTE: Uploading the problem data frame to the server.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPZ97H0CLX in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMPZ97H0CLX has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: The problem food_manufacture_1 has 95 variables (0 free, 10 fixed).</span>
+<span class="go">NOTE: The problem has 54 constraints (18 LE, 30 EQ, 6 GE, 0 range).</span>
+<span class="go">NOTE: The problem has 210 constraint coefficients.</span>
+<span class="go">NOTE: The LP presolver value AUTOMATIC is applied.</span>
+<span class="go">NOTE: The LP presolver removed 10 variables and 0 constraints.</span>
+<span class="go">NOTE: The LP presolver removed 10 constraint coefficients.</span>
+<span class="go">NOTE: The presolved problem has 85 variables, 54 constraints, and 200 constraint coefficients.</span>
+<span class="go">NOTE: The LP solver is called.</span>
+<span class="go">NOTE: The Interior Point algorithm is used.</span>
+<span class="go">NOTE: The deterministic parallel mode is enabled.</span>
+<span class="go">NOTE: The Interior Point algorithm is using up to 32 threads.</span>
+<span class="go">                                           Primal       Bound        Dual</span>
+<span class="go">         Iter  Complement Duality Gap      Infeas      Infeas      Infeas   Time</span>
+<span class="go">            0  4.2997E+03  1.5010E+01  4.2157E-02  1.4325E-01  4.2366E-01      0</span>
+<span class="go">            1  2.7239E+03  4.0077E+00  1.7368E-03  5.9018E-03  2.5867E-01      0</span>
+<span class="go">            2  8.0938E+02  7.4301E-01  8.4899E-04  2.8850E-03  6.5283E-02      0</span>
+<span class="go">            3  3.8789E+02  3.7949E-01  3.2532E-04  1.1055E-03  8.4918E-03      0</span>
+<span class="go">            4  4.1836E+01  3.8559E-02  3.6316E-05  1.2341E-04  6.4884E-04      0</span>
+<span class="go">            5  1.2878E+00  1.1373E-03  5.0477E-07  1.7153E-06  2.5783E-05      0</span>
+<span class="go">            6  1.2953E-02  1.1443E-05  5.1201E-09  1.7399E-08  2.5813E-07      0</span>
+<span class="go">            7  0.0000E+00  7.9506E-08  3.0784E-07  8.9734E-10  9.0537E-07      0</span>
+<span class="go">NOTE: The Interior Point solve time is 0.00 seconds.</span>
+<span class="go">NOTE: The CROSSOVER option is enabled.</span>
+<span class="go">NOTE: The crossover basis contains 11 primal and 3 dual superbasic variables.</span>
+<span class="go">                              Objective</span>
+<span class="go">         Phase Iteration        Value         Time</span>
+<span class="go">          P C          1    1.268451E+03         0</span>
+<span class="go">          D C         13    1.703674E+02         0</span>
+<span class="go">          D 2         16    1.078426E+05         0</span>
+<span class="go">          D 2         17    1.078426E+05         0</span>
+<span class="go">NOTE: The Crossover time is 0.01 seconds.</span>
+<span class="go">NOTE: Optimal.</span>
+<span class="go">NOTE: Objective = 107842.59259.</span>
+<span class="go">NOTE: Data length = 293 rows</span>
+<span class="go">NOTE: Conversion to MPS =   0.0013 secs</span>
+<span class="go">NOTE: Upload to CAS time =  0.2168 secs</span>
+<span class="go">NOTE: Solution parse time = 0.0877 secs</span>
+<span class="go">NOTE: Server solve time =   0.1153 secs</span>
+<span class="go">NOTE: Cloud Analytic Services dropped table TMPZ97H0CLX from caslib CASUSERHDFS(casuser).</span>
+<span class="go">Problem Summary</span>
+
+<span class="go">                                      Value</span>
+<span class="go">Label                                      </span>
+<span class="go">Problem Name             food_manufacture_1</span>
+<span class="go">Objective Sense                Maximization</span>
+<span class="go">Objective Function                   profit</span>
+<span class="go">RHS                                     RHS</span>
+<span class="go">                                           </span>
+<span class="go">Number of Variables                      95</span>
+<span class="go">Bounded Above                             0</span>
+<span class="go">Bounded Below                            60</span>
+<span class="go">Bounded Above and Below                  25</span>
+<span class="go">Free                                      0</span>
+<span class="go">Fixed                                    10</span>
+<span class="go">                                           </span>
+<span class="go">Number of Constraints                    54</span>
+<span class="go">LE (&lt;=)                                  18</span>
+<span class="go">EQ (=)                                   30</span>
+<span class="go">GE (&gt;=)                                   6</span>
+<span class="go">Range                                     0</span>
+<span class="go">                                           </span>
+<span class="go">Constraint Coefficients                 210</span>
+<span class="go">Solution Summary</span>
+
+<span class="go">                               Value</span>
+<span class="go">Label                               </span>
+<span class="go">Solver                            LP</span>
+<span class="go">Algorithm             Interior Point</span>
+<span class="go">Objective Function            profit</span>
+<span class="go">Solution Status              Optimal</span>
+<span class="go">Objective Value         107842.59259</span>
+<span class="go">                                    </span>
+<span class="go">Primal Infeasibility    1.048051E-13</span>
+<span class="go">Dual Infeasibility                 0</span>
+<span class="go">Bound Infeasibility                0</span>
+<span class="go">Complementarity                    0</span>
+<span class="go">Duality Gap                        0</span>
+<span class="go">                                    </span>
+<span class="go">Iterations                         7</span>
+<span class="go">Iterations2                       17</span>
+<span class="go">Presolve Time                   0.00</span>
+<span class="go">Solution Time                   0.02</span>
+<span class="go">NOTE: Converting model food_manufacture_1 to data frame</span>
+<span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
+<span class="go">NOTE: Uploading the problem data frame to the server.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMP95UGCSDA in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMP95UGCSDA has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: The problem food_manufacture_1 has 95 variables (0 free, 10 fixed).</span>
+<span class="go">NOTE: The problem has 54 constraints (18 LE, 30 EQ, 6 GE, 0 range).</span>
+<span class="go">NOTE: The problem has 210 constraint coefficients.</span>
+<span class="go">NOTE: The LP presolver value AUTOMATIC is applied.</span>
+<span class="go">NOTE: The LP presolver removed 10 variables and 0 constraints.</span>
+<span class="go">NOTE: The LP presolver removed 10 constraint coefficients.</span>
+<span class="go">NOTE: The presolved problem has 85 variables, 54 constraints, and 200 constraint coefficients.</span>
+<span class="go">NOTE: The LP solver is called.</span>
+<span class="go">NOTE: The Network Simplex algorithm is used.</span>
+<span class="go">NOTE: The network has 24 rows (44.44%), 51 columns (60.00%), and 1 component.</span>
+<span class="go">NOTE: The network extraction and setup time is 0.00 seconds.</span>
+<span class="go">                           Primal         Primal           Dual</span>
+<span class="go">         Iteration      Objective  Infeasibility  Infeasibility     Time</span>
+<span class="go">                 1  -1.250000E+04   5.000000E+02   4.076000E+03     0.00</span>
+<span class="go">                40   5.125000E+04   0.000000E+00   0.000000E+00     0.00</span>
+<span class="go">NOTE: The Network Simplex solve time is 0.00 seconds.</span>
+<span class="go">NOTE: The total Network Simplex solve time is 0.00 seconds.</span>
+<span class="go">NOTE: The Dual Simplex algorithm is used.</span>
+<span class="go">                              Objective</span>
+<span class="go">         Phase Iteration        Value         Time</span>
+<span class="go">          D 2          1    4.090791E+05         0</span>
+<span class="go">          P 2         42    1.078426E+05         0</span>
+<span class="go">NOTE: Optimal.</span>
+<span class="go">NOTE: Objective = 107842.59259.</span>
+<span class="go">NOTE: The Simplex solve time is 0.01 seconds.</span>
+<span class="go">NOTE: Data length = 293 rows</span>
+<span class="go">NOTE: Conversion to MPS =   0.0013 secs</span>
+<span class="go">NOTE: Upload to CAS time =  0.2148 secs</span>
+<span class="go">NOTE: Solution parse time = 0.0941 secs</span>
+<span class="go">NOTE: Server solve time =   0.1131 secs</span>
+<span class="go">NOTE: Cloud Analytic Services dropped table TMP95UGCSDA from caslib CASUSERHDFS(casuser).</span>
+<span class="go">Problem Summary</span>
+
+<span class="go">                                      Value</span>
+<span class="go">Label                                      </span>
+<span class="go">Problem Name             food_manufacture_1</span>
+<span class="go">Objective Sense                Maximization</span>
+<span class="go">Objective Function                   profit</span>
+<span class="go">RHS                                     RHS</span>
+<span class="go">                                           </span>
+<span class="go">Number of Variables                      95</span>
+<span class="go">Bounded Above                             0</span>
+<span class="go">Bounded Below                            60</span>
+<span class="go">Bounded Above and Below                  25</span>
+<span class="go">Free                                      0</span>
+<span class="go">Fixed                                    10</span>
+<span class="go">                                           </span>
+<span class="go">Number of Constraints                    54</span>
+<span class="go">LE (&lt;=)                                  18</span>
+<span class="go">EQ (=)                                   30</span>
+<span class="go">GE (&gt;=)                                   6</span>
+<span class="go">Range                                     0</span>
+<span class="go">                                           </span>
+<span class="go">Constraint Coefficients                 210</span>
+<span class="go">Solution Summary</span>
+
+<span class="go">                                Value</span>
+<span class="go">Label                                </span>
+<span class="go">Solver                             LP</span>
+<span class="go">Algorithm             Network Simplex</span>
+<span class="go">Objective Function             profit</span>
+<span class="go">Solution Status               Optimal</span>
+<span class="go">Objective Value          107842.59259</span>
+<span class="go">                                     </span>
+<span class="go">Primal Infeasibility     3.410605E-13</span>
+<span class="go">Dual Infeasibility       2.842171E-14</span>
+<span class="go">Bound Infeasibility       8.21565E-14</span>
+<span class="go">                                     </span>
+<span class="go">Iterations                         40</span>
+<span class="go">Iterations2                        42</span>
+<span class="go">Presolve Time                    0.00</span>
+<span class="go">Solution Time                    0.01</span>
+<span class="go">            buy          use         store</span>
+<span class="go">1    2                                    </span>
+<span class="go">oil1 0        -            -  5.000000e+02</span>
+<span class="go">oil1 1        0            0  5.000000e+02</span>
+<span class="go">oil1 2        0            0  5.000000e+02</span>
+<span class="go">oil1 3        0            0  5.000000e+02</span>
+<span class="go">oil1 4        0            0  5.000000e+02</span>
+<span class="go">oil1 5        0            0  5.000000e+02</span>
+<span class="go">oil1 6        0            0  5.000000e+02</span>
+<span class="go">oil2 0        -            -  5.000000e+02</span>
+<span class="go">oil2 1        0            0  5.000000e+02</span>
+<span class="go">oil2 2      250            0  7.500000e+02</span>
+<span class="go">oil2 3        0          250  5.000000e+02</span>
+<span class="go">oil2 4        0          250  2.500000e+02</span>
+<span class="go">oil2 5        0          250  0.000000e+00</span>
+<span class="go">oil2 6      750          250  5.000000e+02</span>
+<span class="go">oil3 0        -            -  5.000000e+02</span>
+<span class="go">oil3 1        0          250  2.500000e+02</span>
+<span class="go">oil3 2        0          250  0.000000e+00</span>
+<span class="go">oil3 3        0            0 -8.215650e-14</span>
+<span class="go">oil3 4        0 -8.21565e-14  0.000000e+00</span>
+<span class="go">oil3 5      500            0  5.000000e+02</span>
+<span class="go">oil3 6        0            0  5.000000e+02</span>
+<span class="go">veg1 0        -            -  5.000000e+02</span>
+<span class="go">veg1 1        0      85.1852  4.148148e+02</span>
+<span class="go">veg1 2        0      85.1852  3.296296e+02</span>
+<span class="go">veg1 3        0      159.259  1.703704e+02</span>
+<span class="go">veg1 4        0      11.1111  1.592593e+02</span>
+<span class="go">veg1 5        0      159.259  0.000000e+00</span>
+<span class="go">veg1 6  659.259      159.259  5.000000e+02</span>
+<span class="go">veg2 0        -            -  5.000000e+02</span>
+<span class="go">veg2 1        0      114.815  3.851852e+02</span>
+<span class="go">veg2 2        0      114.815  2.703704e+02</span>
+<span class="go">veg2 3        0      40.7407  2.296296e+02</span>
+<span class="go">veg2 4        0      188.889  4.074074e+01</span>
+<span class="go">veg2 5        0      40.7407  0.000000e+00</span>
+<span class="go">veg2 6  540.741      40.7407  5.000000e+02</span>
+<span class="gh">Out[2]: </span><span class="go">107842.59259259261</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../whatsnew.html">What’s New</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../input-data.html">Handling Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../models.html">Sessions and Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">Model components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sasoptpy.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Food Manufacture 1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#model">Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output">Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="food_manufacture_2.html">Food Manufacture 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="factory_planning_1.html">Factory Planning 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="factory_planning_2.html">Factory Planning 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manpower_planning.html">Manpower Planning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="refinery_optimization.html">Refinery Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mining_optimization.html">Mining Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="farm_planning.html">Farm Planning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="economic_planning.html">Economic Planning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optimal_wedding.html">SAS/OR Blog: Optimal Wedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kidney_exchange.html">SAS/OR Blog: Kidney Exchange</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="food_manufacture_2.html" title="Food Manufacture 2"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../examples.html" title="Examples"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, SAS.
+      Last updated on Dec 22, 2017 (Timestamp: 0.1.0-20171222145159).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
+    </div>
+  </body>
+</html>

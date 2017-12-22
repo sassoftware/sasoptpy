@@ -1,0 +1,6 @@
+sasoptpy\.extract\_list\_value
+==============================
+
+.. currentmodule:: sasoptpy
+
+.. autofunction:: extract_list_value
