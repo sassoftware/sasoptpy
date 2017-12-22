@@ -28,16 +28,12 @@ where `X.X.X` is the release you want to install.
 ## Getting Started
 
 * The source code is currently hosted on Github at https://github.com/sassoftware/sasoptpy
-* For the full documentation go to https://sassoftware.github.io/sasoptpy
+* Full documentation is available [here](sasoptpy.pdf)
 * For the latest release go to https://github.com/sassoftware/sasoptpy/releases/latest
 
 ### Examples
 
-<div style="border:1px gray solid">
-
 ![sasoptpy demo gif](img/sasoptpy-demo.gif)
-
-</div>
 
 ```python
 from swat import CAS
