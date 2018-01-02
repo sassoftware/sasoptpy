@@ -28,7 +28,7 @@ where `X.X.X` is the release you want to install.
 ## Getting Started
 
 * The source code is currently hosted on Github at https://github.com/sassoftware/sasoptpy
-* Full documentation is available [here](sasoptpy.pdf)
+* Online documentation is at https://sassoftware.github.io/sasoptpy/
 * For the latest release go to https://github.com/sassoftware/sasoptpy/releases/latest
 
 ### Examples
