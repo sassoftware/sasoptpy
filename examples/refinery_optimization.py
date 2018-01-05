@@ -1,4 +1,3 @@
-from swat import CAS
 import sasoptpy as so
 import pandas as pd
 import numpy as np

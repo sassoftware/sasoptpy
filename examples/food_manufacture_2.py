@@ -1,4 +1,3 @@
-from swat import CAS
 import sasoptpy as so
 import pandas as pd
 
@@ -70,8 +69,8 @@ def test(cas_conn):
     # Additions to the first problem
     isUsed = m.add_variables(OILS, PERIODS, vartype=so.BIN, name='is_used')
     for p in PERIODS:
-        [use[o, p].set_bounds(ub=veg_ub) for o in VEG]
-        [use[o, p].set_bounds(ub=nonveg_ub) for o in NONVEG]
+        use[o, p].set_bounds(ub=veg_ub) for o in VEG
+        use[o, p].set_bounds(ub=nonveg_ub) for o in NONVEG
     m.add_constraints((use[o, p] <= use[o, p]._ub * isUsed[o, p]
                       for o in OILS for p in PERIODS), name='link')
     m.add_constraints((isUsed.sum('*', p) <= max_num_oils_used
