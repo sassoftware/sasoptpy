@@ -463,7 +463,7 @@ class Variable(Expression):
         if vartype == sasoptpy.methods.BIN:
             self._lb = max(self._lb, 0)
             self._ub = min(self._ub, 1)
-        self._linCoef = {name: {'ref': self, 'val': 1.0}}
+        self._linCoef[name] = {'ref': self, 'val': 1.0}
         sasoptpy.methods.register_name(name, self)
         self._cons = set()
         self._key = None
