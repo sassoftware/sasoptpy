@@ -16,10 +16,10 @@
 #  limitations under the License.
 #
 
-import copy
 from itertools import product
 from math import copysign, inf
 from types import GeneratorType
+import warnings
 
 import numpy as np
 import pandas as pd
@@ -902,10 +902,10 @@ class VariableGroup:
             indices_to_filter = []
             filter_values = {}
             list_of_variables = []
-            for i, _ in enumerate(key):
-                if key[i] != '*':
+            for i, _ in enumerate(k):
+                if k[i] != '*':
                     indices_to_filter.append(i)
-                    filter_values[i] = sasoptpy.methods._list_item(key[i])
+                    filter_values[i] = sasoptpy.methods._list_item(k[i])
             for v in self._vardict:
                 eligible = True
                 for f in indices_to_filter:
@@ -913,6 +913,11 @@ class VariableGroup:
                         eligible = False
                 if eligible:
                     list_of_variables.append(self._vardict[v])
+            if not list_of_variables:
+                warnings.warn('Requested variable group is empty:' +
+                              ' {}[{}] ({})'.
+                              format(self._name, key, type(key)),
+                              RuntimeWarning, stacklevel=2)
             return list_of_variables
 
     def __iter__(self):
@@ -981,7 +986,7 @@ class VariableGroup:
         Returns
         -------
         :class:`Expression` object
-            An expression that is the product of the variable group with the 
+            An expression that is the product of the variable group with the
             given vector
 
         Examples
@@ -1131,7 +1136,7 @@ class ConstraintGroup:
 
     Notes
     -----
-    Use :func:`sasoptpy.Model.add_constraints` when working with a single 
+    Use :func:`sasoptpy.Model.add_constraints` when working with a single
     model.
 
     See also

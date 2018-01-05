@@ -25,6 +25,7 @@ Model includes :class:`Model` class, the main structure of an opt. model
 from math import inf
 from time import time
 from types import GeneratorType
+import warnings
 
 import pandas as pd
 
@@ -80,6 +81,13 @@ class Model:
         self._lp_opts = {}
         sasoptpy.methods.register_name(name, self)
         print('NOTE: Initialized model {}'.format(name))
+
+    def __eq__(self, other):
+        if not isinstance(other, sasoptpy.Model):
+            warnings.warn('Cannot compare Model object with {}'.
+                          format(type(other)), RuntimeWarning, stacklevel=2)
+            return False
+        return super().__eq__(other)
 
     def add_variable(self, var=None, vartype=sasoptpy.methods.CONT, name=None,
                      lb=0, ub=inf):
@@ -378,7 +386,7 @@ class Model:
 
         Notes
         -----
-        * This function is essentially a wrapper for two functions, 
+        * This function is essentially a wrapper for two functions,
           :func:`sasoptpy.Model.add_variable` and
           :func:`sasoptpy.Model.add_constraint`.
         * Including a model causes all variables and constraints inside the
@@ -914,7 +922,7 @@ class Model:
                 else:
                     current_row.append(c._name)
                     current_row.append(rhs)
-                    #self._append_row(['', 'RHS', c._name, rhs, '', ''])
+                    # self._append_row(['', 'RHS', c._name, rhs, '', ''])
                     f5 = 0
                     self._append_row(current_row)
         if f5 == 1:
