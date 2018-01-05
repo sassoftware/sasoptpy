@@ -22,7 +22,7 @@ from setuptools import setup
 
 setup(
     name='sasoptpy',
-    version='0.1.0',
+    version='0.1.1.dev0',
     packages=['sasoptpy'],
     author='SAS',
     author_email='Sertalp.Cay@sas.com',
