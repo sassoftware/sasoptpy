@@ -996,6 +996,8 @@ class Model:
 
         '''
         sess = self._session
+        blocks_dict = {}
+        block_counter = 0
         if sess is None:
             print('ERROR: CAS Session is not defined for model {}.'.format(
                 self._name))
@@ -1003,22 +1005,56 @@ class Model:
         decomp_table = []
         for c in self._constraints:
             if c._block is not None:
-                decomp_table.append([c.get_name(), c._block])
+                if c._block not in blocks_dict:
+                    blocks_dict[c._block] = block_counter
+                    block_counter += 1
+                block_no = blocks_dict[c._block]
+                decomp_table.append([c.get_name(), block_no])
         frame_decomp_table = pd.DataFrame(decomp_table,
                                           columns=['_ROW_', '_BLOCK_'])
         response = sess.upload_frame(frame_decomp_table, casout='BLOCKSTABLE')
         return(response.name)
 
-    def solve(self, milp={}, lp={}):
+    def test_session(self):
+        # Check if session is defined
+        sess = self._session
+        if sess is None:
+            print('ERROR: CAS Session is not defined for model {}.'.format(
+                self._name))
+            return False
+        else:
+            return True
+
+    def upload_model(self, name=None, replace=True):
+        if self.test_session():
+            # Conversion and upload
+            df = self.to_frame()
+            print('NOTE: Uploading the problem data frame to the server.')
+            if name is not None:
+                return self._session.upload_frame(
+                    data=df, casout={'name': name, 'replace': replace})
+            else:
+                return self._session.upload_frame(
+                    data=df, casout={'replace': replace})
+        else:
+            return None
+
+    def solve(self, milp={}, lp={}, name=None, drop=True, replace=True):
         '''
         Solves the model by calling CAS optimization solvers
 
         Parameters
         ----------
-        milp : dict
+        milp : dict, optional
             A dictionary of MILP options for the solveMilp CAS Action
-        lp : dict
+        lp : dict, optional
             A dictionary of LP options for the solveLp CAS Action
+        name : string, optional
+            Name of the table name on CAS Server
+        drop : boolean, optional
+            Switch for dropping the MPS table on CAS Server after solve
+        replace : boolean, optional
+            Switch for replacing an existing MPS table on CAS Server
 
         Returns
         -------
@@ -1054,16 +1090,17 @@ class Model:
         * Both milp and lp should be defined as dictionaries, where keys are
           option names. For example, ``m.solve(milp={'maxtime': 600})`` limits
           solution time to 600 seconds.
-        * See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvelp_syntax.htm&locale=en for a list of LP options.
-        * See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvemilp_syntax.htm&locale=en for a list of MILP options.
+        * See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvelp_syntax.htm&locale=en
+          for a list of LP options.
+        * See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvemilp_syntax.htm&locale=en
+          for a list of MILP options.
 
         '''
 
         # Check if session is defined
-        sess = self._session
-        if sess is None:
-            print('ERROR: CAS Session is not defined for model {}.'.format(
-                self._name))
+        if self.test_session():
+            sess = self._session
+        else:
             return None
 
         # Pre-upload argument parse
@@ -1082,23 +1119,34 @@ class Model:
                     user_blocks = self.upload_user_blocks()
                     opt_args['decomp'] = {'blocks': user_blocks}
 
-        # Conversion and upload
-        time0 = time()
-        df = self.to_frame()
-        time1 = time()
-        sess.loadactionset(actionset='optimization')
-        time2 = time()
-        print('NOTE: Uploading the problem data frame to the server.')
-        m = sess.upload_frame(data=df)
-        time3 = time()
-
-        # Solve based on problem type
+        # Find problem type and initial values
         ptype = 1  # LP
         for v in self._variables:
             if v._type != sasoptpy.methods.CONT:
                 ptype = 2
+                break
+
+        # Initial value check for MIP
+        init_values = []
+        var_names = []
+        if ptype == 2:
+            for v in self._variables:
+                if v._init is not None:
+                    var_names.append(v._name)
+                    init_values.append(v._init)
+                    print(init_values)
+            if (len(init_values) > 0 and
+               opt_args.get('primalin', 1) is not None):
+                primalinTable = pd.DataFrame(data={'_VAR_': var_names,
+                                                   '_VALUE_': init_values})
+                sess.upload_frame(primalinTable, casout='primalinTable')
+                opt_args['primalin'] = 'primalinTable'
+
+        mps_table = self.upload_model(name, replace=replace)
+        sess.loadactionset(actionset='optimization')
+
         if ptype == 1:
-            response = sess.solveLp(data=m.name,
+            response = sess.solveLp(data=mps_table.name,
                                     **self._lp_opts,
                                     primalOut={'caslib': 'CASUSER',
                                                'name': 'primal',
@@ -1107,7 +1155,7 @@ class Model:
                                              'name': 'dual', 'replace': True},
                                     objSense=self._sense)
         elif ptype == 2:
-            response = sess.solveMilp(data=m.name,
+            response = sess.solveMilp(data=mps_table.name,
                                       **self._milp_opts,
                                       primalOut={'caslib': 'CASUSER',
                                                  'name': 'primal',
@@ -1116,7 +1164,6 @@ class Model:
                                                'name': 'dual',
                                                'replace': True},
                                       objSense=self._sense)
-        time4 = time()
 
         # Parse solution
         if(response.get_tables('status')[0] == 'OK'):
@@ -1127,19 +1174,12 @@ class Model:
             # Bring solution to variables
             for _, row in self._primalSolution.iterrows():
                 self._variableDict[row['_VAR_']]._value = row['_VALUE_']
-        time5 = time()
-
-        # Print timings
-        print('NOTE: Data length = {} rows'.format(len(df)))
-        print('NOTE: Conversion to MPS =   {:.4f} secs'.format(time1-time0))
-        print('NOTE: Upload to CAS time =  {:.4f} secs'.format(time3-time2))
-        print('NOTE: Solution parse time = {:.4f} secs'.format(time5-time4))
-        print('NOTE: Server solve time =   {:.4f} secs'.format(time4-time3))
 
         # Drop tables
-        sess.table.droptable(table=m.name)
-        if user_blocks is not None:
-            sess.table.droptable(table=user_blocks)
+        if drop:
+            sess.table.droptable(table=mps_table.name)
+            if user_blocks is not None:
+                sess.table.droptable(table=user_blocks)
 
         # Post-solve parse
         if(response.get_tables('status')[0] == 'OK'):

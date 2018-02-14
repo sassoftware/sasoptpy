@@ -264,7 +264,7 @@ class Expression:
         * Adding an expression is equivalent to calling this function:
           (x-y)+(3*x-2*y) and (x-y).add(3*x-2*y) are interchangeable.
         '''
-        if self._temp:
+        if self._temp and type(self) is Expression:
             r = self
         else:
             if isinstance(other, Expression) and other._temp:
@@ -308,7 +308,7 @@ class Expression:
         if isinstance(other, Expression):
             raise Exception('Two expressions cannot be multiplied.')
         elif np.issubdtype(type(other), np.number):
-            if self._temp:
+            if self._temp and type(self) is Expression:
                 for mylc in self._linCoef:
                     self._linCoef[mylc]['val'] *= other
                 r = self
@@ -344,7 +344,7 @@ class Expression:
                                            crange=abs(other[1]-other[0]))
             return ranged_constraint
         elif not isinstance(self, Variable):
-            if self._temp:
+            if self._temp and type(self) is Expression:
                 r = self
             else:
                 r = self.copy()
@@ -431,6 +431,8 @@ class Variable(Expression):
         Lower bound of the variable
     ub : float, optional
         Upper bound of the variable
+    init : float, optional
+        Initial value of the variable
 
     Examples
     --------
@@ -449,7 +451,8 @@ class Variable(Expression):
 
     '''
 
-    def __init__(self, name, vartype=sasoptpy.methods.CONT, lb=0, ub=inf):
+    def __init__(self, name, vartype=sasoptpy.methods.CONT, lb=0, ub=inf,
+                 init=None):
         super().__init__()
         name = sasoptpy.methods.check_name(name, 'var')
         self._name = name
@@ -460,6 +463,7 @@ class Variable(Expression):
             ub = inf
         self._lb = lb
         self._ub = ub
+        self._init = init
         if vartype == sasoptpy.methods.BIN:
             self._lb = max(self._lb, 0)
             self._ub = min(self._ub, 1)
@@ -520,6 +524,12 @@ class Variable(Expression):
         '''
         if c is not None:
             self._cons.add(c._name)
+
+    def __setattr__(self, attr, value):
+        if attr == '_temp' and value is True:
+            print('Variables cannot be temporary! ( TODO edit this message )')
+        else:
+            super().__setattr__(attr, value)
 
 
 class Constraint(Expression):
@@ -850,6 +860,24 @@ class VariableGroup:
             self._name = None
         self._set_var_info()
 
+    def get_name(self):
+        '''
+        Returns the name of the variable group
+
+        Returns
+        -------
+        string
+            Name of the variable group
+
+        Examples
+        --------
+
+        >>> var1 = m.add_variables(4, name='x')
+        >>> print(var1.get_name())
+        x
+        '''
+        return self._name
+
     def _recursive_add_vars(self, *argv, name, vartype, lb, ub, vardict={},
                             vkeys=()):
         the_list = sasoptpy.methods.extract_argument_as_list(argv[0])
@@ -1156,6 +1184,25 @@ class ConstraintGroup:
             sasoptpy.methods.register_name(name, self)
         else:
             self._name = None
+
+    def get_name(self):
+            '''
+            Returns the name of the constraint group
+
+            Returns
+            -------
+            string
+                Name of the constraint group
+
+            Examples
+            --------
+
+            >>> c1 = m.add_constraints((x + y[i] <= 4 for i in indices),
+                                       name='con1')
+            >>> print(c1.get_name())
+            con1
+            '''
+            return self._name
 
     def _recursive_add_cons(self, argv, name, condict, ckeys=()):
         conctr = 0
