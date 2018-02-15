@@ -527,7 +527,7 @@ class Variable(Expression):
 
     def __setattr__(self, attr, value):
         if attr == '_temp' and value is True:
-            print('Variables cannot be temporary! ( TODO edit this message )')
+            print('WARNING: Variables cannot be temporary.')
         else:
             super().__setattr__(attr, value)
 

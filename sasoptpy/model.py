@@ -1012,7 +1012,9 @@ class Model:
                 decomp_table.append([c.get_name(), block_no])
         frame_decomp_table = pd.DataFrame(decomp_table,
                                           columns=['_ROW_', '_BLOCK_'])
-        response = sess.upload_frame(frame_decomp_table, casout='BLOCKSTABLE')
+        response = sess.upload_frame(frame_decomp_table,
+                                     casout={'name': 'BLOCKSTABLE',
+                                             'replace': True})
         return(response.name)
 
     def test_session(self):
@@ -1039,7 +1041,8 @@ class Model:
         else:
             return None
 
-    def solve(self, milp={}, lp={}, name=None, drop=True, replace=True):
+    def solve(self, milp={}, lp={}, name=None, drop=True, replace=True,
+              primalin=False):
         '''
         Solves the model by calling CAS optimization solvers
 
@@ -1055,6 +1058,8 @@ class Model:
             Switch for dropping the MPS table on CAS Server after solve
         replace : boolean, optional
             Switch for replacing an existing MPS table on CAS Server
+        primalin : boolean, optional
+            Switch for using initial values (for MIP only)
 
         Returns
         -------
@@ -1127,20 +1132,22 @@ class Model:
                 break
 
         # Initial value check for MIP
-        init_values = []
-        var_names = []
-        if ptype == 2:
-            for v in self._variables:
-                if v._init is not None:
-                    var_names.append(v._name)
-                    init_values.append(v._init)
-                    print(init_values)
-            if (len(init_values) > 0 and
-               opt_args.get('primalin', 1) is not None):
-                primalinTable = pd.DataFrame(data={'_VAR_': var_names,
-                                                   '_VALUE_': init_values})
-                sess.upload_frame(primalinTable, casout='primalinTable')
-                opt_args['primalin'] = 'primalinTable'
+        if primalin:
+            init_values = []
+            var_names = []
+            if ptype == 2:
+                for v in self._variables:
+                    if v._init is not None:
+                        var_names.append(v._name)
+                        init_values.append(v._init)
+                if (len(init_values) > 0 and
+                   opt_args.get('primalin', 1) is not None):
+                    primalinTable = pd.DataFrame(data={'_VAR_': var_names,
+                                                       '_VALUE_': init_values})
+                    sess.upload_frame(primalinTable,
+                                      casout={'name': 'PRIMALINTABLE',
+                                              'replace': True})
+                    opt_args['primalin'] = 'PRIMALINTABLE'
 
         mps_table = self.upload_model(name, replace=replace)
         sess.loadactionset(actionset='optimization')
@@ -1180,6 +1187,8 @@ class Model:
             sess.table.droptable(table=mps_table.name)
             if user_blocks is not None:
                 sess.table.droptable(table=user_blocks)
+            if primalin:
+                sess.table.droptable(table='PRIMALINTABLE')
 
         # Post-solve parse
         if(response.get_tables('status')[0] == 'OK'):
@@ -1201,6 +1210,9 @@ class Model:
             self._soltime = response.solutionTime
             if('OPTIMAL' in response.solutionStatus):
                 self._objval = response.objective
+                # Replace initial values with current values
+                for v in self._variables:
+                    v._init = v._value
                 return self._primalSolution
             else:
                 print('NOTE: Response {}'.format(response.solutionStatus))
