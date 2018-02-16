@@ -100,8 +100,10 @@ def test(cas_conn):
     GROUPS = grain_data.index.tolist()
     acres = grain_data['acres']
     grain_yield = grain_data['yield']
-    grainAcres = m.add_variables(GROUPS, YEARS, lb=0, name='grainAcres',
-                                 ub=acres)
+    grainAcres = m.add_variables(GROUPS, YEARS, lb=0, name='grainAcres')
+    for group in GROUPS:
+        for year in YEARS:
+            grainAcres[group, year].set_bounds(ub=acres[group])
     grainBought = m.add_variables(YEARS, lb=0, name='grainBought')
     grainSold = m.add_variables(YEARS, lb=0, name='grainSold')
 
