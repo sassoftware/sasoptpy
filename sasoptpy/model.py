@@ -90,7 +90,7 @@ class Model:
         return super().__eq__(other)
 
     def add_variable(self, var=None, vartype=sasoptpy.methods.CONT, name=None,
-                     lb=0, ub=inf):
+                     lb=0, ub=inf, init=None):
         '''
         Adds a new variable to the model
 
@@ -109,6 +109,8 @@ class Model:
             Lower bound of the variable
         ub : float, optional
             Upper bound of the variable
+        init : float, optional
+            Initial value of the variable
 
         Returns
         -------
@@ -120,10 +122,10 @@ class Model:
         Adding a variable on the fly
 
         >>> m = so.Model(name='demo')
-        >>> x = m.add_variable(name='x', vartype=so.INT, ub=10)
+        >>> x = m.add_variable(name='x', vartype=so.INT, ub=10, init=2)
         >>> print(repr(x))
         NOTE: Initialized model demo
-        sasoptpy.Variable(name='x', lb=0, ub=10, vartype='INT')
+        sasoptpy.Variable(name='x', lb=0, ub=10, init=2, vartype='INT')
 
         Adding an existing variable to a model
 
@@ -153,14 +155,14 @@ class Model:
             else:
                 print('ERROR: Use the appropriate argument name for variable.')
         else:
-            var = sasoptpy.components.Variable(name, vartype, lb, ub)
+            var = sasoptpy.components.Variable(name, vartype, lb, ub, init)
             self._variables.append(var)
         self._variableDict[var._name] = var
         return var
 
     def add_variables(self, *argv, vg=None, name=None,
                       vartype=sasoptpy.methods.CONT,
-                      lb=None, ub=None):
+                      lb=None, ub=None, init=None):
         '''
         Adds a group of variables to the model
 
@@ -178,6 +180,8 @@ class Model:
             Lower bounds of variables
         ub : list, dict, :class:`pandas.Series`
             Upper bounds of variables
+        init : list, dict, :class:`pandas.Series`
+            Initial values of variables
 
         See also
         --------
@@ -214,7 +218,7 @@ class Model:
             name = sasoptpy.methods.check_name(name, 'var')
             vg = sasoptpy.components.VariableGroup(*argv, name=name,
                                                    vartype=vartype,
-                                                   lb=lb, ub=ub)
+                                                   lb=lb, ub=ub, init=init)
             for i in vg:
                 self._variables.append(i)
         for i in vg:

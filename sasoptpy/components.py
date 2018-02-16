@@ -441,9 +441,9 @@ class Variable(Expression):
     >>> print(repr(x))
     sasoptpy.Variable(name='x', lb=0, ub=20, vartype='CONT')
 
-    >>> y = so.Variable(name='y', vartype=so.INT)
+    >>> y = so.Variable(name='y', init=1, vartype=so.INT)
     >>> print(repr(y))
-    sasoptpy.Variable(name='y', lb=0, ub=inf, vartype='INT')
+    sasoptpy.Variable(name='y', lb=0, ub=inf, init=1, vartype='INT')
 
     See also
     --------
@@ -504,10 +504,37 @@ class Variable(Expression):
         if ub is not None:
             self._ub = ub
 
+    def set_init(self, init=None):
+        '''
+        Changes initial value of a variable
+
+        Parameters
+        ----------
+        init : float or None
+            Initial value of the variable
+
+        Examples
+        --------
+
+        >>> x = so.Variable(name='x')
+        >>> x.set_init(5)
+
+        >>> y = so.Variable(name='y', init=3)
+        >>> y.set_init()
+
+        '''
+        self._init = init
+
     def __repr__(self):
-        st = 'sasoptpy.Variable(name=\'{}\', lb={}, ub={}, vartype=\'{}\')'
-        s = st.format(self._name, self._lb, self._ub, self._type)
-        return s
+        st = 'sasoptpy.Variable(name=\'{}\', '.format(self._name)
+        if self._lb is not 0:
+            st += 'lb={}, '.format(self._lb)
+        if self._ub is not inf:
+            st += 'ub={}, '.format(self._ub)
+        if self._init is not None:
+            st += 'init={}, '.format(self._init)
+        st += ' vartype=\'{}\')'.format(self._type)
+        return st
 
     def __str__(self):
         if self._parent is not None and self._key is not None:
@@ -786,10 +813,12 @@ class VariableGroup:
         Name (prefix) of the variables
     vartype : string, optional
         Type of variables, `BIN`, `INT`, or `CONT`
-    lb : list, dict, :class:`pandas.Series`
+    lb : list, dict, :class:`pandas.Series`, optional
         Lower bounds of variables
-    ub : list, dict, :class:`pandas.Series`
+    ub : list, dict, :class:`pandas.Series`, optional
         Upper bounds of variables
+    init : float, optional
+        Initial values of variables
 
     Examples
     --------
@@ -846,11 +875,11 @@ class VariableGroup:
     '''
 
     def __init__(self, *argv, name, vartype=sasoptpy.methods.CONT, lb=0,
-                 ub=inf):
+                 ub=inf, init=None):
         self._vardict = {}
         self._groups = {}
         self._recursive_add_vars(*argv, name=name,
-                                 vartype=vartype, lb=lb, ub=ub,
+                                 vartype=vartype, lb=lb, ub=ub, init=init,
                                  vardict=self._vardict)
         if name is not None:
             name = sasoptpy.methods.check_name(name, 'var')
@@ -878,8 +907,8 @@ class VariableGroup:
         '''
         return self._name
 
-    def _recursive_add_vars(self, *argv, name, vartype, lb, ub, vardict={},
-                            vkeys=()):
+    def _recursive_add_vars(self, *argv, name, vartype, lb, ub, init,
+                            vardict={}, vkeys=()):
         the_list = sasoptpy.methods.extract_argument_as_list(argv[0])
         for _, i in enumerate(the_list):
             if isinstance(i, tuple):
@@ -897,14 +926,16 @@ class VariableGroup:
                         self._groups[j].add(k)
                 varlb = sasoptpy.methods.extract_list_value(newfixed, lb)
                 varub = sasoptpy.methods.extract_list_value(newfixed, ub)
+                varin = sasoptpy.methods.extract_list_value(newfixed, init)
                 new_var = sasoptpy.Variable(
-                    name=varname, lb=varlb, ub=varub, vartype=vartype)
+                    name=varname, lb=varlb, ub=varub, init=varin,
+                    vartype=vartype)
                 vardict[newfixed] = new_var
             else:
                 self._recursive_add_vars(*argv[1:], vardict=vardict,
                                          vkeys=newfixed,
                                          name=name, vartype=vartype,
-                                         lb=lb, ub=ub)
+                                         lb=lb, ub=ub, init=init)
 
     def _set_var_info(self):
         for i in self._vardict:

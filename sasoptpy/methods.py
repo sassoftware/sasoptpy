@@ -203,7 +203,7 @@ def extract_list_value(tuplist, listname):
         v = None
     elif isinstance(listname, dict):
         v = listname[tuple_unpack(tuplist)]
-    elif isinstance(listname, int) or isinstance(listname, float):
+    elif np.issubdtype(type(listname), np.number):
         v = listname
     elif isinstance(listname, pd.DataFrame):
         if isinstance(listname.index, pd.MultiIndex):
@@ -533,6 +533,20 @@ def _list_item(i):
         return [i]
 
 
+def _sort_tuple(i):
+    i = sasoptpy.methods.tuple_pack(i)
+    key = (len(i),)
+    for s in i:
+        if isinstance(s, str):
+            key += (0,)
+        elif np.issubdtype(type(s), np.number):
+            key += (1,)
+        elif isinstance(s, tuple):
+            key += (2,)
+    key += i
+    return(key)
+
+
 def get_solution_table(*argv, sort=True, rhs=False):
     '''
     Returns the requested variable names as a DataFrame table
@@ -610,7 +624,7 @@ def get_solution_table(*argv, sort=True, rhs=False):
     if(sort):
         try:
             listofkeys = sorted(listofkeys,
-                                key=lambda x: (get_len(x), x))
+                                key=_sort_tuple)
         except TypeError:
             listofkeys = listofkeys
 
