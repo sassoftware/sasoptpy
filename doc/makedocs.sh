@@ -6,3 +6,4 @@ make latex
 sed -i -- 's/CASUSERHDFS([A-Za-z0-9]*)/CASUSERHDFS(casuser)/g' _build/latex/sasoptpy.tex 
 cd _build/latex
 make
+cp sasoptpy.pdf ../html

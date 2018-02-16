@@ -3,7 +3,7 @@
 sasoptpy: SAS Viya Optimization Interface for Python
 ****************************************************
 
-`PDF Version <../latex/sasoptpy.pdf>`_
+`PDF Version <sasoptpy.pdf>`_
 
 .. module:: sasoptpy
 
