@@ -209,9 +209,9 @@ def extract_list_value(tuplist, listname):
         if isinstance(listname.index, pd.MultiIndex):
             v = listname.loc[tuplist[:-1]][tuplist[-1]]
         else:
-            v = listname.get_value(*tuplist)
+            v = listname.loc[tuplist]
     elif isinstance(listname, pd.Series):
-        v = listname.get_value(*tuplist)
+        v = listname.loc[tuplist]
     else:
         v = listname
         for k in tuplist:
