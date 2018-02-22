@@ -24,7 +24,9 @@ setup(
     name='sasoptpy',
     version='0.1.1.dev0',
     packages=['sasoptpy'],
-    author='SAS',
+    description='sasoptpy: SAS Viya Optimization Interface for Python',
+    url='https://github.com/sassoftware/sasoptpy',
+    author='SAS Institute',
     author_email='Sertalp.Cay@sas.com',
     license='Apache v2.0',
     install_requires=[
