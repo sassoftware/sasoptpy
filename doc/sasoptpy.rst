@@ -23,8 +23,8 @@ Classes
    ConstraintGroup
 
 
-Methods
-=======
+Functions
+=========
 
 .. autosummary::
    :toctree: generated/

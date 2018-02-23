@@ -534,7 +534,7 @@ def _list_item(i):
 
 
 def _sort_tuple(i):
-    i = sasoptpy.methods.tuple_pack(i)
+    i = sasoptpy.utils.tuple_pack(i)
     key = (len(i),)
     for s in i:
         if isinstance(s, str):
@@ -573,18 +573,18 @@ def get_solution_table(*argv, sort=True, rhs=False):
             if isinstance(argv[i], sasoptpy.components.VariableGroup):
                 currentkeylist = list(argv[i]._vardict.keys())
                 for m in argv[i]._vardict:
-                    m = sasoptpy.methods.tuple_unpack(m)
+                    m = sasoptpy.utils.tuple_unpack(m)
                     if m not in listofkeys:
                         listofkeys.append(m)
-                keylengths.append(sasoptpy.methods.list_length(
+                keylengths.append(sasoptpy.utils.list_length(
                     currentkeylist[0]))
             elif isinstance(argv[i], sasoptpy.components.ConstraintGroup):
                 currentkeylist = list(argv[i]._condict.keys())
                 for m in argv[i]._condict:
-                    m = sasoptpy.methods.tuple_unpack(m)
+                    m = sasoptpy.utils.tuple_unpack(m)
                     if m not in listofkeys:
                         listofkeys.append(m)
-                keylengths.append(sasoptpy.methods.list_length(
+                keylengths.append(sasoptpy.utils.list_length(
                     currentkeylist[0]))
             elif (isinstance(argv[i], pd.Series) or
                   (isinstance(argv[i], pd.DataFrame) and
@@ -592,29 +592,29 @@ def get_solution_table(*argv, sort=True, rhs=False):
                 # optinal method: converting to series, argv[i].iloc[0]
                 currentkeylist = argv[i].index.values
                 for m in currentkeylist:
-                    m = sasoptpy.methods.tuple_unpack(m)
+                    m = sasoptpy.utils.tuple_unpack(m)
                     if m not in listofkeys:
                         listofkeys.append(m)
-                keylengths.append(sasoptpy.methods.list_length(
+                keylengths.append(sasoptpy.utils.list_length(
                     currentkeylist[0]))
             elif isinstance(argv[i], pd.DataFrame):
                 index_list = argv[i].index.tolist()
                 col_list = argv[i].columns.tolist()
                 for m in index_list:
                     for n in col_list:
-                        current_key = sasoptpy.methods.tuple_pack(m)
-                        + sasoptpy.methods.tuple_pack(n)
+                        current_key = sasoptpy.utils.tuple_pack(m)
+                        + sasoptpy.utils.tuple_pack(n)
                         if current_key not in listofkeys:
                             listofkeys.append(current_key)
-                keylengths.append(sasoptpy.methods.list_length(
+                keylengths.append(sasoptpy.utils.list_length(
                     current_key))
             elif isinstance(argv[i], dict):
                 currentkeylist = list(argv[i].keys())
                 for m in currentkeylist:
-                    m = sasoptpy.methods.tuple_unpack(m)
+                    m = sasoptpy.utils.tuple_unpack(m)
                     if m not in listofkeys:
                         listofkeys.append(m)
-                keylengths.append(sasoptpy.methods.list_length(
+                keylengths.append(sasoptpy.utils.list_length(
                     currentkeylist[0]))
         else:
             if ('',) not in listofkeys:
@@ -634,11 +634,11 @@ def get_solution_table(*argv, sort=True, rhs=False):
             row = list(k)
         else:
             row = [k]
-        if sasoptpy.methods.list_length(k) < maxk:
-            row.extend(['-']*(maxk-sasoptpy.methods.list_length(k)))
+        if sasoptpy.utils.list_length(k) < maxk:
+            row.extend(['-']*(maxk-sasoptpy.utils.list_length(k)))
         for i, _ in enumerate(argv):
             if type(argv[i]) == sasoptpy.components.VariableGroup:
-                tk = sasoptpy.methods.tuple_pack(k)
+                tk = sasoptpy.utils.tuple_pack(k)
                 val = argv[i][tk].get_value()\
                     if tk in argv[i]._vardict else '-'
                 row.append(val)
@@ -649,7 +649,7 @@ def get_solution_table(*argv, sort=True, rhs=False):
                 val = argv[i].get_value(rhs=rhs) if k == ('',) else '-'
                 row.append(val)
             elif type(argv[i]) == sasoptpy.components.ConstraintGroup:
-                tk = sasoptpy.methods.tuple_pack(k)
+                tk = sasoptpy.utils.tuple_pack(k)
                 val = argv[i][tk].get_value()\
                     if tk in argv[i]._condict else '-'
                 row.append(val)
@@ -700,7 +700,7 @@ def get_solution_table(*argv, sort=True, rhs=False):
                 row.append(val)
             elif isinstance(argv[i], dict):
                 if k in argv[i]:
-                    tk = sasoptpy.methods.tuple_pack(k)
+                    tk = sasoptpy.utils.tuple_pack(k)
                     if type(argv[i][tk]) == sasoptpy.components.Expression:
                         row.append(argv[i][tk].get_value())
                     elif np.issubdtype(type(argv[i][tk]), np.number):
