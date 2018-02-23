@@ -71,7 +71,7 @@ def test(cas_conn):
     for p in PERIODS:
         for o in VEG:
             use[o, p].set_bounds(ub=veg_ub)
-        for i in NONVEG:
+        for o in NONVEG:
             use[o, p].set_bounds(ub=nonveg_ub)
     m.add_constraints((use[o, p] <= use[o, p]._ub * isUsed[o, p]
                       for o in OILS for p in PERIODS), name='link')
