@@ -1,4 +1,3 @@
-from swat import CAS
 import sasoptpy as so
 import pandas as pd
 
@@ -125,7 +124,8 @@ def test(cas_conn):
                heifer_revenue * numHeifersSold[year] +
                dairy_cow_selling_revenue * numCows[dairy_cow_selling_age,
                                                    year] +
-               sum(milk_revenue[age] * numCows[age, year] for age in AGES) +
+               so.quick_sum(milk_revenue[age] * numCows[age, year]
+                            for age in AGES) +
                grain_revenue * grainSold[year] +
                sugar_beet_revenue * sugarBeetSold[year]
                for year in YEARS}
@@ -135,26 +135,27 @@ def test(cas_conn):
             sugar_beet_cost * sugarBeetBought[year] +
             nominal_labour_cost +
             excess_labour_cost * numExcessLabourHours[year] +
-            sum(cow_other_costs[age] * numCows[age, year] for age in AGES) +
-            sum(grain_other_costs * grainAcres[group, year]
-                for group in GROUPS) +
+            so.quick_sum(cow_other_costs[age] * numCows[age, year]
+                         for age in AGES) +
+            so.quick_sum(grain_other_costs * grainAcres[group, year]
+                         for group in GROUPS) +
             sugar_beet_other_costs * sugarBeetAcres[year] +
-            sum(yearly_loan_payment * capitalOutlay[y]
-                for y in YEARS if y <= year)
+            so.quick_sum(yearly_loan_payment * capitalOutlay[y]
+                         for y in YEARS if y <= year)
             for year in YEARS}
     profit = {year: revenue[year] - cost[year] for year in YEARS}
 
-    totalProfit = sum(profit[year] -
-                      yearly_loan_payment * (num_years - 1 + year) *
-                      capitalOutlay[year] for year in YEARS)
+    totalProfit = so.quick_sum(profit[year] -
+                               yearly_loan_payment * (num_years - 1 + year) *
+                               capitalOutlay[year] for year in YEARS)
 
     m.set_objective(totalProfit, sense=so.MAX, name='totalProfit')
 
     # Constraints
 
     m.add_constraints((
-        sum(acres_needed[age] * numCows[age, year] for age in AGES) +
-        sum(grainAcres[group, year] for group in GROUPS) +
+        so.quick_sum(acres_needed[age] * numCows[age, year] for age in AGES) +
+        so.quick_sum(grainAcres[group, year] for group in GROUPS) +
         sugarBeetAcres[year] <= num_acres
         for year in YEARS), name='num_acres')
 
@@ -164,45 +165,49 @@ def test(cas_conn):
         for year in YEARS0 if year != num_years), name='aging')
 
     m.add_constraints((
-        numBullocksSold[year] == sum(bullock_yield[age] * numCows[age, year]
-                                     for age in AGES)
+        numBullocksSold[year] == so.quick_sum(
+            bullock_yield[age] * numCows[age, year] for age in AGES)
         for year in YEARS), name='numBullocksSold_def')
 
     m.add_constraints((
-        numCows[0, year] == sum(heifer_yield[age] * numCows[age, year]
-                                for age in AGES) - numHeifersSold[year]
+        numCows[0, year] == so.quick_sum(
+            heifer_yield[age] * numCows[age, year]
+            for age in AGES) - numHeifersSold[year]
         for year in YEARS), name='numHeifersSold_def')
 
     m.add_constraints((
-        sum(numCows[age, year] for age in AGES) <= max_num_cows +
-        sum(capitalOutlay[y] for y in YEARS if y <= year)
+        so.quick_sum(numCows[age, year] for age in AGES) <= max_num_cows +
+        so.quick_sum(capitalOutlay[y] for y in YEARS if y <= year)
         for year in YEARS), name='max_num_cows_def')
 
     grainGrown = {(group, year): grain_yield[group] * grainAcres[group, year]
                   for group in GROUPS for year in YEARS}
     m.add_constraints((
-        sum(grain_req[age] * numCows[age, year] for age in AGES) <=
-        sum(grainGrown[group, year] for group in GROUPS) + grainBought[year] -
-        grainSold[year]
+        so.quick_sum(grain_req[age] * numCows[age, year] for age in AGES) <=
+        so.quick_sum(grainGrown[group, year] for group in GROUPS)
+        + grainBought[year] - grainSold[year]
         for year in YEARS), name='grain_req_def')
 
     sugarBeetGrown = {(year): sugar_beet_yield * sugarBeetAcres[year]
                       for year in YEARS}
     m.add_constraints((
-        sum(sugar_beet_req[age] * numCows[age, year] for age in AGES) <=
+        so.quick_sum(sugar_beet_req[age] * numCows[age, year] for age in AGES)
+        <=
         sugarBeetGrown[year] + sugarBeetBought[year] - sugarBeetSold[year]
         for year in YEARS), name='sugar_beet_req_def')
 
     m.add_constraints((
-        sum(cow_labour_req[age] * numCows[age, year] for age in AGES) +
-        sum(grain_labour_req * grainAcres[group, year] for group in GROUPS) +
+        so.quick_sum(cow_labour_req[age] * numCows[age, year]
+                     for age in AGES) +
+        so.quick_sum(grain_labour_req * grainAcres[group, year]
+                     for group in GROUPS) +
         sugar_beet_labour_req * sugarBeetAcres[year] <=
         nominal_labour_hours + numExcessLabourHours[year]
         for year in YEARS), name='labour_req_def')
     m.add_constraints((profit[year] >= 0 for year in YEARS), name='cash_flow')
 
-    m.add_constraint(sum(numCows[age, num_years] for age in AGES
-                         if age >= 2) /
+    m.add_constraint(so.quick_sum(numCows[age, num_years] for age in AGES
+                                  if age >= 2) /
                      sum(init_num_cows[age] for age in AGES if age >= 2) ==
                      [1-max_decrease_ratio, 1+max_increase_ratio],
                      name='final_dairy_cows_range')

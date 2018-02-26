@@ -462,6 +462,7 @@ class Model:
             sasoptpy.utils.register_name(name, self._objective)
             self._objective._name = name
         self._sense = sense
+        self._objective._temp = False
         return self._objective
 
     def get_objective(self):

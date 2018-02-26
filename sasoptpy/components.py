@@ -476,6 +476,7 @@ class Variable(Expression):
         self._cons = set()
         self._key = None
         self._parent = None
+        self._temp = False
 
     def _set_info(self, parent, key):
         self._parent = parent
@@ -642,6 +643,7 @@ class Constraint(Expression):
         self._key = None
         self._parent = None
         self._block = None
+        self._temp = False
 
     def update_var_coef(self, var, value):
         '''

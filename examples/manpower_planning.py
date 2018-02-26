@@ -1,7 +1,7 @@
-from swat import CAS
 import sasoptpy as so
 import pandas as pd
 import math
+
 
 def test(cas_conn):
     # Input data
@@ -102,12 +102,13 @@ def test(cas_conn):
                       for p in PERIODS), name='overmanning')
     # Objectives
     redundancy = so.Expression(numRedundant.sum('*', '*'), name='redundancy')
-    cost = so.Expression(sum(redundancy_cost[w] * numRedundant[w, p] +
-                             shorttime_cost[w] * numShortTime[w, p] +
-                             overmanning_cost[w] * numExcess[w, p]
-                             for w in WORKERS for p in PERIODS)
-                         + sum(retrain_cost.loc[i, j] * numRetrain[i, j, p]
-                         for i, j in RETRAIN_PAIRS for p in PERIODS),
+    cost = so.Expression(so.quick_sum(redundancy_cost[w] * numRedundant[w, p] +
+                                      shorttime_cost[w] * numShortTime[w, p] +
+                                      overmanning_cost[w] * numExcess[w, p]
+                                      for w in WORKERS for p in PERIODS)
+                         + so.quick_sum(
+                             retrain_cost.loc[i, j] * numRetrain[i, j, p]
+                             for i, j in RETRAIN_PAIRS for p in PERIODS),
                          name='cost')
 
     m.set_objective(redundancy, sense=so.MIN, name='redundancy_obj')

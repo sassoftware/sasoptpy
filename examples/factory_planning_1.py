@@ -73,14 +73,14 @@ def test(cas_conn):
         store[p, 6].set_bounds(lb=final_storage, ub=final_storage+1)
 
     storageCost = storage_cost_per_unit * store.sum('*', '*')
-    revenue = sum(product_data.at[p, 'profit'] * sell[p, t]
-                  for p in PRODUCTS for t in PERIODS)
+    revenue = so.quick_sum(product_data.at[p, 'profit'] * sell[p, t]
+                           for p in PRODUCTS for t in PERIODS)
     m.set_objective(revenue-storageCost, sense=so.MAX, name='total_profit')
 
     production_time = machine_type_product_data
     m.add_constraints((
-        sum(production_time.at[mc, p] * make[p, t] for p in PRODUCTS) <=
-        num_hours_per_period * num_machine_per_period.at[mc, t]
+        so.quick_sum(production_time.at[mc, p] * make[p, t] for p in PRODUCTS)
+        <= num_hours_per_period * num_machine_per_period.at[mc, t]
         for mc in MACHINE_TYPES for t in PERIODS), name='machine_hours')
     m.add_constraints(((store[p, t-1] if t-1 in PERIODS else 0) + make[p, t] ==
                       sell[p, t] + store[p, t] for p in PRODUCTS

@@ -42,5 +42,6 @@ Functions
    read_frame
    register_name
    reset_globals
+   summation
    tuple_pack
    tuple_unpack

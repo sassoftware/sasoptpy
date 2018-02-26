@@ -17,6 +17,7 @@
 #
 
 from collections import Iterable
+import inspect
 import random
 import string
 
@@ -78,11 +79,48 @@ def check_name(name, ctype=None):
     return name
 
 
+def _is_generated(expr):
+    if isinstance(expr, sasoptpy.Variable):
+        return
+    caller = inspect.stack()[2][3]
+    if caller == '<genexpr>':
+        return True
+
+
 def register_name(name, obj):
     '''
     Adds the name of a component into the global reference list
     '''
     __namedict[name] = obj
+
+
+def quick_sum(argv):
+    '''
+    Quick summation function for :class:`Expression` objects
+
+    Returns
+    -------
+    :class:`Expression` object
+        Sum of given arguments
+
+    Examples
+    --------
+
+    >>> x = so.VariableGroup(10000, name='x')
+    >>> y = so.quick_sum(2*x[i] for i in range(10000))
+
+    Notes
+    -----
+
+    This function is faster for expressions compared to Python's native sum()
+    function.
+
+    '''
+    exp = sasoptpy.Expression(temp=True)
+    for i in argv:
+        exp = exp + i
+    exp._temp = False
+    return exp
 
 
 def get_obj_by_name(name):
