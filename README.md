@@ -77,9 +77,9 @@ Model: [
      y  +  3.0 * x  <=  5.5
   ]
 ]
-NOTE: Converting model demo to data frame
+NOTE: Converting model demo to DataFrame
 NOTE: Added action set 'optimization'.
-NOTE: Uploading the problem data frame to the server.
+NOTE: Uploading the problem DataFrame to the server.
 NOTE: Cloud Analytic Services made the uploaded file available as table TMPLZLOW3J0 in caslib CASUSERHDFS(casuser).
 NOTE: The table TMPLZLOW3J0 has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.
 NOTE: The problem demo has 2 variables (0 binary, 1 integer, 0 free, 0 fixed).
@@ -101,10 +101,6 @@ NOTE: The Branch and Cut algorithm is using up to 32 threads.
 NOTE: Optimal.
 NOTE: Objective = 4.
 NOTE: Data length = 18 rows
-NOTE: Conversion to MPS =   0.0010 secs
-NOTE: Upload to CAS time =  0.1344 secs
-NOTE: Solution parse time = 0.2669 secs
-NOTE: Server solve time =   1.0903 secs
 NOTE: Cloud Analytic Services dropped table TMPLZLOW3J0 from caslib CASUSERHDFS(casuser).
 Problem Summary
 

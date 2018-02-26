@@ -1,7 +1,7 @@
-from swat import CAS
 import sasoptpy as so
 import pandas as pd
 import math
+
 
 def test(cas_conn):
     # Input data
@@ -58,11 +58,17 @@ def test(cas_conn):
     demand0 = demand_data.loc[0]
     for w in WORKERS:
         numWorkers[w, 0].set_bounds(lb=demand0[w], ub=demand0[w])
-    numRecruits = m.add_variables(WORKERS, PERIODS, name='numRecruits',
-                                  lb=0, ub=worker_data['recruit_ub'])
+    numRecruits = m.add_variables(WORKERS, PERIODS, name='numRecruits', lb=0)
+    worker_ub = worker_data['recruit_ub']
+    for w in WORKERS:
+        for p in PERIODS:
+            numRecruits[w, p].set_bounds(ub=worker_ub[w])
     numRedundant = m.add_variables(WORKERS, PERIODS, name='numRedundant', lb=0)
-    numShortTime = m.add_variables(WORKERS, PERIODS, name='numShortTime',
-                                   lb=0, ub=worker_data['shorttime_ub'])
+    numShortTime = m.add_variables(WORKERS, PERIODS, name='numShortTime', lb=0)
+    shorttime_ub = worker_data['shorttime_ub']
+    for w in WORKERS:
+        for p in PERIODS:
+            numShortTime.set_bounds(ub=shorttime_ub[w])
     numExcess = m.add_variables(WORKERS, PERIODS, name='numExcess', lb=0)
 
     retrain_ub = pd.DataFrame()
@@ -96,12 +102,13 @@ def test(cas_conn):
                       for p in PERIODS), name='overmanning')
     # Objectives
     redundancy = so.Expression(numRedundant.sum('*', '*'), name='redundancy')
-    cost = so.Expression(sum(redundancy_cost[w] * numRedundant[w, p] +
-                             shorttime_cost[w] * numShortTime[w, p] +
-                             overmanning_cost[w] * numExcess[w, p]
-                             for w in WORKERS for p in PERIODS)
-                         + sum(retrain_cost.loc[i, j] * numRetrain[i, j, p]
-                         for i, j in RETRAIN_PAIRS for p in PERIODS),
+    cost = so.Expression(so.quick_sum(redundancy_cost[w] * numRedundant[w, p] +
+                                      shorttime_cost[w] * numShortTime[w, p] +
+                                      overmanning_cost[w] * numExcess[w, p]
+                                      for w in WORKERS for p in PERIODS)
+                         + so.quick_sum(
+                             retrain_cost.loc[i, j] * numRetrain[i, j, p]
+                             for i, j in RETRAIN_PAIRS for p in PERIODS),
                          name='cost')
 
     m.set_objective(redundancy, sense=so.MIN, name='redundancy_obj')

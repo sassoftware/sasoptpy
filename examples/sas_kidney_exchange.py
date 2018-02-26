@@ -34,8 +34,8 @@ def test(cas_conn):
     print('Setting objective...')
 
     # Objective
-    model.set_objective(sum((ARCS[i, j] * UseArc[i, j, m] for [i, j] in
-                        ARCS for m in MATCHINGS)),
+    model.set_objective(so.quick_sum((ARCS[i, j] * UseArc[i, j, m]
+                                      for [i, j] in ARCS for m in MATCHINGS)),
                         name="total_weight", sense=so.MAX)
 
     print('Adding constraints...')

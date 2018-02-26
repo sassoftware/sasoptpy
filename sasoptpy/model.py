@@ -30,7 +30,7 @@ import warnings
 import pandas as pd
 
 import sasoptpy.components
-import sasoptpy.methods
+import sasoptpy.utils
 
 
 class Model:
@@ -58,13 +58,13 @@ class Model:
     '''
 
     def __init__(self, name, session=None):
-        self._name = sasoptpy.methods.check_name(name, 'model')
+        self._name = sasoptpy.utils.check_name(name, 'model')
         self._session = session
         self._variables = []
         self._constraints = []
         self._objective = sasoptpy.components.Expression()
         self._datarows = []
-        self._sense = sasoptpy.methods.MIN
+        self._sense = sasoptpy.utils.MIN
         self._variableDict = {}
         self._constraintDict = {}
         self._vcid = {}
@@ -79,7 +79,7 @@ class Model:
         self._dualSolution = pd.DataFrame()
         self._milp_opts = {}
         self._lp_opts = {}
-        sasoptpy.methods.register_name(name, self)
+        sasoptpy.utils.register_name(name, self)
         print('NOTE: Initialized model {}'.format(name))
 
     def __eq__(self, other):
@@ -89,12 +89,12 @@ class Model:
             return False
         return super().__eq__(other)
 
-    def add_variable(self, var=None, vartype=sasoptpy.methods.CONT, name=None,
-                     lb=0, ub=inf):
+    def add_variable(self, var=None, vartype=sasoptpy.utils.CONT, name=None,
+                     lb=0, ub=inf, init=None):
         '''
         Adds a new variable to the model
 
-        New variables can be created via this function or existing variables
+        New variables can be created via this method or existing variables
         can be added to the model.
 
         Parameters
@@ -109,6 +109,8 @@ class Model:
             Lower bound of the variable
         ub : float, optional
             Upper bound of the variable
+        init : float, optional
+            Initial value of the variable
 
         Returns
         -------
@@ -120,10 +122,10 @@ class Model:
         Adding a variable on the fly
 
         >>> m = so.Model(name='demo')
-        >>> x = m.add_variable(name='x', vartype=so.INT, ub=10)
+        >>> x = m.add_variable(name='x', vartype=so.INT, ub=10, init=2)
         >>> print(repr(x))
         NOTE: Initialized model demo
-        sasoptpy.Variable(name='x', lb=0, ub=10, vartype='INT')
+        sasoptpy.Variable(name='x', lb=0, ub=10, init=2, vartype='INT')
 
         Adding an existing variable to a model
 
@@ -153,14 +155,14 @@ class Model:
             else:
                 print('ERROR: Use the appropriate argument name for variable.')
         else:
-            var = sasoptpy.components.Variable(name, vartype, lb, ub)
+            var = sasoptpy.components.Variable(name, vartype, lb, ub, init)
             self._variables.append(var)
         self._variableDict[var._name] = var
         return var
 
     def add_variables(self, *argv, vg=None, name=None,
-                      vartype=sasoptpy.methods.CONT,
-                      lb=None, ub=None):
+                      vartype=sasoptpy.utils.CONT,
+                      lb=None, ub=None, init=None):
         '''
         Adds a group of variables to the model
 
@@ -178,6 +180,8 @@ class Model:
             Lower bounds of variables
         ub : list, dict, :class:`pandas.Series`
             Upper bounds of variables
+        init : list, dict, :class:`pandas.Series`
+            Initial values of variables
 
         See also
         --------
@@ -211,10 +215,10 @@ class Model:
                 print('ERROR: Cannot add variable group of type {}'.format(
                     type(vg)))
         else:
-            name = sasoptpy.methods.check_name(name, 'var')
+            name = sasoptpy.utils.check_name(name, 'var')
             vg = sasoptpy.components.VariableGroup(*argv, name=name,
                                                    vartype=vartype,
-                                                   lb=lb, ub=ub)
+                                                   lb=lb, ub=ub, init=init)
             for i in vg:
                 self._variables.append(i)
         for i in vg:
@@ -257,9 +261,9 @@ class Model:
                 return None
             self._constraints.append(c)
             if name is not None or (name is None and c._name is None):
-                name = sasoptpy.methods.check_name(name, 'con')
+                name = sasoptpy.utils.check_name(name, 'con')
                 c._name = name
-                sasoptpy.methods.register_name(name, c)
+                sasoptpy.utils.register_name(name, c)
             self._constraintDict[c._name] = c
             for v in c._linCoef:
                 if v != 'CONST':
@@ -332,7 +336,7 @@ class Model:
             return cg
         else:
             if type(argv) == list or type(argv) == GeneratorType:
-                name = sasoptpy.methods.check_name(name, 'con')
+                name = sasoptpy.utils.check_name(name, 'con')
                 cg = sasoptpy.components.ConstraintGroup(argv, name=name)
                 for i in cg:
                     self._constraints.append(i)
@@ -341,7 +345,7 @@ class Model:
             elif type(argv) == sasoptpy.components.Constraint:
                 print('WARNING: add_constraints argument is a single' +
                       ' constraint, inserting as a single constraint')
-                name = sasoptpy.methods.check_name(name, 'con')
+                name = sasoptpy.utils.check_name(name, 'con')
                 c = self.add_constraint(c=argv, name=name)
                 return c
 
@@ -386,7 +390,7 @@ class Model:
 
         Notes
         -----
-        * This function is essentially a wrapper for two functions,
+        * This method is essentially a wrapper for two methods,
           :func:`sasoptpy.Model.add_variable` and
           :func:`sasoptpy.Model.add_constraint`.
         * Including a model causes all variables and constraints inside the
@@ -454,10 +458,11 @@ class Model:
             obj = sasoptpy.components.Expression(expression)
         self._objective = obj
         if self._objective._name is None:
-            name = sasoptpy.methods.check_name(name, 'obj')
-            sasoptpy.methods.register_name(name, self._objective)
+            name = sasoptpy.utils.check_name(name, 'obj')
+            sasoptpy.utils.register_name(name, self._objective)
             self._objective._name = name
         self._sense = sense
+        self._objective._temp = False
         return self._objective
 
     def get_objective(self):
@@ -834,9 +839,9 @@ class Model:
 
         Notes
         -----
-        * This function is called inside :func:`sasoptpy.Model.solve`.
+        * This method is called inside :func:`sasoptpy.Model.solve`.
         '''
-        print('NOTE: Converting model {} to data frame'.format(self._name))
+        print('NOTE: Converting model {} to DataFrame'.format(self._name))
         self._id = 1
         if(len(self._datarows) > 0):  # For future reference
             # take a copy?
@@ -846,7 +851,7 @@ class Model:
             self._datarows = []
         # Check if objective has a constant field, if so hack using a variable
         if self._objective._linCoef['CONST']['val'] != 0:
-            obj_constant = self.add_variable(name=sasoptpy.methods.check_name(
+            obj_constant = self.add_variable(name=sasoptpy.utils.check_name(
                 'obj_constant', 'var'))
             constant_value = self._objective._linCoef['CONST']['val']
             obj_constant.set_bounds(lb=constant_value, ub=constant_value)
@@ -866,20 +871,20 @@ class Model:
         for c in self._constraints:
             self._append_row([c._direction, c._name, '', '', '', ''])
         self._append_row(['COLUMNS', '', '', '', '', ''])
-        curtype = sasoptpy.methods.CONT
+        curtype = sasoptpy.utils.CONT
         for v in self._variables:
             f5 = 0
             self._vcid[v._name] = {}
-            if v._type is sasoptpy.methods.INT and\
-                    curtype is sasoptpy.methods.CONT:
+            if v._type is sasoptpy.utils.INT and\
+                    curtype is sasoptpy.utils.CONT:
                 self._append_row(['', 'MARK0000', '\'MARKER\'', '',
                                  '\'INTORG\'', ''])
-                curtype = sasoptpy.methods.INT
-            if v._type is not sasoptpy.methods.INT\
-                    and curtype is sasoptpy.methods.INT:
+                curtype = sasoptpy.utils.INT
+            if v._type is not sasoptpy.utils.INT\
+                    and curtype is sasoptpy.utils.INT:
                 self._append_row(['', 'MARK0001', '\'MARKER\'', '',
                                  '\'INTEND\'', ''])
-                curtype = sasoptpy.methods.CONT
+                curtype = sasoptpy.utils.CONT
             if v._name in self._objective._linCoef:
                 cv = self._objective._linCoef[v._name]
                 current_row = ['', v._name, self._objective._name, cv['val']]
@@ -904,7 +909,7 @@ class Model:
                 current_row.append('')
                 ID = self._append_row(current_row)
                 self._vcid[v._name][current_row[2]] = ID
-        if curtype is sasoptpy.methods.INT:
+        if curtype is sasoptpy.utils.INT:
             self._append_row(['', 'MARK0001', '\'MARKER\'', '', '\'INTEND\'',
                              ''])
         self._append_row(['RHS', '', '', '', '', ''])
@@ -943,11 +948,11 @@ class Model:
                 else:
                     self._append_row(['LO', 'BND', v._name, v._lb, '', ''])
             if v._ub != inf and v._ub is not None and not\
-               (v._type is sasoptpy.methods.BIN and v._ub == 1):
+               (v._type is sasoptpy.utils.BIN and v._ub == 1):
                 self._append_row(['UP', 'BND', v._name, v._ub, '', ''])
-            if v._type is sasoptpy.methods.BIN:
+            if v._type is sasoptpy.utils.BIN:
                 self._append_row(['BV', 'BND', v._name, '1.0', '', ''])
-            if v._lb is 0 and v._type is sasoptpy.methods.INT:
+            if v._lb is 0 and v._type is sasoptpy.utils.INT:
                 self._append_row(['LO', 'BND', v._name, v._lb, '', ''])
         self._append_row(['ENDATA', '', '', float(0), '', float(0)])
         mpsdata = pd.DataFrame(data=self._datarows,
@@ -996,6 +1001,8 @@ class Model:
 
         '''
         sess = self._session
+        blocks_dict = {}
+        block_counter = 0
         if sess is None:
             print('ERROR: CAS Session is not defined for model {}.'.format(
                 self._name))
@@ -1003,22 +1010,61 @@ class Model:
         decomp_table = []
         for c in self._constraints:
             if c._block is not None:
-                decomp_table.append([c.get_name(), c._block])
+                if c._block not in blocks_dict:
+                    blocks_dict[c._block] = block_counter
+                    block_counter += 1
+                block_no = blocks_dict[c._block]
+                decomp_table.append([c.get_name(), block_no])
         frame_decomp_table = pd.DataFrame(decomp_table,
                                           columns=['_ROW_', '_BLOCK_'])
-        response = sess.upload_frame(frame_decomp_table, casout='BLOCKSTABLE')
+        response = sess.upload_frame(frame_decomp_table,
+                                     casout={'name': 'BLOCKSTABLE',
+                                             'replace': True})
         return(response.name)
 
-    def solve(self, milp={}, lp={}):
+    def test_session(self):
+        # Check if session is defined
+        sess = self._session
+        if sess is None:
+            print('ERROR: CAS Session is not defined for model {}.'.format(
+                self._name))
+            return False
+        else:
+            return True
+
+    def upload_model(self, name=None, replace=True):
+        if self.test_session():
+            # Conversion and upload
+            df = self.to_frame()
+            print('NOTE: Uploading the problem DataFrame to the server.')
+            if name is not None:
+                return self._session.upload_frame(
+                    data=df, casout={'name': name, 'replace': replace})
+            else:
+                return self._session.upload_frame(
+                    data=df, casout={'replace': replace})
+        else:
+            return None
+
+    def solve(self, milp={}, lp={}, name=None, drop=True, replace=True,
+              primalin=False):
         '''
         Solves the model by calling CAS optimization solvers
 
         Parameters
         ----------
-        milp : dict
+        milp : dict, optional
             A dictionary of MILP options for the solveMilp CAS Action
-        lp : dict
+        lp : dict, optional
             A dictionary of LP options for the solveLp CAS Action
+        name : string, optional
+            Name of the table name on CAS Server
+        drop : boolean, optional
+            Switch for dropping the MPS table on CAS Server after solve
+        replace : boolean, optional
+            Switch for replacing an existing MPS table on CAS Server
+        primalin : boolean, optional
+            Switch for using initial values (for MIP only)
 
         Returns
         -------
@@ -1030,7 +1076,7 @@ class Model:
 
         >>> m.solve()
         NOTE: Initialized model food_manufacture_1
-        NOTE: Converting model food_manufacture_1 to data frame
+        NOTE: Converting model food_manufacture_1 to DataFrame
         NOTE: Added action set 'optimization'.
         ...
         NOTE: Optimal.
@@ -1048,22 +1094,23 @@ class Model:
 
         Notes
         -----
-        * This function takes two optional arguments (milp and lp).
+        * This method takes two optional arguments (milp and lp).
         * These arguments pass options to the solveLp and solveMilp CAS
           actions.
         * Both milp and lp should be defined as dictionaries, where keys are
           option names. For example, ``m.solve(milp={'maxtime': 600})`` limits
           solution time to 600 seconds.
-        * See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvelp_syntax.htm&locale=en for a list of LP options.
-        * See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvemilp_syntax.htm&locale=en for a list of MILP options.
+        * See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvelp_syntax.htm&locale=en
+          for a list of LP options.
+        * See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvemilp_syntax.htm&locale=en
+          for a list of MILP options.
 
         '''
 
         # Check if session is defined
-        sess = self._session
-        if sess is None:
-            print('ERROR: CAS Session is not defined for model {}.'.format(
-                self._name))
+        if self.test_session():
+            sess = self._session
+        else:
             return None
 
         # Pre-upload argument parse
@@ -1082,23 +1129,36 @@ class Model:
                     user_blocks = self.upload_user_blocks()
                     opt_args['decomp'] = {'blocks': user_blocks}
 
-        # Conversion and upload
-        time0 = time()
-        df = self.to_frame()
-        time1 = time()
-        sess.loadactionset(actionset='optimization')
-        time2 = time()
-        print('NOTE: Uploading the problem data frame to the server.')
-        m = sess.upload_frame(data=df)
-        time3 = time()
-
-        # Solve based on problem type
+        # Find problem type and initial values
         ptype = 1  # LP
         for v in self._variables:
-            if v._type != sasoptpy.methods.CONT:
+            if v._type != sasoptpy.utils.CONT:
                 ptype = 2
+                break
+
+        # Initial value check for MIP
+        if primalin:
+            init_values = []
+            var_names = []
+            if ptype == 2:
+                for v in self._variables:
+                    if v._init is not None:
+                        var_names.append(v._name)
+                        init_values.append(v._init)
+                if (len(init_values) > 0 and
+                   opt_args.get('primalin', 1) is not None):
+                    primalinTable = pd.DataFrame(data={'_VAR_': var_names,
+                                                       '_VALUE_': init_values})
+                    sess.upload_frame(primalinTable,
+                                      casout={'name': 'PRIMALINTABLE',
+                                              'replace': True})
+                    opt_args['primalin'] = 'PRIMALINTABLE'
+
+        mps_table = self.upload_model(name, replace=replace)
+        sess.loadactionset(actionset='optimization')
+
         if ptype == 1:
-            response = sess.solveLp(data=m.name,
+            response = sess.solveLp(data=mps_table.name,
                                     **self._lp_opts,
                                     primalOut={'caslib': 'CASUSER',
                                                'name': 'primal',
@@ -1107,7 +1167,7 @@ class Model:
                                              'name': 'dual', 'replace': True},
                                     objSense=self._sense)
         elif ptype == 2:
-            response = sess.solveMilp(data=m.name,
+            response = sess.solveMilp(data=mps_table.name,
                                       **self._milp_opts,
                                       primalOut={'caslib': 'CASUSER',
                                                  'name': 'primal',
@@ -1116,7 +1176,6 @@ class Model:
                                                'name': 'dual',
                                                'replace': True},
                                       objSense=self._sense)
-        time4 = time()
 
         # Parse solution
         if(response.get_tables('status')[0] == 'OK'):
@@ -1127,19 +1186,14 @@ class Model:
             # Bring solution to variables
             for _, row in self._primalSolution.iterrows():
                 self._variableDict[row['_VAR_']]._value = row['_VALUE_']
-        time5 = time()
-
-        # Print timings
-        print('NOTE: Data length = {} rows'.format(len(df)))
-        print('NOTE: Conversion to MPS =   {:.4f} secs'.format(time1-time0))
-        print('NOTE: Upload to CAS time =  {:.4f} secs'.format(time3-time2))
-        print('NOTE: Solution parse time = {:.4f} secs'.format(time5-time4))
-        print('NOTE: Server solve time =   {:.4f} secs'.format(time4-time3))
 
         # Drop tables
-        sess.table.droptable(table=m.name)
-        if user_blocks is not None:
-            sess.table.droptable(table=user_blocks)
+        if drop:
+            sess.table.droptable(table=mps_table.name)
+            if user_blocks is not None:
+                sess.table.droptable(table=user_blocks)
+            if primalin:
+                sess.table.droptable(table='PRIMALINTABLE')
 
         # Post-solve parse
         if(response.get_tables('status')[0] == 'OK'):
@@ -1161,6 +1215,9 @@ class Model:
             self._soltime = response.solutionTime
             if('OPTIMAL' in response.solutionStatus):
                 self._objval = response.objective
+                # Replace initial values with current values
+                for v in self._variables:
+                    v._init = v._value
                 return self._primalSolution
             else:
                 print('NOTE: Response {}'.format(response.solutionStatus))

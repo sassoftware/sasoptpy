@@ -25,7 +25,7 @@ This file includes static methods and imports.
 '''
 
 from sasoptpy.model import *
-from sasoptpy.methods import *
+from sasoptpy.utils import *
 from sasoptpy.components import *
 #  from sasoptpy.gui import start_gui
 

@@ -1,4 +1,3 @@
-from swat import CAS
 import sasoptpy as so
 import math
 

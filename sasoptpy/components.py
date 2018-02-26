@@ -24,7 +24,7 @@ import warnings
 import numpy as np
 import pandas as pd
 
-import sasoptpy.methods
+import sasoptpy.utils
 
 
 class Expression:
@@ -72,8 +72,8 @@ class Expression:
 
     def __init__(self, exp=None, name=None, temp=False):
         if name is not None:
-            self._name = sasoptpy.methods.check_name(name, 'expr')
-            sasoptpy.methods.register_name(self._name, self)
+            self._name = sasoptpy.utils.check_name(name, 'expr')
+            sasoptpy.utils.register_name(self._name, self)
         else:
             self._name = None
         self._value = 0
@@ -182,8 +182,8 @@ class Expression:
             Name of the expression in the namespace
         '''
         if self._name is None:
-            self._name = sasoptpy.methods.check_name(name, 'expr')
-            sasoptpy.methods.register_name(self._name, self)
+            self._name = sasoptpy.utils.check_name(name, 'expr')
+            sasoptpy.utils.register_name(self._name, self)
         self._temp = False
         return self._name
 
@@ -260,11 +260,11 @@ class Expression:
 
         Notes
         -----
-        * This function is mainly for internal use.
-        * Adding an expression is equivalent to calling this function:
+        * This method is mainly for internal use.
+        * Adding an expression is equivalent to calling this method:
           (x-y)+(3*x-2*y) and (x-y).add(3*x-2*y) are interchangeable.
         '''
-        if self._temp:
+        if self._temp and type(self) is Expression:
             r = self
         else:
             if isinstance(other, Expression) and other._temp:
@@ -300,23 +300,27 @@ class Expression:
 
         Notes
         -----
-        * This function is mainly for internal use.
-        * Multiplying an expression is equivalent to calling this function:
+        * This method is mainly for internal use.
+        * Multiplying an expression is equivalent to calling this method:
           3*(x-y) and (x-y).mult(3) are interchangeable.
         '''
         #  TODO r=self could be used whenever expression has no name
         if isinstance(other, Expression):
             raise Exception('Two expressions cannot be multiplied.')
         elif np.issubdtype(type(other), np.number):
-            if self._temp:
-                for mylc in self._linCoef:
-                    self._linCoef[mylc]['val'] *= other
+            if self._temp and type(self) is Expression:
+                if other == 0:
+                    self._linCoef = {'CONST': {'ref': None, 'val': 0}}
+                else:
+                    for mylc in self._linCoef:
+                        self._linCoef[mylc]['val'] *= other
                 r = self
             else:
                 r = Expression()
-                for mylc in self._linCoef:
-                    r._linCoef[mylc] = dict(self._linCoef[mylc])
-                    r._linCoef[mylc]['val'] *= other
+                if other != 0:
+                    for mylc in self._linCoef:
+                        r._linCoef[mylc] = dict(self._linCoef[mylc])
+                        r._linCoef[mylc]['val'] *= other
         return r
 
     def _relational(self, other, direction_):
@@ -344,7 +348,7 @@ class Expression:
                                            crange=abs(other[1]-other[0]))
             return ranged_constraint
         elif not isinstance(self, Variable):
-            if self._temp:
+            if self._temp and type(self) is Expression:
                 r = self
             else:
                 r = self.copy()
@@ -431,6 +435,8 @@ class Variable(Expression):
         Lower bound of the variable
     ub : float, optional
         Upper bound of the variable
+    init : float, optional
+        Initial value of the variable
 
     Examples
     --------
@@ -439,9 +445,9 @@ class Variable(Expression):
     >>> print(repr(x))
     sasoptpy.Variable(name='x', lb=0, ub=20, vartype='CONT')
 
-    >>> y = so.Variable(name='y', vartype=so.INT)
+    >>> y = so.Variable(name='y', init=1, vartype=so.INT)
     >>> print(repr(y))
-    sasoptpy.Variable(name='y', lb=0, ub=inf, vartype='INT')
+    sasoptpy.Variable(name='y', lb=0, ub=inf, init=1, vartype='INT')
 
     See also
     --------
@@ -449,9 +455,10 @@ class Variable(Expression):
 
     '''
 
-    def __init__(self, name, vartype=sasoptpy.methods.CONT, lb=0, ub=inf):
+    def __init__(self, name, vartype=sasoptpy.utils.CONT, lb=0, ub=inf,
+                 init=None):
         super().__init__()
-        name = sasoptpy.methods.check_name(name, 'var')
+        name = sasoptpy.utils.check_name(name, 'var')
         self._name = name
         self._type = vartype
         if lb is None:
@@ -460,14 +467,16 @@ class Variable(Expression):
             ub = inf
         self._lb = lb
         self._ub = ub
-        if vartype == sasoptpy.methods.BIN:
+        self._init = init
+        if vartype == sasoptpy.utils.BIN:
             self._lb = max(self._lb, 0)
             self._ub = min(self._ub, 1)
         self._linCoef[name] = {'ref': self, 'val': 1.0}
-        sasoptpy.methods.register_name(name, self)
+        sasoptpy.utils.register_name(name, self)
         self._cons = set()
         self._key = None
         self._parent = None
+        self._temp = False
 
     def _set_info(self, parent, key):
         self._parent = parent
@@ -500,10 +509,37 @@ class Variable(Expression):
         if ub is not None:
             self._ub = ub
 
+    def set_init(self, init=None):
+        '''
+        Changes initial value of a variable
+
+        Parameters
+        ----------
+        init : float or None
+            Initial value of the variable
+
+        Examples
+        --------
+
+        >>> x = so.Variable(name='x')
+        >>> x.set_init(5)
+
+        >>> y = so.Variable(name='y', init=3)
+        >>> y.set_init()
+
+        '''
+        self._init = init
+
     def __repr__(self):
-        st = 'sasoptpy.Variable(name=\'{}\', lb={}, ub={}, vartype=\'{}\')'
-        s = st.format(self._name, self._lb, self._ub, self._type)
-        return s
+        st = 'sasoptpy.Variable(name=\'{}\', '.format(self._name)
+        if self._lb is not 0:
+            st += 'lb={}, '.format(self._lb)
+        if self._ub is not inf:
+            st += 'ub={}, '.format(self._ub)
+        if self._init is not None:
+            st += 'init={}, '.format(self._init)
+        st += ' vartype=\'{}\')'.format(self._type)
+        return st
 
     def __str__(self):
         if self._parent is not None and self._key is not None:
@@ -520,6 +556,12 @@ class Variable(Expression):
         '''
         if c is not None:
             self._cons.add(c._name)
+
+    def __setattr__(self, attr, value):
+        if attr == '_temp' and value is True:
+            print('WARNING: Variables cannot be temporary.')
+        else:
+            super().__setattr__(attr, value)
 
 
 class Constraint(Expression):
@@ -555,7 +597,7 @@ class Constraint(Expression):
 
     * A constraint can be generated in multiple ways:
 
-      1. Using the :func:`sasoptpy.Model.add_constraint` function
+      1. Using the :func:`sasoptpy.Model.add_constraint` method
 
          >>> c1 = m.add_constraint(3 * x - 5 * y <= 10, name='c1')
          >>> print(repr(c1))
@@ -568,7 +610,7 @@ class Constraint(Expression):
          sasoptpy.Constraint( -  5.0 * y  +  3.0 * x  <=  10, name='c1')
 
     * The same constraint can be included into other models using the
-      :func:`Model.include` function.
+      :func:`Model.include` method.
 
     See also
     --------
@@ -578,9 +620,9 @@ class Constraint(Expression):
     def __init__(self, exp, direction=None, name=None, crange=0):
         super().__init__()
         if name is not None:
-            name = sasoptpy.methods.check_name(name, 'con')
+            name = sasoptpy.utils.check_name(name, 'con')
             self._name = name
-            sasoptpy.methods.register_name(name, self)
+            sasoptpy.utils.register_name(name, self)
         else:
             self._name = None
         if exp._name is None:
@@ -601,6 +643,7 @@ class Constraint(Expression):
         self._key = None
         self._parent = None
         self._block = None
+        self._temp = False
 
     def update_var_coef(self, var, value):
         '''
@@ -776,10 +819,12 @@ class VariableGroup:
         Name (prefix) of the variables
     vartype : string, optional
         Type of variables, `BIN`, `INT`, or `CONT`
-    lb : list, dict, :class:`pandas.Series`
+    lb : list, dict, :class:`pandas.Series`, optional
         Lower bounds of variables
-    ub : list, dict, :class:`pandas.Series`
+    ub : list, dict, :class:`pandas.Series`, optional
         Upper bounds of variables
+    init : float, optional
+        Initial values of variables
 
     Examples
     --------
@@ -819,9 +864,9 @@ class VariableGroup:
     Notes
     -----
     * When working with a single model, use the
-      :func:`sasoptpy.Model.add_variables` function.
+      :func:`sasoptpy.Model.add_variables` method.
     * If a variable group object is created, it can be added to a model using
-      the :func:`sasoptpy.Model.include` function.
+      the :func:`sasoptpy.Model.include` method.
     * An individual variable inside the group can be accessed using indices.
 
       >>> z = so.VariableGroup(2, ['a', 'b', 'c'], name='z', lb=0, ub=10)
@@ -835,24 +880,42 @@ class VariableGroup:
 
     '''
 
-    def __init__(self, *argv, name, vartype=sasoptpy.methods.CONT, lb=0,
-                 ub=inf):
+    def __init__(self, *argv, name, vartype=sasoptpy.utils.CONT, lb=0,
+                 ub=inf, init=None):
         self._vardict = {}
         self._groups = {}
         self._recursive_add_vars(*argv, name=name,
-                                 vartype=vartype, lb=lb, ub=ub,
+                                 vartype=vartype, lb=lb, ub=ub, init=init,
                                  vardict=self._vardict)
         if name is not None:
-            name = sasoptpy.methods.check_name(name, 'var')
+            name = sasoptpy.utils.check_name(name, 'var')
             self._name = name
-            sasoptpy.methods.register_name(name, self)
+            sasoptpy.utils.register_name(name, self)
         else:
             self._name = None
         self._set_var_info()
 
-    def _recursive_add_vars(self, *argv, name, vartype, lb, ub, vardict={},
-                            vkeys=()):
-        the_list = sasoptpy.methods.extract_argument_as_list(argv[0])
+    def get_name(self):
+        '''
+        Returns the name of the variable group
+
+        Returns
+        -------
+        string
+            Name of the variable group
+
+        Examples
+        --------
+
+        >>> var1 = m.add_variables(4, name='x')
+        >>> print(var1.get_name())
+        x
+        '''
+        return self._name
+
+    def _recursive_add_vars(self, *argv, name, vartype, lb, ub, init,
+                            vardict={}, vkeys=()):
+        the_list = sasoptpy.utils.extract_argument_as_list(argv[0])
         for _, i in enumerate(the_list):
             if isinstance(i, tuple):
                 newfixed = vkeys + i
@@ -867,16 +930,18 @@ class VariableGroup:
                     except KeyError:
                         self._groups[j] = set()
                         self._groups[j].add(k)
-                varlb = sasoptpy.methods.extract_list_value(newfixed, lb)
-                varub = sasoptpy.methods.extract_list_value(newfixed, ub)
+                varlb = sasoptpy.utils.extract_list_value(newfixed, lb)
+                varub = sasoptpy.utils.extract_list_value(newfixed, ub)
+                varin = sasoptpy.utils.extract_list_value(newfixed, init)
                 new_var = sasoptpy.Variable(
-                    name=varname, lb=varlb, ub=varub, vartype=vartype)
+                    name=varname, lb=varlb, ub=varub, init=varin,
+                    vartype=vartype)
                 vardict[newfixed] = new_var
             else:
                 self._recursive_add_vars(*argv[1:], vardict=vardict,
                                          vkeys=newfixed,
                                          name=name, vartype=vartype,
-                                         lb=lb, ub=ub)
+                                         lb=lb, ub=ub, init=init)
 
     def _set_var_info(self):
         for i in self._vardict:
@@ -884,7 +949,7 @@ class VariableGroup:
 
     def __getitem__(self, key):
         '''
-        Overloaded function to access individual variables
+        Overloaded method to access individual variables
 
         Parameters
         ----------
@@ -895,7 +960,7 @@ class VariableGroup:
         -------
         :class:`Variable` object or list of :class:`Variable` objects
         '''
-        k = sasoptpy.methods.tuple_pack(key)
+        k = sasoptpy.utils.tuple_pack(key)
         if k in self._vardict:
             return self._vardict[k]
         else:
@@ -905,7 +970,7 @@ class VariableGroup:
             for i, _ in enumerate(k):
                 if k[i] != '*':
                     indices_to_filter.append(i)
-                    filter_values[i] = sasoptpy.methods._list_item(k[i])
+                    filter_values[i] = sasoptpy.utils._list_item(k[i])
             for v in self._vardict:
                 eligible = True
                 for f in indices_to_filter:
@@ -929,7 +994,7 @@ class VariableGroup:
 
     def sum(self, *argv):
         '''
-        Quick sum function for the variable groups
+        Quick sum method for the variable groups
 
         Parameters
         ----------
@@ -968,7 +1033,7 @@ class VariableGroup:
                 feas_set.append([a])
         combs = product(*feas_set)
         for i in combs:
-            var_key = sasoptpy.methods.tuple_pack(i)
+            var_key = sasoptpy.utils.tuple_pack(i)
             if var_key in self._vardict:
                 r.add(self._vardict[var_key], 1)
         r.set_permanent()
@@ -976,7 +1041,7 @@ class VariableGroup:
 
     def mult(self, vector):
         '''
-        Quick multiplication function for the variable groups
+        Quick multiplication method for the variable groups
 
         Parameters
         ----------
@@ -1017,13 +1082,13 @@ class VariableGroup:
 
         '''
         r = Expression()
-        if isinstance(vector, list):
+        if isinstance(vector, list) or isinstance(vector, np.ndarray):
             for i, key in enumerate(vector):
                 var = self._vardict[i, ]
                 r._linCoef[var._name] = {'ref': var, 'val': vector[i]}
         elif isinstance(vector, pd.Series):
             for key in vector.index:
-                k = sasoptpy.methods.tuple_pack(key)
+                k = sasoptpy.utils.tuple_pack(key)
                 var = self._vardict[k]
                 r._linCoef[var._name] = {'ref': var, 'val': vector[key]}
         else:
@@ -1033,7 +1098,7 @@ class VariableGroup:
                 else:
                     k = (key,)
                 var = self._vardict[k]
-                r._linCoef[var._name] = {'ref': var, 'val': vector[key]}
+                r._linCoef[var._name] = {'ref': var, 'val': vector[i]}
         return r
 
     def set_bounds(self, lb=None, ub=None):
@@ -1063,8 +1128,8 @@ class VariableGroup:
 
         '''
         for v in self._vardict:
-            varlb = sasoptpy.methods.extract_list_value(v, lb)
-            varub = sasoptpy.methods.extract_list_value(v, ub)
+            varlb = sasoptpy.utils.extract_list_value(v, lb)
+            varub = sasoptpy.utils.extract_list_value(v, ub)
             self._vardict[v].set_bounds(lb=varlb, ub=varub)
 
     def __str__(self):
@@ -1075,7 +1140,7 @@ class VariableGroup:
             vd = self._vardict
         for k in vd:
             v = self._vardict[k]
-            s += '  [{}: {}]\n'.format(sasoptpy.methods.tuple_unpack(k),
+            s += '  [{}: {}]\n'.format(sasoptpy.utils.tuple_unpack(k),
                                        v)
         s += ']'
         return s
@@ -1151,11 +1216,30 @@ class ConstraintGroup:
         if type(argv) == list or type(argv) == GeneratorType:
             self._recursive_add_cons(argv, name=name, condict=self._condict)
         if name is not None:
-            name = sasoptpy.methods.check_name(name, 'con')
+            name = sasoptpy.utils.check_name(name, 'con')
             self._name = name
-            sasoptpy.methods.register_name(name, self)
+            sasoptpy.utils.register_name(name, self)
         else:
             self._name = None
+
+    def get_name(self):
+            '''
+            Returns the name of the constraint group
+
+            Returns
+            -------
+            string
+                Name of the constraint group
+
+            Examples
+            --------
+
+            >>> c1 = m.add_constraints((x + y[i] <= 4 for i in indices),
+                                       name='con1')
+            >>> print(c1.get_name())
+            con1
+            '''
+            return self._name
 
     def _recursive_add_cons(self, argv, name, condict, ckeys=()):
         conctr = 0
@@ -1173,7 +1257,7 @@ class ConstraintGroup:
                     if ky != '.0':
                         newkeys = newkeys + (vdict[ky],)
             conname = '{}_{}'.format(name, conctr)
-            conname = sasoptpy.methods.check_name(conname, 'con')
+            conname = sasoptpy.utils.check_name(conname, 'con')
             newcon = sasoptpy.Constraint(exp=c, name=conname, crange=c._range)
             condict[newkeys] = newcon
             conctr += 1
@@ -1219,12 +1303,12 @@ class ConstraintGroup:
             cd[i] = self._condict[i].copy()
             if rhs is False:
                 cd[i]._linCoef['CONST']['val'] = 0
-        cd_df = sasoptpy.methods.dict_to_frame(cd, cols=[self._name])
+        cd_df = sasoptpy.utils.dict_to_frame(cd, cols=[self._name])
         return cd_df
 
     def __getitem__(self, key):
         '''
-        Overloaded function to access individual constraints
+        Overloaded method to access individual constraints
 
         Parameters
         ----------
@@ -1235,7 +1319,7 @@ class ConstraintGroup:
         -------
         :class:`Constraint` object
         '''
-        key = sasoptpy.methods.tuple_pack(key)
+        key = sasoptpy.utils.tuple_pack(key)
         return self._condict.__getitem__(key)
 
     def __iter__(self):
@@ -1249,7 +1333,7 @@ class ConstraintGroup:
         s = 'Constraint Group ({}) [\n'.format(self._name)
         for k in sorted(self._condict):
             v = self._condict[k]
-            s += '  [{}: {}]\n'.format(sasoptpy.methods.tuple_unpack(k),
+            s += '  [{}: {}]\n'.format(sasoptpy.utils.tuple_unpack(k),
                                        v)
         s += ']'
         return s
