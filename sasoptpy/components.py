@@ -260,8 +260,8 @@ class Expression:
 
         Notes
         -----
-        * This function is mainly for internal use.
-        * Adding an expression is equivalent to calling this function:
+        * This method is mainly for internal use.
+        * Adding an expression is equivalent to calling this method:
           (x-y)+(3*x-2*y) and (x-y).add(3*x-2*y) are interchangeable.
         '''
         if self._temp and type(self) is Expression:
@@ -300,8 +300,8 @@ class Expression:
 
         Notes
         -----
-        * This function is mainly for internal use.
-        * Multiplying an expression is equivalent to calling this function:
+        * This method is mainly for internal use.
+        * Multiplying an expression is equivalent to calling this method:
           3*(x-y) and (x-y).mult(3) are interchangeable.
         '''
         #  TODO r=self could be used whenever expression has no name
@@ -596,7 +596,7 @@ class Constraint(Expression):
 
     * A constraint can be generated in multiple ways:
 
-      1. Using the :func:`sasoptpy.Model.add_constraint` function
+      1. Using the :func:`sasoptpy.Model.add_constraint` method
 
          >>> c1 = m.add_constraint(3 * x - 5 * y <= 10, name='c1')
          >>> print(repr(c1))
@@ -609,7 +609,7 @@ class Constraint(Expression):
          sasoptpy.Constraint( -  5.0 * y  +  3.0 * x  <=  10, name='c1')
 
     * The same constraint can be included into other models using the
-      :func:`Model.include` function.
+      :func:`Model.include` method.
 
     See also
     --------
@@ -862,9 +862,9 @@ class VariableGroup:
     Notes
     -----
     * When working with a single model, use the
-      :func:`sasoptpy.Model.add_variables` function.
+      :func:`sasoptpy.Model.add_variables` method.
     * If a variable group object is created, it can be added to a model using
-      the :func:`sasoptpy.Model.include` function.
+      the :func:`sasoptpy.Model.include` method.
     * An individual variable inside the group can be accessed using indices.
 
       >>> z = so.VariableGroup(2, ['a', 'b', 'c'], name='z', lb=0, ub=10)
@@ -947,7 +947,7 @@ class VariableGroup:
 
     def __getitem__(self, key):
         '''
-        Overloaded function to access individual variables
+        Overloaded method to access individual variables
 
         Parameters
         ----------
@@ -992,7 +992,7 @@ class VariableGroup:
 
     def sum(self, *argv):
         '''
-        Quick sum function for the variable groups
+        Quick sum method for the variable groups
 
         Parameters
         ----------
@@ -1039,7 +1039,7 @@ class VariableGroup:
 
     def mult(self, vector):
         '''
-        Quick multiplication function for the variable groups
+        Quick multiplication method for the variable groups
 
         Parameters
         ----------
@@ -1306,7 +1306,7 @@ class ConstraintGroup:
 
     def __getitem__(self, key):
         '''
-        Overloaded function to access individual constraints
+        Overloaded method to access individual constraints
 
         Parameters
         ----------

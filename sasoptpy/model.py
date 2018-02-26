@@ -94,7 +94,7 @@ class Model:
         '''
         Adds a new variable to the model
 
-        New variables can be created via this function or existing variables
+        New variables can be created via this method or existing variables
         can be added to the model.
 
         Parameters
@@ -390,7 +390,7 @@ class Model:
 
         Notes
         -----
-        * This function is essentially a wrapper for two functions,
+        * This method is essentially a wrapper for two methods,
           :func:`sasoptpy.Model.add_variable` and
           :func:`sasoptpy.Model.add_constraint`.
         * Including a model causes all variables and constraints inside the
@@ -838,7 +838,7 @@ class Model:
 
         Notes
         -----
-        * This function is called inside :func:`sasoptpy.Model.solve`.
+        * This method is called inside :func:`sasoptpy.Model.solve`.
         '''
         print('NOTE: Converting model {} to DataFrame'.format(self._name))
         self._id = 1
@@ -1093,7 +1093,7 @@ class Model:
 
         Notes
         -----
-        * This function takes two optional arguments (milp and lp).
+        * This method takes two optional arguments (milp and lp).
         * These arguments pass options to the solveLp and solveMilp CAS
           actions.
         * Both milp and lp should be defined as dictionaries, where keys are

@@ -17,7 +17,7 @@ New Features
 
 - Initial value argument 'init' is added for :class:`Variable` objects
 - :func:`Variable.set_init` method is added for variables
-- Initial value option 'primalin' is added to :func:`Model.solve` function
+- Initial value option 'primalin' is added to :func:`Model.solve` method
 - Table name argument 'name', table drop option 'drop' and replace
   option 'replace' are added to :func:`Model.solve` method
 - Decomposition block implementation is rewritten, block numbers does
