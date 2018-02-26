@@ -5,14 +5,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Economic Planning &#8212; sasoptpy 0.1.0 documentation</title>
+    <title>Economic Planning &#8212; sasoptpy 0.1.1 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.1.0',
+        VERSION:     '0.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -44,7 +44,7 @@
         <li class="right" >
           <a href="farm_planning.html" title="Farm Planning"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &#187;</li> 
       </ul>
     </div>  
@@ -58,8 +58,7 @@
 <h1>Economic Planning<a class="headerlink" href="#economic-planning" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="model">
 <h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">swat</span> <span class="k">import</span> <span class="n">CAS</span>
-<span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 
@@ -98,7 +97,7 @@
     <span class="n">INDUSTRIES</span> <span class="o">=</span> <span class="n">industry_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
     <span class="p">[</span><span class="n">init_stocks</span><span class="p">,</span> <span class="n">init_productive_capacity</span><span class="p">,</span> <span class="n">demand</span><span class="p">]</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">read_frame</span><span class="p">(</span>
         <span class="n">industry_data</span><span class="p">)</span>
-    <span class="n">INPUTS</span> <span class="o">=</span> <span class="n">production_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="c1"># INPUTS = production_data.index.tolist()</span>
     <span class="n">production_coeff</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">flatten_frame</span><span class="p">(</span><span class="n">production_data</span><span class="p">)</span>
     <span class="n">productive_capacity_coeff</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">flatten_frame</span><span class="p">(</span><span class="n">productive_capacity_data</span><span class="p">)</span>
 
@@ -106,14 +105,16 @@
                                         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;static_production&#39;</span><span class="p">)</span>
     <span class="n">m</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MIN</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Zero&#39;</span><span class="p">)</span>
     <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">static_production</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">demand</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span>
-                       <span class="nb">sum</span><span class="p">(</span><span class="n">production_coeff</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">static_production</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                       <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span>
+                           <span class="n">production_coeff</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">static_production</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
                            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">INDUSTRIES</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">INDUSTRIES</span><span class="p">),</span>
                       <span class="n">name</span><span class="o">=</span><span class="s1">&#39;static_con&#39;</span><span class="p">)</span>
 
     <span class="n">m</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">static_production</span><span class="p">))</span>
 
-    <span class="n">final_demand</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">static_production</span><span class="p">)[</span><span class="s1">&#39;static_production&#39;</span><span class="p">]</span>
+    <span class="n">final_demand</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span>
+        <span class="n">static_production</span><span class="p">)[</span><span class="s1">&#39;static_production&#39;</span><span class="p">]</span>
     <span class="c1"># Alternative way</span>
     <span class="c1"># final_demand = {}</span>
     <span class="c1"># for i in INDUSTRIES:</span>
@@ -129,35 +130,35 @@
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">INDUSTRIES</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_years</span><span class="o">+</span><span class="mi">2</span><span class="p">):</span>
             <span class="n">productive_capacity</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">year</span><span class="p">]</span> <span class="o">=</span> <span class="n">init_productive_capacity</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span>\
-                <span class="nb">sum</span><span class="p">(</span><span class="n">extra_capacity</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">year</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+                <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">extra_capacity</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">year</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">INDUSTRIES</span><span class="p">:</span>
         <span class="n">production</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_bounds</span><span class="p">(</span><span class="n">ub</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">stock</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_bounds</span><span class="p">(</span><span class="n">lb</span><span class="o">=</span><span class="n">init_stocks</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ub</span><span class="o">=</span><span class="n">init_stocks</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
 
     <span class="n">total_productive_capacity</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">productive_capacity</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">num_years</span><span class="p">]</span>
                                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">INDUSTRIES</span><span class="p">)</span>
-    <span class="n">total_production</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">production</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">year</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">INDUSTRIES</span>
-                           <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
-    <span class="n">total_manpower</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">production_coeff</span><span class="p">[</span><span class="s1">&#39;manpower&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">*</span>
-                         <span class="n">production</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">year</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span>
-                         <span class="n">productive_capacity_coeff</span><span class="p">[</span><span class="s1">&#39;manpower&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">*</span>
-                         <span class="n">extra_capacity</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">year</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span>
-                         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">INDUSTRIES</span> <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="n">YEARS</span><span class="p">)</span>
+    <span class="n">total_production</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">production</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">year</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">INDUSTRIES</span>
+                                    <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+    <span class="n">total_manpower</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">production_coeff</span><span class="p">[</span><span class="s1">&#39;manpower&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">*</span>
+                                  <span class="n">production</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">year</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span>
+                                  <span class="n">productive_capacity_coeff</span><span class="p">[</span><span class="s1">&#39;manpower&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">*</span>
+                                  <span class="n">extra_capacity</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">year</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span>
+                                  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">INDUSTRIES</span> <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="n">YEARS</span><span class="p">)</span>
 
     <span class="n">continuity_con</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span>
         <span class="n">stock</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">year</span><span class="p">]</span> <span class="o">+</span> <span class="n">production</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">year</span><span class="p">]</span> <span class="o">==</span>
         <span class="p">(</span><span class="n">demand</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">year</span> <span class="ow">in</span> <span class="n">YEARS</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span>
-        <span class="nb">sum</span><span class="p">(</span><span class="n">production_coeff</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">production</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">year</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span>
-            <span class="n">productive_capacity_coeff</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">extra_capacity</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">year</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span>
-            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">INDUSTRIES</span><span class="p">)</span> <span class="o">+</span>
+        <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">production_coeff</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">production</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">year</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span>
+                     <span class="n">productive_capacity_coeff</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span>
+                     <span class="n">extra_capacity</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">year</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">INDUSTRIES</span><span class="p">)</span> <span class="o">+</span>
         <span class="n">stock</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">year</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">INDUSTRIES</span> <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="n">YEARS0</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;continuity_con&#39;</span><span class="p">)</span>
 
     <span class="n">manpower_con</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span>
-        <span class="nb">sum</span><span class="p">(</span><span class="n">production_coeff</span><span class="p">[</span><span class="s1">&#39;manpower&#39;</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">production</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">year</span><span class="p">]</span> <span class="o">+</span>
-            <span class="n">productive_capacity_coeff</span><span class="p">[</span><span class="s1">&#39;manpower&#39;</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span>
-            <span class="n">extra_capacity</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">year</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
-            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">INDUSTRIES</span><span class="p">)</span>
+        <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">production_coeff</span><span class="p">[</span><span class="s1">&#39;manpower&#39;</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">production</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">year</span><span class="p">]</span> <span class="o">+</span>
+                     <span class="n">productive_capacity_coeff</span><span class="p">[</span><span class="s1">&#39;manpower&#39;</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span>
+                     <span class="n">extra_capacity</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">year</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+                     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">INDUSTRIES</span><span class="p">)</span>
         <span class="o">&lt;=</span> <span class="n">manpower_capacity</span> <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_years</span><span class="o">+</span><span class="mi">2</span><span class="p">)),</span>
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;manpower_con&#39;</span><span class="p">)</span>
 
@@ -197,7 +198,7 @@
             <span class="n">continuity_con</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">year</span><span class="p">]</span><span class="o">.</span><span class="n">set_rhs</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">problem2</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">production</span><span class="p">,</span> <span class="n">stock</span><span class="p">,</span> <span class="n">extra_capacity</span><span class="p">,</span>
-                                      <span class="n">productive_capacity</span><span class="p">))</span>
+                                <span class="n">productive_capacity</span><span class="p">))</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">manpower_con</span><span class="o">.</span><span class="n">get_expressions</span><span class="p">()))</span>
 
     <span class="c1"># Problem 3</span>
@@ -211,7 +212,7 @@
             <span class="n">continuity_con</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">year</span><span class="p">]</span><span class="o">.</span><span class="n">set_rhs</span><span class="p">(</span><span class="n">demand</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
     <span class="n">problem3</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">production</span><span class="p">,</span> <span class="n">stock</span><span class="p">,</span> <span class="n">extra_capacity</span><span class="p">,</span>
-                                      <span class="n">productive_capacity</span><span class="p">))</span>
+                                <span class="n">productive_capacity</span><span class="p">))</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">manpower_con</span><span class="o">.</span><span class="n">get_expressions</span><span class="p">()))</span>
 
     <span class="k">return</span> <span class="n">problem3</span><span class="o">.</span><span class="n">get_objective_value</span><span class="p">()</span>
@@ -224,11 +225,11 @@
 
 <span class="gp">In [2]: </span><span class="n">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">)</span>
 <span class="go">NOTE: Initialized model economic_planning</span>
-<span class="go">NOTE: Converting model economic_planning to data frame</span>
+<span class="go">NOTE: Converting model economic_planning to DataFrame</span>
+<span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMP153XBVSR in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMP153XBVSR has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
-<span class="go">NOTE: Uploading the problem data frame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPZFHB9SWO in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table TMPZFHB9SWO has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: The problem economic_planning has 3 variables (0 free, 0 fixed).</span>
 <span class="go">NOTE: The problem has 3 constraints (0 LE, 3 EQ, 0 GE, 0 range).</span>
 <span class="go">NOTE: The problem has 9 constraint coefficients.</span>
@@ -236,12 +237,7 @@
 <span class="go">NOTE: The LP presolver removed all variables and constraints.</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 0.</span>
-<span class="go">NOTE: Data length = 19 rows</span>
-<span class="go">NOTE: Conversion to MPS =   0.0008 secs</span>
-<span class="go">NOTE: Upload to CAS time =  0.2133 secs</span>
-<span class="go">NOTE: Solution parse time = 0.2924 secs</span>
-<span class="go">NOTE: Server solve time =   0.1037 secs</span>
-<span class="go">NOTE: Cloud Analytic Services dropped table TMPZFHB9SWO from caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: Cloud Analytic Services dropped table TMP153XBVSR from caslib CASUSERHDFS(casuser).</span>
 <span class="go">Problem Summary</span>
 
 <span class="go">                                     Value</span>
@@ -275,7 +271,7 @@
 <span class="go">Solution Status              Optimal</span>
 <span class="go">Objective Value                    0</span>
 <span class="go">                                    </span>
-<span class="go">Primal Infeasibility    3.552714E-14</span>
+<span class="go">Primal Infeasibility    1.421085E-14</span>
 <span class="go">Dual Infeasibility                 0</span>
 <span class="go">Bound Infeasibility                0</span>
 <span class="go">                                    </span>
@@ -288,12 +284,12 @@
 <span class="go">steel             105.668016</span>
 <span class="go">transport          92.307692</span>
 <span class="go">NOTE: Initialized model Problem1</span>
-<span class="go">NOTE: Converting model Problem1 to data frame</span>
+<span class="go">NOTE: Converting model Problem1 to DataFrame</span>
 <span class="go">WARNING: The objective function contains a constant term. An auxiliary variable is added.</span>
+<span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPQRAFKYFB in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMPQRAFKYFB has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
-<span class="go">NOTE: Uploading the problem data frame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMP53N87A1R in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table TMP53N87A1R has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: The problem Problem1 has 61 variables (0 free, 13 fixed).</span>
 <span class="go">NOTE: The problem has 42 constraints (24 LE, 18 EQ, 0 GE, 0 range).</span>
 <span class="go">NOTE: The problem has 255 constraint coefficients.</span>
@@ -312,12 +308,7 @@
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 2141.8751967.</span>
 <span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
-<span class="go">NOTE: Data length = 238 rows</span>
-<span class="go">NOTE: Conversion to MPS =   0.0022 secs</span>
-<span class="go">NOTE: Upload to CAS time =  0.2143 secs</span>
-<span class="go">NOTE: Solution parse time = 0.0878 secs</span>
-<span class="go">NOTE: Server solve time =   0.1274 secs</span>
-<span class="go">NOTE: Cloud Analytic Services dropped table TMP53N87A1R from caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: Cloud Analytic Services dropped table TMPQRAFKYFB from caslib CASUSERHDFS(casuser).</span>
 <span class="go">Problem Summary</span>
 
 <span class="go">                                                      Value</span>
@@ -351,9 +342,9 @@
 <span class="go">Solution Status                                  Optimal</span>
 <span class="go">Objective Value                             2141.8751967</span>
 <span class="go">                                                        </span>
-<span class="go">Primal Infeasibility                        1.705303E-13</span>
+<span class="go">Primal Infeasibility                        5.115908E-13</span>
 <span class="go">Dual Infeasibility                                     0</span>
-<span class="go">Bound Infeasibility                         7.105427E-15</span>
+<span class="go">Bound Infeasibility                         1.421085E-14</span>
 <span class="go">                                                        </span>
 <span class="go">Iterations                                            38</span>
 <span class="go">Presolve Time                                       0.00</span>
@@ -366,7 +357,7 @@
 <span class="go">coal      3        300            0              0                 300</span>
 <span class="go">coal      4    17.9487      148.448        189.203             489.203</span>
 <span class="go">coal      5    166.397            0        1022.67             1511.88</span>
-<span class="go">coal      6    166.397 -7.10543e-15              0             1511.88</span>
+<span class="go">coal      6    166.397 -1.42109e-14              0             1511.88</span>
 <span class="go">coal      7          -            -              0                   -</span>
 <span class="go">steel     0          0           80              -                   -</span>
 <span class="go">steel     1    135.342      12.2811              0                 350</span>
@@ -382,7 +373,7 @@
 <span class="go">transport 3    267.152            0              0                 280</span>
 <span class="go">transport 4    92.3077            0              0                 280</span>
 <span class="go">transport 5    92.3077            0              0                 280</span>
-<span class="go">transport 6    92.3077  3.55271e-15              0                 280</span>
+<span class="go">transport 6    92.3077  1.42109e-14              0                 280</span>
 <span class="go">transport 7          -            -              0                   -</span>
 <span class="go">   manpower_con</span>
 <span class="go">1              </span>
@@ -393,11 +384,11 @@
 <span class="go">5    150.000000</span>
 <span class="go">6    150.000000</span>
 <span class="go">NOTE: Initialized model Problem2</span>
-<span class="go">NOTE: Converting model Problem2 to data frame</span>
+<span class="go">NOTE: Converting model Problem2 to DataFrame</span>
+<span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPPULFAZ5N in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMPPULFAZ5N has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
-<span class="go">NOTE: Uploading the problem data frame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPLQ7B5GGL in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table TMPLQ7B5GGL has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: The problem Problem2 has 60 variables (0 free, 12 fixed).</span>
 <span class="go">NOTE: The problem has 42 constraints (24 LE, 18 EQ, 0 GE, 0 range).</span>
 <span class="go">NOTE: The problem has 255 constraint coefficients.</span>
@@ -410,16 +401,11 @@
 <span class="go">                              Objective</span>
 <span class="go">         Phase Iteration        Value         Time</span>
 <span class="go">          D 2          1    9.413902E+03         0</span>
-<span class="go">          P 2         46    2.618579E+03         0</span>
+<span class="go">          P 2         40    2.618579E+03         0</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 2618.5791147.</span>
 <span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
-<span class="go">NOTE: Data length = 227 rows</span>
-<span class="go">NOTE: Conversion to MPS =   0.0019 secs</span>
-<span class="go">NOTE: Upload to CAS time =  0.2134 secs</span>
-<span class="go">NOTE: Solution parse time = 0.0848 secs</span>
-<span class="go">NOTE: Server solve time =   0.1117 secs</span>
-<span class="go">NOTE: Cloud Analytic Services dropped table TMPLQ7B5GGL from caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: Cloud Analytic Services dropped table TMPPULFAZ5N from caslib CASUSERHDFS(casuser).</span>
 <span class="go">Problem Summary</span>
 
 <span class="go">                                    Value</span>
@@ -453,19 +439,19 @@
 <span class="go">Solution Status                Optimal</span>
 <span class="go">Objective Value           2618.5791147</span>
 <span class="go">                                      </span>
-<span class="go">Primal Infeasibility      2.842171E-13</span>
+<span class="go">Primal Infeasibility      1.755041E-12</span>
 <span class="go">Dual Infeasibility                   0</span>
 <span class="go">Bound Infeasibility                  0</span>
 <span class="go">                                      </span>
-<span class="go">Iterations                          46</span>
+<span class="go">Iterations                          40</span>
 <span class="go">Presolve Time                     0.00</span>
 <span class="go">Solution Time                     0.01</span>
 <span class="go">            production    stock extra_capacity     dict</span>
 <span class="go">1         2                                            </span>
 <span class="go">coal      0          0      150              -        -</span>
-<span class="go">coal      1    184.818  31.6285              0      300</span>
-<span class="go">coal      2    430.505  16.3725        130.505  430.505</span>
-<span class="go">coal      3    430.505        0              0  430.505</span>
+<span class="go">coal      1        300  20.1103              0      300</span>
+<span class="go">coal      2    315.323  131.554         15.323  315.323</span>
+<span class="go">coal      3    430.505        0        115.182  430.505</span>
 <span class="go">coal      4    430.505        0              0  430.505</span>
 <span class="go">coal      5    430.505        0              0  430.505</span>
 <span class="go">coal      6    166.397  324.108              0  430.505</span>
@@ -488,18 +474,18 @@
 <span class="go">transport 7          -        -              0        -</span>
 <span class="go">   manpower_con</span>
 <span class="go">1              </span>
-<span class="go">1    217.374162</span>
-<span class="go">2    344.581624</span>
+<span class="go">1    240.410497</span>
+<span class="go">2    321.545290</span>
 <span class="go">3    384.165212</span>
 <span class="go">4    470.000000</span>
 <span class="go">5    470.000000</span>
 <span class="go">6    150.000000</span>
 <span class="go">NOTE: Initialized model Problem3</span>
-<span class="go">NOTE: Converting model Problem3 to data frame</span>
+<span class="go">NOTE: Converting model Problem3 to DataFrame</span>
+<span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMP4_NQHTZM in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMP4_NQHTZM has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
-<span class="go">NOTE: Uploading the problem data frame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMP074MBHVW in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table TMP074MBHVW has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: The problem Problem3 has 60 variables (0 free, 12 fixed).</span>
 <span class="go">NOTE: The problem has 36 constraints (18 LE, 18 EQ, 0 GE, 0 range).</span>
 <span class="go">NOTE: The problem has 219 constraint coefficients.</span>
@@ -512,16 +498,11 @@
 <span class="go">                              Objective</span>
 <span class="go">         Phase Iteration        Value         Time</span>
 <span class="go">          D 2          1    4.013232E+04         0</span>
-<span class="go">          P 2         48    2.450027E+03         0</span>
+<span class="go">          P 2         49    2.450027E+03         0</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 2450.0266228.</span>
 <span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
-<span class="go">NOTE: Data length = 217 rows</span>
-<span class="go">NOTE: Conversion to MPS =   0.0013 secs</span>
-<span class="go">NOTE: Upload to CAS time =  0.2123 secs</span>
-<span class="go">NOTE: Solution parse time = 0.0869 secs</span>
-<span class="go">NOTE: Server solve time =   0.1151 secs</span>
-<span class="go">NOTE: Cloud Analytic Services dropped table TMP074MBHVW from caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: Cloud Analytic Services dropped table TMP4_NQHTZM from caslib CASUSERHDFS(casuser).</span>
 <span class="go">Problem Summary</span>
 
 <span class="go">                                  Value</span>
@@ -555,11 +536,11 @@
 <span class="go">Solution Status              Optimal</span>
 <span class="go">Objective Value         2450.0266228</span>
 <span class="go">                                    </span>
-<span class="go">Primal Infeasibility    2.273737E-13</span>
+<span class="go">Primal Infeasibility    2.195577E-12</span>
 <span class="go">Dual Infeasibility                 0</span>
 <span class="go">Bound Infeasibility                0</span>
 <span class="go">                                    </span>
-<span class="go">Iterations                        48</span>
+<span class="go">Iterations                        49</span>
 <span class="go">Presolve Time                   0.00</span>
 <span class="go">Solution Time                   0.01</span>
 <span class="go">            production    stock extra_capacity     dict</span>
@@ -596,7 +577,7 @@
 <span class="go">4    539.769130</span>
 <span class="go">5    636.824849</span>
 <span class="go">6    659.723590</span>
-<span class="gh">Out[2]: </span><span class="go">2450.026622821297</span>
+<span class="gh">Out[2]: </span><span class="go">2450.0266228212977</span>
 </pre></div>
 </div>
 </div>
@@ -666,13 +647,13 @@
         <li class="right" >
           <a href="farm_planning.html" title="Farm Planning"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017, SAS.
-      Last updated on Dec 22, 2017 (Timestamp: 0.1.0-20171222145159).
+        &#169; Copyright 2017-2018, SAS Institute.
+      Last updated on Feb 26, 2018 (Timestamp: 0.1.1-20180226160330).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
     </div>
   </body>

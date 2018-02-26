@@ -5,14 +5,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Getting Started &#8212; sasoptpy 0.1.0 documentation</title>
+    <title>Getting Started &#8212; sasoptpy 0.1.1 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/css/sasoptpy.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.1.0',
+        VERSION:     '0.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -44,7 +44,7 @@
         <li class="right" >
           <a href="install.html" title="Installation"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">sasoptpy 0.1.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">sasoptpy 0.1.1 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -173,7 +173,7 @@ with a scalar.</p>
 In this problem, the objective is to maximize the profit, so
 <a class="reference internal" href="generated/sasoptpy.Model.set_objective.html#sasoptpy.Model.set_objective" title="sasoptpy.Model.set_objective"><code class="xref py py-func docutils literal"><span class="pre">Model.set_objective()</span></code></a> function is used as follows:</p>
 <div class="highlight-ipython"><div class="highlight"><pre><span></span><span class="gp">In [16]: </span><span class="n">m</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">totalRevenue</span><span class="o">-</span><span class="n">totalCost</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MAX</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;totalProfit&#39;</span><span class="p">)</span>
-<span class="gh">Out[16]: </span><span class="go">sasoptpy.Expression(exp =  10.0 * production[&#39;Period1&#39;]  -  10.0 * production_cap  +  10.0 * production[&#39;Period3&#39;]  +  10.0 * production[&#39;Period2&#39;] , name=&#39;obj_1&#39;)</span>
+<span class="gh">Out[16]: </span><span class="go">sasoptpy.Expression(exp =  10.0 * production[&#39;Period2&#39;]  -  10.0 * production_cap  +  10.0 * production[&#39;Period1&#39;]  +  10.0 * production[&#39;Period3&#39;] , name=&#39;obj_1&#39;)</span>
 </pre></div>
 </div>
 <p>Notice that you can define the same objective using
@@ -194,13 +194,13 @@ be added to a model.</p>
 <div class="highlight-ipython"><div class="highlight"><pre><span></span><span class="gp">In [17]: </span><span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">production</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">production_cap</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">),</span>
 <span class="gp">   ....: </span>                  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;capacity&#39;</span><span class="p">)</span>
 <span class="gp">   ....: </span>
-<span class="gh">Out[17]: </span><span class="go">sasoptpy.ConstraintGroup([ -  production_cap  +  production[&#39;Period2&#39;]  &lt;=  0,  production[&#39;Period1&#39;]  -  production_cap  &lt;=  0,  -  production_cap  +  production[&#39;Period3&#39;]  &lt;=  0, ], name=&#39;capacity&#39;)</span>
+<span class="gh">Out[17]: </span><span class="go">sasoptpy.ConstraintGroup([ -  production_cap  +  production[&#39;Period3&#39;]  &lt;=  0,  -  production_cap  +  production[&#39;Period1&#39;]  &lt;=  0,  production[&#39;Period2&#39;]  -  production_cap  &lt;=  0, ], name=&#39;capacity&#39;)</span>
 </pre></div>
 </div>
 <div class="highlight-ipython"><div class="highlight"><pre><span></span><span class="gp">In [18]: </span><span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">production</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">demand</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">),</span>
 <span class="gp">   ....: </span>                  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;demand&#39;</span><span class="p">)</span>
 <span class="gp">   ....: </span>
-<span class="gh">Out[18]: </span><span class="go">sasoptpy.ConstraintGroup([ production[&#39;Period2&#39;]  &lt;=  15,  production[&#39;Period1&#39;]  &lt;=  30,  production[&#39;Period3&#39;]  &lt;=  25, ], name=&#39;demand&#39;)</span>
+<span class="gh">Out[18]: </span><span class="go">sasoptpy.ConstraintGroup([ production[&#39;Period3&#39;]  &lt;=  25,  production[&#39;Period1&#39;]  &lt;=  30,  production[&#39;Period2&#39;]  &lt;=  15, ], name=&#39;demand&#39;)</span>
 </pre></div>
 </div>
 <p>Here, the first term provides a Python generator, which then gets translated into
@@ -214,11 +214,11 @@ respectively.</p>
 <a class="reference internal" href="generated/sasoptpy.Model.solve.html#sasoptpy.Model.solve" title="sasoptpy.Model.solve"><code class="xref py py-func docutils literal"><span class="pre">Model.solve()</span></code></a> function.</p>
 <p>See the solution output to the problem.</p>
 <div class="highlight-ipython"><div class="highlight"><pre><span></span><span class="gp">In [19]: </span><span class="n">m</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
-<span class="go">NOTE: Converting model my_first_model to data frame</span>
+<span class="go">NOTE: Converting model my_first_model to DataFrame</span>
+<span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPX28FLEXD in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMPX28FLEXD has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
-<span class="go">NOTE: Uploading the problem data frame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPODIDMQCO in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table TMPODIDMQCO has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: The problem my_first_model has 4 variables (0 binary, 4 integer, 0 free, 0 fixed).</span>
 <span class="go">NOTE: The problem has 6 constraints (6 LE, 0 EQ, 0 GE, 0 range).</span>
 <span class="go">NOTE: The problem has 9 constraint coefficients.</span>
@@ -227,12 +227,7 @@ respectively.</p>
 <span class="go">NOTE: The MILP presolver removed all variables and constraints.</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 400.</span>
-<span class="go">NOTE: Data length = 30 rows</span>
-<span class="go">NOTE: Conversion to MPS =   0.0014 secs</span>
-<span class="go">NOTE: Upload to CAS time =  0.2148 secs</span>
-<span class="go">NOTE: Solution parse time = 0.2881 secs</span>
-<span class="go">NOTE: Server solve time =   0.1297 secs</span>
-<span class="go">NOTE: Cloud Analytic Services dropped table TMPODIDMQCO from caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: Cloud Analytic Services dropped table TMPX28FLEXD from caslib CASUSERHDFS(casuser).</span>
 <span class="go">Problem Summary</span>
 
 <span class="go">                                  Value</span>
@@ -387,12 +382,12 @@ access API details.</p>
         <li class="right" >
           <a href="install.html" title="Installation"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">sasoptpy 0.1.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">sasoptpy 0.1.1 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017, SAS.
-      Last updated on Dec 22, 2017 (Timestamp: 0.1.0-20171222145159).
+        &#169; Copyright 2017-2018, SAS Institute.
+      Last updated on Feb 26, 2018 (Timestamp: 0.1.1-20180226160330).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
     </div>
   </body>

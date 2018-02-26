@@ -17,6 +17,7 @@ sasoptpy\.ConstraintGroup
       :toctree:
       
       ConstraintGroup.get_expressions
+      ConstraintGroup.get_name
 
 
 

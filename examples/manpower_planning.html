@@ -5,14 +5,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Manpower Planning &#8212; sasoptpy 0.1.0 documentation</title>
+    <title>Manpower Planning &#8212; sasoptpy 0.1.1 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.1.0',
+        VERSION:     '0.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -44,7 +44,7 @@
         <li class="right" >
           <a href="factory_planning_2.html" title="Factory Planning 2"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &#187;</li> 
       </ul>
     </div>  
@@ -58,10 +58,10 @@
 <h1>Manpower Planning<a class="headerlink" href="#manpower-planning" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="model">
 <h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">swat</span> <span class="k">import</span> <span class="n">CAS</span>
-<span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">math</span>
+
 
 <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">):</span>
     <span class="c1"># Input data</span>
@@ -118,11 +118,17 @@
     <span class="n">demand0</span> <span class="o">=</span> <span class="n">demand_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">WORKERS</span><span class="p">:</span>
         <span class="n">numWorkers</span><span class="p">[</span><span class="n">w</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_bounds</span><span class="p">(</span><span class="n">lb</span><span class="o">=</span><span class="n">demand0</span><span class="p">[</span><span class="n">w</span><span class="p">],</span> <span class="n">ub</span><span class="o">=</span><span class="n">demand0</span><span class="p">[</span><span class="n">w</span><span class="p">])</span>
-    <span class="n">numRecruits</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">WORKERS</span><span class="p">,</span> <span class="n">PERIODS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;numRecruits&#39;</span><span class="p">,</span>
-                                  <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">worker_data</span><span class="p">[</span><span class="s1">&#39;recruit_ub&#39;</span><span class="p">])</span>
+    <span class="n">numRecruits</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">WORKERS</span><span class="p">,</span> <span class="n">PERIODS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;numRecruits&#39;</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">worker_ub</span> <span class="o">=</span> <span class="n">worker_data</span><span class="p">[</span><span class="s1">&#39;recruit_ub&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">WORKERS</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">:</span>
+            <span class="n">numRecruits</span><span class="p">[</span><span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">set_bounds</span><span class="p">(</span><span class="n">ub</span><span class="o">=</span><span class="n">worker_ub</span><span class="p">[</span><span class="n">w</span><span class="p">])</span>
     <span class="n">numRedundant</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">WORKERS</span><span class="p">,</span> <span class="n">PERIODS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;numRedundant&#39;</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">numShortTime</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">WORKERS</span><span class="p">,</span> <span class="n">PERIODS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;numShortTime&#39;</span><span class="p">,</span>
-                                   <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">worker_data</span><span class="p">[</span><span class="s1">&#39;shorttime_ub&#39;</span><span class="p">])</span>
+    <span class="n">numShortTime</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">WORKERS</span><span class="p">,</span> <span class="n">PERIODS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;numShortTime&#39;</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">shorttime_ub</span> <span class="o">=</span> <span class="n">worker_data</span><span class="p">[</span><span class="s1">&#39;shorttime_ub&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">WORKERS</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">:</span>
+            <span class="n">numShortTime</span><span class="o">.</span><span class="n">set_bounds</span><span class="p">(</span><span class="n">ub</span><span class="o">=</span><span class="n">shorttime_ub</span><span class="p">[</span><span class="n">w</span><span class="p">])</span>
     <span class="n">numExcess</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">WORKERS</span><span class="p">,</span> <span class="n">PERIODS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;numExcess&#39;</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="n">retrain_ub</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
@@ -156,12 +162,13 @@
                       <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;overmanning&#39;</span><span class="p">)</span>
     <span class="c1"># Objectives</span>
     <span class="n">redundancy</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="n">numRedundant</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;redundancy&#39;</span><span class="p">)</span>
-    <span class="n">cost</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">redundancy_cost</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="o">*</span> <span class="n">numRedundant</span><span class="p">[</span><span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="o">+</span>
-                             <span class="n">shorttime_cost</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="o">*</span> <span class="n">numShortTime</span><span class="p">[</span><span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="o">+</span>
-                             <span class="n">overmanning_cost</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="o">*</span> <span class="n">numExcess</span><span class="p">[</span><span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span>
-                             <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">WORKERS</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">)</span>
-                         <span class="o">+</span> <span class="nb">sum</span><span class="p">(</span><span class="n">retrain_cost</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">numRetrain</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span>
-                         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">RETRAIN_PAIRS</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">),</span>
+    <span class="n">cost</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">redundancy_cost</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="o">*</span> <span class="n">numRedundant</span><span class="p">[</span><span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="o">+</span>
+                                      <span class="n">shorttime_cost</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="o">*</span> <span class="n">numShortTime</span><span class="p">[</span><span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="o">+</span>
+                                      <span class="n">overmanning_cost</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="o">*</span> <span class="n">numExcess</span><span class="p">[</span><span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span>
+                                      <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">WORKERS</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">)</span>
+                         <span class="o">+</span> <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span>
+                             <span class="n">retrain_cost</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">numRetrain</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span>
+                             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">RETRAIN_PAIRS</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">),</span>
                          <span class="n">name</span><span class="o">=</span><span class="s1">&#39;cost&#39;</span><span class="p">)</span>
 
     <span class="n">m</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">redundancy</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MIN</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;redundancy_obj&#39;</span><span class="p">)</span>
@@ -194,11 +201,11 @@
 
 <span class="gp">In [2]: </span><span class="n">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">)</span>
 <span class="go">NOTE: Initialized model manpower_planning</span>
-<span class="go">NOTE: Converting model manpower_planning to data frame</span>
+<span class="go">NOTE: Converting model manpower_planning to DataFrame</span>
+<span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMP5ELZG0L0 in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMP5ELZG0L0 has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
-<span class="go">NOTE: Uploading the problem data frame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPU5FKGIJL in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table TMPU5FKGIJL has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: The problem manpower_planning has 63 variables (0 free, 3 fixed).</span>
 <span class="go">NOTE: The problem has 24 constraints (6 LE, 18 EQ, 0 GE, 0 range).</span>
 <span class="go">NOTE: The problem has 108 constraint coefficients.</span>
@@ -215,12 +222,7 @@
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 841.796875.</span>
 <span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
-<span class="go">NOTE: Data length = 138 rows</span>
-<span class="go">NOTE: Conversion to MPS =   0.0020 secs</span>
-<span class="go">NOTE: Upload to CAS time =  0.2156 secs</span>
-<span class="go">NOTE: Solution parse time = 0.0880 secs</span>
-<span class="go">NOTE: Server solve time =   0.1238 secs</span>
-<span class="go">NOTE: Cloud Analytic Services dropped table TMPU5FKGIJL from caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: Cloud Analytic Services dropped table TMP5ELZG0L0 from caslib CASUSERHDFS(casuser).</span>
 <span class="go">Problem Summary</span>
 
 <span class="go">                                     Value</span>
@@ -296,11 +298,11 @@
 <span class="go">skilled     unskilled   1        0.0000</span>
 <span class="go">skilled     unskilled   2        0.0000</span>
 <span class="go">skilled     unskilled   3        0.0000</span>
-<span class="go">NOTE: Converting model manpower_planning to data frame</span>
+<span class="go">NOTE: Converting model manpower_planning to DataFrame</span>
+<span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPDDA_M__V in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMPDDA_M__V has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
-<span class="go">NOTE: Uploading the problem data frame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPUYB6BL69 in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table TMPUYB6BL69 has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: The problem manpower_planning has 63 variables (0 free, 3 fixed).</span>
 <span class="go">NOTE: The problem has 24 constraints (6 LE, 18 EQ, 0 GE, 0 range).</span>
 <span class="go">NOTE: The problem has 108 constraint coefficients.</span>
@@ -317,12 +319,7 @@
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 498677.28532.</span>
 <span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
-<span class="go">NOTE: Data length = 150 rows</span>
-<span class="go">NOTE: Conversion to MPS =   0.0014 secs</span>
-<span class="go">NOTE: Upload to CAS time =  0.2165 secs</span>
-<span class="go">NOTE: Solution parse time = 0.0845 secs</span>
-<span class="go">NOTE: Server solve time =   0.1145 secs</span>
-<span class="go">NOTE: Cloud Analytic Services dropped table TMPUYB6BL69 from caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: Cloud Analytic Services dropped table TMPDDA_M__V from caslib CASUSERHDFS(casuser).</span>
 <span class="go">Problem Summary</span>
 
 <span class="go">                                     Value</span>
@@ -398,7 +395,7 @@
 <span class="go">skilled     unskilled   1           0.0</span>
 <span class="go">skilled     unskilled   2           0.0</span>
 <span class="go">skilled     unskilled   3           0.0</span>
-<span class="gh">Out[2]: </span><span class="go">498677.2853185595</span>
+<span class="gh">Out[2]: </span><span class="go">498677.2853185596</span>
 </pre></div>
 </div>
 </div>
@@ -468,13 +465,13 @@
         <li class="right" >
           <a href="factory_planning_2.html" title="Factory Planning 2"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017, SAS.
-      Last updated on Dec 22, 2017 (Timestamp: 0.1.0-20171222145159).
+        &#169; Copyright 2017-2018, SAS Institute.
+      Last updated on Feb 26, 2018 (Timestamp: 0.1.1-20180226160330).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
     </div>
   </body>

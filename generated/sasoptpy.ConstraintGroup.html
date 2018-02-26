@@ -5,14 +5,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>sasoptpy.ConstraintGroup &#8212; sasoptpy 0.1.0 documentation</title>
+    <title>sasoptpy.ConstraintGroup &#8212; sasoptpy 0.1.1 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.1.0',
+        VERSION:     '0.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -44,7 +44,7 @@
         <li class="right" >
           <a href="sasoptpy.Constraint.update_var_coef.html" title="sasoptpy.Constraint.update_var_coef"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../sasoptpy.html" accesskey="U">API Reference</a> &#187;</li> 
       </ul>
     </div>  
@@ -81,7 +81,7 @@
 <p class="last"><a class="reference internal" href="sasoptpy.Model.add_constraints.html#sasoptpy.Model.add_constraints" title="sasoptpy.Model.add_constraints"><code class="xref py py-func docutils literal"><span class="pre">sasoptpy.Model.add_constraints()</span></code></a>, <a class="reference internal" href="sasoptpy.Model.include.html#sasoptpy.Model.include" title="sasoptpy.Model.include"><code class="xref py py-func docutils literal"><span class="pre">sasoptpy.Model.include()</span></code></a></p>
 </div>
 <p class="rubric">Notes</p>
-<p>Use <a class="reference internal" href="sasoptpy.Model.add_constraints.html#sasoptpy.Model.add_constraints" title="sasoptpy.Model.add_constraints"><code class="xref py py-func docutils literal"><span class="pre">sasoptpy.Model.add_constraints()</span></code></a> when working with a single 
+<p>Use <a class="reference internal" href="sasoptpy.Model.add_constraints.html#sasoptpy.Model.add_constraints" title="sasoptpy.Model.add_constraints"><code class="xref py py-func docutils literal"><span class="pre">sasoptpy.Model.add_constraints()</span></code></a> when working with a single
 model.</p>
 <p class="rubric">Examples</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">var_ind</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">]</span>
@@ -119,6 +119,9 @@ model.</p>
 <tr class="row-odd"><td><a class="reference internal" href="sasoptpy.ConstraintGroup.get_expressions.html#sasoptpy.ConstraintGroup.get_expressions" title="sasoptpy.ConstraintGroup.get_expressions"><code class="xref py py-obj docutils literal"><span class="pre">get_expressions</span></code></a>([rhs])</td>
 <td>Returns constraints as a list of expressions</td>
 </tr>
+<tr class="row-even"><td><a class="reference internal" href="sasoptpy.ConstraintGroup.get_name.html#sasoptpy.ConstraintGroup.get_name" title="sasoptpy.ConstraintGroup.get_name"><code class="xref py py-obj docutils literal"><span class="pre">get_name</span></code></a>()</td>
+<td>Returns the name of the constraint group</td>
+</tr>
 </tbody>
 </table>
 </dd></dl>
@@ -148,11 +151,12 @@ model.</p>
 <li class="toctree-l3"><a class="reference internal" href="sasoptpy.Constraint.html">sasoptpy.Constraint</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">sasoptpy.ConstraintGroup</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.ConstraintGroup.get_expressions.html">sasoptpy.ConstraintGroup.get_expressions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sasoptpy.ConstraintGroup.get_name.html">sasoptpy.ConstraintGroup.get_name</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../sasoptpy.html#methods">Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sasoptpy.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
@@ -187,13 +191,13 @@ model.</p>
         <li class="right" >
           <a href="sasoptpy.Constraint.update_var_coef.html" title="sasoptpy.Constraint.update_var_coef"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../sasoptpy.html" >API Reference</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017, SAS.
-      Last updated on Dec 22, 2017 (Timestamp: 0.1.0-20171222145159).
+        &#169; Copyright 2017-2018, SAS Institute.
+      Last updated on Feb 26, 2018 (Timestamp: 0.1.1-20180226160330).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
     </div>
   </body>

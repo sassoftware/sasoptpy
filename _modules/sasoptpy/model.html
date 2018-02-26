@@ -5,14 +5,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>sasoptpy.model &#8212; sasoptpy 0.1.0 documentation</title>
+    <title>sasoptpy.model &#8212; sasoptpy 0.1.1 documentation</title>
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/css/sasoptpy.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '0.1.0',
+        VERSION:     '0.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -36,7 +36,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -74,11 +74,12 @@
 <span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">inf</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="k">import</span> <span class="n">time</span>
 <span class="kn">from</span> <span class="nn">types</span> <span class="k">import</span> <span class="n">GeneratorType</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">import</span> <span class="nn">sasoptpy.components</span>
-<span class="kn">import</span> <span class="nn">sasoptpy.methods</span>
+<span class="kn">import</span> <span class="nn">sasoptpy.utils</span>
 
 
 <div class="viewcode-block" id="Model"><a class="viewcode-back" href="../../generated/sasoptpy.Model.html#sasoptpy.Model">[docs]</a><span class="k">class</span> <span class="nc">Model</span><span class="p">:</span>
@@ -106,13 +107,13 @@
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">check_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;model&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">check_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;model&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_session</span> <span class="o">=</span> <span class="n">session</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_constraints</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_objective</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">Expression</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_datarows</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_sense</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">MIN</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sense</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">MIN</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_variableDict</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_constraintDict</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_vcid</span> <span class="o">=</span> <span class="p">{}</span>
@@ -127,15 +128,22 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_dualSolution</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_milp_opts</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_lp_opts</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">sasoptpy</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">register_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">register_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;NOTE: Initialized model </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
 
-<div class="viewcode-block" id="Model.add_variable"><a class="viewcode-back" href="../../generated/sasoptpy.Model.add_variable.html#sasoptpy.Model.add_variable">[docs]</a>    <span class="k">def</span> <span class="nf">add_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">sasoptpy</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">CONT</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                     <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">inf</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Cannot compare Model object with </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span>
+                          <span class="nb">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)),</span> <span class="ne">RuntimeWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Model.add_variable"><a class="viewcode-back" href="../../generated/sasoptpy.Model.add_variable.html#sasoptpy.Model.add_variable">[docs]</a>    <span class="k">def</span> <span class="nf">add_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">CONT</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">inf</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Adds a new variable to the model</span>
 
-<span class="sd">        New variables can be created via this function or existing variables</span>
+<span class="sd">        New variables can be created via this method or existing variables</span>
 <span class="sd">        can be added to the model.</span>
 
 <span class="sd">        Parameters</span>
@@ -150,6 +158,8 @@
 <span class="sd">            Lower bound of the variable</span>
 <span class="sd">        ub : float, optional</span>
 <span class="sd">            Upper bound of the variable</span>
+<span class="sd">        init : float, optional</span>
+<span class="sd">            Initial value of the variable</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -161,10 +171,10 @@
 <span class="sd">        Adding a variable on the fly</span>
 
 <span class="sd">        &gt;&gt;&gt; m = so.Model(name=&#39;demo&#39;)</span>
-<span class="sd">        &gt;&gt;&gt; x = m.add_variable(name=&#39;x&#39;, vartype=so.INT, ub=10)</span>
+<span class="sd">        &gt;&gt;&gt; x = m.add_variable(name=&#39;x&#39;, vartype=so.INT, ub=10, init=2)</span>
 <span class="sd">        &gt;&gt;&gt; print(repr(x))</span>
 <span class="sd">        NOTE: Initialized model demo</span>
-<span class="sd">        sasoptpy.Variable(name=&#39;x&#39;, lb=0, ub=10, vartype=&#39;INT&#39;)</span>
+<span class="sd">        sasoptpy.Variable(name=&#39;x&#39;, lb=0, ub=10, init=2, vartype=&#39;INT&#39;)</span>
 
 <span class="sd">        Adding an existing variable to a model</span>
 
@@ -194,14 +204,14 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR: Use the appropriate argument name for variable.&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">var</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">vartype</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">vartype</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">,</span> <span class="n">init</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_variableDict</span><span class="p">[</span><span class="n">var</span><span class="o">.</span><span class="n">_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">var</span>
         <span class="k">return</span> <span class="n">var</span></div>
 
 <div class="viewcode-block" id="Model.add_variables"><a class="viewcode-back" href="../../generated/sasoptpy.Model.add_variables.html#sasoptpy.Model.add_variables">[docs]</a>    <span class="k">def</span> <span class="nf">add_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">argv</span><span class="p">,</span> <span class="n">vg</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                      <span class="n">vartype</span><span class="o">=</span><span class="n">sasoptpy</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">CONT</span><span class="p">,</span>
-                      <span class="n">lb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                      <span class="n">vartype</span><span class="o">=</span><span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">CONT</span><span class="p">,</span>
+                      <span class="n">lb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Adds a group of variables to the model</span>
 
@@ -219,6 +229,8 @@
 <span class="sd">            Lower bounds of variables</span>
 <span class="sd">        ub : list, dict, :class:`pandas.Series`</span>
 <span class="sd">            Upper bounds of variables</span>
+<span class="sd">        init : list, dict, :class:`pandas.Series`</span>
+<span class="sd">            Initial values of variables</span>
 
 <span class="sd">        See also</span>
 <span class="sd">        --------</span>
@@ -252,10 +264,10 @@
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR: Cannot add variable group of type </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="nb">type</span><span class="p">(</span><span class="n">vg</span><span class="p">)))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">check_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;var&#39;</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">check_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;var&#39;</span><span class="p">)</span>
             <span class="n">vg</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">VariableGroup</span><span class="p">(</span><span class="o">*</span><span class="n">argv</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                                                    <span class="n">vartype</span><span class="o">=</span><span class="n">vartype</span><span class="p">,</span>
-                                                   <span class="n">lb</span><span class="o">=</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">ub</span><span class="p">)</span>
+                                                   <span class="n">lb</span><span class="o">=</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">ub</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">vg</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">vg</span><span class="p">:</span>
@@ -298,9 +310,9 @@
                 <span class="k">return</span> <span class="kc">None</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="p">(</span><span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">c</span><span class="o">.</span><span class="n">_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
-                <span class="n">name</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">check_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;con&#39;</span><span class="p">)</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">check_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;con&#39;</span><span class="p">)</span>
                 <span class="n">c</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
-                <span class="n">sasoptpy</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">register_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+                <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">register_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_constraintDict</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span>
             <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">_linCoef</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">v</span> <span class="o">!=</span> <span class="s1">&#39;CONST&#39;</span><span class="p">:</span>
@@ -373,7 +385,7 @@
             <span class="k">return</span> <span class="n">cg</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span> <span class="o">==</span> <span class="n">GeneratorType</span><span class="p">:</span>
-                <span class="n">name</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">check_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;con&#39;</span><span class="p">)</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">check_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;con&#39;</span><span class="p">)</span>
                 <span class="n">cg</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">ConstraintGroup</span><span class="p">(</span><span class="n">argv</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">cg</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
@@ -382,7 +394,7 @@
             <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span> <span class="o">==</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">Constraint</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: add_constraints argument is a single&#39;</span> <span class="o">+</span>
                       <span class="s1">&#39; constraint, inserting as a single constraint&#39;</span><span class="p">)</span>
-                <span class="n">name</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">check_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;con&#39;</span><span class="p">)</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">check_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;con&#39;</span><span class="p">)</span>
                 <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="n">argv</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">c</span></div>
 
@@ -427,7 +439,7 @@
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        * This function is essentially a wrapper for two functions, </span>
+<span class="sd">        * This method is essentially a wrapper for two methods,</span>
 <span class="sd">          :func:`sasoptpy.Model.add_variable` and</span>
 <span class="sd">          :func:`sasoptpy.Model.add_constraint`.</span>
 <span class="sd">        * Including a model causes all variables and constraints inside the</span>
@@ -495,10 +507,11 @@
             <span class="n">obj</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_objective</span> <span class="o">=</span> <span class="n">obj</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objective</span><span class="o">.</span><span class="n">_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">check_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;obj&#39;</span><span class="p">)</span>
-            <span class="n">sasoptpy</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">register_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objective</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">check_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;obj&#39;</span><span class="p">)</span>
+            <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">register_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objective</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_objective</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_sense</span> <span class="o">=</span> <span class="n">sense</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_objective</span><span class="o">.</span><span class="n">_temp</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objective</span></div>
 
 <div class="viewcode-block" id="Model.get_objective"><a class="viewcode-back" href="../../generated/sasoptpy.Model.get_objective.html#sasoptpy.Model.get_objective">[docs]</a>    <span class="k">def</span> <span class="nf">get_objective</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -875,9 +888,9 @@
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        * This function is called inside :func:`sasoptpy.Model.solve`.</span>
+<span class="sd">        * This method is called inside :func:`sasoptpy.Model.solve`.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;NOTE: Converting model </span><span class="si">{}</span><span class="s1"> to data frame&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;NOTE: Converting model </span><span class="si">{}</span><span class="s1"> to DataFrame&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_datarows</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>  <span class="c1"># For future reference</span>
             <span class="c1"># take a copy?</span>
@@ -887,7 +900,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_datarows</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c1"># Check if objective has a constant field, if so hack using a variable</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objective</span><span class="o">.</span><span class="n">_linCoef</span><span class="p">[</span><span class="s1">&#39;CONST&#39;</span><span class="p">][</span><span class="s1">&#39;val&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">obj_constant</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">sasoptpy</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">check_name</span><span class="p">(</span>
+            <span class="n">obj_constant</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">check_name</span><span class="p">(</span>
                 <span class="s1">&#39;obj_constant&#39;</span><span class="p">,</span> <span class="s1">&#39;var&#39;</span><span class="p">))</span>
             <span class="n">constant_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objective</span><span class="o">.</span><span class="n">_linCoef</span><span class="p">[</span><span class="s1">&#39;CONST&#39;</span><span class="p">][</span><span class="s1">&#39;val&#39;</span><span class="p">]</span>
             <span class="n">obj_constant</span><span class="o">.</span><span class="n">set_bounds</span><span class="p">(</span><span class="n">lb</span><span class="o">=</span><span class="n">constant_value</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">constant_value</span><span class="p">)</span>
@@ -907,20 +920,20 @@
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_constraints</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_append_row</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">_direction</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_append_row</span><span class="p">([</span><span class="s1">&#39;COLUMNS&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">])</span>
-        <span class="n">curtype</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">CONT</span>
+        <span class="n">curtype</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">CONT</span>
         <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">:</span>
             <span class="n">f5</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_vcid</span><span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">_type</span> <span class="ow">is</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">INT</span> <span class="ow">and</span>\
-                    <span class="n">curtype</span> <span class="ow">is</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">CONT</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">_type</span> <span class="ow">is</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">INT</span> <span class="ow">and</span>\
+                    <span class="n">curtype</span> <span class="ow">is</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">CONT</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_append_row</span><span class="p">([</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;MARK0000&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\&#39;</span><span class="s1">MARKER</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;</span><span class="se">\&#39;</span><span class="s1">INTORG</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">])</span>
-                <span class="n">curtype</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">INT</span>
-            <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">INT</span>\
-                    <span class="ow">and</span> <span class="n">curtype</span> <span class="ow">is</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">INT</span><span class="p">:</span>
+                <span class="n">curtype</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">INT</span>
+            <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">INT</span>\
+                    <span class="ow">and</span> <span class="n">curtype</span> <span class="ow">is</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">INT</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_append_row</span><span class="p">([</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;MARK0001&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\&#39;</span><span class="s1">MARKER</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;</span><span class="se">\&#39;</span><span class="s1">INTEND</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">])</span>
-                <span class="n">curtype</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">CONT</span>
+                <span class="n">curtype</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">CONT</span>
             <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objective</span><span class="o">.</span><span class="n">_linCoef</span><span class="p">:</span>
                 <span class="n">cv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objective</span><span class="o">.</span><span class="n">_linCoef</span><span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">_name</span><span class="p">]</span>
                 <span class="n">current_row</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objective</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="n">cv</span><span class="p">[</span><span class="s1">&#39;val&#39;</span><span class="p">]]</span>
@@ -945,7 +958,7 @@
                 <span class="n">current_row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
                 <span class="n">ID</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_append_row</span><span class="p">(</span><span class="n">current_row</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_vcid</span><span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">_name</span><span class="p">][</span><span class="n">current_row</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span> <span class="o">=</span> <span class="n">ID</span>
-        <span class="k">if</span> <span class="n">curtype</span> <span class="ow">is</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">INT</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">curtype</span> <span class="ow">is</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">INT</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_append_row</span><span class="p">([</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;MARK0001&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\&#39;</span><span class="s1">MARKER</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\&#39;</span><span class="s1">INTEND</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">,</span>
                              <span class="s1">&#39;&#39;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_append_row</span><span class="p">([</span><span class="s1">&#39;RHS&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">])</span>
@@ -963,7 +976,7 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">current_row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span>
                     <span class="n">current_row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rhs</span><span class="p">)</span>
-                    <span class="c1">#self._append_row([&#39;&#39;, &#39;RHS&#39;, c._name, rhs, &#39;&#39;, &#39;&#39;])</span>
+                    <span class="c1"># self._append_row([&#39;&#39;, &#39;RHS&#39;, c._name, rhs, &#39;&#39;, &#39;&#39;])</span>
                     <span class="n">f5</span> <span class="o">=</span> <span class="mi">0</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_append_row</span><span class="p">(</span><span class="n">current_row</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">f5</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -984,11 +997,11 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_append_row</span><span class="p">([</span><span class="s1">&#39;LO&#39;</span><span class="p">,</span> <span class="s1">&#39;BND&#39;</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">_lb</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">])</span>
             <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">_ub</span> <span class="o">!=</span> <span class="n">inf</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">_ub</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span>\
-               <span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">_type</span> <span class="ow">is</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">BIN</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">_ub</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+               <span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">_type</span> <span class="ow">is</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">BIN</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">_ub</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_append_row</span><span class="p">([</span><span class="s1">&#39;UP&#39;</span><span class="p">,</span> <span class="s1">&#39;BND&#39;</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">_ub</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">])</span>
-            <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">_type</span> <span class="ow">is</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">BIN</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">_type</span> <span class="ow">is</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">BIN</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_append_row</span><span class="p">([</span><span class="s1">&#39;BV&#39;</span><span class="p">,</span> <span class="s1">&#39;BND&#39;</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="s1">&#39;1.0&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">])</span>
-            <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">_lb</span> <span class="ow">is</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">_type</span> <span class="ow">is</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">INT</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">_lb</span> <span class="ow">is</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">_type</span> <span class="ow">is</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">INT</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_append_row</span><span class="p">([</span><span class="s1">&#39;LO&#39;</span><span class="p">,</span> <span class="s1">&#39;BND&#39;</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">_name</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">_lb</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_append_row</span><span class="p">([</span><span class="s1">&#39;ENDATA&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="mi">0</span><span class="p">)])</span>
         <span class="n">mpsdata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_datarows</span><span class="p">,</span>
@@ -1037,6 +1050,8 @@
 
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">sess</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span>
+        <span class="n">blocks_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">block_counter</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="n">sess</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR: CAS Session is not defined for model </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">))</span>
@@ -1044,22 +1059,61 @@
         <span class="n">decomp_table</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_constraints</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">_block</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">decomp_table</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">get_name</span><span class="p">(),</span> <span class="n">c</span><span class="o">.</span><span class="n">_block</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">_block</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">blocks_dict</span><span class="p">:</span>
+                    <span class="n">blocks_dict</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">_block</span><span class="p">]</span> <span class="o">=</span> <span class="n">block_counter</span>
+                    <span class="n">block_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">block_no</span> <span class="o">=</span> <span class="n">blocks_dict</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">_block</span><span class="p">]</span>
+                <span class="n">decomp_table</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">get_name</span><span class="p">(),</span> <span class="n">block_no</span><span class="p">])</span>
         <span class="n">frame_decomp_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">decomp_table</span><span class="p">,</span>
                                           <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_ROW_&#39;</span><span class="p">,</span> <span class="s1">&#39;_BLOCK_&#39;</span><span class="p">])</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">upload_frame</span><span class="p">(</span><span class="n">frame_decomp_table</span><span class="p">,</span> <span class="n">casout</span><span class="o">=</span><span class="s1">&#39;BLOCKSTABLE&#39;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">upload_frame</span><span class="p">(</span><span class="n">frame_decomp_table</span><span class="p">,</span>
+                                     <span class="n">casout</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;BLOCKSTABLE&#39;</span><span class="p">,</span>
+                                             <span class="s1">&#39;replace&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
         <span class="k">return</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Model.solve"><a class="viewcode-back" href="../../generated/sasoptpy.Model.solve.html#sasoptpy.Model.solve">[docs]</a>    <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">milp</span><span class="o">=</span><span class="p">{},</span> <span class="n">lp</span><span class="o">=</span><span class="p">{}):</span>
+<div class="viewcode-block" id="Model.test_session"><a class="viewcode-back" href="../../generated/sasoptpy.Model.test_session.html#sasoptpy.Model.test_session">[docs]</a>    <span class="k">def</span> <span class="nf">test_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Check if session is defined</span>
+        <span class="n">sess</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span>
+        <span class="k">if</span> <span class="n">sess</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR: CAS Session is not defined for model </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">))</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="Model.upload_model"><a class="viewcode-back" href="../../generated/sasoptpy.Model.upload_model.html#sasoptpy.Model.upload_model">[docs]</a>    <span class="k">def</span> <span class="nf">upload_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_session</span><span class="p">():</span>
+            <span class="c1"># Conversion and upload</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;NOTE: Uploading the problem DataFrame to the server.&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">upload_frame</span><span class="p">(</span>
+                    <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">casout</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s1">&#39;replace&#39;</span><span class="p">:</span> <span class="n">replace</span><span class="p">})</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">upload_frame</span><span class="p">(</span>
+                    <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">casout</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;replace&#39;</span><span class="p">:</span> <span class="n">replace</span><span class="p">})</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Model.solve"><a class="viewcode-back" href="../../generated/sasoptpy.Model.solve.html#sasoptpy.Model.solve">[docs]</a>    <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">milp</span><span class="o">=</span><span class="p">{},</span> <span class="n">lp</span><span class="o">=</span><span class="p">{},</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">primalin</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Solves the model by calling CAS optimization solvers</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        milp : dict</span>
+<span class="sd">        milp : dict, optional</span>
 <span class="sd">            A dictionary of MILP options for the solveMilp CAS Action</span>
-<span class="sd">        lp : dict</span>
+<span class="sd">        lp : dict, optional</span>
 <span class="sd">            A dictionary of LP options for the solveLp CAS Action</span>
+<span class="sd">        name : string, optional</span>
+<span class="sd">            Name of the table name on CAS Server</span>
+<span class="sd">        drop : boolean, optional</span>
+<span class="sd">            Switch for dropping the MPS table on CAS Server after solve</span>
+<span class="sd">        replace : boolean, optional</span>
+<span class="sd">            Switch for replacing an existing MPS table on CAS Server</span>
+<span class="sd">        primalin : boolean, optional</span>
+<span class="sd">            Switch for using initial values (for MIP only)</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1071,7 +1125,7 @@
 
 <span class="sd">        &gt;&gt;&gt; m.solve()</span>
 <span class="sd">        NOTE: Initialized model food_manufacture_1</span>
-<span class="sd">        NOTE: Converting model food_manufacture_1 to data frame</span>
+<span class="sd">        NOTE: Converting model food_manufacture_1 to DataFrame</span>
 <span class="sd">        NOTE: Added action set &#39;optimization&#39;.</span>
 <span class="sd">        ...</span>
 <span class="sd">        NOTE: Optimal.</span>
@@ -1089,22 +1143,23 @@
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        * This function takes two optional arguments (milp and lp).</span>
+<span class="sd">        * This method takes two optional arguments (milp and lp).</span>
 <span class="sd">        * These arguments pass options to the solveLp and solveMilp CAS</span>
 <span class="sd">          actions.</span>
 <span class="sd">        * Both milp and lp should be defined as dictionaries, where keys are</span>
 <span class="sd">          option names. For example, ``m.solve(milp={&#39;maxtime&#39;: 600})`` limits</span>
 <span class="sd">          solution time to 600 seconds.</span>
-<span class="sd">        * See http://go.documentation.sas.com/?cdcId=vdmmlcdc&amp;cdcVersion=8.11&amp;docsetId=casactmopt&amp;docsetTarget=casactmopt_solvelp_syntax.htm&amp;locale=en for a list of LP options.</span>
-<span class="sd">        * See http://go.documentation.sas.com/?cdcId=vdmmlcdc&amp;cdcVersion=8.11&amp;docsetId=casactmopt&amp;docsetTarget=casactmopt_solvemilp_syntax.htm&amp;locale=en for a list of MILP options.</span>
+<span class="sd">        * See http://go.documentation.sas.com/?cdcId=vdmmlcdc&amp;cdcVersion=8.11&amp;docsetId=casactmopt&amp;docsetTarget=casactmopt_solvelp_syntax.htm&amp;locale=en</span>
+<span class="sd">          for a list of LP options.</span>
+<span class="sd">        * See http://go.documentation.sas.com/?cdcId=vdmmlcdc&amp;cdcVersion=8.11&amp;docsetId=casactmopt&amp;docsetTarget=casactmopt_solvemilp_syntax.htm&amp;locale=en</span>
+<span class="sd">          for a list of MILP options.</span>
 
 <span class="sd">        &#39;&#39;&#39;</span>
 
         <span class="c1"># Check if session is defined</span>
-        <span class="n">sess</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span>
-        <span class="k">if</span> <span class="n">sess</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR: CAS Session is not defined for model </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_session</span><span class="p">():</span>
+            <span class="n">sess</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span>
+        <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
 
         <span class="c1"># Pre-upload argument parse</span>
@@ -1123,23 +1178,36 @@
                     <span class="n">user_blocks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_user_blocks</span><span class="p">()</span>
                     <span class="n">opt_args</span><span class="p">[</span><span class="s1">&#39;decomp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;blocks&#39;</span><span class="p">:</span> <span class="n">user_blocks</span><span class="p">}</span>
 
-        <span class="c1"># Conversion and upload</span>
-        <span class="n">time0</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
-        <span class="n">time1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-        <span class="n">sess</span><span class="o">.</span><span class="n">loadactionset</span><span class="p">(</span><span class="n">actionset</span><span class="o">=</span><span class="s1">&#39;optimization&#39;</span><span class="p">)</span>
-        <span class="n">time2</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;NOTE: Uploading the problem data frame to the server.&#39;</span><span class="p">)</span>
-        <span class="n">m</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">upload_frame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">)</span>
-        <span class="n">time3</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-
-        <span class="c1"># Solve based on problem type</span>
+        <span class="c1"># Find problem type and initial values</span>
         <span class="n">ptype</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># LP</span>
         <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">_type</span> <span class="o">!=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">CONT</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">_type</span> <span class="o">!=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">CONT</span><span class="p">:</span>
                 <span class="n">ptype</span> <span class="o">=</span> <span class="mi">2</span>
+                <span class="k">break</span>
+
+        <span class="c1"># Initial value check for MIP</span>
+        <span class="k">if</span> <span class="n">primalin</span><span class="p">:</span>
+            <span class="n">init_values</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">var_names</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="n">ptype</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">_init</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">var_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span>
+                        <span class="n">init_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">_init</span><span class="p">)</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">init_values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span>
+                   <span class="n">opt_args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;primalin&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+                    <span class="n">primalinTable</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;_VAR_&#39;</span><span class="p">:</span> <span class="n">var_names</span><span class="p">,</span>
+                                                       <span class="s1">&#39;_VALUE_&#39;</span><span class="p">:</span> <span class="n">init_values</span><span class="p">})</span>
+                    <span class="n">sess</span><span class="o">.</span><span class="n">upload_frame</span><span class="p">(</span><span class="n">primalinTable</span><span class="p">,</span>
+                                      <span class="n">casout</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;PRIMALINTABLE&#39;</span><span class="p">,</span>
+                                              <span class="s1">&#39;replace&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+                    <span class="n">opt_args</span><span class="p">[</span><span class="s1">&#39;primalin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;PRIMALINTABLE&#39;</span>
+
+        <span class="n">mps_table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_model</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="n">replace</span><span class="p">)</span>
+        <span class="n">sess</span><span class="o">.</span><span class="n">loadactionset</span><span class="p">(</span><span class="n">actionset</span><span class="o">=</span><span class="s1">&#39;optimization&#39;</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">ptype</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">solveLp</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">solveLp</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">mps_table</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
                                     <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_lp_opts</span><span class="p">,</span>
                                     <span class="n">primalOut</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;caslib&#39;</span><span class="p">:</span> <span class="s1">&#39;CASUSER&#39;</span><span class="p">,</span>
                                                <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;primal&#39;</span><span class="p">,</span>
@@ -1148,7 +1216,7 @@
                                              <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;dual&#39;</span><span class="p">,</span> <span class="s1">&#39;replace&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
                                     <span class="n">objSense</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_sense</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">ptype</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">solveMilp</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">solveMilp</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">mps_table</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
                                       <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_milp_opts</span><span class="p">,</span>
                                       <span class="n">primalOut</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;caslib&#39;</span><span class="p">:</span> <span class="s1">&#39;CASUSER&#39;</span><span class="p">,</span>
                                                  <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;primal&#39;</span><span class="p">,</span>
@@ -1157,7 +1225,6 @@
                                                <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;dual&#39;</span><span class="p">,</span>
                                                <span class="s1">&#39;replace&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
                                       <span class="n">objSense</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_sense</span><span class="p">)</span>
-        <span class="n">time4</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
 
         <span class="c1"># Parse solution</span>
         <span class="k">if</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get_tables</span><span class="p">(</span><span class="s1">&#39;status&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;OK&#39;</span><span class="p">):</span>
@@ -1168,19 +1235,14 @@
             <span class="c1"># Bring solution to variables</span>
             <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_primalSolution</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_variableDict</span><span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;_VAR_&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;_VALUE_&#39;</span><span class="p">]</span>
-        <span class="n">time5</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-
-        <span class="c1"># Print timings</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;NOTE: Data length = </span><span class="si">{}</span><span class="s1"> rows&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;NOTE: Conversion to MPS =   </span><span class="si">{:.4f}</span><span class="s1"> secs&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time1</span><span class="o">-</span><span class="n">time0</span><span class="p">))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;NOTE: Upload to CAS time =  </span><span class="si">{:.4f}</span><span class="s1"> secs&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time3</span><span class="o">-</span><span class="n">time2</span><span class="p">))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;NOTE: Solution parse time = </span><span class="si">{:.4f}</span><span class="s1"> secs&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time5</span><span class="o">-</span><span class="n">time4</span><span class="p">))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;NOTE: Server solve time =   </span><span class="si">{:.4f}</span><span class="s1"> secs&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time4</span><span class="o">-</span><span class="n">time3</span><span class="p">))</span>
 
         <span class="c1"># Drop tables</span>
-        <span class="n">sess</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">droptable</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">user_blocks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">sess</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">droptable</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">user_blocks</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">drop</span><span class="p">:</span>
+            <span class="n">sess</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">droptable</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">mps_table</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">user_blocks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">sess</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">droptable</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">user_blocks</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">primalin</span><span class="p">:</span>
+                <span class="n">sess</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">droptable</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="s1">&#39;PRIMALINTABLE&#39;</span><span class="p">)</span>
 
         <span class="c1"># Post-solve parse</span>
         <span class="k">if</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get_tables</span><span class="p">(</span><span class="s1">&#39;status&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;OK&#39;</span><span class="p">):</span>
@@ -1202,6 +1264,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_soltime</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">solutionTime</span>
             <span class="k">if</span><span class="p">(</span><span class="s1">&#39;OPTIMAL&#39;</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">solutionStatus</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_objval</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">objective</span>
+                <span class="c1"># Replace initial values with current values</span>
+                <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_variables</span><span class="p">:</span>
+                    <span class="n">v</span><span class="o">.</span><span class="n">_init</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">_value</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_primalSolution</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;NOTE: Response </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">solutionStatus</span><span class="p">))</span>
@@ -1252,13 +1317,13 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017, SAS.
-      Last updated on Dec 22, 2017 (Timestamp: 0.1.0-20171222145159).
+        &#169; Copyright 2017-2018, SAS Institute.
+      Last updated on Feb 26, 2018 (Timestamp: 0.1.1-20180226160330).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
     </div>
   </body>

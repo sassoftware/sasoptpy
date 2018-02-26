@@ -5,14 +5,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>sasoptpy.Model &#8212; sasoptpy 0.1.0 documentation</title>
+    <title>sasoptpy.Model &#8212; sasoptpy 0.1.1 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.1.0',
+        VERSION:     '0.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -44,7 +44,7 @@
         <li class="right" >
           <a href="../sasoptpy.html" title="API Reference"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../sasoptpy.html" accesskey="U">API Reference</a> &#187;</li> 
       </ul>
     </div>  
@@ -101,10 +101,10 @@
 <tr class="row-even"><td><a class="reference internal" href="sasoptpy.Model.add_constraints.html#sasoptpy.Model.add_constraints" title="sasoptpy.Model.add_constraints"><code class="xref py py-obj docutils literal"><span class="pre">add_constraints</span></code></a>(argv[,&nbsp;cg,&nbsp;name])</td>
 <td>Adds a set of constraints to the model</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="sasoptpy.Model.add_variable.html#sasoptpy.Model.add_variable" title="sasoptpy.Model.add_variable"><code class="xref py py-obj docutils literal"><span class="pre">add_variable</span></code></a>([var,&nbsp;vartype,&nbsp;name,&nbsp;lb,&nbsp;ub])</td>
+<tr class="row-odd"><td><a class="reference internal" href="sasoptpy.Model.add_variable.html#sasoptpy.Model.add_variable" title="sasoptpy.Model.add_variable"><code class="xref py py-obj docutils literal"><span class="pre">add_variable</span></code></a>([var,&nbsp;vartype,&nbsp;name,&nbsp;lb,&nbsp;ub,&nbsp;init])</td>
 <td>Adds a new variable to the model</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="sasoptpy.Model.add_variables.html#sasoptpy.Model.add_variables" title="sasoptpy.Model.add_variables"><code class="xref py py-obj docutils literal"><span class="pre">add_variables</span></code></a>(*argv[,&nbsp;vg,&nbsp;name,&nbsp;vartype,&nbsp;lb,&nbsp;ub])</td>
+<tr class="row-even"><td><a class="reference internal" href="sasoptpy.Model.add_variables.html#sasoptpy.Model.add_variables" title="sasoptpy.Model.add_variables"><code class="xref py py-obj docutils literal"><span class="pre">add_variables</span></code></a>(*argv[,&nbsp;vg,&nbsp;name,&nbsp;vartype,&nbsp;…])</td>
 <td>Adds a group of variables to the model</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="sasoptpy.Model.get_objective.html#sasoptpy.Model.get_objective" title="sasoptpy.Model.get_objective"><code class="xref py py-obj docutils literal"><span class="pre">get_objective</span></code></a>()</td>
@@ -143,11 +143,17 @@
 <tr class="row-even"><td><a class="reference internal" href="sasoptpy.Model.set_session.html#sasoptpy.Model.set_session" title="sasoptpy.Model.set_session"><code class="xref py py-obj docutils literal"><span class="pre">set_session</span></code></a>(session)</td>
 <td>Sets the CAS session for model</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="sasoptpy.Model.solve.html#sasoptpy.Model.solve" title="sasoptpy.Model.solve"><code class="xref py py-obj docutils literal"><span class="pre">solve</span></code></a>([milp,&nbsp;lp])</td>
+<tr class="row-odd"><td><a class="reference internal" href="sasoptpy.Model.solve.html#sasoptpy.Model.solve" title="sasoptpy.Model.solve"><code class="xref py py-obj docutils literal"><span class="pre">solve</span></code></a>([milp,&nbsp;lp,&nbsp;name,&nbsp;drop,&nbsp;replace,&nbsp;primalin])</td>
 <td>Solves the model by calling CAS optimization solvers</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="sasoptpy.Model.to_frame.html#sasoptpy.Model.to_frame" title="sasoptpy.Model.to_frame"><code class="xref py py-obj docutils literal"><span class="pre">to_frame</span></code></a>()</td>
+<tr class="row-even"><td><a class="reference internal" href="sasoptpy.Model.test_session.html#sasoptpy.Model.test_session" title="sasoptpy.Model.test_session"><code class="xref py py-obj docutils literal"><span class="pre">test_session</span></code></a>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="sasoptpy.Model.to_frame.html#sasoptpy.Model.to_frame" title="sasoptpy.Model.to_frame"><code class="xref py py-obj docutils literal"><span class="pre">to_frame</span></code></a>()</td>
 <td>Converts the Python model into a DataFrame object in MPS format</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="sasoptpy.Model.upload_model.html#sasoptpy.Model.upload_model" title="sasoptpy.Model.upload_model"><code class="xref py py-obj docutils literal"><span class="pre">upload_model</span></code></a>([name,&nbsp;replace])</td>
+<td></td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="sasoptpy.Model.upload_user_blocks.html#sasoptpy.Model.upload_user_blocks" title="sasoptpy.Model.upload_user_blocks"><code class="xref py py-obj docutils literal"><span class="pre">upload_user_blocks</span></code></a>()</td>
 <td>Uploads user-defined decomposition blocks to the CAS server</td>
@@ -192,7 +198,9 @@
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.set_objective.html">sasoptpy.Model.set_objective</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.set_session.html">sasoptpy.Model.set_session</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.solve.html">sasoptpy.Model.solve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.test_session.html">sasoptpy.Model.test_session</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.to_frame.html">sasoptpy.Model.to_frame</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.upload_model.html">sasoptpy.Model.upload_model</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.upload_user_blocks.html">sasoptpy.Model.upload_user_blocks</a></li>
 </ul>
 </li>
@@ -203,7 +211,7 @@
 <li class="toctree-l3"><a class="reference internal" href="sasoptpy.ConstraintGroup.html">sasoptpy.ConstraintGroup</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../sasoptpy.html#methods">Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sasoptpy.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
@@ -238,13 +246,13 @@
         <li class="right" >
           <a href="../sasoptpy.html" title="API Reference"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../sasoptpy.html" >API Reference</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017, SAS.
-      Last updated on Dec 22, 2017 (Timestamp: 0.1.0-20171222145159).
+        &#169; Copyright 2017-2018, SAS Institute.
+      Last updated on Feb 26, 2018 (Timestamp: 0.1.1-20180226160330).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
     </div>
   </body>

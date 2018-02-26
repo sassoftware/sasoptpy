@@ -5,14 +5,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Food Manufacture 2 &#8212; sasoptpy 0.1.0 documentation</title>
+    <title>Food Manufacture 2 &#8212; sasoptpy 0.1.1 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.1.0',
+        VERSION:     '0.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -44,7 +44,7 @@
         <li class="right" >
           <a href="food_manufacture_1.html" title="Food Manufacture 1"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &#187;</li> 
       </ul>
     </div>  
@@ -58,8 +58,7 @@
 <h1>Food Manufacture 2<a class="headerlink" href="#food-manufacture-2" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="model">
 <h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">swat</span> <span class="k">import</span> <span class="n">CAS</span>
-<span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 
@@ -105,10 +104,11 @@
         <span class="n">store</span><span class="p">[</span><span class="n">oil</span><span class="p">,</span> <span class="n">last_period</span><span class="p">]</span><span class="o">.</span><span class="n">set_bounds</span><span class="p">(</span><span class="n">lb</span><span class="o">=</span><span class="n">init_storage</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">init_storage</span><span class="p">)</span>
     <span class="n">VEG</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">OILS</span> <span class="k">if</span> <span class="s1">&#39;veg&#39;</span> <span class="ow">in</span> <span class="n">i</span><span class="p">]</span>
     <span class="n">NONVEG</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">OILS</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">VEG</span><span class="p">]</span>
-    <span class="n">revenue</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">revenue_per_ton</span> <span class="o">*</span> <span class="n">manufacture</span><span class="p">[</span><span class="n">p</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">)</span>
-    <span class="n">rawcost</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">cost</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">p</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">o</span><span class="p">]</span> <span class="o">*</span> <span class="n">buy</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">OILS</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">)</span>
-    <span class="n">storagecost</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">storage_cost_per_ton</span> <span class="o">*</span> <span class="n">store</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">OILS</span>
-                      <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">)</span>
+    <span class="n">revenue</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">revenue_per_ton</span> <span class="o">*</span> <span class="n">manufacture</span><span class="p">[</span><span class="n">p</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">)</span>
+    <span class="n">rawcost</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">cost</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">p</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">o</span><span class="p">]</span> <span class="o">*</span> <span class="n">buy</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span>
+                           <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">OILS</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">)</span>
+    <span class="n">storagecost</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">storage_cost_per_ton</span> <span class="o">*</span> <span class="n">store</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">OILS</span>
+                               <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">)</span>
     <span class="n">m</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">revenue</span> <span class="o">-</span> <span class="n">rawcost</span> <span class="o">-</span> <span class="n">storagecost</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MAX</span><span class="p">,</span>
                     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;profit&#39;</span><span class="p">)</span>
 
@@ -120,18 +120,20 @@
     <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">store</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">buy</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="o">==</span> <span class="n">use</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="o">+</span> <span class="n">store</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span>
                       <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">OILS</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">),</span>
                       <span class="n">name</span><span class="o">=</span><span class="s1">&#39;flow_balance&#39;</span><span class="p">)</span>
-    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="nb">sum</span><span class="p">(</span><span class="n">hardness</span><span class="p">[</span><span class="n">o</span><span class="p">]</span><span class="o">*</span><span class="n">use</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">OILS</span><span class="p">)</span> <span class="o">&gt;=</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">hardness</span><span class="p">[</span><span class="n">o</span><span class="p">]</span><span class="o">*</span><span class="n">use</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">OILS</span><span class="p">)</span> <span class="o">&gt;=</span>
                       <span class="n">hardness_lb</span> <span class="o">*</span> <span class="n">manufacture</span><span class="p">[</span><span class="n">p</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">),</span>
                       <span class="n">name</span><span class="o">=</span><span class="s1">&#39;hardness_ub&#39;</span><span class="p">)</span>
-    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="nb">sum</span><span class="p">(</span><span class="n">hardness</span><span class="p">[</span><span class="n">o</span><span class="p">]</span><span class="o">*</span><span class="n">use</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">OILS</span><span class="p">)</span> <span class="o">&lt;=</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">hardness</span><span class="p">[</span><span class="n">o</span><span class="p">]</span><span class="o">*</span><span class="n">use</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">OILS</span><span class="p">)</span> <span class="o">&lt;=</span>
                       <span class="n">hardness_ub</span> <span class="o">*</span> <span class="n">manufacture</span><span class="p">[</span><span class="n">p</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">),</span>
                       <span class="n">name</span><span class="o">=</span><span class="s1">&#39;hardness_lb&#39;</span><span class="p">)</span>
 
     <span class="c1"># Additions to the first problem</span>
     <span class="n">isUsed</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">OILS</span><span class="p">,</span> <span class="n">PERIODS</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">BIN</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;is_used&#39;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">:</span>
-        <span class="p">[</span><span class="n">use</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">set_bounds</span><span class="p">(</span><span class="n">ub</span><span class="o">=</span><span class="n">veg_ub</span><span class="p">)</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">VEG</span><span class="p">]</span>
-        <span class="p">[</span><span class="n">use</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">set_bounds</span><span class="p">(</span><span class="n">ub</span><span class="o">=</span><span class="n">nonveg_ub</span><span class="p">)</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">NONVEG</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">VEG</span><span class="p">:</span>
+            <span class="n">use</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">set_bounds</span><span class="p">(</span><span class="n">ub</span><span class="o">=</span><span class="n">veg_ub</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">NONVEG</span><span class="p">:</span>
+            <span class="n">use</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">set_bounds</span><span class="p">(</span><span class="n">ub</span><span class="o">=</span><span class="n">nonveg_ub</span><span class="p">)</span>
     <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">use</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">use</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">_ub</span> <span class="o">*</span> <span class="n">isUsed</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span>
                       <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">OILS</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;link&#39;</span><span class="p">)</span>
     <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">isUsed</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">max_num_oils_used</span>
@@ -156,11 +158,11 @@
 
 <span class="gp">In [2]: </span><span class="n">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">)</span>
 <span class="go">NOTE: Initialized model food_manufacture_2</span>
-<span class="go">NOTE: Converting model food_manufacture_2 to data frame</span>
+<span class="go">NOTE: Converting model food_manufacture_2 to DataFrame</span>
+<span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPEU5XZABE in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMPEU5XZABE has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
-<span class="go">NOTE: Uploading the problem data frame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMP0MSY6B65 in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table TMP0MSY6B65 has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: The problem food_manufacture_2 has 125 variables (30 binary, 0 integer, 0 free, 10 fixed).</span>
 <span class="go">NOTE: The problem has 132 constraints (66 LE, 30 EQ, 36 GE, 0 range).</span>
 <span class="go">NOTE: The problem has 384 constraint coefficients.</span>
@@ -178,37 +180,31 @@
 <span class="go">                0        1      4  77764.2857143         107333   27.55%       0</span>
 <span class="go">                0        1      4  77764.2857143         106191   26.77%       0</span>
 <span class="go">                0        1      4  77764.2857143         105907   26.57%       0</span>
-<span class="go">                0        1      4  77764.2857143         105665   26.40%       0</span>
-<span class="go">                0        1      4  77764.2857143         105447   26.25%       0</span>
-<span class="go">                0        1      4  77764.2857143         105274   26.13%       0</span>
-<span class="go">                0        1      4  77764.2857143         104808   25.80%       0</span>
-<span class="go">                0        1      4  77764.2857143         104715   25.74%       0</span>
-<span class="go">                0        1      4  77764.2857143         104696   25.72%       0</span>
-<span class="go">                0        1      4  77764.2857143         104597   25.65%       0</span>
-<span class="go">                0        1      4  77764.2857143         104339   25.47%       0</span>
-<span class="go">                0        1      4  77764.2857143         104195   25.37%       0</span>
-<span class="go">                0        1      4  77764.2857143         104148   25.33%       0</span>
-<span class="go">                0        1      4  77764.2857143         104117   25.31%       0</span>
-<span class="go">                0        1      4  77764.2857143         104031   25.25%       0</span>
-<span class="go">                0        1      4  77764.2857143         103974   25.21%       0</span>
-<span class="go">                0        1      4  77764.2857143         103958   25.20%       0</span>
-<span class="go">                0        1      4  77764.2857143         103956   25.20%       0</span>
-<span class="go">                0        1      5  87368.5185185         103956   15.96%       0</span>
-<span class="go">NOTE: The MILP solver added 28 cuts with 151 cut coefficients at the root.</span>
-<span class="go">               24       15      6  98163.8888889         102528    4.26%       0</span>
-<span class="go">               29       19      7  99458.3333333         102528    2.99%       0</span>
-<span class="go">               40       16      8  99872.2222222         102528    2.59%       0</span>
-<span class="go">               66       25      9         100214         101826    1.58%       0</span>
-<span class="go">              200       10     10         100279         101486    1.19%       1</span>
-<span class="go">              223        0     10         100279         100279    0.00%       1</span>
+<span class="go">                0        1      4  77764.2857143         104924   25.89%       0</span>
+<span class="go">                0        1      4  77764.2857143         104751   25.76%       0</span>
+<span class="go">                0        1      4  77764.2857143         104461   25.56%       0</span>
+<span class="go">                0        1      4  77764.2857143         104350   25.48%       0</span>
+<span class="go">                0        1      4  77764.2857143         104173   25.35%       0</span>
+<span class="go">                0        1      4  77764.2857143         104066   25.27%       0</span>
+<span class="go">                0        1      4  77764.2857143         103777   25.07%       0</span>
+<span class="go">                0        1      4  77764.2857143         103697   25.01%       0</span>
+<span class="go">                0        1      4  77764.2857143         103654   24.98%       0</span>
+<span class="go">                0        1      4  77764.2857143         103578   24.92%       0</span>
+<span class="go">                0        1      4  77764.2857143         103455   24.83%       0</span>
+<span class="go">                0        1      4  77764.2857143         103424   24.81%       0</span>
+<span class="go">                0        1      4  77764.2857143         103407   24.80%       0</span>
+<span class="go">                0        1      5  87368.5185185         103407   15.51%       0</span>
+<span class="go">NOTE: The MILP solver added 29 cuts with 144 cut coefficients at the root.</span>
+<span class="go">               35       23      6  87791.6666667         102113   14.03%       0</span>
+<span class="go">               36       23      7  99908.3333333         102113    2.16%       0</span>
+<span class="go">               41       27      8  99908.3333333         102113    2.16%       0</span>
+<span class="go">               76       31      9         100192         101638    1.42%       0</span>
+<span class="go">              116       41     10         100214         101434    1.20%       1</span>
+<span class="go">              210       19     11         100279         101074    0.79%       1</span>
+<span class="go">              254        0     11         100279         100279    0.00%       1</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 100278.7037.</span>
-<span class="go">NOTE: Data length = 530 rows</span>
-<span class="go">NOTE: Conversion to MPS =   0.0085 secs</span>
-<span class="go">NOTE: Upload to CAS time =  0.2167 secs</span>
-<span class="go">NOTE: Solution parse time = 0.0892 secs</span>
-<span class="go">NOTE: Server solve time =   1.8925 secs</span>
-<span class="go">NOTE: Cloud Analytic Services dropped table TMP0MSY6B65 from caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: Cloud Analytic Services dropped table TMPEU5XZABE from caslib CASUSERHDFS(casuser).</span>
 <span class="go">Problem Summary</span>
 
 <span class="go">                                      Value</span>
@@ -246,54 +242,54 @@
 <span class="go">                                     </span>
 <span class="go">Relative Gap                        0</span>
 <span class="go">Absolute Gap                        0</span>
-<span class="go">Primal Infeasibility      5.04369E-13</span>
-<span class="go">Bound Infeasibility      5.684342E-14</span>
-<span class="go">Integer Infeasibility    2.220446E-15</span>
+<span class="go">Primal Infeasibility     7.338079E-13</span>
+<span class="go">Bound Infeasibility      8.636037E-13</span>
+<span class="go">Integer Infeasibility    6.489791E-15</span>
 <span class="go">                                     </span>
 <span class="go">Best Bound                100278.7037</span>
-<span class="go">Nodes                             224</span>
-<span class="go">Iterations                       3965</span>
+<span class="go">Nodes                             255</span>
+<span class="go">Iterations                       3823</span>
 <span class="go">                                     </span>
 <span class="go">Presolve Time                    0.02</span>
-<span class="go">Solution Time                    1.77</span>
+<span class="go">Solution Time                    1.83</span>
 <span class="go">                buy          use       store      is_used</span>
 <span class="go">1    2                                                   </span>
 <span class="go">oil1 0            -            -  500.000000            -</span>
 <span class="go">oil1 1            0            0  500.000000            0</span>
 <span class="go">oil1 2            0            0  500.000000            0</span>
-<span class="go">oil1 3            0 -4.38582e-14  500.000000 -2.19291e-15</span>
-<span class="go">oil1 4 -5.68434e-14            0  500.000000            0</span>
+<span class="go">oil1 3            0            0  500.000000            0</span>
+<span class="go">oil1 4 -5.68434e-14 -6.82121e-14  500.000000            0</span>
 <span class="go">oil1 5            0            0  500.000000            0</span>
 <span class="go">oil1 6            0            0  500.000000            0</span>
 <span class="go">oil2 0            -            -  500.000000            -</span>
 <span class="go">oil2 1            0            0  500.000000            0</span>
-<span class="go">oil2 2          190            0  690.000000            0</span>
-<span class="go">oil2 3            0          230  460.000000            1</span>
-<span class="go">oil2 4            0          230  230.000000            1</span>
+<span class="go">oil2 2            0           40  460.000000            1</span>
+<span class="go">oil2 3 -5.68434e-14  5.05275e-14  460.000000            0</span>
+<span class="go">oil2 4  1.13687e-13          230  230.000000            1</span>
 <span class="go">oil2 5            0          230    0.000000            1</span>
 <span class="go">oil2 6          730          230  500.000000            1</span>
 <span class="go">oil3 0            -            -  500.000000            -</span>
 <span class="go">oil3 1            0          250  250.000000            1</span>
-<span class="go">oil3 2            0          250    0.000000            1</span>
-<span class="go">oil3 3          580           20  560.000000            1</span>
+<span class="go">oil3 2 -2.84217e-14          210   40.000000            1</span>
+<span class="go">oil3 3          770          250  560.000000            1</span>
 <span class="go">oil3 4            0           20  540.000000            1</span>
 <span class="go">oil3 5            0           20  520.000000            1</span>
 <span class="go">oil3 6            0           20  500.000000            1</span>
 <span class="go">veg1 0            -            -  500.000000            -</span>
 <span class="go">veg1 1            0      85.1852  414.814815            1</span>
-<span class="go">veg1 2            0      85.1852  329.629630            1</span>
-<span class="go">veg1 3            0            0  329.629630            0</span>
+<span class="go">veg1 2            0            0  414.814815            0</span>
+<span class="go">veg1 3            0      85.1852  329.629630            1</span>
 <span class="go">veg1 4            0          155  174.629630            1</span>
-<span class="go">veg1 5            0          155   19.629630            1</span>
-<span class="go">veg1 6       480.37  1.05232e-13  500.000000            0</span>
+<span class="go">veg1 5  2.84217e-14          155   19.629630            1</span>
+<span class="go">veg1 6       480.37 -8.63604e-13  500.000000 -6.48979e-15</span>
 <span class="go">veg2 0            -            -  500.000000            -</span>
 <span class="go">veg2 1            0      114.815  385.185185            1</span>
-<span class="go">veg2 2            0      114.815  270.370370            1</span>
-<span class="go">veg2 3 -1.42109e-14          200   70.370370            1</span>
+<span class="go">veg2 2            0          200  185.185185            1</span>
+<span class="go">veg2 3            0      114.815   70.370370            1</span>
 <span class="go">veg2 4            0            0   70.370370            0</span>
 <span class="go">veg2 5            0            0   70.370370            0</span>
 <span class="go">veg2 6       629.63          200  500.000000            1</span>
-<span class="gh">Out[2]: </span><span class="go">100278.7037037037</span>
+<span class="gh">Out[2]: </span><span class="go">100278.70370370374</span>
 </pre></div>
 </div>
 </div>
@@ -363,13 +359,13 @@
         <li class="right" >
           <a href="food_manufacture_1.html" title="Food Manufacture 1"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017, SAS.
-      Last updated on Dec 22, 2017 (Timestamp: 0.1.0-20171222145159).
+        &#169; Copyright 2017-2018, SAS Institute.
+      Last updated on Feb 26, 2018 (Timestamp: 0.1.1-20180226160330).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
     </div>
   </body>

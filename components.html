@@ -5,14 +5,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Model components &#8212; sasoptpy 0.1.0 documentation</title>
+    <title>Model components &#8212; sasoptpy 0.1.1 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/css/sasoptpy.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.1.0',
+        VERSION:     '0.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -44,7 +44,7 @@
         <li class="right" >
           <a href="models.html" title="Sessions and Models"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">sasoptpy 0.1.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">sasoptpy 0.1.1 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -67,7 +67,7 @@ define optimization models.</p>
 <div class="highlight-ipython"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="n">profit</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="n">sales</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">material</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;profit&#39;</span><span class="p">)</span>
 
 <span class="gp">In [2]: </span><span class="k">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">profit</span><span class="p">))</span>
-<span class="go">sasoptpy.Expression(exp =  -  3.0 * material  +  5.0 * sales , name=&#39;profit&#39;)</span>
+<span class="go">sasoptpy.Expression(exp =  5.0 * sales  -  3.0 * material , name=&#39;profit&#39;)</span>
 </pre></div>
 </div>
 </div>
@@ -89,7 +89,7 @@ The first and simpler way creates a new expression at the end:</p>
 </pre></div>
 </div>
 <div class="highlight-ipython"><div class="highlight"><pre><span></span><span class="gp">In [5]: </span><span class="k">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">profit_after_tax</span><span class="p">))</span>
-<span class="go">sasoptpy.Expression(exp =  5.0 * sales  -  3.0 * material  -  0.5 , name=None)</span>
+<span class="go">sasoptpy.Expression(exp =  5.0 * sales  -  0.5  -  3.0 * material , name=None)</span>
 </pre></div>
 </div>
 <p>The second way, <a class="reference internal" href="generated/sasoptpy.Expression.add.html#sasoptpy.Expression.add" title="sasoptpy.Expression.add"><code class="xref py py-func docutils literal"><span class="pre">Expression.add()</span></code></a> function, takes two arguments:
@@ -98,11 +98,11 @@ the element to be added and the sign (1 or -1):</p>
 </pre></div>
 </div>
 <div class="highlight-ipython"><div class="highlight"><pre><span></span><span class="gp">In [7]: </span><span class="k">print</span><span class="p">(</span><span class="n">profit_after_tax</span><span class="p">)</span>
-<span class="go"> 5.0 * sales  -  3.0 * material  -  0.5 </span>
+<span class="go"> 5.0 * sales  -  0.5  -  3.0 * material </span>
 </pre></div>
 </div>
 <div class="highlight-ipython"><div class="highlight"><pre><span></span><span class="gp">In [8]: </span><span class="k">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">profit_after_tax</span><span class="p">))</span>
-<span class="go">sasoptpy.Expression(exp =  5.0 * sales  -  3.0 * material  -  0.5 , name=None)</span>
+<span class="go">sasoptpy.Expression(exp =  5.0 * sales  -  0.5  -  3.0 * material , name=None)</span>
 </pre></div>
 </div>
 <p>If the expression is a temporary one, then the addition is performed in place.</p>
@@ -132,16 +132,16 @@ faster <code class="xref py py-func docutils literal"><span class="pre">Expressi
 <div class="highlight-ipython"><div class="highlight"><pre><span></span><span class="gp">In [13]: </span><span class="n">new_profit</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="mi">10</span> <span class="o">*</span> <span class="n">sales</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">material</span><span class="p">,</span> <span class="n">temp</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
 <span class="gp">In [14]: </span><span class="k">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">new_profit</span><span class="p">))</span>
-<span class="go">sasoptpy.Expression(exp =  -  2.0 * material  +  10.0 * sales , name=None)</span>
+<span class="go">sasoptpy.Expression(exp =  10.0 * sales  -  2.0 * material , name=None)</span>
 </pre></div>
 </div>
 <p>The expression can be modified inside a function:</p>
 <div class="highlight-ipython"><div class="highlight"><pre><span></span><span class="gp">In [15]: </span><span class="n">new_profit</span> <span class="o">+</span> <span class="mi">5</span>
-<span class="gh">Out[15]: </span><span class="go">sasoptpy.Expression(exp =  -  2.0 * material  +  10.0 * sales  +  5 , name=None)</span>
+<span class="gh">Out[15]: </span><span class="go">sasoptpy.Expression(exp =  10.0 * sales  +  5  -  2.0 * material , name=None)</span>
 </pre></div>
 </div>
 <div class="highlight-ipython"><div class="highlight"><pre><span></span><span class="gp">In [16]: </span><span class="k">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">new_profit</span><span class="p">))</span>
-<span class="go">sasoptpy.Expression(exp =  -  2.0 * material  +  10.0 * sales  +  5 , name=None)</span>
+<span class="go">sasoptpy.Expression(exp =  10.0 * sales  +  5  -  2.0 * material , name=None)</span>
 </pre></div>
 </div>
 <p>As you can see, the value of <code class="docutils literal"><span class="pre">new_profit</span></code> is changed due to an in-place addition.
@@ -155,7 +155,7 @@ using the <a class="reference internal" href="generated/sasoptpy.Expression.set_
 <span class="gp">In [19]: </span><span class="n">tmp</span> <span class="o">=</span> <span class="n">new_profit</span> <span class="o">+</span> <span class="mi">5</span>
 
 <span class="gp">In [20]: </span><span class="k">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">new_profit</span><span class="p">))</span>
-<span class="go">sasoptpy.Expression(exp =  -  2.0 * material  +  10.0 * sales , name=&#39;expr_1&#39;)</span>
+<span class="go">sasoptpy.Expression(exp =  10.0 * sales  -  2.0 * material , name=&#39;expr_1&#39;)</span>
 </pre></div>
 </div>
 </div>
@@ -242,7 +242,7 @@ used to reset sasoptpy namespace when needed.</p>
 <div class="section" id="working-with-a-set-of-variables">
 <h3>Working with a set of variables<a class="headerlink" href="#working-with-a-set-of-variables" title="Permalink to this headline">¶</a></h3>
 <p>A set of variables can be added using single or multiple indices.
-Valid index sets include list, dict, and <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Index.html#pandas.Index" title="(in pandas v0.21.1)"><code class="xref py py-class docutils literal"><span class="pre">pandas.Index</span></code></a> objects.
+Valid index sets include list, dict, and <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Index.html#pandas.Index" title="(in pandas v0.22.0)"><code class="xref py py-class docutils literal"><span class="pre">pandas.Index</span></code></a> objects.
 See <a class="reference internal" href="input-data.html#input-data"><span class="std std-ref">Handling Data</span></a> for more about allowed index types.</p>
 <p><strong>Creating a set of variables outside a model</strong></p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">production</span> <span class="o">=</span> <span class="n">VariableGroup</span><span class="p">(</span><span class="n">PERIODS</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;production&#39;</span><span class="p">,</span>
@@ -303,7 +303,7 @@ created inside or outside optimization models.</p>
 <div class="section" id="working-with-a-set-of-constraints">
 <h3>Working with a set of constraints<a class="headerlink" href="#working-with-a-set-of-constraints" title="Permalink to this headline">¶</a></h3>
 <p>A set of constraints can be added using single or multiple indices.
-Valid index sets include list, dict, and <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Index.html#pandas.Index" title="(in pandas v0.21.1)"><code class="xref py py-class docutils literal"><span class="pre">pandas.Index</span></code></a> objects.
+Valid index sets include list, dict, and <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Index.html#pandas.Index" title="(in pandas v0.22.0)"><code class="xref py py-class docutils literal"><span class="pre">pandas.Index</span></code></a> objects.
 See <a class="reference internal" href="input-data.html#input-data"><span class="std std-ref">Handling Data</span></a> for more about allowed index types.</p>
 <p><strong>Creating a set of variables outside a model</strong></p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">VariableGroup</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
@@ -407,12 +407,12 @@ See <a class="reference internal" href="input-data.html#input-data"><span class=
         <li class="right" >
           <a href="models.html" title="Sessions and Models"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">sasoptpy 0.1.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">sasoptpy 0.1.1 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017, SAS.
-      Last updated on Dec 22, 2017 (Timestamp: 0.1.0-20171222145159).
+        &#169; Copyright 2017-2018, SAS Institute.
+      Last updated on Feb 26, 2018 (Timestamp: 0.1.1-20180226160330).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
     </div>
   </body>

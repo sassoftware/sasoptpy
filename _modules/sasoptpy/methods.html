@@ -5,14 +5,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>sasoptpy.methods &#8212; sasoptpy 0.1.0 documentation</title>
+    <title>sasoptpy.methods &#8212; sasoptpy 0.1.1.dev0 documentation</title>
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/css/sasoptpy.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '0.1.0',
+        VERSION:     '0.1.1.dev0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -36,7 +36,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 0.1.1.dev0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -252,7 +252,7 @@
         <span class="n">v</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">listname</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="n">v</span> <span class="o">=</span> <span class="n">listname</span><span class="p">[</span><span class="n">tuple_unpack</span><span class="p">(</span><span class="n">tuplist</span><span class="p">)]</span>
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">listname</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">listname</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">listname</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">):</span>
         <span class="n">v</span> <span class="o">=</span> <span class="n">listname</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">listname</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">listname</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="p">):</span>
@@ -582,6 +582,20 @@
         <span class="k">return</span> <span class="p">[</span><span class="n">i</span><span class="p">]</span>
 
 
+<span class="k">def</span> <span class="nf">_sort_tuple</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">tuple_pack</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">i</span><span class="p">),)</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">key</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,)</span>
+        <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">):</span>
+            <span class="n">key</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="n">key</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,)</span>
+    <span class="n">key</span> <span class="o">+=</span> <span class="n">i</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+
 <div class="viewcode-block" id="get_solution_table"><a class="viewcode-back" href="../../generated/sasoptpy.get_solution_table.html#sasoptpy.get_solution_table">[docs]</a><span class="k">def</span> <span class="nf">get_solution_table</span><span class="p">(</span><span class="o">*</span><span class="n">argv</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">rhs</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Returns the requested variable names as a DataFrame table</span>
@@ -659,7 +673,7 @@
     <span class="k">if</span><span class="p">(</span><span class="n">sort</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">listofkeys</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">listofkeys</span><span class="p">,</span>
-                                <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">get_len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">x</span><span class="p">))</span>
+                                <span class="n">key</span><span class="o">=</span><span class="n">_sort_tuple</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
             <span class="n">listofkeys</span> <span class="o">=</span> <span class="n">listofkeys</span>
 
@@ -813,13 +827,13 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 0.1.1.dev0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017, SAS.
-      Last updated on Dec 22, 2017 (Timestamp: 0.1.0-20171222145159).
+        &#169; Copyright 2017-2018, SAS Institute.
+      Last updated on Feb 16, 2018 (Timestamp: 0.1.1.dev0-20180216114050).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
     </div>
   </body>

@@ -5,14 +5,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>sasoptpy.VariableGroup &#8212; sasoptpy 0.1.0 documentation</title>
+    <title>sasoptpy.VariableGroup &#8212; sasoptpy 0.1.1 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.1.0',
+        VERSION:     '0.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="../_static/js/url.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="sasoptpy.VariableGroup.mult" href="sasoptpy.VariableGroup.mult.html" />
+    <link rel="next" title="sasoptpy.VariableGroup.get_name" href="sasoptpy.VariableGroup.get_name.html" />
     <link rel="prev" title="sasoptpy.Variable.set_permanent" href="sasoptpy.Variable.set_permanent.html" /> 
   </head>
   <body>
@@ -39,12 +39,12 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="sasoptpy.VariableGroup.mult.html" title="sasoptpy.VariableGroup.mult"
+          <a href="sasoptpy.VariableGroup.get_name.html" title="sasoptpy.VariableGroup.get_name"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="sasoptpy.Variable.set_permanent.html" title="sasoptpy.Variable.set_permanent"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../sasoptpy.html" accesskey="U">API Reference</a> &#187;</li> 
       </ul>
     </div>  
@@ -58,13 +58,13 @@
 <h1>sasoptpy.VariableGroup<a class="headerlink" href="#sasoptpy-variablegroup" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="sasoptpy.VariableGroup">
-<em class="property">class </em><code class="descclassname">sasoptpy.</code><code class="descname">VariableGroup</code><span class="sig-paren">(</span><em>*argv</em>, <em>name</em>, <em>vartype='CONT'</em>, <em>lb=0</em>, <em>ub=inf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sasoptpy/components.html#VariableGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.VariableGroup" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">sasoptpy.</code><code class="descname">VariableGroup</code><span class="sig-paren">(</span><em>*argv</em>, <em>name</em>, <em>vartype='CONT'</em>, <em>lb=0</em>, <em>ub=inf</em>, <em>init=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sasoptpy/components.html#VariableGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.VariableGroup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a group of <a class="reference internal" href="sasoptpy.Variable.html#sasoptpy.Variable" title="sasoptpy.Variable"><code class="xref py py-class docutils literal"><span class="pre">Variable</span></code></a> objects</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>argv</strong> : list, dict, int, <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Index.html#pandas.Index" title="(in pandas v0.21.1)"><code class="xref py py-class docutils literal"><span class="pre">pandas.Index</span></code></a></p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>argv</strong> : list, dict, int, <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Index.html#pandas.Index" title="(in pandas v0.22.0)"><code class="xref py py-class docutils literal"><span class="pre">pandas.Index</span></code></a></p>
 <blockquote>
 <div><p>Loop index for variable group</p>
 </div></blockquote>
@@ -76,13 +76,17 @@
 <blockquote>
 <div><p>Type of variables, <cite>BIN</cite>, <cite>INT</cite>, or <cite>CONT</cite></p>
 </div></blockquote>
-<p><strong>lb</strong> : list, dict, <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.html#pandas.Series" title="(in pandas v0.21.1)"><code class="xref py py-class docutils literal"><span class="pre">pandas.Series</span></code></a></p>
+<p><strong>lb</strong> : list, dict, <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.html#pandas.Series" title="(in pandas v0.22.0)"><code class="xref py py-class docutils literal"><span class="pre">pandas.Series</span></code></a>, optional</p>
 <blockquote>
 <div><p>Lower bounds of variables</p>
 </div></blockquote>
-<p><strong>ub</strong> : list, dict, <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.html#pandas.Series" title="(in pandas v0.21.1)"><code class="xref py py-class docutils literal"><span class="pre">pandas.Series</span></code></a></p>
-<blockquote class="last">
+<p><strong>ub</strong> : list, dict, <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.html#pandas.Series" title="(in pandas v0.22.0)"><code class="xref py py-class docutils literal"><span class="pre">pandas.Series</span></code></a>, optional</p>
+<blockquote>
 <div><p>Upper bounds of variables</p>
+</div></blockquote>
+<p><strong>init</strong> : float, optional</p>
+<blockquote class="last">
+<div><p>Initial values of variables</p>
 </div></blockquote>
 </td>
 </tr>
@@ -95,10 +99,10 @@
 <p class="rubric">Notes</p>
 <ul>
 <li><p class="first">When working with a single model, use the
-<a class="reference internal" href="sasoptpy.Model.add_variables.html#sasoptpy.Model.add_variables" title="sasoptpy.Model.add_variables"><code class="xref py py-func docutils literal"><span class="pre">sasoptpy.Model.add_variables()</span></code></a> function.</p>
+<a class="reference internal" href="sasoptpy.Model.add_variables.html#sasoptpy.Model.add_variables" title="sasoptpy.Model.add_variables"><code class="xref py py-func docutils literal"><span class="pre">sasoptpy.Model.add_variables()</span></code></a> method.</p>
 </li>
 <li><p class="first">If a variable group object is created, it can be added to a model using
-the <a class="reference internal" href="sasoptpy.Model.include.html#sasoptpy.Model.include" title="sasoptpy.Model.include"><code class="xref py py-func docutils literal"><span class="pre">sasoptpy.Model.include()</span></code></a> function.</p>
+the <a class="reference internal" href="sasoptpy.Model.include.html#sasoptpy.Model.include" title="sasoptpy.Model.include"><code class="xref py py-func docutils literal"><span class="pre">sasoptpy.Model.include()</span></code></a> method.</p>
 </li>
 <li><p class="first">An individual variable inside the group can be accessed using indices.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">VariableGroup</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
@@ -151,14 +155,17 @@ the <a class="reference internal" href="sasoptpy.Model.include.html#sasoptpy.Mod
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="sasoptpy.VariableGroup.mult.html#sasoptpy.VariableGroup.mult" title="sasoptpy.VariableGroup.mult"><code class="xref py py-obj docutils literal"><span class="pre">mult</span></code></a>(vector)</td>
-<td>Quick multiplication function for the variable groups</td>
+<tr class="row-odd"><td><a class="reference internal" href="sasoptpy.VariableGroup.get_name.html#sasoptpy.VariableGroup.get_name" title="sasoptpy.VariableGroup.get_name"><code class="xref py py-obj docutils literal"><span class="pre">get_name</span></code></a>()</td>
+<td>Returns the name of the variable group</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="sasoptpy.VariableGroup.set_bounds.html#sasoptpy.VariableGroup.set_bounds" title="sasoptpy.VariableGroup.set_bounds"><code class="xref py py-obj docutils literal"><span class="pre">set_bounds</span></code></a>([lb,&nbsp;ub])</td>
+<tr class="row-even"><td><a class="reference internal" href="sasoptpy.VariableGroup.mult.html#sasoptpy.VariableGroup.mult" title="sasoptpy.VariableGroup.mult"><code class="xref py py-obj docutils literal"><span class="pre">mult</span></code></a>(vector)</td>
+<td>Quick multiplication method for the variable groups</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="sasoptpy.VariableGroup.set_bounds.html#sasoptpy.VariableGroup.set_bounds" title="sasoptpy.VariableGroup.set_bounds"><code class="xref py py-obj docutils literal"><span class="pre">set_bounds</span></code></a>([lb,&nbsp;ub])</td>
 <td>Sets / updates bounds for the given variable</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="sasoptpy.VariableGroup.sum.html#sasoptpy.VariableGroup.sum" title="sasoptpy.VariableGroup.sum"><code class="xref py py-obj docutils literal"><span class="pre">sum</span></code></a>(*argv)</td>
-<td>Quick sum function for the variable groups</td>
+<tr class="row-even"><td><a class="reference internal" href="sasoptpy.VariableGroup.sum.html#sasoptpy.VariableGroup.sum" title="sasoptpy.VariableGroup.sum"><code class="xref py py-obj docutils literal"><span class="pre">sum</span></code></a>(*argv)</td>
+<td>Quick sum method for the variable groups</td>
 </tr>
 </tbody>
 </table>
@@ -186,6 +193,7 @@ the <a class="reference internal" href="sasoptpy.Model.include.html#sasoptpy.Mod
 <li class="toctree-l3"><a class="reference internal" href="sasoptpy.Expression.html">sasoptpy.Expression</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sasoptpy.Variable.html">sasoptpy.Variable</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">sasoptpy.VariableGroup</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="sasoptpy.VariableGroup.get_name.html">sasoptpy.VariableGroup.get_name</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.VariableGroup.mult.html">sasoptpy.VariableGroup.mult</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.VariableGroup.set_bounds.html">sasoptpy.VariableGroup.set_bounds</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.VariableGroup.sum.html">sasoptpy.VariableGroup.sum</a></li>
@@ -195,7 +203,7 @@ the <a class="reference internal" href="sasoptpy.Model.include.html#sasoptpy.Mod
 <li class="toctree-l3"><a class="reference internal" href="sasoptpy.ConstraintGroup.html">sasoptpy.ConstraintGroup</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../sasoptpy.html#methods">Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sasoptpy.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
@@ -225,18 +233,18 @@ the <a class="reference internal" href="sasoptpy.Model.include.html#sasoptpy.Mod
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="sasoptpy.VariableGroup.mult.html" title="sasoptpy.VariableGroup.mult"
+          <a href="sasoptpy.VariableGroup.get_name.html" title="sasoptpy.VariableGroup.get_name"
              >next</a> |</li>
         <li class="right" >
           <a href="sasoptpy.Variable.set_permanent.html" title="sasoptpy.Variable.set_permanent"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../sasoptpy.html" >API Reference</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017, SAS.
-      Last updated on Dec 22, 2017 (Timestamp: 0.1.0-20171222145159).
+        &#169; Copyright 2017-2018, SAS Institute.
+      Last updated on Feb 26, 2018 (Timestamp: 0.1.1-20180226160330).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
     </div>
   </body>

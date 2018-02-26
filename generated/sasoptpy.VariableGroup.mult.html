@@ -5,14 +5,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>sasoptpy.VariableGroup.mult &#8212; sasoptpy 0.1.0 documentation</title>
+    <title>sasoptpy.VariableGroup.mult &#8212; sasoptpy 0.1.1 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.1.0',
+        VERSION:     '0.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,7 +26,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="sasoptpy.VariableGroup.set_bounds" href="sasoptpy.VariableGroup.set_bounds.html" />
-    <link rel="prev" title="sasoptpy.VariableGroup" href="sasoptpy.VariableGroup.html" /> 
+    <link rel="prev" title="sasoptpy.VariableGroup.get_name" href="sasoptpy.VariableGroup.get_name.html" /> 
   </head>
   <body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -42,9 +42,9 @@
           <a href="sasoptpy.VariableGroup.set_bounds.html" title="sasoptpy.VariableGroup.set_bounds"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="sasoptpy.VariableGroup.html" title="sasoptpy.VariableGroup"
+          <a href="sasoptpy.VariableGroup.get_name.html" title="sasoptpy.VariableGroup.get_name"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../sasoptpy.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="sasoptpy.VariableGroup.html" accesskey="U">sasoptpy.VariableGroup</a> &#187;</li> 
       </ul>
@@ -60,12 +60,12 @@
 <dl class="method">
 <dt id="sasoptpy.VariableGroup.mult">
 <code class="descclassname">VariableGroup.</code><code class="descname">mult</code><span class="sig-paren">(</span><em>vector</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sasoptpy/components.html#VariableGroup.mult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.VariableGroup.mult" title="Permalink to this definition">¶</a></dt>
-<dd><p>Quick multiplication function for the variable groups</p>
+<dd><p>Quick multiplication method for the variable groups</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>vector</strong> : list, dictionary, or <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.html#pandas.Series" title="(in pandas v0.21.1)"><code class="xref py py-class docutils literal"><span class="pre">pandas.Series</span></code></a> object</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>vector</strong> : list, dictionary, or <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.html#pandas.Series" title="(in pandas v0.22.0)"><code class="xref py py-class docutils literal"><span class="pre">pandas.Series</span></code></a> object</p>
 <blockquote>
 <div><p>Vector to be multiplied with the variable group</p>
 </div></blockquote>
@@ -73,7 +73,7 @@
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><a class="reference internal" href="sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal"><span class="pre">Expression</span></code></a> object</p>
 <blockquote class="last">
-<div><p>An expression that is the product of the variable group with the 
+<div><p>An expression that is the product of the variable group with the
 given vector</p>
 </div></blockquote>
 </td>
@@ -128,6 +128,7 @@ given vector</p>
 <li class="toctree-l3"><a class="reference internal" href="sasoptpy.Expression.html">sasoptpy.Expression</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sasoptpy.Variable.html">sasoptpy.Variable</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="sasoptpy.VariableGroup.html">sasoptpy.VariableGroup</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="sasoptpy.VariableGroup.get_name.html">sasoptpy.VariableGroup.get_name</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">sasoptpy.VariableGroup.mult</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.VariableGroup.set_bounds.html">sasoptpy.VariableGroup.set_bounds</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.VariableGroup.sum.html">sasoptpy.VariableGroup.sum</a></li>
@@ -137,7 +138,7 @@ given vector</p>
 <li class="toctree-l3"><a class="reference internal" href="sasoptpy.ConstraintGroup.html">sasoptpy.ConstraintGroup</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../sasoptpy.html#methods">Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sasoptpy.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
@@ -170,16 +171,16 @@ given vector</p>
           <a href="sasoptpy.VariableGroup.set_bounds.html" title="sasoptpy.VariableGroup.set_bounds"
              >next</a> |</li>
         <li class="right" >
-          <a href="sasoptpy.VariableGroup.html" title="sasoptpy.VariableGroup"
+          <a href="sasoptpy.VariableGroup.get_name.html" title="sasoptpy.VariableGroup.get_name"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../sasoptpy.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="sasoptpy.VariableGroup.html" >sasoptpy.VariableGroup</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017, SAS.
-      Last updated on Dec 22, 2017 (Timestamp: 0.1.0-20171222145159).
+        &#169; Copyright 2017-2018, SAS Institute.
+      Last updated on Feb 26, 2018 (Timestamp: 0.1.1-20180226160330).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
     </div>
   </body>

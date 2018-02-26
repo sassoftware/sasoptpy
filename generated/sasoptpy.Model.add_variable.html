@@ -5,14 +5,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>sasoptpy.Model.add_variable &#8212; sasoptpy 0.1.0 documentation</title>
+    <title>sasoptpy.Model.add_variable &#8212; sasoptpy 0.1.1 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.1.0',
+        VERSION:     '0.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -44,7 +44,7 @@
         <li class="right" >
           <a href="sasoptpy.Model.add_constraints.html" title="sasoptpy.Model.add_constraints"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../sasoptpy.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="sasoptpy.Model.html" accesskey="U">sasoptpy.Model</a> &#187;</li> 
       </ul>
@@ -59,9 +59,9 @@
 <h1>sasoptpy.Model.add_variable<a class="headerlink" href="#sasoptpy-model-add-variable" title="Permalink to this headline">¶</a></h1>
 <dl class="method">
 <dt id="sasoptpy.Model.add_variable">
-<code class="descclassname">Model.</code><code class="descname">add_variable</code><span class="sig-paren">(</span><em>var=None</em>, <em>vartype='CONT'</em>, <em>name=None</em>, <em>lb=0</em>, <em>ub=inf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sasoptpy/model.html#Model.add_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.Model.add_variable" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Model.</code><code class="descname">add_variable</code><span class="sig-paren">(</span><em>var=None</em>, <em>vartype='CONT'</em>, <em>name=None</em>, <em>lb=0</em>, <em>ub=inf</em>, <em>init=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sasoptpy/model.html#Model.add_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.Model.add_variable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a new variable to the model</p>
-<p>New variables can be created via this function or existing variables
+<p>New variables can be created via this method or existing variables
 can be added to the model.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -87,6 +87,10 @@ can be added to the model.</p>
 <blockquote>
 <div><p>Upper bound of the variable</p>
 </div></blockquote>
+<p><strong>init</strong> : float, optional</p>
+<blockquote>
+<div><p>Initial value of the variable</p>
+</div></blockquote>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><a class="reference internal" href="sasoptpy.Variable.html#sasoptpy.Variable" title="sasoptpy.Variable"><code class="xref py py-class docutils literal"><span class="pre">Variable</span></code></a> object</p>
@@ -109,10 +113,10 @@ can be added to the model.</p>
 <p class="rubric">Examples</p>
 <p>Adding a variable on the fly</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;demo&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 <span class="go">NOTE: Initialized model demo</span>
-<span class="go">sasoptpy.Variable(name=&#39;x&#39;, lb=0, ub=10, vartype=&#39;INT&#39;)</span>
+<span class="go">sasoptpy.Variable(name=&#39;x&#39;, lb=0, ub=10, init=2, vartype=&#39;INT&#39;)</span>
 </pre></div>
 </div>
 <p>Adding an existing variable to a model</p>
@@ -159,7 +163,9 @@ can be added to the model.</p>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.set_objective.html">sasoptpy.Model.set_objective</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.set_session.html">sasoptpy.Model.set_session</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.solve.html">sasoptpy.Model.solve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.test_session.html">sasoptpy.Model.test_session</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.to_frame.html">sasoptpy.Model.to_frame</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.upload_model.html">sasoptpy.Model.upload_model</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.upload_user_blocks.html">sasoptpy.Model.upload_user_blocks</a></li>
 </ul>
 </li>
@@ -170,7 +176,7 @@ can be added to the model.</p>
 <li class="toctree-l3"><a class="reference internal" href="sasoptpy.ConstraintGroup.html">sasoptpy.ConstraintGroup</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../sasoptpy.html#methods">Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sasoptpy.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
@@ -205,14 +211,14 @@ can be added to the model.</p>
         <li class="right" >
           <a href="sasoptpy.Model.add_constraints.html" title="sasoptpy.Model.add_constraints"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../sasoptpy.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="sasoptpy.Model.html" >sasoptpy.Model</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017, SAS.
-      Last updated on Dec 22, 2017 (Timestamp: 0.1.0-20171222145159).
+        &#169; Copyright 2017-2018, SAS Institute.
+      Last updated on Feb 26, 2018 (Timestamp: 0.1.1-20180226160330).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
     </div>
   </body>

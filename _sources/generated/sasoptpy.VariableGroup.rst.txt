@@ -16,6 +16,7 @@ sasoptpy\.VariableGroup
    .. autosummary::
       :toctree:
       
+      VariableGroup.get_name
       VariableGroup.mult
       VariableGroup.set_bounds
       VariableGroup.sum

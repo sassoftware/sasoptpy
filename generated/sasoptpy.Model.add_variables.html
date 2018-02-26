@@ -5,14 +5,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>sasoptpy.Model.add_variables &#8212; sasoptpy 0.1.0 documentation</title>
+    <title>sasoptpy.Model.add_variables &#8212; sasoptpy 0.1.1 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.1.0',
+        VERSION:     '0.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -44,7 +44,7 @@
         <li class="right" >
           <a href="sasoptpy.Model.add_variable.html" title="sasoptpy.Model.add_variable"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../sasoptpy.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="sasoptpy.Model.html" accesskey="U">sasoptpy.Model</a> &#187;</li> 
       </ul>
@@ -59,13 +59,13 @@
 <h1>sasoptpy.Model.add_variables<a class="headerlink" href="#sasoptpy-model-add-variables" title="Permalink to this headline">¶</a></h1>
 <dl class="method">
 <dt id="sasoptpy.Model.add_variables">
-<code class="descclassname">Model.</code><code class="descname">add_variables</code><span class="sig-paren">(</span><em>*argv</em>, <em>vg=None</em>, <em>name=None</em>, <em>vartype='CONT'</em>, <em>lb=None</em>, <em>ub=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sasoptpy/model.html#Model.add_variables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.Model.add_variables" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Model.</code><code class="descname">add_variables</code><span class="sig-paren">(</span><em>*argv</em>, <em>vg=None</em>, <em>name=None</em>, <em>vartype='CONT'</em>, <em>lb=None</em>, <em>ub=None</em>, <em>init=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sasoptpy/model.html#Model.add_variables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.Model.add_variables" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a group of variables to the model</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>argv</strong> : list, dict, <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Index.html#pandas.Index" title="(in pandas v0.21.1)"><code class="xref py py-class docutils literal"><span class="pre">pandas.Index</span></code></a></p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>argv</strong> : list, dict, <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Index.html#pandas.Index" title="(in pandas v0.22.0)"><code class="xref py py-class docutils literal"><span class="pre">pandas.Index</span></code></a></p>
 <blockquote>
 <div><p>Loop index for variable group</p>
 </div></blockquote>
@@ -81,13 +81,17 @@
 <blockquote>
 <div><p>Type of variables, <cite>BIN</cite>, <cite>INT</cite>, or <cite>CONT</cite></p>
 </div></blockquote>
-<p><strong>lb</strong> : list, dict, <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.html#pandas.Series" title="(in pandas v0.21.1)"><code class="xref py py-class docutils literal"><span class="pre">pandas.Series</span></code></a></p>
+<p><strong>lb</strong> : list, dict, <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.html#pandas.Series" title="(in pandas v0.22.0)"><code class="xref py py-class docutils literal"><span class="pre">pandas.Series</span></code></a></p>
 <blockquote>
 <div><p>Lower bounds of variables</p>
 </div></blockquote>
-<p><strong>ub</strong> : list, dict, <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.html#pandas.Series" title="(in pandas v0.21.1)"><code class="xref py py-class docutils literal"><span class="pre">pandas.Series</span></code></a></p>
-<blockquote class="last">
+<p><strong>ub</strong> : list, dict, <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.html#pandas.Series" title="(in pandas v0.22.0)"><code class="xref py py-class docutils literal"><span class="pre">pandas.Series</span></code></a></p>
+<blockquote>
 <div><p>Upper bounds of variables</p>
+</div></blockquote>
+<p><strong>init</strong> : list, dict, <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.html#pandas.Series" title="(in pandas v0.22.0)"><code class="xref py py-class docutils literal"><span class="pre">pandas.Series</span></code></a></p>
+<blockquote class="last">
+<div><p>Initial values of variables</p>
 </div></blockquote>
 </td>
 </tr>
@@ -151,7 +155,9 @@
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.set_objective.html">sasoptpy.Model.set_objective</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.set_session.html">sasoptpy.Model.set_session</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.solve.html">sasoptpy.Model.solve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.test_session.html">sasoptpy.Model.test_session</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.to_frame.html">sasoptpy.Model.to_frame</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.upload_model.html">sasoptpy.Model.upload_model</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.upload_user_blocks.html">sasoptpy.Model.upload_user_blocks</a></li>
 </ul>
 </li>
@@ -162,7 +168,7 @@
 <li class="toctree-l3"><a class="reference internal" href="sasoptpy.ConstraintGroup.html">sasoptpy.ConstraintGroup</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../sasoptpy.html#methods">Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sasoptpy.html#functions">Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
@@ -197,14 +203,14 @@
         <li class="right" >
           <a href="sasoptpy.Model.add_variable.html" title="sasoptpy.Model.add_variable"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../sasoptpy.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="sasoptpy.Model.html" >sasoptpy.Model</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017, SAS.
-      Last updated on Dec 22, 2017 (Timestamp: 0.1.0-20171222145159).
+        &#169; Copyright 2017-2018, SAS Institute.
+      Last updated on Feb 26, 2018 (Timestamp: 0.1.1-20180226160330).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
     </div>
   </body>

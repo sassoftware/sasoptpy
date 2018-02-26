@@ -122,7 +122,7 @@ Linear Optimization) is determined based on variable types.
 
 >>> m.solve()
 NOTE: Initialized model model_1
-NOTE: Converting model model_1 to data frame
+NOTE: Converting model model_1 to DataFrame
 NOTE: Added action set 'optimization'.
 ...
 NOTE: Optimal.

@@ -33,7 +33,9 @@ sasoptpy\.Model
       Model.set_objective
       Model.set_session
       Model.solve
+      Model.test_session
       Model.to_frame
+      Model.upload_model
       Model.upload_user_blocks
 
 

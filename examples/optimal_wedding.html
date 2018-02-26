@@ -5,14 +5,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Optimal Wedding &#8212; sasoptpy 0.1.0 documentation</title>
+    <title>Optimal Wedding &#8212; sasoptpy 0.1.1 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.1.0',
+        VERSION:     '0.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -44,7 +44,7 @@
         <li class="right" >
           <a href="economic_planning.html" title="Economic Planning"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &#187;</li> 
       </ul>
     </div>  
@@ -59,8 +59,7 @@
 <p>Blog: <a class="reference external" href="https://blogs.sas.com/content/operations/2014/11/10/do-you-have-an-uncle-louie-optimal-wedding-seat-assignments/">https://blogs.sas.com/content/operations/2014/11/10/do-you-have-an-uncle-louie-optimal-wedding-seat-assignments/</a></p>
 <div class="section" id="model">
 <h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">swat</span> <span class="k">import</span> <span class="n">CAS</span>
-<span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
 <span class="kn">import</span> <span class="nn">math</span>
 
 
@@ -117,11 +116,11 @@
 
 <span class="gp">In [2]: </span><span class="n">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">)</span>
 <span class="go">NOTE: Initialized model wedding</span>
-<span class="go">NOTE: Converting model wedding to data frame</span>
+<span class="go">NOTE: Converting model wedding to DataFrame</span>
+<span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPLDIFT87Y in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMPLDIFT87Y has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
-<span class="go">NOTE: Uploading the problem data frame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMP0HHRL21G in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table TMP0HHRL21G has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: The problem wedding has 44 variables (40 binary, 0 integer, 0 free, 0 fixed).</span>
 <span class="go">NOTE: The problem has 194 constraints (4 LE, 10 EQ, 180 GE, 0 range).</span>
 <span class="go">NOTE: The problem has 620 constraint coefficients.</span>
@@ -151,12 +150,7 @@
 <span class="go">NOTE: The Decomposition algorithm time is 16.75 seconds.</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 6.</span>
-<span class="go">NOTE: Data length = 671 rows</span>
-<span class="go">NOTE: Conversion to MPS =   0.0064 secs</span>
-<span class="go">NOTE: Upload to CAS time =  0.2259 secs</span>
-<span class="go">NOTE: Solution parse time = 0.0890 secs</span>
-<span class="go">NOTE: Server solve time =   16.9523 secs</span>
-<span class="go">NOTE: Cloud Analytic Services dropped table TMP0HHRL21G from caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: Cloud Analytic Services dropped table TMPLDIFT87Y from caslib CASUSERHDFS(casuser).</span>
 <span class="go">Problem Summary</span>
 
 <span class="go">                                Value</span>
@@ -320,13 +314,13 @@
         <li class="right" >
           <a href="economic_planning.html" title="Economic Planning"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017, SAS.
-      Last updated on Dec 22, 2017 (Timestamp: 0.1.0-20171222145159).
+        &#169; Copyright 2017-2018, SAS Institute.
+      Last updated on Feb 26, 2018 (Timestamp: 0.1.1-20180226160330).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
     </div>
   </body>
