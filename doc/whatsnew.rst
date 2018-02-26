@@ -26,6 +26,8 @@ New Features
   are added
 - :func:`Model.test_session` method is added for checking if session is defined
   for models
+- :func:`quick_sum` function is added for faster summation of
+  :class:`Expression` objects
 
 Changes
 +++++++
