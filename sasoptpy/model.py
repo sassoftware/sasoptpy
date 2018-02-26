@@ -840,7 +840,7 @@ class Model:
         -----
         * This function is called inside :func:`sasoptpy.Model.solve`.
         '''
-        print('NOTE: Converting model {} to data frame'.format(self._name))
+        print('NOTE: Converting model {} to DataFrame'.format(self._name))
         self._id = 1
         if(len(self._datarows) > 0):  # For future reference
             # take a copy?
@@ -1035,7 +1035,7 @@ class Model:
         if self.test_session():
             # Conversion and upload
             df = self.to_frame()
-            print('NOTE: Uploading the problem data frame to the server.')
+            print('NOTE: Uploading the problem DataFrame to the server.')
             if name is not None:
                 return self._session.upload_frame(
                     data=df, casout={'name': name, 'replace': replace})
@@ -1075,7 +1075,7 @@ class Model:
 
         >>> m.solve()
         NOTE: Initialized model food_manufacture_1
-        NOTE: Converting model food_manufacture_1 to data frame
+        NOTE: Converting model food_manufacture_1 to DataFrame
         NOTE: Added action set 'optimization'.
         ...
         NOTE: Optimal.
