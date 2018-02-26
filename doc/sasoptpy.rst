@@ -39,9 +39,9 @@ Functions
    get_solution_table
    list_length
    print_model_mps
+   quick_sum
    read_frame
    register_name
    reset_globals
-   summation
    tuple_pack
    tuple_unpack
