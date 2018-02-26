@@ -309,14 +309,18 @@ class Expression:
             raise Exception('Two expressions cannot be multiplied.')
         elif np.issubdtype(type(other), np.number):
             if self._temp and type(self) is Expression:
-                for mylc in self._linCoef:
-                    self._linCoef[mylc]['val'] *= other
+                if other == 0:
+                    self._linCoef = {'CONST': {'ref': None, 'val': 0}}
+                else:
+                    for mylc in self._linCoef:
+                        self._linCoef[mylc]['val'] *= other
                 r = self
             else:
                 r = Expression()
-                for mylc in self._linCoef:
-                    r._linCoef[mylc] = dict(self._linCoef[mylc])
-                    r._linCoef[mylc]['val'] *= other
+                if other != 0:
+                    for mylc in self._linCoef:
+                        r._linCoef[mylc] = dict(self._linCoef[mylc])
+                        r._linCoef[mylc]['val'] *= other
         return r
 
     def _relational(self, other, direction_):
@@ -1076,7 +1080,7 @@ class VariableGroup:
 
         '''
         r = Expression()
-        if isinstance(vector, list):
+        if isinstance(vector, list) or isinstance(vector, np.ndarray):
             for i, key in enumerate(vector):
                 var = self._vardict[i, ]
                 r._linCoef[var._name] = {'ref': var, 'val': vector[i]}
@@ -1092,7 +1096,7 @@ class VariableGroup:
                 else:
                     k = (key,)
                 var = self._vardict[k]
-                r._linCoef[var._name] = {'ref': var, 'val': vector[key]}
+                r._linCoef[var._name] = {'ref': var, 'val': vector[i]}
         return r
 
     def set_bounds(self, lb=None, ub=None):
