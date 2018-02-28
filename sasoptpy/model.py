@@ -1046,7 +1046,7 @@ class Model:
         else:
             return None
 
-    def local_solve(self, session):
+    def local_solve(self, session, name='MPS'):
         '''
         **Experimental** Solves the model by calling SAS 9.4 solvers
 
@@ -1054,6 +1054,8 @@ class Model:
         ----------
         session : :class:`saspy.SASsession` object
             SAS session
+        name : string, optional
+            Name of the MPS table
 
         Notes
         -----
@@ -1076,6 +1078,7 @@ class Model:
 
         # Get the MPS data
         df = self.to_frame()
+
         # Prepare for the upload
         for f in ['Field1', 'Field2', 'Field3', 'Field5']:
             df[f] = df[f].replace('', '.')
@@ -1084,19 +1087,38 @@ class Model:
         df['_id_'].astype('int')
 
         # Upload MPS table
-        session.df2sd(df, table='MPS')
+        session.df2sd(df, table=name)
 
-        # Call action
-        c = session.submit("""
-        proc optmilp data = MPS
-           primalout  = primal_out
-           dualout    = dual_out;
-        run;
-        """)
+        # Find problem type and initial values
+        ptype = 1  # LP
+        for v in self._variables:
+            if v._type != sasoptpy.utils.CONT:
+                ptype = 2
+                break
+
+        if ptype == 1:
+            c = session.submit("""
+            proc optlp data = {}
+               primalout  = primal_out
+               dualout    = dual_out;
+            run;
+            """.format(name))
+        else:
+            c = session.submit("""
+            proc optmilp data = {}
+               primalout  = primal_out
+               dualout    = dual_out;
+            run;
+            """.format(name))
 
         self._primalSolution = session.sd2df('PRIMAL_OUT')
         self._dualSolution = session.sd2df('DUAL_OUT')
         print(c['LOG'])
+
+        # Parse solutions
+        for _, row in self._primalSolution.iterrows():
+            self._variableDict[row['_VAR_']]._value = row['_VALUE_']
+
         return True
 
     def solve(self, milp={}, lp={}, name=None, drop=True, replace=True,
