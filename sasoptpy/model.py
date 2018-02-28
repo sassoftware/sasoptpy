@@ -23,10 +23,10 @@ Model includes :class:`Model` class, the main structure of an opt. model
 
 
 from math import inf
-from time import time
 from types import GeneratorType
 import warnings
 
+import numpy as np
 import pandas as pd
 
 import sasoptpy.components
@@ -1045,6 +1045,59 @@ class Model:
                     data=df, casout={'replace': replace})
         else:
             return None
+
+    def local_solve(self, session):
+        '''
+        **Experimental** Solves the model by calling SAS 9.4 solvers
+
+        Parameters
+        ----------
+        session : :class:`saspy.SASsession` object
+            SAS session
+
+        Notes
+        -----
+
+        - To use this function, you need to have saspy installed on your
+          Python environment
+        - This function is experimental and may not work reliable
+
+        '''
+
+        try:
+            import saspy as sp
+        except ImportError:
+            print('ERROR: saspy cannot be imported.')
+            return False
+
+        if not isinstance(session, sp.SASsession):
+            print('ERROR: session= argument is not a valid SAS session.')
+            return False
+
+        # Get the MPS data
+        df = self.to_frame()
+        # Prepare for the upload
+        for f in ['Field1', 'Field2', 'Field3', 'Field5']:
+            df[f] = df[f].replace('', '.')
+        for f in ['Field4', 'Field6']:
+            df[f] = df[f].replace('', np.nan)
+        df['_id_'].astype('int')
+
+        # Upload MPS table
+        session.df2sd(df, table='MPS')
+
+        # Call action
+        c = session.submit("""
+        proc optmilp data = MPS
+           primalout  = primal_out
+           dualout    = dual_out;
+        run;
+        """)
+
+        self._primalSolution = session.sd2df('PRIMAL_OUT')
+        self._dualSolution = session.sd2df('DUAL_OUT')
+        print(c['LOG'])
+        return True
 
     def solve(self, milp={}, lp={}, name=None, drop=True, replace=True,
               primalin=False):
