@@ -57,9 +57,10 @@ class Model:
     NOTE: Initialized model mip
     '''
 
-    def __init__(self, name, session=None):
+    def __init__(self, name, session=None, abstract=False):
         self._name = sasoptpy.utils.check_name(name, 'model')
         self._session = session
+        self._abstract = abstract
         self._variables = []
         self._constraints = []
         self._objective = sasoptpy.components.Expression()
@@ -79,6 +80,8 @@ class Model:
         self._dualSolution = pd.DataFrame()
         self._milp_opts = {}
         self._lp_opts = {}
+        self._sets = []
+        self._parameters = []
         sasoptpy.utils.register_name(name, self)
         print('NOTE: Initialized model {}'.format(name))
 
@@ -348,6 +351,41 @@ class Model:
                 name = sasoptpy.utils.check_name(name, 'con')
                 c = self.add_constraint(c=argv, name=name)
                 return c
+
+    def add_set(self, name, settype='num'):
+        newset = sasoptpy.data.Set(name, settype=settype)
+        self._sets.append(newset)
+        return newset
+
+    def add_parameter(self, *argv, name=None):
+        keylist = list(argv)
+        p = sasoptpy.data.Parameter(name, keys=keylist)
+        self._parameters.append(p)
+        return p
+
+    def read_data(self, table, keyset=None, key=[0], params=[]):
+        '''
+        Reads a CASTable into PROC OPTMODEL sets
+        '''
+
+        # Reading key
+        if keyset is not None:
+            for i, k in enumerate(keyset):
+                k._colname = key[i]
+
+        # Reading parameters
+        for p in params:
+            p.setdefault('column', None)
+            p.setdefault('index', None)
+            p['param']._set_loop(table, keyset, p['column'], p['index'])
+
+        print('Statement: ')
+        s = 'read data {} into '.format(table.name)
+        for k in keyset:
+            s += '{}=[{}] '.format(k._name, k._colname)
+        for p in params:
+            s += p['param']._to_optmodel()
+        print(s)
 
     def include(self, *argv):
         '''
