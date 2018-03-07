@@ -363,15 +363,16 @@ class Model:
         self._parameters.append(p)
         return p
 
-    def read_data(self, table, keyset=None, key=[0], params=[]):
+    def read_data(self, table, keyset=None, key=[], params=[]):
         '''
         Reads a CASTable into PROC OPTMODEL sets
         '''
 
         # Reading key
         if keyset is not None:
-            for i, k in enumerate(keyset):
-                k._colname = key[i]
+            if key != []:
+                for i, k in enumerate(keyset):
+                    k._colname = key[i]
 
         # Reading parameters
         for p in params:
@@ -379,12 +380,20 @@ class Model:
             p.setdefault('index', None)
             p['param']._set_loop(table, keyset, p['column'], p['index'])
 
-        print('Statement: ')
         s = 'read data {} into '.format(table.name)
-        for k in keyset:
+        if len(keyset) == 1:
+            k = keyset[0]
             s += '{}=[{}] '.format(k._name, k._colname)
+        else:
+            s += '['
+            for k in keyset:
+                s += k._colname + ' '
+            s = s[:-1]
+            s += '] '
         for p in params:
-            s += p['param']._to_optmodel()
+            s += p['param']._to_read_data()
+            print(p['param']._to_optmodel())
+        s += ';'
         print(s)
 
     def include(self, *argv):
