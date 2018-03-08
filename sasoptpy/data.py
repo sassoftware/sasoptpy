@@ -145,7 +145,7 @@ class Set:
         self._colname = name
 
     def __iter__(self):
-        return iter([self._name])
+        return iter([self])
 
     def _to_optmodel(self):
         s = 'set '

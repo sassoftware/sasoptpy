@@ -471,6 +471,10 @@ class Variable(Expression):
         Upper bound of the variable
     init : float, optional
         Initial value of the variable
+    abstract : boolean, optional
+        Indicator of whether the variable is abtract or not
+    shadow : boolean, optional
+        Indicator of whether the variable is shadow or not
 
     Examples
     --------
@@ -490,7 +494,7 @@ class Variable(Expression):
     '''
 
     def __init__(self, name, vartype=sasoptpy.utils.CONT, lb=0, ub=inf,
-                 init=None, abstract=False):
+                 init=None, abstract=False, shadow=False):
         super().__init__()
         name = sasoptpy.utils.check_name(name, 'var')
         self._name = name
@@ -512,6 +516,7 @@ class Variable(Expression):
         self._parent = None
         self._temp = False
         self._abstract = abstract
+        self._shadow = shadow
 
     def _set_info(self, parent, key):
         self._parent = parent
@@ -573,6 +578,10 @@ class Variable(Expression):
             st += 'ub={}, '.format(self._ub)
         if self._init is not None:
             st += 'init={}, '.format(self._init)
+        if self._abstract:
+            st += 'abstract=True, '
+        if self._shadow:
+            st += 'shadow=True, '
         st += ' vartype=\'{}\')'.format(self._type)
         return st
 
@@ -1045,7 +1054,8 @@ class VariableGroup:
                 vname = self._name + '[' +\
                     ', '.join([str(i) for i in tuple_key]) + ']'
                 shadow = Variable(name=vname, vartype=v._type, lb=v._lb,
-                                  ub=v._ub, init=v._init, abstract=True)
+                                  ub=v._ub, init=v._init, abstract=True,
+                                  shadow=True)
                 self._shadows[tuple_key] = shadow
                 return shadow
 
