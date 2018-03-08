@@ -63,6 +63,7 @@ class Model:
         self._abstract = abstract
         self._variables = []
         self._constraints = []
+        self._vargroups = []
         self._objective = sasoptpy.components.Expression()
         self._datarows = []
         self._sense = sasoptpy.utils.MIN
@@ -82,6 +83,8 @@ class Model:
         self._lp_opts = {}
         self._sets = []
         self._parameters = []
+        self._statements = []
+        # self._events = [] 
         sasoptpy.utils.register_name(name, self)
         print('NOTE: Initialized model {}'.format(name))
 
@@ -219,13 +222,16 @@ class Model:
                     type(vg)))
         else:
             name = sasoptpy.utils.check_name(name, 'var')
+            abstract = isinstance(argv[0], sasoptpy.data.Set)
             vg = sasoptpy.components.VariableGroup(*argv, name=name,
                                                    vartype=vartype,
-                                                   lb=lb, ub=ub, init=init)
+                                                   lb=lb, ub=ub, init=init,
+                                                   abstract=abstract)
             for i in vg:
                 self._variables.append(i)
         for i in vg:
             self._variableDict[i._name] = i
+        self._vargroups.append(vg)
         return vg
 
     def add_constraint(self, c, name=None):
@@ -257,6 +263,7 @@ class Model:
          -  y[2]  +  x  =  [4, 10]
 
         '''
+        print('add_constraint is called')
         if isinstance(c, sasoptpy.components.Constraint):
             # Do not add if the constraint is not valid
             if ((c._direction == 'L' and c._linCoef['CONST']['val'] == -inf) or
@@ -392,9 +399,8 @@ class Model:
             s += '] '
         for p in params:
             s += p['param']._to_read_data()
-            print(p['param']._to_optmodel())
         s += ';'
-        print(s)
+        self._statements.append(s)
 
     def include(self, *argv):
         '''
@@ -1006,6 +1012,39 @@ class Model:
                                columns=['Field1', 'Field2', 'Field3', 'Field4',
                                         'Field5', 'Field6', '_id_'])
         return mpsdata
+
+    def _to_optmodel(self):
+
+        if not self._abstract:
+            print('ERROR: Model is not abstract, can\'t produce OPTMODEL output')
+            return ''
+
+        s = 'proc optmodel;\n'
+        tab = '   '
+
+        for i in self._sets:
+            s += tab + i._to_optmodel() + '\n'
+
+        for i in self._parameters:
+            s += tab + i._to_optmodel() + '\n'
+
+        for i in self._statements:
+            s += tab + i + '\n'
+
+        for i in self._vargroups:
+            s += tab + i._to_optmodel() + '\n'
+
+        for v in self._variables:
+            if v._parent is None:
+                s += tab + v._to_optmodel() + '\n'
+
+        for c in self._constraints:
+            if c._parent is None:
+                s += tab + c._to_optmodel() + '\n'
+
+        s += 'quit;\n'
+
+        return(s)
 
     def __str__(self):
         s = 'Model: [\n'

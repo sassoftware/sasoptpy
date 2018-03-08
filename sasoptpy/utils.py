@@ -80,7 +80,7 @@ def check_name(name, ctype=None):
 
 
 def _is_generated(expr):
-    if isinstance(expr, sasoptpy.Variable):
+    if isinstance(expr, sasoptpy.components.Variable):
         return
     caller = inspect.stack()[2][3]
     if caller == '<genexpr>':
@@ -116,7 +116,7 @@ def quick_sum(argv):
     function.
 
     '''
-    exp = sasoptpy.Expression(temp=True)
+    exp = sasoptpy.components.Expression(temp=True)
     for i in argv:
         exp = exp + i
     exp._temp = False
@@ -216,6 +216,8 @@ def extract_argument_as_list(inp):
         thelist = inp[0]
     elif isinstance(inp, list):
         thelist = inp
+    elif isinstance(inp, sasoptpy.data.Set):
+        thelist = [inp]
     else:
         thelist = list(inp)
     return thelist
@@ -569,6 +571,14 @@ def _list_item(i):
         return i
     else:
         return [i]
+
+
+def _to_bracket(prefix, keys):
+    s = prefix + '['
+    k = tuple_pack(keys)
+    s += ','.join([str(i) for i in k])
+    s += ']'
+    return s
 
 
 def _sort_tuple(i):

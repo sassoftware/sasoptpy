@@ -23,8 +23,8 @@ operations
 '''
 
 
-#import sasoptpy.components
-#import sasoptpy.utils
+import sasoptpy.components
+import sasoptpy.utils
 #import pandas as pd
 
 #==============================================================================
@@ -56,6 +56,16 @@ class Parameter:
         self._keyset = None
         self._colname = name
         self._index = None
+        self._shadows = {}
+
+    def __getitem__(self, key):
+        refname = sasoptpy.utils._to_bracket(self._name, key)
+        if refname in self._shadows:
+            return self._shadows[refname]
+        else:
+            pv = ParameterValue(refname)
+            self._shadows[refname] = pv
+            return pv
 
     def _set_loop(self, source, keyset, colname=None, index=None):
         self._source = source
@@ -107,6 +117,23 @@ class Parameter:
 
         return(s)
 
+
+class ParameterValue(sasoptpy.components.Expression):
+
+    def __init__(self, paramkey):
+        super().__init__()
+        self._name = paramkey
+        self._linCoef[paramkey] = {'ref': self,
+                                   'val': 1.0}
+
+    def __repr__(self):
+        st = 'sasoptpy.ParameterValue(name=\'{}\')'.format(self._name)
+        return st
+
+    def __str__(self):
+        return self._name
+
+
 class Set:
     '''
     Represents index sets inside PROC OPTMODEL
@@ -117,10 +144,31 @@ class Set:
         self._type = settype
         self._colname = name
 
+    def __iter__(self):
+        return iter([self._name])
+
     def _to_optmodel(self):
         s = 'set '
         if self._type == 'str':
             s += '<str> '
         s += self._name
         s += ';'
+        return(s)
+
+    def __hash__(self):
+        return hash((self._name))
+
+    def __eq__(self, other):
+        if isinstance(other, Set):
+            return (self._name) == (other._name)
+        else:
+            return False
+
+    def __str__(self):
+        s = self._name
+        return(s)
+
+    def __repr__(self):
+        s = 'sasoptpy.data.Set(name={}, settype={})'.format(
+            self._name, self._type)
         return(s)
