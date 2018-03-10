@@ -91,6 +91,8 @@ class Expression:
                       'Expression: {}'.format(type(exp)))
         self._temp = temp
         self._value = 0
+        self._operand = None
+        self._key = None
 
     def copy(self, name=None):
         '''
@@ -120,6 +122,8 @@ class Expression:
         r = Expression(name=name)
         for mylc in self._linCoef:
             r._linCoef[mylc] = dict(self._linCoef[mylc])
+        r._operand = self._operand
+        r._key = self._key
         return r
 
     def get_value(self):
@@ -212,7 +216,10 @@ class Expression:
                     s += ' - '
             firstel = 0
             if(v is not 'CONST'):
-                refs = ' * '.join([str(i) for i in list(vx['ref'])])
+                refs = ' * '.join([
+                    str(i) if i._operand is None
+                    else i._to_optmodel()
+                    for i in list(vx['ref'])])
                 if vx['val'] == 1 or vx['val'] == -1:
                     s += ' {} '.format(refs)
                 else:
@@ -221,6 +228,20 @@ class Expression:
                 if vx['val'] is not 0:
                     s += ' {} '.format(abs(vx['val']))
         return s
+
+    def _check_iterator(self, operand):
+        for _, v in self._linCoef.items():
+            if v['ref']:
+                for k in list(v['ref']):
+                    if k._key:
+                        for itemk in list(k._key):
+                            if isinstance(itemk, sasoptpy.data.SetIterator):
+                                self._operand = operand
+                                self._key = itemk
+                                if self._name is None:
+                                    self._name = sasoptpy.utils.check_name(
+                                        None, 'expr')
+                                return
 
     def _add_coef_value(self, var, key, value):
         '''
@@ -271,15 +292,21 @@ class Expression:
                 r = other
                 other = self
                 sign = sign * -1
+            elif self._operand is not None:
+                r = Expression()
+                r._linCoef[self._name] = {'val': 1.0, 'ref': self}
             else:
                 r = self.copy()
         if isinstance(other, Expression):
-            for v in other._linCoef:
-                if v in r._linCoef:
-                    r._linCoef[v]['val'] += sign * other._linCoef[v]['val']
-                else:
-                    r._linCoef[v] = dict(other._linCoef[v])
-                    r._linCoef[v]['val'] *= sign
+            if other._operand is None:
+                for v in other._linCoef:
+                    if v in r._linCoef:
+                        r._linCoef[v]['val'] += sign * other._linCoef[v]['val']
+                    else:
+                        r._linCoef[v] = dict(other._linCoef[v])
+                        r._linCoef[v]['val'] *= sign
+            else:
+                r._linCoef[other._name] = {'val': 1.0, 'ref': other}
         elif np.issubdtype(type(other), np.number):
             r._linCoef['CONST']['val'] += sign * other
         return r
@@ -314,15 +341,15 @@ class Expression:
                     if x['ref'] is None and y['ref'] is None:
                         target['CONST'] = {
                             'ref': None, 'val': x['val']*y['val']}
-                    elif x['ref'] is None: # y times CONST
+                    elif x['ref'] is None:
                         if x['val'] * y['val'] != 0:
                             target[j] = {
                                 'ref': y['ref'], 'val': x['val']*y['val']}
-                    elif y['ref'] is None: # x times CONST
+                    elif y['ref'] is None:
                         if x['val'] * y['val'] != 0:
                             target[i] = {
                                 'ref': x['ref'], 'val': x['val']*y['val']}
-                    else:
+                    else:  # TODO indexing is not interchangable
                         if x['val'] * y['val'] != 0:
                             newkey = (i, j)
                             target[newkey] = {
@@ -344,6 +371,17 @@ class Expression:
                         r._linCoef[mylc] = dict(self._linCoef[mylc])
                         r._linCoef[mylc]['val'] *= other
         return r
+
+    def _to_optmodel(self):
+        if self._operand is None:
+            s = str(self)
+        else:
+            s = '{} {{'.format(self._operand)
+            s += self._key._to_optmodel()
+            s += '} ('
+            s += str(self)
+            s += ')'
+        return s
 
     def _relational(self, other, direction_):
         '''
@@ -420,6 +458,8 @@ class Expression:
             return 0
 
     def __radd__(self, other):
+        if other == 0:
+            self._check_iterator('sum')
         return self.add(other)
 
     def __rsub__(self, other):
@@ -587,10 +627,11 @@ class Variable(Expression):
 
     def __str__(self):
         if self._parent is not None and self._key is not None:
-            if len(self._key) == 1:
-                key = str(self._key)[1:-2]  # Remove comma
-            else:
-                key = str(self._key)[1:-1]  # Remove parantheses
+            #if len(self._key) == 1:
+            #    key = str(self._key)[1:-2]  # Remove comma
+            #else:
+            #    key = str(self._key)[1:-1]  # Remove parantheses
+            key = ', '.join([str(i) for i in self._key])
             return ('{}[{}]'.format(self._parent._name, key))
         return('{}'.format(self._name))
 
@@ -611,12 +652,6 @@ class Variable(Expression):
         '''
         if c is not None:
             self._cons.add(c._name)
-
-    def __setattr__(self, attr, value):
-        if attr == '_temp' and value is True:
-            print('WARNING: Variables cannot be temporary.')
-        else:
-            super().__setattr__(attr, value)
 
 
 class Constraint(Expression):
@@ -1040,7 +1075,6 @@ class VariableGroup:
         -------
         :class:`Variable` object or list of :class:`Variable` objects
         '''
-
         if self._abstract:
             # TODO check if number of keys correct e.g. x[I], x[1,2] requested
             tuple_key = sasoptpy.utils.tuple_pack(key)
@@ -1056,6 +1090,7 @@ class VariableGroup:
                 shadow = Variable(name=vname, vartype=v._type, lb=v._lb,
                                   ub=v._ub, init=v._init, abstract=True,
                                   shadow=True)
+                shadow._key = tuple_key
                 self._shadows[tuple_key] = shadow
                 return shadow
 

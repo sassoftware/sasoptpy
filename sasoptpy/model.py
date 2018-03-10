@@ -263,7 +263,6 @@ class Model:
          -  y[2]  +  x  =  [4, 10]
 
         '''
-        print('add_constraint is called')
         if isinstance(c, sasoptpy.components.Constraint):
             # Do not add if the constraint is not valid
             if ((c._direction == 'L' and c._linCoef['CONST']['val'] == -inf) or
@@ -277,7 +276,9 @@ class Model:
             self._constraintDict[c._name] = c
             for v in c._linCoef:
                 if v != 'CONST':
-                    c._linCoef[v]['ref']._tag_constraint(c)
+                    for vi in list(c._linCoef[v]['ref']):
+                        if isinstance(vi, sasoptpy.components.Variable):
+                            vi._tag_constraint(c)
         else:
             raise Exception('Expression is not a constraint!')
         # Return reference to the Constraint object

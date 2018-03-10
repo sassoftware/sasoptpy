@@ -25,22 +25,7 @@ operations
 
 import sasoptpy.components
 import sasoptpy.utils
-#import pandas as pd
 
-#==============================================================================
-# class Statement:
-# 
-#     def _to_optmodel(self):
-#         index = self._keys[0]
-#         s = 'read data {} into {}=[{}] '.format(
-#             self._name, index._name, index._colname)
-#         if self._keysize > 1:
-#             col = self._keys[1]
-#             s += '{{j in {}}} <{}[{},j]=col(j)> '.format(
-#                 col._name, self._name, index._colname)
-#         s += ';'
-#         return s
-#==============================================================================
 
 class Parameter:
     '''
@@ -59,12 +44,11 @@ class Parameter:
         self._shadows = {}
 
     def __getitem__(self, key):
-        refname = sasoptpy.utils._to_bracket(self._name, key)
-        if refname in self._shadows:
-            return self._shadows[refname]
+        if key in self._shadows:
+            return self._shadows[key]
         else:
-            pv = ParameterValue(refname)
-            self._shadows[refname] = pv
+            pv = ParameterValue(self, key)
+            self._shadows[key] = pv
             return pv
 
     def _set_loop(self, source, keyset, colname=None, index=None):
@@ -120,11 +104,14 @@ class Parameter:
 
 class ParameterValue(sasoptpy.components.Expression):
 
-    def __init__(self, paramkey):
+    def __init__(self, param, key):
         super().__init__()
-        self._name = paramkey
-        self._linCoef[paramkey] = {'ref': self,
-                                   'val': 1.0}
+        pvname = sasoptpy.utils._to_bracket(param._name, key)
+        self._name = pvname
+        tkey = sasoptpy.utils.tuple_pack(key)
+        self._key = key
+        self._linCoef[pvname] = {'ref': self,
+                                 'val': 1.0}
 
     def __repr__(self):
         st = 'sasoptpy.ParameterValue(name=\'{}\')'.format(self._name)
@@ -145,7 +132,8 @@ class Set:
         self._colname = name
 
     def __iter__(self):
-        return iter([self])
+        s = SetIterator(self)
+        return iter([s])
 
     def _to_optmodel(self):
         s = 'set '
@@ -164,6 +152,10 @@ class Set:
         else:
             return False
 
+    def __contains__(self, item):
+        print('Containts is called: {}'.format(item))
+        return True
+
     def __str__(self):
         s = self._name
         return(s)
@@ -171,4 +163,68 @@ class Set:
     def __repr__(self):
         s = 'sasoptpy.data.Set(name={}, settype={})'.format(
             self._name, self._type)
+        return(s)
+
+
+class SetIterator:
+
+    def __init__(self, initset, conditions=[]):
+        self._name = sasoptpy.utils.check_name(None, 'i')
+        self._set = initset
+        self._conditions = conditions
+
+    def __hash__(self):
+        return hash((self._name))
+
+    def __add_condition(self, operation, key):
+        c = {'type': operation, 'key': key}
+        self._conditions.append(c)
+
+    def __contains__(self, key):
+        self.__add_condition('IN', key)
+        return True
+
+    def __eq__(self, key):
+        if isinstance(key, SetIterator):
+            return self._name == key._name
+        self.__add_condition('=', key)  # or 'EQ'
+        return True
+
+    def __le__(self, key):
+        self.__add_condition('<=', key)  # or 'LE'
+        return True
+
+    def __ge__(self, key):
+        self.__add_condition('>=', key)  # or 'GE'
+        return True
+
+    def __ne__(self, key):
+        self.__add_condition('~=', key)  # or 'NE'
+        return True
+
+    def __and__(self, key):
+        self.__add_condition('AND', key)
+
+    def __or__(self, key):
+        self.__add_condition('OR', key)
+
+    def _to_optmodel(self):
+        s = '{} in {}'.format(self._name, self._set._name)
+        if len(self._conditions) > 0:
+            s += ':'
+            for i in self._conditions:
+                s += ' i {} \'{}\' and'.format(i['type'], i['key'])
+            s = s[:-4]
+        return(s)
+
+    def __str__(self):
+        return self._name
+
+    def __repr__(self):
+        s = 'sasoptpy.data.SetIterator(initset={}, conditions=['.format(
+            self._set._name)
+        for i in self._conditions:
+            s += '{{\'type\': \'{}\', \'key\': \'{}\'}}, '.format(
+                i['type'], i['key'])
+        s += '])'
         return(s)

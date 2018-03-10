@@ -39,7 +39,8 @@ BIN = 'BIN'
 __namedict = {}
 
 # Counters
-__ctr = {'obj': [0], 'var': [0], 'con': [0], 'expr': [0], 'model': [0]}
+__ctr = {'obj': [0], 'var': [0], 'con': [0], 'expr': [0], 'model': [0],
+         'i':[0]}
 
 
 def check_name(name, ctype=None):
@@ -116,9 +117,13 @@ def quick_sum(argv):
     function.
 
     '''
+    print('quick_sum is called: {}'.format(argv))
+    from pprint import pprint
+    pprint(argv)
     exp = sasoptpy.components.Expression(temp=True)
     for i in argv:
         exp = exp + i
+    exp = 0 + exp  # Imitate Python sum behaviour
     exp._temp = False
     return exp
 
