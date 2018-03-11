@@ -64,6 +64,7 @@ class Model:
         self._variables = []
         self._constraints = []
         self._vargroups = []
+        self._congroups = []
         self._objective = sasoptpy.components.Expression()
         self._datarows = []
         self._sense = sasoptpy.utils.MIN
@@ -352,6 +353,7 @@ class Model:
                 for i in cg:
                     self._constraints.append(i)
                     self._constraintDict[i._name] = i
+                self._congroups.append(cg)
                 return cg
             elif type(argv) == sasoptpy.components.Constraint:
                 print('WARNING: add_constraints argument is a single' +
@@ -365,13 +367,13 @@ class Model:
         self._sets.append(newset)
         return newset
 
-    def add_parameter(self, *argv, name=None):
+    def add_parameter(self, *argv, name=None, init=None):
         keylist = list(argv)
-        p = sasoptpy.data.Parameter(name, keys=keylist)
+        p = sasoptpy.data.Parameter(name, keys=keylist, init=init)
         self._parameters.append(p)
         return p
 
-    def read_data(self, table, keyset=None, key=[], params=[]):
+    def read_data(self, table, option='', keyset=None, key=[], params=[]):
         '''
         Reads a CASTable into PROC OPTMODEL sets
         '''
@@ -388,7 +390,7 @@ class Model:
             p.setdefault('index', None)
             p['param']._set_loop(table, keyset, p['column'], p['index'])
 
-        s = 'read data {} into '.format(table.name)
+        s = 'read data {} {} into '.format(table.name, option)
         if len(keyset) == 1:
             k = keyset[0]
             s += '{}=[{}] '.format(k._name, k._colname)
@@ -1017,7 +1019,7 @@ class Model:
     def _to_optmodel(self):
 
         if not self._abstract:
-            print('ERROR: Model is not abstract, can\'t produce OPTMODEL output')
+            print('ERROR: Model is not abstract, can\'t produce OPTMODEL code')
             return ''
 
         s = 'proc optmodel;\n'
@@ -1039,9 +1041,18 @@ class Model:
             if v._parent is None:
                 s += tab + v._to_optmodel() + '\n'
 
+        for c in self._congroups:
+            s += tab + c._to_optmodel() + '\n'
+
         for c in self._constraints:
             if c._parent is None:
                 s += tab + c._to_optmodel() + '\n'
+
+        if self._objective is not None:
+            s += tab + '{} {} = '.format(self._sense, self._objective._name) 
+            s += self._objective._to_optmodel() + '; \n'
+
+        s += tab + 'solve;\n'
 
         s += 'quit;\n'
 

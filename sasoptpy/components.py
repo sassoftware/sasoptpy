@@ -92,7 +92,8 @@ class Expression:
         self._temp = temp
         self._value = 0
         self._operand = None
-        self._key = None
+        self._iterkey = []
+        self._abstract = False
 
     def copy(self, name=None):
         '''
@@ -123,7 +124,8 @@ class Expression:
         for mylc in self._linCoef:
             r._linCoef[mylc] = dict(self._linCoef[mylc])
         r._operand = self._operand
-        r._key = self._key
+        r._iterkey = self._iterkey
+        r._abstract = self._abstract
         return r
 
     def get_value(self):
@@ -229,20 +231,6 @@ class Expression:
                     s += ' {} '.format(abs(vx['val']))
         return s
 
-    def _check_iterator(self, operand):
-        for _, v in self._linCoef.items():
-            if v['ref']:
-                for k in list(v['ref']):
-                    if k._key:
-                        for itemk in list(k._key):
-                            if isinstance(itemk, sasoptpy.data.SetIterator):
-                                self._operand = operand
-                                self._key = itemk
-                                if self._name is None:
-                                    self._name = sasoptpy.utils.check_name(
-                                        None, 'expr')
-                                return
-
     def _add_coef_value(self, var, key, value):
         '''
         Changes value of a variable inside the :class:`Expression` object in
@@ -298,6 +286,8 @@ class Expression:
             else:
                 r = self.copy()
         if isinstance(other, Expression):
+            if other._abstract:
+                r._abstract = True
             if other._operand is None:
                 for v in other._linCoef:
                     if v in r._linCoef:
@@ -306,7 +296,7 @@ class Expression:
                         r._linCoef[v] = dict(other._linCoef[v])
                         r._linCoef[v]['val'] *= sign
             else:
-                r._linCoef[other._name] = {'val': 1.0, 'ref': other}
+                r._linCoef[other._name] = {'val': sign, 'ref': other}
         elif np.issubdtype(type(other), np.number):
             r._linCoef['CONST']['val'] += sign * other
         return r
@@ -335,6 +325,8 @@ class Expression:
         #  TODO r=self could be used whenever expression has no name
         if isinstance(other, Expression):
             r = Expression()
+            if self._abstract or other._abstract:
+                r._abstract = True
             target = r._linCoef
             for i, x in self._linCoef.items():
                 for j, y in other._linCoef.items():
@@ -377,11 +369,14 @@ class Expression:
             s = str(self)
         else:
             s = '{} {{'.format(self._operand)
-            s += self._key._to_optmodel()
+            s += ', '.join([i._to_optmodel() for i in list(self._iterkey)])
             s += '} ('
             s += str(self)
             s += ')'
         return s
+
+    def _tag_constraint(self, *argv):
+        pass
 
     def _relational(self, other, direction_):
         '''
@@ -416,9 +411,10 @@ class Expression:
             if np.issubdtype(type(other), np.number):
                 r._linCoef['CONST']['val'] -= other
             elif isinstance(other, Expression):
-                for v in other._linCoef:
-                    r._add_coef_value(other._linCoef[v]['ref'], v,
-                                      -other._linCoef[v]['val'])
+                r -= other
+                #for v in other._linCoef:
+                #    r._add_coef_value(other._linCoef[v]['ref'], v,
+                #                      -other._linCoef[v]['val'])
             generated_constraint = Constraint(exp=r, direction=direction_,
                                               crange=0)
             return generated_constraint
@@ -458,8 +454,6 @@ class Expression:
             return 0
 
     def __radd__(self, other):
-        if other == 0:
-            self._check_iterator('sum')
         return self.add(other)
 
     def __rsub__(self, other):
@@ -870,7 +864,9 @@ class Constraint(Expression):
         self._key = key
 
     def _to_optmodel(self):
-        s = 'con {} : '.format(self._name)
+        s = ''
+        if self._parent is None:
+            s = 'con {} : '.format(self._name)
         s += super().__str__()
         if self._direction == 'E':
             s += ' = '
@@ -886,7 +882,8 @@ class Constraint(Expression):
             s += ' [{}, {}]'.format(- self._linCoef['CONST']['val'],
                                     - self._linCoef['CONST']['val'] +
                                     self._range)
-        s += ';'
+        if self._parent is None:
+            s += ';'
         return(s)
 
     def __str__(self):
@@ -1086,11 +1083,11 @@ class VariableGroup:
                 k = list(self._vardict)[0]
                 v = self._vardict[k]
                 vname = self._name + '[' +\
-                    ', '.join([str(i) for i in tuple_key]) + ']'
+                    ','.join([str(i) for i in tuple_key]) + ']'
                 shadow = Variable(name=vname, vartype=v._type, lb=v._lb,
                                   ub=v._ub, init=v._init, abstract=True,
                                   shadow=True)
-                shadow._key = tuple_key
+                shadow._iterkey = tuple_key
                 self._shadows[tuple_key] = shadow
                 return shadow
 
@@ -1485,6 +1482,18 @@ class ConstraintGroup:
         for i in self._condict:
             self._condict[i]._set_info(parent=self, key=i)
 
+    def _get_keys(self):
+        return list(self._condict)[0]
+
+    def _to_optmodel(self):
+        ab_key = list(self._condict)[0]
+        s = 'con {} {{'.format(self._name)
+        s += ', '.join([i._to_optmodel() for i in ab_key])
+        s += '}: '
+        s += self._condict[ab_key]._to_optmodel()
+        s += ';'
+        return s
+
     def __str__(self):
         s = 'Constraint Group ({}) [\n'.format(self._name)
         for k in sorted(self._condict):
@@ -1501,10 +1510,3 @@ class ConstraintGroup:
         s += '], '
         s += 'name=\'{}\')'.format(self._name)
         return s
-
-
-class SymbolicExpression(Expression):
-    '''
-    Represents symbolic expressions
-    '''
-    

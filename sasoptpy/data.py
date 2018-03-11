@@ -32,11 +32,12 @@ class Parameter:
     Represents set inside PROC OPTMODEL
     '''
 
-    def __init__(self, name, keys, order=1):
+    def __init__(self, name, keys, order=1, init=None):
         self._name = name
         self._keys = keys
         self._keysize = len(keys)
         self._order = order
+        self._init = init
         self._source = None
         self._keyset = None
         self._colname = name
@@ -59,10 +60,13 @@ class Parameter:
 
     def _to_optmodel(self):
         s = 'num {} {{'.format(self._name)
-        for k in self._keyset:
+        for k in self._keys:
             s += '{}, '.format(k._name)
         s = s[:-2]
-        s += '};'
+        s += '}'
+        if self._init is not None:
+            s += ' init {} '.format(self._init)
+        s += ';'
         return(s)
 
     def _to_read_data(self):
@@ -112,6 +116,10 @@ class ParameterValue(sasoptpy.components.Expression):
         self._key = key
         self._linCoef[pvname] = {'ref': self,
                                  'val': 1.0}
+        self._abstract = True
+
+    def _tag_constraint(self, *argv):
+        pass
 
     def __repr__(self):
         st = 'sasoptpy.ParameterValue(name=\'{}\')'.format(self._name)

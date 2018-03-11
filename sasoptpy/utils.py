@@ -117,15 +117,34 @@ def quick_sum(argv):
     function.
 
     '''
-    print('quick_sum is called: {}'.format(argv))
-    from pprint import pprint
-    pprint(argv)
+    clocals = argv.gi_frame.f_locals.copy()
     exp = sasoptpy.components.Expression(temp=True)
     for i in argv:
         exp = exp + i
-    exp = 0 + exp  # Imitate Python sum behaviour
+        if i._abstract:
+            newlocals = argv.gi_frame.f_locals
+            iterators = []
+            for nl in newlocals.keys():
+                if nl not in clocals:
+                    iterators.append(newlocals[nl])
+            exp = _check_iterator(exp, 'sum', iterators)
     exp._temp = False
     return exp
+
+
+def _check_iterator(exp, operand, iterators):
+    if isinstance(exp, sasoptpy.components.Variable):
+        r = exp.copy()
+    else:
+        r = exp
+    if r._name is None:
+        r._name = check_name(None, 'expr')
+    if r._operand is None:
+        r._operand = operand
+    for i in iterators:
+        if isinstance(i, sasoptpy.data.SetIterator):
+            r._iterkey.append(i)
+    return r
 
 
 def get_obj_by_name(name):
