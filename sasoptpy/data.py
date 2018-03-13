@@ -108,7 +108,7 @@ class Parameter:
 
 class ParameterValue(sasoptpy.components.Expression):
 
-    def __init__(self, param, key):
+    def __init__(self, param, key, prefix='', postfix=''):
         super().__init__()
         pvname = sasoptpy.utils._to_bracket(param._name, key)
         self._name = pvname
@@ -117,6 +117,8 @@ class ParameterValue(sasoptpy.components.Expression):
         self._linCoef[pvname] = {'ref': self,
                                  'val': 1.0}
         self._abstract = True
+        self._prefix = prefix
+        self._postfix = postfix
 
     def _tag_constraint(self, *argv):
         pass
@@ -126,7 +128,7 @@ class ParameterValue(sasoptpy.components.Expression):
         return st
 
     def __str__(self):
-        return self._name
+        return self._prefix + self._name + self._postfix
 
 
 class Set:
@@ -174,15 +176,19 @@ class Set:
         return(s)
 
 
-class SetIterator:
+class SetIterator(sasoptpy.components.Expression):
 
-    def __init__(self, initset, conditions=[]):
+    def __init__(self, initset, conditions=None):
+        # TODO use self._name = initset._colname
+        super().__init__()
         self._name = sasoptpy.utils.check_name(None, 'i')
         self._set = initset
+        if conditions is None:
+            conditions = []
         self._conditions = conditions
 
     def __hash__(self):
-        return hash((self._name))
+        return hash('{}{}'.format(self._name, id(self)))
 
     def __add_condition(self, operation, key):
         c = {'type': operation, 'key': key}
@@ -216,14 +222,17 @@ class SetIterator:
     def __or__(self, key):
         self.__add_condition('OR', key)
 
-    def _to_optmodel(self):
+    def _to_optmodel(self, cond=0):
         s = '{} in {}'.format(self._name, self._set._name)
-        if len(self._conditions) > 0:
+        if cond and len(self._conditions) > 0:
             s += ':'
-            for i in self._conditions:
-                s += ' i {} \'{}\' and'.format(i['type'], i['key'])
-            s = s[:-4]
+            s += self._to_conditions()
         return(s)
+
+    def _to_conditions(self):
+        s = ' and '.join(['{} {} \'{}\''.format(
+            self._name, i['type'], i['key']) for i in self._conditions])
+        return s
 
     def __str__(self):
         return self._name

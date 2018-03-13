@@ -369,6 +369,7 @@ class Model:
 
     def add_parameter(self, *argv, name=None, init=None):
         keylist = list(argv)
+        name = sasoptpy.utils.check_name(name, 'param')
         p = sasoptpy.data.Parameter(name, keys=keylist, init=init)
         self._parameters.append(p)
         return p
@@ -1016,45 +1017,59 @@ class Model:
                                         'Field5', 'Field6', '_id_'])
         return mpsdata
 
-    def _to_optmodel(self):
+    def _to_optmodel(self, header=1):
 
         if not self._abstract:
             print('ERROR: Model is not abstract, can\'t produce OPTMODEL code')
             return ''
 
-        s = 'proc optmodel;\n'
+        s = ''
+
+        if header:
+            s = 'proc optmodel;\n'
+
         tab = '   '
 
+        s += tab + '/* Sets */\n'
         for i in self._sets:
             s += tab + i._to_optmodel() + '\n'
 
+        s += '\n' + tab + '/* Parameters */\n'
         for i in self._parameters:
             s += tab + i._to_optmodel() + '\n'
 
+        s += '\n' + tab + '/* Statements */\n'
         for i in self._statements:
             s += tab + i + '\n'
 
+        s += '\n' + tab + '/* Variable Groups */\n'
         for i in self._vargroups:
-            s += tab + i._to_optmodel() + '\n'
+            s += i._to_optmodel(tabs=tab) + '\n'
 
+        s += '\n' + tab + '/* Variables */\n'
         for v in self._variables:
             if v._parent is None:
                 s += tab + v._to_optmodel() + '\n'
 
+        s += '\n' + tab + '/* Constraint Groups */\n'
         for c in self._congroups:
             s += tab + c._to_optmodel() + '\n'
 
+        s += '\n' + tab + '/* Constraints */\n'
         for c in self._constraints:
             if c._parent is None:
                 s += tab + c._to_optmodel() + '\n'
 
+        s += '\n' + tab + '/* Objective */\n'
         if self._objective is not None:
             s += tab + '{} {} = '.format(self._sense, self._objective._name) 
             s += self._objective._to_optmodel() + '; \n'
 
+        s += '\n' + tab + '/* Solver call */\n'
         s += tab + 'solve;\n'
 
-        s += 'quit;\n'
+        if header:
+            s += 'quit;\n'
 
         return(s)
 
@@ -1144,6 +1159,16 @@ class Model:
         else:
             return None
 
+    def solve_remote(self):
+        # Check if session is defined
+        if self.test_session():
+            sess = self._session
+        else:
+            return None
+        sess.loadactionset(actionset='optimization')
+        optmodel_string = self._to_optmodel(0)
+        sess.runOptmodel(optmodel_string)
+
     def solve(self, milp={}, lp={}, name=None, drop=True, replace=True,
               primalin=False):
         '''
@@ -1204,6 +1229,10 @@ class Model:
           for a list of MILP options.
 
         '''
+
+        if self._abstract:
+            self.solve_remote()
+            return None
 
         # Check if session is defined
         if self.test_session():

@@ -40,7 +40,7 @@ __namedict = {}
 
 # Counters
 __ctr = {'obj': [0], 'var': [0], 'con': [0], 'expr': [0], 'model': [0],
-         'i':[0]}
+         'i':[0], 'param': [0]}
 
 
 def check_name(name, ctype=None):
@@ -121,13 +121,14 @@ def quick_sum(argv):
     exp = sasoptpy.components.Expression(temp=True)
     for i in argv:
         exp = exp + i
-        if i._abstract:
-            newlocals = argv.gi_frame.f_locals
-            iterators = []
-            for nl in newlocals.keys():
-                if nl not in clocals:
-                    iterators.append(newlocals[nl])
-            exp = _check_iterator(exp, 'sum', iterators)
+        if isinstance(i, sasoptpy.components.Expression):
+            if i._abstract:
+                newlocals = argv.gi_frame.f_locals
+                iterators = []
+                for nl in newlocals.keys():
+                    if nl not in clocals:
+                        iterators.append(newlocals[nl])
+                exp = _check_iterator(exp, 'sum', iterators)
     exp._temp = False
     return exp
 
@@ -598,11 +599,14 @@ def _list_item(i):
 
 
 def _to_bracket(prefix, keys):
-    s = prefix + '['
-    k = tuple_pack(keys)
-    s += ','.join([str(i) for i in k])
-    s += ']'
-    return s
+    if keys is None:
+        return prefix
+    else:
+        s = prefix + '['
+        k = tuple_pack(keys)
+        s += ','.join([str(i) for i in k])
+        s += ']'
+        return s
 
 
 def _sort_tuple(i):

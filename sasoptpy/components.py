@@ -356,12 +356,14 @@ class Expression:
                     for mylc in self._linCoef:
                         self._linCoef[mylc]['val'] *= other
                 r = self
+                return r
             else:
                 r = Expression()
                 if other != 0:
                     for mylc in self._linCoef:
                         r._linCoef[mylc] = dict(self._linCoef[mylc])
                         r._linCoef[mylc]['val'] *= other
+                return r
         return r
 
     def _to_optmodel(self):
@@ -406,7 +408,11 @@ class Expression:
             if self._temp and type(self) is Expression:
                 r = self
             else:
-                r = self.copy()
+                if self._operand is None:
+                    r = self.copy()
+                else:
+                    r = Expression(0)
+                    r += self
             #  TODO r=self could be used whenever expression has no name
             if np.issubdtype(type(other), np.number):
                 r._linCoef['CONST']['val'] -= other
@@ -433,6 +439,9 @@ class Expression:
                                               crange=0)
             return generated_constraint
         return self
+
+    def __hash__(self):
+        return hash('{}{}'.format(self._name, id(self)))
 
     def __add__(self, other):
         return self.add(other)
@@ -631,10 +640,19 @@ class Variable(Expression):
 
     def _to_optmodel(self):
         s = 'var {} '.format(self._name)
+        BIN = sasoptpy.utils.BIN
+        CONT = sasoptpy.utils.CONT
+        if self._type != CONT:
+            if self._type == BIN:
+                s += 'binary '
+            else:
+                s += 'integer '
         if self._lb != -inf:
-            s += '>= {} '.format(self._lb)
+            if not (self._lb == 0 and self._type == BIN):
+                s += '>= {} '.format(self._lb)
         if self._ub != inf:
-            s += '<= {} '.format(self._ub)
+            if not (self._ub == 1 and self._type == BIN):
+                s += '<= {} '.format(self._ub)
         if self._init is not None:
             s += 'init {} '.format(self._init)
         s += ';'
@@ -713,7 +731,9 @@ class Constraint(Expression):
             self._linCoef = exp._linCoef
             for m in self._linCoef:
                 if name is not None and m != 'CONST':
-                        self._linCoef[m]['ref']._tag_constraint(self)
+                    for lcref in list(self._linCoef[m]['ref']):
+                        lcref._tag_constraint(self)
+                    #self._linCoef[m]['ref']._tag_constraint(self)
         else:
             for m in exp._linCoef:
                 self._linCoef[m] = dict(exp._linCoef[m])
@@ -1087,6 +1107,10 @@ class VariableGroup:
                 shadow = Variable(name=vname, vartype=v._type, lb=v._lb,
                                   ub=v._ub, init=v._init, abstract=True,
                                   shadow=True)
+                ub = sasoptpy.data.ParameterValue(shadow, key=None, postfix='.ub')
+                lb = sasoptpy.data.ParameterValue(shadow, key=None, postfix='.lb')
+                shadow._ub = ub
+                shadow._lb = lb
                 shadow._iterkey = tuple_key
                 self._shadows[tuple_key] = shadow
                 return shadow
@@ -1123,8 +1147,10 @@ class VariableGroup:
             ls = [self._vardict[key] for key in self._vardict.keys()]
         return iter(ls)
 
-    def _to_optmodel(self):
-        s = 'var {}'.format(self._name)
+    def _to_optmodel(self, tabs=None):
+        if tabs is None:
+            tabs = ''
+        s = tabs + 'var {}'.format(self._name)
         s += ' {'
         for i in self._keyset:
             if isinstance(i, sasoptpy.data.Set):
@@ -1136,13 +1162,39 @@ class VariableGroup:
         s += '} '
         k = list(self._vardict)[0]
         v = self._vardict[k]
+        BIN = sasoptpy.utils.BIN
+        CONT = sasoptpy.utils.CONT
+        if v._type != CONT:
+            if v._type == BIN:
+                s += 'binary '
+            else:
+                s += 'integer '
         if v._lb != -inf:
-            s += '>= {} '.format(v._lb)
+            if not (v._lb == 0 and v._type == BIN):
+                s += '>= {} '.format(v._lb)
         if v._ub != inf:
-            s += '<= {} '.format(v._ub)
+            if not (v._ub == 1 and v._type == BIN):
+                s += '<= {} '.format(v._ub)
         if v._init is not None:
             s += 'init {} '.format(v._init)
         s += ';'
+        # Check bounds to see if they are parameters
+        for i in self._shadows:
+            v = self._shadows[i]
+            lbparam = v._name != v._lb._name
+            ubparam = v._name != v._ub._name
+            if lbparam or ubparam:
+                s += '\n' + tabs + 'for {'
+                s += ','.join([iv._to_optmodel() for iv in i])
+                if sum(len(iv._conditions) for iv in i) > 0:
+                    s += ':'
+                    s += ' and '.join([iv._to_conditions() for iv in i])
+                s += '} '
+                if lbparam:
+                    s += v._name + '.lb=' + v._lb._to_optmodel()
+                if ubparam:
+                    s += v._name + '.ub=' + v._ub._to_optmodel()
+                s += ';'
         return(s)
 
     def sum(self, *argv):
@@ -1175,22 +1227,38 @@ class VariableGroup:
          z[1, 'a']  +  z[0, 'b']  +  z[1, 'b']  +  z[0, 'a']
 
         '''
-        r = Expression(temp=True)
-        feas_set = []
-        for i, a in enumerate(argv):
-            if a == '*':
-                feas_set.append(self._groups[i])
-            elif hasattr(a, "__iter__") and not isinstance(a, str):
-                feas_set.append(a)
-            else:
-                feas_set.append([a])
-        combs = product(*feas_set)
-        for i in combs:
-            var_key = sasoptpy.utils.tuple_pack(i)
-            if var_key in self._vardict:
-                r.add(self._vardict[var_key], 1)
-        r.set_permanent()
-        return r
+        if self._abstract:
+            r = Expression()
+            ind_set = list()
+            iter_key = list()
+            for i, a in enumerate(argv):
+                if isinstance(a, str) and a == '*':
+                    si = sasoptpy.data.SetIterator(self._keyset[i])
+                    ind_set.append(si)
+                    iter_key.append(si)
+                else:
+                    ind_set.append(a)
+            r = r.add(self[tuple(ind_set)])
+            r._operand = 'sum'
+            r._iterkey = iter_key
+            return r
+        else:
+            r = Expression(temp=True)
+            feas_set = []
+            for i, a in enumerate(argv):
+                if a == '*':
+                    feas_set.append(self._groups[i])
+                elif hasattr(a, "__iter__") and not isinstance(a, str):
+                    feas_set.append(a)
+                else:
+                    feas_set.append([a])
+            combs = product(*feas_set)
+            for i in combs:
+                var_key = sasoptpy.utils.tuple_pack(i)
+                if var_key in self._vardict:
+                    r.add(self._vardict[var_key], 1)
+            r.set_permanent()
+            return r
 
     def mult(self, vector):
         '''
