@@ -91,9 +91,10 @@ class Expression:
                       'Expression: {}'.format(type(exp)))
         self._temp = temp
         self._value = 0
-        self._operand = None
+        self._operator = None
         self._iterkey = []
         self._abstract = False
+        self._conditions = []
 
     def copy(self, name=None):
         '''
@@ -123,9 +124,10 @@ class Expression:
         r = Expression(name=name)
         for mylc in self._linCoef:
             r._linCoef[mylc] = dict(self._linCoef[mylc])
-        r._operand = self._operand
+        r._operator = self._operator
         r._iterkey = self._iterkey
         r._abstract = self._abstract
+        r._conditionts = self._conditions
         return r
 
     def get_value(self):
@@ -205,6 +207,11 @@ class Expression:
     def __str__(self):
         s = ''
         firstel = 1
+        #if self._operator is not None:
+            #if self._operator == 'sum':
+            #    s += 'so.quick_sum('
+            #else:
+            #    s += str(self._operator) + '('
         for v, vx in self._linCoef.items():
             if (vx['val'] == 0 or
                (v == 'CONST' and isinstance(self, Constraint))):
@@ -213,13 +220,13 @@ class Expression:
                 s += ''
             else:
                 if copysign(1, vx['val']) == 1:
-                    s += ' + '
+                    s += '+'
                 else:
-                    s += ' - '
+                    s += '-'
             firstel = 0
             if(v is not 'CONST'):
                 refs = ' * '.join([
-                    str(i) if i._operand is None
+                    str(i) if i._operator is None
                     else i._to_optmodel()
                     for i in list(vx['ref'])])
                 if vx['val'] == 1 or vx['val'] == -1:
@@ -229,6 +236,12 @@ class Expression:
             elif not isinstance(self, Constraint):
                 if vx['val'] is not 0:
                     s += ' {} '.format(abs(vx['val']))
+
+        #if self._operator is not None:
+            #s += ' ' + ' '.join(
+            #    ['for {} in {}'.format(i._name, i._set._name)
+            #     for i in self._iterkey])
+            #s += ')'
         return s
 
     def _add_coef_value(self, var, key, value):
@@ -280,7 +293,7 @@ class Expression:
                 r = other
                 other = self
                 sign = sign * -1
-            elif self._operand is not None:
+            elif self._operator is not None:
                 r = Expression()
                 r._linCoef[self._name] = {'val': 1.0, 'ref': self}
             else:
@@ -288,7 +301,7 @@ class Expression:
         if isinstance(other, Expression):
             if other._abstract:
                 r._abstract = True
-            if other._operand is None:
+            if other._operator is None:
                 for v in other._linCoef:
                     if v in r._linCoef:
                         r._linCoef[v]['val'] += sign * other._linCoef[v]['val']
@@ -297,6 +310,8 @@ class Expression:
                         r._linCoef[v]['val'] *= sign
             else:
                 r._linCoef[other._name] = {'val': sign, 'ref': other}
+            r._conditions += self._conditions
+            r._conditions += other._conditions
         elif np.issubdtype(type(other), np.number):
             r._linCoef['CONST']['val'] += sign * other
         return r
@@ -347,6 +362,8 @@ class Expression:
                             target[newkey] = {
                                 'ref': [x['ref'], y['ref']],
                                 'val': x['val'] * y['val']}
+            r._conditions += self._conditions
+            r._conditions += other._conditions
             return r
         elif np.issubdtype(type(other), np.number):
             if self._temp and type(self) is Expression:
@@ -358,24 +375,28 @@ class Expression:
                 r = self
                 return r
             else:
-                r = Expression()
-                if other != 0:
-                    for mylc in self._linCoef:
-                        r._linCoef[mylc] = dict(self._linCoef[mylc])
+                if other == 0:
+                    r = Expression()
+                else:
+                    r = self.copy()
+                    for mylc in r._linCoef:
                         r._linCoef[mylc]['val'] *= other
                 return r
         return r
 
     def _to_optmodel(self):
-        if self._operand is None:
+        if self._operator is None:
             s = str(self)
         else:
-            s = '{} {{'.format(self._operand)
+            s = '{} {{'.format(self._operator)
             s += ', '.join([i._to_optmodel() for i in list(self._iterkey)])
             s += '} ('
             s += str(self)
             s += ')'
         return s
+
+    #def _recursive_walk(self):
+    #    
 
     def _tag_constraint(self, *argv):
         pass
@@ -408,7 +429,7 @@ class Expression:
             if self._temp and type(self) is Expression:
                 r = self
             else:
-                if self._operand is None:
+                if self._operator is None:
                     r = self.copy()
                 else:
                     r = Expression(0)
@@ -461,6 +482,18 @@ class Expression:
         else:
             warnings.warn('Power is not an integer.')
             return 0
+
+    def __rpow__(self, other):
+        r = Expression()
+        self._operator = '^'
+        self._iterkey = []
+        if not isinstance(other, Expression):
+            other = Expression(other)
+        r._linCoef[other._name, self._name] = {
+            'ref': [other, self],
+            'val': 1.0
+            }
+        return r
 
     def __radd__(self, other):
         return self.add(other)
@@ -537,9 +570,10 @@ class Variable(Expression):
     '''
 
     def __init__(self, name, vartype=sasoptpy.utils.CONT, lb=0, ub=inf,
-                 init=None, abstract=False, shadow=False):
+                 init=None, abstract=False, shadow=False, key=None):
         super().__init__()
-        name = sasoptpy.utils.check_name(name, 'var')
+        if not shadow:
+            name = sasoptpy.utils.check_name(name, 'var')
         self._name = name
         self._type = vartype
         if lb is None:
@@ -552,10 +586,13 @@ class Variable(Expression):
         if vartype == sasoptpy.utils.BIN:
             self._lb = max(self._lb, 0)
             self._ub = min(self._ub, 1)
-        self._linCoef[name] = {'ref': self, 'val': 1.0}
-        sasoptpy.utils.register_name(name, self)
+        if shadow:
+            self._linCoef[name + str(id(self))] = {'ref': self, 'val': 1.0}
+        else:
+            self._linCoef[name] = {'ref': self, 'val': 1.0}
+            sasoptpy.utils.register_name(name, self)
         self._cons = set()
-        self._key = None
+        self._key = key
         self._parent = None
         self._temp = False
         self._abstract = abstract
@@ -630,12 +667,11 @@ class Variable(Expression):
 
     def __str__(self):
         if self._parent is not None and self._key is not None:
-            #if len(self._key) == 1:
-            #    key = str(self._key)[1:-2]  # Remove comma
-            #else:
-            #    key = str(self._key)[1:-1]  # Remove parantheses
             key = ', '.join([str(i) for i in self._key])
             return ('{}[{}]'.format(self._parent._name, key))
+        if self._shadow and self._iterkey:
+            key = ', '.join([str(i) for i in self._iterkey])
+            return('{}[{}]'.format(self._name, key))
         return('{}'.format(self._name))
 
     def _to_optmodel(self):
@@ -1102,13 +1138,15 @@ class VariableGroup:
             else:
                 k = list(self._vardict)[0]
                 v = self._vardict[k]
-                vname = self._name + '[' +\
-                    ','.join([str(i) for i in tuple_key]) + ']'
+                vname = self._name
+                #vname = self._name + '[' +\
+                #    ','.join([str(i) for i in tuple_key]) + ']'
+                vname = vname.replace(' ', '')
                 shadow = Variable(name=vname, vartype=v._type, lb=v._lb,
                                   ub=v._ub, init=v._init, abstract=True,
                                   shadow=True)
-                ub = sasoptpy.data.ParameterValue(shadow, key=None, postfix='.ub')
-                lb = sasoptpy.data.ParameterValue(shadow, key=None, postfix='.lb')
+                ub = sasoptpy.data.ParameterValue(shadow, key=tuple_key, postfix='.ub')
+                lb = sasoptpy.data.ParameterValue(shadow, key=tuple_key, postfix='.lb')
                 shadow._ub = ub
                 shadow._lb = lb
                 shadow._iterkey = tuple_key
@@ -1181,19 +1219,30 @@ class VariableGroup:
         # Check bounds to see if they are parameters
         for i in self._shadows:
             v = self._shadows[i]
-            lbparam = v._name != v._lb._name
-            ubparam = v._name != v._ub._name
+            lbparam = str(v) + '.lb' != str(v._lb)
+            ubparam = str(v) + '.ub' != str(v._ub)
             if lbparam or ubparam:
                 s += '\n' + tabs + 'for {'
                 s += ','.join([iv._to_optmodel() for iv in i])
-                if sum(len(iv._conditions) for iv in i) > 0:
+                condition_cnt = 0
+                for iv in i:
+                    if isinstance(iv, sasoptpy.data.SetIterator):
+                        condition_cnt += len(iv._conditions)
+                # TODO recursive condition check inside expressions!
+                if condition_cnt > 0:
                     s += ':'
                     s += ' and '.join([iv._to_conditions() for iv in i])
                 s += '} '
                 if lbparam:
-                    s += v._name + '.lb=' + v._lb._to_optmodel()
+                    if isinstance(v._lb, Expression):
+                        s += str(v) + '.lb=' + v._lb._to_optmodel()
+                    else:
+                        s += str(v) + '.lb=' + str(v._lb)
                 if ubparam:
-                    s += v._name + '.ub=' + v._ub._to_optmodel()
+                    if isinstance(v._ub, Expression):
+                        s += str(v) + '.ub=' + v._ub._to_optmodel()
+                    else:
+                        s += str(v) + '.ub=' + str(v._ub)
                 s += ';'
         return(s)
 
@@ -1239,7 +1288,7 @@ class VariableGroup:
                 else:
                     ind_set.append(a)
             r = r.add(self[tuple(ind_set)])
-            r._operand = 'sum'
+            r._operator = 'sum'
             r._iterkey = iter_key
             return r
         else:
@@ -1557,6 +1606,13 @@ class ConstraintGroup:
         ab_key = list(self._condict)[0]
         s = 'con {} {{'.format(self._name)
         s += ', '.join([i._to_optmodel() for i in ab_key])
+        allconditions = []
+        for i in ab_key:
+            if i._to_conditions() != '':
+                allconditions.append(i._to_conditions())
+        if len(allconditions) > 0:
+            s += ': '
+            s += ' and '.join(allconditions)
         s += '}: '
         s += self._condict[ab_key]._to_optmodel()
         s += ';'

@@ -40,7 +40,7 @@ __namedict = {}
 
 # Counters
 __ctr = {'obj': [0], 'var': [0], 'con': [0], 'expr': [0], 'model': [0],
-         'i':[0], 'param': [0]}
+         'i': [0], 'param': [0], 'impvar': [0]}
 
 
 def check_name(name, ctype=None):
@@ -133,19 +133,22 @@ def quick_sum(argv):
     return exp
 
 
-def _check_iterator(exp, operand, iterators):
+def _check_iterator(exp, operator, iterators):
     if isinstance(exp, sasoptpy.components.Variable):
         r = exp.copy()
     else:
         r = exp
     if r._name is None:
         r._name = check_name(None, 'expr')
-    if r._operand is None:
-        r._operand = operand
+    if r._operator is None:
+        r._operator = operator
     for i in iterators:
         if isinstance(i, sasoptpy.data.SetIterator):
             r._iterkey.append(i)
-    return r
+    wrapper = sasoptpy.components.Expression()
+    wrapper._linCoef[r._name] = {'ref': r, 'val': 1.0}
+    wrapper._abstract = True
+    return wrapper
 
 
 def get_obj_by_name(name):
@@ -604,7 +607,7 @@ def _to_bracket(prefix, keys):
     else:
         s = prefix + '['
         k = tuple_pack(keys)
-        s += ','.join([str(i) for i in k])
+        s += ', '.join([str(i) for i in k])
         s += ']'
         return s
 

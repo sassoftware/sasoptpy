@@ -110,25 +110,29 @@ class ParameterValue(sasoptpy.components.Expression):
 
     def __init__(self, param, key, prefix='', postfix=''):
         super().__init__()
-        pvname = sasoptpy.utils._to_bracket(param._name, key)
-        self._name = pvname
+        #pvname = sasoptpy.utils._to_bracket(param._name, key)
+        self._name = param._name
         tkey = sasoptpy.utils.tuple_pack(key)
         self._key = key
-        self._linCoef[pvname] = {'ref': self,
-                                 'val': 1.0}
         self._abstract = True
         self._prefix = prefix
         self._postfix = postfix
+        self._linCoef[str(self)] = {'ref': self,
+                                    'val': 1.0}
+        self._ref = param
 
     def _tag_constraint(self, *argv):
         pass
 
     def __repr__(self):
-        st = 'sasoptpy.ParameterValue(name=\'{}\')'.format(self._name)
+        st = 'sasoptpy.ParameterValue(name=\'{}\', key=[{}])'.format(
+            self._name, str(self._key))
         return st
 
     def __str__(self):
-        return self._prefix + self._name + self._postfix
+        return self._prefix +\
+               sasoptpy.utils._to_bracket(self._name, self._key) +\
+               self._postfix
 
 
 class Set:
@@ -140,9 +144,11 @@ class Set:
         self._name = name
         self._type = settype
         self._colname = name
+        self._iterators = []
 
     def __iter__(self):
         s = SetIterator(self)
+        self._iterators.append(s)
         return iter([s])
 
     def _to_optmodel(self):
@@ -182,13 +188,15 @@ class SetIterator(sasoptpy.components.Expression):
         # TODO use self._name = initset._colname
         super().__init__()
         self._name = sasoptpy.utils.check_name(None, 'i')
+        self._linCoef[self._name] = {'ref': self,
+                                     'val': 1.0}
         self._set = initset
         if conditions is None:
             conditions = []
         self._conditions = conditions
 
     def __hash__(self):
-        return hash('{}{}'.format(self._name, id(self)))
+        return hash('{}'.format(id(self)))
 
     def __add_condition(self, operation, key):
         c = {'type': operation, 'key': key}
@@ -213,7 +221,7 @@ class SetIterator(sasoptpy.components.Expression):
         return True
 
     def __ne__(self, key):
-        self.__add_condition('~=', key)  # or 'NE'
+        self.__add_condition('NE', key)  # or 'NE'
         return True
 
     def __and__(self, key):
@@ -230,18 +238,111 @@ class SetIterator(sasoptpy.components.Expression):
         return(s)
 
     def _to_conditions(self):
-        s = ' and '.join(['{} {} \'{}\''.format(
-            self._name, i['type'], i['key']) for i in self._conditions])
+        s = ''
+        conds = []
+        if len(self._conditions) > 0:
+            for i in self._conditions:
+                c_cond = '{} {} '.format(self._name, i['type'])
+                if type(i['key']) == str:
+                    c_cond += '\'{}\''.format(i['key'])
+                else:
+                    c_cond += '{}'.format(i['key'])
+                conds.append(c_cond)
+
+            s = ' and '.join(conds)
+        else:
+            s = ''
         return s
 
     def __str__(self):
         return self._name
 
     def __repr__(self):
-        s = 'sasoptpy.data.SetIterator(initset={}, conditions=['.format(
-            self._set._name)
+        s = 'sasoptpy.data.SetIterator(name={}, initset={}, conditions=['.\
+            format(self._name, self._set._name)
         for i in self._conditions:
             s += '{{\'type\': \'{}\', \'key\': \'{}\'}}, '.format(
                 i['type'], i['key'])
         s += '])'
         return(s)
+
+
+class ExpressionDict:
+
+    def __init__(self, name=None):
+        name = sasoptpy.utils.check_name(name, 'impvar')
+        self._name = name
+        self._dict = dict()
+        self._conditions = []
+
+    def __setitem__(self, key, value):
+        try:
+            if value._name is None:
+                value._name = self._name
+            if value._abstract:
+                self._dict[key] = ParameterValue(value, key)
+            else:
+                self._dict[key] = value
+        except AttributeError:
+            self._dict[key] = value
+
+    def __getitem__(self, key):
+        if key in self._dict:
+            return self._dict[key]
+        else:
+            tuple_key = sasoptpy.utils.tuple_pack(key)
+            for i in self._dict.keys():
+                match = True
+                for pos, el in enumerate(i):
+                    ckey = tuple_key[pos]
+                    if isinstance(el, SetIterator) and isinstance(ckey, SetIterator):
+                        if el._set._name != ckey._set._name:
+                            match = False
+                        else:
+                            continue
+                    else:
+                        if el != ckey:
+                            match = False
+                if match:
+                    for pos, el in enumerate(i):
+                        if isinstance(el, SetIterator) and isinstance(ckey, SetIterator):
+                            ckey._name = el._name
+                        else:
+                            ckey = el
+                    return self._dict[i]
+        return None
+
+    def _to_optmodel(self):
+        s = 'impvar {} '.format(self._name)
+        # There should be a single element in the dictionary
+        if len(self._dict) > 1:
+            print('ERROR: ExpressionDict has more than one elements!')
+            return ''
+        else:
+            s += '{'
+            key = self._get_only_key()
+            s += ', '.join([i._to_optmodel() for i in list(key)])
+            s += '} = '
+            s += self._dict[key]._ref._to_optmodel()
+            s += ';'
+        return s
+
+    def _get_only_key(self):
+        return list(self._dict.keys())[0]
+
+    def __str__(self):
+        return self._name
+
+    def __repr__(self):
+        s = 'sasoptpy.data.ExpressionDict(name=\'{}\', '.format(self._name)
+        if len(self._dict) == 1:
+            key = self._get_only_key()
+            s += 'expr=('
+            try:
+                s += self._dict[key]._ref._to_optmodel()
+            except AttributeError:
+                s += str(self._dict[key])
+            s += ' ' + ' '.join(['for ' + i._to_optmodel() for i in list(key)])
+            s += ')'
+        s += ')'
+        return s

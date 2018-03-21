@@ -84,6 +84,7 @@ class Model:
         self._lp_opts = {}
         self._sets = []
         self._parameters = []
+        self._impliedvars = []
         self._statements = []
         # self._events = [] 
         sasoptpy.utils.register_name(name, self)
@@ -373,6 +374,29 @@ class Model:
         p = sasoptpy.data.Parameter(name, keys=keylist, init=init)
         self._parameters.append(p)
         return p
+
+    def add_implied_variable(self, argv, name=None):
+        '''
+        Adds an implied variable to the model
+        '''
+        iv = sasoptpy.data.ExpressionDict(name=name)
+        for arg in argv:
+            keynames = ()
+            keyrefs = ()
+            if argv.gi_code.co_nlocals == 1:
+                itlist = argv.gi_code.co_cellvars
+            else:
+                itlist = argv.gi_code.co_varnames
+            localdict = argv.gi_frame.f_locals
+            for i in itlist:
+                if i != '.0':
+                    keynames += (i,)
+            for i in keynames:
+                keyrefs += (localdict[i],)
+            iv[keyrefs] = arg
+
+        self._impliedvars.append(iv)
+        return iv
 
     def read_data(self, table, option='', keyset=None, key=[], params=[]):
         '''
@@ -1017,7 +1041,7 @@ class Model:
                                         'Field5', 'Field6', '_id_'])
         return mpsdata
 
-    def _to_optmodel(self, header=1):
+    def _to_optmodel(self, header=True, expand=False):
 
         if not self._abstract:
             print('ERROR: Model is not abstract, can\'t produce OPTMODEL code')
@@ -1042,30 +1066,34 @@ class Model:
         for i in self._statements:
             s += tab + i + '\n'
 
-        s += '\n' + tab + '/* Variable Groups */\n'
+        s += '\n' + tab + '/* Variables */\n'
         for i in self._vargroups:
             s += i._to_optmodel(tabs=tab) + '\n'
 
-        s += '\n' + tab + '/* Variables */\n'
         for v in self._variables:
             if v._parent is None:
                 s += tab + v._to_optmodel() + '\n'
 
-        s += '\n' + tab + '/* Constraint Groups */\n'
+        s += '\n' + tab + '/* Implied variables */\n'
+        for v in self._impliedvars:
+            s += tab + v._to_optmodel() + '\n'
+
+        s += '\n' + tab + '/* Constraints */\n'
         for c in self._congroups:
             s += tab + c._to_optmodel() + '\n'
 
-        s += '\n' + tab + '/* Constraints */\n'
         for c in self._constraints:
             if c._parent is None:
                 s += tab + c._to_optmodel() + '\n'
 
         s += '\n' + tab + '/* Objective */\n'
         if self._objective is not None:
-            s += tab + '{} {} = '.format(self._sense, self._objective._name) 
+            s += tab + '{} {} = '.format(self._sense, self._objective._name)
             s += self._objective._to_optmodel() + '; \n'
 
         s += '\n' + tab + '/* Solver call */\n'
+        if expand:
+            s += tab + 'expand;\n'
         s += tab + 'solve;\n'
 
         if header:
