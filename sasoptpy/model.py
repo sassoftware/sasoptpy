@@ -375,25 +375,26 @@ class Model:
         self._parameters.append(p)
         return p
 
-    def add_implied_variable(self, argv, name=None):
+    def add_implied_variable(self, argv=None, name=None):
         '''
         Adds an implied variable to the model
         '''
         iv = sasoptpy.data.ExpressionDict(name=name)
-        for arg in argv:
-            keynames = ()
-            keyrefs = ()
-            if argv.gi_code.co_nlocals == 1:
-                itlist = argv.gi_code.co_cellvars
-            else:
-                itlist = argv.gi_code.co_varnames
-            localdict = argv.gi_frame.f_locals
-            for i in itlist:
-                if i != '.0':
-                    keynames += (i,)
-            for i in keynames:
-                keyrefs += (localdict[i],)
-            iv[keyrefs] = arg
+        if argv:
+            for arg in argv:
+                keynames = ()
+                keyrefs = ()
+                if argv.gi_code.co_nlocals == 1:
+                    itlist = argv.gi_code.co_cellvars
+                else:
+                    itlist = argv.gi_code.co_varnames
+                localdict = argv.gi_frame.f_locals
+                for i in itlist:
+                    if i != '.0':
+                        keynames += (i,)
+                for i in keynames:
+                    keyrefs += (localdict[i],)
+                iv[keyrefs] = arg
 
         self._impliedvars.append(iv)
         return iv

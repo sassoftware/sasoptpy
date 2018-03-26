@@ -195,6 +195,15 @@ class Expression:
         self._temp = False
         return self._name
 
+    def _to_text(self, parantheses=True):
+        if parantheses:
+            if self._operator is None:
+                #return '(' + str(self) + ')'
+                return self._name
+            else:
+                return self._to_optmodel()
+        
+
     def __repr__(self):
         s = 'sasoptpy.Expression('
         if self._name is not None:
@@ -208,10 +217,9 @@ class Expression:
         s = ''
         firstel = 1
         #if self._operator is not None:
-            #if self._operator == 'sum':
-            #    s += 'so.quick_sum('
-            #else:
-            #    s += str(self._operator) + '('
+        #    s += str(self._operator) + '('
+        #if len(self._linCoef) > 1:
+        #    s += '('
         for v, vx in self._linCoef.items():
             if (vx['val'] == 0 or
                (v == 'CONST' and isinstance(self, Constraint))):
@@ -225,10 +233,21 @@ class Expression:
                     s += '-'
             firstel = 0
             if(v is not 'CONST'):
-                refs = ' * '.join([
-                    str(i) if i._operator is None
-                    else i._to_optmodel()
-                    for i in list(vx['ref'])])
+                if 'op' in vx:
+                    op = ' {} '.format(vx['op'])
+                    refs_str = sasoptpy.utils.recursive_walk(
+                        vx['ref'],  func='__str__',
+                        attr='_operator', alt='_to_optmodel')
+                    refs = op.join(refs_str)
+                    #refs = ' {} '.format(vx['op']).join([
+                    #    '(' + str(i) + ')' if i._operator is None
+                    #    else i._to_optmodel()
+                    #    for i in list(vx['ref'])])
+                else:
+                    refs = ' * '.join([
+                        str(i) if i._operator is None
+                        else i._to_optmodel()
+                        for i in list(vx['ref'])])
                 if vx['val'] == 1 or vx['val'] == -1:
                     s += ' {} '.format(refs)
                 else:
@@ -238,10 +257,11 @@ class Expression:
                     s += ' {} '.format(abs(vx['val']))
 
         #if self._operator is not None:
+        #if self._operator is not None or len(self._linCoef) > 1:
             #s += ' ' + ' '.join(
             #    ['for {} in {}'.format(i._name, i._set._name)
             #     for i in self._iterkey])
-            #s += ')'
+        #    s += ')'
         return s
 
     def _add_coef_value(self, var, key, value):
@@ -388,15 +408,15 @@ class Expression:
         if self._operator is None:
             s = str(self)
         else:
-            s = '{} {{'.format(self._operator)
-            s += ', '.join([i._to_optmodel() for i in list(self._iterkey)])
-            s += '} ('
+            s = '{}'.format(self._operator)
+            if self._iterkey != []:
+                s += '{'
+                s += ', '.join([i._to_optmodel() for i in list(self._iterkey)])
+                s += '}'
+            s += '('
             s += str(self)
             s += ')'
         return s
-
-    #def _recursive_walk(self):
-    #    
 
     def _tag_constraint(self, *argv):
         pass
@@ -474,24 +494,31 @@ class Expression:
         return self.mult(other)
 
     def __pow__(self, other):
-        if isinstance(other, int):
-            v = self.copy()
-            for _ in range(other-1):
-                v = v * v
-            return v
-        else:
-            warnings.warn('Power is not an integer.')
-            return 0
+        #if isinstance(other, int):
+        #    v = self.copy()
+        #    for _ in range(other-1):
+        #        v = v * v
+        #    return v
+        #else:
+        r = Expression()
+        if not isinstance(other, Expression):
+            other = Expression(other, name='')
+        self.set_permanent()
+        r._linCoef[self._name, other._name] = {
+            'ref': [self, other],
+            'val': 1.0,
+            'op': '^'
+            }
+        return r
 
     def __rpow__(self, other):
         r = Expression()
-        self._operator = '^'
-        self._iterkey = []
         if not isinstance(other, Expression):
             other = Expression(other)
         r._linCoef[other._name, self._name] = {
             'ref': [other, self],
-            'val': 1.0
+            'val': 1.0,
+            'op': '^'
             }
         return r
 
@@ -509,6 +536,16 @@ class Expression:
 
     def __truediv__(self, other):
         return self.mult(1/other)
+
+    def __rtruediv__(self, other):
+        r = Expression()
+        other = Expression(other)
+        r._linCoef[other._name, self._name] = {
+            'ref': [other, self],
+            'val': 1.0,
+            'op': '/'
+            }
+        return r
 
     def __le__(self, other):
         return self._relational(other, 'L')

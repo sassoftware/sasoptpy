@@ -56,7 +56,7 @@ def check_name(name, ctype=None):
     -------
     str : The given name if valid, a random string otherwise
     '''
-    if name is None:
+    if name is None or name == '':
         if ctype is None:
             name = ''.join(random.choice(string.ascii_lowercase) for
                            _ in range(5))
@@ -94,6 +94,24 @@ def register_name(name, obj):
     '''
     __namedict[name] = obj
 
+
+def recursive_walk(obj, func, attr=None, alt=None):
+    result = []
+    for i in list(obj):
+        if isinstance(i, list):
+            result.append(recursive_walk(i, func))
+        else:
+            if attr is None:
+                m_call = getattr(i, func)
+                result.append(m_call())
+            else:
+                m_attr = getattr(i, attr)
+                if m_attr:
+                    m_call = getattr(i, alt)
+                else:
+                    m_call = getattr(i, func)
+                result.append(m_call())
+    return result
 
 def quick_sum(argv):
     '''
