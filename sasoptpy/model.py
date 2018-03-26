@@ -369,11 +369,17 @@ class Model:
         return newset
 
     def add_parameter(self, *argv, name=None, init=None):
-        keylist = list(argv)
-        name = sasoptpy.utils.check_name(name, 'param')
-        p = sasoptpy.data.Parameter(name, keys=keylist, init=init)
-        self._parameters.append(p)
-        return p
+        if len(argv) == 0:
+            name = sasoptpy.utils.check_name(name, 'param')
+            p = sasoptpy.data.Parameter(name, keys=(), init=init)
+            self._parameters.append(p)
+            return p['']
+        else:
+            keylist = list(argv)
+            name = sasoptpy.utils.check_name(name, 'param')
+            p = sasoptpy.data.Parameter(name, keys=keylist, init=init)
+            self._parameters.append(p)
+            return p
 
     def add_implied_variable(self, argv=None, name=None):
         '''

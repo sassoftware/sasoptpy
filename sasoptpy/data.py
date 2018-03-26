@@ -59,13 +59,16 @@ class Parameter:
         self._index = index
 
     def _to_optmodel(self):
-        s = 'num {} {{'.format(self._name)
-        for k in self._keys:
-            s += '{}, '.format(k._name)
-        s = s[:-2]
-        s += '}'
-        if self._init is not None:
-            s += ' init {} '.format(self._init)
+        if self._keys == ():
+            s = 'num {} = {}'.format(self._name, self._init)
+        else:
+            s = 'num {} {{'.format(self._name)
+            for k in self._keys:
+                s += '{}, '.format(k._name)
+            s = s[:-2]
+            s += '}'
+            if self._init is not None:
+                s += ' init {} '.format(self._init)
         s += ';'
         return(s)
 
@@ -113,7 +116,7 @@ class ParameterValue(sasoptpy.components.Expression):
         #pvname = sasoptpy.utils._to_bracket(param._name, key)
         self._name = param._name
         tkey = sasoptpy.utils.tuple_pack(key)
-        self._key = key
+        self._key = tkey
         self._abstract = True
         self._prefix = prefix
         self._postfix = postfix
@@ -130,10 +133,18 @@ class ParameterValue(sasoptpy.components.Expression):
         return st
 
     def __str__(self):
+        if len(self._key) == 1:
+            if isinstance(self._key[0], str):
+                if self._key[0] == '':
+                    return self._prefix +\
+                           self._name +\
+                           self._postfix
         return self._prefix +\
                sasoptpy.utils._to_bracket(self._name, self._key) +\
                self._postfix
 
+    def _to_text(self):
+        return str(self)
 
 class Set:
     '''
@@ -254,6 +265,9 @@ class SetIterator(sasoptpy.components.Expression):
             s = ''
         return s
 
+    def _to_text(self):
+        return str(self)
+
     def __str__(self):
         return self._name
 
@@ -274,8 +288,10 @@ class ExpressionDict:
         self._name = name
         self._dict = dict()
         self._conditions = []
+        self._shadows = dict()
 
     def __setitem__(self, key, value):
+        key = sasoptpy.utils.tuple_pack(key)
         try:
             if value._name is None:
                 value._name = self._name
@@ -287,30 +303,16 @@ class ExpressionDict:
             self._dict[key] = value
 
     def __getitem__(self, key):
+        key = sasoptpy.utils.tuple_pack(key)
         if key in self._dict:
             return self._dict[key]
+        elif key in self._shadows:
+            return self._shadows[key]
         else:
             tuple_key = sasoptpy.utils.tuple_pack(key)
-            for i in self._dict.keys():
-                match = True
-                for pos, el in enumerate(i):
-                    ckey = tuple_key[pos]
-                    if isinstance(el, SetIterator) and isinstance(ckey, SetIterator):
-                        if el._set._name != ckey._set._name:
-                            match = False
-                        else:
-                            continue
-                    else:
-                        if el != ckey:
-                            match = False
-                if match:
-                    for pos, el in enumerate(i):
-                        if isinstance(el, SetIterator) and isinstance(ckey, SetIterator):
-                            ckey._name = el._name
-                        else:
-                            ckey = el
-                    return self._dict[i]
-        return None
+            pv = ParameterValue(self, tuple_key)
+            self._shadows[key] = pv
+            return pv
 
     def _to_optmodel(self):
         s = 'impvar {} '.format(self._name)
@@ -323,7 +325,11 @@ class ExpressionDict:
             key = self._get_only_key()
             s += ', '.join([i._to_optmodel() for i in list(key)])
             s += '} = '
-            s += self._dict[key]._ref._to_optmodel()
+            item = self._dict[key]
+            if isinstance(item, ParameterValue):
+                s += self._dict[key]._ref._to_optmodel()
+            else:
+                s += self._dict[key]._to_optmodel()
             s += ';'
         return s
 

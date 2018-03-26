@@ -426,12 +426,18 @@ class Expression:
                         if x['val'] * y['val'] != 0:
                             target[i] = {
                                 'ref': x['ref'], 'val': x['val']*y['val']}
-                    else:  # TODO indexing is not interchangable
+                    else:  # TODO indexing is not interchangable,
                         if x['val'] * y['val'] != 0:
-                            newkey = (i, j)
-                            target[newkey] = {
-                                'ref': [x['ref'], y['ref']],
-                                'val': x['val'] * y['val']}
+                            if x.get('op') is None and y.get('op') is None:
+                                newkey = sasoptpy.utils.tuple_pack(i) + sasoptpy.utils.tuple_pack(j)
+                                target[newkey] = {
+                                    'ref': list(x['ref']) + list(y['ref']),
+                                    'val': x['val'] * y['val']}
+                            else:
+                                newkey = (i, j)
+                                target[newkey] = {
+                                    'ref': [x['ref'], other],
+                                    'val': x['val'] * y['val']}
             r._conditions += self._conditions
             r._conditions += other._conditions
             return r
@@ -559,7 +565,7 @@ class Expression:
     def __rpow__(self, other):
         r = Expression()
         if not isinstance(other, Expression):
-            other = Expression(other)
+            other = Expression(other, name='')
         r._linCoef[other._name, self._name] = {
             'ref': [other, self],
             'val': 1.0,
@@ -585,12 +591,13 @@ class Expression:
 
     def __rtruediv__(self, other):
         r = Expression()
-        other = Expression(other)
+        other = Expression(other, name='')
         r._linCoef[other._name, self._name] = {
             'ref': [other, self],
             'val': 1.0,
             'op': '/'
             }
+        r._abstract = self._abstract or other._abstract
         return r
 
     def __le__(self, other):
@@ -1009,7 +1016,7 @@ class Constraint(Expression):
         s = ''
         if self._parent is None:
             s = 'con {} : '.format(self._name)
-        s += super().__str__()
+        s += super()._to_text() #super().__str__()
         if self._direction == 'E':
             s += ' = '
         elif self._direction == 'L':
