@@ -195,14 +195,62 @@ class Expression:
         self._temp = False
         return self._name
 
-    def _to_text(self, parantheses=True):
-        if parantheses:
-            if self._operator is None:
-                #return '(' + str(self) + ')'
-                return self._name
+    def _to_text(self):
+        s = ''
+        if self._operator:
+            s += self._operator
+            if self._operator == 'sum':
+                s += '{'
+                allkeys = []
+                for i in self._iterkey:
+                    if isinstance(i, sasoptpy.data.SetIterator):
+                        allkeys.append(i._to_optmodel())
+                s += ', '.join(allkeys)
+                s += '}'
+            s += '('
+
+        itemcnt = 0
+        firstel = True
+        for idx, el in self._linCoef.items():
+            val = el['val']
+            ref = el['ref']
+            op = el.get('op')
+            csign = copysign(1, val)
+            if val == 0:
+                continue
+            if idx == 'CONST' and isinstance(self, Constraint):
+                continue
+            if not(firstel and csign == 1):
+                if csign == 1:
+                    s += ' + '
+                else:
+                    s += ' - '
+            firstel = False
+            if idx != 'CONST':
+                if op:
+                    optext = ' {} '.format(op)
+                else:
+                    optext = ' * '
+
+                if isinstance(ref, list):
+                    strlist = sasoptpy.utils.recursive_walk(
+                        ref, func='_to_text')
+                else:
+                    strlist = [ref._to_text()]
+                refs = optext.join(strlist)
+                if val == 1 or val == -1:
+                    s += '{}'.format(refs)
+                else:
+                    s += '{} * {}'.format(abs(float(val)), refs)
             else:
-                return self._to_optmodel()
-        
+                s += '{}'.format(abs(val))
+            itemcnt += 1
+
+        if self._operator:
+            s += ')'
+        if itemcnt > 1 and self._operator is None:
+            s = '(' + s + ')'
+        return s
 
     def __repr__(self):
         s = 'sasoptpy.Expression('
@@ -214,6 +262,8 @@ class Expression:
         return s
 
     def __str__(self):
+        if self._abstract:
+            return self._to_text()
         s = ''
         firstel = 1
         #if self._operator is not None:
@@ -494,12 +544,6 @@ class Expression:
         return self.mult(other)
 
     def __pow__(self, other):
-        #if isinstance(other, int):
-        #    v = self.copy()
-        #    for _ in range(other-1):
-        #        v = v * v
-        #    return v
-        #else:
         r = Expression()
         if not isinstance(other, Expression):
             other = Expression(other, name='')
@@ -509,6 +553,7 @@ class Expression:
             'val': 1.0,
             'op': '^'
             }
+        r._abstract = self._abstract or other._abstract
         return r
 
     def __rpow__(self, other):
@@ -520,6 +565,7 @@ class Expression:
             'val': 1.0,
             'op': '^'
             }
+        r._abstract = self._abstract or other._abstract
         return r
 
     def __radd__(self, other):
@@ -701,6 +747,9 @@ class Variable(Expression):
             st += 'shadow=True, '
         st += ' vartype=\'{}\')'.format(self._type)
         return st
+
+    def _to_text(self):
+        return str(self)
 
     def __str__(self):
         if self._parent is not None and self._key is not None:

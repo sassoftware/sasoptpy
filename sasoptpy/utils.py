@@ -644,6 +644,17 @@ def _sort_tuple(i):
     return(key)
 
 
+def get_mutable(exp):
+    '''
+    Returns a mutable copy of the given expression if it is immutable
+    '''
+    if isinstance(exp, sasoptpy.components.Variable):
+        r = sasoptpy.components.Expression(exp)
+    else:
+        r = exp
+    return r
+
+
 def get_solution_table(*argv, sort=True, rhs=False):
     '''
     Returns the requested variable names as a DataFrame table
