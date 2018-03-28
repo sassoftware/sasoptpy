@@ -88,6 +88,19 @@ def _is_generated(expr):
         return True
 
 
+def exp_range(start, stop, step=1):
+    '''
+    Creates a range using expressions
+    '''
+    regular = isinstance(start, int) and isinstance(stop, int) and\
+        isinstance(step, int)
+    if regular:
+        return range(start, stop, step)
+    setname = str(start) + '..' + str(stop)
+    setname = setname.replace(' ', '')
+    return sasoptpy.data.Set(name=setname)
+
+
 def register_name(name, obj):
     '''
     Adds the name of a component into the global reference list
@@ -349,12 +362,12 @@ def _to_optmodel_loop(keys):
     iters = get_iterators(keys)
     conds = get_conditions(keys)
     if len(iters) > 0:
-        s += 'for {'
+        s += ' {'
         s += ', '.join(iters)
         if len(conds) > 0:
             s += ': '
             s += ' and '.join(conds)
-        s += '} '
+        s += '}'
     return s
 
 

@@ -1316,7 +1316,9 @@ class VariableGroup:
             ubparam = str(v) + '.ub' != str(v._ub)
             if lbparam or ubparam:
                 s += '\n' + tabs
-                s += sasoptpy.utils._to_optmodel_loop(i)
+                loop_text = sasoptpy.utils._to_optmodel_loop(i)
+                if loop_text != '':
+                    s += 'for ' + loop_text
 
                 if lbparam:
                     if isinstance(v._lb, Expression):
@@ -1334,7 +1336,9 @@ class VariableGroup:
             initparam = v._init != None
             if initparam:
                 s += '\n' + tabs
-                s += sasoptpy.utils._to_optmodel_loop(i)
+                loop_text = sasoptpy.utils._to_optmodel_loop(i)
+                if loop_text != '':
+                    s += 'for ' + loop_text
                 s += str(v) + ' = ' + str(v._init) + ';'
 
         return(s)
@@ -1697,17 +1701,9 @@ class ConstraintGroup:
 
     def _to_optmodel(self):
         ab_key = list(self._condict)[0]
-        s = 'con {} {{'.format(self._name)
-        s += ', '.join([i._to_optmodel() for i in ab_key])
-        allconditions = []
-        for i in ab_key:
-            if i._to_conditions() != '':
-                allconditions.append(i._to_conditions())
-        if len(allconditions) > 0:
-            s += ': '
-            s += ' and '.join(allconditions)
-        s += '}: '
-        s += self._condict[ab_key]._to_optmodel()
+        s = 'con {} '.format(self._name)
+        s += sasoptpy.utils._to_optmodel_loop(ab_key)
+        s += ': ' + self._condict[ab_key]._to_optmodel()
         s += ';'
         return s
 
