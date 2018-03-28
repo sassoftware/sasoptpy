@@ -344,6 +344,37 @@ def get_counter(ctrtype):
     return ctr[0]
 
 
+def _to_optmodel_loop(keys):
+    s = ''
+    iters = get_iterators(keys)
+    conds = get_conditions(keys)
+    if len(iters) > 0:
+        s += 'for {'
+        s += ', '.join(iters)
+        if len(conds) > 0:
+            s += ': '
+            s += ' and '.join(conds)
+        s += '} '
+    return s
+
+
+def get_iterators(keys):
+    iterators = []
+    for key in keys:
+        if isinstance(key, sasoptpy.data.SetIterator):
+            iterators.append(key._to_optmodel())
+    return iterators
+
+
+def get_conditions(keys):
+    conditions = []
+    for key in keys:
+        if isinstance(key, sasoptpy.data.SetIterator):
+            if len(key._conditions) > 0:
+                conditions.append(key._to_conditions())
+    return conditions
+
+
 def tuple_unpack(tp):
     '''
     Grabs the first element in a tuple, if a tuple is given as argument

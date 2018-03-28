@@ -98,7 +98,7 @@ class Model:
         return super().__eq__(other)
 
     def add_variable(self, var=None, vartype=sasoptpy.utils.CONT, name=None,
-                     lb=0, ub=inf, init=None):
+                     lb=0, ub=inf, init=None, abstract=False):
         '''
         Adds a new variable to the model
 
@@ -170,7 +170,7 @@ class Model:
 
     def add_variables(self, *argv, vg=None, name=None,
                       vartype=sasoptpy.utils.CONT,
-                      lb=None, ub=None, init=None):
+                      lb=None, ub=None, init=None, abstract=None):
         '''
         Adds a group of variables to the model
 
@@ -224,7 +224,8 @@ class Model:
                     type(vg)))
         else:
             name = sasoptpy.utils.check_name(name, 'var')
-            abstract = isinstance(argv[0], sasoptpy.data.Set)
+            if abstract is None:
+                abstract = isinstance(argv[0], sasoptpy.data.Set)
             vg = sasoptpy.components.VariableGroup(*argv, name=name,
                                                    vartype=vartype,
                                                    lb=lb, ub=ub, init=init,
@@ -363,8 +364,16 @@ class Model:
                 c = self.add_constraint(c=argv, name=name)
                 return c
 
-    def add_set(self, name, settype='num'):
-        newset = sasoptpy.data.Set(name, settype=settype)
+    def add_set(self, name, init=None, settype='num'):
+        if init:
+            if isinstance(init, range):
+                newinit = str(init.start) + '..' + str(init.stop)
+                if init.step != 1:
+                    newinit = ' by ' + init.step
+                init = newinit
+            elif isinstance(init, list):
+                init = '[' + ' '.join([str(i) for i in init]) + ']'
+        newset = sasoptpy.data.Set(name, init=init, settype=settype)
         self._sets.append(newset)
         return newset
 
@@ -1067,7 +1076,7 @@ class Model:
 
         s += '\n' + tab + '/* Parameters */\n'
         for i in self._parameters:
-            s += tab + i._to_optmodel() + '\n'
+            s += i._to_optmodel(tab) + '\n'
 
         s += '\n' + tab + '/* Statements */\n'
         for i in self._statements:

@@ -52,17 +52,23 @@ class Parameter:
             self._shadows[key] = pv
             return pv
 
+    def __setitem__(self, key, item):
+        pv = self[key]
+        pv._assign = item
+
     def _set_loop(self, source, keyset, colname=None, index=None):
         self._source = source
         self._keyset = keyset
         self._colname = colname
         self._index = index
 
-    def _to_optmodel(self):
+    def _to_optmodel(self, tabs=None):
+        if tabs is None:
+            tabs = ''
         if self._keys == ():
-            s = 'num {} = {}'.format(self._name, self._init)
+            s = tabs + 'num {} = {}'.format(self._name, self._init)
         else:
-            s = 'num {} {{'.format(self._name)
+            s = tabs + 'num {} {{'.format(self._name)
             for k in self._keys:
                 s += '{}, '.format(k._name)
             s = s[:-2]
@@ -70,6 +76,25 @@ class Parameter:
             if self._init is not None:
                 s += ' init {} '.format(self._init)
         s += ';'
+
+        for key in self._shadows:
+            sh = self._shadows[key]
+            if sh._assign is not None:
+                s += '\n'
+                has_iterators = False
+                iter_list = []
+                for i in key:
+                    if isinstance(i, SetIterator):
+                        has_iterators = True
+                        iter_list.append(i._to_optmodel())
+                if has_iterators:
+                    forcond = 'for {'
+                    forcond += ', '.join(iter_list)
+                    forcond += '} '
+                else:
+                    forcond = ''
+                s += tabs + forcond + str(sh) + ' = ' + str(sh._assign) + ';'
+
         return(s)
 
     def _to_read_data(self):
@@ -123,6 +148,7 @@ class ParameterValue(sasoptpy.components.Expression):
         self._linCoef[str(self)] = {'ref': self,
                                     'val': 1.0}
         self._ref = param
+        self._assign = None
 
     def _tag_constraint(self, *argv):
         pass
@@ -151,8 +177,9 @@ class Set:
     Represents index sets inside PROC OPTMODEL
     '''
 
-    def __init__(self, name, settype='num'):
+    def __init__(self, name, init=None, settype='num'):
         self._name = name
+        self._init = init
         self._type = settype
         self._colname = name
         self._iterators = []
@@ -167,6 +194,8 @@ class Set:
         if self._type == 'str':
             s += '<str> '
         s += self._name
+        if self._init is not None:
+            s += ' = ' + str(self._init)
         s += ';'
         return(s)
 

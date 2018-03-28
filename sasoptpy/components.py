@@ -1315,28 +1315,28 @@ class VariableGroup:
             lbparam = str(v) + '.lb' != str(v._lb)
             ubparam = str(v) + '.ub' != str(v._ub)
             if lbparam or ubparam:
-                s += '\n' + tabs + 'for {'
-                s += ','.join([iv._to_optmodel() for iv in i])
-                condition_cnt = 0
-                for iv in i:
-                    if isinstance(iv, sasoptpy.data.SetIterator):
-                        condition_cnt += len(iv._conditions)
-                # TODO recursive condition check inside expressions!
-                if condition_cnt > 0:
-                    s += ':'
-                    s += ' and '.join([iv._to_conditions() for iv in i])
-                s += '} '
+                s += '\n' + tabs
+                s += sasoptpy.utils._to_optmodel_loop(i)
+
                 if lbparam:
                     if isinstance(v._lb, Expression):
                         s += str(v) + '.lb=' + v._lb._to_optmodel()
                     else:
                         s += str(v) + '.lb=' + str(v._lb)
+                    s += ' '
                 if ubparam:
                     if isinstance(v._ub, Expression):
                         s += str(v) + '.ub=' + v._ub._to_optmodel()
                     else:
                         s += str(v) + '.ub=' + str(v._ub)
+                    s += ' '
                 s += ';'
+            initparam = v._init != None
+            if initparam:
+                s += '\n' + tabs
+                s += sasoptpy.utils._to_optmodel_loop(i)
+                s += str(v) + ' = ' + str(v._init) + ';'
+
         return(s)
 
     def sum(self, *argv):
