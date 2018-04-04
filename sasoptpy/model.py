@@ -889,6 +889,9 @@ class Model:
                 cv = self._objective._linCoef[v._name]
                 current_row = ['', v._name, self._objective._name, cv['val']]
                 f5 = 1
+            elif not v._cons:
+                current_row = ['', v._name, self._objective._name, 0.0]
+                f5 = 1
             for cn in v._cons:
                 if cn in self._constraintDict:
                     c = self._constraintDict[cn]
@@ -1262,6 +1265,13 @@ class Model:
             for _, row in self._primalSolution.iterrows():
                 self._variableDict[row['_VAR_']]._value = row['_VALUE_']
 
+            # Capturing dual values for LP problems
+            if ptype == 1:
+                for _, row in self._primalSolution.iterrows():
+                    self._variableDict[row['_VAR_']]._dual = row['_R_COST_']
+                for _, row in self._dualSolution.iterrows():
+                    self._constraintDict[row['_ROW_']]._dual = row['_VALUE_']
+
         # Drop tables
         if drop:
             sess.table.droptable(table=mps_table.name)
@@ -1283,8 +1293,6 @@ class Model:
             self._solutionSummary.set_index(['Label1'], inplace=True)
             self._solutionSummary.columns = ['Value']
             self._solutionSummary.index.names = ['Label']
-            print(self._problemSummary)
-            print(self._solutionSummary)
             # Record status and time
             self._status = response.solutionStatus
             self._soltime = response.solutionTime

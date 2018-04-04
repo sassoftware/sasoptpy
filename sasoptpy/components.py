@@ -77,6 +77,7 @@ class Expression:
         else:
             self._name = None
         self._value = 0
+        self._dual = None
         self._linCoef = {}
         if exp is None:
             self._linCoef = {'CONST': {'ref': None, 'val': 0}}
