@@ -349,6 +349,25 @@ class Model:
                 c = self.add_constraint(c=argv, name=name)
                 return c
 
+    def drop_variable(self, variable):
+        pass
+
+    def drop_constraint(self, constraint):
+        try:
+            del self._constraintDict[constraint._name]
+            for i, c in enumerate(self._constraints):
+                if c._name == constraint._name:
+                    del self._constraints[i]
+        except KeyError:
+            pass
+
+    def drop_variables(self, variables):
+        pass
+
+    def drop_constraints(self, constraints):
+        for c in constraints:
+            self.drop_constraint(c)
+
     def include(self, *argv):
         '''
         Adds existing variables and constraints to a model
@@ -889,7 +908,7 @@ class Model:
                 cv = self._objective._linCoef[v._name]
                 current_row = ['', v._name, self._objective._name, cv['val']]
                 f5 = 1
-            elif not v._cons:
+            else:
                 current_row = ['', v._name, self._objective._name, 0.0]
                 f5 = 1
             for cn in v._cons:
