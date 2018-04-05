@@ -350,9 +350,63 @@ class Model:
                 return c
 
     def drop_variable(self, variable):
-        pass
+        '''
+        Drops a variable from the model
+
+        Parameters
+        ----------
+        variable : :class:`Variable` object
+            The variable to be dropped from the model
+
+        Examples
+        --------
+
+        >>> x = m.add_variable(name='x')
+        >>> y = m.add_variable(name='y')
+        >>> print(m.get_variable('x'))
+         x
+        >>> m.drop_variable(x)
+        >>> print(m.get_variable('x'))
+        None
+
+        See also
+        --------
+        :func:`sasoptpy.Model.drop_variables`
+        :func:`sasoptpy.Model.drop_constraint`
+        :func:`sasoptpy.Model.drop_constraints`
+
+        '''
+        for i, v in enumerate(self._variables):
+            if id(variable) == id(v):
+                del self._variables[i]
+                return
 
     def drop_constraint(self, constraint):
+        '''
+        Drops a constraint from the model
+
+        Parameters
+        ----------
+        constraint : :class:`Constraint` object
+            The constraint to be dropped from the model
+
+        Examples
+        --------
+
+        >>> c1 = m.add_constraint(2 * x + y <= 15, name='c1')
+        >>> print(m.get_constraint('c1'))
+          2.0 * x  +  y  <=  15
+        >>> m.drop_constraint(c1)
+        >>> print(m.get_constraint('c1'))
+        None
+
+        See also
+        --------
+        :func:`sasoptpy.Model.drop_constraints`
+        :func:`sasoptpy.Model.drop_variable`
+        :func:`sasoptpy.Model.drop_variables`
+
+        '''
         try:
             del self._constraintDict[constraint._name]
             for i, c in enumerate(self._constraints):
@@ -362,9 +416,62 @@ class Model:
             pass
 
     def drop_variables(self, variables):
-        pass
+        '''
+        Drops a variable group from the model
+
+        Parameters
+        ----------
+        variables : :class:`VariableGroup` object
+            The variable group to be dropped from the model
+
+        Examples
+        --------
+
+        >>> x = m.add_variables(3, name='x')
+        >>> print(m.get_variables())
+        [sasoptpy.Variable(name='x_0',  vartype='CONT'),
+         sasoptpy.Variable(name='x_1',  vartype='CONT')]
+        >>> m.drop_variables(x)
+        >>> print(m.get_variables())
+        []
+
+        See also
+        --------
+        :func:`sasoptpy.Model.drop_variable`
+        :func:`sasoptpy.Model.drop_constraint`
+        :func:`sasoptpy.Model.drop_constraints`
+
+        '''
+        for v in variables:
+            self.drop_variable(v)
 
     def drop_constraints(self, constraints):
+        '''
+        Drops a constraint group from the model
+
+        Parameters
+        ----------
+        constraints : :class:`ConstraintGroup` object
+            The constraint group to be dropped from the model
+
+        Examples
+        --------
+
+        >>> c1 = m.add_constraints((x[i] + y <= 15 for i in [0, 1]), name='c1')
+        >>> print(m.get_constraints())
+        [sasoptpy.Constraint( x[0]  +  y  <=  15, name='c1_0'),
+         sasoptpy.Constraint( x[1]  +  y  <=  15, name='c1_1')]
+        >>> m.drop_constraints(c1)
+        >>> print(m.get_constraints())
+        []
+
+        See also
+        --------
+        :func:`sasoptpy.Model.drop_constraints`
+        :func:`sasoptpy.Model.drop_variable`
+        :func:`sasoptpy.Model.drop_variables`
+
+        '''
         for c in constraints:
             self.drop_constraint(c)
 
@@ -520,6 +627,50 @@ class Model:
         '''
         return self._objective.get_value()
 
+    def get_constraint(self, name):
+        '''
+        Returns the reference to a constraint in the model
+
+        Parameters
+        ----------
+        name : string
+            Name of the constraint requested
+
+        Returns
+        -------
+        :class:`Constraint` object
+
+        Examples
+        --------
+
+        >>> m.add_constraint(2 * x + y <= 15, name='c1')
+        >>> print(m.get_constraint('c1'))
+        2.0 * x  +  y  <=  15
+
+        '''
+        return self._constraintDict.get(name)
+
+    def get_constraints(self):
+        '''
+        Returns a list of constraints in the model
+
+        Returns
+        -------
+        list : A list of :class:`sasoptpy.components.Constraint` objects
+
+        Examples
+        --------
+
+        >>> m.add_constraint(x[0] + y <= 15, name='c1')
+        >>> m.add_constraints((2 * x[i] - y >= 1 for i in [0, 1]), name='c2')
+        >>> print(m.get_constraints())
+        [sasoptpy.Constraint( x[0]  +  y  <=  15, name='c1'),
+         sasoptpy.Constraint( 2.0 * x[0]  -  y  >=  1, name='c2_0'),
+         sasoptpy.Constraint( 2.0 * x[1]  -  y  >=  1, name='c2_1')]
+
+        '''
+        return self._constraints
+
     def get_variable(self, name):
         '''
         Returns the reference to a variable in the model
@@ -545,6 +696,27 @@ class Model:
         for v in self._variables:
             if v._name == name:
                 return v
+
+    def get_variables(self):
+        '''
+        Returns a list of variables
+
+        Returns
+        -------
+        list : A list of :class:`sasoptpy.components.Variable` objects
+
+        Examples
+        --------
+
+        >>> x = m.add_variables(2, name='x')
+        >>> y = m.add_variable(name='y')
+        >>> print(m.get_variables())
+        [sasoptpy.Variable(name='x_0',  vartype='CONT'),
+         sasoptpy.Variable(name='x_1',  vartype='CONT'),
+         sasoptpy.Variable(name='y',  vartype='CONT')]
+
+        '''
+        return self._variables
 
     def get_variable_coef(self, var):
         '''
