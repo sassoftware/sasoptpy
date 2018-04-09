@@ -434,7 +434,10 @@ class Model:
         s = 'read data {} {} into '.format(table.name, option)
         if len(keyset) == 1:
             k = keyset[0]
-            s += '{}=[{}] '.format(k._name, k._colname)
+            if isinstance(k._colname, str):
+                s += '{}=[{}] '.format(k._name, k._colname)
+            elif isinstance(k._colname, list):
+                s += '{}=[{}] '.format(k._name, ' '.join(k._colname))
         else:
             s += '['
             for k in keyset:

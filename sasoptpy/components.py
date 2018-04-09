@@ -201,13 +201,7 @@ class Expression:
         if self._operator:
             s += self._operator
             if self._operator == 'sum':
-                s += '{'
-                allkeys = []
-                for i in self._iterkey:
-                    if isinstance(i, sasoptpy.data.SetIterator):
-                        allkeys.append(i._to_optmodel())
-                s += ', '.join(allkeys)
-                s += '}'
+                s += sasoptpy.utils._to_optmodel_loop(self._iterkey)
             s += '('
 
         itemcnt = 0
@@ -1319,7 +1313,7 @@ class VariableGroup:
                 s += '\n' + tabs
                 loop_text = sasoptpy.utils._to_optmodel_loop(i)
                 if loop_text != '':
-                    s += 'for ' + loop_text
+                    s += 'for ' + loop_text + ' '
 
                 if lbparam:
                     if isinstance(v._lb, Expression):

@@ -138,7 +138,7 @@ class ParameterValue(sasoptpy.components.Expression):
 
     def __init__(self, param, key, prefix='', postfix=''):
         super().__init__()
-        #pvname = sasoptpy.utils._to_bracket(param._name, key)
+        # pvname = sasoptpy.utils._to_bracket(param._name, key)
         self._name = param._name
         tkey = sasoptpy.utils.tuple_pack(key)
         self._key = tkey
@@ -166,11 +166,12 @@ class ParameterValue(sasoptpy.components.Expression):
                            self._name +\
                            self._postfix
         return self._prefix +\
-               sasoptpy.utils._to_bracket(self._name, self._key) +\
-               self._postfix
+            sasoptpy.utils._to_bracket(self._name, self._key) +\
+            self._postfix
 
     def _to_text(self):
         return str(self)
+
 
 class Set:
     '''
@@ -185,14 +186,27 @@ class Set:
         self._iterators = []
 
     def __iter__(self):
-        s = SetIterator(self)
-        self._iterators.append(s)
-        return iter([s])
+        if isinstance(self._type, list):
+            itlist = tuple(SetIterator(
+                self, datatype=j,
+                group={'order': i, 'outof': len(self._type),
+                       'id': id(self._type[0])})
+                for i, j in enumerate(self._type))
+            self._iterators.append(itlist)
+            return iter([itlist])
+        else:
+            s = SetIterator(self)
+            self._iterators.append(s)
+            return iter([s])
 
     def _to_optmodel(self):
         s = 'set '
-        if self._type == 'str':
+        if isinstance(self._type, list):
+            s += '<' + ','.join(self._type) + '> '
+        elif self._type == 'str':
             s += '<str> '
+        elif self._type == 'num':
+            s += ''
         s += self._name
         if self._init is not None:
             s += ' = ' + str(self._init)
@@ -224,13 +238,18 @@ class Set:
 
 class SetIterator(sasoptpy.components.Expression):
 
-    def __init__(self, initset, conditions=None):
+    def __init__(self, initset, conditions=None, datatype='num',
+                 group={'order': 1, 'outof': 1, 'id': 0}):
         # TODO use self._name = initset._colname
         super().__init__()
         self._name = sasoptpy.utils.check_name(None, 'i')
         self._linCoef[self._name] = {'ref': self,
                                      'val': 1.0}
         self._set = initset
+        self._type = datatype
+        self._order = group['order']
+        self._outof = group['outof']
+        self._group = group['id']
         if conditions is None:
             conditions = []
         self._conditions = conditions
@@ -247,8 +266,8 @@ class SetIterator(sasoptpy.components.Expression):
         return True
 
     def __eq__(self, key):
-        if isinstance(key, SetIterator):
-            return self._name == key._name
+        #if isinstance(key, SetIterator):
+        #    return self._name == key._name
         self.__add_condition('=', key)  # or 'EQ'
         return True
 
@@ -306,7 +325,8 @@ class SetIterator(sasoptpy.components.Expression):
         for i in self._conditions:
             s += '{{\'type\': \'{}\', \'key\': \'{}\'}}, '.format(
                 i['type'], i['key'])
-        s += '])'
+        s += '], datatype={}, order={}, outof={}, group={})'.format(
+            self._type, self._order, self._outof, self._group)
         return(s)
 
 

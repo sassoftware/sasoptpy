@@ -373,9 +373,19 @@ def _to_optmodel_loop(keys):
 
 def get_iterators(keys):
     iterators = []
+    groups = {}
     for key in keys:
         if isinstance(key, sasoptpy.data.SetIterator):
-            iterators.append(key._to_optmodel())
+            if key._group == 0:
+                iterators.append(key._to_optmodel())
+            else:
+                g = groups.setdefault(key._group, [])
+                g.append(key)
+    if groups:
+        for kg in groups.values():
+            s = '<' + ','.join([i._name for i in kg]) + '> in ' +\
+                kg[0]._set._name
+            iterators.append(s)
     return iterators
 
 
