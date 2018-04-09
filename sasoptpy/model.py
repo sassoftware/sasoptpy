@@ -23,10 +23,10 @@ Model includes :class:`Model` class, the main structure of an opt. model
 
 
 from math import inf
-from time import time
 from types import GeneratorType
 import warnings
 
+import numpy as np
 import pandas as pd
 
 import sasoptpy.components
@@ -446,6 +446,132 @@ class Model:
         s += ';'
         self._statements.append(s)
 
+    def drop_variable(self, variable):
+        '''
+        Drops a variable from the model
+
+        Parameters
+        ----------
+        variable : :class:`Variable` object
+            The variable to be dropped from the model
+
+        Examples
+        --------
+
+        >>> x = m.add_variable(name='x')
+        >>> y = m.add_variable(name='y')
+        >>> print(m.get_variable('x'))
+         x
+        >>> m.drop_variable(x)
+        >>> print(m.get_variable('x'))
+        None
+
+        See also
+        --------
+        :func:`sasoptpy.Model.drop_variables`
+        :func:`sasoptpy.Model.drop_constraint`
+        :func:`sasoptpy.Model.drop_constraints`
+
+        '''
+        for i, v in enumerate(self._variables):
+            if id(variable) == id(v):
+                del self._variables[i]
+                return
+
+    def drop_constraint(self, constraint):
+        '''
+        Drops a constraint from the model
+
+        Parameters
+        ----------
+        constraint : :class:`Constraint` object
+            The constraint to be dropped from the model
+
+        Examples
+        --------
+
+        >>> c1 = m.add_constraint(2 * x + y <= 15, name='c1')
+        >>> print(m.get_constraint('c1'))
+          2.0 * x  +  y  <=  15
+        >>> m.drop_constraint(c1)
+        >>> print(m.get_constraint('c1'))
+        None
+
+        See also
+        --------
+        :func:`sasoptpy.Model.drop_constraints`
+        :func:`sasoptpy.Model.drop_variable`
+        :func:`sasoptpy.Model.drop_variables`
+
+        '''
+        try:
+            del self._constraintDict[constraint._name]
+            for i, c in enumerate(self._constraints):
+                if c._name == constraint._name:
+                    del self._constraints[i]
+        except KeyError:
+            pass
+
+    def drop_variables(self, variables):
+        '''
+        Drops a variable group from the model
+
+        Parameters
+        ----------
+        variables : :class:`VariableGroup` object
+            The variable group to be dropped from the model
+
+        Examples
+        --------
+
+        >>> x = m.add_variables(3, name='x')
+        >>> print(m.get_variables())
+        [sasoptpy.Variable(name='x_0',  vartype='CONT'),
+         sasoptpy.Variable(name='x_1',  vartype='CONT')]
+        >>> m.drop_variables(x)
+        >>> print(m.get_variables())
+        []
+
+        See also
+        --------
+        :func:`sasoptpy.Model.drop_variable`
+        :func:`sasoptpy.Model.drop_constraint`
+        :func:`sasoptpy.Model.drop_constraints`
+
+        '''
+        for v in variables:
+            self.drop_variable(v)
+
+    def drop_constraints(self, constraints):
+        '''
+        Drops a constraint group from the model
+
+        Parameters
+        ----------
+        constraints : :class:`ConstraintGroup` object
+            The constraint group to be dropped from the model
+
+        Examples
+        --------
+
+        >>> c1 = m.add_constraints((x[i] + y <= 15 for i in [0, 1]), name='c1')
+        >>> print(m.get_constraints())
+        [sasoptpy.Constraint( x[0]  +  y  <=  15, name='c1_0'),
+         sasoptpy.Constraint( x[1]  +  y  <=  15, name='c1_1')]
+        >>> m.drop_constraints(c1)
+        >>> print(m.get_constraints())
+        []
+
+        See also
+        --------
+        :func:`sasoptpy.Model.drop_constraints`
+        :func:`sasoptpy.Model.drop_variable`
+        :func:`sasoptpy.Model.drop_variables`
+
+        '''
+        for c in constraints:
+            self.drop_constraint(c)
+
     def include(self, *argv):
         '''
         Adds existing variables and constraints to a model
@@ -598,6 +724,50 @@ class Model:
         '''
         return self._objective.get_value()
 
+    def get_constraint(self, name):
+        '''
+        Returns the reference to a constraint in the model
+
+        Parameters
+        ----------
+        name : string
+            Name of the constraint requested
+
+        Returns
+        -------
+        :class:`Constraint` object
+
+        Examples
+        --------
+
+        >>> m.add_constraint(2 * x + y <= 15, name='c1')
+        >>> print(m.get_constraint('c1'))
+        2.0 * x  +  y  <=  15
+
+        '''
+        return self._constraintDict.get(name)
+
+    def get_constraints(self):
+        '''
+        Returns a list of constraints in the model
+
+        Returns
+        -------
+        list : A list of :class:`sasoptpy.components.Constraint` objects
+
+        Examples
+        --------
+
+        >>> m.add_constraint(x[0] + y <= 15, name='c1')
+        >>> m.add_constraints((2 * x[i] - y >= 1 for i in [0, 1]), name='c2')
+        >>> print(m.get_constraints())
+        [sasoptpy.Constraint( x[0]  +  y  <=  15, name='c1'),
+         sasoptpy.Constraint( 2.0 * x[0]  -  y  >=  1, name='c2_0'),
+         sasoptpy.Constraint( 2.0 * x[1]  -  y  >=  1, name='c2_1')]
+
+        '''
+        return self._constraints
+
     def get_variable(self, name):
         '''
         Returns the reference to a variable in the model
@@ -623,6 +793,27 @@ class Model:
         for v in self._variables:
             if v._name == name:
                 return v
+
+    def get_variables(self):
+        '''
+        Returns a list of variables
+
+        Returns
+        -------
+        list : A list of :class:`sasoptpy.components.Variable` objects
+
+        Examples
+        --------
+
+        >>> x = m.add_variables(2, name='x')
+        >>> y = m.add_variable(name='y')
+        >>> print(m.get_variables())
+        [sasoptpy.Variable(name='x_0',  vartype='CONT'),
+         sasoptpy.Variable(name='x_1',  vartype='CONT'),
+         sasoptpy.Variable(name='y',  vartype='CONT')]
+
+        '''
+        return self._variables
 
     def get_variable_coef(self, var):
         '''
@@ -986,6 +1177,9 @@ class Model:
                 cv = self._objective._linCoef[v._name]
                 current_row = ['', v._name, self._objective._name, cv['val']]
                 f5 = 1
+            else:
+                current_row = ['', v._name, self._objective._name, 0.0]
+                f5 = 1
             for cn in v._cons:
                 if cn in self._constraintDict:
                     c = self._constraintDict[cn]
@@ -1203,7 +1397,7 @@ class Model:
         else:
             return None
 
-    def solve_remote(self):
+    def remote_solve(self):
         # Check if session is defined
         if self.test_session():
             sess = self._session
@@ -1212,6 +1406,81 @@ class Model:
         sess.loadactionset(actionset='optimization')
         optmodel_string = self._to_optmodel(0)
         sess.runOptmodel(optmodel_string)
+
+    def local_solve(self, session, name='MPS'):
+        '''
+        **Experimental** Solves the model by calling SAS 9.4 solvers
+
+        Parameters
+        ----------
+        session : :class:`saspy.SASsession` object
+            SAS session
+        name : string, optional
+            Name of the MPS table
+
+        Notes
+        -----
+
+        - To use this function, you need to have saspy installed on your
+          Python environment
+        - This function is experimental and may not work reliable
+
+        '''
+
+        try:
+            import saspy as sp
+        except ImportError:
+            print('ERROR: saspy cannot be imported.')
+            return False
+
+        if not isinstance(session, sp.SASsession):
+            print('ERROR: session= argument is not a valid SAS session.')
+            return False
+
+        # Get the MPS data
+        df = self.to_frame()
+
+        # Prepare for the upload
+        for f in ['Field1', 'Field2', 'Field3', 'Field5']:
+            df[f] = df[f].replace('', '.')
+        for f in ['Field4', 'Field6']:
+            df[f] = df[f].replace('', np.nan)
+        df['_id_'].astype('int')
+
+        # Upload MPS table
+        session.df2sd(df, table=name)
+
+        # Find problem type and initial values
+        ptype = 1  # LP
+        for v in self._variables:
+            if v._type != sasoptpy.utils.CONT:
+                ptype = 2
+                break
+
+        if ptype == 1:
+            c = session.submit("""
+            proc optlp data = {}
+               primalout  = primal_out
+               dualout    = dual_out;
+            run;
+            """.format(name))
+        else:
+            c = session.submit("""
+            proc optmilp data = {}
+               primalout  = primal_out
+               dualout    = dual_out;
+            run;
+            """.format(name))
+
+        self._primalSolution = session.sd2df('PRIMAL_OUT')
+        self._dualSolution = session.sd2df('DUAL_OUT')
+        print(c['LOG'])
+
+        # Parse solutions
+        for _, row in self._primalSolution.iterrows():
+            self._variableDict[row['_VAR_']]._value = row['_VALUE_']
+
+        return True
 
     def solve(self, milp={}, lp={}, name=None, drop=True, replace=True,
               primalin=False):
@@ -1275,7 +1544,7 @@ class Model:
         '''
 
         if self._abstract:
-            self.solve_remote()
+            self.remote_solve()
             return None
 
         # Check if session is defined
@@ -1358,6 +1627,13 @@ class Model:
             for _, row in self._primalSolution.iterrows():
                 self._variableDict[row['_VAR_']]._value = row['_VALUE_']
 
+            # Capturing dual values for LP problems
+            if ptype == 1:
+                for _, row in self._primalSolution.iterrows():
+                    self._variableDict[row['_VAR_']]._dual = row['_R_COST_']
+                for _, row in self._dualSolution.iterrows():
+                    self._constraintDict[row['_ROW_']]._dual = row['_VALUE_']
+
         # Drop tables
         if drop:
             sess.table.droptable(table=mps_table.name)
@@ -1379,8 +1655,6 @@ class Model:
             self._solutionSummary.set_index(['Label1'], inplace=True)
             self._solutionSummary.columns = ['Value']
             self._solutionSummary.index.names = ['Label']
-            print(self._problemSummary)
-            print(self._solutionSummary)
             # Record status and time
             self._status = response.solutionStatus
             self._soltime = response.solutionTime

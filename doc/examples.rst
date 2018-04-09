@@ -28,6 +28,7 @@ Examples are provided from `SAS/OR documentation <http://go.documentation.sas.co
    Mining Optimization <examples/mining_optimization.rst>
    Farm Planning <examples/farm_planning.rst>
    Economic Planning <examples/economic_planning.rst>
+   Decentralization <examples/decentralization.rst>
    SAS/OR Blog: Optimal Wedding <examples/optimal_wedding.rst>
    SAS/OR Blog: Kidney Exchange <examples/kidney_exchange.rst>
 	      
