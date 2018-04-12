@@ -173,17 +173,21 @@ class ParameterValue(sasoptpy.components.Expression):
         return str(self)
 
 
-class Set:
+class Set(sasoptpy.components.Expression):
     '''
     Represents index sets inside PROC OPTMODEL
     '''
 
     def __init__(self, name, init=None, settype='num'):
+        super().__init__()
         self._name = name
         self._init = init
         self._type = settype
         self._colname = name
         self._iterators = []
+        self._abstract = True
+        self._linCoef[str(self)] = {'ref': self,
+                                    'val': 1.0}
 
     def __iter__(self):
         if isinstance(self._type, list):
@@ -234,6 +238,9 @@ class Set:
         s = 'sasoptpy.data.Set(name={}, settype={})'.format(
             self._name, self._type)
         return(s)
+
+    def _to_text(self):
+        return self._name
 
 
 class SetIterator(sasoptpy.components.Expression):

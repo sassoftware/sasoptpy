@@ -414,6 +414,10 @@ class Model:
         self._impliedvars.append(iv)
         return iv
 
+    def add_statement(self, statement):
+        if isinstance(statement, sasoptpy.components.Expression):
+            self._statements.append(str(statement))
+
     def read_data(self, table, option='', keyset=None, key=[], params=[]):
         '''
         Reads a CASTable into PROC OPTMODEL sets

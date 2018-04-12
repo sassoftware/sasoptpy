@@ -571,6 +571,13 @@ def flatten_frame(df):
     return new_frame
 
 
+def is_equal(a, b):
+    '''
+    Compares various sasoptpy object types
+    '''
+    return a == b
+
+
 def print_model_mps(model):
     '''
     Prints the MPS representation of the model
@@ -898,3 +905,33 @@ def get_solution_table(*argv, sort=True, rhs=False):
     soltablep2 = soltablep.set_index(indexcols)
     pd.set_option('display.multi_sparse', False)
     return soltablep2
+
+
+def union(*args):
+    type0 = type(args[0])
+    for i in args:
+        if type(i) != type0:
+            print('ERROR: Cannot perform union on {} {} objects'.format(
+                type0, type(i)))
+            return None
+    if type0 == sasoptpy.data.Set:
+        r = sasoptpy.components.Expression()
+        names = tuple(i._name for i in args)
+        refs = [i for i in args]
+        r._linCoef[names] = {
+            'ref': refs,
+            'val': 1.0,
+            'op': 'union'
+            }
+        r._abstract = True
+        return r
+    elif type0 == list:
+        r = []
+        for i in args:
+            r += i
+        return r
+    elif type0 == set:
+        r = set()
+        for i in args:
+            r += i
+        return r
