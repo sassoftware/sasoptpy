@@ -14,7 +14,7 @@ sasoptpy: SAS Viya Optimization Interface for Python
 interface for `SAS Viya <https://www.sas.com/en_us/software/viya.html>`_ 
 Optimization solvers. It provides a quick way for 
 users to deploy optimization models and solve them
-using CAS Action.
+using `SAS Viya Optimization Action Set<http://go.documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.3&docsetId=casactmopt&docsetTarget=casactmopt_optimization_toc.htm&locale=en>`_.
 
 **sasoptpy** currently can handle linear optimization
 and mixed integer linear optimization problems. 
