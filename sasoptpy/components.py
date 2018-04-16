@@ -1046,7 +1046,8 @@ class VariableGroup:
 
         Parameters
         ----------
-        vector : list, dictionary, or :class:`pandas.Series` object
+        vector : list, dictionary, :class:`pandas.Series` object,
+                 or :class:`pandas.DataFrame` object
             Vector to be multiplied with the variable group
 
         Returns
@@ -1081,6 +1082,25 @@ class VariableGroup:
         >>> print(e3)
          1.5 * u['b']  +  0.1 * u['a']  -  0.2 * u['c']  +  0.3 * u['d']
 
+        Multiplying with a pandas.DataFrame object
+
+        >>> data = np.random.rand(3, 3)
+        >>> df = pd.DataFrame(data, columns=['a', 'b', 'c'])
+        >>> print(df)
+        >>> NOTE: Initialized model model1
+                  a         b         c
+        0  0.966524  0.237081  0.944630
+        1  0.821356  0.074753  0.345596
+        2  0.065229  0.037212  0.136644
+        >>> y = m.add_variables(3, ['a', 'b', 'c'], name='y')
+        >>> e = y.mult(df)
+        >>> print(e)
+         0.9665237354418064 * y[0, 'a']  +  0.23708064143289442 * y[0, 'b']  +
+        0.944629500537536 * y[0, 'c']  +  0.8213562592159828 * y[1, 'a']  +
+        0.07475256894157478 * y[1, 'b']  +  0.3455957019116668 * y[1, 'c']  +
+        0.06522945752546017 * y[2, 'a']  +  0.03721153533250843 * y[2, 'b']  +
+        0.13664422498043194 * y[2, 'c']
+
         '''
         r = Expression()
         if isinstance(vector, list) or isinstance(vector, np.ndarray):
@@ -1092,6 +1112,12 @@ class VariableGroup:
                 k = sasoptpy.utils.tuple_pack(key)
                 var = self._vardict[k]
                 r._linCoef[var._name] = {'ref': var, 'val': vector[key]}
+        elif isinstance(vector, pd.DataFrame):
+            vectorflat = sasoptpy.utils.flatten_frame(vector)
+            for key in vectorflat.index:
+                k = sasoptpy.utils.tuple_pack(key)
+                var = self._vardict[k]
+                r._linCoef[var._name] = {'ref': var, 'val': vectorflat[key]}
         else:
             for i, key in enumerate(vector):
                 if isinstance(key, tuple):
