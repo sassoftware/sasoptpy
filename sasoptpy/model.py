@@ -1255,8 +1255,8 @@ class Model:
         -----
 
         - To use this function, you need to have saspy installed on your
-          Python environment
-        - This function is experimental and may not work reliable
+          Python environment.
+        - This function is experimental.
 
         '''
 
@@ -1351,11 +1351,6 @@ class Model:
         NOTE: Optimal.
         NOTE: Objective = 107842.59259.
         NOTE: The Dual Simplex solve time is 0.01 seconds.
-        NOTE: Data length = 419 rows
-        NOTE: Conversion to MPS =   0.0010 secs
-        NOTE: Upload to CAS time =  0.1420 secs
-        NOTE: Solution parse time = 0.2500 secs
-        NOTE: Server solve time =   0.1168 secs
 
         >>> m.solve(milp={'maxtime': 600})
 
@@ -1383,12 +1378,17 @@ class Model:
             return None
 
         # Pre-upload argument parse
+        self._lp_opts = lp
+        self._milp_opts = milp
+
+        # Find problem type and initial values
+        ptype = 1  # LP
         opt_args = lp
-        if bool(lp):
-            self._lp_opts = lp
-        if bool(milp):
-            self._milp_opts = milp
-            opt_args = milp
+        for v in self._variables:
+            if v._type != sasoptpy.utils.CONT:
+                ptype = 2
+                opt_args = milp
+                break
 
         # Decomp check
         user_blocks = None
@@ -1397,13 +1397,6 @@ class Model:
                 if opt_args['decomp']['method'] == 'user':
                     user_blocks = self.upload_user_blocks()
                     opt_args['decomp'] = {'blocks': user_blocks}
-
-        # Find problem type and initial values
-        ptype = 1  # LP
-        for v in self._variables:
-            if v._type != sasoptpy.utils.CONT:
-                ptype = 2
-                break
 
         # Initial value check for MIP
         if primalin:
@@ -1428,7 +1421,7 @@ class Model:
 
         if ptype == 1:
             response = sess.solveLp(data=mps_table.name,
-                                    **self._lp_opts,
+                                    **opt_args,
                                     primalOut={'caslib': 'CASUSER',
                                                'name': 'primal',
                                                'replace': True},
@@ -1437,7 +1430,7 @@ class Model:
                                     objSense=self._sense)
         elif ptype == 2:
             response = sess.solveMilp(data=mps_table.name,
-                                      **self._milp_opts,
+                                      **opt_args,
                                       primalOut={'caslib': 'CASUSER',
                                                  'name': 'primal',
                                                  'replace': True},
