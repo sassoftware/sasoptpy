@@ -14,6 +14,7 @@ Underlying methods for communication to SAS Viya are provided by the [SAS-SWAT P
 To use **sasoptpy**, you need to have:
 * Python 3.5+
 * [sas-swat](https://github.com/sassoftware/python-swat)
+* [saspy](https://github.com/sassoftware/saspy) (Optional)
 * [numpy](https://pypi.python.org/pypi/numpy)
 * [pandas](https://pypi.python.org/pypi/pandas)
 

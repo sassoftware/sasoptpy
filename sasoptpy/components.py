@@ -150,6 +150,38 @@ class Expression:
                 v += self._linCoef[mylc]['val']
         return v
 
+    def set_name(self, name):
+        '''
+        Sets the name of the expression
+
+        Parameters
+        ----------
+        name : string
+            Name of the expression
+
+        Returns
+        -------
+        string
+            Name of the expression after resolving conflicts
+
+        Examples
+        --------
+
+        >>> e = x + 2*y
+        >>> e.set_name('objective')
+
+        '''
+        if self._name is not None:
+            if self._name in sasoptpy.utils.__namedict:
+                del sasoptpy.utils.__namedict[self._name]
+        safe_name = sasoptpy.utils.check_name(name, 'expr')
+        if name != safe_name:
+            print('NOTE: Name {} is changed to {} to prevent a conflict'
+                  .format(name, safe_name))
+        sasoptpy.utils.register_name(self._name, self)
+        self._name = safe_name
+        return self._name
+
     def get_name(self):
         '''
         Returns the name of the expression
@@ -924,6 +956,9 @@ class VariableGroup:
                 newfixed = vkeys + (i,)
             if len(argv) == 1:
                 varname = '{}'.format(name)
+                # Proposed change:
+                # varname = '{}['.format(name) + ','.join(format(k)
+                #                                         for k in newfixed)
                 for j, k in enumerate(newfixed):
                     varname += '_{}'.format(k)
                     try:
@@ -931,6 +966,7 @@ class VariableGroup:
                     except KeyError:
                         self._groups[j] = set()
                         self._groups[j].add(k)
+                varname += ']'
                 varlb = sasoptpy.utils.extract_list_value(newfixed, lb)
                 varub = sasoptpy.utils.extract_list_value(newfixed, ub)
                 varin = sasoptpy.utils.extract_list_value(newfixed, init)
@@ -1284,6 +1320,9 @@ class ConstraintGroup:
                     if ky != '.0':
                         newkeys = newkeys + (vdict[ky],)
             conname = '{}_{}'.format(name, conctr)
+            # Proposed change:
+            # conname = '{}[{}]'.format(name, ','.join(format(k)
+            #                                          for k in newkeys))
             conname = sasoptpy.utils.check_name(conname, 'con')
             newcon = sasoptpy.Constraint(exp=c, name=conname, crange=c._range)
             condict[newkeys] = newcon
