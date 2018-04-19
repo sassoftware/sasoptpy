@@ -6,7 +6,6 @@ Model
 -----
 
 .. literalinclude:: ../../examples/mining_optimization.py
-   :linenos:
 
 Output
 ------

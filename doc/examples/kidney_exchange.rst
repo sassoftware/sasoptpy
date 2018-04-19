@@ -8,7 +8,6 @@ Model
 -----
 
 .. literalinclude:: ../../examples/sas_kidney_exchange.py
-   :linenos:
 
 Output
 ------

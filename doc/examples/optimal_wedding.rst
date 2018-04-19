@@ -8,7 +8,6 @@ Model
 -----
 
 .. literalinclude:: ../../examples/sas_optimal_wedding.py
-   :linenos:
 
 Output
 ------

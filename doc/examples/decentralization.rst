@@ -6,7 +6,6 @@ Model
 -----
 
 .. literalinclude:: ../../examples/decentralization.py
-   :linenos:
 
 Output
 ------
