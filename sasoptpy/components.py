@@ -1082,8 +1082,8 @@ class VariableGroup:
 
         Parameters
         ----------
-        vector : list, dictionary, :class:`pandas.Series` object,
-                 or :class:`pandas.DataFrame` object
+        vector : list, dictionary, :class:`pandas.Series` object,\
+ or :class:`pandas.DataFrame` object
             Vector to be multiplied with the variable group
 
         Returns
