@@ -958,7 +958,7 @@ class VariableGroup:
                 varname = '{}'.format(name)
                 # Proposed change:
                 # varname = '{}['.format(name) + ','.join(format(k)
-                #                                         for k in newfixed)
+                #                                    for k in newfixed) + ']'
                 for j, k in enumerate(newfixed):
                     varname += '_{}'.format(k)
                     try:
@@ -966,7 +966,6 @@ class VariableGroup:
                     except KeyError:
                         self._groups[j] = set()
                         self._groups[j].add(k)
-                varname += ']'
                 varlb = sasoptpy.utils.extract_list_value(newfixed, lb)
                 varub = sasoptpy.utils.extract_list_value(newfixed, ub)
                 varin = sasoptpy.utils.extract_list_value(newfixed, init)
