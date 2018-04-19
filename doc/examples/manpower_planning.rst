@@ -6,6 +6,7 @@ Model
 -----
 
 .. literalinclude:: ../../examples/manpower_planning.py
+   :linenos:
 
 Output
 ------

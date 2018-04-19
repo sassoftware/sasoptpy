@@ -6,6 +6,7 @@ Model
 -----
 
 .. literalinclude:: ../../examples/economic_planning.py
+   :linenos:
 
 Output
 ------

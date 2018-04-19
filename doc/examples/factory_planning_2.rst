@@ -6,6 +6,7 @@ Model
 -----
 
 .. literalinclude:: ../../examples/factory_planning_2.py
+   :linenos:
 
 Output
 ------

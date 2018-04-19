@@ -6,6 +6,7 @@ Model
 -----
 
 .. literalinclude:: ../../examples/food_manufacture_2.py
+   :linenos:
 
 Output
 ------

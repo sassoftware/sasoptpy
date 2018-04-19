@@ -6,6 +6,7 @@ Model
 -----
 
 .. literalinclude:: ../../examples/farm_planning.py
+   :linenos:
 
 Output
 ------

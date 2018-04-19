@@ -1225,11 +1225,18 @@ class Model:
         # Check if session is defined
         sess = self._session
         if sess is None:
-            print('ERROR: CAS Session is not defined for model {}.'.format(
+            print('ERROR: No session is not defined for model {}.'.format(
                 self._name))
-            return False
+            return None
         else:
-            return True
+            sess_type = type(sess).__name__
+            if sess_type == 'CAS':
+                return 'CAS'
+            elif sess_type == 'SASsession':
+                return 'SAS'
+            else:
+                print('ERROR: Unrecognized session type: {}'.format(sess_type))
+                return None
 
     def upload_model(self, name=None, replace=True):
         if self.test_session():
@@ -1245,7 +1252,7 @@ class Model:
         else:
             return None
 
-    def local_solve(self, session, name='MPS'):
+    def solve_local(self, name='MPS'):
         '''
         **Experimental** Solves the model by calling SAS 9.4 solvers
 
@@ -1264,6 +1271,8 @@ class Model:
         - This function is experimental.
 
         '''
+
+        session = self._session
 
         try:
             import saspy as sp
@@ -1327,7 +1336,9 @@ class Model:
             run;
             """.format(name))
 
-        print(c['LOG'])
+        for line in c['LOG'].split('\n'):
+            if line[0:4] == '    ' or line[0:4] == 'NOTE':
+                print(line)
 
         self._primalSolution = session.sd2df('PRIMAL_OUT')
         self._dualSolution = session.sd2df('DUAL_OUT')
@@ -1352,9 +1363,9 @@ class Model:
         for _, row in self._primalSolution.iterrows():
             self._variableDict[row['_VAR_']]._value = row['_VALUE_']
 
-        return True
+        return self._primalSolution
 
-    def solve(self, milp={}, lp={}, name=None, drop=True, replace=True,
+    def solve(self, milp={}, lp={}, name=None, drop=False, replace=True,
               primalin=False):
         '''
         Solves the model by calling CAS optimization solvers
@@ -1411,8 +1422,11 @@ class Model:
         '''
 
         # Check if session is defined
-        if self.test_session():
+        session_type = self.test_session()
+        if session_type == 'CAS':
             sess = self._session
+        elif session_type == 'SAS':
+            return self.solve_local()
         else:
             return None
 

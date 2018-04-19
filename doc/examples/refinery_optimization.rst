@@ -6,6 +6,7 @@ Model
 -----
 
 .. literalinclude:: ../../examples/refinery_optimization.py
+   :linenos:
 
 Output
 ------

@@ -14,7 +14,8 @@ Examples are provided from `SAS/OR documentation <http://go.documentation.sas.co
    from swat import CAS
    cas_conn = CAS(hostname, port)
 
-
+Viya (swat) Examples
+--------------------
 
 .. toctree::
    :maxdepth: 1
@@ -32,3 +33,10 @@ Examples are provided from `SAS/OR documentation <http://go.documentation.sas.co
    SAS/OR Blog: Optimal Wedding <examples/optimal_wedding.rst>
    SAS/OR Blog: Kidney Exchange <examples/kidney_exchange.rst>
 	      
+SAS (saspy) Examples
+--------------------
+
+.. toctree::
+   :maxdepth: 1
+
+   Food Manufacture 1 <examples/food_manufacture_1_saspy.rst>
