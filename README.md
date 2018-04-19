@@ -5,7 +5,7 @@
 
 **sasoptpy** currently can handle linear optimization and mixed integer linear optimization problems. Users can benefit from native Python structures like dictionaries, tuples, and list to define an optimization problem. **sasoptpy** uses [Pandas](http://pandas.pydata.org/) structures extensively.
 
-Underlying methods for communication to SAS Viya are provided by the [SAS-SWAT Package](https://sassoftware.github.io/python-swat/)
+Underlying methods for communication to SAS Viya are provided by the [swat](https://sassoftware.github.io/python-swat/) package.
 
 **sasoptpy** is merely an interface to SAS Optimization solvers. Check [SAS/OR](http://go.documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.3&docsetId=casmopt&docsetTarget=titlepage.htm&locale=en) and [PROC OPTMODEL](http://go.documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.3&docsetId=casmopt&docsetTarget=casmopt_optmodel_toc.htm&locale=en) for more details about optimization tools provided by SAS and an interface to model optimization problems inside SAS.
 
@@ -13,9 +13,9 @@ Underlying methods for communication to SAS Viya are provided by the [SAS-SWAT P
 
 To use **sasoptpy**, you need to have:
 * Python 3.5+
-* [sas-swat](https://github.com/sassoftware/python-swat)
-* [saspy](https://github.com/sassoftware/saspy) (Optional)
 * [numpy](https://pypi.python.org/pypi/numpy)
+* [saspy](https://github.com/sassoftware/saspy) (Optional)
+* [swat](https://github.com/sassoftware/python-swat)
 * [pandas](https://pypi.python.org/pypi/pandas)
 
 ### Installation
@@ -158,7 +158,6 @@ Obj: 4.0
 
 ## Resources
 
-- [SAS SWAT](http://github.com/sassoftware/python-swat/)
 - [SAS Viya](http://www.sas.com/en_us/software/viya.html)
 
 Copyright SAS Institute

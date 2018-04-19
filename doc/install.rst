@@ -13,21 +13,22 @@ Python version support and dependencies
 
 It depends on the following packages:
 
-* Pandas
-* SAS-SWAT
-* Numpy
+* numpy
+* saspy (Optional)
+* swat
+* pandas
 
 .. note::
 
    You need to download
-   `SAS-SWAT <https://sassoftware.github.io/python-swat/>`_
+   `swat package <https://sassoftware.github.io/python-swat/>`_
    from the online repository before using **sasoptpy**. 
 
 
-Getting SAS-SWAT
-----------------
+Getting swat
+------------
 
-`SAS-SWAT <https://sassoftware.github.io/python-swat/>`_ should be available
+`swat <https://sassoftware.github.io/python-swat/>`_ should be available
 to use solver actions.
 
 Releases are listed at
@@ -69,10 +70,10 @@ Step-by-step installation
       pip install pandas
 
       
-#. **Installing the SAS-SWAT package**
+#. **Installing the swat package**
 
    First, check the
-   `SAS-SWAT release page <https://github.com/sassoftware/python-swat/releases>`_
+   `swat release page <https://github.com/sassoftware/python-swat/releases>`_
    to find the latest release of the SAS-SWAT package for your environment.
 
    Then install it using
@@ -88,7 +89,7 @@ Step-by-step installation
       wget https://github.com/sassoftware/python-swat/releases/download/v1.2.1/python-swat-1.2.1-linux64.tar.gz
       pip install python-swat-1.2.1-linux64.tar.gz
 
-   to install the version 1.2.1 of the SAS-SWAT package for 64-bit Linux
+   to install the version 1.2.1 of the swat package for 64-bit Linux
    environments.
 
 #. **Installing sasoptpy**

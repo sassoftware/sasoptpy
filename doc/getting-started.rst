@@ -16,7 +16,7 @@ Connecting to a CAS server
 --------------------------
 
 **sasoptpy** uses the CAS connection provided by the
-SAS-SWAT package.
+swat package.
 After installation simply use
 
 .. ipython:: python
@@ -33,7 +33,7 @@ After installation simply use
    s = CAS(hostname, port, userid, password)
 
 The last two parameters are optional for some
-cases. See `SAS-SWAT Documentation <https://sassoftware.github.io/python-swat/generated/swat.cas.connection.CAS.html#swat-cas-connection-cas>`_.
+cases. See `swat Documentation <https://sassoftware.github.io/python-swat/generated/swat.cas.connection.CAS.html#swat-cas-connection-cas>`_.
 
 Initializing a model
 --------------------

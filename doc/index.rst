@@ -25,7 +25,7 @@ structures extensively.
 
 Underlying methods for communication to SAS Viya
 are provided by the 
-`SAS-SWAT Package <https://sassoftware.github.io/python-swat/>`_.
+`swat package <https://sassoftware.github.io/python-swat/>`_.
 
 **sasoptpy** is merely an interface to SAS Optimization
 solvers. Check
