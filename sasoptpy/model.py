@@ -80,7 +80,7 @@ class Model:
         self._milp_opts = {}
         self._lp_opts = {}
         sasoptpy.utils.register_name(name, self)
-        print('NOTE: Initialized model {}'.format(name))
+        print('NOTE: Initialized model {}.'.format(name))
 
     def __eq__(self, other):
         if not isinstance(other, sasoptpy.Model):
@@ -1032,7 +1032,7 @@ class Model:
         -----
         * This method is called inside :func:`sasoptpy.Model.solve`.
         '''
-        print('NOTE: Converting model {} to DataFrame'.format(self._name))
+        print('NOTE: Converting model {} to DataFrame.'.format(self._name))
         self._id = 1
         if(len(self._datarows) > 0):  # For future reference
             # take a copy?
@@ -1040,7 +1040,7 @@ class Model:
             self._datarows = []
         else:
             self._datarows = []
-        # Check if objective has a constant field, if so hack using a variable
+        # Check if objective has a constant field
         if self._objective._linCoef['CONST']['val'] != 0:
             obj_constant = self.add_variable(name=sasoptpy.utils.check_name(
                 'obj_constant', 'var'))
@@ -1080,7 +1080,7 @@ class Model:
                 cv = self._objective._linCoef[v._name]
                 current_row = ['', v._name, self._objective._name, cv['val']]
                 f5 = 1
-            else:
+            elif not v._cons:
                 current_row = ['', v._name, self._objective._name, 0.0]
                 f5 = 1
             for cn in v._cons:
@@ -1136,19 +1136,24 @@ class Model:
         for v in self._variables:
             if self._vcid[v._name] == {}:
                 continue
-            if v._lb is not 0 and v._lb is not None:
+            if v._lb == v._ub:
+                self._append_row(['FX', 'BND', v._name, v._ub, '', ''])
+            if v._lb is not None and v._type is not sasoptpy.utils.BIN:
                 if v._ub == inf and v._lb == -inf:
                     self._append_row(['FR', 'BND', v._name, '', '', ''])
-                else:
-                    self._append_row(['LO', 'BND', v._name, v._lb, '', ''])
+                elif not v._ub == v._lb:
+                    if v._type == sasoptpy.utils.INT and\
+                       v._lb == 0 and v._ub == inf:
+                        self._append_row(['PL', 'BND', v._name, '', '', ''])
+                    elif not(v._type == sasoptpy.utils.CONT and v._lb == 0):
+                        self._append_row(['LO', 'BND', v._name, v._lb, '', ''])
             if v._ub != inf and v._ub is not None and not\
-               (v._type is sasoptpy.utils.BIN and v._ub == 1):
+               (v._type is sasoptpy.utils.BIN and v._ub == 1) and\
+               v._lb != v._ub:
                 self._append_row(['UP', 'BND', v._name, v._ub, '', ''])
             if v._type is sasoptpy.utils.BIN:
                 self._append_row(['BV', 'BND', v._name, '1.0', '', ''])
-            if v._lb is 0 and v._type is sasoptpy.utils.INT:
-                self._append_row(['LO', 'BND', v._name, v._lb, '', ''])
-        self._append_row(['ENDATA', '', '', float(0), '', float(0)])
+        self._append_row(['ENDATA', '', '', 0.0, '', 0.0])
         mpsdata = pd.DataFrame(data=self._datarows,
                                columns=['Field1', 'Field2', 'Field3', 'Field4',
                                         'Field5', 'Field6', '_id_'])
@@ -1274,14 +1279,27 @@ class Model:
         df = self.to_frame()
 
         # Prepare for the upload
-        for f in ['Field1', 'Field2', 'Field3', 'Field5']:
-            df[f] = df[f].replace('', '.')
         for f in ['Field4', 'Field6']:
             df[f] = df[f].replace('', np.nan)
-        df['_id_'].astype('int')
+        df['_id_'] = df['_id_'].astype('int')
+        df[['Field4', 'Field6']] = df[['Field4', 'Field6']].astype(float)
 
         # Upload MPS table
-        session.df2sd(df, table=name)
+        try:
+            session.df2sd(df, table=name, keep_outer_quotes=True)
+        except:
+            session.df2sd(df, table=name)
+            session.submit("""
+            data {};
+                set {};
+                field3=tranwrd(field3, "'MARKER'", "MARKER");
+                field3=tranwrd(field3, "MARKER", "'MARKER'");
+                field5=tranwrd(field5, "'INTORG'", "INTORG");
+                field5=tranwrd(field5, "INTORG", "'INTORG'");
+                field5=tranwrd(field5, "'INTEND'", "INTEND");
+                field5=tranwrd(field5, "INTEND", "'INTEND'");
+            run;
+            """.format(name, name))
 
         # Find problem type and initial values
         ptype = 1  # LP
@@ -1292,6 +1310,8 @@ class Model:
 
         if ptype == 1:
             c = session.submit("""
+            ods output SolutionSummary=SOL_SUMMARY;
+            ods output ProblemSummary=PROB_SUMMARY;
             proc optlp data = {}
                primalout  = primal_out
                dualout    = dual_out;
@@ -1299,15 +1319,34 @@ class Model:
             """.format(name))
         else:
             c = session.submit("""
+            ods output SolutionSummary=SOL_SUMMARY;
+            ods output ProblemSummary=PROB_SUMMARY;
             proc optmilp data = {}
                primalout  = primal_out
                dualout    = dual_out;
             run;
             """.format(name))
 
+        print(c['LOG'])
+
         self._primalSolution = session.sd2df('PRIMAL_OUT')
         self._dualSolution = session.sd2df('DUAL_OUT')
-        print(c['LOG'])
+
+        # Get Problem Summary
+        self._problemSummary = session.sd2df('PROB_SUMMARY')
+        self._problemSummary.replace(np.nan, '', inplace=True)
+        self._problemSummary = self._problemSummary[['Label1', 'cValue1']]
+        self._problemSummary.set_index(['Label1'], inplace=True)
+        self._problemSummary.columns = ['Value']
+        self._problemSummary.index.names = ['Label']
+
+        # Get Solution Summary
+        self._solutionSummary = session.sd2df('SOL_SUMMARY')
+        self._solutionSummary.replace(np.nan, '', inplace=True)
+        self._solutionSummary = self._solutionSummary[['Label1', 'cValue1']]
+        self._solutionSummary.set_index(['Label1'], inplace=True)
+        self._solutionSummary.columns = ['Value']
+        self._solutionSummary.index.names = ['Label']
 
         # Parse solutions
         for _, row in self._primalSolution.iterrows():
