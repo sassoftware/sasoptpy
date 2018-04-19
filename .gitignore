@@ -1,0 +1,16 @@
+# Temporary files
+*~
+
+# Compiled files
+__pycache__/
+*.py[cod]
+
+# Eclipse-related files
+.classpath
+.project
+.settings
+.pydevproject
+
+# Sphinx
+.buildinfo
+
