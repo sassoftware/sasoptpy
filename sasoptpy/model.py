@@ -41,8 +41,8 @@ class Model:
     ----------
     name : string
         Name of the model
-    session : :class:`swat.cas.connection.CAS` object, optional
-        CAS Session object
+    session : :class:`swat.cas.connection.CAS` object or :class:`saspy.SASsession` object, optional
+        CAS or SAS Session object
 
     Examples
     --------
@@ -1411,6 +1411,7 @@ class Model:
         * This method takes two optional arguments (milp and lp).
         * These arguments pass options to the solveLp and solveMilp CAS
           actions.
+        * These arguments are not passed if the model has a SAS session.
         * Both milp and lp should be defined as dictionaries, where keys are
           option names. For example, ``m.solve(milp={'maxtime': 600})`` limits
           solution time to 600 seconds.

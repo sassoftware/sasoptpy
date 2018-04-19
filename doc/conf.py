@@ -82,6 +82,11 @@ language = None
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+try:
+    if os.environ['ignore'] == 'ex':
+        exclude_patterns.append('examples')
+except:
+    pass
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
@@ -214,7 +219,9 @@ epub_exclude_files = ['search.html']
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'https://docs.python.org/': None,
                        'https://pandas.pydata.org/pandas-docs/stable/': None,
-                       'https://sassoftware.github.io/python-swat/': None}
+                       'https://sassoftware.github.io/python-swat/': None,
+                       'https://sassoftware.github.io/saspy/': None
+}
 
 
 import glob
