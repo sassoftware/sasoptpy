@@ -1,6 +1,10 @@
 # Temporary files
 *~
 
+# Scripts
+/*.sh
+/*.tar.gz
+
 # Compiled files
 __pycache__/
 *.py[cod]
@@ -13,4 +17,6 @@ __pycache__/
 
 # Sphinx
 .buildinfo
+/doc/_build/
+/doc/generated/
 

@@ -5,19 +5,17 @@ Food Manufacture 1 (saspy)
 Model
 -----
 
-.. literalinclude:: ../../examples/food_manufacture_1_saspy.py
+.. literalinclude:: ../../examples/food_manufacture_1.py
    :linenos:
 
 Output
 ------
 
-.. ipython::
+.. code-block:: python
 
-   In [1]: from examples.food_manufacture_1 import test
-
-   In [2]: sas_session = saspy.SASsession(cfgname='winlocal')
-
-   In [3]: test(sas_session)
+   >>> from examples.food_manufacture_1 import test
+   >>> sas_session = saspy.SASsession(cfgname='winlocal')
+   >>> test(sas_session)
 
    SAS Connection established. Subprocess id is 14868
    
@@ -146,5 +144,3 @@ Output
    D      0.0     1.0    0.0
    E      1.0     0.0    0.0
    SAS Connection terminated. Subprocess id was 14868
-
-   Out[3]: 14.9
