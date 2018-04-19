@@ -29,4 +29,4 @@ from sasoptpy.utils import *
 from sasoptpy.components import *
 #  from sasoptpy.gui import start_gui
 
-__version__ = '0.1.1.dev0'
+__version__ = '0.1.2.dev0'
