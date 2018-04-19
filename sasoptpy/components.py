@@ -336,6 +336,7 @@ class Expression:
         * This method is mainly for internal use.
         * Multiplying an expression is equivalent to calling this method:
           3*(x-y) and (x-y).mult(3) are interchangeable.
+
         '''
         #  TODO r=self could be used whenever expression has no name
         if isinstance(other, Expression):
@@ -1137,6 +1138,7 @@ class VariableGroup:
         0.13664422498043194 * y[2, 'c']
 
         '''
+
         r = Expression()
         if isinstance(vector, list) or isinstance(vector, np.ndarray):
             for i, key in enumerate(vector):

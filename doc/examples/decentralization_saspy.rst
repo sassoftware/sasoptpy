@@ -1,11 +1,11 @@
 
-Food Manufacture 1 (saspy)
-==========================
+Decentralization (saspy)
+========================
 
 Model
 -----
 
-.. literalinclude:: ../../examples/food_manufacture_1.py
+.. literalinclude:: ../../examples/decentralization.py
 
 Output
 ------

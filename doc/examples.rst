@@ -39,4 +39,4 @@ SAS (saspy) Examples
 .. toctree::
    :maxdepth: 1
 
-   Food Manufacture 1 <examples/food_manufacture_1_saspy.rst>
+   Decentralization <examples/decentralization_saspy.rst>
