@@ -33,7 +33,6 @@ Functions
    dict_to_frame
    extract_list_value
    flatten_frame
-   get_counter
    get_namespace
    get_obj_by_name
    get_solution_table

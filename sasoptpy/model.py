@@ -1263,12 +1263,57 @@ class Model:
         name : string, optional
             Name of the MPS table
 
+        Examples
+        --------
+
+        >>> import saspy
+        >>> import sasoptpy as so
+        >>> sas = saspy.SASsession(cfgname='winlocal')
+        >>> m = so.Model(name='demo', session=sas)
+        >>> choco = m.add_variable(lb=0, ub=20, name='choco', vartype=so.INT)
+        >>> toffee = m.add_variable(lb=0, ub=30, name='toffee')
+        >>> m.set_objective(0.25*choco + 0.75*toffee, sense=so.MAX, name='profit')
+        >>> m.add_constraint(15*choco + 40*toffee <= 27000, name='process1')
+        >>> m.add_constraint(56.25*toffee <= 27000, name='process2')
+        >>> m.add_constraint(18.75*choco <= 27000, name='process3')
+        >>> m.add_constraint(12*choco + 50*toffee <= 27000, name='process4')
+        >>> 
+        >>> m.solve_local()
+        >>> # or m.solve()
+        SAS Connection established. Subprocess id is 18192
+        NOTE: Initialized model demo.
+        NOTE: Converting model demo to DataFrame.
+        NOTE: Writing HTML5(SASPY_INTERNAL) Body file: _TOMODS1
+        NOTE: The problem demo has 2 variables (0 binary, 1 integer, 0 free, 0 fixed).
+        NOTE: The problem has 4 constraints (4 LE, 0 EQ, 0 GE, 0 range).
+        NOTE: The problem has 6 constraint coefficients.
+        NOTE: The initial MILP heuristics are applied.
+        NOTE: Optimal.
+        NOTE: Objective = 27.5.
+        NOTE: The data set WORK.PROB_SUMMARY has 21 observations and 3 variables.
+        NOTE: The data set WORK.SOL_SUMMARY has 17 observations and 3 variables.
+        NOTE: There were 23 observations read from the data set WORK.MPS.
+        NOTE: The data set WORK.PRIMAL_OUT has 2 observations and 8 variables.
+        NOTE: The data set WORK.DUAL_OUT has 4 observations and 8 variables.
+        NOTE: PROCEDURE OPTMILP used (Total process time):
+        real time           0.07 seconds
+        cpu time            0.04 seconds
+        SAS Connection terminated. Subprocess id was 18192
+
         Notes
         -----
 
-        - To use this function, you need to have saspy installed on your
+        - If the session of a model is a :class:`saspy.SASsession` object,
+          then :func:`Model.solve` calls this method internally.
+        - To use this method, you need to have saspy installed on your
           Python environment.
         - This function is experimental.
+        - Unlike :func:`Model.solve`, this method does not accept LP and MILP
+          options yet.
+
+        See also
+        --------
+        :func:`Model.solve`
 
         '''
 
@@ -1419,6 +1464,10 @@ class Model:
           for a list of LP options.
         * See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvemilp_syntax.htm&locale=en
           for a list of MILP options.
+
+        See also
+        --------
+        :func:`Model.solve_local`
 
         '''
 
