@@ -28,22 +28,35 @@ It depends on the following packages:
 Getting swat
 ------------
 
-`swat <https://sassoftware.github.io/python-swat/>`_ should be available
+`swat <https://github.com/sassoftware/python-swat>`_ should be available
 to use solver actions.
 
-Releases are listed at
+swat releases are listed at
 `<https://github.com/sassoftware/python-swat/releases>`_.
 After downloading the platform-specific release file, it can be installed using
 pip::
 
 	pip install python-swat-X.X.X-platform.tar.gz
 
+Getting saspy
+-------------
+
+`saspy <https://github.com/sassoftware/saspy>`_ should be available to use
+solver methods for local SAS 9.4 clients.
+**sasoptpy** support for local solve methods are currently experimental.
+saspy is not a requirement for the SAS Viya functionality.
+
+saspy releases are listed at
+`<https://github.com/sassoftware/saspy/releases>`_.
+Easiest way to download the latest stable version of saspy is to use::
+
+        pip install saspy
+
+	
 Getting sasoptpy
 ----------------
 
-
-Latest release of **sasoptpy** can be
-obtained from the online repository.
+Latest release of **sasoptpy** can be obtained from the online repository.
 Call::
 
   git clone https://github.com/sassoftware/sasoptpy.git
