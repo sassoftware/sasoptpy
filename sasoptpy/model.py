@@ -140,7 +140,7 @@ class Model:
 
         See also
         --------
-        :func:`sasoptpy.Model.include`
+        :func:`Model.include`
         '''
         # name = check_name(name, 'var')
         # Check bounds
@@ -371,9 +371,9 @@ class Model:
 
         See also
         --------
-        :func:`sasoptpy.Model.drop_variables`
-        :func:`sasoptpy.Model.drop_constraint`
-        :func:`sasoptpy.Model.drop_constraints`
+        :func:`Model.drop_variables`
+        :func:`Model.drop_constraint`
+        :func:`Model.drop_constraints`
 
         '''
         for i, v in enumerate(self._variables):
@@ -402,9 +402,9 @@ class Model:
 
         See also
         --------
-        :func:`sasoptpy.Model.drop_constraints`
-        :func:`sasoptpy.Model.drop_variable`
-        :func:`sasoptpy.Model.drop_variables`
+        :func:`Model.drop_constraints`
+        :func:`Model.drop_variable`
+        :func:`Model.drop_variables`
 
         '''
         try:
@@ -437,9 +437,9 @@ class Model:
 
         See also
         --------
-        :func:`sasoptpy.Model.drop_variable`
-        :func:`sasoptpy.Model.drop_constraint`
-        :func:`sasoptpy.Model.drop_constraints`
+        :func:`Model.drop_variable`
+        :func:`Model.drop_constraint`
+        :func:`Model.drop_constraints`
 
         '''
         for v in variables:
@@ -467,9 +467,9 @@ class Model:
 
         See also
         --------
-        :func:`sasoptpy.Model.drop_constraints`
-        :func:`sasoptpy.Model.drop_variable`
-        :func:`sasoptpy.Model.drop_variables`
+        :func:`Model.drop_constraints`
+        :func:`Model.drop_variable`
+        :func:`Model.drop_variables`
 
         '''
         for c in constraints:
@@ -517,8 +517,8 @@ class Model:
         Notes
         -----
         * This method is essentially a wrapper for two methods,
-          :func:`sasoptpy.Model.add_variable` and
-          :func:`sasoptpy.Model.add_constraint`.
+          :func:`Model.add_variable` and
+          :func:`Model.add_constraint`.
         * Including a model causes all variables and constraints inside the
           original model to be included.
         '''
@@ -597,7 +597,8 @@ class Model:
 
         Returns
         -------
-        :class:`Expression` : Objective function
+        :class:`Expression` object
+            Objective function
 
         Examples
         --------
@@ -656,7 +657,7 @@ class Model:
 
         Returns
         -------
-        list : A list of :class:`sasoptpy.components.Constraint` objects
+        list : A list of :class:`Constraint` objects
 
         Examples
         --------
@@ -703,7 +704,7 @@ class Model:
 
         Returns
         -------
-        list : A list of :class:`sasoptpy.components.Variable` objects
+        list : A list of :class:`Variable` objects
 
         Examples
         --------
@@ -760,7 +761,7 @@ class Model:
         Returns
         -------
         :class:`swat.dataframe.SASDataFrame` object
-            Problem summary obtained after :func:`sasoptpy.Model.solve`
+            Problem summary obtained after :func:`Model.solve`
 
         Examples
         --------
@@ -916,14 +917,18 @@ class Model:
 
         Parameters
         ----------
-        session : :class:`swat.cas.connection.CAS`
-            CAS Session
+        session : :class:`swat.cas.connection.CAS` or \
+:class:`saspy.SASsession` objects
+            CAS or SAS Session object
+
+        Notes
+        -----
+
+        * Session of a model can be set at initialization.
+          See :class:`Model`.
+
         '''
-        from swat import CAS
-        if type(session) == CAS:
-            self._session = session
-        else:
-            print('WARNING: Session is not added, not a CAS object.')
+        self._session = session
 
     def set_coef(self, var, con, value):
         '''
@@ -954,7 +959,7 @@ class Model:
 
         See also
         --------
-        :func:`sasoptpy.Constraint.update_var_coef`
+        :func:`Constraint.update_var_coef`
 
         '''
         con.update_var_coef(var=var, value=value)
@@ -973,7 +978,7 @@ class Model:
 
         See also
         --------
-        :func:`sasoptpy.Model.get_solution`
+        :func:`Model.get_solution`
 
         '''
         for v in self._variables:
@@ -1030,7 +1035,7 @@ class Model:
 
         Notes
         -----
-        * This method is called inside :func:`sasoptpy.Model.solve`.
+        * This method is called inside :func:`Model.solve`.
         '''
         print('NOTE: Converting model {} to DataFrame.'.format(self._name))
         self._id = 1
@@ -1222,6 +1227,15 @@ class Model:
         return(response.name)
 
     def test_session(self):
+        '''
+        Tests if the model session is defined and still active
+
+        Returns
+        -------
+        string
+            'CAS' for CAS sessions, 'SAS' for SAS sessions, None otherwise
+
+        '''
         # Check if session is defined
         sess = self._session
         if sess is None:
@@ -1239,6 +1253,31 @@ class Model:
                 return None
 
     def upload_model(self, name=None, replace=True):
+        '''
+        Converts internal model to MPS table and upload to CAS session
+
+        Parameters
+        ----------
+        name : string, optional
+            Desired name of the MPS table on the server
+        replace : boolean, optional
+            Option to replace the existing MPS table
+
+        Returns
+        -------
+        :class:`swat.cas.table.CASTable` object
+            Reference to the uploaded CAS Table
+
+        Notes
+        -----
+        
+        - This method returns None if the model session is not valid.
+        - Name of the table is randomly assigned if name argument is None
+          or not given.
+        - This method should not be used if :func:`Model.solve` is going
+          to be used. :func:`Model.solve` calls this method internally.
+
+        '''
         if self.test_session():
             # Conversion and upload
             df = self.to_frame()
@@ -1254,12 +1293,11 @@ class Model:
 
     def solve_local(self, name='MPS'):
         '''
-        **Experimental** Solves the model by calling SAS 9.4 solvers
+        (Experimental) Solves the model by calling SAS 9.4 solvers
 
         Parameters
         ----------
-        session : :class:`saspy.SASsession` object
-            SAS session
+
         name : string, optional
             Name of the MPS table
 
