@@ -35,6 +35,7 @@ and
 for more details about optimization tools provided by SAS
 and an interface to model optimization problems inside SAS.
 
+See our SAS Global Forum paper: `Optimization Modeling with Python and SAS Viya <https://www.sas.com/content/dam/SAS/support/en/sas-global-forum-proceedings/2018/1814-2018.pdf>`_
 
 .. toctree::
    :glob:
