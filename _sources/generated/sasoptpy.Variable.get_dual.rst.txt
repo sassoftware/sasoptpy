@@ -1,0 +1,6 @@
+sasoptpy.Variable.get\_dual
+===========================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Variable.get_dual

@@ -1,8 +1,8 @@
 
 .. currentmodule:: sasoptpy
 
-sasoptpy\.Variable
-==================
+sasoptpy.Variable
+=================
 
 .. currentmodule:: sasoptpy
 
@@ -18,11 +18,13 @@ sasoptpy\.Variable
       
       Variable.add
       Variable.copy
+      Variable.get_dual
       Variable.get_name
       Variable.get_value
       Variable.mult
       Variable.set_bounds
       Variable.set_init
+      Variable.set_name
       Variable.set_permanent
 
 

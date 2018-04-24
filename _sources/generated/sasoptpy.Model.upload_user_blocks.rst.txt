@@ -1,5 +1,5 @@
-sasoptpy\.Model\.upload\_user\_blocks
-=====================================
+sasoptpy.Model.upload\_user\_blocks
+===================================
 
 .. currentmodule:: sasoptpy
 

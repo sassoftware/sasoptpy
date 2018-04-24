@@ -1,5 +1,5 @@
-sasoptpy\.Variable\.get\_name
-=============================
+sasoptpy.Variable.get\_name
+===========================
 
 .. currentmodule:: sasoptpy
 

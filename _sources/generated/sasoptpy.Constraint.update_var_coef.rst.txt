@@ -1,5 +1,5 @@
-sasoptpy\.Constraint\.update\_var\_coef
-=======================================
+sasoptpy.Constraint.update\_var\_coef
+=====================================
 
 .. currentmodule:: sasoptpy
 

@@ -1,5 +1,5 @@
-sasoptpy\.Expression\.mult
-==========================
+sasoptpy.Expression.mult
+========================
 
 .. currentmodule:: sasoptpy
 

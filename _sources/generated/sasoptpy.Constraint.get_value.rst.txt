@@ -1,5 +1,5 @@
-sasoptpy\.Constraint\.get\_value
-================================
+sasoptpy.Constraint.get\_value
+==============================
 
 .. currentmodule:: sasoptpy
 

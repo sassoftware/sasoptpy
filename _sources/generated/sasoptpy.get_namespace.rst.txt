@@ -1,5 +1,5 @@
-sasoptpy\.get\_namespace
-========================
+sasoptpy.get\_namespace
+=======================
 
 .. currentmodule:: sasoptpy
 

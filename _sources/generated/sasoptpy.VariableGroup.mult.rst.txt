@@ -1,5 +1,5 @@
-sasoptpy\.VariableGroup\.mult
-=============================
+sasoptpy.VariableGroup.mult
+===========================
 
 .. currentmodule:: sasoptpy
 

@@ -4,31 +4,22 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Economic Planning &#8212; sasoptpy 0.1.1 documentation</title>
+    <title>Economic Planning &#8212; sasoptpy 0.1.2 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '0.1.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/js/url.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Optimal Wedding" href="optimal_wedding.html" />
+    <link rel="next" title="Decentralization" href="decentralization.html" />
     <link rel="prev" title="Farm Planning" href="farm_planning.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -39,12 +30,12 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="optimal_wedding.html" title="Optimal Wedding"
+          <a href="decentralization.html" title="Decentralization"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="farm_planning.html" title="Farm Planning"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &#187;</li> 
       </ul>
     </div>  
@@ -58,7 +49,7 @@
 <h1>Economic Planning<a class="headerlink" href="#economic-planning" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="model">
 <h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 
@@ -221,14 +212,14 @@
 </div>
 <div class="section" id="output">
 <h2>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-ipython"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">examples.economic_planning</span> <span class="kn">import</span> <span class="n">test</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">examples.economic_planning</span> <span class="kn">import</span> <span class="n">test</span>
 
 <span class="gp">In [2]: </span><span class="n">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">)</span>
-<span class="go">NOTE: Initialized model economic_planning</span>
-<span class="go">NOTE: Converting model economic_planning to DataFrame</span>
+<span class="go">NOTE: Initialized model economic_planning.</span>
+<span class="go">NOTE: Converting model economic_planning to DataFrame.</span>
 <span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMP153XBVSR in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table TMP153XBVSR has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPC9BX6XV9 in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMPC9BX6XV9 has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
 <span class="go">NOTE: The problem economic_planning has 3 variables (0 free, 0 fixed).</span>
 <span class="go">NOTE: The problem has 3 constraints (0 LE, 3 EQ, 0 GE, 0 range).</span>
@@ -237,66 +228,28 @@
 <span class="go">NOTE: The LP presolver removed all variables and constraints.</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 0.</span>
-<span class="go">NOTE: Cloud Analytic Services dropped table TMP153XBVSR from caslib CASUSERHDFS(casuser).</span>
-<span class="go">Problem Summary</span>
-
-<span class="go">                                     Value</span>
-<span class="go">Label                                     </span>
-<span class="go">Problem Name             economic_planning</span>
-<span class="go">Objective Sense               Minimization</span>
-<span class="go">Objective Function                    Zero</span>
-<span class="go">RHS                                    RHS</span>
-<span class="go">                                          </span>
-<span class="go">Number of Variables                      3</span>
-<span class="go">Bounded Above                            0</span>
-<span class="go">Bounded Below                            3</span>
-<span class="go">Bounded Above and Below                  0</span>
-<span class="go">Free                                     0</span>
-<span class="go">Fixed                                    0</span>
-<span class="go">                                          </span>
-<span class="go">Number of Constraints                    3</span>
-<span class="go">LE (&lt;=)                                  0</span>
-<span class="go">EQ (=)                                   3</span>
-<span class="go">GE (&gt;=)                                  0</span>
-<span class="go">Range                                    0</span>
-<span class="go">                                          </span>
-<span class="go">Constraint Coefficients                  9</span>
-<span class="go">Solution Summary</span>
-
-<span class="go">                               Value</span>
-<span class="go">Label                               </span>
-<span class="go">Solver                            LP</span>
-<span class="go">Algorithm               Dual Simplex</span>
-<span class="go">Objective Function              Zero</span>
-<span class="go">Solution Status              Optimal</span>
-<span class="go">Objective Value                    0</span>
-<span class="go">                                    </span>
-<span class="go">Primal Infeasibility    1.421085E-14</span>
-<span class="go">Dual Infeasibility                 0</span>
-<span class="go">Bound Infeasibility                0</span>
-<span class="go">                                    </span>
-<span class="go">Iterations                         0</span>
-<span class="go">Presolve Time                   0.00</span>
-<span class="go">Solution Time                   0.00</span>
 <span class="go">           static_production</span>
 <span class="go">1                           </span>
 <span class="go">coal              166.396761</span>
 <span class="go">steel             105.668016</span>
 <span class="go">transport          92.307692</span>
-<span class="go">NOTE: Initialized model Problem1</span>
-<span class="go">NOTE: Converting model Problem1 to DataFrame</span>
+<span class="go">NOTE: Initialized model Problem1.</span>
+<span class="go">NOTE: Converting model Problem1 to DataFrame.</span>
 <span class="go">WARNING: The objective function contains a constant term. An auxiliary variable is added.</span>
 <span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPQRAFKYFB in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table TMPQRAFKYFB has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPAI1ZFSCS in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMPAI1ZFSCS has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
-<span class="go">NOTE: The problem Problem1 has 61 variables (0 free, 13 fixed).</span>
+<span class="go">NOTE: The problem Problem1 has 64 variables (0 free, 13 fixed).</span>
 <span class="go">NOTE: The problem has 42 constraints (24 LE, 18 EQ, 0 GE, 0 range).</span>
 <span class="go">NOTE: The problem has 255 constraint coefficients.</span>
 <span class="go">NOTE: The following columns have no constraint coefficients:</span>
+<span class="go">         extra_capacity_coal_1</span>
+<span class="go">         extra_capacity_transport_1</span>
+<span class="go">         extra_capacity_steel_1</span>
 <span class="go">         obj_constant</span>
 <span class="go">NOTE: The LP presolver value AUTOMATIC is applied.</span>
-<span class="go">NOTE: The LP presolver removed 19 variables and 7 constraints.</span>
+<span class="go">NOTE: The LP presolver removed 22 variables and 7 constraints.</span>
 <span class="go">NOTE: The LP presolver removed 64 constraint coefficients.</span>
 <span class="go">NOTE: The presolved problem has 42 variables, 35 constraints, and 191 constraint coefficients.</span>
 <span class="go">NOTE: The LP solver is called.</span>
@@ -304,51 +257,10 @@
 <span class="go">                              Objective</span>
 <span class="go">         Phase Iteration        Value         Time</span>
 <span class="go">          D 2          1    1.360782E+04         0</span>
-<span class="go">          P 2         38    2.141875E+03         0</span>
+<span class="go">          P 2         39    2.141875E+03         0</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 2141.8751967.</span>
 <span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
-<span class="go">NOTE: Cloud Analytic Services dropped table TMPQRAFKYFB from caslib CASUSERHDFS(casuser).</span>
-<span class="go">Problem Summary</span>
-
-<span class="go">                                                      Value</span>
-<span class="go">Label                                                      </span>
-<span class="go">Problem Name                                       Problem1</span>
-<span class="go">Objective Sense                                Maximization</span>
-<span class="go">Objective Function       total_productive_capacity_constant</span>
-<span class="go">RHS                                                     RHS</span>
-<span class="go">                                                           </span>
-<span class="go">Number of Variables                                      61</span>
-<span class="go">Bounded Above                                             0</span>
-<span class="go">Bounded Below                                            48</span>
-<span class="go">Bounded Above and Below                                   0</span>
-<span class="go">Free                                                      0</span>
-<span class="go">Fixed                                                    13</span>
-<span class="go">                                                           </span>
-<span class="go">Number of Constraints                                    42</span>
-<span class="go">LE (&lt;=)                                                  24</span>
-<span class="go">EQ (=)                                                   18</span>
-<span class="go">GE (&gt;=)                                                   0</span>
-<span class="go">Range                                                     0</span>
-<span class="go">                                                           </span>
-<span class="go">Constraint Coefficients                                 255</span>
-<span class="go">Solution Summary</span>
-
-<span class="go">                                                   Value</span>
-<span class="go">Label                                                   </span>
-<span class="go">Solver                                                LP</span>
-<span class="go">Algorithm                                   Dual Simplex</span>
-<span class="go">Objective Function    total_productive_capacity_constant</span>
-<span class="go">Solution Status                                  Optimal</span>
-<span class="go">Objective Value                             2141.8751967</span>
-<span class="go">                                                        </span>
-<span class="go">Primal Infeasibility                        5.115908E-13</span>
-<span class="go">Dual Infeasibility                                     0</span>
-<span class="go">Bound Infeasibility                         1.421085E-14</span>
-<span class="go">                                                        </span>
-<span class="go">Iterations                                            38</span>
-<span class="go">Presolve Time                                       0.00</span>
-<span class="go">Solution Time                                       0.01</span>
 <span class="go">            production        stock extra_capacity productive_capacity</span>
 <span class="go">1         2                                                           </span>
 <span class="go">coal      0          0          150              -                   -</span>
@@ -357,7 +269,7 @@
 <span class="go">coal      3        300            0              0                 300</span>
 <span class="go">coal      4    17.9487      148.448        189.203             489.203</span>
 <span class="go">coal      5    166.397            0        1022.67             1511.88</span>
-<span class="go">coal      6    166.397 -1.42109e-14              0             1511.88</span>
+<span class="go">coal      6    166.397 -7.10543e-15              0             1511.88</span>
 <span class="go">coal      7          -            -              0                   -</span>
 <span class="go">steel     0          0           80              -                   -</span>
 <span class="go">steel     1    135.342      12.2811              0                 350</span>
@@ -365,7 +277,7 @@
 <span class="go">steel     3     193.09            0              0                 350</span>
 <span class="go">steel     4    105.668            0              0                 350</span>
 <span class="go">steel     5    105.668            0              0                 350</span>
-<span class="go">steel     6    105.668            0              0                 350</span>
+<span class="go">steel     6    105.668 -7.10543e-15              0                 350</span>
 <span class="go">steel     7          -            -              0                   -</span>
 <span class="go">transport 0          0          100              -                   -</span>
 <span class="go">transport 1    140.722      6.24084              0                 280</span>
@@ -373,7 +285,7 @@
 <span class="go">transport 3    267.152            0              0                 280</span>
 <span class="go">transport 4    92.3077            0              0                 280</span>
 <span class="go">transport 5    92.3077            0              0                 280</span>
-<span class="go">transport 6    92.3077  1.42109e-14              0                 280</span>
+<span class="go">transport 6    92.3077  7.10543e-15              0                 280</span>
 <span class="go">transport 7          -            -              0                   -</span>
 <span class="go">   manpower_con</span>
 <span class="go">1              </span>
@@ -383,17 +295,22 @@
 <span class="go">4    470.000000</span>
 <span class="go">5    150.000000</span>
 <span class="go">6    150.000000</span>
-<span class="go">NOTE: Initialized model Problem2</span>
-<span class="go">NOTE: Converting model Problem2 to DataFrame</span>
+<span class="go">NOTE: Initialized model Problem2.</span>
+<span class="go">NOTE: Converting model Problem2 to DataFrame.</span>
 <span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPPULFAZ5N in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table TMPPULFAZ5N has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPCVW8PYNI in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMPCVW8PYNI has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
-<span class="go">NOTE: The problem Problem2 has 60 variables (0 free, 12 fixed).</span>
+<span class="go">NOTE: The problem Problem2 has 64 variables (0 free, 13 fixed).</span>
 <span class="go">NOTE: The problem has 42 constraints (24 LE, 18 EQ, 0 GE, 0 range).</span>
 <span class="go">NOTE: The problem has 255 constraint coefficients.</span>
+<span class="go">NOTE: The following columns have no constraint coefficients:</span>
+<span class="go">         extra_capacity_coal_1</span>
+<span class="go">         extra_capacity_transport_1</span>
+<span class="go">         extra_capacity_steel_1</span>
+<span class="go">         obj_constant</span>
 <span class="go">NOTE: The LP presolver value AUTOMATIC is applied.</span>
-<span class="go">NOTE: The LP presolver removed 18 variables and 7 constraints.</span>
+<span class="go">NOTE: The LP presolver removed 22 variables and 7 constraints.</span>
 <span class="go">NOTE: The LP presolver removed 64 constraint coefficients.</span>
 <span class="go">NOTE: The presolved problem has 42 variables, 35 constraints, and 191 constraint coefficients.</span>
 <span class="go">NOTE: The LP solver is called.</span>
@@ -401,57 +318,16 @@
 <span class="go">                              Objective</span>
 <span class="go">         Phase Iteration        Value         Time</span>
 <span class="go">          D 2          1    9.413902E+03         0</span>
-<span class="go">          P 2         40    2.618579E+03         0</span>
+<span class="go">          P 2         46    2.618579E+03         0</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 2618.5791147.</span>
 <span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
-<span class="go">NOTE: Cloud Analytic Services dropped table TMPPULFAZ5N from caslib CASUSERHDFS(casuser).</span>
-<span class="go">Problem Summary</span>
-
-<span class="go">                                    Value</span>
-<span class="go">Label                                    </span>
-<span class="go">Problem Name                     Problem2</span>
-<span class="go">Objective Sense              Maximization</span>
-<span class="go">Objective Function       total_production</span>
-<span class="go">RHS                                   RHS</span>
-<span class="go">                                         </span>
-<span class="go">Number of Variables                    60</span>
-<span class="go">Bounded Above                           0</span>
-<span class="go">Bounded Below                          48</span>
-<span class="go">Bounded Above and Below                 0</span>
-<span class="go">Free                                    0</span>
-<span class="go">Fixed                                  12</span>
-<span class="go">                                         </span>
-<span class="go">Number of Constraints                  42</span>
-<span class="go">LE (&lt;=)                                24</span>
-<span class="go">EQ (=)                                 18</span>
-<span class="go">GE (&gt;=)                                 0</span>
-<span class="go">Range                                   0</span>
-<span class="go">                                         </span>
-<span class="go">Constraint Coefficients               255</span>
-<span class="go">Solution Summary</span>
-
-<span class="go">                                 Value</span>
-<span class="go">Label                                 </span>
-<span class="go">Solver                              LP</span>
-<span class="go">Algorithm                 Dual Simplex</span>
-<span class="go">Objective Function    total_production</span>
-<span class="go">Solution Status                Optimal</span>
-<span class="go">Objective Value           2618.5791147</span>
-<span class="go">                                      </span>
-<span class="go">Primal Infeasibility      1.755041E-12</span>
-<span class="go">Dual Infeasibility                   0</span>
-<span class="go">Bound Infeasibility                  0</span>
-<span class="go">                                      </span>
-<span class="go">Iterations                          40</span>
-<span class="go">Presolve Time                     0.00</span>
-<span class="go">Solution Time                     0.01</span>
 <span class="go">            production    stock extra_capacity     dict</span>
 <span class="go">1         2                                            </span>
 <span class="go">coal      0          0      150              -        -</span>
-<span class="go">coal      1        300  20.1103              0      300</span>
-<span class="go">coal      2    315.323  131.554         15.323  315.323</span>
-<span class="go">coal      3    430.505        0        115.182  430.505</span>
+<span class="go">coal      1    184.818  31.6285              0      300</span>
+<span class="go">coal      2    430.505  16.3725        130.505  430.505</span>
+<span class="go">coal      3    430.505        0              0  430.505</span>
 <span class="go">coal      4    430.505        0              0  430.505</span>
 <span class="go">coal      5    430.505        0              0  430.505</span>
 <span class="go">coal      6    166.397  324.108              0  430.505</span>
@@ -474,23 +350,27 @@
 <span class="go">transport 7          -        -              0        -</span>
 <span class="go">   manpower_con</span>
 <span class="go">1              </span>
-<span class="go">1    240.410497</span>
-<span class="go">2    321.545290</span>
+<span class="go">1    217.374162</span>
+<span class="go">2    344.581624</span>
 <span class="go">3    384.165212</span>
 <span class="go">4    470.000000</span>
 <span class="go">5    470.000000</span>
 <span class="go">6    150.000000</span>
-<span class="go">NOTE: Initialized model Problem3</span>
-<span class="go">NOTE: Converting model Problem3 to DataFrame</span>
+<span class="go">NOTE: Initialized model Problem3.</span>
+<span class="go">NOTE: Converting model Problem3 to DataFrame.</span>
 <span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMP4_NQHTZM in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table TMP4_NQHTZM has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMP31DVR5RC in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMP31DVR5RC has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
-<span class="go">NOTE: The problem Problem3 has 60 variables (0 free, 12 fixed).</span>
+<span class="go">NOTE: The problem Problem3 has 63 variables (0 free, 12 fixed).</span>
 <span class="go">NOTE: The problem has 36 constraints (18 LE, 18 EQ, 0 GE, 0 range).</span>
 <span class="go">NOTE: The problem has 219 constraint coefficients.</span>
+<span class="go">NOTE: The following columns have no constraint coefficients:</span>
+<span class="go">         extra_capacity_coal_1</span>
+<span class="go">         extra_capacity_transport_1</span>
+<span class="go">         extra_capacity_steel_1</span>
 <span class="go">NOTE: The LP presolver value AUTOMATIC is applied.</span>
-<span class="go">NOTE: The LP presolver removed 15 variables and 3 constraints.</span>
+<span class="go">NOTE: The LP presolver removed 18 variables and 3 constraints.</span>
 <span class="go">NOTE: The LP presolver removed 31 constraint coefficients.</span>
 <span class="go">NOTE: The presolved problem has 45 variables, 33 constraints, and 188 constraint coefficients.</span>
 <span class="go">NOTE: The LP solver is called.</span>
@@ -498,51 +378,10 @@
 <span class="go">                              Objective</span>
 <span class="go">         Phase Iteration        Value         Time</span>
 <span class="go">          D 2          1    4.013232E+04         0</span>
-<span class="go">          P 2         49    2.450027E+03         0</span>
+<span class="go">          P 2         50    2.450027E+03         0</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 2450.0266228.</span>
 <span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
-<span class="go">NOTE: Cloud Analytic Services dropped table TMP4_NQHTZM from caslib CASUSERHDFS(casuser).</span>
-<span class="go">Problem Summary</span>
-
-<span class="go">                                  Value</span>
-<span class="go">Label                                  </span>
-<span class="go">Problem Name                   Problem3</span>
-<span class="go">Objective Sense            Maximization</span>
-<span class="go">Objective Function       total_manpower</span>
-<span class="go">RHS                                 RHS</span>
-<span class="go">                                       </span>
-<span class="go">Number of Variables                  60</span>
-<span class="go">Bounded Above                         0</span>
-<span class="go">Bounded Below                        48</span>
-<span class="go">Bounded Above and Below               0</span>
-<span class="go">Free                                  0</span>
-<span class="go">Fixed                                12</span>
-<span class="go">                                       </span>
-<span class="go">Number of Constraints                36</span>
-<span class="go">LE (&lt;=)                              18</span>
-<span class="go">EQ (=)                               18</span>
-<span class="go">GE (&gt;=)                               0</span>
-<span class="go">Range                                 0</span>
-<span class="go">                                       </span>
-<span class="go">Constraint Coefficients             219</span>
-<span class="go">Solution Summary</span>
-
-<span class="go">                               Value</span>
-<span class="go">Label                               </span>
-<span class="go">Solver                            LP</span>
-<span class="go">Algorithm               Dual Simplex</span>
-<span class="go">Objective Function    total_manpower</span>
-<span class="go">Solution Status              Optimal</span>
-<span class="go">Objective Value         2450.0266228</span>
-<span class="go">                                    </span>
-<span class="go">Primal Infeasibility    2.195577E-12</span>
-<span class="go">Dual Infeasibility                 0</span>
-<span class="go">Bound Infeasibility                0</span>
-<span class="go">                                    </span>
-<span class="go">Iterations                        49</span>
-<span class="go">Presolve Time                   0.00</span>
-<span class="go">Solution Time                   0.01</span>
 <span class="go">            production    stock extra_capacity     dict</span>
 <span class="go">1         2                                            </span>
 <span class="go">coal      0          0      150              -        -</span>
@@ -577,7 +416,7 @@
 <span class="go">4    539.769130</span>
 <span class="go">5    636.824849</span>
 <span class="go">6    659.723590</span>
-<span class="gh">Out[2]: </span><span class="go">2450.0266228212977</span>
+<span class="gh">Out[2]: </span><span class="go">2450.026622821299</span>
 </pre></div>
 </div>
 </div>
@@ -599,33 +438,40 @@
 <li class="toctree-l1"><a class="reference internal" href="../components.html">Model components</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../sasoptpy.html">API Reference</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="food_manufacture_1.html">Food Manufacture 1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="food_manufacture_2.html">Food Manufacture 2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="factory_planning_1.html">Factory Planning 1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="factory_planning_2.html">Factory Planning 2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="manpower_planning.html">Manpower Planning</a></li>
-<li class="toctree-l2"><a class="reference internal" href="refinery_optimization.html">Refinery Optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mining_optimization.html">Mining Optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="farm_planning.html">Farm Planning</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Economic Planning</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#model">Model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#output">Output</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../examples.html#viya-swat-examples">Viya (swat) Examples</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="food_manufacture_1.html">Food Manufacture 1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="food_manufacture_2.html">Food Manufacture 2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="factory_planning_1.html">Factory Planning 1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="factory_planning_2.html">Factory Planning 2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manpower_planning.html">Manpower Planning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="refinery_optimization.html">Refinery Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mining_optimization.html">Mining Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="farm_planning.html">Farm Planning</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Economic Planning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#model">Model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#output">Output</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="optimal_wedding.html">SAS/OR Blog: Optimal Wedding</a></li>
-<li class="toctree-l2"><a class="reference internal" href="kidney_exchange.html">SAS/OR Blog: Kidney Exchange</a></li>
+<li class="toctree-l3"><a class="reference internal" href="decentralization.html">Decentralization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="optimal_wedding.html">SAS/OR Blog: Optimal Wedding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kidney_exchange.html">SAS/OR Blog: Kidney Exchange</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
 </ul>
 </li>
 </ul>
 
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -642,19 +488,19 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="optimal_wedding.html" title="Optimal Wedding"
+          <a href="decentralization.html" title="Decentralization"
              >next</a> |</li>
         <li class="right" >
           <a href="farm_planning.html" title="Farm Planning"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2018, SAS Institute.
-      Last updated on Feb 26, 2018 (Timestamp: 0.1.1-20180226160330).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
+      Last updated on Apr 24, 2018 (Timestamp: 0.1.2-20180424164025).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
     </div>
   </body>
 </html>

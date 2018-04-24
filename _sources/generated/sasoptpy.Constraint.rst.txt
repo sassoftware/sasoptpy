@@ -1,8 +1,8 @@
 
 .. currentmodule:: sasoptpy
 
-sasoptpy\.Constraint
-====================
+sasoptpy.Constraint
+===================
 
 .. currentmodule:: sasoptpy
 
@@ -18,11 +18,13 @@ sasoptpy\.Constraint
       
       Constraint.add
       Constraint.copy
+      Constraint.get_dual
       Constraint.get_name
       Constraint.get_value
       Constraint.mult
       Constraint.set_block
       Constraint.set_direction
+      Constraint.set_name
       Constraint.set_permanent
       Constraint.set_rhs
       Constraint.update_var_coef

@@ -1,5 +1,5 @@
-sasoptpy\.dict\_to\_frame
-=========================
+sasoptpy.dict\_to\_frame
+========================
 
 .. currentmodule:: sasoptpy
 

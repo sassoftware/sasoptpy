@@ -1,5 +1,5 @@
-sasoptpy\.Model\.set\_coef
-==========================
+sasoptpy.Model.set\_coef
+========================
 
 .. currentmodule:: sasoptpy
 

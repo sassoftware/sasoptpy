@@ -1,5 +1,5 @@
-sasoptpy\.tuple\_pack
-=====================
+sasoptpy.tuple\_pack
+====================
 
 .. currentmodule:: sasoptpy
 

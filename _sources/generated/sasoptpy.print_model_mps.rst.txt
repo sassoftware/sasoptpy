@@ -1,5 +1,5 @@
-sasoptpy\.print\_model\_mps
-===========================
+sasoptpy.print\_model\_mps
+==========================
 
 .. currentmodule:: sasoptpy
 

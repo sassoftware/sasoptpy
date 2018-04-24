@@ -4,21 +4,13 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Food Manufacture 1 &#8212; sasoptpy 0.1.1 documentation</title>
+    <title>Food Manufacture 1 &#8212; sasoptpy 0.1.2 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '0.1.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
@@ -27,8 +19,7 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Food Manufacture 2" href="food_manufacture_2.html" />
     <link rel="prev" title="Examples" href="../examples.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -44,7 +35,7 @@
         <li class="right" >
           <a href="../examples.html" title="Examples"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &#187;</li> 
       </ul>
     </div>  
@@ -58,7 +49,7 @@
 <h1>Food Manufacture 1<a class="headerlink" href="#food-manufacture-1" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="model">
 <h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 
@@ -140,14 +131,14 @@
 </div>
 <div class="section" id="output">
 <h2>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-ipython"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">examples.food_manufacture_1</span> <span class="kn">import</span> <span class="n">test</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">examples.food_manufacture_1</span> <span class="kn">import</span> <span class="n">test</span>
 
 <span class="gp">In [2]: </span><span class="n">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">)</span>
-<span class="go">NOTE: Initialized model food_manufacture_1</span>
-<span class="go">NOTE: Converting model food_manufacture_1 to DataFrame</span>
+<span class="go">NOTE: Initialized model food_manufacture_1.</span>
+<span class="go">NOTE: Converting model food_manufacture_1 to DataFrame.</span>
 <span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMP14OHCS9Q in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table TMP14OHCS9Q has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMP3EA71LRX in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMP3EA71LRX has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
 <span class="go">NOTE: The problem food_manufacture_1 has 95 variables (0 free, 10 fixed).</span>
 <span class="go">NOTE: The problem has 54 constraints (18 LE, 30 EQ, 6 GE, 0 range).</span>
@@ -166,51 +157,10 @@
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 107842.59259.</span>
 <span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
-<span class="go">NOTE: Cloud Analytic Services dropped table TMP14OHCS9Q from caslib CASUSERHDFS(casuser).</span>
-<span class="go">Problem Summary</span>
-
-<span class="go">                                      Value</span>
-<span class="go">Label                                      </span>
-<span class="go">Problem Name             food_manufacture_1</span>
-<span class="go">Objective Sense                Maximization</span>
-<span class="go">Objective Function                   profit</span>
-<span class="go">RHS                                     RHS</span>
-<span class="go">                                           </span>
-<span class="go">Number of Variables                      95</span>
-<span class="go">Bounded Above                             0</span>
-<span class="go">Bounded Below                            60</span>
-<span class="go">Bounded Above and Below                  25</span>
-<span class="go">Free                                      0</span>
-<span class="go">Fixed                                    10</span>
-<span class="go">                                           </span>
-<span class="go">Number of Constraints                    54</span>
-<span class="go">LE (&lt;=)                                  18</span>
-<span class="go">EQ (=)                                   30</span>
-<span class="go">GE (&gt;=)                                   6</span>
-<span class="go">Range                                     0</span>
-<span class="go">                                           </span>
-<span class="go">Constraint Coefficients                 210</span>
-<span class="go">Solution Summary</span>
-
-<span class="go">                               Value</span>
-<span class="go">Label                               </span>
-<span class="go">Solver                            LP</span>
-<span class="go">Algorithm               Dual Simplex</span>
-<span class="go">Objective Function            profit</span>
-<span class="go">Solution Status              Optimal</span>
-<span class="go">Objective Value         107842.59259</span>
-<span class="go">                                    </span>
-<span class="go">Primal Infeasibility    4.289902E-13</span>
-<span class="go">Dual Infeasibility                 0</span>
-<span class="go">Bound Infeasibility                0</span>
-<span class="go">                                    </span>
-<span class="go">Iterations                        71</span>
-<span class="go">Presolve Time                   0.00</span>
-<span class="go">Solution Time                   0.01</span>
-<span class="go">NOTE: Converting model food_manufacture_1 to DataFrame</span>
+<span class="go">NOTE: Converting model food_manufacture_1 to DataFrame.</span>
 <span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMP1ASTJEPD in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table TMP1ASTJEPD has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMP64SSN3EJ in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMP64SSN3EJ has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
 <span class="go">NOTE: The problem food_manufacture_1 has 95 variables (0 free, 10 fixed).</span>
 <span class="go">NOTE: The problem has 54 constraints (18 LE, 30 EQ, 6 GE, 0 range).</span>
@@ -230,51 +180,10 @@
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 107842.59259.</span>
 <span class="go">NOTE: The Primal Simplex solve time is 0.01 seconds.</span>
-<span class="go">NOTE: Cloud Analytic Services dropped table TMP1ASTJEPD from caslib CASUSERHDFS(casuser).</span>
-<span class="go">Problem Summary</span>
-
-<span class="go">                                      Value</span>
-<span class="go">Label                                      </span>
-<span class="go">Problem Name             food_manufacture_1</span>
-<span class="go">Objective Sense                Maximization</span>
-<span class="go">Objective Function                   profit</span>
-<span class="go">RHS                                     RHS</span>
-<span class="go">                                           </span>
-<span class="go">Number of Variables                      95</span>
-<span class="go">Bounded Above                             0</span>
-<span class="go">Bounded Below                            60</span>
-<span class="go">Bounded Above and Below                  25</span>
-<span class="go">Free                                      0</span>
-<span class="go">Fixed                                    10</span>
-<span class="go">                                           </span>
-<span class="go">Number of Constraints                    54</span>
-<span class="go">LE (&lt;=)                                  18</span>
-<span class="go">EQ (=)                                   30</span>
-<span class="go">GE (&gt;=)                                   6</span>
-<span class="go">Range                                     0</span>
-<span class="go">                                           </span>
-<span class="go">Constraint Coefficients                 210</span>
-<span class="go">Solution Summary</span>
-
-<span class="go">                               Value</span>
-<span class="go">Label                               </span>
-<span class="go">Solver                            LP</span>
-<span class="go">Algorithm             Primal Simplex</span>
-<span class="go">Objective Function            profit</span>
-<span class="go">Solution Status              Optimal</span>
-<span class="go">Objective Value         107842.59259</span>
-<span class="go">                                    </span>
-<span class="go">Primal Infeasibility    9.947598E-14</span>
-<span class="go">Dual Infeasibility      3.552714E-15</span>
-<span class="go">Bound Infeasibility                0</span>
-<span class="go">                                    </span>
-<span class="go">Iterations                        70</span>
-<span class="go">Presolve Time                   0.00</span>
-<span class="go">Solution Time                   0.01</span>
-<span class="go">NOTE: Converting model food_manufacture_1 to DataFrame</span>
+<span class="go">NOTE: Converting model food_manufacture_1 to DataFrame.</span>
 <span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPXVI0J9T1 in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table TMPXVI0J9T1 has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPGGRH98B6 in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMPGGRH98B6 has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
 <span class="go">NOTE: The problem food_manufacture_1 has 95 variables (0 free, 10 fixed).</span>
 <span class="go">NOTE: The problem has 54 constraints (18 LE, 30 EQ, 6 GE, 0 range).</span>
@@ -290,73 +199,30 @@
 <span class="go">                                           Primal       Bound        Dual</span>
 <span class="go">         Iter  Complement Duality Gap      Infeas      Infeas      Infeas   Time</span>
 <span class="go">            0  4.2997E+03  1.5010E+01  4.2157E-02  1.4325E-01  4.2366E-01      0</span>
-<span class="go">            1  2.7239E+03  4.0077E+00  1.7368E-03  5.9018E-03  2.5867E-01      0</span>
-<span class="go">            2  8.0938E+02  7.4301E-01  8.4899E-04  2.8850E-03  6.5283E-02      0</span>
-<span class="go">            3  3.8789E+02  3.7949E-01  3.2532E-04  1.1055E-03  8.4918E-03      0</span>
-<span class="go">            4  4.1836E+01  3.8559E-02  3.6316E-05  1.2341E-04  6.4884E-04      0</span>
-<span class="go">            5  1.2878E+00  1.1373E-03  5.0477E-07  1.7153E-06  2.5783E-05      0</span>
-<span class="go">            6  1.2953E-02  1.1443E-05  5.1201E-09  1.7399E-08  2.5813E-07      0</span>
-<span class="go">            7  0.0000E+00  7.9506E-08  3.0784E-07  8.9734E-10  9.0537E-07      0</span>
+<span class="go">            1  2.7269E+03  4.0309E+00  1.7457E-03  5.9323E-03  2.5977E-01      0</span>
+<span class="go">            2  8.0688E+02  7.3876E-01  8.5537E-04  2.9066E-03  6.5752E-02      0</span>
+<span class="go">            3  3.8920E+02  3.7862E-01  3.3049E-04  1.1230E-03  8.8814E-03      0</span>
+<span class="go">            4  4.1483E+01  3.8035E-02  3.7209E-05  1.2644E-04  6.7674E-04      0</span>
+<span class="go">            5  1.2691E+00  1.1121E-03  5.3186E-07  1.8073E-06  2.6917E-05      0</span>
+<span class="go">            6  1.2754E-02  1.1177E-05  5.3951E-09  1.8333E-08  2.6964E-07      0</span>
+<span class="go">            7  0.0000E+00  8.0023E-08  3.0560E-07  9.4554E-10  8.8666E-07      0</span>
 <span class="go">NOTE: The Interior Point solve time is 0.00 seconds.</span>
 <span class="go">NOTE: The CROSSOVER option is enabled.</span>
 <span class="go">NOTE: The crossover basis contains 11 primal and 3 dual superbasic variables.</span>
 <span class="go">                              Objective</span>
 <span class="go">         Phase Iteration        Value         Time</span>
-<span class="go">          P C          1    1.056115E+03         0</span>
-<span class="go">          D C         13    1.753674E+02         0</span>
+<span class="go">          P C          1    8.684742E+02         0</span>
+<span class="go">          D C         13    1.703660E+02         0</span>
 <span class="go">          D 2         16    1.078426E+05         0</span>
-<span class="go">          D 2         17    1.078426E+05         0</span>
+<span class="go">          P 2         17    1.078426E+05         0</span>
+<span class="go">          D 2         18    1.078426E+05         0</span>
 <span class="go">NOTE: The Crossover time is 0.01 seconds.</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 107842.59259.</span>
-<span class="go">NOTE: Cloud Analytic Services dropped table TMPXVI0J9T1 from caslib CASUSERHDFS(casuser).</span>
-<span class="go">Problem Summary</span>
-
-<span class="go">                                      Value</span>
-<span class="go">Label                                      </span>
-<span class="go">Problem Name             food_manufacture_1</span>
-<span class="go">Objective Sense                Maximization</span>
-<span class="go">Objective Function                   profit</span>
-<span class="go">RHS                                     RHS</span>
-<span class="go">                                           </span>
-<span class="go">Number of Variables                      95</span>
-<span class="go">Bounded Above                             0</span>
-<span class="go">Bounded Below                            60</span>
-<span class="go">Bounded Above and Below                  25</span>
-<span class="go">Free                                      0</span>
-<span class="go">Fixed                                    10</span>
-<span class="go">                                           </span>
-<span class="go">Number of Constraints                    54</span>
-<span class="go">LE (&lt;=)                                  18</span>
-<span class="go">EQ (=)                                   30</span>
-<span class="go">GE (&gt;=)                                   6</span>
-<span class="go">Range                                     0</span>
-<span class="go">                                           </span>
-<span class="go">Constraint Coefficients                 210</span>
-<span class="go">Solution Summary</span>
-
-<span class="go">                               Value</span>
-<span class="go">Label                               </span>
-<span class="go">Solver                            LP</span>
-<span class="go">Algorithm             Interior Point</span>
-<span class="go">Objective Function            profit</span>
-<span class="go">Solution Status              Optimal</span>
-<span class="go">Objective Value         107842.59259</span>
-<span class="go">                                    </span>
-<span class="go">Primal Infeasibility     4.52971E-14</span>
-<span class="go">Dual Infeasibility      1.776357E-14</span>
-<span class="go">Bound Infeasibility                0</span>
-<span class="go">Complementarity                    0</span>
-<span class="go">Duality Gap                        0</span>
-<span class="go">                                    </span>
-<span class="go">Iterations                         7</span>
-<span class="go">Iterations2                       17</span>
-<span class="go">Presolve Time                   0.00</span>
-<span class="go">Solution Time                   0.02</span>
-<span class="go">NOTE: Converting model food_manufacture_1 to DataFrame</span>
+<span class="go">NOTE: Converting model food_manufacture_1 to DataFrame.</span>
 <span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPRP3BDIU5 in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table TMPRP3BDIU5 has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPSQTLC41L in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMPSQTLC41L has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
 <span class="go">NOTE: The problem food_manufacture_1 has 95 variables (0 free, 10 fixed).</span>
 <span class="go">NOTE: The problem has 54 constraints (18 LE, 30 EQ, 6 GE, 0 range).</span>
@@ -372,7 +238,7 @@
 <span class="go">                           Primal         Primal           Dual</span>
 <span class="go">         Iteration      Objective  Infeasibility  Infeasibility     Time</span>
 <span class="go">                 1  -1.250000E+04   5.000000E+02   4.076000E+03     0.00</span>
-<span class="go">                39   5.125000E+04   0.000000E+00   0.000000E+00     0.00</span>
+<span class="go">                38   5.125000E+04   0.000000E+00   0.000000E+00     0.00</span>
 <span class="go">NOTE: The Network Simplex solve time is 0.00 seconds.</span>
 <span class="go">NOTE: The total Network Simplex solve time is 0.00 seconds.</span>
 <span class="go">NOTE: The Dual Simplex algorithm is used.</span>
@@ -383,48 +249,6 @@
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 107842.59259.</span>
 <span class="go">NOTE: The Simplex solve time is 0.01 seconds.</span>
-<span class="go">NOTE: Cloud Analytic Services dropped table TMPRP3BDIU5 from caslib CASUSERHDFS(casuser).</span>
-<span class="go">Problem Summary</span>
-
-<span class="go">                                      Value</span>
-<span class="go">Label                                      </span>
-<span class="go">Problem Name             food_manufacture_1</span>
-<span class="go">Objective Sense                Maximization</span>
-<span class="go">Objective Function                   profit</span>
-<span class="go">RHS                                     RHS</span>
-<span class="go">                                           </span>
-<span class="go">Number of Variables                      95</span>
-<span class="go">Bounded Above                             0</span>
-<span class="go">Bounded Below                            60</span>
-<span class="go">Bounded Above and Below                  25</span>
-<span class="go">Free                                      0</span>
-<span class="go">Fixed                                    10</span>
-<span class="go">                                           </span>
-<span class="go">Number of Constraints                    54</span>
-<span class="go">LE (&lt;=)                                  18</span>
-<span class="go">EQ (=)                                   30</span>
-<span class="go">GE (&gt;=)                                   6</span>
-<span class="go">Range                                     0</span>
-<span class="go">                                           </span>
-<span class="go">Constraint Coefficients                 210</span>
-<span class="go">Solution Summary</span>
-
-<span class="go">                                Value</span>
-<span class="go">Label                                </span>
-<span class="go">Solver                             LP</span>
-<span class="go">Algorithm             Network Simplex</span>
-<span class="go">Objective Function             profit</span>
-<span class="go">Solution Status               Optimal</span>
-<span class="go">Objective Value          107842.59259</span>
-<span class="go">                                     </span>
-<span class="go">Primal Infeasibility     3.410605E-13</span>
-<span class="go">Dual Infeasibility       2.842171E-14</span>
-<span class="go">Bound Infeasibility       8.21565E-14</span>
-<span class="go">                                     </span>
-<span class="go">Iterations                         39</span>
-<span class="go">Iterations2                        42</span>
-<span class="go">Presolve Time                    0.00</span>
-<span class="go">Solution Time                    0.01</span>
 <span class="go">            buy          use         store</span>
 <span class="go">1    2                                    </span>
 <span class="go">oil1 0        -            -  5.000000e+02</span>
@@ -462,7 +286,7 @@
 <span class="go">veg2 4        0      188.889  4.074074e+01</span>
 <span class="go">veg2 5        0      40.7407  0.000000e+00</span>
 <span class="go">veg2 6  540.741      40.7407  5.000000e+02</span>
-<span class="gh">Out[2]: </span><span class="go">107842.59259259261</span>
+<span class="gh">Out[2]: </span><span class="go">107842.59259259264</span>
 </pre></div>
 </div>
 </div>
@@ -484,33 +308,40 @@
 <li class="toctree-l1"><a class="reference internal" href="../components.html">Model components</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../sasoptpy.html">API Reference</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Food Manufacture 1</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#model">Model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#output">Output</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../examples.html#viya-swat-examples">Viya (swat) Examples</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Food Manufacture 1</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#model">Model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#output">Output</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="food_manufacture_2.html">Food Manufacture 2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="factory_planning_1.html">Factory Planning 1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="factory_planning_2.html">Factory Planning 2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="manpower_planning.html">Manpower Planning</a></li>
-<li class="toctree-l2"><a class="reference internal" href="refinery_optimization.html">Refinery Optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mining_optimization.html">Mining Optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="farm_planning.html">Farm Planning</a></li>
-<li class="toctree-l2"><a class="reference internal" href="economic_planning.html">Economic Planning</a></li>
-<li class="toctree-l2"><a class="reference internal" href="optimal_wedding.html">SAS/OR Blog: Optimal Wedding</a></li>
-<li class="toctree-l2"><a class="reference internal" href="kidney_exchange.html">SAS/OR Blog: Kidney Exchange</a></li>
+<li class="toctree-l3"><a class="reference internal" href="food_manufacture_2.html">Food Manufacture 2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="factory_planning_1.html">Factory Planning 1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="factory_planning_2.html">Factory Planning 2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manpower_planning.html">Manpower Planning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="refinery_optimization.html">Refinery Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mining_optimization.html">Mining Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="farm_planning.html">Farm Planning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="economic_planning.html">Economic Planning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="decentralization.html">Decentralization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="optimal_wedding.html">SAS/OR Blog: Optimal Wedding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kidney_exchange.html">SAS/OR Blog: Kidney Exchange</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
 </ul>
 </li>
 </ul>
 
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -532,14 +363,14 @@
         <li class="right" >
           <a href="../examples.html" title="Examples"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2018, SAS Institute.
-      Last updated on Feb 26, 2018 (Timestamp: 0.1.1-20180226160330).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
+      Last updated on Apr 24, 2018 (Timestamp: 0.1.2-20180424164025).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
     </div>
   </body>
 </html>

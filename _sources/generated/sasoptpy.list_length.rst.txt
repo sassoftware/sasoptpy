@@ -1,5 +1,5 @@
-sasoptpy\.list\_length
-======================
+sasoptpy.list\_length
+=====================
 
 .. currentmodule:: sasoptpy
 

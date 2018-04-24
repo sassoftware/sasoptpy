@@ -4,21 +4,13 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Refinery Optimization &#8212; sasoptpy 0.1.1 documentation</title>
+    <title>Refinery Optimization &#8212; sasoptpy 0.1.2 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '0.1.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
@@ -27,8 +19,7 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Mining Optimization" href="mining_optimization.html" />
     <link rel="prev" title="Manpower Planning" href="manpower_planning.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -44,7 +35,7 @@
         <li class="right" >
           <a href="manpower_planning.html" title="Manpower Planning"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &#187;</li> 
       </ul>
     </div>  
@@ -58,7 +49,7 @@
 <h1>Refinery Optimization<a class="headerlink" href="#refinery-optimization" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="model">
 <h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -282,63 +273,63 @@
 </div>
 <div class="section" id="output">
 <h2>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-ipython"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">examples.refinery_optimization</span> <span class="kn">import</span> <span class="n">test</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">examples.refinery_optimization</span> <span class="kn">import</span> <span class="n">test</span>
 
 <span class="gp">In [2]: </span><span class="n">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">)</span>
-<span class="go">NOTE: Initialized model refinery_optimization</span>
-<span class="go">NOTE: Converting model refinery_optimization to DataFrame</span>
+<span class="go">NOTE: Initialized model refinery_optimization.</span>
+<span class="go">NOTE: Converting model refinery_optimization to DataFrame.</span>
 <span class="go">     Field1                                 Field2                  Field3  \</span>
 <span class="go">0      NAME                                          refinery_optimization   </span>
 <span class="go">1      ROWS                                                                  </span>
 <span class="go">2       MAX                            totalProfit                           </span>
-<span class="go">3         E                         flow_balance_5                           </span>
-<span class="go">4         E                        flow_balance_13                           </span>
-<span class="go">5         E                        flow_balance_17                           </span>
-<span class="go">6         E                         flow_balance_2                           </span>
-<span class="go">7         E                         flow_balance_9                           </span>
-<span class="go">8         E                         flow_balance_0                           </span>
-<span class="go">9         E                        flow_balance_11                           </span>
-<span class="go">10        E                        flow_balance_10                           </span>
-<span class="go">11        E                        flow_balance_14                           </span>
-<span class="go">12        E                         flow_balance_8                           </span>
-<span class="go">13        E                         flow_balance_6                           </span>
-<span class="go">14        E                         flow_balance_7                           </span>
-<span class="go">15        E                        flow_balance_16                           </span>
+<span class="go">3         E                         flow_balance_6                           </span>
+<span class="go">4         E                         flow_balance_7                           </span>
+<span class="go">5         E                         flow_balance_3                           </span>
+<span class="go">6         E                         flow_balance_9                           </span>
+<span class="go">7         E                         flow_balance_4                           </span>
+<span class="go">8         E                         flow_balance_1                           </span>
+<span class="go">9         E                        flow_balance_13                           </span>
+<span class="go">10        E                        flow_balance_16                           </span>
+<span class="go">11        E                        flow_balance_11                           </span>
+<span class="go">12        E                        flow_balance_17                           </span>
+<span class="go">13        E                        flow_balance_14                           </span>
+<span class="go">14        E                         flow_balance_0                           </span>
+<span class="go">15        E                         flow_balance_8                           </span>
 <span class="go">16        E                        flow_balance_12                           </span>
-<span class="go">17        E                         flow_balance_1                           </span>
-<span class="go">18        E                         flow_balance_3                           </span>
-<span class="go">19        E                         flow_balance_4                           </span>
-<span class="go">20        E                        flow_balance_15                           </span>
-<span class="go">21        E                         distillation_0                           </span>
-<span class="go">22        E                         distillation_1                           </span>
-<span class="go">23        E                        distillation_10                           </span>
-<span class="go">24        E                         distillation_2                           </span>
-<span class="go">25        E                         distillation_3                           </span>
-<span class="go">26        E                         distillation_6                           </span>
-<span class="go">27        E                         distillation_7                           </span>
-<span class="go">28        E                         distillation_8                           </span>
-<span class="go">29        E                         distillation_4                           </span>
+<span class="go">17        E                        flow_balance_15                           </span>
+<span class="go">18        E                         flow_balance_5                           </span>
+<span class="go">19        E                        flow_balance_10                           </span>
+<span class="go">20        E                         flow_balance_2                           </span>
+<span class="go">21        E                         distillation_1                           </span>
+<span class="go">22        E                         distillation_6                           </span>
+<span class="go">23        E                         distillation_3                           </span>
+<span class="go">24        E                        distillation_10                           </span>
+<span class="go">25        E                         distillation_4                           </span>
+<span class="go">26        E                         distillation_9                           </span>
+<span class="go">27        E                         distillation_8                           </span>
+<span class="go">28        E                         distillation_2                           </span>
+<span class="go">29        E                         distillation_0                           </span>
 <span class="go">..      ...                                    ...                     ...   </span>
-<span class="go">130          flow_reformed_gasoline_regular_petrol         flow_balance_16   </span>
+<span class="go">130          flow_reformed_gasoline_regular_petrol       blending_petrol_0   </span>
 <span class="go">131                       flow_regular_petrol_sink             totalProfit   </span>
-<span class="go">132                       flow_regular_petrol_sink         flow_balance_16   </span>
-<span class="go">133                         flow_residuum_fuel_oil     blending_fuel_oil_3   </span>
-<span class="go">134                         flow_residuum_fuel_oil          flow_balance_4   </span>
-<span class="go">135                         flow_residuum_fuel_oil         flow_balance_17   </span>
+<span class="go">132                       flow_regular_petrol_sink           premium_ratio   </span>
+<span class="go">133                         flow_residuum_fuel_oil     blending_fuel_oil_2   </span>
+<span class="go">134                         flow_residuum_fuel_oil         flow_balance_17   </span>
+<span class="go">135                         flow_residuum_fuel_oil     blending_fuel_oil_0   </span>
 <span class="go">136                         flow_residuum_jet_fuel       blending_jet_fuel   </span>
 <span class="go">137                         flow_residuum_jet_fuel          flow_balance_8   </span>
-<span class="go">138                         flow_residuum_lube_oil         flow_balance_17   </span>
+<span class="go">138                         flow_residuum_lube_oil         flow_balance_12   </span>
 <span class="go">139                             flow_source_crude1          flow_balance_2   </span>
 <span class="go">140                             flow_source_crude2          flow_balance_3   </span>
-<span class="go">141                         crudesDistilled_crude1          distillation_5   </span>
-<span class="go">142                         crudesDistilled_crude1          distillation_2   </span>
-<span class="go">143                         crudesDistilled_crude1          distillation_3   </span>
-<span class="go">144                         crudesDistilled_crude1          distillation_4   </span>
-<span class="go">145                         crudesDistilled_crude2         distillation_10   </span>
+<span class="go">141                         crudesDistilled_crude1          distillation_2   </span>
+<span class="go">142                         crudesDistilled_crude1          distillation_4   </span>
+<span class="go">143                         crudesDistilled_crude1          crude_total_ub   </span>
+<span class="go">144                         crudesDistilled_crude1          distillation_0   </span>
+<span class="go">145                         crudesDistilled_crude2          distillation_9   </span>
 <span class="go">146                         crudesDistilled_crude2          distillation_8   </span>
-<span class="go">147                         crudesDistilled_crude2          distillation_6   </span>
-<span class="go">148                         crudesDistilled_crude2         distillation_11   </span>
-<span class="go">149                   oilCracked_heavy_oil_cracked              cracking_3   </span>
+<span class="go">147                         crudesDistilled_crude2         distillation_11   </span>
+<span class="go">148                         crudesDistilled_crude2          crude_total_ub   </span>
+<span class="go">149                   oilCracked_heavy_oil_cracked              cracking_2   </span>
 <span class="go">150                   oilCracked_light_oil_cracked              cracking_1   </span>
 <span class="go">151     RHS                                                                  </span>
 <span class="go">152                                            RHS          crude_total_ub   </span>
@@ -382,26 +373,26 @@
 <span class="go">28                                       29  </span>
 <span class="go">29                                       30  </span>
 <span class="go">..     ...                  ...    ...  ...  </span>
-<span class="go">130     -1                              131  </span>
-<span class="go">131      6        premium_ratio   -0.4  132  </span>
-<span class="go">132      1                              133  </span>
-<span class="go">133     17  blending_fuel_oil_1     -3  134  </span>
-<span class="go">134     -1  blending_fuel_oil_0    -10  135  </span>
-<span class="go">135      1  blending_fuel_oil_2     -4  136  </span>
+<span class="go">130     31                              131  </span>
+<span class="go">131      6      flow_balance_16      1  132  </span>
+<span class="go">132   -0.4                              133  </span>
+<span class="go">133     -4       flow_balance_4     -1  134  </span>
+<span class="go">134      1  blending_fuel_oil_3     17  135  </span>
+<span class="go">135    -10  blending_fuel_oil_1     -3  136  </span>
 <span class="go">136  -0.95      flow_balance_17      1  137  </span>
 <span class="go">137     -1                              138  </span>
-<span class="go">138      1      flow_balance_12   -0.5  139  </span>
+<span class="go">138   -0.5      flow_balance_17      1  139  </span>
 <span class="go">139     -6                              140  </span>
 <span class="go">140     -6                              141  </span>
 <span class="go">141     -1       distillation_1     -1  142  </span>
-<span class="go">142     -1       crude_total_ub      1  143  </span>
-<span class="go">143     -1       distillation_0     -1  144  </span>
+<span class="go">142     -1       distillation_5     -1  143  </span>
+<span class="go">143      1       distillation_3     -1  144  </span>
 <span class="go">144     -1                              145  </span>
-<span class="go">145     -1       distillation_9     -1  146  </span>
-<span class="go">146     -1       crude_total_ub      1  147  </span>
-<span class="go">147     -1       distillation_7     -1  148  </span>
-<span class="go">148     -1                              149  </span>
-<span class="go">149     -1           cracking_2     -1  150  </span>
+<span class="go">145     -1       distillation_6     -1  146  </span>
+<span class="go">146     -1       distillation_7     -1  147  </span>
+<span class="go">147     -1      distillation_10     -1  148  </span>
+<span class="go">148      1                              149  </span>
+<span class="go">149     -1           cracking_3     -1  150  </span>
 <span class="go">150     -1           cracking_0     -1  151  </span>
 <span class="go">151                                     152  </span>
 <span class="go">152  45000           naphtba_ub  10000  153  </span>
@@ -414,10 +405,10 @@
 <span class="go">159      0                           0  160  </span>
 
 <span class="go">[160 rows x 7 columns]</span>
-<span class="go">NOTE: Converting model refinery_optimization to DataFrame</span>
+<span class="go">NOTE: Converting model refinery_optimization to DataFrame.</span>
 <span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPO0PYZUL5 in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table TMPO0PYZUL5 has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPWD9Z9U8I in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMPWD9Z9U8I has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
 <span class="go">NOTE: The problem refinery_optimization has 51 variables (0 free, 0 fixed).</span>
 <span class="go">NOTE: The problem has 46 constraints (4 LE, 38 EQ, 3 GE, 1 range).</span>
@@ -430,52 +421,11 @@
 <span class="go">NOTE: The Dual Simplex algorithm is used.</span>
 <span class="go">                              Objective</span>
 <span class="go">         Phase Iteration        Value         Time</span>
-<span class="go">          D 2          1    7.181778E+05         0</span>
+<span class="go">          D 2          1    7.181780E+05         0</span>
 <span class="go">          P 2         22    2.113651E+05         0</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 211365.13477.</span>
 <span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
-<span class="go">NOTE: Cloud Analytic Services dropped table TMPO0PYZUL5 from caslib CASUSERHDFS(casuser).</span>
-<span class="go">Problem Summary</span>
-
-<span class="go">                                         Value</span>
-<span class="go">Label                                         </span>
-<span class="go">Problem Name             refinery_optimization</span>
-<span class="go">Objective Sense                   Maximization</span>
-<span class="go">Objective Function                 totalProfit</span>
-<span class="go">RHS                                        RHS</span>
-<span class="go">                                              </span>
-<span class="go">Number of Variables                         51</span>
-<span class="go">Bounded Above                                0</span>
-<span class="go">Bounded Below                               49</span>
-<span class="go">Bounded Above and Below                      2</span>
-<span class="go">Free                                         0</span>
-<span class="go">Fixed                                        0</span>
-<span class="go">                                              </span>
-<span class="go">Number of Constraints                       46</span>
-<span class="go">LE (&lt;=)                                      4</span>
-<span class="go">EQ (=)                                      38</span>
-<span class="go">GE (&gt;=)                                      3</span>
-<span class="go">Range                                        1</span>
-<span class="go">                                              </span>
-<span class="go">Constraint Coefficients                    158</span>
-<span class="go">Solution Summary</span>
-
-<span class="go">                               Value</span>
-<span class="go">Label                               </span>
-<span class="go">Solver                            LP</span>
-<span class="go">Algorithm               Dual Simplex</span>
-<span class="go">Objective Function       totalProfit</span>
-<span class="go">Solution Status              Optimal</span>
-<span class="go">Objective Value         211365.13477</span>
-<span class="go">                                    </span>
-<span class="go">Primal Infeasibility    7.275958E-12</span>
-<span class="go">Dual Infeasibility      1.776357E-15</span>
-<span class="go">Bound Infeasibility                0</span>
-<span class="go">                                    </span>
-<span class="go">Iterations                        22</span>
-<span class="go">Presolve Time                   0.00</span>
-<span class="go">Solution Time                   0.01</span>
 <span class="go">        crudesDistilled</span>
 <span class="go">1                      </span>
 <span class="go">crude1          15000.0</span>
@@ -572,33 +522,40 @@
 <li class="toctree-l1"><a class="reference internal" href="../components.html">Model components</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../sasoptpy.html">API Reference</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="food_manufacture_1.html">Food Manufacture 1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="food_manufacture_2.html">Food Manufacture 2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="factory_planning_1.html">Factory Planning 1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="factory_planning_2.html">Factory Planning 2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="manpower_planning.html">Manpower Planning</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Refinery Optimization</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#model">Model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#output">Output</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../examples.html#viya-swat-examples">Viya (swat) Examples</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="food_manufacture_1.html">Food Manufacture 1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="food_manufacture_2.html">Food Manufacture 2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="factory_planning_1.html">Factory Planning 1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="factory_planning_2.html">Factory Planning 2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manpower_planning.html">Manpower Planning</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Refinery Optimization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#model">Model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#output">Output</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="mining_optimization.html">Mining Optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="farm_planning.html">Farm Planning</a></li>
-<li class="toctree-l2"><a class="reference internal" href="economic_planning.html">Economic Planning</a></li>
-<li class="toctree-l2"><a class="reference internal" href="optimal_wedding.html">SAS/OR Blog: Optimal Wedding</a></li>
-<li class="toctree-l2"><a class="reference internal" href="kidney_exchange.html">SAS/OR Blog: Kidney Exchange</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mining_optimization.html">Mining Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="farm_planning.html">Farm Planning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="economic_planning.html">Economic Planning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="decentralization.html">Decentralization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="optimal_wedding.html">SAS/OR Blog: Optimal Wedding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kidney_exchange.html">SAS/OR Blog: Kidney Exchange</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
 </ul>
 </li>
 </ul>
 
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -620,14 +577,14 @@
         <li class="right" >
           <a href="manpower_planning.html" title="Manpower Planning"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2018, SAS Institute.
-      Last updated on Feb 26, 2018 (Timestamp: 0.1.1-20180226160330).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
+      Last updated on Apr 24, 2018 (Timestamp: 0.1.2-20180424164025).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
     </div>
   </body>
 </html>

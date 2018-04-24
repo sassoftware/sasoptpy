@@ -1,5 +1,5 @@
-sasoptpy\.Model\.to\_frame
-==========================
+sasoptpy.Model.to\_frame
+========================
 
 .. currentmodule:: sasoptpy
 

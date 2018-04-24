@@ -1,5 +1,5 @@
-sasoptpy\.Constraint\.copy
-==========================
+sasoptpy.Constraint.copy
+========================
 
 .. currentmodule:: sasoptpy
 

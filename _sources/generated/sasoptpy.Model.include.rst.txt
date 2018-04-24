@@ -1,5 +1,5 @@
-sasoptpy\.Model\.include
-========================
+sasoptpy.Model.include
+======================
 
 .. currentmodule:: sasoptpy
 

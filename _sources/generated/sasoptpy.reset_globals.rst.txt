@@ -1,5 +1,5 @@
-sasoptpy\.reset\_globals
-========================
+sasoptpy.reset\_globals
+=======================
 
 .. currentmodule:: sasoptpy
 

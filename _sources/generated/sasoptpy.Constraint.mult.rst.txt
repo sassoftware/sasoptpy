@@ -1,5 +1,5 @@
-sasoptpy\.Constraint\.mult
-==========================
+sasoptpy.Constraint.mult
+========================
 
 .. currentmodule:: sasoptpy
 

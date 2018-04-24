@@ -1,5 +1,5 @@
-sasoptpy\.Expression\.copy
-==========================
+sasoptpy.Expression.copy
+========================
 
 .. currentmodule:: sasoptpy
 

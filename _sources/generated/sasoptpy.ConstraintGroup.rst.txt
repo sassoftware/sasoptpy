@@ -1,8 +1,8 @@
 
 .. currentmodule:: sasoptpy
 
-sasoptpy\.ConstraintGroup
-=========================
+sasoptpy.ConstraintGroup
+========================
 
 .. currentmodule:: sasoptpy
 

@@ -1,5 +1,5 @@
-sasoptpy\.Expression\.set\_permanent
-====================================
+sasoptpy.Expression.set\_permanent
+==================================
 
 .. currentmodule:: sasoptpy
 

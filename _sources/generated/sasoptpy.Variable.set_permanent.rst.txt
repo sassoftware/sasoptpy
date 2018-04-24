@@ -1,5 +1,5 @@
-sasoptpy\.Variable\.set\_permanent
-==================================
+sasoptpy.Variable.set\_permanent
+================================
 
 .. currentmodule:: sasoptpy
 

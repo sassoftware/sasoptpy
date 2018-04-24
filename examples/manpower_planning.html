@@ -4,21 +4,13 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Manpower Planning &#8212; sasoptpy 0.1.1 documentation</title>
+    <title>Manpower Planning &#8212; sasoptpy 0.1.2 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '0.1.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
@@ -27,8 +19,7 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Refinery Optimization" href="refinery_optimization.html" />
     <link rel="prev" title="Factory Planning 2" href="factory_planning_2.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -44,7 +35,7 @@
         <li class="right" >
           <a href="factory_planning_2.html" title="Factory Planning 2"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &#187;</li> 
       </ul>
     </div>  
@@ -58,7 +49,7 @@
 <h1>Manpower Planning<a class="headerlink" href="#manpower-planning" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="model">
 <h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">math</span>
 
@@ -197,14 +188,14 @@
 </div>
 <div class="section" id="output">
 <h2>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-ipython"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">examples.manpower_planning</span> <span class="kn">import</span> <span class="n">test</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">examples.manpower_planning</span> <span class="kn">import</span> <span class="n">test</span>
 
 <span class="gp">In [2]: </span><span class="n">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">)</span>
-<span class="go">NOTE: Initialized model manpower_planning</span>
-<span class="go">NOTE: Converting model manpower_planning to DataFrame</span>
+<span class="go">NOTE: Initialized model manpower_planning.</span>
+<span class="go">NOTE: Converting model manpower_planning to DataFrame.</span>
 <span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMP5ELZG0L0 in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table TMP5ELZG0L0 has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPRXOPPKQ_ in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMPRXOPPKQ_ has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
 <span class="go">NOTE: The problem manpower_planning has 63 variables (0 free, 3 fixed).</span>
 <span class="go">NOTE: The problem has 24 constraints (6 LE, 18 EQ, 0 GE, 0 range).</span>
@@ -222,47 +213,6 @@
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 841.796875.</span>
 <span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
-<span class="go">NOTE: Cloud Analytic Services dropped table TMP5ELZG0L0 from caslib CASUSERHDFS(casuser).</span>
-<span class="go">Problem Summary</span>
-
-<span class="go">                                     Value</span>
-<span class="go">Label                                     </span>
-<span class="go">Problem Name             manpower_planning</span>
-<span class="go">Objective Sense               Minimization</span>
-<span class="go">Objective Function          redundancy_obj</span>
-<span class="go">RHS                                    RHS</span>
-<span class="go">                                          </span>
-<span class="go">Number of Variables                     63</span>
-<span class="go">Bounded Above                            0</span>
-<span class="go">Bounded Below                           39</span>
-<span class="go">Bounded Above and Below                 21</span>
-<span class="go">Free                                     0</span>
-<span class="go">Fixed                                    3</span>
-<span class="go">                                          </span>
-<span class="go">Number of Constraints                   24</span>
-<span class="go">LE (&lt;=)                                  6</span>
-<span class="go">EQ (=)                                  18</span>
-<span class="go">GE (&gt;=)                                  0</span>
-<span class="go">Range                                    0</span>
-<span class="go">                                          </span>
-<span class="go">Constraint Coefficients                108</span>
-<span class="go">Solution Summary</span>
-
-<span class="go">                               Value</span>
-<span class="go">Label                               </span>
-<span class="go">Solver                            LP</span>
-<span class="go">Algorithm               Dual Simplex</span>
-<span class="go">Objective Function    redundancy_obj</span>
-<span class="go">Solution Status              Optimal</span>
-<span class="go">Objective Value           841.796875</span>
-<span class="go">                                    </span>
-<span class="go">Primal Infeasibility    1.421085E-14</span>
-<span class="go">Dual Infeasibility                 0</span>
-<span class="go">Bound Infeasibility                0</span>
-<span class="go">                                    </span>
-<span class="go">Iterations                        13</span>
-<span class="go">Presolve Time                   0.00</span>
-<span class="go">Solution Time                   0.01</span>
 <span class="go">841.796875</span>
 <span class="go">1462047.6973684211</span>
 <span class="go">               numWorkers numRecruits numRedundant numShortTime numExcess</span>
@@ -298,10 +248,10 @@
 <span class="go">skilled     unskilled   1        0.0000</span>
 <span class="go">skilled     unskilled   2        0.0000</span>
 <span class="go">skilled     unskilled   3        0.0000</span>
-<span class="go">NOTE: Converting model manpower_planning to DataFrame</span>
+<span class="go">NOTE: Converting model manpower_planning to DataFrame.</span>
 <span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPDDA_M__V in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table TMPDDA_M__V has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPPKNJM4XN in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMPPKNJM4XN has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
 <span class="go">NOTE: The problem manpower_planning has 63 variables (0 free, 3 fixed).</span>
 <span class="go">NOTE: The problem has 24 constraints (6 LE, 18 EQ, 0 GE, 0 range).</span>
@@ -319,47 +269,6 @@
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 498677.28532.</span>
 <span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
-<span class="go">NOTE: Cloud Analytic Services dropped table TMPDDA_M__V from caslib CASUSERHDFS(casuser).</span>
-<span class="go">Problem Summary</span>
-
-<span class="go">                                     Value</span>
-<span class="go">Label                                     </span>
-<span class="go">Problem Name             manpower_planning</span>
-<span class="go">Objective Sense               Minimization</span>
-<span class="go">Objective Function                cost_obj</span>
-<span class="go">RHS                                    RHS</span>
-<span class="go">                                          </span>
-<span class="go">Number of Variables                     63</span>
-<span class="go">Bounded Above                            0</span>
-<span class="go">Bounded Below                           39</span>
-<span class="go">Bounded Above and Below                 21</span>
-<span class="go">Free                                     0</span>
-<span class="go">Fixed                                    3</span>
-<span class="go">                                          </span>
-<span class="go">Number of Constraints                   24</span>
-<span class="go">LE (&lt;=)                                  6</span>
-<span class="go">EQ (=)                                  18</span>
-<span class="go">GE (&gt;=)                                  0</span>
-<span class="go">Range                                    0</span>
-<span class="go">                                          </span>
-<span class="go">Constraint Coefficients                108</span>
-<span class="go">Solution Summary</span>
-
-<span class="go">                               Value</span>
-<span class="go">Label                               </span>
-<span class="go">Solver                            LP</span>
-<span class="go">Algorithm               Dual Simplex</span>
-<span class="go">Objective Function          cost_obj</span>
-<span class="go">Solution Status              Optimal</span>
-<span class="go">Objective Value         498677.28532</span>
-<span class="go">                                    </span>
-<span class="go">Primal Infeasibility    2.842171E-14</span>
-<span class="go">Dual Infeasibility                 0</span>
-<span class="go">Bound Infeasibility                0</span>
-<span class="go">                                    </span>
-<span class="go">Iterations                         8</span>
-<span class="go">Presolve Time                   0.00</span>
-<span class="go">Solution Time                   0.01</span>
 <span class="go">1423.7188365650968</span>
 <span class="go">498677.2853185596</span>
 <span class="go">               numWorkers numRecruits numRedundant numShortTime numExcess</span>
@@ -395,7 +304,7 @@
 <span class="go">skilled     unskilled   1           0.0</span>
 <span class="go">skilled     unskilled   2           0.0</span>
 <span class="go">skilled     unskilled   3           0.0</span>
-<span class="gh">Out[2]: </span><span class="go">498677.2853185596</span>
+<span class="gh">Out[2]: </span><span class="go">498677.28531855956</span>
 </pre></div>
 </div>
 </div>
@@ -417,33 +326,40 @@
 <li class="toctree-l1"><a class="reference internal" href="../components.html">Model components</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../sasoptpy.html">API Reference</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="food_manufacture_1.html">Food Manufacture 1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="food_manufacture_2.html">Food Manufacture 2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="factory_planning_1.html">Factory Planning 1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="factory_planning_2.html">Factory Planning 2</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Manpower Planning</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#model">Model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#output">Output</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../examples.html#viya-swat-examples">Viya (swat) Examples</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="food_manufacture_1.html">Food Manufacture 1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="food_manufacture_2.html">Food Manufacture 2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="factory_planning_1.html">Factory Planning 1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="factory_planning_2.html">Factory Planning 2</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Manpower Planning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#model">Model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#output">Output</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="refinery_optimization.html">Refinery Optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mining_optimization.html">Mining Optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="farm_planning.html">Farm Planning</a></li>
-<li class="toctree-l2"><a class="reference internal" href="economic_planning.html">Economic Planning</a></li>
-<li class="toctree-l2"><a class="reference internal" href="optimal_wedding.html">SAS/OR Blog: Optimal Wedding</a></li>
-<li class="toctree-l2"><a class="reference internal" href="kidney_exchange.html">SAS/OR Blog: Kidney Exchange</a></li>
+<li class="toctree-l3"><a class="reference internal" href="refinery_optimization.html">Refinery Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mining_optimization.html">Mining Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="farm_planning.html">Farm Planning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="economic_planning.html">Economic Planning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="decentralization.html">Decentralization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="optimal_wedding.html">SAS/OR Blog: Optimal Wedding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kidney_exchange.html">SAS/OR Blog: Kidney Exchange</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
 </ul>
 </li>
 </ul>
 
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -465,14 +381,14 @@
         <li class="right" >
           <a href="factory_planning_2.html" title="Factory Planning 2"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2018, SAS Institute.
-      Last updated on Feb 26, 2018 (Timestamp: 0.1.1-20180226160330).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
+      Last updated on Apr 24, 2018 (Timestamp: 0.1.2-20180424164025).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
     </div>
   </body>
 </html>

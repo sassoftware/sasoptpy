@@ -1,5 +1,5 @@
-sasoptpy\.VariableGroup\.set\_bounds
-====================================
+sasoptpy.VariableGroup.set\_bounds
+==================================
 
 .. currentmodule:: sasoptpy
 

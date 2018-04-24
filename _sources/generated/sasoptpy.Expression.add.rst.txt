@@ -1,5 +1,5 @@
-sasoptpy\.Expression\.add
-=========================
+sasoptpy.Expression.add
+=======================
 
 .. currentmodule:: sasoptpy
 

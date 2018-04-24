@@ -1,5 +1,5 @@
-sasoptpy\.Expression\.get\_value
-================================
+sasoptpy.Expression.get\_value
+==============================
 
 .. currentmodule:: sasoptpy
 

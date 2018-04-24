@@ -1,5 +1,5 @@
-sasoptpy\.Model\.add\_constraints
-=================================
+sasoptpy.Model.add\_constraints
+===============================
 
 .. currentmodule:: sasoptpy
 

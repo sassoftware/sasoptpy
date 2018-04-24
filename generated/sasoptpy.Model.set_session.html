@@ -4,21 +4,13 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>sasoptpy.Model.set_session &#8212; sasoptpy 0.1.1 documentation</title>
+    <title>sasoptpy.Model.set_session &#8212; sasoptpy 0.1.2 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '0.1.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
@@ -27,8 +19,7 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="sasoptpy.Model.solve" href="sasoptpy.Model.solve.html" />
     <link rel="prev" title="sasoptpy.Model.set_objective" href="sasoptpy.Model.set_objective.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -44,7 +35,7 @@
         <li class="right" >
           <a href="sasoptpy.Model.set_objective.html" title="sasoptpy.Model.set_objective"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../sasoptpy.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="sasoptpy.Model.html" accesskey="U">sasoptpy.Model</a> &#187;</li> 
       </ul>
@@ -65,14 +56,19 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>session</strong> : <a class="reference external" href="https://sassoftware.github.io/python-swat/generated/swat.cas.connection.CAS.html#swat.cas.connection.CAS" title="(in SWAT v1.3.0)"><code class="xref py py-class docutils literal"><span class="pre">swat.cas.connection.CAS</span></code></a></p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>session</strong> : <a class="reference external" href="https://sassoftware.github.io/python-swat/generated/swat.cas.connection.CAS.html#swat.cas.connection.CAS" title="(in SWAT v1.3.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">swat.cas.connection.CAS</span></code></a> or <a class="reference external" href="https://sassoftware.github.io/saspy/api.html#saspy.SASsession" title="(in saspy v2.1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">saspy.SASsession</span></code></a> objects</p>
 <blockquote class="last">
-<div><p>CAS Session</p>
+<div><p>CAS or SAS Session object</p>
 </div></blockquote>
 </td>
 </tr>
 </tbody>
 </table>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li>Session of a model can be set at initialization.
+See <a class="reference internal" href="sasoptpy.Model.html#sasoptpy.Model" title="sasoptpy.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></a>.</li>
+</ul>
 </dd></dl>
 
 </div>
@@ -98,6 +94,12 @@
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.add_constraints.html">sasoptpy.Model.add_constraints</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.add_variable.html">sasoptpy.Model.add_variable</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.add_variables.html">sasoptpy.Model.add_variables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.drop_constraint.html">sasoptpy.Model.drop_constraint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.drop_constraints.html">sasoptpy.Model.drop_constraints</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.drop_variable.html">sasoptpy.Model.drop_variable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.drop_variables.html">sasoptpy.Model.drop_variables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.get_constraint.html">sasoptpy.Model.get_constraint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.get_constraints.html">sasoptpy.Model.get_constraints</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.get_objective.html">sasoptpy.Model.get_objective</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.get_objective_value.html">sasoptpy.Model.get_objective_value</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.get_problem_summary.html">sasoptpy.Model.get_problem_summary</a></li>
@@ -105,12 +107,14 @@
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.get_solution_summary.html">sasoptpy.Model.get_solution_summary</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.get_variable.html">sasoptpy.Model.get_variable</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.get_variable_coef.html">sasoptpy.Model.get_variable_coef</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.get_variables.html">sasoptpy.Model.get_variables</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.include.html">sasoptpy.Model.include</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.print_solution.html">sasoptpy.Model.print_solution</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.set_coef.html">sasoptpy.Model.set_coef</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.set_objective.html">sasoptpy.Model.set_objective</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">sasoptpy.Model.set_session</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.solve.html">sasoptpy.Model.solve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.solve_local.html">sasoptpy.Model.solve_local</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.test_session.html">sasoptpy.Model.test_session</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.to_frame.html">sasoptpy.Model.to_frame</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.upload_model.html">sasoptpy.Model.upload_model</a></li>
@@ -132,12 +136,14 @@
 
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -159,15 +165,15 @@
         <li class="right" >
           <a href="sasoptpy.Model.set_objective.html" title="sasoptpy.Model.set_objective"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../sasoptpy.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="sasoptpy.Model.html" >sasoptpy.Model</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2018, SAS Institute.
-      Last updated on Feb 26, 2018 (Timestamp: 0.1.1-20180226160330).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
+      Last updated on Apr 24, 2018 (Timestamp: 0.1.2-20180424164025).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
     </div>
   </body>
 </html>

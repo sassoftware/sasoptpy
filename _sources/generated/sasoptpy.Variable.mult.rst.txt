@@ -1,5 +1,5 @@
-sasoptpy\.Variable\.mult
-========================
+sasoptpy.Variable.mult
+======================
 
 .. currentmodule:: sasoptpy
 

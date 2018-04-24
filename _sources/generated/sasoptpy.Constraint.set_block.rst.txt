@@ -1,5 +1,5 @@
-sasoptpy\.Constraint\.set\_block
-================================
+sasoptpy.Constraint.set\_block
+==============================
 
 .. currentmodule:: sasoptpy
 

@@ -1,5 +1,5 @@
-sasoptpy\.Model\.print\_solution
-================================
+sasoptpy.Model.print\_solution
+==============================
 
 .. currentmodule:: sasoptpy
 

@@ -1,5 +1,5 @@
-sasoptpy\.VariableGroup\.get\_name
-==================================
+sasoptpy.VariableGroup.get\_name
+================================
 
 .. currentmodule:: sasoptpy
 

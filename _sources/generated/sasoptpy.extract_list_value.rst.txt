@@ -1,5 +1,5 @@
-sasoptpy\.extract\_list\_value
-==============================
+sasoptpy.extract\_list\_value
+=============================
 
 .. currentmodule:: sasoptpy
 

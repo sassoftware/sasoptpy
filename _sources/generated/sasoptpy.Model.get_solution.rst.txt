@@ -1,5 +1,5 @@
-sasoptpy\.Model\.get\_solution
-==============================
+sasoptpy.Model.get\_solution
+============================
 
 .. currentmodule:: sasoptpy
 

@@ -1,5 +1,5 @@
-sasoptpy\.Model\.get\_objective
-===============================
+sasoptpy.Model.get\_objective
+=============================
 
 .. currentmodule:: sasoptpy
 

@@ -1,5 +1,5 @@
-sasoptpy\.Constraint\.set\_rhs
-==============================
+sasoptpy.Constraint.set\_rhs
+============================
 
 .. currentmodule:: sasoptpy
 

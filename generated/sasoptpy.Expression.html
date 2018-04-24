@@ -4,21 +4,13 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>sasoptpy.Expression &#8212; sasoptpy 0.1.1 documentation</title>
+    <title>sasoptpy.Expression &#8212; sasoptpy 0.1.2 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '0.1.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
@@ -27,8 +19,7 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="sasoptpy.Expression.add" href="sasoptpy.Expression.add.html" />
     <link rel="prev" title="sasoptpy.Model.upload_user_blocks" href="sasoptpy.Model.upload_user_blocks.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -44,7 +35,7 @@
         <li class="right" >
           <a href="sasoptpy.Model.upload_user_blocks.html" title="sasoptpy.Model.upload_user_blocks"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../sasoptpy.html" accesskey="U">API Reference</a> &#187;</li> 
       </ul>
     </div>  
@@ -64,7 +55,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>exp</strong> : <a class="reference internal" href="#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal"><span class="pre">Expression</span></code></a> object, optional</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>exp</strong> : <a class="reference internal" href="#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a> object, optional</p>
 <blockquote>
 <div><p>An existing expression where arguments are being passed</p>
 </div></blockquote>
@@ -82,7 +73,7 @@
 </table>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li>Two other classes (<a class="reference internal" href="sasoptpy.Variable.html#sasoptpy.Variable" title="sasoptpy.Variable"><code class="xref py py-class docutils literal"><span class="pre">Variable</span></code></a> and <a class="reference internal" href="sasoptpy.Constraint.html#sasoptpy.Constraint" title="sasoptpy.Constraint"><code class="xref py py-class docutils literal"><span class="pre">Constraint</span></code></a>) are
+<li>Two other classes (<a class="reference internal" href="sasoptpy.Variable.html#sasoptpy.Variable" title="sasoptpy.Variable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Variable</span></code></a> and <a class="reference internal" href="sasoptpy.Constraint.html#sasoptpy.Constraint" title="sasoptpy.Constraint"><code class="xref py py-class docutils literal notranslate"><span class="pre">Constraint</span></code></a>) are
 subclasses of this class.</li>
 <li>Expressions are created automatically after linear math operations
 with variables.</li>
@@ -90,7 +81,7 @@ with variables.</li>
 expressions.</li>
 </ul>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">VariableGroup</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="n">exp</span><span class="o">=</span><span class="n">x</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;exp1&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
@@ -100,7 +91,7 @@ expressions.</li>
 <span class="go">                    name=&#39;exp1&#39;)</span>
 </pre></div>
 </div>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sales</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sales&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sales</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sales&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">material</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;material&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">profit</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">sales</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">material</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">profit</span><span class="p">)</span>
@@ -116,22 +107,28 @@ expressions.</li>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="sasoptpy.Expression.add.html#sasoptpy.Expression.add" title="sasoptpy.Expression.add"><code class="xref py py-obj docutils literal"><span class="pre">add</span></code></a>(other[,&nbsp;sign])</td>
+<tr class="row-odd"><td><a class="reference internal" href="sasoptpy.Expression.add.html#sasoptpy.Expression.add" title="sasoptpy.Expression.add"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add</span></code></a>(other[,&nbsp;sign])</td>
 <td>Combines two expressions and produces a new one</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="sasoptpy.Expression.copy.html#sasoptpy.Expression.copy" title="sasoptpy.Expression.copy"><code class="xref py py-obj docutils literal"><span class="pre">copy</span></code></a>([name])</td>
-<td>Returns a copy of the <a class="reference internal" href="#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal"><span class="pre">Expression</span></code></a> object</td>
+<tr class="row-even"><td><a class="reference internal" href="sasoptpy.Expression.copy.html#sasoptpy.Expression.copy" title="sasoptpy.Expression.copy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code></a>([name])</td>
+<td>Returns a copy of the <a class="reference internal" href="#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a> object</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="sasoptpy.Expression.get_name.html#sasoptpy.Expression.get_name" title="sasoptpy.Expression.get_name"><code class="xref py py-obj docutils literal"><span class="pre">get_name</span></code></a>()</td>
+<tr class="row-odd"><td><a class="reference internal" href="sasoptpy.Expression.get_dual.html#sasoptpy.Expression.get_dual" title="sasoptpy.Expression.get_dual"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_dual</span></code></a>()</td>
+<td>Returns the dual value</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="sasoptpy.Expression.get_name.html#sasoptpy.Expression.get_name" title="sasoptpy.Expression.get_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_name</span></code></a>()</td>
 <td>Returns the name of the expression</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="sasoptpy.Expression.get_value.html#sasoptpy.Expression.get_value" title="sasoptpy.Expression.get_value"><code class="xref py py-obj docutils literal"><span class="pre">get_value</span></code></a>()</td>
+<tr class="row-odd"><td><a class="reference internal" href="sasoptpy.Expression.get_value.html#sasoptpy.Expression.get_value" title="sasoptpy.Expression.get_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_value</span></code></a>()</td>
 <td>Returns the value of the expression after variable values are changed</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="sasoptpy.Expression.mult.html#sasoptpy.Expression.mult" title="sasoptpy.Expression.mult"><code class="xref py py-obj docutils literal"><span class="pre">mult</span></code></a>(other)</td>
-<td>Multiplies the <a class="reference internal" href="#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal"><span class="pre">Expression</span></code></a> with a scalar value</td>
+<tr class="row-even"><td><a class="reference internal" href="sasoptpy.Expression.mult.html#sasoptpy.Expression.mult" title="sasoptpy.Expression.mult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mult</span></code></a>(other)</td>
+<td>Multiplies the <a class="reference internal" href="#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a> with a scalar value</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="sasoptpy.Expression.set_permanent.html#sasoptpy.Expression.set_permanent" title="sasoptpy.Expression.set_permanent"><code class="xref py py-obj docutils literal"><span class="pre">set_permanent</span></code></a>([name])</td>
+<tr class="row-odd"><td><a class="reference internal" href="sasoptpy.Expression.set_name.html#sasoptpy.Expression.set_name" title="sasoptpy.Expression.set_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_name</span></code></a>(name)</td>
+<td>Sets the name of the expression</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="sasoptpy.Expression.set_permanent.html#sasoptpy.Expression.set_permanent" title="sasoptpy.Expression.set_permanent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_permanent</span></code></a>([name])</td>
 <td>Converts a temporary expression into a permanent one</td>
 </tr>
 </tbody>
@@ -160,9 +157,11 @@ expressions.</li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">sasoptpy.Expression</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Expression.add.html">sasoptpy.Expression.add</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Expression.copy.html">sasoptpy.Expression.copy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Expression.get_dual.html">sasoptpy.Expression.get_dual</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Expression.get_name.html">sasoptpy.Expression.get_name</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Expression.get_value.html">sasoptpy.Expression.get_value</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Expression.mult.html">sasoptpy.Expression.mult</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Expression.set_name.html">sasoptpy.Expression.set_name</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Expression.set_permanent.html">sasoptpy.Expression.set_permanent</a></li>
 </ul>
 </li>
@@ -180,12 +179,14 @@ expressions.</li>
 
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -207,14 +208,14 @@ expressions.</li>
         <li class="right" >
           <a href="sasoptpy.Model.upload_user_blocks.html" title="sasoptpy.Model.upload_user_blocks"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../sasoptpy.html" >API Reference</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2018, SAS Institute.
-      Last updated on Feb 26, 2018 (Timestamp: 0.1.1-20180226160330).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
+      Last updated on Apr 24, 2018 (Timestamp: 0.1.2-20180424164025).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
     </div>
   </body>
 </html>

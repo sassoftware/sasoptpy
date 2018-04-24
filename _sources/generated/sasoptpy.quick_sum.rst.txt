@@ -1,5 +1,5 @@
-sasoptpy\.quick\_sum
-====================
+sasoptpy.quick\_sum
+===================
 
 .. currentmodule:: sasoptpy
 

@@ -1,5 +1,5 @@
-sasoptpy\.flatten\_frame
-========================
+sasoptpy.flatten\_frame
+=======================
 
 .. currentmodule:: sasoptpy
 

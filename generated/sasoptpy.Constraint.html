@@ -4,21 +4,13 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>sasoptpy.Constraint &#8212; sasoptpy 0.1.1 documentation</title>
+    <title>sasoptpy.Constraint &#8212; sasoptpy 0.1.2 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '0.1.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
@@ -27,8 +19,7 @@
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="sasoptpy.Constraint.add" href="sasoptpy.Constraint.add.html" />
     <link rel="prev" title="sasoptpy.VariableGroup.sum" href="sasoptpy.VariableGroup.sum.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -44,7 +35,7 @@
         <li class="right" >
           <a href="sasoptpy.VariableGroup.sum.html" title="sasoptpy.VariableGroup.sum"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../sasoptpy.html" accesskey="U">API Reference</a> &#187;</li> 
       </ul>
     </div>  
@@ -61,12 +52,12 @@
 <em class="property">class </em><code class="descclassname">sasoptpy.</code><code class="descname">Constraint</code><span class="sig-paren">(</span><em>exp</em>, <em>direction=None</em>, <em>name=None</em>, <em>crange=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sasoptpy/components.html#Constraint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.Constraint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a linear or quadratic constraint for optimization models</p>
 <p>Constraints should be created by adding logical relations to
-<a class="reference internal" href="sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal"><span class="pre">Expression</span></code></a> objects.</p>
+<a class="reference internal" href="sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a> objects.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>exp</strong> : <a class="reference internal" href="sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal"><span class="pre">Expression</span></code></a></p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>exp</strong> : <a class="reference internal" href="sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a></p>
 <blockquote>
 <div><p>A logical expression that forms the constraint</p>
 </div></blockquote>
@@ -88,21 +79,21 @@
 </table>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><a class="reference internal" href="sasoptpy.Model.add_constraint.html#sasoptpy.Model.add_constraint" title="sasoptpy.Model.add_constraint"><code class="xref py py-func docutils literal"><span class="pre">sasoptpy.Model.add_constraint()</span></code></a></p>
+<p class="last"><a class="reference internal" href="sasoptpy.Model.add_constraint.html#sasoptpy.Model.add_constraint" title="sasoptpy.Model.add_constraint"><code class="xref py py-func docutils literal notranslate"><span class="pre">sasoptpy.Model.add_constraint()</span></code></a></p>
 </div>
 <p class="rubric">Notes</p>
 <ul>
 <li><p class="first">A constraint can be generated in multiple ways:</p>
 <ol class="arabic">
-<li><p class="first">Using the <a class="reference internal" href="sasoptpy.Model.add_constraint.html#sasoptpy.Model.add_constraint" title="sasoptpy.Model.add_constraint"><code class="xref py py-func docutils literal"><span class="pre">sasoptpy.Model.add_constraint()</span></code></a> method</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c1</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;c1&#39;</span><span class="p">)</span>
+<li><p class="first">Using the <a class="reference internal" href="sasoptpy.Model.add_constraint.html#sasoptpy.Model.add_constraint" title="sasoptpy.Model.add_constraint"><code class="xref py py-func docutils literal notranslate"><span class="pre">sasoptpy.Model.add_constraint()</span></code></a> method</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c1</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;c1&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">c1</span><span class="p">))</span>
 <span class="go">sasoptpy.Constraint( -  5.0 * y  +  3.0 * x  &lt;=  10, name=&#39;c1&#39;)</span>
 </pre></div>
 </div>
 </li>
 <li><p class="first">Using the constructor</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c1</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">Constraint</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;c1&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c1</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">Constraint</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;c1&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">c1</span><span class="p">))</span>
 <span class="go">sasoptpy.Constraint( -  5.0 * y  +  3.0 * x  &lt;=  10, name=&#39;c1&#39;)</span>
 </pre></div>
@@ -111,16 +102,16 @@
 </ol>
 </li>
 <li><p class="first">The same constraint can be included into other models using the
-<a class="reference internal" href="sasoptpy.Model.include.html#sasoptpy.Model.include" title="sasoptpy.Model.include"><code class="xref py py-func docutils literal"><span class="pre">Model.include()</span></code></a> method.</p>
+<a class="reference internal" href="sasoptpy.Model.include.html#sasoptpy.Model.include" title="sasoptpy.Model.include"><code class="xref py py-func docutils literal notranslate"><span class="pre">Model.include()</span></code></a> method.</p>
 </li>
 </ul>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c1</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Constraint</span><span class="p">(</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;c1&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c1</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Constraint</span><span class="p">(</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;c1&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">c1</span><span class="p">))</span>
 <span class="go">sasoptpy.Constraint( -  5.0 * y  +  3.0 * x  &lt;=  10, name=&#39;c1&#39;)</span>
 </pre></div>
 </div>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c2</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Constraint</span><span class="p">(</span> <span class="o">-</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">5</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;L&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;c2&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c2</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Constraint</span><span class="p">(</span> <span class="o">-</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">5</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;L&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;c2&#39;</span><span class="p">)</span>
 <span class="go">sasoptpy.Constraint( -  x  +  2.0 * y  &lt;=  5, name=&#39;c2&#39;)</span>
 </pre></div>
 </div>
@@ -131,34 +122,40 @@
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="sasoptpy.Constraint.add.html#sasoptpy.Constraint.add" title="sasoptpy.Constraint.add"><code class="xref py py-obj docutils literal"><span class="pre">add</span></code></a>(other[,&nbsp;sign])</td>
+<tr class="row-odd"><td><a class="reference internal" href="sasoptpy.Constraint.add.html#sasoptpy.Constraint.add" title="sasoptpy.Constraint.add"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add</span></code></a>(other[,&nbsp;sign])</td>
 <td>Combines two expressions and produces a new one</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="sasoptpy.Constraint.copy.html#sasoptpy.Constraint.copy" title="sasoptpy.Constraint.copy"><code class="xref py py-obj docutils literal"><span class="pre">copy</span></code></a>([name])</td>
-<td>Returns a copy of the <a class="reference internal" href="sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal"><span class="pre">Expression</span></code></a> object</td>
+<tr class="row-even"><td><a class="reference internal" href="sasoptpy.Constraint.copy.html#sasoptpy.Constraint.copy" title="sasoptpy.Constraint.copy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code></a>([name])</td>
+<td>Returns a copy of the <a class="reference internal" href="sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a> object</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="sasoptpy.Constraint.get_name.html#sasoptpy.Constraint.get_name" title="sasoptpy.Constraint.get_name"><code class="xref py py-obj docutils literal"><span class="pre">get_name</span></code></a>()</td>
+<tr class="row-odd"><td><a class="reference internal" href="sasoptpy.Constraint.get_dual.html#sasoptpy.Constraint.get_dual" title="sasoptpy.Constraint.get_dual"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_dual</span></code></a>()</td>
+<td>Returns the dual value</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="sasoptpy.Constraint.get_name.html#sasoptpy.Constraint.get_name" title="sasoptpy.Constraint.get_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_name</span></code></a>()</td>
 <td>Returns the name of the expression</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="sasoptpy.Constraint.get_value.html#sasoptpy.Constraint.get_value" title="sasoptpy.Constraint.get_value"><code class="xref py py-obj docutils literal"><span class="pre">get_value</span></code></a>([rhs])</td>
+<tr class="row-odd"><td><a class="reference internal" href="sasoptpy.Constraint.get_value.html#sasoptpy.Constraint.get_value" title="sasoptpy.Constraint.get_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_value</span></code></a>([rhs])</td>
 <td>Returns the current value of the constraint</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="sasoptpy.Constraint.mult.html#sasoptpy.Constraint.mult" title="sasoptpy.Constraint.mult"><code class="xref py py-obj docutils literal"><span class="pre">mult</span></code></a>(other)</td>
-<td>Multiplies the <a class="reference internal" href="sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal"><span class="pre">Expression</span></code></a> with a scalar value</td>
+<tr class="row-even"><td><a class="reference internal" href="sasoptpy.Constraint.mult.html#sasoptpy.Constraint.mult" title="sasoptpy.Constraint.mult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mult</span></code></a>(other)</td>
+<td>Multiplies the <a class="reference internal" href="sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a> with a scalar value</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="sasoptpy.Constraint.set_block.html#sasoptpy.Constraint.set_block" title="sasoptpy.Constraint.set_block"><code class="xref py py-obj docutils literal"><span class="pre">set_block</span></code></a>(block_number)</td>
+<tr class="row-odd"><td><a class="reference internal" href="sasoptpy.Constraint.set_block.html#sasoptpy.Constraint.set_block" title="sasoptpy.Constraint.set_block"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_block</span></code></a>(block_number)</td>
 <td>Sets the decomposition block number for a constraint</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="sasoptpy.Constraint.set_direction.html#sasoptpy.Constraint.set_direction" title="sasoptpy.Constraint.set_direction"><code class="xref py py-obj docutils literal"><span class="pre">set_direction</span></code></a>(direction)</td>
+<tr class="row-even"><td><a class="reference internal" href="sasoptpy.Constraint.set_direction.html#sasoptpy.Constraint.set_direction" title="sasoptpy.Constraint.set_direction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_direction</span></code></a>(direction)</td>
 <td>Changes the direction of a constraint</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="sasoptpy.Constraint.set_permanent.html#sasoptpy.Constraint.set_permanent" title="sasoptpy.Constraint.set_permanent"><code class="xref py py-obj docutils literal"><span class="pre">set_permanent</span></code></a>([name])</td>
+<tr class="row-odd"><td><a class="reference internal" href="sasoptpy.Constraint.set_name.html#sasoptpy.Constraint.set_name" title="sasoptpy.Constraint.set_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_name</span></code></a>(name)</td>
+<td>Sets the name of the expression</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="sasoptpy.Constraint.set_permanent.html#sasoptpy.Constraint.set_permanent" title="sasoptpy.Constraint.set_permanent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_permanent</span></code></a>([name])</td>
 <td>Converts a temporary expression into a permanent one</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="sasoptpy.Constraint.set_rhs.html#sasoptpy.Constraint.set_rhs" title="sasoptpy.Constraint.set_rhs"><code class="xref py py-obj docutils literal"><span class="pre">set_rhs</span></code></a>(value)</td>
+<tr class="row-odd"><td><a class="reference internal" href="sasoptpy.Constraint.set_rhs.html#sasoptpy.Constraint.set_rhs" title="sasoptpy.Constraint.set_rhs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_rhs</span></code></a>(value)</td>
 <td>Changes the RHS of a constraint</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="sasoptpy.Constraint.update_var_coef.html#sasoptpy.Constraint.update_var_coef" title="sasoptpy.Constraint.update_var_coef"><code class="xref py py-obj docutils literal"><span class="pre">update_var_coef</span></code></a>(var,&nbsp;value)</td>
+<tr class="row-even"><td><a class="reference internal" href="sasoptpy.Constraint.update_var_coef.html#sasoptpy.Constraint.update_var_coef" title="sasoptpy.Constraint.update_var_coef"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_var_coef</span></code></a>(var,&nbsp;value)</td>
 <td>Updates the coefficient of a variable inside the constraint</td>
 </tr>
 </tbody>
@@ -190,11 +187,13 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">sasoptpy.Constraint</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Constraint.add.html">sasoptpy.Constraint.add</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Constraint.copy.html">sasoptpy.Constraint.copy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Constraint.get_dual.html">sasoptpy.Constraint.get_dual</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Constraint.get_name.html">sasoptpy.Constraint.get_name</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Constraint.get_value.html">sasoptpy.Constraint.get_value</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Constraint.mult.html">sasoptpy.Constraint.mult</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Constraint.set_block.html">sasoptpy.Constraint.set_block</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Constraint.set_direction.html">sasoptpy.Constraint.set_direction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Constraint.set_name.html">sasoptpy.Constraint.set_name</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Constraint.set_permanent.html">sasoptpy.Constraint.set_permanent</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Constraint.set_rhs.html">sasoptpy.Constraint.set_rhs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sasoptpy.Constraint.update_var_coef.html">sasoptpy.Constraint.update_var_coef</a></li>
@@ -211,12 +210,14 @@
 
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -238,14 +239,14 @@
         <li class="right" >
           <a href="sasoptpy.VariableGroup.sum.html" title="sasoptpy.VariableGroup.sum"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../sasoptpy.html" >API Reference</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2018, SAS Institute.
-      Last updated on Feb 26, 2018 (Timestamp: 0.1.1-20180226160330).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
+      Last updated on Apr 24, 2018 (Timestamp: 0.1.2-20180424164025).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
     </div>
   </body>
 </html>

@@ -1,5 +1,5 @@
-sasoptpy\.Variable\.add
-=======================
+sasoptpy.Variable.add
+=====================
 
 .. currentmodule:: sasoptpy
 

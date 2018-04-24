@@ -1,5 +1,5 @@
-sasoptpy\.read\_frame
-=====================
+sasoptpy.read\_frame
+====================
 
 .. currentmodule:: sasoptpy
 

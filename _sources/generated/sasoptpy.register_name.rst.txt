@@ -1,5 +1,5 @@
-sasoptpy\.register\_name
-========================
+sasoptpy.register\_name
+=======================
 
 .. currentmodule:: sasoptpy
 

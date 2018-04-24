@@ -1,5 +1,5 @@
-sasoptpy\.Variable\.set\_init
-=============================
+sasoptpy.Variable.set\_init
+===========================
 
 .. currentmodule:: sasoptpy
 

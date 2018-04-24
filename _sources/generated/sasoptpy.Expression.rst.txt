@@ -1,8 +1,8 @@
 
 .. currentmodule:: sasoptpy
 
-sasoptpy\.Expression
-====================
+sasoptpy.Expression
+===================
 
 .. currentmodule:: sasoptpy
 
@@ -18,9 +18,11 @@ sasoptpy\.Expression
       
       Expression.add
       Expression.copy
+      Expression.get_dual
       Expression.get_name
       Expression.get_value
       Expression.mult
+      Expression.set_name
       Expression.set_permanent
 
 

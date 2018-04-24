@@ -1,5 +1,5 @@
-sasoptpy\.Model\.test\_session
-==============================
+sasoptpy.Model.test\_session
+============================
 
 .. currentmodule:: sasoptpy
 

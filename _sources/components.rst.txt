@@ -58,10 +58,21 @@ Operations
 **Getting the current value**
 
 After the solve is completed, the current value of an expression can be
-obtained using the :func:`Expression.get_value` function:
+obtained using the :func:`Expression.get_value` method:
 
 >>> print(profit.get_value())
 42.0
+
+**Getting the dual value**
+
+Dual values of :class:`Expression` objects can be obtained using
+:func:`Variable.get_dual` and :func:`Constraint.get_dual` methods.
+
+>>> m.solve()
+>>> ...
+>>> print(x.get_dual())
+1.0
+
 
 **Addition**
 
@@ -78,7 +89,7 @@ The first and simpler way creates a new expression at the end:
    print(repr(profit_after_tax))
 
 
-The second way, :func:`Expression.add` function, takes two arguments:
+The second way, :func:`Expression.add` method, takes two arguments:
 the element to be added and the sign (1 or -1):
 
 .. ipython:: python
@@ -98,12 +109,47 @@ If the expression is a temporary one, then the addition is performed in place.
 
 **Multiplication**
 
-You can only multiply a number with an existing :class:`Expression` object:
+You can multiply expressions with scalar values:
 
 .. ipython:: python
 
    investment = profit.mult(0.2)
    print(investment)
+
+**Summation**
+
+For faster summations compared to Python's native :code:`sum` function,
+**sasoptpy** provides :func:`sasoptpy.quick_sum`.
+
+.. ipython:: python
+
+   import time
+   x = m.add_variables(1000, name='x')
+
+.. ipython:: python
+
+   t0 = time.time()
+   e = so.quick_sum(2 * x[i] for i in range(1000))
+   print(time.time()-t0)
+
+.. ipython:: python
+
+   t0 = time.time()
+   f = sum(2 * x[i] for i in range(1000))
+   print(time.time()-t0)
+
+Renaming an expression
+~~~~~~~~~~~~~~~~~~~~~~
+
+Expressions can be renamed using :func:`Expression.set_name` method:
+
+.. ipython:: python
+
+   e = so.Expression(x[5] + 2 * x[6], name='e1')
+   print(repr(e))
+   e.set_name('e2')
+   print(repr(e))
+
 
 Copying an expression
 ~~~~~~~~~~~~~~~~~~~~~
@@ -138,7 +184,7 @@ The expression can be modified inside a function:
 
 As you can see, the value of ``new_profit`` is changed due to an in-place addition.
 To prevent the change, such expressions can be converted to permanent expressions
-using the :func:`Expression.set_permanent` function or constructor:
+using the :func:`Expression.set_permanent` method or constructor:
 
 .. ipython:: python
 
@@ -157,8 +203,8 @@ Setting and getting an objective function
 
 Any valid :class:`Expression` can be used as the objective function of a model.
 An existing expression can be used as an objective function using
-the :func:`Model.set_objective` function. The objective function of a model can
-be obtained using the :func:`Model.get_objective` function.
+the :func:`Model.set_objective` method. The objective function of a model can
+be obtained using the :func:`Model.get_objective` method.
 
 >>> profit = so.Expression(5 * sales - 2 * material, name='profit')
 >>> m.set_objective(profit, so.MAX)
@@ -170,7 +216,7 @@ Getting the value
 ~~~~~~~~~~~~~~~~~
 
 After a solve, the objective value can be checked using the
-:func:`Expression.get_objective_value` function.
+:func:`Model.get_objective_value` method.
 
 >>> m.solve()
 >>> print(m.get_objective_value())
@@ -205,11 +251,10 @@ are equivalent.
 
 **Creating a variable inside a model**
 
-The second way is to use :func:`Model.add_variable`. This function creates
+The second way is to use :func:`Model.add_variable`. This method creates
 a :class:`Variable` object and returns a pointer.
 
 >>> x = m.add_variable(vartype=so.INT, ub=5, name='x')
-
 
 Arguments
 ~~~~~~~~~
@@ -229,7 +274,7 @@ used to reset sasoptpy namespace when needed.
 Changing bounds
 ~~~~~~~~~~~~~~~
 
-The function :func:`Variable.set_bounds` can change the bounds of a variable.
+The :func:`Variable.set_bounds` method changes the bounds of a variable.
 
 >>> x = so.Variable(name='x', lb=0, ub=20)
 >>> print(repr(x))
@@ -238,6 +283,16 @@ sasoptpy.Variable(name='x', lb=0, ub=20, vartype='CONT')
 >>> print(repr(x))
 sasoptpy.Variable(name='x', lb=5, ub=15, vartype='CONT')
 
+Setting initial values
+~~~~~~~~~~~~~~~~~~~~~~
+
+Initial values of variables can be passed to the solvers for certain problems.
+The :func:`Variable.set_init` method changes the initial value for variables.
+This value can be set at the creation of the variable as well.
+
+>>> x.set_init(5)
+>>> print(repr(x))
+sasoptpy.Variable(name='x', ub=20, init=5,  vartype='CONT')
 
 Working with a set of variables
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -296,7 +351,7 @@ Modifying variable coefficients
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The coefficient of a variable inside a constraint can be updated using the
-:func:`Constraint.update_var_coef` function:
+:func:`Constraint.update_var_coef` method:
 
 >>> c1 = so.Constraint(exp=3 * x - 5 * y <= 10, name='c1')
 >>> print(repr(c1))

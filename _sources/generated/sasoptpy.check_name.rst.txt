@@ -1,5 +1,5 @@
-sasoptpy\.check\_name
-=====================
+sasoptpy.check\_name
+====================
 
 .. currentmodule:: sasoptpy
 

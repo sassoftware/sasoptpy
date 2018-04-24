@@ -4,30 +4,22 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Kidney Exchange &#8212; sasoptpy 0.1.1 documentation</title>
+    <title>Kidney Exchange &#8212; sasoptpy 0.1.2 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '0.1.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/js/url.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Decentralization (saspy)" href="decentralization_saspy.html" />
     <link rel="prev" title="Optimal Wedding" href="optimal_wedding.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -38,9 +30,12 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
+          <a href="decentralization_saspy.html" title="Decentralization (saspy)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
           <a href="optimal_wedding.html" title="Optimal Wedding"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &#187;</li> 
       </ul>
     </div>  
@@ -52,10 +47,10 @@
             
   <div class="section" id="kidney-exchange">
 <h1>Kidney Exchange<a class="headerlink" href="#kidney-exchange" title="Permalink to this headline">¶</a></h1>
-<p>Blog: <a class="reference external" href="https://blogs.sas.com/content/operations/2015/02/06/the-kidney-exchange-problem/">https://blogs.sas.com/content/operations/2015/02/06/the-kidney-exchange-problem/</a></p>
+<p>SAS Blog: <a class="reference external" href="https://blogs.sas.com/content/operations/2015/02/06/the-kidney-exchange-problem/">https://blogs.sas.com/content/operations/2015/02/06/the-kidney-exchange-problem/</a></p>
 <div class="section" id="model">
 <h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
 <span class="kn">import</span> <span class="nn">random</span>
 
 
@@ -129,102 +124,51 @@
 </div>
 <div class="section" id="output">
 <h2>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-ipython"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">examples.sas_kidney_exchange</span> <span class="kn">import</span> <span class="n">test</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">examples.sas_kidney_exchange</span> <span class="kn">import</span> <span class="n">test</span>
 
 <span class="gp">In [2]: </span><span class="n">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">)</span>
-<span class="go">NOTE: Initialized model kidney_exchange</span>
+<span class="go">NOTE: Initialized model kidney_exchange.</span>
 <span class="go">Setting objective...</span>
 <span class="go">Adding constraints...</span>
-<span class="go">NOTE: Converting model kidney_exchange to DataFrame</span>
+<span class="go">NOTE: Converting model kidney_exchange to DataFrame.</span>
 <span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPVPYAYCO1 in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table TMPVPYAYCO1 has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
-<span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
-<span class="go">NOTE: The problem kidney_exchange has 8133 variables (8133 binary, 0 integer, 0 free, 0 fixed).</span>
-<span class="go">NOTE: The problem has 5967 constraints (38 LE, 5929 EQ, 0 GE, 0 range).</span>
-<span class="go">NOTE: The problem has 24245 constraint coefficients.</span>
-<span class="go">NOTE: The remaining solution time after solver initialization is 299.89 seconds.</span>
-<span class="go">NOTE: The initial MILP heuristics are applied.</span>
-<span class="go">NOTE: The MILP presolver value AUTOMATIC is applied.</span>
-<span class="go">NOTE: The MILP presolver removed 6212 variables and 5352 constraints.</span>
-<span class="go">NOTE: The MILP presolver removed 17534 constraint coefficients.</span>
-<span class="go">NOTE: The MILP presolver modified 0 constraint coefficients.</span>
-<span class="go">NOTE: The presolved problem has 1921 variables, 615 constraints, and 6711 constraint coefficients.</span>
-<span class="go">NOTE: The MILP solver is called.</span>
-<span class="go">NOTE: The parallel Branch and Cut algorithm is used.</span>
-<span class="go">NOTE: The Branch and Cut algorithm is using up to 32 threads.</span>
-<span class="go">             Node   Active   Sols    BestInteger      BestBound      Gap    Time</span>
-<span class="go">                0        1      3      3.5275019     18.3085704   80.73%       3</span>
-<span class="go">NOTE: The MILP solver&#39;s symmetry detection found 778 orbits. The largest orbit contains 15 variables.</span>
-<span class="go">                0        1      4      3.5936462     18.3085704   80.37%       3</span>
-<span class="go">NOTE: The MILP solver added 1 cuts with 31 cut coefficients at the root.</span>
-<span class="go">                2        2      5     17.1113590     18.3085704    6.54%       4</span>
-<span class="go">               23        3      6     17.1113590     18.3085704    6.54%       5</span>
-<span class="go">               24        2      6     17.1113590     18.3085704    6.54%       5</span>
-<span class="go">               58        4      7     17.1113590     18.0278830    5.08%       5</span>
-<span class="go">               69        2      8     17.1113590     18.0125221    5.00%       6</span>
-<span class="go">               74        0      8     17.1113590     17.1113590    0.00%       6</span>
-<span class="go">NOTE: Optimal.</span>
-<span class="go">NOTE: Objective = 17.111358985.</span>
-<span class="go">NOTE: Cloud Analytic Services dropped table TMPVPYAYCO1 from caslib CASUSERHDFS(casuser).</span>
-<span class="go">Problem Summary</span>
-
-<span class="go">                                   Value</span>
-<span class="go">Label                                   </span>
-<span class="go">Problem Name             kidney_exchange</span>
-<span class="go">Objective Sense             Maximization</span>
-<span class="go">Objective Function          total_weight</span>
-<span class="go">RHS                                  RHS</span>
-<span class="go">                                        </span>
-<span class="go">Number of Variables                 8133</span>
-<span class="go">Bounded Above                          0</span>
-<span class="go">Bounded Below                          0</span>
-<span class="go">Bounded Above and Below             8133</span>
-<span class="go">Free                                   0</span>
-<span class="go">Fixed                                  0</span>
-<span class="go">Binary                              8133</span>
-<span class="go">Integer                                0</span>
-<span class="go">                                        </span>
-<span class="go">Number of Constraints               5967</span>
-<span class="go">LE (&lt;=)                               38</span>
-<span class="go">EQ (=)                              5929</span>
-<span class="go">GE (&gt;=)                                0</span>
-<span class="go">Range                                  0</span>
-<span class="go">                                        </span>
-<span class="go">Constraint Coefficients            24245</span>
-<span class="go">Solution Summary</span>
-
-<span class="go">                                Value</span>
-<span class="go">Label                                </span>
-<span class="go">Solver                           MILP</span>
-<span class="go">Algorithm              Branch and Cut</span>
-<span class="go">Objective Function       total_weight</span>
-<span class="go">Solution Status               Optimal</span>
-<span class="go">Objective Value          17.111358985</span>
-<span class="go">                                     </span>
-<span class="go">Relative Gap                        0</span>
-<span class="go">Absolute Gap                        0</span>
-<span class="go">Primal Infeasibility     9.325873E-15</span>
-<span class="go">Bound Infeasibility      6.661338E-16</span>
-<span class="go">Integer Infeasibility    9.325873E-15</span>
-<span class="go">                                     </span>
-<span class="go">Best Bound               17.111358985</span>
-<span class="go">Nodes                              75</span>
-<span class="go">Iterations                       8909</span>
-<span class="go">                                     </span>
-<span class="go">Presolve Time                    2.68</span>
-<span class="go">Solution Time                    7.03</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table BLOCKSTABLE in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table BLOCKSTABLE has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
-<span class="go">NOTE: Converting model kidney_exchange to DataFrame</span>
-<span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPS7CCLMBF in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table TMPS7CCLMBF has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPZT5TBUPR in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMPZT5TBUPR has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
 <span class="go">NOTE: The problem kidney_exchange has 8133 variables (8133 binary, 0 integer, 0 free, 0 fixed).</span>
 <span class="go">NOTE: The problem has 5967 constraints (38 LE, 5929 EQ, 0 GE, 0 range).</span>
 <span class="go">NOTE: The problem has 24245 constraint coefficients.</span>
 <span class="go">NOTE: The remaining solution time after solver initialization is 299.87 seconds.</span>
+<span class="go">NOTE: The initial MILP heuristics are applied.</span>
+<span class="go">NOTE: The MILP presolver value AUTOMATIC is applied.</span>
+<span class="go">NOTE: The MILP presolver removed 6216 variables and 5356 constraints.</span>
+<span class="go">NOTE: The MILP presolver removed 17276 constraint coefficients.</span>
+<span class="go">NOTE: The MILP presolver modified 0 constraint coefficients.</span>
+<span class="go">NOTE: The presolved problem has 1917 variables, 611 constraints, and 6969 constraint coefficients.</span>
+<span class="go">NOTE: The MILP solver is called.</span>
+<span class="go">NOTE: The parallel Branch and Cut algorithm is used.</span>
+<span class="go">NOTE: The Branch and Cut algorithm is using up to 32 threads.</span>
+<span class="go">             Node   Active   Sols    BestInteger      BestBound      Gap    Time</span>
+<span class="go">                0        1      3      4.5256201   2194.9865951   99.79%       2</span>
+<span class="go">                0        1      3      4.5256201     18.3085704   75.28%       3</span>
+<span class="go">NOTE: The MILP solver&#39;s symmetry detection found 774 orbits. The largest orbit contains 15 variables.</span>
+<span class="go">               12       10      4     14.7200815     18.3085704   19.60%       4</span>
+<span class="go">               22       15      5     17.1113590     18.3085704    6.54%       4</span>
+<span class="go">               60        2      7     17.1113590     18.0210902    5.05%      11</span>
+<span class="go">               97        0      8     17.1113590     17.1113590    0.00%      12</span>
+<span class="go">NOTE: Optimal.</span>
+<span class="go">NOTE: Objective = 17.111358985.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table BLOCKSTABLE in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table BLOCKSTABLE has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: Converting model kidney_exchange to DataFrame.</span>
+<span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPSPP8B14F in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMPSPP8B14F has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
+<span class="go">NOTE: The problem kidney_exchange has 8133 variables (8133 binary, 0 integer, 0 free, 0 fixed).</span>
+<span class="go">NOTE: The problem has 5967 constraints (38 LE, 5929 EQ, 0 GE, 0 range).</span>
+<span class="go">NOTE: The problem has 24245 constraint coefficients.</span>
+<span class="go">NOTE: The remaining solution time after solver initialization is 299.88 seconds.</span>
 <span class="go">NOTE: The initial MILP heuristics are applied.</span>
 <span class="go">NOTE: The MILP presolver value BASIC is applied.</span>
 <span class="go">NOTE: The MILP presolver removed 2685 variables and 1925 constraints.</span>
@@ -241,73 +185,26 @@
 <span class="go">NOTE: The Decomposition algorithm is using up to 32 threads.</span>
 <span class="go">         Iter         Best       Master         Best       LP       IP  CPU Real</span>
 <span class="go">                     Bound    Objective      Integer      Gap      Gap Time Time</span>
-<span class="go">            .     283.4155      10.6475      10.6475   96.24%   96.24%    3    3</span>
-<span class="go">            1     283.4155      10.6475      10.6475   96.24%   96.24%    5    6</span>
-<span class="go">            2     226.1977      10.6475      10.6475   95.29%   95.29%    8    8</span>
-<span class="go">            3     209.4256      10.6475      10.6475   94.92%   94.92%   10   10</span>
-<span class="go">            4     148.3711      14.8383      14.8383   90.00%   90.00%   14   13</span>
-<span class="go">            7     100.1095      17.1114      17.1114   82.91%   82.91%   20   19</span>
-<span class="go">            8      80.4083      17.1114      17.1114   78.72%   78.72%   22   21</span>
-<span class="go">            9      53.9515      17.1114      17.1114   68.28%   68.28%   25   24</span>
-<span class="go">            .      53.9515      17.1114      17.1114   68.28%   68.28%   26   25</span>
-<span class="go">           10      25.4548      17.1114      17.1114   32.78%   32.78%   28   28</span>
-<span class="go">           12      17.1114      17.1114      17.1114    0.00%    0.00%   52   33</span>
+<span class="go">            .     283.4155      10.6475      10.6475   96.24%   96.24%    3    2</span>
+<span class="go">            1     283.4155      10.6475      10.6475   96.24%   96.24%    4    4</span>
+<span class="go">            2     229.9494      10.6475      10.6475   95.37%   95.37%    6    5</span>
+<span class="go">            3     220.2164      14.8383      14.8383   93.26%   93.26%    8    7</span>
+<span class="go">            4     209.0289      14.8383      14.8383   92.90%   92.90%   10    8</span>
+<span class="go">            5     150.2142      14.8383      14.8383   90.12%   90.12%   11    9</span>
+<span class="go">            7     150.2142      17.1114      17.1114   88.61%   88.61%   14   11</span>
+<span class="go">            8     149.2953      17.1114      17.1114   88.54%   88.54%   15   13</span>
+<span class="go">            9     125.0268      17.1114      17.1114   86.31%   86.31%   17   14</span>
+<span class="go">            .     125.0268      17.1114      17.1114   86.31%   86.31%   18   15</span>
+<span class="go">           10      25.4420      17.1114      17.1114   32.74%   32.74%   20   16</span>
+<span class="go">           11      19.0558      17.1114      17.1114   10.20%   10.20%   26   18</span>
+<span class="go">           12      17.1114      17.1114      17.1114    0.00%    0.00%   33   20</span>
 <span class="go">            Node  Active   Sols         Best         Best      Gap    CPU   Real</span>
 <span class="go">                                     Integer        Bound            Time   Time</span>
-<span class="go">               0       0      8      17.1114      17.1114    0.00%     52     33</span>
+<span class="go">               0       0      6      17.1114      17.1114    0.00%     33     20</span>
 <span class="go">NOTE: The Decomposition algorithm used 32 threads.</span>
-<span class="go">NOTE: The Decomposition algorithm time is 33.80 seconds.</span>
+<span class="go">NOTE: The Decomposition algorithm time is 20.15 seconds.</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 17.111358985.</span>
-<span class="go">NOTE: Cloud Analytic Services dropped table TMPS7CCLMBF from caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: Cloud Analytic Services dropped table BLOCKSTABLE from caslib CASUSERHDFS(casuser).</span>
-<span class="go">Problem Summary</span>
-
-<span class="go">                                   Value</span>
-<span class="go">Label                                   </span>
-<span class="go">Problem Name             kidney_exchange</span>
-<span class="go">Objective Sense             Maximization</span>
-<span class="go">Objective Function          total_weight</span>
-<span class="go">RHS                                  RHS</span>
-<span class="go">                                        </span>
-<span class="go">Number of Variables                 8133</span>
-<span class="go">Bounded Above                          0</span>
-<span class="go">Bounded Below                          0</span>
-<span class="go">Bounded Above and Below             8133</span>
-<span class="go">Free                                   0</span>
-<span class="go">Fixed                                  0</span>
-<span class="go">Binary                              8133</span>
-<span class="go">Integer                                0</span>
-<span class="go">                                        </span>
-<span class="go">Number of Constraints               5967</span>
-<span class="go">LE (&lt;=)                               38</span>
-<span class="go">EQ (=)                              5929</span>
-<span class="go">GE (&gt;=)                                0</span>
-<span class="go">Range                                  0</span>
-<span class="go">                                        </span>
-<span class="go">Constraint Coefficients            24245</span>
-<span class="go">Solution Summary</span>
-
-<span class="go">                                Value</span>
-<span class="go">Label                                </span>
-<span class="go">Solver                           MILP</span>
-<span class="go">Algorithm               Decomposition</span>
-<span class="go">Objective Function       total_weight</span>
-<span class="go">Solution Status               Optimal</span>
-<span class="go">Objective Value          17.111358985</span>
-<span class="go">                                     </span>
-<span class="go">Relative Gap                        0</span>
-<span class="go">Absolute Gap                        0</span>
-<span class="go">Primal Infeasibility                0</span>
-<span class="go">Bound Infeasibility                 0</span>
-<span class="go">Integer Infeasibility               0</span>
-<span class="go">                                     </span>
-<span class="go">Best Bound               17.111358985</span>
-<span class="go">Nodes                               1</span>
-<span class="go">Iterations                         12</span>
-<span class="go">                                     </span>
-<span class="go">Presolve Time                    0.11</span>
-<span class="go">Solution Time                   33.96</span>
 <span class="gh">Out[2]: </span><span class="go">17.111358984870215</span>
 </pre></div>
 </div>
@@ -330,33 +227,40 @@
 <li class="toctree-l1"><a class="reference internal" href="../components.html">Model components</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../sasoptpy.html">API Reference</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="food_manufacture_1.html">Food Manufacture 1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="food_manufacture_2.html">Food Manufacture 2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="factory_planning_1.html">Factory Planning 1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="factory_planning_2.html">Factory Planning 2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="manpower_planning.html">Manpower Planning</a></li>
-<li class="toctree-l2"><a class="reference internal" href="refinery_optimization.html">Refinery Optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mining_optimization.html">Mining Optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="farm_planning.html">Farm Planning</a></li>
-<li class="toctree-l2"><a class="reference internal" href="economic_planning.html">Economic Planning</a></li>
-<li class="toctree-l2"><a class="reference internal" href="optimal_wedding.html">SAS/OR Blog: Optimal Wedding</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">SAS/OR Blog: Kidney Exchange</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#model">Model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#output">Output</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../examples.html#viya-swat-examples">Viya (swat) Examples</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="food_manufacture_1.html">Food Manufacture 1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="food_manufacture_2.html">Food Manufacture 2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="factory_planning_1.html">Factory Planning 1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="factory_planning_2.html">Factory Planning 2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manpower_planning.html">Manpower Planning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="refinery_optimization.html">Refinery Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mining_optimization.html">Mining Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="farm_planning.html">Farm Planning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="economic_planning.html">Economic Planning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="decentralization.html">Decentralization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="optimal_wedding.html">SAS/OR Blog: Optimal Wedding</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">SAS/OR Blog: Kidney Exchange</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#model">Model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#output">Output</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
 </ul>
 </li>
 </ul>
 
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -373,16 +277,19 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
+          <a href="decentralization_saspy.html" title="Decentralization (saspy)"
+             >next</a> |</li>
+        <li class="right" >
           <a href="optimal_wedding.html" title="Optimal Wedding"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2018, SAS Institute.
-      Last updated on Feb 26, 2018 (Timestamp: 0.1.1-20180226160330).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
+      Last updated on Apr 24, 2018 (Timestamp: 0.1.2-20180424164025).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
     </div>
   </body>
 </html>

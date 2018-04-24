@@ -1,5 +1,5 @@
-sasoptpy\.Constraint\.set\_permanent
-====================================
+sasoptpy.Constraint.set\_permanent
+==================================
 
 .. currentmodule:: sasoptpy
 

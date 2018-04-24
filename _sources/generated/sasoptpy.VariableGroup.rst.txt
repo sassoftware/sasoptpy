@@ -1,8 +1,8 @@
 
 .. currentmodule:: sasoptpy
 
-sasoptpy\.VariableGroup
-=======================
+sasoptpy.VariableGroup
+======================
 
 .. currentmodule:: sasoptpy
 

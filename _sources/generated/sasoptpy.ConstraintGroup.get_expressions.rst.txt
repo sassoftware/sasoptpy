@@ -1,5 +1,5 @@
-sasoptpy\.ConstraintGroup\.get\_expressions
-===========================================
+sasoptpy.ConstraintGroup.get\_expressions
+=========================================
 
 .. currentmodule:: sasoptpy
 

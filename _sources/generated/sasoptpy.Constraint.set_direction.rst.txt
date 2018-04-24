@@ -1,5 +1,5 @@
-sasoptpy\.Constraint\.set\_direction
-====================================
+sasoptpy.Constraint.set\_direction
+==================================
 
 .. currentmodule:: sasoptpy
 

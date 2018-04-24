@@ -1,5 +1,5 @@
-sasoptpy\.tuple\_unpack
-=======================
+sasoptpy.tuple\_unpack
+======================
 
 .. currentmodule:: sasoptpy
 
