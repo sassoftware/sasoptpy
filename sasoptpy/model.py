@@ -23,10 +23,10 @@ Model includes :class:`Model` class, the main structure of an opt. model
 
 
 from math import inf
-from time import time
 from types import GeneratorType
 import warnings
 
+import numpy as np
 import pandas as pd
 
 import sasoptpy.components
@@ -41,8 +41,8 @@ class Model:
     ----------
     name : string
         Name of the model
-    session : :class:`swat.cas.connection.CAS` object, optional
-        CAS Session object
+    session : :class:`swat.cas.connection.CAS` object or :class:`saspy.SASsession` object, optional
+        CAS or SAS Session object
 
     Examples
     --------
@@ -80,7 +80,7 @@ class Model:
         self._milp_opts = {}
         self._lp_opts = {}
         sasoptpy.utils.register_name(name, self)
-        print('NOTE: Initialized model {}'.format(name))
+        print('NOTE: Initialized model {}.'.format(name))
 
     def __eq__(self, other):
         if not isinstance(other, sasoptpy.Model):
@@ -140,7 +140,7 @@ class Model:
 
         See also
         --------
-        :func:`sasoptpy.Model.include`
+        :func:`Model.include`
         '''
         # name = check_name(name, 'var')
         # Check bounds
@@ -349,6 +349,132 @@ class Model:
                 c = self.add_constraint(c=argv, name=name)
                 return c
 
+    def drop_variable(self, variable):
+        '''
+        Drops a variable from the model
+
+        Parameters
+        ----------
+        variable : :class:`Variable` object
+            The variable to be dropped from the model
+
+        Examples
+        --------
+
+        >>> x = m.add_variable(name='x')
+        >>> y = m.add_variable(name='y')
+        >>> print(m.get_variable('x'))
+         x
+        >>> m.drop_variable(x)
+        >>> print(m.get_variable('x'))
+        None
+
+        See also
+        --------
+        :func:`Model.drop_variables`
+        :func:`Model.drop_constraint`
+        :func:`Model.drop_constraints`
+
+        '''
+        for i, v in enumerate(self._variables):
+            if id(variable) == id(v):
+                del self._variables[i]
+                return
+
+    def drop_constraint(self, constraint):
+        '''
+        Drops a constraint from the model
+
+        Parameters
+        ----------
+        constraint : :class:`Constraint` object
+            The constraint to be dropped from the model
+
+        Examples
+        --------
+
+        >>> c1 = m.add_constraint(2 * x + y <= 15, name='c1')
+        >>> print(m.get_constraint('c1'))
+          2.0 * x  +  y  <=  15
+        >>> m.drop_constraint(c1)
+        >>> print(m.get_constraint('c1'))
+        None
+
+        See also
+        --------
+        :func:`Model.drop_constraints`
+        :func:`Model.drop_variable`
+        :func:`Model.drop_variables`
+
+        '''
+        try:
+            del self._constraintDict[constraint._name]
+            for i, c in enumerate(self._constraints):
+                if c._name == constraint._name:
+                    del self._constraints[i]
+        except KeyError:
+            pass
+
+    def drop_variables(self, variables):
+        '''
+        Drops a variable group from the model
+
+        Parameters
+        ----------
+        variables : :class:`VariableGroup` object
+            The variable group to be dropped from the model
+
+        Examples
+        --------
+
+        >>> x = m.add_variables(3, name='x')
+        >>> print(m.get_variables())
+        [sasoptpy.Variable(name='x_0',  vartype='CONT'),
+         sasoptpy.Variable(name='x_1',  vartype='CONT')]
+        >>> m.drop_variables(x)
+        >>> print(m.get_variables())
+        []
+
+        See also
+        --------
+        :func:`Model.drop_variable`
+        :func:`Model.drop_constraint`
+        :func:`Model.drop_constraints`
+
+        '''
+        for v in variables:
+            self.drop_variable(v)
+
+    def drop_constraints(self, constraints):
+        '''
+        Drops a constraint group from the model
+
+        Parameters
+        ----------
+        constraints : :class:`ConstraintGroup` object
+            The constraint group to be dropped from the model
+
+        Examples
+        --------
+
+        >>> c1 = m.add_constraints((x[i] + y <= 15 for i in [0, 1]), name='c1')
+        >>> print(m.get_constraints())
+        [sasoptpy.Constraint( x[0]  +  y  <=  15, name='c1_0'),
+         sasoptpy.Constraint( x[1]  +  y  <=  15, name='c1_1')]
+        >>> m.drop_constraints(c1)
+        >>> print(m.get_constraints())
+        []
+
+        See also
+        --------
+        :func:`Model.drop_constraints`
+        :func:`Model.drop_variable`
+        :func:`Model.drop_variables`
+
+        '''
+        for c in constraints:
+            self.drop_constraint(c)
+
     def include(self, *argv):
         '''
         Adds existing variables and constraints to a model
@@ -391,8 +517,8 @@ class Model:
         Notes
         -----
         * This method is essentially a wrapper for two methods,
-          :func:`sasoptpy.Model.add_variable` and
-          :func:`sasoptpy.Model.add_constraint`.
+          :func:`Model.add_variable` and
+          :func:`Model.add_constraint`.
         * Including a model causes all variables and constraints inside the
           original model to be included.
         '''
@@ -471,7 +597,8 @@ class Model:
 
         Returns
         -------
-        :class:`Expression` : Objective function
+        :class:`Expression` object
+            Objective function
 
         Examples
         --------
@@ -501,6 +628,50 @@ class Model:
         '''
         return self._objective.get_value()
 
+    def get_constraint(self, name):
+        '''
+        Returns the reference to a constraint in the model
+
+        Parameters
+        ----------
+        name : string
+            Name of the constraint requested
+
+        Returns
+        -------
+        :class:`Constraint` object
+
+        Examples
+        --------
+
+        >>> m.add_constraint(2 * x + y <= 15, name='c1')
+        >>> print(m.get_constraint('c1'))
+        2.0 * x  +  y  <=  15
+
+        '''
+        return self._constraintDict.get(name)
+
+    def get_constraints(self):
+        '''
+        Returns a list of constraints in the model
+
+        Returns
+        -------
+        list : A list of :class:`Constraint` objects
+
+        Examples
+        --------
+
+        >>> m.add_constraint(x[0] + y <= 15, name='c1')
+        >>> m.add_constraints((2 * x[i] - y >= 1 for i in [0, 1]), name='c2')
+        >>> print(m.get_constraints())
+        [sasoptpy.Constraint( x[0]  +  y  <=  15, name='c1'),
+         sasoptpy.Constraint( 2.0 * x[0]  -  y  >=  1, name='c2_0'),
+         sasoptpy.Constraint( 2.0 * x[1]  -  y  >=  1, name='c2_1')]
+
+        '''
+        return self._constraints
+
     def get_variable(self, name):
         '''
         Returns the reference to a variable in the model
@@ -526,6 +697,27 @@ class Model:
         for v in self._variables:
             if v._name == name:
                 return v
+
+    def get_variables(self):
+        '''
+        Returns a list of variables
+
+        Returns
+        -------
+        list : A list of :class:`Variable` objects
+
+        Examples
+        --------
+
+        >>> x = m.add_variables(2, name='x')
+        >>> y = m.add_variable(name='y')
+        >>> print(m.get_variables())
+        [sasoptpy.Variable(name='x_0',  vartype='CONT'),
+         sasoptpy.Variable(name='x_1',  vartype='CONT'),
+         sasoptpy.Variable(name='y',  vartype='CONT')]
+
+        '''
+        return self._variables
 
     def get_variable_coef(self, var):
         '''
@@ -569,7 +761,7 @@ class Model:
         Returns
         -------
         :class:`swat.dataframe.SASDataFrame` object
-            Problem summary obtained after :func:`sasoptpy.Model.solve`
+            Problem summary obtained after :func:`Model.solve`
 
         Examples
         --------
@@ -725,14 +917,18 @@ class Model:
 
         Parameters
         ----------
-        session : :class:`swat.cas.connection.CAS`
-            CAS Session
+        session : :class:`swat.cas.connection.CAS` or \
+:class:`saspy.SASsession` objects
+            CAS or SAS Session object
+
+        Notes
+        -----
+
+        * Session of a model can be set at initialization.
+          See :class:`Model`.
+
         '''
-        from swat import CAS
-        if type(session) == CAS:
-            self._session = session
-        else:
-            print('WARNING: Session is not added, not a CAS object.')
+        self._session = session
 
     def set_coef(self, var, con, value):
         '''
@@ -763,7 +959,7 @@ class Model:
 
         See also
         --------
-        :func:`sasoptpy.Constraint.update_var_coef`
+        :func:`Constraint.update_var_coef`
 
         '''
         con.update_var_coef(var=var, value=value)
@@ -782,7 +978,7 @@ class Model:
 
         See also
         --------
-        :func:`sasoptpy.Model.get_solution`
+        :func:`Model.get_solution`
 
         '''
         for v in self._variables:
@@ -839,9 +1035,9 @@ class Model:
 
         Notes
         -----
-        * This method is called inside :func:`sasoptpy.Model.solve`.
+        * This method is called inside :func:`Model.solve`.
         '''
-        print('NOTE: Converting model {} to DataFrame'.format(self._name))
+        print('NOTE: Converting model {} to DataFrame.'.format(self._name))
         self._id = 1
         if(len(self._datarows) > 0):  # For future reference
             # take a copy?
@@ -849,7 +1045,7 @@ class Model:
             self._datarows = []
         else:
             self._datarows = []
-        # Check if objective has a constant field, if so hack using a variable
+        # Check if objective has a constant field
         if self._objective._linCoef['CONST']['val'] != 0:
             obj_constant = self.add_variable(name=sasoptpy.utils.check_name(
                 'obj_constant', 'var'))
@@ -888,6 +1084,9 @@ class Model:
             if v._name in self._objective._linCoef:
                 cv = self._objective._linCoef[v._name]
                 current_row = ['', v._name, self._objective._name, cv['val']]
+                f5 = 1
+            elif not v._cons:
+                current_row = ['', v._name, self._objective._name, 0.0]
                 f5 = 1
             for cn in v._cons:
                 if cn in self._constraintDict:
@@ -942,19 +1141,24 @@ class Model:
         for v in self._variables:
             if self._vcid[v._name] == {}:
                 continue
-            if v._lb is not 0 and v._lb is not None:
+            if v._lb == v._ub:
+                self._append_row(['FX', 'BND', v._name, v._ub, '', ''])
+            if v._lb is not None and v._type is not sasoptpy.utils.BIN:
                 if v._ub == inf and v._lb == -inf:
                     self._append_row(['FR', 'BND', v._name, '', '', ''])
-                else:
-                    self._append_row(['LO', 'BND', v._name, v._lb, '', ''])
+                elif not v._ub == v._lb:
+                    if v._type == sasoptpy.utils.INT and\
+                       v._lb == 0 and v._ub == inf:
+                        self._append_row(['PL', 'BND', v._name, '', '', ''])
+                    elif not(v._type == sasoptpy.utils.CONT and v._lb == 0):
+                        self._append_row(['LO', 'BND', v._name, v._lb, '', ''])
             if v._ub != inf and v._ub is not None and not\
-               (v._type is sasoptpy.utils.BIN and v._ub == 1):
+               (v._type is sasoptpy.utils.BIN and v._ub == 1) and\
+               v._lb != v._ub:
                 self._append_row(['UP', 'BND', v._name, v._ub, '', ''])
             if v._type is sasoptpy.utils.BIN:
                 self._append_row(['BV', 'BND', v._name, '1.0', '', ''])
-            if v._lb is 0 and v._type is sasoptpy.utils.INT:
-                self._append_row(['LO', 'BND', v._name, v._lb, '', ''])
-        self._append_row(['ENDATA', '', '', float(0), '', float(0)])
+        self._append_row(['ENDATA', '', '', 0.0, '', 0.0])
         mpsdata = pd.DataFrame(data=self._datarows,
                                columns=['Field1', 'Field2', 'Field3', 'Field4',
                                         'Field5', 'Field6', '_id_'])
@@ -1023,16 +1227,57 @@ class Model:
         return(response.name)
 
     def test_session(self):
+        '''
+        Tests if the model session is defined and still active
+
+        Returns
+        -------
+        string
+            'CAS' for CAS sessions, 'SAS' for SAS sessions, None otherwise
+
+        '''
         # Check if session is defined
         sess = self._session
         if sess is None:
-            print('ERROR: CAS Session is not defined for model {}.'.format(
+            print('ERROR: No session is not defined for model {}.'.format(
                 self._name))
-            return False
+            return None
         else:
-            return True
+            sess_type = type(sess).__name__
+            if sess_type == 'CAS':
+                return 'CAS'
+            elif sess_type == 'SASsession':
+                return 'SAS'
+            else:
+                print('ERROR: Unrecognized session type: {}'.format(sess_type))
+                return None
 
     def upload_model(self, name=None, replace=True):
+        '''
+        Converts internal model to MPS table and upload to CAS session
+
+        Parameters
+        ----------
+        name : string, optional
+            Desired name of the MPS table on the server
+        replace : boolean, optional
+            Option to replace the existing MPS table
+
+        Returns
+        -------
+        :class:`swat.cas.table.CASTable` object
+            Reference to the uploaded CAS Table
+
+        Notes
+        -----
+        
+        - This method returns None if the model session is not valid.
+        - Name of the table is randomly assigned if name argument is None
+          or not given.
+        - This method should not be used if :func:`Model.solve` is going
+          to be used. :func:`Model.solve` calls this method internally.
+
+        '''
         if self.test_session():
             # Conversion and upload
             df = self.to_frame()
@@ -1046,7 +1291,164 @@ class Model:
         else:
             return None
 
-    def solve(self, milp={}, lp={}, name=None, drop=True, replace=True,
+    def solve_local(self, name='MPS'):
+        '''
+        (Experimental) Solves the model by calling SAS 9.4 solvers
+
+        Parameters
+        ----------
+
+        name : string, optional
+            Name of the MPS table
+
+        Examples
+        --------
+
+        >>> import saspy
+        >>> import sasoptpy as so
+        >>> sas = saspy.SASsession(cfgname='winlocal')
+        >>> m = so.Model(name='demo', session=sas)
+        >>> choco = m.add_variable(lb=0, ub=20, name='choco', vartype=so.INT)
+        >>> toffee = m.add_variable(lb=0, ub=30, name='toffee')
+        >>> m.set_objective(0.25*choco + 0.75*toffee, sense=so.MAX, name='profit')
+        >>> m.add_constraint(15*choco + 40*toffee <= 27000, name='process1')
+        >>> m.add_constraint(56.25*toffee <= 27000, name='process2')
+        >>> m.add_constraint(18.75*choco <= 27000, name='process3')
+        >>> m.add_constraint(12*choco + 50*toffee <= 27000, name='process4')
+        >>> 
+        >>> m.solve_local()
+        >>> # or m.solve()
+        SAS Connection established. Subprocess id is 18192
+        NOTE: Initialized model demo.
+        NOTE: Converting model demo to DataFrame.
+        NOTE: Writing HTML5(SASPY_INTERNAL) Body file: _TOMODS1
+        NOTE: The problem demo has 2 variables (0 binary, 1 integer, 0 free, 0 fixed).
+        NOTE: The problem has 4 constraints (4 LE, 0 EQ, 0 GE, 0 range).
+        NOTE: The problem has 6 constraint coefficients.
+        NOTE: The initial MILP heuristics are applied.
+        NOTE: Optimal.
+        NOTE: Objective = 27.5.
+        NOTE: The data set WORK.PROB_SUMMARY has 21 observations and 3 variables.
+        NOTE: The data set WORK.SOL_SUMMARY has 17 observations and 3 variables.
+        NOTE: There were 23 observations read from the data set WORK.MPS.
+        NOTE: The data set WORK.PRIMAL_OUT has 2 observations and 8 variables.
+        NOTE: The data set WORK.DUAL_OUT has 4 observations and 8 variables.
+        NOTE: PROCEDURE OPTMILP used (Total process time):
+        real time           0.07 seconds
+        cpu time            0.04 seconds
+        SAS Connection terminated. Subprocess id was 18192
+
+        Notes
+        -----
+
+        - If the session of a model is a :class:`saspy.SASsession` object,
+          then :func:`Model.solve` calls this method internally.
+        - To use this method, you need to have saspy installed on your
+          Python environment.
+        - This function is experimental.
+        - Unlike :func:`Model.solve`, this method does not accept LP and MILP
+          options yet.
+
+        See also
+        --------
+        :func:`Model.solve`
+
+        '''
+
+        session = self._session
+
+        try:
+            import saspy as sp
+        except ImportError:
+            print('ERROR: saspy cannot be imported.')
+            return False
+
+        if not isinstance(session, sp.SASsession):
+            print('ERROR: session= argument is not a valid SAS session.')
+            return False
+
+        # Get the MPS data
+        df = self.to_frame()
+
+        # Prepare for the upload
+        for f in ['Field4', 'Field6']:
+            df[f] = df[f].replace('', np.nan)
+        df['_id_'] = df['_id_'].astype('int')
+        df[['Field4', 'Field6']] = df[['Field4', 'Field6']].astype(float)
+
+        # Upload MPS table
+        try:
+            session.df2sd(df, table=name, keep_outer_quotes=True)
+        except:
+            session.df2sd(df, table=name)
+            session.submit("""
+            data {};
+                set {};
+                field3=tranwrd(field3, "'MARKER'", "MARKER");
+                field3=tranwrd(field3, "MARKER", "'MARKER'");
+                field5=tranwrd(field5, "'INTORG'", "INTORG");
+                field5=tranwrd(field5, "INTORG", "'INTORG'");
+                field5=tranwrd(field5, "'INTEND'", "INTEND");
+                field5=tranwrd(field5, "INTEND", "'INTEND'");
+            run;
+            """.format(name, name))
+
+        # Find problem type and initial values
+        ptype = 1  # LP
+        for v in self._variables:
+            if v._type != sasoptpy.utils.CONT:
+                ptype = 2
+                break
+
+        if ptype == 1:
+            c = session.submit("""
+            ods output SolutionSummary=SOL_SUMMARY;
+            ods output ProblemSummary=PROB_SUMMARY;
+            proc optlp data = {}
+               primalout  = primal_out
+               dualout    = dual_out;
+            run;
+            """.format(name))
+        else:
+            c = session.submit("""
+            ods output SolutionSummary=SOL_SUMMARY;
+            ods output ProblemSummary=PROB_SUMMARY;
+            proc optmilp data = {}
+               primalout  = primal_out
+               dualout    = dual_out;
+            run;
+            """.format(name))
+
+        for line in c['LOG'].split('\n'):
+            if line[0:4] == '    ' or line[0:4] == 'NOTE':
+                print(line)
+
+        self._primalSolution = session.sd2df('PRIMAL_OUT')
+        self._dualSolution = session.sd2df('DUAL_OUT')
+
+        # Get Problem Summary
+        self._problemSummary = session.sd2df('PROB_SUMMARY')
+        self._problemSummary.replace(np.nan, '', inplace=True)
+        self._problemSummary = self._problemSummary[['Label1', 'cValue1']]
+        self._problemSummary.set_index(['Label1'], inplace=True)
+        self._problemSummary.columns = ['Value']
+        self._problemSummary.index.names = ['Label']
+
+        # Get Solution Summary
+        self._solutionSummary = session.sd2df('SOL_SUMMARY')
+        self._solutionSummary.replace(np.nan, '', inplace=True)
+        self._solutionSummary = self._solutionSummary[['Label1', 'cValue1']]
+        self._solutionSummary.set_index(['Label1'], inplace=True)
+        self._solutionSummary.columns = ['Value']
+        self._solutionSummary.index.names = ['Label']
+
+        # Parse solutions
+        for _, row in self._primalSolution.iterrows():
+            self._variableDict[row['_VAR_']]._value = row['_VALUE_']
+
+        return self._primalSolution
+
+    def solve(self, milp={}, lp={}, name=None, drop=False, replace=True,
               primalin=False):
         '''
         Solves the model by calling CAS optimization solvers
@@ -1082,11 +1484,6 @@ class Model:
         NOTE: Optimal.
         NOTE: Objective = 107842.59259.
         NOTE: The Dual Simplex solve time is 0.01 seconds.
-        NOTE: Data length = 419 rows
-        NOTE: Conversion to MPS =   0.0010 secs
-        NOTE: Upload to CAS time =  0.1420 secs
-        NOTE: Solution parse time = 0.2500 secs
-        NOTE: Server solve time =   0.1168 secs
 
         >>> m.solve(milp={'maxtime': 600})
 
@@ -1097,6 +1494,7 @@ class Model:
         * This method takes two optional arguments (milp and lp).
         * These arguments pass options to the solveLp and solveMilp CAS
           actions.
+        * These arguments are not passed if the model has a SAS session.
         * Both milp and lp should be defined as dictionaries, where keys are
           option names. For example, ``m.solve(milp={'maxtime': 600})`` limits
           solution time to 600 seconds.
@@ -1105,21 +1503,33 @@ class Model:
         * See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvemilp_syntax.htm&locale=en
           for a list of MILP options.
 
+        See also
+        --------
+        :func:`Model.solve_local`
+
         '''
 
         # Check if session is defined
-        if self.test_session():
+        session_type = self.test_session()
+        if session_type == 'CAS':
             sess = self._session
+        elif session_type == 'SAS':
+            return self.solve_local()
         else:
             return None
 
         # Pre-upload argument parse
+        self._lp_opts = lp
+        self._milp_opts = milp
+
+        # Find problem type and initial values
+        ptype = 1  # LP
         opt_args = lp
-        if bool(lp):
-            self._lp_opts = lp
-        if bool(milp):
-            self._milp_opts = milp
-            opt_args = milp
+        for v in self._variables:
+            if v._type != sasoptpy.utils.CONT:
+                ptype = 2
+                opt_args = milp
+                break
 
         # Decomp check
         user_blocks = None
@@ -1128,13 +1538,6 @@ class Model:
                 if opt_args['decomp']['method'] == 'user':
                     user_blocks = self.upload_user_blocks()
                     opt_args['decomp'] = {'blocks': user_blocks}
-
-        # Find problem type and initial values
-        ptype = 1  # LP
-        for v in self._variables:
-            if v._type != sasoptpy.utils.CONT:
-                ptype = 2
-                break
 
         # Initial value check for MIP
         if primalin:
@@ -1159,7 +1562,7 @@ class Model:
 
         if ptype == 1:
             response = sess.solveLp(data=mps_table.name,
-                                    **self._lp_opts,
+                                    **opt_args,
                                     primalOut={'caslib': 'CASUSER',
                                                'name': 'primal',
                                                'replace': True},
@@ -1168,7 +1571,7 @@ class Model:
                                     objSense=self._sense)
         elif ptype == 2:
             response = sess.solveMilp(data=mps_table.name,
-                                      **self._milp_opts,
+                                      **opt_args,
                                       primalOut={'caslib': 'CASUSER',
                                                  'name': 'primal',
                                                  'replace': True},
@@ -1186,6 +1589,13 @@ class Model:
             # Bring solution to variables
             for _, row in self._primalSolution.iterrows():
                 self._variableDict[row['_VAR_']]._value = row['_VALUE_']
+
+            # Capturing dual values for LP problems
+            if ptype == 1:
+                for _, row in self._primalSolution.iterrows():
+                    self._variableDict[row['_VAR_']]._dual = row['_R_COST_']
+                for _, row in self._dualSolution.iterrows():
+                    self._constraintDict[row['_ROW_']]._dual = row['_VALUE_']
 
         # Drop tables
         if drop:
@@ -1208,8 +1618,6 @@ class Model:
             self._solutionSummary.set_index(['Label1'], inplace=True)
             self._solutionSummary.columns = ['Value']
             self._solutionSummary.index.names = ['Label']
-            print(self._problemSummary)
-            print(self._solutionSummary)
             # Record status and time
             self._status = response.solutionStatus
             self._soltime = response.solutionTime

@@ -15,7 +15,7 @@ and :class:`pandas.Series` objects to construct and manipulate model components.
 Indices
 -------
 
-Functions like :func:`Model.add_variables` can utilize native Python object
+Methods like :func:`Model.add_variables` can utilize native Python object
 types like list and range as variable and constraint indices.
 :class:`pandas.Index` can be used as index as well.
 
@@ -88,8 +88,8 @@ pandas.Index
 Operations
 ----------
 
-Lists and :class:`pandas.Series` objects can be used for mathematical
-operations like :func:`VariableGroup.mult`.
+Lists, :class:`pandas.Series`, and :class:`pandas.DataFrame` objects can be
+used for mathematical operations like :func:`VariableGroup.mult`.
 
 .. ipython:: python
 

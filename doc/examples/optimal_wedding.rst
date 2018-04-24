@@ -2,7 +2,7 @@
 Optimal Wedding
 ===============
 
-Blog: https://blogs.sas.com/content/operations/2014/11/10/do-you-have-an-uncle-louie-optimal-wedding-seat-assignments/
+SAS Blog: https://blogs.sas.com/content/operations/2014/11/10/do-you-have-an-uncle-louie-optimal-wedding-seat-assignments/
 
 Model
 -----

@@ -1,0 +1,22 @@
+# Temporary files
+*~
+
+# Scripts
+/*.sh
+/*.tar.gz
+
+# Compiled files
+__pycache__/
+*.py[cod]
+
+# Eclipse-related files
+.classpath
+.project
+.settings
+.pydevproject
+
+# Sphinx
+.buildinfo
+/doc/_build/
+/doc/generated/
+

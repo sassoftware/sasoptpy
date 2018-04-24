@@ -80,7 +80,7 @@ Adding existing components to a model
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A new model can use existing variables. The typical way to include a variable
-is to use the :func:`Model.include` function:
+is to use the :func:`Model.include` method:
 
 .. ipython:: python
 
@@ -96,6 +96,65 @@ is to use the :func:`Model.include` function:
 Note that variables are added to :class:`Model` objects by reference.
 Therefore, after :func:`Model.solve` is called, values of variables will be
 replaced with optimal values.
+
+Accessing components
+~~~~~~~~~~~~~~~~~~~~
+
+You can get a list of model variables using :func:`Model.get_variables()`
+method.
+
+.. ipython:: python
+
+   print(m.get_variables())
+
+Similarly, you can access a list of constraints using
+:func:`Model.get_constraints()` method. 
+
+.. ipython:: python
+
+   c2 = m.add_constraint(2 * x - y >= 1, name='c2')
+   print(m.get_constraints())
+
+To access a certain constraint using its name, you can use
+:func:`Model.get_constraint` method:
+
+.. ipython:: python
+
+   print(m.get_constraint('c2'))
+
+
+Dropping components
+~~~~~~~~~~~~~~~~~~~
+
+A variable inside a model can simply be dropped using 
+:func:`Model.drop_variable`. Similarly, a set of variables can be dropped
+using :func:`Model.drop_variables`.
+
+.. ipython:: python
+
+   m.drop_variable(y)
+   print(m)
+
+.. ipython:: python
+   
+   m.include(y)
+   print(m)
+
+A constraint can be dropped using :func:`Model.drop_constraint` method.
+Similarly, a set of constraints can be dropped using
+:func:`Model.drop_constraints`.
+
+.. ipython:: python
+
+   m.drop_constraint(c1)
+   m.drop_constraint(c2)
+   print(m)
+
+.. ipython:: python
+
+   m.include(c1)
+   print(m)
+
 
 Copying a model
 ~~~~~~~~~~~~~~~
@@ -115,7 +174,7 @@ Note that all variables and constraints are included by reference.
 Solving a model
 ~~~~~~~~~~~~~~~
 
-A model is solved using the :func:`Model.solve` function. This function converts
+A model is solved using the :func:`Model.solve` method. This method converts
 Python definitions into an MPS file and uploads to a CAS server for the optimization
 action. The type of the optimization problem (Linear Optimization or Mixed Integer
 Linear Optimization) is determined based on variable types.
@@ -128,17 +187,14 @@ NOTE: Added action set 'optimization'.
 NOTE: Optimal.
 NOTE: Objective = 124.343.
 NOTE: The Dual Simplex solve time is 0.01 seconds.
-NOTE: Data length = 189 rows
-NOTE: Conversion to MPS =   0.0010 secs
-NOTE: Upload to CAS time =  0.0710 secs
-NOTE: Solution parse time = 0.1900 secs
-NOTE: Server solve time =   0.1560 secs
 
 Solve options
 ~~~~~~~~~~~~~
 
+**Solver Options**
+
 All options listed for the CAS solveLp and solveMilp actions can be used through
-:func:`Model.solve` function.
+:func:`Model.solve` method.
 LP options can passed to :func:`Model.solve` using ``lp`` argument, while MILP
 options can be passed using ``milp`` argument:
 
@@ -149,22 +205,37 @@ See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=cas
 
 See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvemilp_syntax.htm&locale=en for a list of MILP options.
 
+**Package Options**
+
+Besides ``lp`` and ``milp`` arguments, there are 4 arguments that can be passed
+into :func:`Model.solve` method:
+
+- name: Upload name of the MPS data
+- drop: Option for dropping the data from server after solve
+- replace: Option for replacing an existing data with the same name
+- primalin: Option for using the current values of the variables as an initial solution
+
+When ``primalin`` argument is ``True``, it grabs :class:`Variable` objects
+``_init`` field. This field can be modified with :func:`Variable.set_init`
+method.
+
+
 Getting solutions
 ~~~~~~~~~~~~~~~~~
 
 After the solve is completed, all variable and constraint values are parsed
 automatically.
 A summary of the problem can be accessed using the 
-:func:`Model.get_problem_summary` function, 
+:func:`Model.get_problem_summary` method, 
 and a summary of the solution can be accesed using the
 :func:`Model.get_solution_summary`
-function.
+method.
 
 To print values of any object, :func:`get_solution_table` can be used:
 
 >>> print(so.get_solution_table(x, y))
 
-All variables and constraints passed into this function are returned based on
+All variables and constraints passed into this method are returned based on
 their indices. See :ref:`examples` for more details.
 
 

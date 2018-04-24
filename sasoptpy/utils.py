@@ -422,8 +422,7 @@ def read_frame(df, cols=None):
 
 def flatten_frame(df):
     '''
-    Converts a :class:`pandas.DataFrame` object into a :class:`pandas.Series`
-    object where indices are tuples of row and column indices
+    Converts a :class:`pandas.DataFrame` object into :class:`pandas.Series`
 
     Parameters
     ----------

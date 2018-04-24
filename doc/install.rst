@@ -13,36 +13,43 @@ Python version support and dependencies
 
 It depends on the following packages:
 
-* Pandas
-* SAS-SWAT
-* Numpy
+* numpy
+* saspy (Optional)
+* swat
+* pandas
 
-.. note::
+Getting swat
+------------
 
-   You need to download
-   `SAS-SWAT <https://sassoftware.github.io/python-swat/>`_
-   from the online repository before using **sasoptpy**. 
+`swat <https://github.com/sassoftware/python-swat>`_ should be available
+to use SAS Viya solvers.
 
-
-Getting SAS-SWAT
-----------------
-
-`SAS-SWAT <https://sassoftware.github.io/python-swat/>`_ should be available
-to use solver actions.
-
-Releases are listed at
+swat releases are listed at
 `<https://github.com/sassoftware/python-swat/releases>`_.
 After downloading the platform-specific release file, it can be installed using
 pip::
 
 	pip install python-swat-X.X.X-platform.tar.gz
 
+Getting saspy
+-------------
+
+`saspy <https://github.com/sassoftware/saspy>`_ should be available to use
+SAS 9.4 solvers.
+The **sasoptpy** support for SAS 9.4 solvers is experimental.
+Note that saspy is not a requirement for using the SAS Viya solvers.
+
+saspy releases are listed at
+`<https://github.com/sassoftware/saspy/releases>`_.
+The easiest way to download the latest stable version of saspy is to use::
+
+        pip install saspy
+
+	
 Getting sasoptpy
 ----------------
 
-
-Latest release of **sasoptpy** can be
-obtained from the online repository.
+The latest release of **sasoptpy** can be obtained from the online repository.
 Call::
 
   git clone https://github.com/sassoftware/sasoptpy.git
@@ -69,10 +76,10 @@ Step-by-step installation
       pip install pandas
 
       
-#. **Installing the SAS-SWAT package**
+#. **Installing the swat package**
 
    First, check the
-   `SAS-SWAT release page <https://github.com/sassoftware/python-swat/releases>`_
+   `swat release page <https://github.com/sassoftware/python-swat/releases>`_
    to find the latest release of the SAS-SWAT package for your environment.
 
    Then install it using
@@ -88,7 +95,7 @@ Step-by-step installation
       wget https://github.com/sassoftware/python-swat/releases/download/v1.2.1/python-swat-1.2.1-linux64.tar.gz
       pip install python-swat-1.2.1-linux64.tar.gz
 
-   to install the version 1.2.1 of the SAS-SWAT package for 64-bit Linux
+   to install the version 1.2.1 of the swat package for 64-bit Linux
    environments.
 
 #. **Installing sasoptpy**

@@ -77,6 +77,7 @@ class Expression:
         else:
             self._name = None
         self._value = 0
+        self._dual = None
         self._linCoef = {}
         if exp is None:
             self._linCoef = {'CONST': {'ref': None, 'val': 0}}
@@ -148,6 +149,51 @@ class Expression:
             else:
                 v += self._linCoef[mylc]['val']
         return v
+
+    def get_dual(self):
+        '''
+        Returns the dual value
+
+        Returns
+        -------
+        float
+            Dual value of the variable
+
+        '''
+        return self._dual
+
+    def set_name(self, name):
+        '''
+        Sets the name of the expression
+
+        Parameters
+        ----------
+        name : string
+            Name of the expression
+
+        Returns
+        -------
+        string
+            Name of the expression after resolving conflicts
+
+        Examples
+        --------
+
+        >>> e = x + 2*y
+        >>> e.set_name('objective')
+
+        '''
+        nd = sasoptpy.utils.get_namedict()
+        if self._name is not None:
+            if self._name in nd:
+                del nd[self._name]
+        safe_name = sasoptpy.utils.check_name(name, 'expr')
+        if name != safe_name:
+            print('NOTE: Name {} is changed to {} to prevent a conflict'
+                  .format(name, safe_name))
+        sasoptpy.utils.register_name(self._name, self)
+        self._name = safe_name
+        return self._name
 
     def get_name(self):
         '''
@@ -303,6 +349,7 @@ class Expression:
         * This method is mainly for internal use.
         * Multiplying an expression is equivalent to calling this method:
           3*(x-y) and (x-y).mult(3) are interchangeable.
+
         '''
         #  TODO r=self could be used whenever expression has no name
         if isinstance(other, Expression):
@@ -923,6 +970,9 @@ class VariableGroup:
                 newfixed = vkeys + (i,)
             if len(argv) == 1:
                 varname = '{}'.format(name)
+                # Proposed change:
+                # varname = '{}['.format(name) + ','.join(format(k)
+                #                                    for k in newfixed) + ']'
                 for j, k in enumerate(newfixed):
                     varname += '_{}'.format(k)
                     try:
@@ -1045,7 +1095,8 @@ class VariableGroup:
 
         Parameters
         ----------
-        vector : list, dictionary, or :class:`pandas.Series` object
+        vector : list, dictionary, :class:`pandas.Series` object,\
+ or :class:`pandas.DataFrame` object
             Vector to be multiplied with the variable group
 
         Returns
@@ -1080,7 +1131,27 @@ class VariableGroup:
         >>> print(e3)
          1.5 * u['b']  +  0.1 * u['a']  -  0.2 * u['c']  +  0.3 * u['d']
 
+        Multiplying with a pandas.DataFrame object
+
+        >>> data = np.random.rand(3, 3)
+        >>> df = pd.DataFrame(data, columns=['a', 'b', 'c'])
+        >>> print(df)
+        >>> NOTE: Initialized model model1
+                  a         b         c
+        0  0.966524  0.237081  0.944630
+        1  0.821356  0.074753  0.345596
+        2  0.065229  0.037212  0.136644
+        >>> y = m.add_variables(3, ['a', 'b', 'c'], name='y')
+        >>> e = y.mult(df)
+        >>> print(e)
+         0.9665237354418064 * y[0, 'a']  +  0.23708064143289442 * y[0, 'b']  +
+        0.944629500537536 * y[0, 'c']  +  0.8213562592159828 * y[1, 'a']  +
+        0.07475256894157478 * y[1, 'b']  +  0.3455957019116668 * y[1, 'c']  +
+        0.06522945752546017 * y[2, 'a']  +  0.03721153533250843 * y[2, 'b']  +
+        0.13664422498043194 * y[2, 'c']
+
         '''
+
         r = Expression()
         if isinstance(vector, list) or isinstance(vector, np.ndarray):
             for i, key in enumerate(vector):
@@ -1091,6 +1162,12 @@ class VariableGroup:
                 k = sasoptpy.utils.tuple_pack(key)
                 var = self._vardict[k]
                 r._linCoef[var._name] = {'ref': var, 'val': vector[key]}
+        elif isinstance(vector, pd.DataFrame):
+            vectorflat = sasoptpy.utils.flatten_frame(vector)
+            for key in vectorflat.index:
+                k = sasoptpy.utils.tuple_pack(key)
+                var = self._vardict[k]
+                r._linCoef[var._name] = {'ref': var, 'val': vectorflat[key]}
         else:
             for i, key in enumerate(vector):
                 if isinstance(key, tuple):
@@ -1257,6 +1334,9 @@ class ConstraintGroup:
                     if ky != '.0':
                         newkeys = newkeys + (vdict[ky],)
             conname = '{}_{}'.format(name, conctr)
+            # Proposed change:
+            # conname = '{}[{}]'.format(name, ','.join(format(k)
+            #                                          for k in newkeys))
             conname = sasoptpy.utils.check_name(conname, 'con')
             newcon = sasoptpy.Constraint(exp=c, name=conname, crange=c._range)
             condict[newkeys] = newcon
