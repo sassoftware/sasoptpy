@@ -12,8 +12,8 @@ It is possible to model a problem without a server
 but solving a problem requires access to SAS Viya
 Optimization solvers.
 
-Connecting to a CAS server
---------------------------
+Creating a session
+------------------
 
 **sasoptpy** uses the CAS connection provided by the
 swat package.
@@ -33,7 +33,19 @@ After installation simply use
    s = CAS(hostname, port, userid, password)
 
 The last two parameters are optional for some
-cases. See `swat Documentation <https://sassoftware.github.io/python-swat/generated/swat.cas.connection.CAS.html#swat-cas-connection-cas>`_.
+cases. See `swat Documentation <https://sassoftware.github.io/python-swat/generated/swat.cas.connection.CAS.html#swat-cas-connection-cas>`_ for more details.
+
+Creating a SAS 9.4 session
+++++++++++++++++++++++++++
+
+To create a SAS 9.4 session, see
+`saspy Documentation <https://sassoftware.github.io/saspy/getting-started.html#start-a-sas-session>`_.
+After the configurations, a session can be created as follows:
+
+.. code-block:: python
+
+   import saspy
+   s = saspy.SASsession(cfgname='winlocal')
 
 Initializing a model
 --------------------
@@ -126,8 +138,8 @@ it is possible to define a custom :class:`Expression` to use later.
    totalRevenue = production.sum('*')*price_per_product
    totalCost = production_cap * capacity_cost
 
-The first thing to notice is the use of the :func:`VariableGroup.sum` function
-over a variable group. This function returns the sum of variables inside the
+The first thing to notice is the use of the :func:`VariableGroup.sum` method
+over a variable group. This method returns the sum of variables inside the
 group as an :class:`Expression` object. Its multiplication with a scalar
 ``profit_per_product`` gives the final expression.
 
@@ -139,7 +151,7 @@ Setting an objective function
 
 Objective functions can be written in terms of linear expressions. 
 In this problem, the objective is to maximize the profit, so 
-:func:`Model.set_objective` function is used as follows:
+:func:`Model.set_objective` method is used as follows:
 
 .. ipython:: python
    
@@ -158,7 +170,7 @@ In **sasoptpy**, constraints are simply expressions with a direction.
 It is possible to define an expression and add it to a model by defining which
 direction the linear relation should have.
 
-There are two functions to add constraints. The first one
+There are two methods to add constraints. The first one
 is  :func:`Model.add_constraint` where a single constraint can be inserted into a
 model.
 
@@ -184,7 +196,7 @@ Solving a problem
 -----------------
 
 Defined problems can be simply sent to CAS Servers by calling the 
-:func:`Model.solve` function.
+:func:`Model.solve` method.
 
 See the solution output to the problem.
 
@@ -192,20 +204,25 @@ See the solution output to the problem.
    
    m.solve()
 
-As you can see, at the end of the solve operation, the CAS Server returns and
-prints both Problem Summary and Solution Summary tables. These tables can be
+At the end of the solve operation, the CAS Server returns 
+both Problem Summary and Solution Summary tables. These tables can be
 later accessed using ``m.get_problem_summary()`` and
 ``m.get_solution_summary``.
 
-The :func:`Model.solve` function returns either the primal solution to the
-problem or ``None`` to catch any unexpected result.
+.. ipython:: python
+
+   print(m.get_solution_summary())
+
+
+The :func:`Model.solve` method returns the primal solution when available,
+and ``None`` otherwise.
 
 Printing solutions
 ------------------
 
 Solutions provided by the solver can be obtained using
-:func:`sasoptpy.get_solution_table` function. It is strongly suggested to group
-only variables and expressions that share the same keys.
+:func:`sasoptpy.get_solution_table` method. It is strongly suggested to group
+variables and expressions that share the same keys in a call.
 
 .. ipython:: python
 
@@ -222,6 +239,3 @@ functionality.
 
 If you have a good understanding of the flow, then check :ref:`sasoptpy-api` to
 access API details.
-
-
-

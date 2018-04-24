@@ -18,18 +18,11 @@ It depends on the following packages:
 * swat
 * pandas
 
-.. note::
-
-   You need to download
-   `swat package <https://sassoftware.github.io/python-swat/>`_
-   from the online repository before using **sasoptpy**. 
-
-
 Getting swat
 ------------
 
 `swat <https://github.com/sassoftware/python-swat>`_ should be available
-to use solver actions.
+to use SAS Viya solvers.
 
 swat releases are listed at
 `<https://github.com/sassoftware/python-swat/releases>`_.
@@ -42,9 +35,9 @@ Getting saspy
 -------------
 
 `saspy <https://github.com/sassoftware/saspy>`_ should be available to use
-solver methods for local SAS 9.4 clients.
-**sasoptpy** support for local solve methods are currently experimental.
-saspy is not a requirement for the SAS Viya functionality.
+SAS 9.4 solvers.
+The **sasoptpy** support for SAS 9.4 solvers is experimental.
+Note that saspy is not a requirement for using the SAS Viya solvers.
 
 saspy releases are listed at
 `<https://github.com/sassoftware/saspy/releases>`_.
@@ -56,7 +49,7 @@ The easiest way to download the latest stable version of saspy is to use::
 Getting sasoptpy
 ----------------
 
-Latest release of **sasoptpy** can be obtained from the online repository.
+The latest release of **sasoptpy** can be obtained from the online repository.
 Call::
 
   git clone https://github.com/sassoftware/sasoptpy.git

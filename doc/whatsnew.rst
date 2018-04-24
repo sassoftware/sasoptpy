@@ -15,7 +15,7 @@ v0.1.2 (TBD)
 New Features
 ++++++++++++
 
-- As an experimental feature, **sasoptpy** now supports *saspy* connections
+- As an experimental feature, **sasoptpy** supports *saspy* connections now
 - :func:`Model.solve_local` method is added for solving optimization
   problems using SAS 9.4 installations
 - :func:`Model.drop_variable`, :func:`Model.drop_variables`,
@@ -24,8 +24,8 @@ New Features
 - :func:`Model.get_constraint` and :func:`Model.get_constraints` methods are
   added to grab :class:`Constraint` objects in a model
 - :func:`Model.get_variables` method is added
-- :code:`_dual` attribute is added to :class:`Expression` objects
-- :func:`Variable.get_dual` and `Constraint.get_dual` methods are added
+- :code:`_dual` attribute is added to the :class:`Expression` objects
+- :func:`Variable.get_dual` and :func:`Constraint.get_dual` methods are added
 - :func:`Expression.set_name` method is added
 
 Changes
@@ -33,10 +33,12 @@ Changes
 
 - Session argument accepts :class:`saspy.SASsession` objects
 - :func:`VariableGroup.mult` method now supports :class:`pandas.DataFrame`
-- Type check for :func:`Model.set_session` is removed to support new session
+- Type check for the :func:`Model.set_session` is removed to support new session
   types
 - Problem and solution summaries are not being printed by default anymore,
   see :func:`Model.get_problem_summary` and :func:`Model.get_solution_summary`
+- The default behavior of dropping the table after each solve is changed, but
+  can be controlled with the :code:`drop` argument of the :func:`Model.solve` method
 
 Bug Fixes
 +++++++++

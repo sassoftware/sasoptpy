@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo 'Building documentation... use "no-ex" argument to disabe experiments'
+echo 'Building documentation... use "no-ex" argument to disable experiments'
 
 if [ $# -gt 0 ]; then
 if [ $1 == 'no-ex' ]; then echo 'disabled experiments...'; export ignore='ex'; fi

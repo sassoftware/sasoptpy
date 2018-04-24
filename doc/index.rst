@@ -23,12 +23,14 @@ like dictionaries, tuples, and list to define an
 optimization problem. **sasoptpy** uses `Pandas <http://pandas.pydata.org/>`_
 structures extensively.
 
-Underlying methods for communication to SAS Viya
-are provided by the 
-`swat package <https://sassoftware.github.io/python-swat/>`_.
+Under the hood, **sasopty** uses
+`swat package <https://sassoftware.github.io/python-swat/>`_ to
+communicate SAS Viya, and uses
+`saspy package <https://sassoftware.github.io/saspy/>`_ to
+communicate SAS 9.4 installations.
 
-**sasoptpy** is merely an interface to SAS Optimization
-solvers. Check
+**sasoptpy** is an interface to SAS Optimization solvers.
+Check
 `SAS/OR <http://go.documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.3&docsetId=casmopt&docsetTarget=titlepage.htm&locale=en>`_
 and 
 `PROC OPTMODEL <http://go.documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.3&docsetId=casmopt&docsetTarget=casmopt_optmodel_toc.htm&locale=en>`_ 

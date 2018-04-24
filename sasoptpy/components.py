@@ -183,9 +183,10 @@ class Expression:
         >>> e.set_name('objective')
 
         '''
+        nd = sasoptpy.utils.get_namedict()
         if self._name is not None:
-            if self._name in sasoptpy.utils.__namedict:
-                del sasoptpy.utils.__namedict[self._name]
+            if self._name in nd:
+                del nd[self._name]
         safe_name = sasoptpy.utils.check_name(name, 'expr')
         if name != safe_name:
             print('NOTE: Name {} is changed to {} to prevent a conflict'
