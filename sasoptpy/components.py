@@ -150,6 +150,18 @@ class Expression:
                 v += self._linCoef[mylc]['val']
         return v
 
+    def get_dual(self):
+        '''
+        Returns the dual value
+
+        Returns
+        -------
+        float
+            Dual value of the variable
+
+        '''
+        return self._dual
+
     def set_name(self, name):
         '''
         Sets the name of the expression
