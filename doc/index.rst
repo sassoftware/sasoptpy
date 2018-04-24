@@ -40,7 +40,7 @@ See our SAS Global Forum paper: `Optimization Modeling with Python and SAS Viya 
 .. toctree::
    :glob:
    :name: mastertoc
-   :maxdepth: 2
+   :maxdepth: 3
 
    whatsnew
    install

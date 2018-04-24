@@ -1,4 +1,6 @@
 
+.. _examples/decentralization:
+
 Decentralization
 ================
 

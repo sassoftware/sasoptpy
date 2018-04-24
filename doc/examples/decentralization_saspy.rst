@@ -1,4 +1,6 @@
 
+.. _examples/decentralization-saspy:
+
 Decentralization (saspy)
 ========================
 

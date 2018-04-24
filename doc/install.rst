@@ -48,7 +48,7 @@ saspy is not a requirement for the SAS Viya functionality.
 
 saspy releases are listed at
 `<https://github.com/sassoftware/saspy/releases>`_.
-Easiest way to download the latest stable version of saspy is to use::
+The easiest way to download the latest stable version of saspy is to use::
 
         pip install saspy
 
