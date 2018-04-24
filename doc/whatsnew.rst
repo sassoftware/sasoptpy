@@ -12,6 +12,50 @@ This page outlines changes from each release.
 v0.1.2 (TBD)
 ============
 
+New Features
+++++++++++++
+
+- As an experimental feature, **sasoptpy** now supports *saspy* connections
+- :func:`Model.solve_local` method is added for solving optimization
+  problems using SAS 9.4 installations
+- :func:`Model.drop_variable`, :func:`Model.drop_variables`,
+  :func:`Model.drop_constraint`, :func:`Model.drop_constraints` methods are
+  added
+- :func:`Model.get_constraint` and :func:`Model.get_constraints` methods are
+  added to grab :class:`Constraint` objects in a model
+- :func:`Model.get_variables` method is added
+- :code:`_dual` attribute is added to :class:`Expression` objects
+- :func:`Variable.get_dual` and `Constraint.get_dual` methods are added
+- :func:`Expression.set_name` method is added
+
+Changes
++++++++
+
+- Session argument accepts :class:`saspy.SASsession` objects
+- :func:`VariableGroup.mult` method now supports :class:`pandas.DataFrame`
+- Type check for :func:`Model.set_session` is removed to support new session
+  types
+- Problem and solution summaries are not being printed by default anymore,
+  see :func:`Model.get_problem_summary` and :func:`Model.get_solution_summary`
+
+Bug Fixes
++++++++++
+
+- Fixed: Variables do not appear in MPS files if they are not used in the model
+- Fixed: :func:`Model.solve` primalin argument does not pass into options
+
+Notes
++++++
+
+- A .gitignore file is added to the repository.
+- A new example is added: Decentralization.
+- Both :ref:`CAS/Viya <examples/decentralization>` and 
+  :ref:`SAS <examples/decentralization-saspy>` versions of the new example
+  are available.
+- There is a known issue with the nondeterministic behavior when creating MPS
+  tables. This will be fixed with a hotfix after the release.
+- A new option (no-ex) is added to makedocs script for skipping examples when
+  building docs.
 
 
 v0.1.1 (February 26, 2018)
