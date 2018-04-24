@@ -9,8 +9,8 @@ What's New
 
 This page outlines changes from each release.
 
-v0.1.2 (TBD)
-============
+v0.1.2 (April 24, 2018)
+=======================
 
 New Features
 ++++++++++++
