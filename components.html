@@ -58,7 +58,7 @@ define optimization models.</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="n">profit</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="n">sales</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">material</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;profit&#39;</span><span class="p">)</span>
 
 <span class="gp">In [2]: </span><span class="k">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">profit</span><span class="p">))</span>
-<span class="go">sasoptpy.Expression(exp =  -  3.0 * material  +  5.0 * sales , name=&#39;profit&#39;)</span>
+<span class="go">sasoptpy.Expression(exp =  5.0 * sales  -  3.0 * material , name=&#39;profit&#39;)</span>
 </pre></div>
 </div>
 </div>
@@ -89,7 +89,7 @@ The first and simpler way creates a new expression at the end:</p>
 </pre></div>
 </div>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [5]: </span><span class="k">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">profit_after_tax</span><span class="p">))</span>
-<span class="go">sasoptpy.Expression(exp =  -  0.5  -  3.0 * material  +  5.0 * sales , name=None)</span>
+<span class="go">sasoptpy.Expression(exp =  5.0 * sales  -  0.5  -  3.0 * material , name=None)</span>
 </pre></div>
 </div>
 <p>The second way, <a class="reference internal" href="generated/sasoptpy.Expression.add.html#sasoptpy.Expression.add" title="sasoptpy.Expression.add"><code class="xref py py-func docutils literal notranslate"><span class="pre">Expression.add()</span></code></a> method, takes two arguments:
@@ -98,11 +98,11 @@ the element to be added and the sign (1 or -1):</p>
 </pre></div>
 </div>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [7]: </span><span class="k">print</span><span class="p">(</span><span class="n">profit_after_tax</span><span class="p">)</span>
-<span class="go"> -  0.5  -  3.0 * material  +  5.0 * sales </span>
+<span class="go"> 5.0 * sales  -  0.5  -  3.0 * material </span>
 </pre></div>
 </div>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [8]: </span><span class="k">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">profit_after_tax</span><span class="p">))</span>
-<span class="go">sasoptpy.Expression(exp =  -  0.5  -  3.0 * material  +  5.0 * sales , name=None)</span>
+<span class="go">sasoptpy.Expression(exp =  5.0 * sales  -  0.5  -  3.0 * material , name=None)</span>
 </pre></div>
 </div>
 <p>If the expression is a temporary one, then the addition is performed in place.</p>
@@ -111,7 +111,7 @@ the element to be added and the sign (1 or -1):</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [9]: </span><span class="n">investment</span> <span class="o">=</span> <span class="n">profit</span><span class="o">.</span><span class="n">mult</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span>
 
 <span class="gp">In [10]: </span><span class="k">print</span><span class="p">(</span><span class="n">investment</span><span class="p">)</span>
-<span class="go"> -  0.6000000000000001 * material  +  sales </span>
+<span class="go"> sales  -  0.6000000000000001 * material </span>
 </pre></div>
 </div>
 <p><strong>Summation</strong></p>
@@ -127,7 +127,7 @@ the element to be added and the sign (1 or -1):</p>
 <span class="gp">In [14]: </span><span class="n">e</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">))</span>
 
 <span class="gp">In [15]: </span><span class="k">print</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">t0</span><span class="p">)</span>
-<span class="go">0.007811307907104492</span>
+<span class="go">0.00756525993347168</span>
 </pre></div>
 </div>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [16]: </span><span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
@@ -135,7 +135,7 @@ the element to be added and the sign (1 or -1):</p>
 <span class="gp">In [17]: </span><span class="n">f</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">))</span>
 
 <span class="gp">In [18]: </span><span class="k">print</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">t0</span><span class="p">)</span>
-<span class="go">0.3335609436035156</span>
+<span class="go">0.3149425983428955</span>
 </pre></div>
 </div>
 </div>
@@ -145,13 +145,13 @@ the element to be added and the sign (1 or -1):</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [19]: </span><span class="n">e</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;e1&#39;</span><span class="p">)</span>
 
 <span class="gp">In [20]: </span><span class="k">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
-<span class="go">sasoptpy.Expression(exp =  x[5]  +  2.0 * x[6] , name=&#39;e1&#39;)</span>
+<span class="go">sasoptpy.Expression(exp =  2.0 * x[6]  +  x[5] , name=&#39;e1&#39;)</span>
 
 <span class="gp">In [21]: </span><span class="n">e</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s1">&#39;e2&#39;</span><span class="p">)</span>
 <span class="go">                                                            Out[21]: &#39;e2&#39;</span>
 
 <span class="gp">In [22]: </span><span class="k">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
-<span class="go">                                                                          sasoptpy.Expression(exp =  x[5]  +  2.0 * x[6] , name=&#39;e2&#39;)</span>
+<span class="go">                                                                          sasoptpy.Expression(exp =  2.0 * x[6]  +  x[5] , name=&#39;e2&#39;)</span>
 </pre></div>
 </div>
 </div>
@@ -161,7 +161,7 @@ the element to be added and the sign (1 or -1):</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [23]: </span><span class="n">copy_profit</span> <span class="o">=</span> <span class="n">profit</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;copy_profit&#39;</span><span class="p">)</span>
 
 <span class="gp">In [24]: </span><span class="k">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">copy_profit</span><span class="p">))</span>
-<span class="go">sasoptpy.Expression(exp =  -  3.0 * material  +  5.0 * sales , name=&#39;copy_profit&#39;)</span>
+<span class="go">sasoptpy.Expression(exp =  5.0 * sales  -  3.0 * material , name=&#39;copy_profit&#39;)</span>
 </pre></div>
 </div>
 </div>
@@ -172,16 +172,16 @@ faster <code class="xref py py-func docutils literal notranslate"><span class="p
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [25]: </span><span class="n">new_profit</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="mi">10</span> <span class="o">*</span> <span class="n">sales</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">material</span><span class="p">,</span> <span class="n">temp</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
 <span class="gp">In [26]: </span><span class="k">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">new_profit</span><span class="p">))</span>
-<span class="go">sasoptpy.Expression(exp =  -  2.0 * material  +  10.0 * sales , name=None)</span>
+<span class="go">sasoptpy.Expression(exp =  10.0 * sales  -  2.0 * material , name=None)</span>
 </pre></div>
 </div>
 <p>The expression can be modified inside a function:</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [27]: </span><span class="n">new_profit</span> <span class="o">+</span> <span class="mi">5</span>
-<span class="gh">Out[27]: </span><span class="go">sasoptpy.Expression(exp =  5  -  2.0 * material  +  10.0 * sales , name=None)</span>
+<span class="gh">Out[27]: </span><span class="go">sasoptpy.Expression(exp =  10.0 * sales  +  5  -  2.0 * material , name=None)</span>
 </pre></div>
 </div>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [28]: </span><span class="k">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">new_profit</span><span class="p">))</span>
-<span class="go">sasoptpy.Expression(exp =  5  -  2.0 * material  +  10.0 * sales , name=None)</span>
+<span class="go">sasoptpy.Expression(exp =  10.0 * sales  +  5  -  2.0 * material , name=None)</span>
 </pre></div>
 </div>
 <p>As you can see, the value of <code class="docutils literal notranslate"><span class="pre">new_profit</span></code> is changed due to an in-place addition.
@@ -195,7 +195,7 @@ using the <a class="reference internal" href="generated/sasoptpy.Expression.set_
 <span class="gp">In [31]: </span><span class="n">tmp</span> <span class="o">=</span> <span class="n">new_profit</span> <span class="o">+</span> <span class="mi">5</span>
 
 <span class="gp">In [32]: </span><span class="k">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">new_profit</span><span class="p">))</span>
-<span class="go">sasoptpy.Expression(exp =  -  2.0 * material  +  10.0 * sales , name=&#39;expr_1&#39;)</span>
+<span class="go">sasoptpy.Expression(exp =  10.0 * sales  -  2.0 * material , name=&#39;expr_1&#39;)</span>
 </pre></div>
 </div>
 </div>
@@ -467,7 +467,7 @@ See <a class="reference internal" href="input-data.html#input-data"><span class=
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2018, SAS Institute.
-      Last updated on Apr 24, 2018 (Timestamp: 0.1.2-20180424164025).
+      Last updated on Apr 30, 2018 (Timestamp: 0.1.2-20180430093702).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
     </div>
   </body>

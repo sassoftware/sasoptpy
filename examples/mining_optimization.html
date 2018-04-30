@@ -136,8 +136,8 @@
 <span class="go">NOTE: Initialized model mining_optimization.</span>
 <span class="go">NOTE: Converting model mining_optimization to DataFrame.</span>
 <span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPE75CX22T in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table TMPE75CX22T has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPA5540EI1 in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMPA5540EI1 has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
 <span class="go">NOTE: The problem mining_optimization has 60 variables (40 binary, 0 integer, 0 free, 0 fixed).</span>
 <span class="go">NOTE: The problem has 66 constraints (61 LE, 5 EQ, 0 GE, 0 range).</span>
@@ -156,41 +156,43 @@
 <span class="go">                0        1      7     95.6438817    157.7308887   39.36%       0</span>
 <span class="go">                0        1      7     95.6438817    153.3061673   37.61%       0</span>
 <span class="go">                0        1      7     95.6438817    149.6494350   36.09%       0</span>
-<span class="go">                0        1      8    146.8620252    146.8620252    0.00%       0</span>
-<span class="go">                0        0      8    146.8620252    146.8620252    0.00%       0</span>
-<span class="go">NOTE: The MILP solver added 4 cuts with 20 cut coefficients at the root.</span>
+<span class="go">                0        1      7     95.6438817    148.9399006   35.78%       0</span>
+<span class="go">                0        1      7     95.6438817    146.9093764   34.90%       0</span>
+<span class="go">                0        1      8    146.8619786    146.8619786    0.00%       0</span>
+<span class="go">                0        0      8    146.8619786    146.8619786    0.00%       0</span>
+<span class="go">NOTE: The MILP solver added 8 cuts with 36 cut coefficients at the root.</span>
 <span class="go">NOTE: Optimal.</span>
-<span class="go">NOTE: Objective = 146.86202522.</span>
-<span class="go">           isOpen  isWorked   extract</span>
-<span class="go">1     2                              </span>
-<span class="go">mine1 1  1.000000  1.000000  2.000000</span>
-<span class="go">mine1 2  1.000000  0.000010  0.000020</span>
-<span class="go">mine1 3  1.000000  1.000000  1.950000</span>
-<span class="go">mine1 4  1.000000  1.000000  0.125000</span>
-<span class="go">mine1 5  1.000000  1.000000  2.000000</span>
-<span class="go">mine2 1  1.000000  0.000000  0.000000</span>
-<span class="go">mine2 2  1.000000  0.999990  2.499976</span>
-<span class="go">mine2 3  1.000000  0.000000  0.000000</span>
-<span class="go">mine2 4  1.000000  1.000000  2.500000</span>
-<span class="go">mine2 5  0.999998  0.999998  2.166667</span>
-<span class="go">mine3 1  1.000000  1.000000  1.300000</span>
-<span class="go">mine3 2  1.000000  1.000000  1.299997</span>
-<span class="go">mine3 3  1.000000  1.000000  1.300000</span>
-<span class="go">mine3 4  1.000000  0.000000  0.000000</span>
-<span class="go">mine3 5  1.000000  1.000000  1.300000</span>
-<span class="go">mine4 1  1.000000  1.000000  2.450000</span>
-<span class="go">mine4 2  1.000000  1.000000  2.200013</span>
-<span class="go">mine4 3  1.000000  0.000000  0.000000</span>
-<span class="go">mine4 4  1.000000  1.000000  3.000000</span>
-<span class="go">mine4 5  0.000000  0.000000  0.000000</span>
+<span class="go">NOTE: Objective = 146.86197857.</span>
+<span class="go">           isOpen      isWorked       extract</span>
+<span class="go">1     2                                      </span>
+<span class="go">mine1 1  1.000000  1.000000e+00  2.000000e+00</span>
+<span class="go">mine1 2  1.000000 -1.021405e-14 -2.042810e-14</span>
+<span class="go">mine1 3  1.000000  1.000000e+00  1.950000e+00</span>
+<span class="go">mine1 4  1.000000  1.000000e+00  1.250000e-01</span>
+<span class="go">mine1 5  1.000000  1.000000e+00  2.000000e+00</span>
+<span class="go">mine2 1  1.000000  0.000000e+00  0.000000e+00</span>
+<span class="go">mine2 2  1.000000  1.000000e+00  2.500000e+00</span>
+<span class="go">mine2 3  1.000000  0.000000e+00  0.000000e+00</span>
+<span class="go">mine2 4  1.000000  1.000000e+00  2.500000e+00</span>
+<span class="go">mine2 5  0.999998  9.999985e-01  2.166667e+00</span>
+<span class="go">mine3 1  1.000000  1.000000e+00  1.300000e+00</span>
+<span class="go">mine3 2  1.000000  1.000000e+00  1.300000e+00</span>
+<span class="go">mine3 3  1.000000  1.000000e+00  1.300000e+00</span>
+<span class="go">mine3 4  1.000000  0.000000e+00  0.000000e+00</span>
+<span class="go">mine3 5  1.000000  1.000000e+00  1.300000e+00</span>
+<span class="go">mine4 1  1.000000  1.000000e+00  2.450000e+00</span>
+<span class="go">mine4 2  1.000000  1.000000e+00  2.200000e+00</span>
+<span class="go">mine4 3  1.000000  0.000000e+00  0.000000e+00</span>
+<span class="go">mine4 4  1.000000  1.000000e+00  3.000000e+00</span>
+<span class="go">mine4 5  0.000000  0.000000e+00  0.000000e+00</span>
 <span class="go">   extracted_per_year  quality_sol  quality_required</span>
 <span class="go">1                                                   </span>
 <span class="go">1            5.750000          0.9               0.9</span>
-<span class="go">2            6.000005          0.8               0.8</span>
+<span class="go">2            6.000000          0.8               0.8</span>
 <span class="go">3            3.250000          1.2               1.2</span>
 <span class="go">4            5.625000          0.6               0.6</span>
 <span class="go">5            5.466667          1.0               1.0</span>
-<span class="gh">Out[2]: </span><span class="go">146.86202522326406</span>
+<span class="gh">Out[2]: </span><span class="go">146.86197856738156</span>
 </pre></div>
 </div>
 </div>
@@ -273,7 +275,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2018, SAS Institute.
-      Last updated on Apr 24, 2018 (Timestamp: 0.1.2-20180424164025).
+      Last updated on Apr 30, 2018 (Timestamp: 0.1.2-20180430093702).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
     </div>
   </body>
