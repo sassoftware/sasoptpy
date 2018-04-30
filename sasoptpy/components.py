@@ -362,13 +362,14 @@ class Expression:
                     for mylc in self._linCoef:
                         self._linCoef[mylc]['val'] *= other
                 r = self
+                return r
             else:
                 r = Expression()
                 if other != 0:
                     for mylc in self._linCoef:
                         r._linCoef[mylc] = dict(self._linCoef[mylc])
                         r._linCoef[mylc]['val'] *= other
-        return r
+                return r
 
     def _relational(self, other, direction_):
         '''
