@@ -14,7 +14,7 @@ Output
 
 .. code-block:: python
 
-   >>> from examples.food_manufacture_1 import test
+   >>> from examples.decentralization import test
    >>> sas_session = saspy.SASsession(cfgname='winlocal')
    >>> test(sas_session)
 
