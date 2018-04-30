@@ -969,12 +969,12 @@ class VariableGroup:
             else:
                 newfixed = vkeys + (i,)
             if len(argv) == 1:
-                varname = '{}'.format(name)
+                #varname = '{}'.format(name)
                 # Proposed change:
-                # varname = '{}['.format(name) + ','.join(format(k)
-                #                                    for k in newfixed) + ']'
+                varname = '{}['.format(name) + ','.join(format(k)
+                                                   for k in newfixed) + ']'
                 for j, k in enumerate(newfixed):
-                    varname += '_{}'.format(k)
+                    #varname += '_{}'.format(k)
                     try:
                         self._groups[j].add(k)
                     except KeyError:
@@ -1333,10 +1333,10 @@ class ConstraintGroup:
                 for ky in vnames:
                     if ky != '.0':
                         newkeys = newkeys + (vdict[ky],)
-            conname = '{}_{}'.format(name, conctr)
+            #conname = '{}_{}'.format(name, conctr)
             # Proposed change:
-            # conname = '{}[{}]'.format(name, ','.join(format(k)
-            #                                          for k in newkeys))
+            conname = '{}[{}]'.format(name, ','.join(format(k)
+                                                     for k in newkeys))
             conname = sasoptpy.utils.check_name(conname, 'con')
             newcon = sasoptpy.Constraint(exp=c, name=conname, crange=c._range)
             condict[newkeys] = newcon
