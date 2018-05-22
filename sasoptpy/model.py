@@ -265,9 +265,6 @@ class Model:
                 c._name = name
                 sasoptpy.utils.register_name(name, c)
             self._constraintDict[c._name] = c
-            for v in c._linCoef:
-                if v != 'CONST':
-                    c._linCoef[v]['ref']._tag_constraint(c)
         else:
             raise Exception('Expression is not a constraint!')
         # Return reference to the Constraint object
@@ -1045,6 +1042,11 @@ class Model:
             self._datarows = []
         else:
             self._datarows = []
+        # Create a dictionary of variables with constraint names
+        var_con = {}
+        for c in self._constraints:
+            for v in c._linCoef:
+                var_con.setdefault(v, []).append(c._name)
         # Check if objective has a constant field
         if self._objective._linCoef['CONST']['val'] != 0:
             obj_constant = self.add_variable(name=sasoptpy.utils.check_name(
@@ -1085,10 +1087,11 @@ class Model:
                 cv = self._objective._linCoef[v._name]
                 current_row = ['', v._name, self._objective._name, cv['val']]
                 f5 = 1
-            elif not v._cons:
+            elif v._name not in var_con:
                 current_row = ['', v._name, self._objective._name, 0.0]
                 f5 = 1
-            for cn in v._cons:
+                var_con[v._name] = []
+            for cn in var_con.get(v._name, []):
                 if cn in self._constraintDict:
                     c = self._constraintDict[cn]
                     if v._name in c._linCoef:

@@ -521,7 +521,6 @@ class Variable(Expression):
             self._ub = min(self._ub, 1)
         self._linCoef[name] = {'ref': self, 'val': 1.0}
         sasoptpy.utils.register_name(name, self)
-        self._cons = set()
         self._key = None
         self._parent = None
         self._temp = False
@@ -598,13 +597,6 @@ class Variable(Expression):
             return ('{}[{}]'.format(self._parent._name, key))
         return('{}'.format(self._name))
 
-    def _tag_constraint(self, c):
-        '''
-        Adds a constraint into list of constraints that the variable appears
-        '''
-        if c is not None:
-            self._cons.add(c._name)
-
     def __setattr__(self, attr, value):
         if attr == '_temp' and value is True:
             print('WARNING: Variables cannot be temporary.')
@@ -675,14 +667,9 @@ class Constraint(Expression):
             self._name = None
         if exp._name is None:
             self._linCoef = exp._linCoef
-            for m in self._linCoef:
-                if name is not None and m != 'CONST':
-                        self._linCoef[m]['ref']._tag_constraint(self)
         else:
             for m in exp._linCoef:
                 self._linCoef[m] = dict(exp._linCoef[m])
-                if name is not None and m != 'CONST':
-                    self._linCoef[m]['ref']._tag_constraint(self)
         if direction is None:
             self._direction = exp._direction
         else:
