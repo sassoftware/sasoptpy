@@ -523,8 +523,8 @@ class Model:
             if isinstance(c, sasoptpy.components.Variable):
                 self.add_variable(var=c)
             elif isinstance(c, sasoptpy.components.VariableGroup):
-                for v in c._vardict:
-                    self.add_variable(var=c._vardict[v])
+                for v in c:
+                    self.add_variable(var=v)
             elif isinstance(c, sasoptpy.components.Constraint):
                 self.add_constraint(c)
             elif isinstance(c, sasoptpy.components.ConstraintGroup):
@@ -1165,6 +1165,7 @@ class Model:
         mpsdata = pd.DataFrame(data=self._datarows,
                                columns=['Field1', 'Field2', 'Field3', 'Field4',
                                         'Field5', 'Field6', '_id_'])
+        self._datarows = []
         return mpsdata
 
     def __str__(self):

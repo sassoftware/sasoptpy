@@ -148,7 +148,7 @@ class Expression:
                     self._linCoef[mylc]['ref']._value
             else:
                 v += self._linCoef[mylc]['val']
-        return v
+        return round(v, 6)
 
     def get_dual(self):
         '''
@@ -918,10 +918,11 @@ class VariableGroup:
     def __init__(self, *argv, name, vartype=sasoptpy.utils.CONT, lb=0,
                  ub=inf, init=None):
         self._vardict = {}
+        self._varlist = []
         self._groups = {}
         self._recursive_add_vars(*argv, name=name,
                                  vartype=vartype, lb=lb, ub=ub, init=init,
-                                 vardict=self._vardict)
+                                 vardict=self._vardict, varlist=self._varlist)
         if name is not None:
             name = sasoptpy.utils.check_name(name, 'var')
             self._name = name
@@ -949,7 +950,7 @@ class VariableGroup:
         return self._name
 
     def _recursive_add_vars(self, *argv, name, vartype, lb, ub, init,
-                            vardict={}, vkeys=()):
+                            vardict={}, varlist=[], vkeys=()):
         the_list = sasoptpy.utils.extract_argument_as_list(argv[0])
         for _, i in enumerate(the_list):
             if isinstance(i, tuple):
@@ -972,11 +973,13 @@ class VariableGroup:
                     name=varname, lb=varlb, ub=varub, init=varin,
                     vartype=vartype)
                 vardict[newfixed] = new_var
+                varlist.append(newfixed)
             else:
                 self._recursive_add_vars(*argv[1:], vardict=vardict,
                                          vkeys=newfixed,
                                          name=name, vartype=vartype,
-                                         lb=lb, ub=ub, init=init)
+                                         lb=lb, ub=ub, init=init,
+                                         varlist=varlist)
 
     def _set_var_info(self):
         for i in self._vardict:
@@ -1021,11 +1024,7 @@ class VariableGroup:
             return list_of_variables
 
     def __iter__(self):
-        try:
-            ls = [self._vardict[key] for key in sorted(self._vardict.keys())]
-        except TypeError:
-            ls = [self._vardict[key] for key in self._vardict.keys()]
-        return iter(ls)
+        return iter([self._vardict[i] for i in self._varlist])
 
     def sum(self, *argv):
         '''
@@ -1275,8 +1274,10 @@ class ConstraintGroup:
 
     def __init__(self, argv, name):
         self._condict = {}
+        self._conlist = []
         if type(argv) == list or type(argv) == GeneratorType:
-            self._recursive_add_cons(argv, name=name, condict=self._condict)
+            self._recursive_add_cons(argv, name=name, condict=self._condict,
+                                     conlist=self._conlist)
         if name is not None:
             name = sasoptpy.utils.check_name(name, 'con')
             self._name = name
@@ -1303,7 +1304,7 @@ class ConstraintGroup:
             '''
             return self._name
 
-    def _recursive_add_cons(self, argv, name, condict, ckeys=()):
+    def _recursive_add_cons(self, argv, name, condict, conlist, ckeys=()):
         conctr = 0
         for idx, c in enumerate(argv):
             if type(argv) == list:
@@ -1323,6 +1324,7 @@ class ConstraintGroup:
             conname = sasoptpy.utils.check_name(conname, 'con')
             newcon = sasoptpy.Constraint(exp=c, name=conname, crange=c._range)
             condict[newkeys] = newcon
+            conlist.append(newkeys)
             conctr += 1
         self._set_con_info()
 
@@ -1386,7 +1388,7 @@ class ConstraintGroup:
         return self._condict.__getitem__(key)
 
     def __iter__(self):
-        return iter(self._condict.values())
+        return iter([self._condict[i] for i in self._conlist])
 
     def _set_con_info(self):
         for i in self._condict:
