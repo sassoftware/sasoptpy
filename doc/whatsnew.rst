@@ -9,6 +9,29 @@ What's New
 
 This page outlines changes from each release.
 
+v0.2.0 (TBD)
+=======================
+
+New Features
+++++++++++++
+
+
+Changes
++++++++
+- Variable and constraint naming schemes are replaced with OPTMODEL equivalent
+  versions.
+- Variables and constraints now preserve the order they are inserted to the
+  problem.
+- :func:`Model.to_frame` method is updated to reflect changes to VG and CG
+  orderings.
+
+Bug Fixes
++++++++++
+- Nondeterministic behavior when generating MPS files is fixed.
+
+Notes
++++++
+
 v0.1.2 (April 24, 2018)
 =======================
 

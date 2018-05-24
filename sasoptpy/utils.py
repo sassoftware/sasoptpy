@@ -584,7 +584,7 @@ def _sort_tuple(i):
     return(key)
 
 
-def get_solution_table(*argv, sort=True, rhs=False):
+def get_solution_table(*argv, sort=False, rhs=False):
     '''
     Returns the requested variable names as a DataFrame table
 
