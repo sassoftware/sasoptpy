@@ -411,6 +411,8 @@ class Model:
                     del self._constraints[i]
         except KeyError:
             pass
+        except AttributeError:
+            pass
 
     def drop_variables(self, variables):
         '''
