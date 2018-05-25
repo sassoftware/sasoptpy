@@ -111,7 +111,9 @@ def test(cas_conn):
 
     m.solve()
     print(m.get_problem_summary())
-    totalBenefit._name = 'totalBenefit'
-    totalCost._name = 'totalCost'
+    totalBenefit.set_name('totalBenefit')
+    totalCost.set_name('totalCost')
     print(so.get_solution_table(totalBenefit, totalCost))
-    print(so.get_solution_table(assign))
+    print(so.get_solution_table(assign).unstack(level=-1))
+
+    return m.get_objective_value()

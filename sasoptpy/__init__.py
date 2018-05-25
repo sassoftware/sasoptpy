@@ -31,4 +31,4 @@ from sasoptpy.data import *
 from sasoptpy.math import *
 #  from sasoptpy.gui import start_gui
 
-__version__ = '0.1.1.dev0'
+__version__ = '0.2.0.dev0'
