@@ -327,7 +327,7 @@ class Expression:
                     op = ' {} '.format(vx['op'])
                     refs_str = sasoptpy.utils.recursive_walk(
                         vx['ref'],  func='__str__',
-                        attr='_operator', alt='_to_optmodel')
+                        attr='_operator', alt='_defn')
                     refs = op.join(refs_str)
                     #refs = ' {} '.format(vx['op']).join([
                     #    '(' + str(i) + ')' if i._operator is None
@@ -336,7 +336,7 @@ class Expression:
                 else:
                     refs = ' * '.join([
                         str(i) if i._operator is None
-                        else i._to_optmodel()
+                        else i._defn()
                         for i in list(vx['ref'])])
                 if vx['val'] == 1 or vx['val'] == -1:
                     s += ' {} '.format(refs)
@@ -500,14 +500,14 @@ class Expression:
                         r._linCoef[mylc]['val'] *= other
                 return r
 
-    def _to_optmodel(self):
+    def _defn(self):
         if self._operator is None:
             s = str(self)
         else:
             s = '{}'.format(self._operator)
             if self._iterkey != []:
                 s += '{'
-                s += ', '.join([i._to_optmodel() for i in list(self._iterkey)])
+                s += ', '.join([i._defn() for i in list(self._iterkey)])
                 s += '}'
             s += '('
             s += str(self)
@@ -805,6 +805,9 @@ class Variable(Expression):
             key = ', '.join([str(i) for i in self._iterkey])
             return('{}[{}]'.format(self._name, key))
         return('{}'.format(self._name))
+
+    def _expr(self):
+        return str(self)
 
     #==========================================================================
     # def _to_optmodel(self):
@@ -1211,7 +1214,7 @@ class VariableGroup:
         #for arg in argv:
         #    self._keyset.append(arg)
         for arg in argv:
-            self._keyset.append(sasoptpy.utils.extract_argument_as_list(arg))
+            self._keyset.append(*sasoptpy.utils.extract_argument_as_list(arg))
         self._abstract = abstract
         self._shadows = {}
         self._set_var_info()
@@ -1337,9 +1340,7 @@ class VariableGroup:
         return iter([self._vardict[i] for i in self._varlist])
 
     #def _to_optmodel(self, tabs=None):
-    def _defn(self, tabs=None):
-        if tabs is None:
-            tabs = ''
+    def _defn(self, tabs=''):
         s = tabs + 'var {}'.format(self._name)
         s += ' {'
         for i in self._keyset:
@@ -1386,13 +1387,13 @@ class VariableGroup:
 
                 if lbparam:
                     if isinstance(v._lb, Expression):
-                        s += str(v) + '.lb=' + v._lb._to_optmodel()
+                        s += str(v) + '.lb=' + v._lb._defn()
                     else:
                         s += str(v) + '.lb=' + str(v._lb)
                     s += ' '
                 if ubparam:
                     if isinstance(v._ub, Expression):
-                        s += str(v) + '.ub=' + v._ub._to_optmodel()
+                        s += str(v) + '.ub=' + v._ub._defn()
                     else:
                         s += str(v) + '.ub=' + str(v._ub)
                     s += ' '
@@ -1794,14 +1795,12 @@ class ConstraintGroup:
     def _get_keys(self):
         return list(self._condict)[0]
 
-    #def _to_optmodel(self):
-    def _defn(self):
+    def _defn(self, tabs=''):
         s = ''
         for key_ in self._conlist:
-            #ab_key = list(self._condict)[0]
-            s += 'con {}'.format(self._name)
+            s += tabs + 'con {}'.format(self._name)
             s += sasoptpy.utils._to_optmodel_loop(key_)
-            s += ' : ' + self._condict[key_]._to_optmodel()
+            s += ' : ' + self._condict[key_]._defn()
             s += ';\n'
         return s
 

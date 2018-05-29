@@ -62,7 +62,7 @@ class Parameter:
         self._colname = colname
         self._index = index
 
-    def _to_optmodel(self, tabs=None):
+    def _defn(self, tabs=None):
         if tabs is None:
             tabs = ''
         if self._keys == ():
@@ -86,7 +86,7 @@ class Parameter:
                 for i in key:
                     if isinstance(i, SetIterator):
                         has_iterators = True
-                        iter_list.append(i._to_optmodel())
+                        iter_list.append(i._defn())
                 if has_iterators:
                     forcond = 'for {'
                     forcond += ', '.join(iter_list)
@@ -203,7 +203,7 @@ class Set(sasoptpy.components.Expression):
             self._iterators.append(s)
             return iter([s])
 
-    def _to_optmodel(self):
+    def _defn(self):
         s = 'set '
         if isinstance(self._type, list):
             s += '<' + ','.join(self._type) + '> '
@@ -296,7 +296,7 @@ class SetIterator(sasoptpy.components.Expression):
     def __or__(self, key):
         self.__add_condition('OR', key)
 
-    def _to_optmodel(self, cond=0):
+    def _defn(self, cond=0):
         s = '{} in {}'.format(self._name, self._set._name)
         if cond and len(self._conditions) > 0:
             s += ':'
@@ -370,7 +370,7 @@ class ExpressionDict:
             self._shadows[key] = pv
             return pv
 
-    def _to_optmodel(self):
+    def _defn(self):
         s = 'impvar {} '.format(self._name)
         # There should be a single element in the dictionary
         if len(self._dict) > 1:
@@ -379,13 +379,13 @@ class ExpressionDict:
         else:
             s += '{'
             key = self._get_only_key()
-            s += ', '.join([i._to_optmodel() for i in list(key)])
+            s += ', '.join([i._defn() for i in list(key)])
             s += '} = '
             item = self._dict[key]
             if isinstance(item, ParameterValue):
-                s += self._dict[key]._ref._to_optmodel()
+                s += self._dict[key]._ref._defn()
             else:
-                s += self._dict[key]._to_optmodel()
+                s += self._dict[key]._defn()
             s += ';'
         return s
 
@@ -401,10 +401,10 @@ class ExpressionDict:
             key = self._get_only_key()
             s += 'expr=('
             try:
-                s += self._dict[key]._ref._to_optmodel()
+                s += self._dict[key]._ref._defn()
             except AttributeError:
                 s += str(self._dict[key])
-            s += ' ' + ' '.join(['for ' + i._to_optmodel() for i in list(key)])
+            s += ' ' + ' '.join(['for ' + i._defn() for i in list(key)])
             s += ')'
         s += ')'
         return s

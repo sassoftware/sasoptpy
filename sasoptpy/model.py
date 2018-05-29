@@ -342,6 +342,7 @@ class Model:
             else:
                 print('ERROR: Cannot add constraint group of type {}'.format(
                     type(cg)))
+            self._congroups.append(cg)
             return cg
         else:
             if type(argv) == list or type(argv) == GeneratorType:
@@ -627,13 +628,11 @@ class Model:
             if isinstance(c, sasoptpy.components.Variable):
                 self.add_variable(var=c)
             elif isinstance(c, sasoptpy.components.VariableGroup):
-                for v in c:
-                    self.add_variable(var=v)
+                self.add_variables(vg=c)
             elif isinstance(c, sasoptpy.components.Constraint):
                 self.add_constraint(c)
             elif isinstance(c, sasoptpy.components.ConstraintGroup):
-                for cn in c._condict:
-                    self.add_constraint(c._condict[cn])
+                self.add_constraints(argv=None, cg=c)
             elif isinstance(c, Model):
                 for v in c._variables:
                     self.add_variable(v)
@@ -1272,11 +1271,7 @@ class Model:
         self._datarows = []
         return mpsdata
 
-    def _to_optmodel(self, header=True, expand=False):
-
-        if not self._abstract:
-            print('ERROR: Model is not abstract, can\'t produce OPTMODEL code')
-            #return ''
+    def to_optmodel(self, header=True, expand=False):
 
         s = ''
 
@@ -1287,11 +1282,11 @@ class Model:
 
         s += tab + '/* Sets */\n'
         for i in self._sets:
-            s += tab + i._to_optmodel() + '\n'
+            s += tab + i._defn() + '\n'
 
         s += '\n' + tab + '/* Parameters */\n'
         for i in self._parameters:
-            s += i._to_optmodel(tab) + '\n'
+            s += i._defn(tab) + '\n'
 
         s += '\n' + tab + '/* Statements */\n'
         for i in self._statements:
@@ -1299,28 +1294,28 @@ class Model:
 
         s += '\n' + tab + '/* Variables */\n'
         for i in self._vargroups:
-            s += i._to_optmodel(tabs=tab) + '\n'
+            s += i._defn(tabs=tab) + '\n'
 
         for v in self._variables:
             if v._parent is None:
-                s += tab + v._to_optmodel() + '\n'
+                s += tab + v._defn() + '\n'
 
         s += '\n' + tab + '/* Implied variables */\n'
         for v in self._impliedvars:
-            s += tab + v._to_optmodel() + '\n'
+            s += tab + v._defn() + '\n'
 
         s += '\n' + tab + '/* Constraints */\n'
         for c in self._congroups:
-            s += tab + c._to_optmodel() + '\n'
+            s += c._defn(tabs=tab) + '\n'
 
         for c in self._constraints:
             if c._parent is None:
-                s += tab + c._to_optmodel() + '\n'
+                s += tab + c._defn() + '\n'
 
         s += '\n' + tab + '/* Objective */\n'
         if self._objective is not None:
             s += tab + '{} {} = '.format(self._sense, self._objective._name)
-            s += self._objective._to_optmodel() + '; \n'
+            s += self._objective._defn() + '; \n'
 
         s += '\n' + tab + '/* Solver call */\n'
         if expand:
@@ -1470,6 +1465,15 @@ class Model:
                     data=df, casout={'replace': replace})
         else:
             return None
+
+    def solve_remote(self):
+        '''
+        (Experimental) Solves the model using equivalent OPTMODEL repr
+        '''
+        sess = self._session
+        sess.loadactionset(actionset='optimization')
+        optmodel_string = self.to_optmodel(header=False)
+        sess.runOptmodel(optmodel_string)
 
     def solve_local(self, name='MPS'):
         '''
@@ -1690,7 +1694,7 @@ class Model:
         '''
 
         if self._abstract:
-            self.remote_solve()
+            self.solve_remote()
             return None
 
         # Check if session is defined

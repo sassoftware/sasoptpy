@@ -382,7 +382,7 @@ def get_iterators(keys):
     for key in keys:
         if isinstance(key, sasoptpy.data.SetIterator):
             if key._group == 0:
-                iterators.append(key._to_optmodel())
+                iterators.append(key._defn())
             else:
                 g = groups.setdefault(key._group, [])
                 g.append(key)
