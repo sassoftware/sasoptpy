@@ -359,6 +359,12 @@ def get_counter(ctrtype):
 
 def _to_optmodel_loop(keys):
     s = ''
+    subindex = []
+    for key in keys:
+        if not isinstance(key, sasoptpy.data.SetIterator):
+            subindex.append(str(key))
+    if subindex:
+        s += '_' + '_'.join(subindex)
     iters = get_iterators(keys)
     conds = get_conditions(keys)
     if len(iters) > 0:
@@ -369,7 +375,6 @@ def _to_optmodel_loop(keys):
             s += ' and '.join(conds)
         s += '}'
     return s
-
 
 def get_iterators(keys):
     iterators = []

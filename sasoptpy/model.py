@@ -1276,7 +1276,7 @@ class Model:
 
         if not self._abstract:
             print('ERROR: Model is not abstract, can\'t produce OPTMODEL code')
-            return ''
+            #return ''
 
         s = ''
 
@@ -1355,6 +1355,18 @@ class Model:
         s = 'sasoptpy.Model(name=\'{}\', session={})'.format(self._name,
                                                              self._session)
         return s
+
+    def _defn(self):
+        s = 'problem {} include '.format(self._name)
+        s += ' '.join([s._name for s in self._congroups])
+        s += ' '.join([s._name for s in self._constraints])
+        s += ' '.join([s._name for s in self._vargroups])
+        s += ' '.join([s._name for s in self._variables])
+        s += ';'
+        return s
+
+    def _expr(self):
+        return self._to_optmodel()
 
     def upload_user_blocks(self):
         '''

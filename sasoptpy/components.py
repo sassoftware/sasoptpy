@@ -716,19 +716,12 @@ class Variable(Expression):
         if vartype == sasoptpy.utils.BIN:
             self._lb = max(self._lb, 0)
             self._ub = min(self._ub, 1)
-<<<<<<< HEAD
         if shadow:
             self._linCoef[name + str(id(self))] = {'ref': self, 'val': 1.0}
         else:
             self._linCoef[name] = {'ref': self, 'val': 1.0}
             sasoptpy.utils.register_name(name, self)
-        self._cons = set()
         self._key = key
-=======
-        self._linCoef[name] = {'ref': self, 'val': 1.0}
-        sasoptpy.utils.register_name(name, self)
-        self._key = None
->>>>>>> develop
         self._parent = None
         self._temp = False
         self._abstract = abstract
@@ -813,24 +806,45 @@ class Variable(Expression):
             return('{}[{}]'.format(self._name, key))
         return('{}'.format(self._name))
 
-<<<<<<< HEAD
-    def _to_optmodel(self):
-        s = 'var {} '.format(self._name)
+    #==========================================================================
+    # def _to_optmodel(self):
+    #     s = 'var {} '.format(self._name)
+    #     BIN = sasoptpy.utils.BIN
+    #     CONT = sasoptpy.utils.CONT
+    #     if self._type != CONT:
+    #         if self._type == BIN:
+    #             s += 'binary '
+    #         else:
+    #             s += 'integer '
+    #     if self._lb != -inf:
+    #         if not (self._lb == 0 and self._type == BIN):
+    #             s += '>= {} '.format(self._lb)
+    #     if self._ub != inf:
+    #         if not (self._ub == 1 and self._type == BIN):
+    #             s += '<= {} '.format(self._ub)
+    #     if self._init is not None:
+    #         s += 'init {} '.format(self._init)
+    #     s += ';'
+    #     return(s)
+    #==========================================================================
+
+    def _defn(self):
+        s = 'var {}'.format(self._name)
         BIN = sasoptpy.utils.BIN
         CONT = sasoptpy.utils.CONT
         if self._type != CONT:
             if self._type == BIN:
-                s += 'binary '
+                s += ' binary'
             else:
-                s += 'integer '
+                s += ' integer'
         if self._lb != -inf:
             if not (self._lb == 0 and self._type == BIN):
-                s += '>= {} '.format(self._lb)
+                s += ' >= {}'.format(self._lb)
         if self._ub != inf:
             if not (self._ub == 1 and self._type == BIN):
-                s += '<= {} '.format(self._ub)
+                s += ' <= {}'.format(self._ub)
         if self._init is not None:
-            s += 'init {} '.format(self._init)
+            s += ' init {}'.format(self._init)
         s += ';'
         return(s)
 
@@ -840,13 +854,6 @@ class Variable(Expression):
         '''
         if c is not None:
             self._cons.add(c._name)
-=======
-    def __setattr__(self, attr, value):
-        if attr == '_temp' and value is True:
-            print('WARNING: Variables cannot be temporary.')
-        else:
-            super().__setattr__(attr, value)
->>>>>>> develop
 
 
 class Constraint(Expression):
@@ -912,14 +919,6 @@ class Constraint(Expression):
             self._name = None
         if exp._name is None:
             self._linCoef = exp._linCoef
-<<<<<<< HEAD
-            for m in self._linCoef:
-                if name is not None and m != 'CONST':
-                    for lcref in list(self._linCoef[m]['ref']):
-                        lcref._tag_constraint(self)
-                    #self._linCoef[m]['ref']._tag_constraint(self)
-=======
->>>>>>> develop
         else:
             for m in exp._linCoef:
                 self._linCoef[m] = dict(exp._linCoef[m])
@@ -1067,7 +1066,8 @@ class Constraint(Expression):
         self._parent = parent
         self._key = key
 
-    def _to_optmodel(self):
+    #def _to_optmodel(self):
+    def _defn(self):
         s = ''
         if self._parent is None:
             s = 'con {} : '.format(self._name)
@@ -1199,19 +1199,19 @@ class VariableGroup:
         self._keyset = []
         self._recursive_add_vars(*argv, name=name,
                                  vartype=vartype, lb=lb, ub=ub, init=init,
-<<<<<<< HEAD
-                                 vardict=self._vardict, abstract=abstract)
-=======
-                                 vardict=self._vardict, varlist=self._varlist)
->>>>>>> develop
+                                 vardict=self._vardict, varlist=self._varlist,
+                                 abstract=abstract)
+
         if name is not None:
             name = sasoptpy.utils.check_name(name, 'var')
             self._name = name
             sasoptpy.utils.register_name(name, self)
         else:
             self._name = None
+        #for arg in argv:
+        #    self._keyset.append(arg)
         for arg in argv:
-            self._keyset.append(arg)
+            self._keyset.append(sasoptpy.utils.extract_argument_as_list(arg))
         self._abstract = abstract
         self._shadows = {}
         self._set_var_info()
@@ -1235,11 +1235,7 @@ class VariableGroup:
         return self._name
 
     def _recursive_add_vars(self, *argv, name, vartype, lb, ub, init,
-<<<<<<< HEAD
-                            vardict={}, vkeys=(), abstract=False):
-=======
-                            vardict={}, varlist=[], vkeys=()):
->>>>>>> develop
+                            vardict={}, varlist=[], vkeys=(), abstract=False):
         the_list = sasoptpy.utils.extract_argument_as_list(argv[0])
         for _, i in enumerate(the_list):
             if isinstance(i, tuple):
@@ -1340,7 +1336,8 @@ class VariableGroup:
     def __iter__(self):
         return iter([self._vardict[i] for i in self._varlist])
 
-    def _to_optmodel(self, tabs=None):
+    #def _to_optmodel(self, tabs=None):
+    def _defn(self, tabs=None):
         if tabs is None:
             tabs = ''
         s = tabs + 'var {}'.format(self._name)
@@ -1348,9 +1345,14 @@ class VariableGroup:
         for i in self._keyset:
             if isinstance(i, sasoptpy.data.Set):
                 s += '{}, '.format(i._name)
+            elif isinstance(i, list):
+                s += '{{{}}}, '.format(','.join([str(j) if isinstance(j, int) else "'{}'".format(j) for j in i]))
             else:
-                print('ERROR: VariableGroup {} has unproper index {} ({})'.
-                      format(self._name, str(i), type(i)))
+                try:
+                    s += '{}, '.format(i)
+                except:
+                    print('ERROR: VariableGroup {} has unproper index {} ({})'.
+                          format(self._name, str(i), type(i)))
         s = s[:-2]
         s += '} '
         k = list(self._vardict)[0]
@@ -1792,12 +1794,15 @@ class ConstraintGroup:
     def _get_keys(self):
         return list(self._condict)[0]
 
-    def _to_optmodel(self):
-        ab_key = list(self._condict)[0]
-        s = 'con {} '.format(self._name)
-        s += sasoptpy.utils._to_optmodel_loop(ab_key)
-        s += ': ' + self._condict[ab_key]._to_optmodel()
-        s += ';'
+    #def _to_optmodel(self):
+    def _defn(self):
+        s = ''
+        for key_ in self._conlist:
+            #ab_key = list(self._condict)[0]
+            s += 'con {}'.format(self._name)
+            s += sasoptpy.utils._to_optmodel_loop(key_)
+            s += ' : ' + self._condict[key_]._to_optmodel()
+            s += ';\n'
         return s
 
     def __str__(self):
