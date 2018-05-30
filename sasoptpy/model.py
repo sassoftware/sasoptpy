@@ -414,7 +414,7 @@ class Model:
         if isinstance(statement, sasoptpy.components.Expression):
             self._statements.append(str(statement))
 
-    def read_data(self, table, option='', keyset=None, key=[], params=[]):
+    def read_data(self, table, keyset, option='', key=[], params=[]): # TODO allow params to be strings
         '''
         Reads a CASTable into PROC OPTMODEL sets
         '''
@@ -448,6 +448,46 @@ class Model:
             s += p['param']._to_read_data()
         s += ';'
         self._statements.append(s)
+
+    def read_table(self, table, index=['_N_'], columns=[]):
+        '''
+        Reads a CAS Table into the model
+
+        Parameters
+        ----------
+        table : :class:`swat.cas.table.CASTable` object
+            CASTable to read the data from
+        index : list, optional
+            List of index columns
+        columns : list, optional
+            List of columns to read into parameters
+
+        Returns
+        -------
+        tuple
+            A tuple of Set and Parameter objects
+
+        Notes
+        -----
+
+        - If the model is running in saspy or MPS mode, then the data is read
+          to client from the CAS server.
+        - If the model is running in OPTMODEL mode, then this method generates
+          the corresponding optmodel code.
+
+        See also
+        --------
+        :func:`Model.read_data`
+
+        '''
+        keyset = self.add_set(name='_'.join(index) if index != ['_N_'] else table.name + '_N')
+        pars = []
+        for col in columns:
+            pars.append(self.add_parameter(keyset, name=col))
+
+        self.read_data(table, keyset=[keyset], key=index, params=[
+            {'param': i} for i in pars])
+        return (keyset, pars)
 
     def drop_variable(self, variable):
         '''

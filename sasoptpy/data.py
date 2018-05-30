@@ -169,7 +169,7 @@ class ParameterValue(sasoptpy.components.Expression):
             sasoptpy.utils._to_bracket(self._name, self._key) +\
             self._postfix
 
-    def _to_text(self):
+    def _expr(self):
         return str(self)
 
 
@@ -239,7 +239,7 @@ class Set(sasoptpy.components.Expression):
             self._name, self._type)
         return(s)
 
-    def _to_text(self):
+    def _expr(self):
         return self._name
 
 
@@ -320,7 +320,7 @@ class SetIterator(sasoptpy.components.Expression):
             s = ''
         return s
 
-    def _to_text(self):
+    def _expr(self):
         return str(self)
 
     def __str__(self):

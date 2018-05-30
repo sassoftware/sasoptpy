@@ -241,7 +241,7 @@ class Expression:
         self._temp = False
         return self._name
 
-    def _to_text(self):
+    def _expr(self):
         s = ''
         if self._operator:
             s += self._operator
@@ -274,9 +274,9 @@ class Expression:
 
                 if isinstance(ref, list):
                     strlist = sasoptpy.utils.recursive_walk(
-                        ref, func='_to_text')
+                        ref, func='_expr')
                 else:
-                    strlist = [ref._to_text()]
+                    strlist = [ref._expr()]
                 refs = optext.join(strlist)
                 if val == 1 or val == -1:
                     s += '{}'.format(refs)
@@ -303,7 +303,7 @@ class Expression:
 
     def __str__(self):
         if self._abstract:
-            return self._to_text()
+            return self._expr()
         s = ''
         firstel = 1
         #if self._operator is not None:
@@ -502,7 +502,7 @@ class Expression:
 
     def _defn(self):
         if self._operator is None:
-            s = str(self)
+            s = self._expr()
         else:
             s = '{}'.format(self._operator)
             if self._iterkey != []:
@@ -510,7 +510,7 @@ class Expression:
                 s += ', '.join([i._defn() for i in list(self._iterkey)])
                 s += '}'
             s += '('
-            s += str(self)
+            s += self._expr()
             s += ')'
         return s
 
@@ -661,6 +661,7 @@ class Expression:
     def __iter__(self):
         return iter([self])
 
+
 class Variable(Expression):
     '''
     Creates an optimization variable to be used inside models
@@ -794,9 +795,6 @@ class Variable(Expression):
         st += ' vartype=\'{}\')'.format(self._type)
         return st
 
-    def _to_text(self):
-        return str(self)
-
     def __str__(self):
         if self._parent is not None and self._key is not None:
             key = ', '.join([str(i) for i in self._key])
@@ -807,7 +805,13 @@ class Variable(Expression):
         return('{}'.format(self._name))
 
     def _expr(self):
-        return str(self)
+        if self._parent is not None and self._key is not None:
+            key = ', '.join([str(i) if not isinstance(i, str) else "'{}'".format(i) for i in self._key])
+            return ('{}[{}]'.format(self._parent._name, key))
+        if self._shadow and self._iterkey:
+            key = ', '.join([str(i) if not isinstance(i, str) else "'{}'".format(i) for i in self._iterkey])
+            return('{}[{}]'.format(self._name, key))
+        return('{}'.format(self._name))
 
     #==========================================================================
     # def _to_optmodel(self):
@@ -1074,7 +1078,7 @@ class Constraint(Expression):
         s = ''
         if self._parent is None:
             s = 'con {} : '.format(self._name)
-        s += super()._to_text() #super().__str__()
+        s += super()._expr()
         if self._direction == 'E':
             s += ' = '
         elif self._direction == 'L':
@@ -1214,7 +1218,10 @@ class VariableGroup:
         #for arg in argv:
         #    self._keyset.append(arg)
         for arg in argv:
-            self._keyset.append(*sasoptpy.utils.extract_argument_as_list(arg))
+            if isinstance(arg, int):
+                self._keyset.append(sasoptpy.utils.extract_argument_as_list(arg))
+            else:
+                self._keyset.append(arg)
         self._abstract = abstract
         self._shadows = {}
         self._set_var_info()
