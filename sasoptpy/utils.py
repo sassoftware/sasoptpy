@@ -40,7 +40,7 @@ __namedict = {}
 
 # Counters
 __ctr = {'obj': [0], 'var': [0], 'con': [0], 'expr': [0], 'model': [0],
-         'i': [0], 'param': [0], 'impvar': [0]}
+         'i': [0], 'set': [0], 'param': [0], 'impvar': [0]}
 
 
 def check_name(name, ctype=None):
@@ -150,16 +150,29 @@ def quick_sum(argv):
     '''
     clocals = argv.gi_frame.f_locals.copy()
     exp = sasoptpy.components.Expression(temp=True)
+    #==========================================================================
+    # for i in argv:
+    #     exp = exp + i
+    #     if isinstance(i, sasoptpy.components.Expression):
+    #         if i._abstract:
+    #             newlocals = argv.gi_frame.f_locals
+    #             iterators = []
+    #             for nl in newlocals.keys():
+    #                 if nl not in clocals:
+    #                     iterators.append(newlocals[nl])
+    #             exp = _check_iterator(exp, 'sum', iterators)
+    #==========================================================================
+    iterators = []
     for i in argv:
         exp = exp + i
         if isinstance(i, sasoptpy.components.Expression):
             if i._abstract:
                 newlocals = argv.gi_frame.f_locals
-                iterators = []
                 for nl in newlocals.keys():
                     if nl not in clocals:
                         iterators.append(newlocals[nl])
-                exp = _check_iterator(exp, 'sum', iterators)
+    if iterators:
+        exp = _check_iterator(exp, 'sum', iterators)
     exp._temp = False
     return exp
 

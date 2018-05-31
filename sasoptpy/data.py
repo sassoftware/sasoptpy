@@ -33,7 +33,8 @@ class Parameter:
     '''
 
     def __init__(self, name, keys, order=1, init=None):
-        self._name = name
+        self._name = sasoptpy.utils.check_name(name, 'param')
+        sasoptpy.utils.register_name(self._name, self)
         self._keys = keys
         self._keysize = len(keys)
         self._order = order
@@ -180,7 +181,8 @@ class Set(sasoptpy.components.Expression):
 
     def __init__(self, name, init=None, settype='num'):
         super().__init__()
-        self._name = name
+        self._name = sasoptpy.utils.check_name(name, 'set')
+        sasoptpy.utils.register_name(self._name, self)
         self._init = init
         self._type = settype
         self._colname = name

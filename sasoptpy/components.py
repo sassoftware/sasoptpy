@@ -243,7 +243,7 @@ class Expression:
 
     def _expr(self):
         s = ''
-        if self._operator:
+        if self._operator and self._iterkey:
             s += self._operator
             if self._operator == 'sum':
                 s += sasoptpy.utils._to_optmodel_loop(self._iterkey)
@@ -286,10 +286,10 @@ class Expression:
                 s += '{}'.format(abs(val))
             itemcnt += 1
 
-        if self._operator:
+        if self._operator and self._iterkey:
             s += ')'
-        if itemcnt > 1 and self._operator is None:
-            s = '(' + s + ')'
+        #if itemcnt > 1 and self._operator is None:
+        #    s = '(' + s + ')'
         return s
 
     def __repr__(self):
@@ -301,15 +301,25 @@ class Expression:
         s += ')'
         return s
 
+    def _defn(self):
+        if self._operator is None:
+            s = self._expr()
+        else:
+            s = '{}'.format(self._operator)
+            if self._iterkey != []:
+                s += '{'
+                s += ', '.join([i._defn() for i in list(self._iterkey)])
+                s += '}'
+            s += '('
+            s += self._expr()
+            s += ')'
+        return s
+
     def __str__(self):
-        if self._abstract:
-            return self._expr()
         s = ''
         firstel = 1
-        #if self._operator is not None:
-        #    s += str(self._operator) + '('
-        #if len(self._linCoef) > 1:
-        #    s += '('
+        if self._operator and self._iterkey:
+            s += str(self._operator) + '('
         for v, vx in self._linCoef.items():
             if (vx['val'] == 0 or
                (v == 'CONST' and isinstance(self, Constraint))):
@@ -326,17 +336,14 @@ class Expression:
                 if 'op' in vx:
                     op = ' {} '.format(vx['op'])
                     refs_str = sasoptpy.utils.recursive_walk(
-                        vx['ref'],  func='__str__',
+                        vx['ref'],  func='_expr',
                         attr='_operator', alt='_defn')
                     refs = op.join(refs_str)
-                    #refs = ' {} '.format(vx['op']).join([
-                    #    '(' + str(i) + ')' if i._operator is None
-                    #    else i._to_optmodel()
-                    #    for i in list(vx['ref'])])
                 else:
                     refs = ' * '.join([
-                        str(i) if i._operator is None
-                        else i._defn()
+                        i._expr() #str(i) 
+                        #if i._operator is None
+                        #else i._expr()
                         for i in list(vx['ref'])])
                 if vx['val'] == 1 or vx['val'] == -1:
                     s += ' {} '.format(refs)
@@ -346,12 +353,11 @@ class Expression:
                 if vx['val'] is not 0:
                     s += ' {} '.format(abs(vx['val']))
 
-        #if self._operator is not None:
-        #if self._operator is not None or len(self._linCoef) > 1:
-            #s += ' ' + ' '.join(
-            #    ['for {} in {}'.format(i._name, i._set._name)
-            #     for i in self._iterkey])
-        #    s += ')'
+        if self._operator and self._iterkey:
+            s += ' ' + ' '.join(
+                ['for {} in {}'.format(i._name, i._set._name)
+                 for i in self._iterkey])
+            s += ')'
         return s
 
     def _add_coef_value(self, var, key, value):
@@ -499,20 +505,6 @@ class Expression:
                     for mylc in r._linCoef:
                         r._linCoef[mylc]['val'] *= other
                 return r
-
-    def _defn(self):
-        if self._operator is None:
-            s = self._expr()
-        else:
-            s = '{}'.format(self._operator)
-            if self._iterkey != []:
-                s += '{'
-                s += ', '.join([i._defn() for i in list(self._iterkey)])
-                s += '}'
-            s += '('
-            s += self._expr()
-            s += ')'
-        return s
 
     def _tag_constraint(self, *argv):
         pass

@@ -449,14 +449,15 @@ class Model:
         s += ';'
         self._statements.append(s)
 
-    def read_table(self, table, index=['_N_'], columns=[]):
+    def read_table(self, table, index=['_N_'], columns=[], index_type='num'):
         '''
-        Reads a CAS Table into the model
+        Reads a CAS Table or pandas DataFrame into the model
 
         Parameters
         ----------
-        table : :class:`swat.cas.table.CASTable` object
-            CASTable to read the data from
+        table : :class:`swat.cas.table.CASTable` or :class:`pandas.DataFrame`\
+                object
+            CASTable or DataFrame object to read the data from
         index : list, optional
             List of index columns
         columns : list, optional
@@ -480,13 +481,30 @@ class Model:
         :func:`Model.read_data`
 
         '''
-        keyset = self.add_set(name='_'.join(index) if index != ['_N_'] else table.name + '_N')
-        pars = []
-        for col in columns:
-            pars.append(self.add_parameter(keyset, name=col))
+        if type(table).__name__ == 'CASTable':
+            if not index or index == [None]:
+                index = ['_N_']
+            keyset = self.add_set(
+                name='set_' + ('_'.join([str(i) for i in index])
+                               if index != ['_N_'] else table.name + '_N'),
+                settype=index_type
+                )
+            pars = []
+            for col in columns:
+                pars.append(self.add_parameter(keyset, name=col))
 
-        self.read_data(table, keyset=[keyset], key=index, params=[
-            {'param': i} for i in pars])
+            self.read_data(table, keyset=[keyset], key=index, params=[
+                {'param': i} for i in pars])
+        elif type(table).__name__ == 'DataFrame':
+            table = table.set_index(index)
+            keyset = table.index.tolist()
+            pars = []
+            for col in columns:
+                pars.append(table[col])
+        else:
+            print('ERROR: Data type is not recognized in read_table: {} ({})'
+                  .format(table, type(table)))
+            return None
         return (keyset, pars)
 
     def drop_variable(self, variable):
