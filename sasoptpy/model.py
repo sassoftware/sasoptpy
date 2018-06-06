@@ -87,7 +87,7 @@ class Model:
         self._impliedvars = []
         self._statements = []
         # self._events = [] 
-        sasoptpy.utils.register_name(name, self)
+        self._objorder = sasoptpy.utils.register_name(name, self)
         print('NOTE: Initialized model {}.'.format(name))
 
     def __eq__(self, other):
@@ -275,7 +275,7 @@ class Model:
             if name is not None or (name is None and c._name is None):
                 name = sasoptpy.utils.check_name(name, 'con')
                 c._name = name
-                sasoptpy.utils.register_name(name, c)
+                c._objorder = sasoptpy.utils.register_name(name, c)
             self._constraintDict[c._name] = c
         else:
             raise Exception('Expression is not a constraint!')
@@ -375,13 +375,11 @@ class Model:
 
     def add_parameter(self, *argv, name=None, init=None):
         if len(argv) == 0:
-            name = sasoptpy.utils.check_name(name, 'param')
             p = sasoptpy.data.Parameter(name, keys=(), init=init)
             self._parameters.append(p)
             return p['']
         else:
             keylist = list(argv)
-            name = sasoptpy.utils.check_name(name, 'param')
             p = sasoptpy.data.Parameter(name, keys=keylist, init=init)
             self._parameters.append(p)
             return p
@@ -392,27 +390,36 @@ class Model:
         '''
         iv = sasoptpy.data.ExpressionDict(name=name)
         if argv:
-            for arg in argv:
-                keynames = ()
-                keyrefs = ()
-                if argv.gi_code.co_nlocals == 1:
-                    itlist = argv.gi_code.co_cellvars
-                else:
-                    itlist = argv.gi_code.co_varnames
-                localdict = argv.gi_frame.f_locals
-                for i in itlist:
-                    if i != '.0':
-                        keynames += (i,)
-                for i in keynames:
-                    keyrefs += (localdict[i],)
-                iv[keyrefs] = arg
+            if type(argv) == GeneratorType:
+                for arg in argv:
+                    keynames = ()
+                    keyrefs = ()
+                    if argv.gi_code.co_nlocals == 1:
+                        itlist = argv.gi_code.co_cellvars
+                    else:
+                        itlist = argv.gi_code.co_varnames
+                    localdict = argv.gi_frame.f_locals
+                    for i in itlist:
+                        if i != '.0':
+                            keynames += (i,)
+                    for i in keynames:
+                        keyrefs += (localdict[i],)
+                    iv[keyrefs] = arg
+                self._impliedvars.append(iv)
+            elif type(argv) == sasoptpy.components.Expression and\
+                 argv._abstract:
+                iv[''] = argv
+                iv['']._objorder = iv._objorder
+                self._impliedvars.append(iv)
+                return iv['']
+            else:
+                iv = argv
 
-        self._impliedvars.append(iv)
         return iv
 
     def add_statement(self, statement):
         if isinstance(statement, sasoptpy.components.Expression):
-            self._statements.append(str(statement))
+            self._statements.append(sasoptpy.data.Statement(str(statement)))
 
     def read_data(self, table, keyset, option='', key=[], params=[]): # TODO allow params to be strings
         '''
@@ -447,9 +454,10 @@ class Model:
         for p in params:
             s += p['param']._to_read_data()
         s += ';'
-        self._statements.append(s)
+        self._statements.append(sasoptpy.data.Statement(s))
 
-    def read_table(self, table, index=['_N_'], columns=[], index_type='num'):
+    def read_table(self, table, index=['_N_'], columns=[],
+                   index_type='num'):
         '''
         Reads a CAS Table or pandas DataFrame into the model
 
@@ -462,6 +470,8 @@ class Model:
             List of index columns
         columns : list, optional
             List of columns to read into parameters
+        itype : string, optional
+            Type of the index set, 'num' or 'str'
 
         Returns
         -------
@@ -496,7 +506,8 @@ class Model:
             self.read_data(table, keyset=[keyset], key=index, params=[
                 {'param': i} for i in pars])
         elif type(table).__name__ == 'DataFrame':
-            table = table.set_index(index)
+            if index and index != [None] and index != ['_N_']:
+                table = table.set_index(index)
             keyset = table.index.tolist()
             pars = []
             for col in columns:
@@ -743,7 +754,8 @@ class Model:
         self._objective = obj
         if self._objective._name is None:
             name = sasoptpy.utils.check_name(name, 'obj')
-            sasoptpy.utils.register_name(name, self._objective)
+            self._objective._objorder = sasoptpy.utils.register_name(
+                name, self._objective)
             self._objective._name = name
         self._sense = sense
         self._objective._temp = False
@@ -1329,60 +1341,113 @@ class Model:
         self._datarows = []
         return mpsdata
 
-    def to_optmodel(self, header=True, expand=False):
+    def to_optmodel(self, header=True, expand=False, ordered=False):
+        '''
+        Generates the equivalent PROC OPTMODEL code for the model.
 
-        s = ''
+        Parameters
+        ----------
+        header : boolean, optional
+            Option to include PROC headers
+        expand : boolean, optional
+            Option to include 'expand' command to OPTMODEL code
+        ordered : boolean, optional
+            Option to generate OPTMODEL code in a specific order (True) or\
+            in creation order (False)
 
-        if header:
-            s = 'proc optmodel;\n'
+        Returns
+        -------
+        string
+            PROC OPTMODEL representation of the model
 
-        tab = '   '
+        Examples
+        --------
 
-        s += tab + '/* Sets */\n'
-        for i in self._sets:
-            s += tab + i._defn() + '\n'
+        >>> print(m.to_optmodel())
+        
+        '''
 
-        s += '\n' + tab + '/* Parameters */\n'
-        for i in self._parameters:
-            s += i._defn(tab) + '\n'
+        if ordered:
+            s = ''
 
-        s += '\n' + tab + '/* Statements */\n'
-        for i in self._statements:
-            s += tab + i + '\n'
+            if header:
+                s = 'proc optmodel;\n'
 
-        s += '\n' + tab + '/* Variables */\n'
-        for i in self._vargroups:
-            s += i._defn(tabs=tab) + '\n'
+            tab = '   '
 
-        for v in self._variables:
-            if v._parent is None:
+            s += tab + '/* Sets */\n'
+            for i in self._sets:
+                s += tab + i._defn() + '\n'
+
+            s += '\n' + tab + '/* Parameters */\n'
+            for i in self._parameters:
+                s += i._defn(tab) + '\n'
+
+            s += '\n' + tab + '/* Statements */\n'
+            for i in self._statements:
+                s += tab + i._defn() + '\n'
+
+            s += '\n' + tab + '/* Variables */\n'
+            for i in self._vargroups:
+                s += i._defn(tabs=tab) + '\n'
+
+            for v in self._variables:
+                if v._parent is None:
+                    s += tab + v._defn() + '\n'
+
+            s += '\n' + tab + '/* Implied variables */\n'
+            for v in self._impliedvars:
                 s += tab + v._defn() + '\n'
 
-        s += '\n' + tab + '/* Implied variables */\n'
-        for v in self._impliedvars:
-            s += tab + v._defn() + '\n'
+            s += '\n' + tab + '/* Constraints */\n'
+            for c in self._congroups:
+                s += c._defn(tabs=tab) + '\n'
 
-        s += '\n' + tab + '/* Constraints */\n'
-        for c in self._congroups:
-            s += c._defn(tabs=tab) + '\n'
+            for c in self._constraints:
+                if c._parent is None:
+                    s += tab + c._defn() + '\n'
 
-        for c in self._constraints:
-            if c._parent is None:
-                s += tab + c._defn() + '\n'
+            s += '\n' + tab + '/* Objective */\n'
+            if self._objective is not None:
+                s += tab + '{} {} = '.format(self._sense, self._objective._name)
+                s += self._objective._defn() + '; \n'
 
-        s += '\n' + tab + '/* Objective */\n'
-        if self._objective is not None:
-            s += tab + '{} {} = '.format(self._sense, self._objective._name)
-            s += self._objective._defn() + '; \n'
+            s += '\n' + tab + '/* Solver call */\n'
+            if expand:
+                s += tab + 'expand;\n'
+            s += tab + 'solve;\n'
 
-        s += '\n' + tab + '/* Solver call */\n'
-        if expand:
-            s += tab + 'expand;\n'
-        s += tab + 'solve;\n'
-
-        if header:
-            s += 'quit;\n'
-
+            if header:
+                s += 'quit;\n'
+        else:
+            # Based on creation order
+            s = ''
+            if header:
+                s = 'proc optmodel;\n'
+            s += '/*Compact unordered format*/\n'
+            tab = '   '
+            allcomp = (
+                self._sets +
+                self._parameters +
+                self._statements +
+                self._vargroups +
+                self._variables +
+                self._impliedvars +
+                self._congroups +
+                self._constraints +
+                [self._objective]
+                )
+            sorted_comp = sorted(allcomp, key=lambda i: i._objorder)
+            for cm in sorted_comp:
+                if id(cm) == id(self._objective):
+                    s += '{} {} = '.format(self._sense, self._objective._name)
+                    s += self._objective._defn() + '; \n'
+                elif (cm._objorder > 0 and
+                      not (hasattr(cm, '_shadow') and cm._shadow) and
+                      not (hasattr(cm, '_parent') and cm._parent)):
+                    s += cm._defn() + '\n'
+            if header:
+                s += 'quit;\n'
         return(s)
 
     def __str__(self):

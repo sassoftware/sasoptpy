@@ -73,7 +73,7 @@ class Expression:
     def __init__(self, exp=None, name=None, temp=False):
         if name is not None:
             self._name = sasoptpy.utils.check_name(name, 'expr')
-            sasoptpy.utils.register_name(self._name, self)
+            self._objorder = sasoptpy.utils.register_name(self._name, self)
         else:
             self._name = None
         self._value = 0
@@ -199,7 +199,9 @@ class Expression:
         if name != safe_name:
             print('NOTE: Name {} is changed to {} to prevent a conflict'
                   .format(name, safe_name))
-        sasoptpy.utils.register_name(self._name, self)
+        order = sasoptpy.utils.register_name(self._name, self)
+        if not self._objorder:
+            self._objorder = order
         self._name = safe_name
         return self._name
 
@@ -237,7 +239,7 @@ class Expression:
         '''
         if self._name is None:
             self._name = sasoptpy.utils.check_name(name, 'expr')
-            sasoptpy.utils.register_name(self._name, self)
+            self._objorder = sasoptpy.utils.register_name(self._name, self)
         self._temp = False
         return self._name
 
@@ -713,7 +715,7 @@ class Variable(Expression):
             self._linCoef[name + str(id(self))] = {'ref': self, 'val': 1.0}
         else:
             self._linCoef[name] = {'ref': self, 'val': 1.0}
-            sasoptpy.utils.register_name(name, self)
+            self._objorder = sasoptpy.utils.register_name(name, self)
         self._key = key
         self._parent = None
         self._temp = False
@@ -913,7 +915,7 @@ class Constraint(Expression):
         if name is not None:
             name = sasoptpy.utils.check_name(name, 'con')
             self._name = name
-            sasoptpy.utils.register_name(name, self)
+            self._objorder = sasoptpy.utils.register_name(name, self)
         else:
             self._name = None
         if exp._name is None:
@@ -1204,7 +1206,7 @@ class VariableGroup:
         if name is not None:
             name = sasoptpy.utils.check_name(name, 'var')
             self._name = name
-            sasoptpy.utils.register_name(name, self)
+            self._objorder = sasoptpy.utils.register_name(name, self)
         else:
             self._name = None
         #for arg in argv:
@@ -1678,7 +1680,7 @@ class ConstraintGroup:
         if name is not None:
             name = sasoptpy.utils.check_name(name, 'con')
             self._name = name
-            sasoptpy.utils.register_name(name, self)
+            self._objorder = sasoptpy.utils.register_name(name, self)
         else:
             self._name = None
 

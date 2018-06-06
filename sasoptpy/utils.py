@@ -42,6 +42,8 @@ __namedict = {}
 __ctr = {'obj': [0], 'var': [0], 'con': [0], 'expr': [0], 'model': [0],
          'i': [0], 'set': [0], 'param': [0], 'impvar': [0]}
 
+__objcnt = 0
+
 
 def check_name(name, ctype=None):
     '''
@@ -103,9 +105,12 @@ def exp_range(start, stop, step=1):
 
 def register_name(name, obj):
     '''
-    Adds the name of a component into the global reference list
+    Adds the name and order of a component into the global reference list
     '''
-    __namedict[name] = obj
+    global __objcnt
+    __objcnt += 1
+    __namedict[name] = {'ref': obj, 'order': __objcnt}
+    return __objcnt
 
 
 def recursive_walk(obj, func, attr=None, alt=None):
@@ -235,7 +240,7 @@ def get_obj_by_name(name):
 
     '''
     if name in __namedict:
-        return __namedict[name]
+        return __namedict[name['ref']]
     else:
         return None
 
@@ -667,9 +672,9 @@ def get_namespace():
               sasoptpy.components.Constraint]:
         s += '\n\t{}'.format(c.__name__)
         for i, k in enumerate(__namedict):
-            if type(__namedict[k]) is c:
+            if type(__namedict[k]['ref']) is c:
                 s += '\n\t\t{:4d} {:{width}} {}, {}'.format(
-                    i, k, type(__namedict[k]), repr(__namedict[k]),
+                    i, k, type(__namedict[k]['ref']), repr(__namedict[k]['ref']),
                     width=len(max(__namedict, key=len)))
     return s
 
@@ -679,7 +684,9 @@ def get_namedict():
 
 
 def set_namedict(ss):
-    __namedict = ss
+    #__namedict = ss
+    for i in ss:
+        register_name(i, ss[i])
 
 
 def get_len(i):

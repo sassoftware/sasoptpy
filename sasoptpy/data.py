@@ -29,12 +29,12 @@ import sasoptpy.utils
 
 class Parameter:
     '''
-    Represents set inside PROC OPTMODEL
+    Represents sets inside PROC OPTMODEL
     '''
 
     def __init__(self, name, keys, order=1, init=None):
         self._name = sasoptpy.utils.check_name(name, 'param')
-        sasoptpy.utils.register_name(self._name, self)
+        self._objorder = sasoptpy.utils.register_name(self._name, self)
         self._keys = keys
         self._keysize = len(keys)
         self._order = order
@@ -182,7 +182,7 @@ class Set(sasoptpy.components.Expression):
     def __init__(self, name, init=None, settype='num'):
         super().__init__()
         self._name = sasoptpy.utils.check_name(name, 'set')
-        sasoptpy.utils.register_name(self._name, self)
+        self._objorder = sasoptpy.utils.register_name(self._name, self)
         self._init = init
         self._type = settype
         self._colname = name
@@ -341,9 +341,10 @@ class SetIterator(sasoptpy.components.Expression):
 
 class ExpressionDict:
 
-    def __init__(self, name=None):
+    def __init__(self, argv=None, name=None):
         name = sasoptpy.utils.check_name(name, 'impvar')
         self._name = name
+        self._objorder = sasoptpy.utils.register_name(name, self)
         self._dict = dict()
         self._conditions = []
         self._shadows = dict()
@@ -353,8 +354,10 @@ class ExpressionDict:
         try:
             if value._name is None:
                 value._name = self._name
-            if value._abstract:
+            if isinstance(value, Parameter) or value._abstract:
                 self._dict[key] = ParameterValue(value, key)
+            elif isinstance(value, sasoptpy.components.Expression):
+                self._dict[key] = value
             else:
                 self._dict[key] = value
         except AttributeError:
@@ -373,21 +376,23 @@ class ExpressionDict:
             return pv
 
     def _defn(self):
-        s = 'impvar {} '.format(self._name)
-        # There should be a single element in the dictionary
-        if len(self._dict) > 1:
-            print('ERROR: ExpressionDict has more than one elements!')
-            return ''
-        else:
-            s += '{'
-            key = self._get_only_key()
-            s += ', '.join([i._defn() for i in list(key)])
-            s += '} = '
+        # Do not return a definition if it is a local dictionary
+        s = ''
+        if len(self._dict) == 1:
+            s = 'impvar {} '.format(self._name)
+            if ('',) not in self._dict:
+                s += '{'
+                key = self._get_only_key()
+                s += ', '.join([i._defn() for i in list(key)])
+                s += '} = '
+            else:
+                key = self._get_only_key()
+                s += '= '
             item = self._dict[key]
             if isinstance(item, ParameterValue):
-                s += self._dict[key]._ref._defn()
+                s += self._dict[key]._ref._expr()
             else:
-                s += self._dict[key]._defn()
+                s += self._dict[key]._expr()
             s += ';'
         return s
 
@@ -398,15 +403,27 @@ class ExpressionDict:
         return self._name
 
     def __repr__(self):
-        s = 'sasoptpy.data.ExpressionDict(name=\'{}\', '.format(self._name)
+        s = 'sasoptpy.ExpressionDict(name=\'{}\', '.format(self._name)
         if len(self._dict) == 1:
             key = self._get_only_key()
             s += 'expr=('
             try:
-                s += self._dict[key]._ref._defn()
+                s += self._dict[key]._ref._expr()
             except AttributeError:
                 s += str(self._dict[key])
-            s += ' ' + ' '.join(['for ' + i._defn() for i in list(key)])
+            if ('',) not in self._dict:
+                s += ' ' + ' '.join(['for ' + i._defn() for i in list(key)])
             s += ')'
         s += ')'
         return s
+
+
+class Statement:
+
+    def __init__(self, statement):
+        self.statement = statement
+        self._name = sasoptpy.utils.check_name(None, None)
+        self._objorder = sasoptpy.utils.register_name(self._name, self)
+
+    def _defn(self):
+        return self.statement
