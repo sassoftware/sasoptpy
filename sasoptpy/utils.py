@@ -174,9 +174,26 @@ def quick_sum(argv):
             if i._abstract:
                 newlocals = argv.gi_frame.f_locals
                 for nl in newlocals.keys():
-                    if nl not in clocals:
-                        iterators.append(newlocals[nl])
+                    if nl not in clocals and\
+                       type(newlocals[nl]) == sasoptpy.data.SetIterator:
+                        iterators.append((nl, newlocals[nl])) # Tuple: name, ref
     if iterators:
+        # First pass: make set iterators uniform
+        for i in iterators:
+            for j in iterators:
+                if i[0] == j[0]:
+                    j[1]._name = i[1]._name
+        it_names = []
+        for i in iterators:
+            unique = True
+            for j in it_names:
+                if i[0] == j[0]:
+                    unique = False
+                    break
+            if unique:
+                it_names.append(i)
+        # Second pass: check for iterators
+        iterators = [p[1] for p in it_names]
         exp = _check_iterator(exp, 'sum', iterators)
     exp._temp = False
     return exp
