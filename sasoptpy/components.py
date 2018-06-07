@@ -279,6 +279,8 @@ class Expression:
                         ref, func='_expr')
                 else:
                     strlist = [ref._expr()]
+                if optext != ' * ':
+                    strlist = ['({})'.format(stritem) for stritem in strlist]
                 refs = optext.join(strlist)
                 if val == 1 or val == -1:
                     s += '{}'.format(refs)
