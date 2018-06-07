@@ -292,6 +292,9 @@ class Expression:
             s += ')'
         #if itemcnt > 1 and self._operator is None:
         #    s = '(' + s + ')'
+        if list(self._linCoef.keys()) == ['CONST'] and\
+           self._linCoef['CONST']['val'] == 0:
+            s += '0'
         return s
 
     def __repr__(self):
@@ -360,6 +363,9 @@ class Expression:
                 ['for {} in {}'.format(i._name, i._set._name)
                  for i in self._iterkey])
             s += ')'
+        if list(self._linCoef.keys()) == ['CONST'] and\
+           self._linCoef['CONST']['val'] == 0:
+            s += '0'
         return s
 
     def _add_coef_value(self, var, key, value):

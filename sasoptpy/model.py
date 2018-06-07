@@ -65,7 +65,7 @@ class Model:
         self._constraints = []
         self._vargroups = []
         self._congroups = []
-        self._objective = sasoptpy.components.Expression()
+        self._objective = sasoptpy.components.Expression(0, name=name+'_obj')
         self._datarows = []
         self._sense = sasoptpy.utils.MIN
         self._variableDict = {}
@@ -1364,7 +1364,7 @@ class Model:
         --------
 
         >>> print(m.to_optmodel())
-        
+
         '''
 
         if ordered:
@@ -1425,7 +1425,6 @@ class Model:
             if header:
                 s = 'proc optmodel;\n'
             s += '/*Compact unordered format*/\n'
-            tab = '   '
             allcomp = (
                 self._sets +
                 self._parameters +
@@ -1446,6 +1445,9 @@ class Model:
                       not (hasattr(cm, '_shadow') and cm._shadow) and
                       not (hasattr(cm, '_parent') and cm._parent)):
                     s += cm._defn() + '\n'
+            if expand:
+                s += 'expand;\n'
+            s += 'solve;\n'
             if header:
                 s += 'quit;\n'
         return(s)
