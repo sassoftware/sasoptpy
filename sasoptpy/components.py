@@ -1365,23 +1365,35 @@ class VariableGroup:
                           format(self._name, str(i), type(i)))
         s = s[:-2]
         s += '} '
+        # This part assumes all lb and ub are same!
+        # Type of variable
+        issame = {'_type': True, '_lb': True, '_ub': True, '_init': True}
         k = list(self._vardict)[0]
         v = self._vardict[k]
-        BIN = sasoptpy.utils.BIN
-        CONT = sasoptpy.utils.CONT
-        if v._type != CONT:
-            if v._type == BIN:
-                s += 'binary '
-            else:
-                s += 'integer '
-        if v._lb != -inf:
-            if not (v._lb == 0 and v._type == BIN):
-                s += '>= {} '.format(v._lb)
-        if v._ub != inf:
-            if not (v._ub == 1 and v._type == BIN):
-                s += '<= {} '.format(v._ub)
-        if v._init is not None:
-            s += 'init {} '.format(v._init)
+        for _, i in self._vardict.items():
+            for attr in issame:
+                if issame[attr] and getattr(i, attr) != getattr(v, attr):
+                    issame[attr] = False
+        if issame['_type']:
+            BIN = sasoptpy.utils.BIN
+            CONT = sasoptpy.utils.CONT
+            if v._type != CONT:
+                if v._type == BIN:
+                    s += 'binary '
+                else:
+                    s += 'integer '
+        # Bound of variable
+        if issame['_lb']:
+            if v._lb != -inf:
+                if not (v._lb == 0 and v._type == BIN):
+                    s += '>= {} '.format(v._lb)
+        if issame['_ub']:
+            if v._ub != inf:
+                if not (v._ub == 1 and v._type == BIN):
+                    s += '<= {} '.format(v._ub)
+        if issame['_init']:
+            if v._init is not None:
+                s += 'init {} '.format(v._init)
         s += ';'
         # Check bounds to see if they are parameters
         for i in self._shadows:
