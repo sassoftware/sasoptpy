@@ -880,7 +880,7 @@ class Constraint(Expression):
         Direction of the logical expression, 'E' (=), 'L' (<=) or 'G' (>=)
     name : string, optional
         Name of the constraint object
-    range : float, optional
+    crange : float, optional
         Range for ranged constraints
 
     Examples
