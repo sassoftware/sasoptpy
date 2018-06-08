@@ -663,6 +663,12 @@ class Expression:
     def __iter__(self):
         return iter([self])
 
+    def __and__(self, other):
+        print('Called!')
+        print(self)
+        print(other)
+        return self
+
 
 class Variable(Expression):
     '''
@@ -941,6 +947,12 @@ class Constraint(Expression):
         self._block = None
         self._temp = False
 
+    def __and__(self, other):
+        print('Called!')
+        print(self)
+        print(other)
+        return self
+
     def update_var_coef(self, var, value):
         '''
         Updates the coefficient of a variable inside the constraint
@@ -1080,21 +1092,20 @@ class Constraint(Expression):
         s = ''
         if self._parent is None:
             s = 'con {} : '.format(self._name)
+        if self._range != 0:
+            s += '{} <= '.format(- self._linCoef['CONST']['val'])
         s += super()._expr()
-        if self._direction == 'E':
+        if self._direction == 'E' and self._range == 0:
             s += ' = '
         elif self._direction == 'L':
             s += ' <= '
         elif self._direction == 'G':
             s += ' >= '
+        elif self._direction == 'E' and self._range != 0:
+            s += ' <= '
         else:
             raise Exception('Constraint has no direction!')
-        if self._range == 0:
-            s += ' {}'.format(- self._linCoef['CONST']['val'])
-        else:
-            s += ' [{}, {}]'.format(- self._linCoef['CONST']['val'],
-                                    - self._linCoef['CONST']['val'] +
-                                    self._range)
+        s += ' {}'.format(- self._linCoef['CONST']['val'] + self._range)
         if self._parent is None:
             s += ';'
         return(s)
