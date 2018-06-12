@@ -57,10 +57,9 @@ class Model:
     NOTE: Initialized model mip
     '''
 
-    def __init__(self, name, session=None, abstract=False):
+    def __init__(self, name, session=None):
         self._name = sasoptpy.utils.check_name(name, 'model')
         self._session = session
-        self._abstract = abstract
         self._variables = []
         self._constraints = []
         self._vargroups = []
@@ -421,7 +420,7 @@ class Model:
         if isinstance(statement, sasoptpy.components.Expression):
             self._statements.append(sasoptpy.data.Statement(str(statement)))
 
-    def read_data(self, table, keyset, option='', key=[], params=[]): # TODO allow params to be strings
+    def read_data(self, table, keyset, option='', key=[], params=[]):
         '''
         Reads a CASTable into PROC OPTMODEL sets
         '''
@@ -430,7 +429,7 @@ class Model:
         if keyset is not None:
             if key != []:
                 for i, k in enumerate(keyset):
-                    k._colname = key[i]
+                    k._colname = str(key[i])
 
         # Reading parameters
         for p in params:
@@ -438,7 +437,10 @@ class Model:
             p.setdefault('index', None)
             p['param']._set_loop(table, keyset, p['column'], p['index'])
 
-        s = 'read data {} {} into '.format(table.name, option)
+        s = 'read data {}'.format(table.name)
+        if option:
+            s += ' {}'.format(option)
+        s += ' into '
         if len(keyset) == 1:
             k = keyset[0]
             if isinstance(k._colname, str):
@@ -451,13 +453,15 @@ class Model:
                 s += k._colname + ' '
             s = s[:-1]
             s += '] '
+        parlist = []
         for p in params:
-            s += p['param']._to_read_data()
+            parlist.append(p['param']._to_read_data())
+        s += ' '.join(parlist)
         s += ';'
         self._statements.append(sasoptpy.data.Statement(s))
 
     def read_table(self, table, index=['_N_'], columns=[],
-                   index_type='num'):
+                   index_type='num', upload=False):
         '''
         Reads a CAS Table or pandas DataFrame into the model
 
@@ -491,6 +495,11 @@ class Model:
         :func:`Model.read_data`
 
         '''
+
+        if upload and type(table).__name__ != 'CASTable' and\
+           self.test_session() == 'CAS':
+            table = self._session.upload_frame(table)
+
         if type(table).__name__ == 'CASTable':
             if not index or index == [None]:
                 index = ['_N_']
@@ -1207,7 +1216,6 @@ class Model:
         -----
         * This method is called inside :func:`Model.solve`.
         '''
-        print('NOTE: Converting model {} to DataFrame.'.format(self._name))
         self._id = 1
         if(len(self._datarows) > 0):  # For future reference
             # take a copy?
@@ -1570,7 +1578,7 @@ class Model:
 
         Notes
         -----
-        
+
         - This method returns None if the model session is not valid.
         - Name of the table is randomly assigned if name argument is None
           or not given.
@@ -1591,18 +1599,220 @@ class Model:
         else:
             return None
 
-    def solve_remote(self):
+    def solve(self, milp={}, lp={}, name=None,
+              frame=False, drop=False, replace=True, primalin=False):
         '''
-        (Experimental) Solves the model using equivalent OPTMODEL repr
-        '''
-        sess = self._session
-        sess.loadactionset(actionset='optimization')
-        optmodel_string = self.to_optmodel(header=False)
-        sess.runOptmodel(optmodel_string)
+        Solves the model by calling CAS or SAS optimization solvers
 
-    def solve_local(self, name='MPS'):
+        Parameters
+        ----------
+        milp : dict, optional
+            A dictionary of MILP options
+        lp : dict, optional
+            A dictionary of LP options
+        name : string, optional
+            Name of the table name
+        frame : boolean, optional
+            Switch for uploading problem as a MPS DataFrame format
+        drop : boolean, optional
+            Switch for dropping the MPS table after solve (only CAS)
+        replace : boolean, optional
+            Switch for replacing an existing MPS table (only CAS and MPS)
+        primalin : boolean, optional
+            Switch for using initial values (only MILP)
+
+        Returns
+        -------
+        :class:`pandas.DataFrame` object
+            Solution of the optimization model
+
+        Examples
+        --------
+
+        >>> m.solve()
+        NOTE: Initialized model food_manufacture_1
+        NOTE: Converting model food_manufacture_1 to DataFrame
+        NOTE: Added action set 'optimization'.
+        ...
+        NOTE: Optimal.
+        NOTE: Objective = 107842.59259.
+        NOTE: The Dual Simplex solve time is 0.01 seconds.
+
+        >>> m.solve(milp={'maxtime': 600})
+
+        >>> m.solve(lp={'algorithm': 'ipm'})
+
+        Notes
+        -----
+        * This method takes two optional arguments (milp and lp).
+        * These arguments pass options to the solveLp and solveMilp CAS
+          actions.
+        * These arguments are not passed if the model has a SAS session.
+        * Both milp and lp should be defined as dictionaries, where keys are
+          option names. For example, ``m.solve(milp={'maxtime': 600})`` limits
+          solution time to 600 seconds.
+        * See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvelp_syntax.htm&locale=en
+          for a list of LP options.
+        * See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvemilp_syntax.htm&locale=en
+          for a list of MILP options.
+
+        See also
+        --------
+        :func:`Model.solve_local`
+
         '''
-        (Experimental) Solves the model by calling SAS 9.4 solvers
+
+        # Check if session is defined
+        session_type = self.test_session()
+        solver_func = None
+        if session_type == 'CAS':
+            sess = self._session
+            # Check if dataframe format, if it is, pass relevant parameters
+            solver_func = self.solve_on_cas
+        elif session_type == 'SAS':
+            sess = self._session
+            solver_func = self.solve_on_mva
+        else:
+            return None
+
+        # Call solver based on session type
+        return solver_func(sess, milp=milp, lp=lp, name=name, drop=drop,
+                           frame=frame, replace=replace, primalin=primalin)
+
+    def solve_on_cas(self, session, milp={}, lp={}, name=None,
+                     frame=False, drop=False, replace=True, primalin=False):
+
+        # Check which method will be used for solve
+        session.loadactionset(actionset='optimization')
+        if frame or not hasattr(session.optimization,'runoptmodel'):
+            frame = True
+
+        # If some of the data is on the server, force using optmodel mode
+        if frame and (self._sets or self._parameters):
+            print('WARNING: Model {} has data on server, switching to optmodel mode.'.format(self._name))
+            frame = False
+
+        if frame:
+            print('NOTE: Converting model {} to DataFrame.'.format(self._name))
+            # Pre-upload argument parse
+            self._lp_opts = lp
+            self._milp_opts = milp
+
+            # Find problem type and initial values
+            ptype = 1  # LP
+            opt_args = lp
+            for v in self._variables:
+                if v._type != sasoptpy.utils.CONT:
+                    ptype = 2
+                    opt_args = milp
+                    break
+
+            # Decomp check
+            user_blocks = None
+            if 'decomp' in opt_args:
+                if 'method' in opt_args['decomp']:
+                    if opt_args['decomp']['method'] == 'user':
+                        user_blocks = self.upload_user_blocks()
+                        opt_args['decomp'] = {'blocks': user_blocks}
+
+            # Initial value check for MIP
+            if primalin:
+                init_values = []
+                var_names = []
+                if ptype == 2:
+                    for v in self._variables:
+                        if v._init is not None:
+                            var_names.append(v._name)
+                            init_values.append(v._init)
+                    if (len(init_values) > 0 and
+                       opt_args.get('primalin', 1) is not None):
+                        primalinTable = pd.DataFrame(data={'_VAR_': var_names,
+                                                           '_VALUE_': init_values})
+                        session.upload_frame(primalinTable,
+                                             casout={'name': 'PRIMALINTABLE',
+                                                     'replace': True})
+                        opt_args['primalin'] = 'PRIMALINTABLE'
+
+            mps_table = self.upload_model(name, replace=replace)
+
+            if ptype == 1:
+                response = session.solveLp(
+                    data=mps_table.name, **opt_args,
+                    primalOut={'caslib': 'CASUSER', 'name': 'primal',
+                               'replace': True},
+                    dualOut={'caslib': 'CASUSER', 'name': 'dual', 'replace': True},
+                    objSense=self._sense)
+            elif ptype == 2:
+                response = session.solveMilp(
+                    data=mps_table.name, **opt_args,
+                    primalOut={'caslib': 'CASUSER', 'name': 'primal',
+                               'replace': True},
+                    dualOut={'caslib': 'CASUSER', 'name': 'dual', 'replace': True},
+                    objSense=self._sense)
+
+            # Parse solution
+            if(response.get_tables('status')[0] == 'OK'):
+                self._primalSolution = session.CASTable(
+                    'primal', caslib='CASUSER').to_frame()
+                self._dualSolution = session.CASTable(
+                    'dual', caslib='CASUSER').to_frame()
+                # Bring solution to variables
+                for _, row in self._primalSolution.iterrows():
+                    self._variableDict[row['_VAR_']]._value = row['_VALUE_']
+
+                # Capturing dual values for LP problems
+                if ptype == 1:
+                    for _, row in self._primalSolution.iterrows():
+                        self._variableDict[row['_VAR_']]._dual = row['_R_COST_']
+                    for _, row in self._dualSolution.iterrows():
+                        self._constraintDict[row['_ROW_']]._dual = row['_VALUE_']
+
+            # Drop tables
+            if drop:
+                session.table.droptable(table=mps_table.name)
+                if user_blocks is not None:
+                    session.table.droptable(table=user_blocks)
+                if primalin:
+                    session.table.droptable(table='PRIMALINTABLE')
+
+            # Post-solve parse
+            if(response.get_tables('status')[0] == 'OK'):
+                # Print problem and solution summaries
+                self._problemSummary = response.ProblemSummary[['Label1',
+                                                                'cValue1']]
+                self._solutionSummary = response.SolutionSummary[['Label1',
+                                                                  'cValue1']]
+                self._problemSummary.set_index(['Label1'], inplace=True)
+                self._problemSummary.columns = ['Value']
+                self._problemSummary.index.names = ['Label']
+                self._solutionSummary.set_index(['Label1'], inplace=True)
+                self._solutionSummary.columns = ['Value']
+                self._solutionSummary.index.names = ['Label']
+                # Record status and time
+                self._status = response.solutionStatus
+                self._soltime = response.solutionTime
+                if('OPTIMAL' in response.solutionStatus):
+                    self._objval = response.objective
+                    # Replace initial values with current values
+                    for v in self._variables:
+                        v._init = v._value
+                    return self._primalSolution
+                else:
+                    print('NOTE: Response {}'.format(response.solutionStatus))
+                    self._objval = 0
+                    return None
+            else:
+                print('ERROR: {}'.format(response.get_tables('status')[0]))
+                return None
+        else:  # OPTMODEL variant
+            print('NOTE: Converting model {} to OPTMODEL.'.format(self._name))
+            optmodel_string = self.to_optmodel(header=False)
+            session.runOptmodel(optmodel_string)
+
+    def solve_on_mva(self, session, milp={}, lp={}, name=None,
+                     frame=False, drop=False, replace=True, primalin=False):
+        '''
+        Solves the model by calling SAS 9.4 solvers
 
         Parameters
         ----------
@@ -1664,7 +1874,12 @@ class Model:
 
         '''
 
-        session = self._session
+        if not name:
+            name = 'MPS'
+
+        if not frame:
+            print('NOTE: Switching to DataFrame method for MVA solver.')
+            frame = True
 
         try:
             import saspy as sp
@@ -1689,6 +1904,7 @@ class Model:
         try:
             session.df2sd(df, table=name, keep_outer_quotes=True)
         except:
+            print(df.to_string())
             session.df2sd(df, table=name)
             session.submit("""
             data {};
@@ -1757,193 +1973,3 @@ class Model:
 
         return self._primalSolution
 
-    def solve(self, milp={}, lp={}, name=None, drop=False, replace=True,
-              primalin=False):
-        '''
-        Solves the model by calling CAS optimization solvers
-
-        Parameters
-        ----------
-        milp : dict, optional
-            A dictionary of MILP options for the solveMilp CAS Action
-        lp : dict, optional
-            A dictionary of LP options for the solveLp CAS Action
-        name : string, optional
-            Name of the table name on CAS Server
-        drop : boolean, optional
-            Switch for dropping the MPS table on CAS Server after solve
-        replace : boolean, optional
-            Switch for replacing an existing MPS table on CAS Server
-        primalin : boolean, optional
-            Switch for using initial values (for MIP only)
-
-        Returns
-        -------
-        :class:`pandas.DataFrame` object
-            Solution of the optimization model
-
-        Examples
-        --------
-
-        >>> m.solve()
-        NOTE: Initialized model food_manufacture_1
-        NOTE: Converting model food_manufacture_1 to DataFrame
-        NOTE: Added action set 'optimization'.
-        ...
-        NOTE: Optimal.
-        NOTE: Objective = 107842.59259.
-        NOTE: The Dual Simplex solve time is 0.01 seconds.
-
-        >>> m.solve(milp={'maxtime': 600})
-
-        >>> m.solve(lp={'algorithm': 'ipm'})
-
-        Notes
-        -----
-        * This method takes two optional arguments (milp and lp).
-        * These arguments pass options to the solveLp and solveMilp CAS
-          actions.
-        * These arguments are not passed if the model has a SAS session.
-        * Both milp and lp should be defined as dictionaries, where keys are
-          option names. For example, ``m.solve(milp={'maxtime': 600})`` limits
-          solution time to 600 seconds.
-        * See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvelp_syntax.htm&locale=en
-          for a list of LP options.
-        * See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvemilp_syntax.htm&locale=en
-          for a list of MILP options.
-
-        See also
-        --------
-        :func:`Model.solve_local`
-
-        '''
-
-        if self._abstract:
-            self.solve_remote()
-            return None
-
-        # Check if session is defined
-        session_type = self.test_session()
-        if session_type == 'CAS':
-            sess = self._session
-        elif session_type == 'SAS':
-            return self.solve_local()
-        else:
-            return None
-
-        # Pre-upload argument parse
-        self._lp_opts = lp
-        self._milp_opts = milp
-
-        # Find problem type and initial values
-        ptype = 1  # LP
-        opt_args = lp
-        for v in self._variables:
-            if v._type != sasoptpy.utils.CONT:
-                ptype = 2
-                opt_args = milp
-                break
-
-        # Decomp check
-        user_blocks = None
-        if 'decomp' in opt_args:
-            if 'method' in opt_args['decomp']:
-                if opt_args['decomp']['method'] == 'user':
-                    user_blocks = self.upload_user_blocks()
-                    opt_args['decomp'] = {'blocks': user_blocks}
-
-        # Initial value check for MIP
-        if primalin:
-            init_values = []
-            var_names = []
-            if ptype == 2:
-                for v in self._variables:
-                    if v._init is not None:
-                        var_names.append(v._name)
-                        init_values.append(v._init)
-                if (len(init_values) > 0 and
-                   opt_args.get('primalin', 1) is not None):
-                    primalinTable = pd.DataFrame(data={'_VAR_': var_names,
-                                                       '_VALUE_': init_values})
-                    sess.upload_frame(primalinTable,
-                                      casout={'name': 'PRIMALINTABLE',
-                                              'replace': True})
-                    opt_args['primalin'] = 'PRIMALINTABLE'
-
-        mps_table = self.upload_model(name, replace=replace)
-        sess.loadactionset(actionset='optimization')
-
-        if ptype == 1:
-            response = sess.solveLp(data=mps_table.name,
-                                    **opt_args,
-                                    primalOut={'caslib': 'CASUSER',
-                                               'name': 'primal',
-                                               'replace': True},
-                                    dualOut={'caslib': 'CASUSER',
-                                             'name': 'dual', 'replace': True},
-                                    objSense=self._sense)
-        elif ptype == 2:
-            response = sess.solveMilp(data=mps_table.name,
-                                      **opt_args,
-                                      primalOut={'caslib': 'CASUSER',
-                                                 'name': 'primal',
-                                                 'replace': True},
-                                      dualOut={'caslib': 'CASUSER',
-                                               'name': 'dual',
-                                               'replace': True},
-                                      objSense=self._sense)
-
-        # Parse solution
-        if(response.get_tables('status')[0] == 'OK'):
-            self._primalSolution = sess.CASTable('primal',
-                                                 caslib='CASUSER').to_frame()
-            self._dualSolution = sess.CASTable('dual',
-                                               caslib='CASUSER').to_frame()
-            # Bring solution to variables
-            for _, row in self._primalSolution.iterrows():
-                self._variableDict[row['_VAR_']]._value = row['_VALUE_']
-
-            # Capturing dual values for LP problems
-            if ptype == 1:
-                for _, row in self._primalSolution.iterrows():
-                    self._variableDict[row['_VAR_']]._dual = row['_R_COST_']
-                for _, row in self._dualSolution.iterrows():
-                    self._constraintDict[row['_ROW_']]._dual = row['_VALUE_']
-
-        # Drop tables
-        if drop:
-            sess.table.droptable(table=mps_table.name)
-            if user_blocks is not None:
-                sess.table.droptable(table=user_blocks)
-            if primalin:
-                sess.table.droptable(table='PRIMALINTABLE')
-
-        # Post-solve parse
-        if(response.get_tables('status')[0] == 'OK'):
-            # Print problem and solution summaries
-            self._problemSummary = response.ProblemSummary[['Label1',
-                                                            'cValue1']]
-            self._solutionSummary = response.SolutionSummary[['Label1',
-                                                              'cValue1']]
-            self._problemSummary.set_index(['Label1'], inplace=True)
-            self._problemSummary.columns = ['Value']
-            self._problemSummary.index.names = ['Label']
-            self._solutionSummary.set_index(['Label1'], inplace=True)
-            self._solutionSummary.columns = ['Value']
-            self._solutionSummary.index.names = ['Label']
-            # Record status and time
-            self._status = response.solutionStatus
-            self._soltime = response.solutionTime
-            if('OPTIMAL' in response.solutionStatus):
-                self._objval = response.objective
-                # Replace initial values with current values
-                for v in self._variables:
-                    v._init = v._value
-                return self._primalSolution
-            else:
-                print('NOTE: Response {}'.format(response.solutionStatus))
-                self._objval = 0
-                return None
-        else:
-            print('ERROR: {}'.format(response.get_tables('status')[0]))
-            return None

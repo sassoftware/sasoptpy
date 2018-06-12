@@ -58,6 +58,8 @@ def check_name(name, ctype=None):
     -------
     str : The given name if valid, a random string otherwise
     '''
+    if name and type(name) != str:
+        name = ctype + '_' + str(name) if ctype else str(name)
     if name is None or name == '':
         if ctype is None:
             name = ''.join(random.choice(string.ascii_lowercase) for

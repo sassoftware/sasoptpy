@@ -128,9 +128,9 @@ class Parameter:
             s = s[:-1]
             s += ')> '
         elif self._colname is not None and self._colname != self._name:
-            s += '{}={} '.format(self._name, self._colname)
+            s += '{}={}'.format(self._name, self._colname)
         else:
-            s += '{} '.format(self._name)
+            s += '{}'.format(self._name)
 
         return(s)
 
