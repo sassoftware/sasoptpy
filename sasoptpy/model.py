@@ -876,6 +876,7 @@ class Model:
         for v in self._variables:
             if v._name == name:
                 return v
+        return None
 
     def get_variables(self):
         '''
@@ -932,6 +933,41 @@ class Model:
             return self._objective._linCoef[varname]['val']
         else:
             return 0
+
+    def get_variable_value(self, var=None, name=None):
+        '''
+        Returns the value of a variable.
+
+        Parameters
+        ----------
+        var : :class:`Variable` object, optional
+            Variable object
+        name : string, optional
+            Name of the variable
+
+        Notes
+        -----
+        - It is possible to get a variable's value using
+          :func:`Variable.get_value` method, if the variable is not abstract.
+        - This method is a wrapper around :func:`Variable.get_value` and an
+          overlook function for model components
+        '''
+        if var and not name:
+            if var._shadow:
+                name = str(var)
+            else:
+                name = var._name
+        elif not var and not name:
+            return None
+
+        if name in self._variableDict:
+            return self._variableDict[name].get_value()
+        else:
+            if self._primalSolution is not None:
+                for _, row in self._primalSolution.iterrows():
+                    if row['var'] == name:
+                        return row['value']
+        return None
 
     def get_problem_summary(self):
         '''
@@ -1424,6 +1460,8 @@ class Model:
             if expand:
                 s += tab + 'expand;\n'
             s += tab + 'solve;\n'
+            s += tab + 'print _var_.name _var_.lb _var_.ub _var_ _var_.rc;\n'
+            s += tab + 'print _con_.name _con_.body _con_.dual;\n'
 
             if header:
                 s += 'quit;\n'
@@ -1456,6 +1494,8 @@ class Model:
             if expand:
                 s += 'expand;\n'
             s += 'solve;\n'
+            s += 'print _var_.name _var_.lb _var_.ub _var_ _var_.rc;\n'
+            s += 'print _con_.name _con_.body _con_.dual;\n'
             if header:
                 s += 'quit;\n'
         return(s)
@@ -1600,7 +1640,7 @@ class Model:
             return None
 
     def solve(self, milp={}, lp={}, name=None,
-              frame=False, drop=False, replace=True, primalin=False):
+              frame=True, drop=False, replace=True, primalin=False):
         '''
         Solves the model by calling CAS or SAS optimization solvers
 
@@ -1679,18 +1719,25 @@ class Model:
         return solver_func(sess, milp=milp, lp=lp, name=name, drop=drop,
                            frame=frame, replace=replace, primalin=primalin)
 
-    def solve_on_cas(self, session, milp={}, lp={}, name=None,
-                     frame=False, drop=False, replace=True, primalin=False):
+    def solve_on_cas(self, session, milp, lp, name,
+                     frame, drop, replace, primalin):
 
         # Check which method will be used for solve
         session.loadactionset(actionset='optimization')
+
         if frame or not hasattr(session.optimization,'runoptmodel'):
             frame = True
 
         # If some of the data is on the server, force using optmodel mode
         if frame and (self._sets or self._parameters):
-            print('WARNING: Model {} has data on server, switching to optmodel mode.'.format(self._name))
-            frame = False
+            print('WARNING: Model {} has data on server,'.format(self._name),
+                  ' switching to optmodel mode.')
+            if hasattr(session.optimization, 'runoptmodel'):
+                frame = False
+            else:
+                print('ERROR: Model {} has data on server'.format(self._name),
+                      ' but runoptmodel action is not available.')
+                return None
 
         if frame:
             print('NOTE: Converting model {} to DataFrame.'.format(self._name))
@@ -1726,11 +1773,11 @@ class Model:
                             init_values.append(v._init)
                     if (len(init_values) > 0 and
                        opt_args.get('primalin', 1) is not None):
-                        primalinTable = pd.DataFrame(data={'_VAR_': var_names,
-                                                           '_VALUE_': init_values})
-                        session.upload_frame(primalinTable,
-                                             casout={'name': 'PRIMALINTABLE',
-                                                     'replace': True})
+                        primalinTable = pd.DataFrame(
+                            data={'_VAR_': var_names, '_VALUE_': init_values})
+                        session.upload_frame(
+                            primalinTable, casout={
+                                'name': 'PRIMALINTABLE', 'replace': True})
                         opt_args['primalin'] = 'PRIMALINTABLE'
 
             mps_table = self.upload_model(name, replace=replace)
@@ -1762,10 +1809,24 @@ class Model:
 
                 # Capturing dual values for LP problems
                 if ptype == 1:
+                    self._primalSolution = self._primalSolution[
+                        ['_VAR_', '_VALUE_', '_R_COST_']]
+                    self._primalSolution.columns = ['var', 'lb', 'ub',
+                                                    'value', 'rc']
+                    self._dualSolution = self._dualSolution[
+                        ['_ROW_', '_ACTIVITY_', '_VALUE_']]
+                    self._dualSolution.columns = ['con', 'value', 'dual']
                     for _, row in self._primalSolution.iterrows():
-                        self._variableDict[row['_VAR_']]._dual = row['_R_COST_']
+                        self._variableDict[row['var']]._dual = row['rc']
                     for _, row in self._dualSolution.iterrows():
-                        self._constraintDict[row['_ROW_']]._dual = row['_VALUE_']
+                        self._constraintDict[row['con']]._dual = row['dual']
+                elif ptype == 2:
+                    self._primalSolution = self._primalSolution[
+                        ['_VAR_', '_LBOUND_', '_UBOUND_', '_VALUE_']]
+                    self._primalSolution.columns = ['var', 'lb', 'ub', 'value']
+                    self._dualSolution = self._dualSolution[
+                        ['_ROW_', '_ACTIVITY_']]
+                    self._dualSolution.columns = ['con', 'value']
 
             # Drop tables
             if drop:
@@ -1805,12 +1866,66 @@ class Model:
                 print('ERROR: {}'.format(response.get_tables('status')[0]))
                 return None
         else:  # OPTMODEL variant
+
+            # Find problem type and initial values
+            ptype = 1  # LP
+            for v in self._variables:
+                if v._type != sasoptpy.utils.CONT:
+                    ptype = 2
+                    break
+
             print('NOTE: Converting model {} to OPTMODEL.'.format(self._name))
             optmodel_string = self.to_optmodel(header=False)
-            session.runOptmodel(optmodel_string)
+            response = session.runOptmodel(
+                optmodel_string,
+                outputTables={
+                    'names': {'solutionSummary': 'solutionSummary',
+                              'problemSummary': 'problemSummary',
+                              'Print1.PrintTable': 'primal',
+                              'Print2.PrintTable': 'dual'}
+                    }
+                )
 
-    def solve_on_mva(self, session, milp={}, lp={}, name=None,
-                     frame=False, drop=False, replace=True, primalin=False):
+            # Parse solution
+            if(response.get_tables('status')[0] == 'OK'):
+                self._primalSolution = session.CASTable('primal').to_frame()
+                self._primalSolution = self._primalSolution[
+                    ['_VAR__NAME', '_VAR__LB', '_VAR__UB', '_VAR_', '_VAR__RC']]
+                self._primalSolution.columns = ['var', 'lb', 'ub', 'value', 'rc']
+                self._dualSolution = session.CASTable('dual').to_frame()
+                self._dualSolution = self._dualSolution[
+                    ['_CON__NAME', '_CON__BODY', '_CON__DUAL']]
+                self._dualSolution.columns = ['con', 'value', 'dual']
+                # Bring solution to variables
+                for _, row in self._primalSolution.iterrows():
+                    if row['var'] in self._variableDict:
+                        self._variableDict[row['var']]._value = row['value']
+
+                # Capturing dual values for LP problems
+                if ptype == 1:
+                    for _, row in self._primalSolution.iterrows():
+                        if row['var'] in self._variableDict:
+                            self._variableDict[row['var']]._dual = row['rc']
+                    for _, row in self._dualSolution.iterrows():
+                        if row['con'] in self._constraintDict:
+                            self._constraintDict[row['con']]._dual = row['dual']
+
+            self._solutionSummary = session.CASTable('solutionSummary').\
+                to_sparse()[['Label1', 'cValue1']].set_index(['Label1'])
+            self._problemSummary = session.CASTable('problemSummary').\
+                to_sparse()[['Label1', 'cValue1']].set_index(['Label1'])
+
+            self._solutionSummary.index.names = ['Label']
+            self._solutionSummary.columns = ['Value']
+
+            self._problemSummary.index.names = ['Label']
+            self._problemSummary.columns = ['Value']
+
+            self._status = response.solutionStatus
+            self._soltime = response.solutionTime
+
+    def solve_on_mva(self, session, milp, lp, name,
+                     frame, drop, replace, primalin):
         '''
         Solves the model by calling SAS 9.4 solvers
 
