@@ -83,7 +83,7 @@ class Model:
         self._lp_opts = {}
         self._sets = []
         self._parameters = []
-        self._impliedvars = []
+        self._impvars = []
         self._statements = []
         # self._events = [] 
         self._objorder = sasoptpy.utils.register_name(name, self)
@@ -383,9 +383,9 @@ class Model:
             self._parameters.append(p)
             return p
 
-    def add_implied_variable(self, argv=None, name=None):
+    def add_implicit_variable(self, argv=None, name=None):
         '''
-        Adds an implied variable to the model
+        Adds an implicit variable to the model
         '''
         iv = sasoptpy.data.ExpressionDict(name=name)
         if argv:
@@ -404,12 +404,12 @@ class Model:
                     for i in keynames:
                         keyrefs += (localdict[i],)
                     iv[keyrefs] = arg
-                self._impliedvars.append(iv)
+                self._impvars.append(iv)
             elif type(argv) == sasoptpy.components.Expression and\
                  argv._abstract:
                 iv[''] = argv
                 iv['']._objorder = iv._objorder
-                self._impliedvars.append(iv)
+                self._impvars.append(iv)
                 return iv['']
             else:
                 iv = argv
@@ -1464,8 +1464,8 @@ class Model:
                 if v._parent is None:
                     s += tab + v._defn() + '\n'
 
-            s += '\n' + tab + '/* Implied variables */\n'
-            for v in self._impliedvars:
+            s += '\n' + tab + '/* Implicit variables */\n'
+            for v in self._impvars:
                 s += tab + v._defn() + '\n'
 
             s += '\n' + tab + '/* Constraints */\n'
@@ -1503,7 +1503,7 @@ class Model:
                 self._statements +
                 self._vargroups +
                 self._variables +
-                self._impliedvars +
+                self._impvars +
                 self._congroups +
                 self._constraints +
                 [self._objective]
