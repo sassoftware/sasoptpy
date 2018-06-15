@@ -493,6 +493,10 @@ class Model:
           to client from the CAS server.
         - If the model is running in OPTMODEL mode, then this method generates
           the corresponding optmodel code.
+        - When table is a CASTable object, since the actual data is stored
+          on the CAS server, some of the functionalities may be limited.
+        - For the local data, `upload` argument can be passed for performance
+          improvement.
 
         Examples
         --------

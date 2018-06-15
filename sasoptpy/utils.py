@@ -116,6 +116,26 @@ def register_name(name, obj):
 
 
 def recursive_walk(obj, func, attr=None, alt=None):
+    '''
+    Calls a given method recursively for given objects
+
+
+    Parameters
+    ----------
+    func : string
+        Name of the method / function be called
+    attr : string, optional
+        An attribute which triggers an alternative method to be called if\
+        exists
+    alt : string, optional
+        Name of the alternative method / function to be called if passed attr\
+        exists for given objects
+
+    Notes
+    -----
+    - This function is for internal consumption.
+
+    '''
     result = []
     for i in list(obj):
         if isinstance(i, list):

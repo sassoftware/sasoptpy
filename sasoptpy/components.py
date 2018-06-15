@@ -629,11 +629,23 @@ class Expression:
         return self.mult(other)
 
     def __truediv__(self, other):
-        return self.mult(1/other)
+        if np.issubdtype(type(other), np.number):
+            return self.mult(1/other)
+        r = Expression()
+        if not isinstance(other, Expression):
+            other = Expression(other, name='')
+        r._linCoef[self._name, other._name] = {
+            'ref': [self, other],
+            'val': 1.0,
+            'op': '/'
+            }
+        r._abstract = self._abstract or other._abstract
+        return r
 
     def __rtruediv__(self, other):
         r = Expression()
-        other = Expression(other, name='')
+        if not isinstance(other, Expression):
+            other = Expression(other, name='')
         r._linCoef[other._name, self._name] = {
             'ref': [other, self],
             'val': 1.0,

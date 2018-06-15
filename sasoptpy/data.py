@@ -63,6 +63,9 @@ class Parameter:
         self._colname = colname
         self._index = index
 
+    def _expr(self):
+        return self._name
+
     def _defn(self, tabs=None):
         if tabs is None:
             tabs = ''
