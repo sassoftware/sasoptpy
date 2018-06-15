@@ -460,8 +460,8 @@ class Model:
         s += ';'
         self._statements.append(sasoptpy.data.Statement(s))
 
-    def read_table(self, table, index=['_N_'], columns=[],
-                   index_type='num', upload=False):
+    def read_table(self, table, key=['_N_'], columns=[],
+                   key_type='num', upload=False):
         '''
         Reads a CAS Table or pandas DataFrame into the model
 
@@ -470,17 +470,21 @@ class Model:
         table : :class:`swat.cas.table.CASTable` or :class:`pandas.DataFrame`\
                 object
             CASTable or DataFrame object to read the data from
-        index : list, optional
-            List of index columns
+        key : list, optional
+            List of key columns (for CASTable) or index columns (for DataFrame)
         columns : list, optional
             List of columns to read into parameters
-        itype : string, optional
-            Type of the index set, 'num' or 'str'
+        key_type : string, optional
+            Type of the key columns, 'num' or 'str' or their comma separated\
+            combinations
+        upload : boolean, optional
+            Option for uploading a local data to CAS server first
 
         Returns
         -------
         tuple
-            A tuple of Set and Parameter objects
+            A tuple where first element is the key (index) and second element\
+            is a list of requested columns
 
         Notes
         -----
@@ -490,9 +494,26 @@ class Model:
         - If the model is running in OPTMODEL mode, then this method generates
           the corresponding optmodel code.
 
+        Examples
+        --------
+
+        >>> info = pd.DataFrame([
+                ['clock', 6, 15, 1],
+                ['pc', 3, 14, 5],
+                ['headphone', 2, 9, 3],
+                ['mug', 2, 4, 1],
+                ['book', 5, 1, 3],
+                ['pen', 1, 1, 4]
+                ], columns=['item', 'weight', 'value', 'limit'])
+        >>> ITEMS, [weight, value, limit] = m.read_table(
+                info, key=['item'], columns=['weight', 'value', 'limit'],
+                key_stype='str', upload=False)
+
         See also
         --------
         :func:`Model.read_data`
+        :func:`Model.add_parameter`
+        :func:`Model.add_set`
 
         '''
 
@@ -501,22 +522,22 @@ class Model:
             table = self._session.upload_frame(table)
 
         if type(table).__name__ == 'CASTable':
-            if not index or index == [None]:
-                index = ['_N_']
+            if not key or key == [None]:
+                key = ['_N_']
             keyset = self.add_set(
-                name='set_' + ('_'.join([str(i) for i in index])
-                               if index != ['_N_'] else table.name + '_N'),
-                settype=index_type
+                name='set_' + ('_'.join([str(i) for i in key])
+                               if key != ['_N_'] else table.name + '_N'),
+                settype=key_type
                 )
             pars = []
             for col in columns:
                 pars.append(self.add_parameter(keyset, name=col))
 
-            self.read_data(table, keyset=[keyset], key=index, params=[
+            self.read_data(table, keyset=[keyset], key=key, params=[
                 {'param': i} for i in pars])
         elif type(table).__name__ == 'DataFrame':
-            if index and index != [None] and index != ['_N_']:
-                table = table.set_index(index)
+            if key and key != [None] and key != ['_N_']:
+                table = table.set_index(key)
             keyset = table.index.tolist()
             pars = []
             for col in columns:
