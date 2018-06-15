@@ -1105,7 +1105,7 @@ class Constraint(Expression):
             s += ' <= '
         else:
             raise Exception('Constraint has no direction!')
-        s += ' {}'.format(- self._linCoef['CONST']['val'] + self._range)
+        s += '{}'.format(- self._linCoef['CONST']['val'] + self._range)
         if self._parent is None:
             s += ';'
         return(s)
@@ -1405,6 +1405,7 @@ class VariableGroup:
         if issame['_init']:
             if v._init is not None:
                 s += 'init {} '.format(v._init)
+        s = s.rstrip()
         s += ';'
         # Check bounds to see if they are parameters
         for i in self._shadows:
@@ -1429,6 +1430,7 @@ class VariableGroup:
                     else:
                         s += str(v) + '.ub=' + str(v._ub)
                     s += ' '
+                s = s.rstrip()
                 s += ';'
             initparam = v._init != None
             if initparam:
@@ -1436,7 +1438,9 @@ class VariableGroup:
                 loop_text = sasoptpy.utils._to_optmodel_loop(i)
                 if loop_text != '':
                     s += 'for ' + loop_text
-                s += str(v) + ' = ' + str(v._init) + ';'
+                s += str(v) + ' = ' + str(v._init)
+                s = s.rstrip()
+                s += ';'
 
         return(s)
 

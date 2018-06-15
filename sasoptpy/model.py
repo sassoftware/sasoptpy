@@ -1474,7 +1474,8 @@ class Model:
 
             s += '\n' + tab + '/* Objective */\n'
             if self._objective is not None:
-                s += tab + '{} {} = '.format(self._sense, self._objective._name)
+                s += tab + '{} {} = '.format(self._sense.lower(),
+                                             self._objective._name)
                 s += self._objective._defn() + '; \n'
 
             s += '\n' + tab + '/* Solver call */\n'
@@ -1506,7 +1507,8 @@ class Model:
             sorted_comp = sorted(allcomp, key=lambda i: i._objorder)
             for cm in sorted_comp:
                 if id(cm) == id(self._objective):
-                    s += '{} {} = '.format(self._sense, self._objective._name)
+                    s += '{} {} = '.format(self._sense.lower(),
+                                           self._objective._name)
                     s += self._objective._defn() + '; \n'
                 elif (cm._objorder > 0 and
                       not (hasattr(cm, '_shadow') and cm._shadow) and
