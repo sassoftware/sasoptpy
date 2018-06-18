@@ -1507,7 +1507,9 @@ class Model:
                     s += ' /' + optstring
             s += ';\n'
 
+            s += tab + 'ods output PrintTable=primal_out;\n'
             s += tab + 'print _var_.name _var_.lb _var_.ub _var_ _var_.rc;\n'
+            s += tab + 'ods output PrintTable=dual_out;\n'
             s += tab + 'print _con_.name _con_.body _con_.dual;\n'
 
             if header:
@@ -1557,7 +1559,9 @@ class Model:
                     s += ' /' + optstring
             s += ';\n'
             # Output ODS tables
+            s += 'ods output PrintTable=primal_out;\n'
             s += 'print _var_.name _var_.lb _var_.ub _var_ _var_.rc;\n'
+            s += 'ods output PrintTable=dual_out;\n'
             s += 'print _con_.name _con_.body _con_.dual;\n'
             if header:
                 s += 'quit;\n'
@@ -2079,10 +2083,6 @@ class Model:
         if not name:
             name = 'MPS'
 
-        if not frame:
-            print('NOTE: Switching to DataFrame method for MVA solver.')
-            frame = True
-
         try:
             import saspy as sp
         except ImportError:
@@ -2093,85 +2093,154 @@ class Model:
             print('ERROR: session= argument is not a valid SAS session.')
             return False
 
-        # Get the MPS data
-        df = self.to_frame()
+        if frame:
 
-        # Prepare for the upload
-        for f in ['Field4', 'Field6']:
-            df[f] = df[f].replace('', np.nan)
-        df['_id_'] = df['_id_'].astype('int')
-        df[['Field4', 'Field6']] = df[['Field4', 'Field6']].astype(float)
+            # Get the MPS data
+            df = self.to_frame()
 
-        # Upload MPS table
-        try:
-            session.df2sd(df, table=name, keep_outer_quotes=True)
-        except:
-            print(df.to_string())
-            session.df2sd(df, table=name)
-            session.submit("""
-            data {};
-                set {};
-                field3=tranwrd(field3, "'MARKER'", "MARKER");
-                field3=tranwrd(field3, "MARKER", "'MARKER'");
-                field5=tranwrd(field5, "'INTORG'", "INTORG");
-                field5=tranwrd(field5, "INTORG", "'INTORG'");
-                field5=tranwrd(field5, "'INTEND'", "INTEND");
-                field5=tranwrd(field5, "INTEND", "'INTEND'");
-            run;
-            """.format(name, name))
+            # Prepare for the upload
+            for f in ['Field4', 'Field6']:
+                df[f] = df[f].replace('', np.nan)
+            df['_id_'] = df['_id_'].astype('int')
+            df[['Field4', 'Field6']] = df[['Field4', 'Field6']].astype(float)
 
-        # Find problem type and initial values
-        ptype = 1  # LP
-        for v in self._variables:
-            if v._type != sasoptpy.utils.CONT:
-                ptype = 2
-                break
+            # Upload MPS table
+            try:
+                session.df2sd(df, table=name, keep_outer_quotes=True)
+            except:
+                print(df.to_string())
+                session.df2sd(df, table=name)
+                session.submit("""
+                data {};
+                    set {};
+                    field3=tranwrd(field3, "'MARKER'", "MARKER");
+                    field3=tranwrd(field3, "MARKER", "'MARKER'");
+                    field5=tranwrd(field5, "'INTORG'", "INTORG");
+                    field5=tranwrd(field5, "INTORG", "'INTORG'");
+                    field5=tranwrd(field5, "'INTEND'", "INTEND");
+                    field5=tranwrd(field5, "INTEND", "'INTEND'");
+                run;
+                """.format(name, name))
 
-        if ptype == 1:
-            c = session.submit("""
-            ods output SolutionSummary=SOL_SUMMARY;
-            ods output ProblemSummary=PROB_SUMMARY;
-            proc optlp data = {}
-               primalout  = primal_out
-               dualout    = dual_out;
-            run;
-            """.format(name))
-        else:
-            c = session.submit("""
-            ods output SolutionSummary=SOL_SUMMARY;
-            ods output ProblemSummary=PROB_SUMMARY;
-            proc optmilp data = {}
-               primalout  = primal_out
-               dualout    = dual_out;
-            run;
-            """.format(name))
+            # Find problem type and initial values
+            ptype = 1  # LP
+            for v in self._variables:
+                if v._type != sasoptpy.utils.CONT:
+                    ptype = 2
+                    break
 
-        for line in c['LOG'].split('\n'):
-            if line[0:4] == '    ' or line[0:4] == 'NOTE':
-                print(line)
+            if ptype == 1:
+                c = session.submit("""
+                ods output SolutionSummary=SOL_SUMMARY;
+                ods output ProblemSummary=PROB_SUMMARY;
+                proc optlp data = {}
+                   primalout  = primal_out
+                   dualout    = dual_out;
+                run;
+                """.format(name))
+            else:
+                c = session.submit("""
+                ods output SolutionSummary=SOL_SUMMARY;
+                ods output ProblemSummary=PROB_SUMMARY;
+                proc optmilp data = {}
+                   primalout  = primal_out
+                   dualout    = dual_out;
+                run;
+                """.format(name))
 
-        self._primalSolution = session.sd2df('PRIMAL_OUT')
-        self._dualSolution = session.sd2df('DUAL_OUT')
+            for line in c['LOG'].split('\n'):
+                if line[0:4] == '    ' or line[0:4] == 'NOTE':
+                    print(line)
 
-        # Get Problem Summary
-        self._problemSummary = session.sd2df('PROB_SUMMARY')
-        self._problemSummary.replace(np.nan, '', inplace=True)
-        self._problemSummary = self._problemSummary[['Label1', 'cValue1']]
-        self._problemSummary.set_index(['Label1'], inplace=True)
-        self._problemSummary.columns = ['Value']
-        self._problemSummary.index.names = ['Label']
+            self._primalSolution = session.sd2df('PRIMAL_OUT')
+            self._dualSolution = session.sd2df('DUAL_OUT')
 
-        # Get Solution Summary
-        self._solutionSummary = session.sd2df('SOL_SUMMARY')
-        self._solutionSummary.replace(np.nan, '', inplace=True)
-        self._solutionSummary = self._solutionSummary[['Label1', 'cValue1']]
-        self._solutionSummary.set_index(['Label1'], inplace=True)
-        self._solutionSummary.columns = ['Value']
-        self._solutionSummary.index.names = ['Label']
+            # Get Problem Summary
+            self._problemSummary = session.sd2df('PROB_SUMMARY')
+            self._problemSummary.replace(np.nan, '', inplace=True)
+            self._problemSummary = self._problemSummary[['Label1', 'cValue1']]
+            self._problemSummary.set_index(['Label1'], inplace=True)
+            self._problemSummary.columns = ['Value']
+            self._problemSummary.index.names = ['Label']
 
-        # Parse solutions
-        for _, row in self._primalSolution.iterrows():
-            self._variableDict[row['_VAR_']]._value = row['_VALUE_']
+            # Get Solution Summary
+            self._solutionSummary = session.sd2df('SOL_SUMMARY')
+            self._solutionSummary.replace(np.nan, '', inplace=True)
+            self._solutionSummary = self._solutionSummary[['Label1', 'cValue1']]
+            self._solutionSummary.set_index(['Label1'], inplace=True)
+            self._solutionSummary.columns = ['Value']
+            self._solutionSummary.index.names = ['Label']
 
-        return self._primalSolution
+            # Parse solutions
+            for _, row in self._primalSolution.iterrows():
+                self._variableDict[row['_VAR_']]._value = row['_VALUE_']
 
+            return self._primalSolution
+
+        else: # OPTMODEL version
+
+            # Find problem type and initial values
+            ptype = 1  # LP
+            for v in self._variables:
+                if v._type != sasoptpy.utils.CONT:
+                    ptype = 2
+                    break
+
+            print('NOTE: Converting model {} to OPTMODEL.'.format(self._name))
+            optmodel_string = self.to_optmodel(header=True, options=options)
+            if not submit:
+                return optmodel_string
+            print('NOTE: Submitting OPTMODEL codes to SAS server.')
+            optmodel_string = 'ods output SolutionSummary=SOL_SUMMARY;\n' +\
+                              'ods output ProblemSummary=PROB_SUMMARY;\n' +\
+                              optmodel_string
+            c = session.submit(optmodel_string)
+
+            # Print output
+            for line in c['LOG'].split('\n'):
+                if line[0:4] == '    ' or line[0:4] == 'NOTE':
+                    print(line)
+
+            # Parse solution
+            self._primalSolution = session.sd2df('PRIMAL_OUT')
+            self._primalSolution = self._primalSolution[
+                    ['.VAR..NAME', '.VAR..LB', '.VAR..UB', '_VAR_',
+                     '.VAR..RC']]
+            self._primalSolution.columns = ['var', 'lb', 'ub', 'value', 'rc']
+            self._dualSolution = session.sd2df('DUAL_OUT')
+            self._dualSolution = self._dualSolution[
+                    ['.CON..NAME', '.CON..BODY', '.CON..DUAL']]
+            self._dualSolution.columns = ['con', 'value', 'dual']
+
+            # Get Problem Summary
+            self._problemSummary = session.sd2df('PROB_SUMMARY')
+            self._problemSummary.replace(np.nan, '', inplace=True)
+            self._problemSummary = self._problemSummary[['Label1', 'cValue1']]
+            self._problemSummary.set_index(['Label1'], inplace=True)
+            self._problemSummary.columns = ['Value']
+            self._problemSummary.index.names = ['Label']
+
+            # Get Solution Summary
+            self._solutionSummary = session.sd2df('SOL_SUMMARY')
+            self._solutionSummary.replace(np.nan, '', inplace=True)
+            self._solutionSummary = self._solutionSummary[['Label1',
+                                                           'cValue1']]
+            self._solutionSummary.set_index(['Label1'], inplace=True)
+            self._solutionSummary.columns = ['Value']
+            self._solutionSummary.index.names = ['Label']
+
+            # Parse solutions
+            for _, row in self._primalSolution.iterrows():
+                if row['var'] in self._variableDict:
+                    self._variableDict[row['var']]._value = row['value']
+
+            # Capturing dual values for LP problems
+            if ptype == 1:
+                for _, row in self._primalSolution.iterrows():
+                    if row['var'] in self._variableDict:
+                        self._variableDict[row['var']]._dual = row['rc']
+                for _, row in self._dualSolution.iterrows():
+                    if row['con'] in self._constraintDict:
+                        self._constraintDict[row['con']]._dual = row['dual']
+
+            return self._primalSolution
