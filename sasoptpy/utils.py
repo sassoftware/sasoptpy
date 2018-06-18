@@ -39,7 +39,10 @@ BIN = 'BIN'
 __namedict = {}
 
 # Counters
-__ctr = {'obj': [0], 'var': [0], 'con': [0], 'expr': [0], 'model': [0]}
+__ctr = {'obj': [0], 'var': [0], 'con': [0], 'expr': [0], 'model': [0],
+         'i': [0], 'set': [0], 'param': [0], 'impvar': [0]}
+
+__objcnt = 0
 
 
 def check_name(name, ctype=None):
@@ -55,7 +58,9 @@ def check_name(name, ctype=None):
     -------
     str : The given name if valid, a random string otherwise
     '''
-    if name is None:
+    if name and type(name) != str:
+        name = ctype + '_' + str(name) if ctype else str(name)
+    if name is None or name == '':
         if ctype is None:
             name = ''.join(random.choice(string.ascii_lowercase) for
                            _ in range(5))
@@ -80,19 +85,73 @@ def check_name(name, ctype=None):
 
 
 def _is_generated(expr):
-    if isinstance(expr, sasoptpy.Variable):
+    if isinstance(expr, sasoptpy.components.Variable):
         return
     caller = inspect.stack()[2][3]
     if caller == '<genexpr>':
         return True
 
 
+def exp_range(start, stop, step=1):
+    '''
+    Creates a range using expressions
+    '''
+    regular = isinstance(start, int) and isinstance(stop, int) and\
+        isinstance(step, int)
+    if regular:
+        return range(start, stop, step)
+    setname = str(start) + '..' + str(stop)
+    setname = setname.replace(' ', '')
+    return sasoptpy.data.Set(name=setname)
+
+
 def register_name(name, obj):
     '''
-    Adds the name of a component into the global reference list
+    Adds the name and order of a component into the global reference list
     '''
-    __namedict[name] = obj
+    global __objcnt
+    __objcnt += 1
+    __namedict[name] = {'ref': obj, 'order': __objcnt}
+    return __objcnt
 
+
+def recursive_walk(obj, func, attr=None, alt=None):
+    '''
+    Calls a given method recursively for given objects
+
+
+    Parameters
+    ----------
+    func : string
+        Name of the method / function be called
+    attr : string, optional
+        An attribute which triggers an alternative method to be called if\
+        exists
+    alt : string, optional
+        Name of the alternative method / function to be called if passed attr\
+        exists for given objects
+
+    Notes
+    -----
+    - This function is for internal consumption.
+
+    '''
+    result = []
+    for i in list(obj):
+        if isinstance(i, list):
+            result.append(recursive_walk(i, func))
+        else:
+            if attr is None:
+                m_call = getattr(i, func)
+                result.append(m_call())
+            else:
+                m_attr = getattr(i, attr)
+                if m_attr:
+                    m_call = getattr(i, alt)
+                else:
+                    m_call = getattr(i, func)
+                result.append(m_call())
+    return result
 
 def quick_sum(argv):
     '''
@@ -116,11 +175,68 @@ def quick_sum(argv):
     function.
 
     '''
-    exp = sasoptpy.Expression(temp=True)
+    clocals = argv.gi_frame.f_locals.copy()
+    exp = sasoptpy.components.Expression(temp=True)
+    #==========================================================================
+    # for i in argv:
+    #     exp = exp + i
+    #     if isinstance(i, sasoptpy.components.Expression):
+    #         if i._abstract:
+    #             newlocals = argv.gi_frame.f_locals
+    #             iterators = []
+    #             for nl in newlocals.keys():
+    #                 if nl not in clocals:
+    #                     iterators.append(newlocals[nl])
+    #             exp = _check_iterator(exp, 'sum', iterators)
+    #==========================================================================
+    iterators = []
     for i in argv:
         exp = exp + i
+        if isinstance(i, sasoptpy.components.Expression):
+            if i._abstract:
+                newlocals = argv.gi_frame.f_locals
+                for nl in newlocals.keys():
+                    if nl not in clocals and\
+                       type(newlocals[nl]) == sasoptpy.data.SetIterator:
+                        iterators.append((nl, newlocals[nl])) # Tuple: name, ref
+    if iterators:
+        # First pass: make set iterators uniform
+        for i in iterators:
+            for j in iterators:
+                if i[0] == j[0]:
+                    j[1]._name = i[1]._name
+        it_names = []
+        for i in iterators:
+            unique = True
+            for j in it_names:
+                if i[0] == j[0]:
+                    unique = False
+                    break
+            if unique:
+                it_names.append(i)
+        # Second pass: check for iterators
+        iterators = [p[1] for p in it_names]
+        exp = _check_iterator(exp, 'sum', iterators)
     exp._temp = False
     return exp
+
+
+def _check_iterator(exp, operator, iterators):
+    if isinstance(exp, sasoptpy.components.Variable):
+        r = exp.copy()
+    else:
+        r = exp
+    if r._name is None:
+        r._name = check_name(None, 'expr')
+    if r._operator is None:
+        r._operator = operator
+    for i in iterators:
+        if isinstance(i, sasoptpy.data.SetIterator):
+            r._iterkey.append(i)
+    wrapper = sasoptpy.components.Expression()
+    wrapper._linCoef[r._name] = {'ref': r, 'val': 1.0}
+    wrapper._abstract = True
+    return wrapper
 
 
 def get_obj_by_name(name):
@@ -163,7 +279,7 @@ def get_obj_by_name(name):
 
     '''
     if name in __namedict:
-        return __namedict[name]
+        return __namedict[name['ref']]
     else:
         return None
 
@@ -216,6 +332,8 @@ def extract_argument_as_list(inp):
         thelist = inp[0]
     elif isinstance(inp, list):
         thelist = inp
+    elif isinstance(inp, sasoptpy.data.Set):
+        thelist = [inp]
     else:
         thelist = list(inp)
     return thelist
@@ -294,6 +412,52 @@ def get_counter(ctrtype):
     ctr = __ctr[ctrtype]
     ctr[0] = ctr[0] + 1
     return ctr[0]
+
+
+def _to_optmodel_loop(keys):
+    s = ''
+    subindex = []
+    for key in keys:
+        if not isinstance(key, sasoptpy.data.SetIterator):
+            subindex.append(str(key))
+    if subindex:
+        s += '_' + '_'.join(subindex)
+    iters = get_iterators(keys)
+    conds = get_conditions(keys)
+    if len(iters) > 0:
+        s += ' {'
+        s += ', '.join(iters)
+        if len(conds) > 0:
+            s += ': '
+            s += ' and '.join(conds)
+        s += '}'
+    return s
+
+def get_iterators(keys):
+    iterators = []
+    groups = {}
+    for key in keys:
+        if isinstance(key, sasoptpy.data.SetIterator):
+            if key._group == 0:
+                iterators.append(key._defn())
+            else:
+                g = groups.setdefault(key._group, [])
+                g.append(key)
+    if groups:
+        for kg in groups.values():
+            s = '<' + ','.join([i._name for i in kg]) + '> in ' +\
+                kg[0]._set._name
+            iterators.append(s)
+    return iterators
+
+
+def get_conditions(keys):
+    conditions = []
+    for key in keys:
+        if isinstance(key, sasoptpy.data.SetIterator):
+            if len(key._conditions) > 0:
+                conditions.append(key._to_conditions())
+    return conditions
 
 
 def tuple_unpack(tp):
@@ -468,6 +632,13 @@ def flatten_frame(df):
     return new_frame
 
 
+def is_equal(a, b):
+    '''
+    Compares various sasoptpy object types
+    '''
+    return a == b
+
+
 def print_model_mps(model):
     '''
     Prints the MPS representation of the model
@@ -540,9 +711,9 @@ def get_namespace():
               sasoptpy.components.Constraint]:
         s += '\n\t{}'.format(c.__name__)
         for i, k in enumerate(__namedict):
-            if type(__namedict[k]) is c:
+            if type(__namedict[k]['ref']) is c:
                 s += '\n\t\t{:4d} {:{width}} {}, {}'.format(
-                    i, k, type(__namedict[k]), repr(__namedict[k]),
+                    i, k, type(__namedict[k]['ref']), repr(__namedict[k]['ref']),
                     width=len(max(__namedict, key=len)))
     return s
 
@@ -552,7 +723,9 @@ def get_namedict():
 
 
 def set_namedict(ss):
-    __namedict = ss
+    #__namedict = ss
+    for i in ss:
+        register_name(i, ss[i])
 
 
 def get_len(i):
@@ -570,6 +743,17 @@ def _list_item(i):
         return [i]
 
 
+def _to_bracket(prefix, keys):
+    if keys is None:
+        return prefix
+    else:
+        s = prefix + '['
+        k = tuple_pack(keys)
+        s += ', '.join([str(i) for i in k])
+        s += ']'
+        return s
+
+
 def _sort_tuple(i):
     i = sasoptpy.utils.tuple_pack(i)
     key = (len(i),)
@@ -582,6 +766,17 @@ def _sort_tuple(i):
             key += (2,)
     key += i
     return(key)
+
+
+def get_mutable(exp):
+    '''
+    Returns a mutable copy of the given expression if it is immutable
+    '''
+    if isinstance(exp, sasoptpy.components.Variable):
+        r = sasoptpy.components.Expression(exp)
+    else:
+        r = exp
+    return r
 
 
 def get_solution_table(*argv, sort=False, rhs=False):
@@ -773,3 +968,33 @@ def get_solution_table(*argv, sort=False, rhs=False):
     soltablep2 = soltablep.set_index(indexcols)
     pd.set_option('display.multi_sparse', False)
     return soltablep2
+
+
+def union(*args):
+    type0 = type(args[0])
+    for i in args:
+        if type(i) != type0:
+            print('ERROR: Cannot perform union on {} {} objects'.format(
+                type0, type(i)))
+            return None
+    if type0 == sasoptpy.data.Set:
+        r = sasoptpy.components.Expression()
+        names = tuple(i._name for i in args)
+        refs = [i for i in args]
+        r._linCoef[names] = {
+            'ref': refs,
+            'val': 1.0,
+            'op': 'union'
+            }
+        r._abstract = True
+        return r
+    elif type0 == list:
+        r = []
+        for i in args:
+            r += i
+        return r
+    elif type0 == set:
+        r = set()
+        for i in args:
+            r += i
+        return r

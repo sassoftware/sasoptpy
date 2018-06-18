@@ -368,7 +368,7 @@ A set of constraints can be added using single or multiple indices.
 Valid index sets include list, dict, and :class:`pandas.Index` objects. 
 See :ref:`input-data` for more about allowed index types.
 
-**Creating a set of variables outside a model**
+**Creating a set of constraints outside a model**
 
 >>> z = so.VariableGroup(2, ['a', 'b', 'c'], name='z', lb=0, ub=10)
 >>> cg = so.ConstraintGroup((2 * z[i, j] + 3 * z[i-1, j] >= 2 for i in
@@ -381,7 +381,7 @@ Constraint Group (cg) [
 ]
 
 
-**Creating a set of variables inside a model**
+**Creating a set of constraints inside a model**
 
 >>> z = so.VariableGroup(2, ['a', 'b', 'c'], name='z', lb=0, ub=10)
 >>> cg2 = m.add_constraints((2 * z[i, j] + 3 * z[i-1, j] >= 2 for i in
@@ -393,3 +393,14 @@ Constraint Group (cg2) [
   [(1, 'c'):  2.0 * z[1, 'c']  +  3.0 * z[0, 'c']  >=  2]
 ]
 
+Range constraints
+~~~~~~~~~~~~~~~~~
+
+A range for an expression can be given using a list of two value (lower and
+upper bound) with an `==` sign:
+
+>>> x = m.add_variable(name='x')
+>>> y = m.add_variable(name='y')
+>>> c1 = m.add_constraint(x + 2*y == [2,9], name='c1')
+>>> print(repr(c1))
+sasoptpy.Constraint( x + 2.0 * y  ==  [2, 9], name='c1')

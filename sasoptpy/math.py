@@ -17,18 +17,16 @@
 #
 
 '''
-SAS Viya Optimization Modeling for Python (sasoptpy)
-****************************************************
-
-This file includes static methods and imports.
+Math includes the definition of mathematical operations
 
 '''
 
-from sasoptpy.model import *
-from sasoptpy.utils import *
-from sasoptpy.components import *
-from sasoptpy.data import *
-from sasoptpy.math import *
-#  from sasoptpy.gui import start_gui
+import sasoptpy.utils
 
-__version__ = '0.2.0.dev0'
+def sin(exp):
+    try:
+        exp = sasoptpy.utils.get_mutable(exp)
+        exp._operator = 'sin'
+        return exp
+    except AttributeError:
+        print('ERROR: sin function can only be used with Expression objects.')

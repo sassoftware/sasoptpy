@@ -22,6 +22,7 @@ Model includes :class:`Model` class, the main structure of an opt. model
 '''
 
 
+import inspect
 from math import inf
 from types import GeneratorType
 import warnings
@@ -62,7 +63,9 @@ class Model:
         self._session = session
         self._variables = []
         self._constraints = []
-        self._objective = sasoptpy.components.Expression()
+        self._vargroups = []
+        self._congroups = []
+        self._objective = sasoptpy.components.Expression(0, name=name+'_obj')
         self._datarows = []
         self._sense = sasoptpy.utils.MIN
         self._variableDict = {}
@@ -79,7 +82,12 @@ class Model:
         self._dualSolution = pd.DataFrame()
         self._milp_opts = {}
         self._lp_opts = {}
-        sasoptpy.utils.register_name(name, self)
+        self._sets = []
+        self._parameters = []
+        self._impvars = []
+        self._statements = []
+        # self._events = [] 
+        self._objorder = sasoptpy.utils.register_name(name, self)
         print('NOTE: Initialized model {}.'.format(name))
 
     def __eq__(self, other):
@@ -90,7 +98,7 @@ class Model:
         return super().__eq__(other)
 
     def add_variable(self, var=None, vartype=sasoptpy.utils.CONT, name=None,
-                     lb=0, ub=inf, init=None):
+                     lb=0, ub=inf, init=None, abstract=False):
         '''
         Adds a new variable to the model
 
@@ -162,7 +170,7 @@ class Model:
 
     def add_variables(self, *argv, vg=None, name=None,
                       vartype=sasoptpy.utils.CONT,
-                      lb=None, ub=None, init=None):
+                      lb=None, ub=None, init=None, abstract=None):
         '''
         Adds a group of variables to the model
 
@@ -216,13 +224,17 @@ class Model:
                     type(vg)))
         else:
             name = sasoptpy.utils.check_name(name, 'var')
+            if abstract is None:
+                abstract = isinstance(argv[0], sasoptpy.data.Set)
             vg = sasoptpy.components.VariableGroup(*argv, name=name,
                                                    vartype=vartype,
-                                                   lb=lb, ub=ub, init=init)
+                                                   lb=lb, ub=ub, init=init,
+                                                   abstract=abstract)
             for i in vg:
                 self._variables.append(i)
         for i in vg:
             self._variableDict[i._name] = i
+        self._vargroups.append(vg)
         return vg
 
     def add_constraint(self, c, name=None):
@@ -263,7 +275,7 @@ class Model:
             if name is not None or (name is None and c._name is None):
                 name = sasoptpy.utils.check_name(name, 'con')
                 c._name = name
-                sasoptpy.utils.register_name(name, c)
+                c._objorder = sasoptpy.utils.register_name(name, c)
             self._constraintDict[c._name] = c
         else:
             raise Exception('Expression is not a constraint!')
@@ -330,6 +342,7 @@ class Model:
             else:
                 print('ERROR: Cannot add constraint group of type {}'.format(
                     type(cg)))
+            self._congroups.append(cg)
             return cg
         else:
             if type(argv) == list or type(argv) == GeneratorType:
@@ -338,6 +351,7 @@ class Model:
                 for i in cg:
                     self._constraints.append(i)
                     self._constraintDict[i._name] = i
+                self._congroups.append(cg)
                 return cg
             elif type(argv) == sasoptpy.components.Constraint:
                 print('WARNING: add_constraints argument is a single' +
@@ -345,6 +359,202 @@ class Model:
                 name = sasoptpy.utils.check_name(name, 'con')
                 c = self.add_constraint(c=argv, name=name)
                 return c
+
+    def add_set(self, name, init=None, settype='num'):
+        if init:
+            if isinstance(init, range):
+                newinit = str(init.start) + '..' + str(init.stop)
+                if init.step != 1:
+                    newinit = ' by ' + init.step
+                init = newinit
+            elif isinstance(init, list):
+                init = '[' + ' '.join([str(i) for i in init]) + ']'
+        newset = sasoptpy.data.Set(name, init=init, settype=settype)
+        self._sets.append(newset)
+        return newset
+
+    def add_parameter(self, *argv, name=None, init=None):
+        if len(argv) == 0:
+            p = sasoptpy.data.Parameter(name, keys=(), init=init)
+            self._parameters.append(p)
+            return p['']
+        else:
+            keylist = list(argv)
+            p = sasoptpy.data.Parameter(name, keys=keylist, init=init)
+            self._parameters.append(p)
+            return p
+
+    def add_implicit_variable(self, argv=None, name=None):
+        '''
+        Adds an implicit variable to the model
+        '''
+        iv = sasoptpy.data.ExpressionDict(name=name)
+        if argv:
+            if type(argv) == GeneratorType:
+                for arg in argv:
+                    keynames = ()
+                    keyrefs = ()
+                    if argv.gi_code.co_nlocals == 1:
+                        itlist = argv.gi_code.co_cellvars
+                    else:
+                        itlist = argv.gi_code.co_varnames
+                    localdict = argv.gi_frame.f_locals
+                    for i in itlist:
+                        if i != '.0':
+                            keynames += (i,)
+                    for i in keynames:
+                        keyrefs += (localdict[i],)
+                    iv[keyrefs] = arg
+                self._impvars.append(iv)
+            elif type(argv) == sasoptpy.components.Expression and\
+                 argv._abstract:
+                iv[''] = argv
+                iv['']._objorder = iv._objorder
+                self._impvars.append(iv)
+                return iv['']
+            else:
+                iv = argv
+
+        return iv
+
+    def add_statement(self, statement):
+        if isinstance(statement, sasoptpy.components.Expression):
+            self._statements.append(sasoptpy.data.Statement(str(statement)))
+
+    def read_data(self, table, keyset, option='', key=[], params=[]):
+        '''
+        Reads a CASTable into PROC OPTMODEL sets
+        '''
+
+        # Reading key
+        if keyset is not None:
+            if key != []:
+                for i, k in enumerate(keyset):
+                    k._colname = str(key[i])
+
+        # Reading parameters
+        for p in params:
+            p.setdefault('column', None)
+            p.setdefault('index', None)
+            p['param']._set_loop(table, keyset, p['column'], p['index'])
+
+        s = 'read data {}'.format(table.name)
+        if option:
+            s += ' {}'.format(option)
+        s += ' into '
+        if len(keyset) == 1:
+            k = keyset[0]
+            if isinstance(k._colname, str):
+                s += '{}=[{}] '.format(k._name, k._colname)
+            elif isinstance(k._colname, list):
+                s += '{}=[{}] '.format(k._name, ' '.join(k._colname))
+        else:
+            s += '['
+            for k in keyset:
+                s += k._colname + ' '
+            s = s[:-1]
+            s += '] '
+        parlist = []
+        for p in params:
+            parlist.append(p['param']._to_read_data())
+        s += ' '.join(parlist)
+        s += ';'
+        self._statements.append(sasoptpy.data.Statement(s))
+
+    def read_table(self, table, key=['_N_'], columns=[],
+                   key_type='num', upload=False):
+        '''
+        Reads a CAS Table or pandas DataFrame into the model
+
+        Parameters
+        ----------
+        table : :class:`swat.cas.table.CASTable` or :class:`pandas.DataFrame`\
+                object
+            CASTable or DataFrame object to read the data from
+        key : list, optional
+            List of key columns (for CASTable) or index columns (for DataFrame)
+        columns : list, optional
+            List of columns to read into parameters
+        key_type : string, optional
+            Type of the key columns, 'num' or 'str' or their comma separated\
+            combinations
+        upload : boolean, optional
+            Option for uploading a local data to CAS server first
+
+        Returns
+        -------
+        tuple
+            A tuple where first element is the key (index) and second element\
+            is a list of requested columns
+
+        Notes
+        -----
+
+        - If the model is running in saspy or MPS mode, then the data is read
+          to client from the CAS server.
+        - If the model is running in OPTMODEL mode, then this method generates
+          the corresponding optmodel code.
+        - When table is a CASTable object, since the actual data is stored
+          on the CAS server, some of the functionalities may be limited.
+        - For the local data, `upload` argument can be passed for performance
+          improvement.
+
+        Examples
+        --------
+
+        >>> info = pd.DataFrame([
+                ['clock', 6, 15, 1],
+                ['pc', 3, 14, 5],
+                ['headphone', 2, 9, 3],
+                ['mug', 2, 4, 1],
+                ['book', 5, 1, 3],
+                ['pen', 1, 1, 4]
+                ], columns=['item', 'weight', 'value', 'limit'])
+        >>> ITEMS, [weight, value, limit] = m.read_table(
+                info, key=['item'], columns=['weight', 'value', 'limit'],
+                key_stype='str', upload=False)
+
+        See also
+        --------
+        :func:`Model.read_data`
+        :func:`Model.add_parameter`
+        :func:`Model.add_set`
+
+        '''
+
+        if upload and type(table).__name__ != 'CASTable' and\
+           self.test_session() == 'CAS':
+            table = self._session.upload_frame(table)
+
+        if type(table).__name__ == 'CASTable':
+            if not key or key == [None]:
+                key = ['_N_']
+            keyset = self.add_set(
+                name='set_' + ('_'.join([str(i) for i in key])
+                               if key != ['_N_'] else table.name + '_N'),
+                settype=key_type
+                )
+            pars = []
+            for col in columns:
+                pars.append(self.add_parameter(keyset, name=col))
+
+            self.read_data(table, keyset=[keyset], key=key, params=[
+                {'param': i} for i in pars])
+        elif type(table).__name__ == 'DataFrame':
+            if key and key != [None] and key != ['_N_']:
+                table = table.set_index(key)
+            keyset = table.index.tolist()
+            pars = []
+            for col in columns:
+                pars.append(table[col])
+        else:
+            print('ERROR: Data type is not recognized in read_table: {} ({})'
+                  .format(table, type(table)))
+            return None
+        if pars:
+            return (keyset, pars)
+        else:
+            return keyset
 
     def drop_variable(self, variable):
         '''
@@ -525,13 +735,11 @@ class Model:
             if isinstance(c, sasoptpy.components.Variable):
                 self.add_variable(var=c)
             elif isinstance(c, sasoptpy.components.VariableGroup):
-                for v in c:
-                    self.add_variable(var=v)
+                self.add_variables(vg=c)
             elif isinstance(c, sasoptpy.components.Constraint):
                 self.add_constraint(c)
             elif isinstance(c, sasoptpy.components.ConstraintGroup):
-                for cn in c._condict:
-                    self.add_constraint(c._condict[cn])
+                self.add_constraints(argv=None, cg=c)
             elif isinstance(c, Model):
                 for v in c._variables:
                     self.add_variable(v)
@@ -584,7 +792,8 @@ class Model:
         self._objective = obj
         if self._objective._name is None:
             name = sasoptpy.utils.check_name(name, 'obj')
-            sasoptpy.utils.register_name(name, self._objective)
+            self._objective._objorder = sasoptpy.utils.register_name(
+                name, self._objective)
             self._objective._name = name
         self._sense = sense
         self._objective._temp = False
@@ -696,6 +905,7 @@ class Model:
         for v in self._variables:
             if v._name == name:
                 return v
+        return None
 
     def get_variables(self):
         '''
@@ -752,6 +962,41 @@ class Model:
             return self._objective._linCoef[varname]['val']
         else:
             return 0
+
+    def get_variable_value(self, var=None, name=None):
+        '''
+        Returns the value of a variable.
+
+        Parameters
+        ----------
+        var : :class:`Variable` object, optional
+            Variable object
+        name : string, optional
+            Name of the variable
+
+        Notes
+        -----
+        - It is possible to get a variable's value using
+          :func:`Variable.get_value` method, if the variable is not abstract.
+        - This method is a wrapper around :func:`Variable.get_value` and an
+          overlook function for model components
+        '''
+        if var and not name:
+            if var._shadow:
+                name = str(var).replace(' ', '')
+            else:
+                name = var._name
+        elif not var and not name:
+            return None
+
+        if name in self._variableDict:
+            return self._variableDict[name].get_value()
+        else:
+            if self._primalSolution is not None:
+                for _, row in self._primalSolution.iterrows():
+                    if row['var'] == name:
+                        return row['value']
+        return None
 
     def get_problem_summary(self):
         '''
@@ -1036,7 +1281,6 @@ class Model:
         -----
         * This method is called inside :func:`Model.solve`.
         '''
-        print('NOTE: Converting model {} to DataFrame.'.format(self._name))
         self._id = 1
         if(len(self._datarows) > 0):  # For future reference
             # take a copy?
@@ -1170,6 +1414,155 @@ class Model:
         self._datarows = []
         return mpsdata
 
+    def to_optmodel(self, header=True, expand=False, ordered=False,
+                    options={}):
+        '''
+        Generates the equivalent PROC OPTMODEL code for the model.
+
+        Parameters
+        ----------
+        header : boolean, optional
+            Option to include PROC headers
+        expand : boolean, optional
+            Option to include 'expand' command to OPTMODEL code
+        ordered : boolean, optional
+            Option to generate OPTMODEL code in a specific order (True) or\
+            in creation order (False)
+        options : dict, optional
+            Solver options for the OPTMODEL solve command
+
+        Returns
+        -------
+        string
+            PROC OPTMODEL representation of the model
+
+        Examples
+        --------
+
+        >>> print(m.to_optmodel())
+
+        '''
+
+        if ordered:
+            s = ''
+
+            if header:
+                s = 'proc optmodel;\n'
+
+            tab = '   '
+
+            s += tab + '/* Sets */\n'
+            for i in self._sets:
+                s += tab + i._defn() + '\n'
+
+            s += '\n' + tab + '/* Parameters */\n'
+            for i in self._parameters:
+                s += i._defn(tab) + '\n'
+
+            s += '\n' + tab + '/* Statements */\n'
+            for i in self._statements:
+                s += tab + i._defn() + '\n'
+
+            s += '\n' + tab + '/* Variables */\n'
+            for i in self._vargroups:
+                s += i._defn(tabs=tab) + '\n'
+
+            for v in self._variables:
+                if v._parent is None:
+                    s += tab + v._defn() + '\n'
+
+            s += '\n' + tab + '/* Implicit variables */\n'
+            for v in self._impvars:
+                s += tab + v._defn() + '\n'
+
+            s += '\n' + tab + '/* Constraints */\n'
+            for c in self._congroups:
+                s += c._defn(tabs=tab) + '\n'
+
+            for c in self._constraints:
+                if c._parent is None:
+                    s += tab + c._defn() + '\n'
+
+            s += '\n' + tab + '/* Objective */\n'
+            if self._objective is not None:
+                s += tab + '{} {} = '.format(self._sense.lower(),
+                                             self._objective._name)
+                s += self._objective._defn() + '; \n'
+
+            s += '\n' + tab + '/* Solver call */\n'
+            if expand:
+                s += tab + 'expand;\n'
+
+            s += tab + 'solve'
+            if options.get('with', None):
+                s += ' with ' + options['with']
+            if options.get('relaxint', False):
+                s += ' relaxint'
+            if options:
+                optstring = ''
+                for key, value in options.items():
+                    if key not in ('with', 'relaxint'):
+                        optstring += ' {}={}'.format(key, value)
+                if optstring:
+                    s += ' /' + optstring
+            s += ';\n'
+
+            s += tab + 'print _var_.name _var_.lb _var_.ub _var_ _var_.rc;\n'
+            s += tab + 'print _con_.name _con_.body _con_.dual;\n'
+
+            if header:
+                s += 'quit;\n'
+        else:
+            # Based on creation order
+            s = ''
+            if header:
+                s = 'proc optmodel;\n'
+            s += '/*Compact unordered format*/\n'
+            allcomp = (
+                self._sets +
+                self._parameters +
+                self._statements +
+                self._vargroups +
+                self._variables +
+                self._impvars +
+                self._congroups +
+                self._constraints +
+                [self._objective]
+                )
+            sorted_comp = sorted(allcomp, key=lambda i: i._objorder)
+            for cm in sorted_comp:
+                if id(cm) == id(self._objective):
+                    s += '{} {} = '.format(self._sense.lower(),
+                                           self._objective._name)
+                    s += self._objective._defn() + '; \n'
+                elif (cm._objorder > 0 and
+                      not (hasattr(cm, '_shadow') and cm._shadow) and
+                      not (hasattr(cm, '_parent') and cm._parent)):
+                    s += cm._defn() + '\n'
+            if expand:
+                s += 'expand;\n'
+
+            # Solve block
+            s += 'solve'
+            if options.get('with', None):
+                s += ' with ' + options['with']
+            if options.get('relaxint', False):
+                s += ' relaxint'
+            if options:
+                optstring = ''
+                for key, value in options.items():
+                    if key not in ('with', 'relaxint'):
+                        optstring += ' {}={}'.format(key, value)
+                if optstring:
+                    s += ' /' + optstring
+            s += ';\n'
+            # Output ODS tables
+            s += 'print _var_.name _var_.lb _var_.ub _var_ _var_.rc;\n'
+            s += 'print _con_.name _con_.body _con_.dual;\n'
+            if header:
+                s += 'quit;\n'
+        return(s)
+
     def __str__(self):
         s = 'Model: [\n'
         s += '  Name: {}\n'.format(self._name)
@@ -1193,6 +1586,18 @@ class Model:
         s = 'sasoptpy.Model(name=\'{}\', session={})'.format(self._name,
                                                              self._session)
         return s
+
+    def _defn(self):
+        s = 'problem {} include '.format(self._name)
+        s += ' '.join([s._name for s in self._congroups])
+        s += ' '.join([s._name for s in self._constraints])
+        s += ' '.join([s._name for s in self._vargroups])
+        s += ' '.join([s._name for s in self._variables])
+        s += ';'
+        return s
+
+    def _expr(self):
+        return self._to_optmodel()
 
     def upload_user_blocks(self):
         '''
@@ -1276,7 +1681,7 @@ class Model:
 
         Notes
         -----
-        
+
         - This method returns None if the model session is not valid.
         - Name of the table is randomly assigned if name argument is None
           or not given.
@@ -1297,9 +1702,319 @@ class Model:
         else:
             return None
 
-    def solve_local(self, name='MPS'):
+    def solve(self, options={}, submit=True, name=None,
+              frame=False, drop=False, replace=True, primalin=False,
+              milp={}, lp={}):
         '''
-        (Experimental) Solves the model by calling SAS 9.4 solvers
+        Solves the model by calling CAS or SAS optimization solvers
+
+        Parameters
+        ----------
+        options : dict, optional
+            A dictionary solver options
+        submit : boolean, optional
+            Switch for calling the solver instantly
+        name : string, optional
+            Name of the table name
+        frame : boolean, optional
+            Switch for uploading problem as a MPS DataFrame format
+        drop : boolean, optional
+            Switch for dropping the MPS table after solve (only CAS)
+        replace : boolean, optional
+            Switch for replacing an existing MPS table (only CAS and MPS)
+        primalin : boolean, optional
+            Switch for using initial values (only MILP)
+
+        Returns
+        -------
+        :class:`pandas.DataFrame` object
+            Solution of the optimization model
+
+        Examples
+        --------
+
+        >>> m.solve()
+        NOTE: Initialized model food_manufacture_1
+        NOTE: Converting model food_manufacture_1 to DataFrame
+        NOTE: Added action set 'optimization'.
+        ...
+        NOTE: Optimal.
+        NOTE: Objective = 107842.59259.
+        NOTE: The Dual Simplex solve time is 0.01 seconds.
+
+        >>> m.solve(options={'maxtime': 600})
+
+        >>> m.solve(options={'algorithm': 'ipm'})
+
+        Notes
+        -----
+        * This method takes two optional arguments (milp and lp).
+        * These arguments pass options to the solveLp and solveMilp CAS
+          actions.
+        * These arguments are not passed if the model has a SAS session.
+        * Both milp and lp should be defined as dictionaries, where keys are
+          option names. For example, ``m.solve(options={'maxtime': 600})`` limits
+          solution time to 600 seconds.
+        * See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvelp_syntax.htm&locale=en
+          for a list of LP options.
+        * See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvemilp_syntax.htm&locale=en
+          for a list of MILP options.
+
+        See also
+        --------
+        :func:`Model.solve_local`
+
+        '''
+
+        # Check if session is defined
+        session_type = self.test_session()
+        solver_func = None
+        if session_type == 'CAS':
+            sess = self._session
+            # Check if dataframe format, if it is, pass relevant parameters
+            solver_func = self.solve_on_cas
+        elif session_type == 'SAS':
+            sess = self._session
+            solver_func = self.solve_on_mva
+        else:
+            return None
+
+        # Check backward compatibility for options
+        if milp:
+            warnings.warn(
+                'WARNING: Solve method arguments `milp` and `lp` will be '
+                'deprecated, use `options` instead', DeprecationWarning)
+            options.update(milp)
+        if lp:
+            warnings.warn(
+                'WARNING: Solve method arguments `milp` and `lp` will be '
+                'deprecated, use `options` instead', DeprecationWarning)
+            options.update(lp)
+
+        # Call solver based on session type
+        return solver_func(
+            sess, options=options, submit=submit, name=name,
+            drop=drop, frame=frame, replace=replace, primalin=primalin)
+
+    def solve_on_cas(self, session, options, submit, name,
+                     frame, drop, replace, primalin):
+
+        # Check which method will be used for solve
+        session.loadactionset(actionset='optimization')
+
+        if frame or not hasattr(session.optimization, 'runoptmodel'):
+            frame = True
+
+        # If some of the data is on the server, force using optmodel mode
+        if frame and (self._sets or self._parameters):
+            print('INFO: Model {} has data on server,'.format(self._name),
+                  'switching to optmodel mode.')
+            if hasattr(session.optimization, 'runoptmodel'):
+                frame = False
+            else:
+                print('ERROR: Model {} has data on server'.format(self._name),
+                      ' but runoptmodel action is not available.')
+                return None
+
+        if frame:
+            print('NOTE: Converting model {} to DataFrame.'.format(self._name))
+            # Pre-upload argument parse
+
+            # Find problem type and initial values
+            ptype = 1  # LP
+            for v in self._variables:
+                if v._type != sasoptpy.utils.CONT:
+                    ptype = 2
+                    break
+
+            # Decomp check
+            try:
+                if options['decomp']['method'] == 'user':
+                            user_blocks = self.upload_user_blocks()
+                            options['decomp'] = {'blocks': user_blocks}
+            except KeyError:
+                pass
+
+            # Initial value check for MIP
+            if primalin:
+                init_values = []
+                var_names = []
+                if ptype == 2:
+                    for v in self._variables:
+                        if v._init is not None:
+                            var_names.append(v._name)
+                            init_values.append(v._init)
+                    if (len(init_values) > 0 and
+                       options.get('primalin', 1) is not None):
+                        primalinTable = pd.DataFrame(
+                            data={'_VAR_': var_names, '_VALUE_': init_values})
+                        session.upload_frame(
+                            primalinTable, casout={
+                                'name': 'PRIMALINTABLE', 'replace': True})
+                        options['primalin'] = 'PRIMALINTABLE'
+
+            mps_table = self.upload_model(name, replace=replace)
+
+            if ptype == 1:
+                valid_opts = inspect.signature(session.solveLp).parameters
+                lp_opts = {}
+                for key, value in options.items():
+                    if key in valid_opts:
+                        lp_opts[key] = value
+                response = session.solveLp(
+                    data=mps_table.name, **lp_opts,
+                    primalOut={'caslib': 'CASUSER', 'name': 'primal',
+                               'replace': True},
+                    dualOut={'caslib': 'CASUSER', 'name': 'dual', 'replace': True},
+                    objSense=self._sense)
+            elif ptype == 2:
+                valid_opts = inspect.signature(session.solveMilp).parameters
+                milp_opts = {}
+                for key, value in options.items():
+                    if key in valid_opts:
+                        milp_opts[key] = value
+                response = session.solveMilp(
+                    data=mps_table.name, **milp_opts,
+                    primalOut={'caslib': 'CASUSER', 'name': 'primal',
+                               'replace': True},
+                    dualOut={'caslib': 'CASUSER', 'name': 'dual',
+                             'replace': True},
+                    objSense=self._sense)
+
+            # Parse solution
+            if(response.get_tables('status')[0] == 'OK'):
+                self._primalSolution = session.CASTable(
+                    'primal', caslib='CASUSER').to_frame()
+                self._dualSolution = session.CASTable(
+                    'dual', caslib='CASUSER').to_frame()
+                # Bring solution to variables
+                for _, row in self._primalSolution.iterrows():
+                    self._variableDict[row['_VAR_']]._value = row['_VALUE_']
+
+                # Capturing dual values for LP problems
+                if ptype == 1:
+                    self._primalSolution = self._primalSolution[
+                        ['_VAR_', '_VALUE_', '_R_COST_']]
+                    self._primalSolution.columns = ['var', 'lb', 'ub',
+                                                    'value', 'rc']
+                    self._dualSolution = self._dualSolution[
+                        ['_ROW_', '_ACTIVITY_', '_VALUE_']]
+                    self._dualSolution.columns = ['con', 'value', 'dual']
+                    for _, row in self._primalSolution.iterrows():
+                        self._variableDict[row['var']]._dual = row['rc']
+                    for _, row in self._dualSolution.iterrows():
+                        self._constraintDict[row['con']]._dual = row['dual']
+                elif ptype == 2:
+                    self._primalSolution = self._primalSolution[
+                        ['_VAR_', '_LBOUND_', '_UBOUND_', '_VALUE_']]
+                    self._primalSolution.columns = ['var', 'lb', 'ub', 'value']
+                    self._dualSolution = self._dualSolution[
+                        ['_ROW_', '_ACTIVITY_']]
+                    self._dualSolution.columns = ['con', 'value']
+
+            # Drop tables
+            if drop:
+                session.table.droptable(table=mps_table.name)
+                if user_blocks is not None:
+                    session.table.droptable(table=user_blocks)
+                if primalin:
+                    session.table.droptable(table='PRIMALINTABLE')
+
+            # Post-solve parse
+            if(response.get_tables('status')[0] == 'OK'):
+                # Print problem and solution summaries
+                self._problemSummary = response.ProblemSummary[['Label1',
+                                                                'cValue1']]
+                self._solutionSummary = response.SolutionSummary[['Label1',
+                                                                  'cValue1']]
+                self._problemSummary.set_index(['Label1'], inplace=True)
+                self._problemSummary.columns = ['Value']
+                self._problemSummary.index.names = ['Label']
+                self._solutionSummary.set_index(['Label1'], inplace=True)
+                self._solutionSummary.columns = ['Value']
+                self._solutionSummary.index.names = ['Label']
+                # Record status and time
+                self._status = response.solutionStatus
+                self._soltime = response.solutionTime
+                if('OPTIMAL' in response.solutionStatus):
+                    self._objval = response.objective
+                    # Replace initial values with current values
+                    for v in self._variables:
+                        v._init = v._value
+                    return self._primalSolution
+                else:
+                    print('NOTE: Response {}'.format(response.solutionStatus))
+                    self._objval = 0
+                    return None
+            else:
+                print('ERROR: {}'.format(response.get_tables('status')[0]))
+                return None
+        else:  # OPTMODEL variant
+
+            # Find problem type and initial values
+            ptype = 1  # LP
+            for v in self._variables:
+                if v._type != sasoptpy.utils.CONT:
+                    ptype = 2
+                    break
+
+            print('NOTE: Converting model {} to OPTMODEL.'.format(self._name))
+            optmodel_string = self.to_optmodel(header=False, options=options)
+            if not submit:
+                return optmodel_string
+            print('NOTE: Submitting OPTMODEL codes to CAS server.')
+            response = session.runOptmodel(
+                optmodel_string,
+                outputTables={
+                    'names': {'solutionSummary': 'solutionSummary',
+                              'problemSummary': 'problemSummary',
+                              'Print1.PrintTable': 'primal',
+                              'Print2.PrintTable': 'dual'}
+                    }
+                )
+
+            # Parse solution
+            if(response.get_tables('status')[0] == 'OK'):
+                self._primalSolution = session.CASTable('primal').to_frame()
+                self._primalSolution = self._primalSolution[
+                    ['_VAR__NAME', '_VAR__LB', '_VAR__UB', '_VAR_', '_VAR__RC']]
+                self._primalSolution.columns = ['var', 'lb', 'ub', 'value', 'rc']
+                self._dualSolution = session.CASTable('dual').to_frame()
+                self._dualSolution = self._dualSolution[
+                    ['_CON__NAME', '_CON__BODY', '_CON__DUAL']]
+                self._dualSolution.columns = ['con', 'value', 'dual']
+                # Bring solution to variables
+                for _, row in self._primalSolution.iterrows():
+                    if row['var'] in self._variableDict:
+                        self._variableDict[row['var']]._value = row['value']
+
+                # Capturing dual values for LP problems
+                if ptype == 1:
+                    for _, row in self._primalSolution.iterrows():
+                        if row['var'] in self._variableDict:
+                            self._variableDict[row['var']]._dual = row['rc']
+                    for _, row in self._dualSolution.iterrows():
+                        if row['con'] in self._constraintDict:
+                            self._constraintDict[row['con']]._dual = row['dual']
+
+            self._solutionSummary = session.CASTable('solutionSummary').\
+                to_sparse()[['Label1', 'cValue1']].set_index(['Label1'])
+            self._problemSummary = session.CASTable('problemSummary').\
+                to_sparse()[['Label1', 'cValue1']].set_index(['Label1'])
+
+            self._solutionSummary.index.names = ['Label']
+            self._solutionSummary.columns = ['Value']
+
+            self._problemSummary.index.names = ['Label']
+            self._problemSummary.columns = ['Value']
+
+            self._status = response.solutionStatus
+            self._soltime = response.solutionTime
+
+    def solve_on_mva(self, session, options, submit, name,
+                     frame, drop, replace, primalin):
+        '''
+        Solves the model by calling SAS 9.4 solvers
 
         Parameters
         ----------
@@ -1361,7 +2076,12 @@ class Model:
 
         '''
 
-        session = self._session
+        if not name:
+            name = 'MPS'
+
+        if not frame:
+            print('NOTE: Switching to DataFrame method for MVA solver.')
+            frame = True
 
         try:
             import saspy as sp
@@ -1386,6 +2106,7 @@ class Model:
         try:
             session.df2sd(df, table=name, keep_outer_quotes=True)
         except:
+            print(df.to_string())
             session.df2sd(df, table=name)
             session.submit("""
             data {};
@@ -1454,189 +2175,3 @@ class Model:
 
         return self._primalSolution
 
-    def solve(self, milp={}, lp={}, name=None, drop=False, replace=True,
-              primalin=False):
-        '''
-        Solves the model by calling CAS optimization solvers
-
-        Parameters
-        ----------
-        milp : dict, optional
-            A dictionary of MILP options for the solveMilp CAS Action
-        lp : dict, optional
-            A dictionary of LP options for the solveLp CAS Action
-        name : string, optional
-            Name of the table name on CAS Server
-        drop : boolean, optional
-            Switch for dropping the MPS table on CAS Server after solve
-        replace : boolean, optional
-            Switch for replacing an existing MPS table on CAS Server
-        primalin : boolean, optional
-            Switch for using initial values (for MIP only)
-
-        Returns
-        -------
-        :class:`pandas.DataFrame` object
-            Solution of the optimization model
-
-        Examples
-        --------
-
-        >>> m.solve()
-        NOTE: Initialized model food_manufacture_1
-        NOTE: Converting model food_manufacture_1 to DataFrame
-        NOTE: Added action set 'optimization'.
-        ...
-        NOTE: Optimal.
-        NOTE: Objective = 107842.59259.
-        NOTE: The Dual Simplex solve time is 0.01 seconds.
-
-        >>> m.solve(milp={'maxtime': 600})
-
-        >>> m.solve(lp={'algorithm': 'ipm'})
-
-        Notes
-        -----
-        * This method takes two optional arguments (milp and lp).
-        * These arguments pass options to the solveLp and solveMilp CAS
-          actions.
-        * These arguments are not passed if the model has a SAS session.
-        * Both milp and lp should be defined as dictionaries, where keys are
-          option names. For example, ``m.solve(milp={'maxtime': 600})`` limits
-          solution time to 600 seconds.
-        * See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvelp_syntax.htm&locale=en
-          for a list of LP options.
-        * See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvemilp_syntax.htm&locale=en
-          for a list of MILP options.
-
-        See also
-        --------
-        :func:`Model.solve_local`
-
-        '''
-
-        # Check if session is defined
-        session_type = self.test_session()
-        if session_type == 'CAS':
-            sess = self._session
-        elif session_type == 'SAS':
-            return self.solve_local()
-        else:
-            return None
-
-        # Pre-upload argument parse
-        self._lp_opts = lp
-        self._milp_opts = milp
-
-        # Find problem type and initial values
-        ptype = 1  # LP
-        opt_args = lp
-        for v in self._variables:
-            if v._type != sasoptpy.utils.CONT:
-                ptype = 2
-                opt_args = milp
-                break
-
-        # Decomp check
-        user_blocks = None
-        if 'decomp' in opt_args:
-            if 'method' in opt_args['decomp']:
-                if opt_args['decomp']['method'] == 'user':
-                    user_blocks = self.upload_user_blocks()
-                    opt_args['decomp'] = {'blocks': user_blocks}
-
-        # Initial value check for MIP
-        if primalin:
-            init_values = []
-            var_names = []
-            if ptype == 2:
-                for v in self._variables:
-                    if v._init is not None:
-                        var_names.append(v._name)
-                        init_values.append(v._init)
-                if (len(init_values) > 0 and
-                   opt_args.get('primalin', 1) is not None):
-                    primalinTable = pd.DataFrame(data={'_VAR_': var_names,
-                                                       '_VALUE_': init_values})
-                    sess.upload_frame(primalinTable,
-                                      casout={'name': 'PRIMALINTABLE',
-                                              'replace': True})
-                    opt_args['primalin'] = 'PRIMALINTABLE'
-
-        mps_table = self.upload_model(name, replace=replace)
-        sess.loadactionset(actionset='optimization')
-
-        if ptype == 1:
-            response = sess.solveLp(data=mps_table.name,
-                                    **opt_args,
-                                    primalOut={'caslib': 'CASUSER',
-                                               'name': 'primal',
-                                               'replace': True},
-                                    dualOut={'caslib': 'CASUSER',
-                                             'name': 'dual', 'replace': True},
-                                    objSense=self._sense)
-        elif ptype == 2:
-            response = sess.solveMilp(data=mps_table.name,
-                                      **opt_args,
-                                      primalOut={'caslib': 'CASUSER',
-                                                 'name': 'primal',
-                                                 'replace': True},
-                                      dualOut={'caslib': 'CASUSER',
-                                               'name': 'dual',
-                                               'replace': True},
-                                      objSense=self._sense)
-
-        # Parse solution
-        if(response.get_tables('status')[0] == 'OK'):
-            self._primalSolution = sess.CASTable('primal',
-                                                 caslib='CASUSER').to_frame()
-            self._dualSolution = sess.CASTable('dual',
-                                               caslib='CASUSER').to_frame()
-            # Bring solution to variables
-            for _, row in self._primalSolution.iterrows():
-                self._variableDict[row['_VAR_']]._value = row['_VALUE_']
-
-            # Capturing dual values for LP problems
-            if ptype == 1:
-                for _, row in self._primalSolution.iterrows():
-                    self._variableDict[row['_VAR_']]._dual = row['_R_COST_']
-                for _, row in self._dualSolution.iterrows():
-                    self._constraintDict[row['_ROW_']]._dual = row['_VALUE_']
-
-        # Drop tables
-        if drop:
-            sess.table.droptable(table=mps_table.name)
-            if user_blocks is not None:
-                sess.table.droptable(table=user_blocks)
-            if primalin:
-                sess.table.droptable(table='PRIMALINTABLE')
-
-        # Post-solve parse
-        if(response.get_tables('status')[0] == 'OK'):
-            # Print problem and solution summaries
-            self._problemSummary = response.ProblemSummary[['Label1',
-                                                            'cValue1']]
-            self._solutionSummary = response.SolutionSummary[['Label1',
-                                                              'cValue1']]
-            self._problemSummary.set_index(['Label1'], inplace=True)
-            self._problemSummary.columns = ['Value']
-            self._problemSummary.index.names = ['Label']
-            self._solutionSummary.set_index(['Label1'], inplace=True)
-            self._solutionSummary.columns = ['Value']
-            self._solutionSummary.index.names = ['Label']
-            # Record status and time
-            self._status = response.solutionStatus
-            self._soltime = response.solutionTime
-            if('OPTIMAL' in response.solutionStatus):
-                self._objval = response.objective
-                # Replace initial values with current values
-                for v in self._variables:
-                    v._init = v._value
-                return self._primalSolution
-            else:
-                print('NOTE: Response {}'.format(response.solutionStatus))
-                self._objval = 0
-                return None
-        else:
-            print('ERROR: {}'.format(response.get_tables('status')[0]))
-            return None
