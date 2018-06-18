@@ -22,6 +22,7 @@ Model includes :class:`Model` class, the main structure of an opt. model
 '''
 
 
+import inspect
 from math import inf
 from types import GeneratorType
 import warnings
@@ -550,7 +551,10 @@ class Model:
             print('ERROR: Data type is not recognized in read_table: {} ({})'
                   .format(table, type(table)))
             return None
-        return (keyset, pars)
+        if pars:
+            return (keyset, pars)
+        else:
+            return keyset
 
     def drop_variable(self, variable):
         '''
@@ -979,7 +983,7 @@ class Model:
         '''
         if var and not name:
             if var._shadow:
-                name = str(var)
+                name = str(var).replace(' ', '')
             else:
                 name = var._name
         elif not var and not name:
@@ -1410,7 +1414,8 @@ class Model:
         self._datarows = []
         return mpsdata
 
-    def to_optmodel(self, header=True, expand=False, ordered=False):
+    def to_optmodel(self, header=True, expand=False, ordered=False,
+                    options={}):
         '''
         Generates the equivalent PROC OPTMODEL code for the model.
 
@@ -1423,6 +1428,8 @@ class Model:
         ordered : boolean, optional
             Option to generate OPTMODEL code in a specific order (True) or\
             in creation order (False)
+        options : dict, optional
+            Solver options for the OPTMODEL solve command
 
         Returns
         -------
@@ -1485,7 +1492,21 @@ class Model:
             s += '\n' + tab + '/* Solver call */\n'
             if expand:
                 s += tab + 'expand;\n'
-            s += tab + 'solve;\n'
+
+            s += tab + 'solve'
+            if options.get('with', None):
+                s += ' with ' + options['with']
+            if options.get('relaxint', False):
+                s += ' relaxint'
+            if options:
+                optstring = ''
+                for key, value in options.items():
+                    if key not in ('with', 'relaxint'):
+                        optstring += ' {}={}'.format(key, value)
+                if optstring:
+                    s += ' /' + optstring
+            s += ';\n'
+
             s += tab + 'print _var_.name _var_.lb _var_.ub _var_ _var_.rc;\n'
             s += tab + 'print _con_.name _con_.body _con_.dual;\n'
 
@@ -1520,7 +1541,22 @@ class Model:
                     s += cm._defn() + '\n'
             if expand:
                 s += 'expand;\n'
-            s += 'solve;\n'
+
+            # Solve block
+            s += 'solve'
+            if options.get('with', None):
+                s += ' with ' + options['with']
+            if options.get('relaxint', False):
+                s += ' relaxint'
+            if options:
+                optstring = ''
+                for key, value in options.items():
+                    if key not in ('with', 'relaxint'):
+                        optstring += ' {}={}'.format(key, value)
+                if optstring:
+                    s += ' /' + optstring
+            s += ';\n'
+            # Output ODS tables
             s += 'print _var_.name _var_.lb _var_.ub _var_ _var_.rc;\n'
             s += 'print _con_.name _con_.body _con_.dual;\n'
             if header:
@@ -1666,17 +1702,18 @@ class Model:
         else:
             return None
 
-    def solve(self, milp={}, lp={}, name=None,
-              frame=True, drop=False, replace=True, primalin=False):
+    def solve(self, options={}, submit=True, name=None,
+              frame=False, drop=False, replace=True, primalin=False,
+              milp={}, lp={}):
         '''
         Solves the model by calling CAS or SAS optimization solvers
 
         Parameters
         ----------
-        milp : dict, optional
-            A dictionary of MILP options
-        lp : dict, optional
-            A dictionary of LP options
+        options : dict, optional
+            A dictionary solver options
+        submit : boolean, optional
+            Switch for calling the solver instantly
         name : string, optional
             Name of the table name
         frame : boolean, optional
@@ -1705,9 +1742,9 @@ class Model:
         NOTE: Objective = 107842.59259.
         NOTE: The Dual Simplex solve time is 0.01 seconds.
 
-        >>> m.solve(milp={'maxtime': 600})
+        >>> m.solve(options={'maxtime': 600})
 
-        >>> m.solve(lp={'algorithm': 'ipm'})
+        >>> m.solve(options={'algorithm': 'ipm'})
 
         Notes
         -----
@@ -1716,7 +1753,7 @@ class Model:
           actions.
         * These arguments are not passed if the model has a SAS session.
         * Both milp and lp should be defined as dictionaries, where keys are
-          option names. For example, ``m.solve(milp={'maxtime': 600})`` limits
+          option names. For example, ``m.solve(options={'maxtime': 600})`` limits
           solution time to 600 seconds.
         * See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvelp_syntax.htm&locale=en
           for a list of LP options.
@@ -1742,23 +1779,36 @@ class Model:
         else:
             return None
 
-        # Call solver based on session type
-        return solver_func(sess, milp=milp, lp=lp, name=name, drop=drop,
-                           frame=frame, replace=replace, primalin=primalin)
+        # Check backward compatibility for options
+        if milp:
+            warnings.warn(
+                'WARNING: Solve method arguments `milp` and `lp` will be '
+                'deprecated, use `options` instead', DeprecationWarning)
+            options.update(milp)
+        if lp:
+            warnings.warn(
+                'WARNING: Solve method arguments `milp` and `lp` will be '
+                'deprecated, use `options` instead', DeprecationWarning)
+            options.update(lp)
 
-    def solve_on_cas(self, session, milp, lp, name,
+        # Call solver based on session type
+        return solver_func(
+            sess, options=options, submit=submit, name=name,
+            drop=drop, frame=frame, replace=replace, primalin=primalin)
+
+    def solve_on_cas(self, session, options, submit, name,
                      frame, drop, replace, primalin):
 
         # Check which method will be used for solve
         session.loadactionset(actionset='optimization')
 
-        if frame or not hasattr(session.optimization,'runoptmodel'):
+        if frame or not hasattr(session.optimization, 'runoptmodel'):
             frame = True
 
         # If some of the data is on the server, force using optmodel mode
         if frame and (self._sets or self._parameters):
-            print('WARNING: Model {} has data on server,'.format(self._name),
-                  ' switching to optmodel mode.')
+            print('INFO: Model {} has data on server,'.format(self._name),
+                  'switching to optmodel mode.')
             if hasattr(session.optimization, 'runoptmodel'):
                 frame = False
             else:
@@ -1769,25 +1819,21 @@ class Model:
         if frame:
             print('NOTE: Converting model {} to DataFrame.'.format(self._name))
             # Pre-upload argument parse
-            self._lp_opts = lp
-            self._milp_opts = milp
 
             # Find problem type and initial values
             ptype = 1  # LP
-            opt_args = lp
             for v in self._variables:
                 if v._type != sasoptpy.utils.CONT:
                     ptype = 2
-                    opt_args = milp
                     break
 
             # Decomp check
-            user_blocks = None
-            if 'decomp' in opt_args:
-                if 'method' in opt_args['decomp']:
-                    if opt_args['decomp']['method'] == 'user':
-                        user_blocks = self.upload_user_blocks()
-                        opt_args['decomp'] = {'blocks': user_blocks}
+            try:
+                if options['decomp']['method'] == 'user':
+                            user_blocks = self.upload_user_blocks()
+                            options['decomp'] = {'blocks': user_blocks}
+            except KeyError:
+                pass
 
             # Initial value check for MIP
             if primalin:
@@ -1799,29 +1845,40 @@ class Model:
                             var_names.append(v._name)
                             init_values.append(v._init)
                     if (len(init_values) > 0 and
-                       opt_args.get('primalin', 1) is not None):
+                       options.get('primalin', 1) is not None):
                         primalinTable = pd.DataFrame(
                             data={'_VAR_': var_names, '_VALUE_': init_values})
                         session.upload_frame(
                             primalinTable, casout={
                                 'name': 'PRIMALINTABLE', 'replace': True})
-                        opt_args['primalin'] = 'PRIMALINTABLE'
+                        options['primalin'] = 'PRIMALINTABLE'
 
             mps_table = self.upload_model(name, replace=replace)
 
             if ptype == 1:
+                valid_opts = inspect.signature(session.solveLp).parameters
+                lp_opts = {}
+                for key, value in options.items():
+                    if key in valid_opts:
+                        lp_opts[key] = value
                 response = session.solveLp(
-                    data=mps_table.name, **opt_args,
+                    data=mps_table.name, **lp_opts,
                     primalOut={'caslib': 'CASUSER', 'name': 'primal',
                                'replace': True},
                     dualOut={'caslib': 'CASUSER', 'name': 'dual', 'replace': True},
                     objSense=self._sense)
             elif ptype == 2:
+                valid_opts = inspect.signature(session.solveMilp).parameters
+                milp_opts = {}
+                for key, value in options.items():
+                    if key in valid_opts:
+                        milp_opts[key] = value
                 response = session.solveMilp(
-                    data=mps_table.name, **opt_args,
+                    data=mps_table.name, **milp_opts,
                     primalOut={'caslib': 'CASUSER', 'name': 'primal',
                                'replace': True},
-                    dualOut={'caslib': 'CASUSER', 'name': 'dual', 'replace': True},
+                    dualOut={'caslib': 'CASUSER', 'name': 'dual',
+                             'replace': True},
                     objSense=self._sense)
 
             # Parse solution
@@ -1902,7 +1959,10 @@ class Model:
                     break
 
             print('NOTE: Converting model {} to OPTMODEL.'.format(self._name))
-            optmodel_string = self.to_optmodel(header=False)
+            optmodel_string = self.to_optmodel(header=False, options=options)
+            if not submit:
+                return optmodel_string
+            print('NOTE: Submitting OPTMODEL codes to CAS server.')
             response = session.runOptmodel(
                 optmodel_string,
                 outputTables={
@@ -1951,7 +2011,7 @@ class Model:
             self._status = response.solutionStatus
             self._soltime = response.solutionTime
 
-    def solve_on_mva(self, session, milp, lp, name,
+    def solve_on_mva(self, session, options, submit, name,
                      frame, drop, replace, primalin):
         '''
         Solves the model by calling SAS 9.4 solvers
