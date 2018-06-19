@@ -1848,15 +1848,25 @@ class Model:
         if frame or not hasattr(session.optimization, 'runoptmodel'):
             frame = True
 
-        # If some of the data is on the server, force using optmodel mode
-        if frame and (self._sets or self._parameters):
-            print('INFO: Model {} has data on server,'.format(self._name),
-                  'switching to optmodel mode.')
-            if hasattr(session.optimization, 'runoptmodel'):
+        # Check if OPTMODEL mode is needed
+        if frame:
+            switch = False
+            # Check if model has sets or parameters
+            if self._sets or self._parameters:
+                print('INFO: Model {} has data on server,'.format(self._name),
+                      'switching to OPTMODEL mode.')
+                switch = True
+            # Check if model is nonlinear (or abstract)
+            elif not self._is_linear():
+                print('INFO: Model {} includes nonlinear or abstract ',
+                      'components, switching to OPTMODEL mode.')
+                switch = True
+
+            if switch and hasattr(session.optimization, 'runoptmodel'):
                 frame = False
-            else:
-                print('ERROR: Model {} has data on server'.format(self._name),
-                      ' but runoptmodel action is not available.')
+            elif switch:
+                print('ERROR: Switching to OPTMODEL mode is failed,',
+                      ' runOptmodel action is not available in CAS Server.')
                 return None
 
         if frame:
@@ -2131,6 +2141,22 @@ class Model:
         if not isinstance(session, sp.SASsession):
             print('ERROR: session= argument is not a valid SAS session.')
             return False
+
+        # Check if OPTMODEL mode is needed
+        if frame:
+            switch = False
+            # Check if model has sets or parameters
+            if self._sets or self._parameters:
+                print('INFO: Model {} has data on server,'.format(self._name),
+                      'switching to OPTMODEL mode.')
+                switch = True
+            # Check if model is nonlinear (or abstract)
+            elif not self._is_linear():
+                print('INFO: Model {} includes nonlinear or abstract ',
+                      'components, switching to OPTMODEL mode.')
+                switch = True
+            if switch:
+                frame = False
 
         if frame:
 
