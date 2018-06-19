@@ -438,7 +438,12 @@ class Model:
             p.setdefault('index', None)
             p['param']._set_loop(table, keyset, p['column'], p['index'])
 
-        s = 'read data {}'.format(table.name)
+        if type(table).__name__ == 'CASTable':
+            s = 'read data {}'.format(table.name)
+        elif type(table).__name__ == 'SASdata':
+            s = 'read data {}'.format(table.table)
+        else:
+            s = 'read data {}'.format(table)
         if option:
             s += ' {}'.format(option)
         s += ' into '
@@ -525,6 +530,9 @@ class Model:
         if upload and type(table).__name__ != 'CASTable' and\
            self.test_session() == 'CAS':
             table = self._session.upload_frame(table)
+        elif upload and type(table).__name__ == 'DataFrame' and\
+             self.test_session() == 'SAS':
+            table = self._session.df2sd(table)
 
         if type(table).__name__ == 'CASTable':
             if not key or key == [None]:
@@ -532,6 +540,20 @@ class Model:
             keyset = self.add_set(
                 name='set_' + ('_'.join([str(i) for i in key])
                                if key != ['_N_'] else table.name + '_N'),
+                settype=key_type
+                )
+            pars = []
+            for col in columns:
+                pars.append(self.add_parameter(keyset, name=col))
+
+            self.read_data(table, keyset=[keyset], key=key, params=[
+                {'param': i} for i in pars])
+        elif type(table).__name__ == 'SASdata':
+            if not key or key == [None]:
+                key = ['_N_']
+            keyset = self.add_set(
+                name='set_' + ('_'.join([str(i) for i in key])
+                               if key != ['_N_'] else table.table + '_N'),
                 settype=key_type
                 )
             pars = []
