@@ -1170,9 +1170,9 @@ class Model:
               25.0
 
         '''
-        if vtype == 'Primal':
+        if vtype == 'Primal' or vtype == 'primal':
             return self._primalSolution
-        elif vtype == 'Dual':
+        elif vtype == 'Dual' or vtype == 'dual':
             return self._dualSolution
         else:
             return None
@@ -1624,6 +1624,23 @@ class Model:
 
     def _expr(self):
         return self._to_optmodel()
+
+    def _is_linear(self):
+        '''
+        Checks if the model can be written as a linear model (in MPS format)
+
+        Returns
+        -------
+        boolean
+            True if model does not have any nonlinear components or abstract\
+            operations, False otherwise
+        '''
+        for c in self._constraints:
+            if not c._is_linear():
+                return False
+        if not self._objective._is_linear():
+            return False
+        return True
 
     def upload_user_blocks(self):
         '''

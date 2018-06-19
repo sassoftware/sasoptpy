@@ -170,7 +170,9 @@ class Expression:
         '''
         return self._dual
 
-    def set_name(self, name):
+
+
+    def set_name(self, name=None):
         '''
         Sets the name of the expression
 
@@ -191,16 +193,19 @@ class Expression:
         >>> e.set_name('objective')
 
         '''
+        if self._name is not None and not name:
+            # Expression has already a name and if no name is passed
+            return self._name
         nd = sasoptpy.utils.get_namedict()
         if self._name is not None:
             if self._name in nd:
                 del nd[self._name]
         safe_name = sasoptpy.utils.check_name(name, 'expr')
-        if name != safe_name:
+        if name and name != safe_name:
             print('NOTE: Name {} is changed to {} to prevent a conflict'
                   .format(name, safe_name))
         order = sasoptpy.utils.register_name(self._name, self)
-        if not self._objorder:
+        if hasattr(self, '_objorder') and not self._objorder:
             self._objorder = order
         self._name = safe_name
         return self._name
@@ -245,10 +250,11 @@ class Expression:
 
     def _expr(self):
         s = ''
-        if self._operator and self._iterkey:
+        if self._operator:
             s += self._operator
-            if self._operator == 'sum':
-                s += sasoptpy.utils._to_optmodel_loop(self._iterkey)
+            if self._iterkey:
+                if self._operator == 'sum':
+                    s += sasoptpy.utils._to_optmodel_loop(self._iterkey)
             s += '('
 
         itemcnt = 0
@@ -290,7 +296,7 @@ class Expression:
                 s += '{}'.format(abs(val))
             itemcnt += 1
 
-        if self._operator and self._iterkey:
+        if self._operator:
             s += ')'
         #if itemcnt > 1 and self._operator is None:
         #    s = '(' + s + ')'
@@ -325,7 +331,7 @@ class Expression:
     def __str__(self):
         s = ''
         firstel = 1
-        if self._operator and self._iterkey:
+        if self._operator:
             s += str(self._operator) + '('
         for v, vx in self._linCoef.items():
             if (vx['val'] == 0 or
@@ -360,10 +366,11 @@ class Expression:
                 if vx['val'] is not 0:
                     s += ' {} '.format(abs(vx['val']))
 
-        if self._operator and self._iterkey:
-            s += ' ' + ' '.join(
-                ['for {} in {}'.format(i._name, i._set._name)
-                 for i in self._iterkey])
+        if self._operator:
+            if self._iterkey:
+                s += ' ' + ' '.join(
+                    ['for {} in {}'.format(i._name, i._set._name)
+                     for i in self._iterkey])
             s += ')'
         if list(self._linCoef.keys()) == ['CONST'] and\
            self._linCoef['CONST']['val'] == 0:
@@ -421,7 +428,7 @@ class Expression:
                 sign = sign * -1
             elif self._operator is not None:
                 r = Expression()
-                r._linCoef[self._name] = {'val': 1.0, 'ref': self}
+                r._linCoef[self.set_name()] = {'val': 1.0, 'ref': self}
             else:
                 r = self.copy()
         if isinstance(other, Expression):
@@ -435,7 +442,7 @@ class Expression:
                         r._linCoef[v] = dict(other._linCoef[v])
                         r._linCoef[v]['val'] *= sign
             else:
-                r._linCoef[other._name] = {'val': sign, 'ref': other}
+                r._linCoef[other.set_name()] = {'val': sign, 'ref': other}
             r._conditions += self._conditions
             r._conditions += other._conditions
         elif np.issubdtype(type(other), np.number):
@@ -579,8 +586,51 @@ class Expression:
             return generated_constraint
         return self
 
+    def _is_linear(self):
+        '''
+        Checks if the expression is composed of linear components
+
+        Returns
+        -------
+        boolean
+            True if the expression is linear, False otherwise
+
+        Examples
+        --------
+
+        >>> x = so.Variable()
+        >>> e = x*x
+        >>> print(e.is_linear())
+        False
+
+        >>> f = x*x + x*x - 2*x*x + 5
+        >>> print(f.is_linear())
+        True
+
+        '''
+
+        self._clean()
+
+        # Loop over components
+        for val in self._linCoef.values():
+            if val.get('op', False):
+                return False
+            if type(val['ref']) is list:
+                return False
+            if val['ref'] and val['ref']._operator:
+                return False
+        return True
+
     def __hash__(self):
         return hash('{}{}'.format(self._name, id(self)))
+
+    def _clean(self):
+        keys_to_clean = []
+        for key in self._linCoef.keys():
+            if self._linCoef[key]['val'] == 0:
+                keys_to_clean.append(key)
+        for key in keys_to_clean:
+            del self._linCoef[key]
 
     def __add__(self, other):
         return self.add(other)
@@ -674,12 +724,6 @@ class Expression:
 
     def __iter__(self):
         return iter([self])
-
-    def __and__(self, other):
-        print('Called!')
-        print(self)
-        print(other)
-        return self
 
 
 class Variable(Expression):
