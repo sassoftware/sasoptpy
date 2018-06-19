@@ -40,7 +40,7 @@ __namedict = {}
 
 # Counters
 __ctr = {'obj': [0], 'var': [0], 'con': [0], 'expr': [0], 'model': [0],
-         'i': [0], 'set': [0], 'param': [0], 'impvar': [0]}
+         'i': [0], 'set': [0], 'param': [0], 'impvar': [0], 'table': [0]}
 
 __objcnt = 0
 
@@ -62,8 +62,8 @@ def check_name(name, ctype=None):
         name = ctype + '_' + str(name) if ctype else str(name)
     if name is None or name == '':
         if ctype is None:
-            name = ''.join(random.choice(string.ascii_lowercase) for
-                           _ in range(5))
+            name = 'TMP_' + ''.join(random.choice(string.ascii_uppercase) for
+                                    _ in range(5))
         else:
             name = '{}_{}'.format(ctype, get_counter(ctype))
     else:

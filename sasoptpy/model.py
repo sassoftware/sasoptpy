@@ -527,12 +527,14 @@ class Model:
 
         '''
 
-        if upload and type(table).__name__ != 'CASTable' and\
-           self.test_session() == 'CAS':
+        if (upload and type(table).__name__ != 'CASTable' and
+            self.test_session() == 'CAS'):
             table = self._session.upload_frame(table)
-        elif upload and type(table).__name__ == 'DataFrame' and\
-             self.test_session() == 'SAS':
-            table = self._session.df2sd(table)
+        elif (upload and type(table).__name__ == 'DataFrame' and
+              self.test_session() == 'SAS'):
+            tname = sasoptpy.utils.check_name(None, 'table')
+            sasoptpy.utils.register_name(tname, table)
+            table = self._session.df2sd(table, table=tname)
 
         if type(table).__name__ == 'CASTable':
             if not key or key == [None]:
@@ -547,7 +549,8 @@ class Model:
                 pars.append(self.add_parameter(keyset, name=col))
 
             self.read_data(table, keyset=[keyset], key=key, params=[
-                {'param': i} for i in pars])
+                {'param': pars[i], 'column': columns[i]}
+                for i in range(len(pars))])
         elif type(table).__name__ == 'SASdata':
             if not key or key == [None]:
                 key = ['_N_']
@@ -561,7 +564,8 @@ class Model:
                 pars.append(self.add_parameter(keyset, name=col))
 
             self.read_data(table, keyset=[keyset], key=key, params=[
-                {'param': i} for i in pars])
+                {'param': pars[i], 'column': columns[i]}
+                for i in range(len(pars))])
         elif type(table).__name__ == 'DataFrame':
             if key and key != [None] and key != ['_N_']:
                 table = table.set_index(key)
