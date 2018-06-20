@@ -278,8 +278,6 @@ class SetIterator(sasoptpy.components.Expression):
         return True
 
     def __eq__(self, key):
-        #if isinstance(key, SetIterator):
-        #    return self._name == key._name
         self.__add_condition('=', key)  # or 'EQ'
         return True
 

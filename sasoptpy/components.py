@@ -170,8 +170,6 @@ class Expression:
         '''
         return self._dual
 
-
-
     def set_name(self, name=None):
         '''
         Sets the name of the expression
@@ -298,8 +296,6 @@ class Expression:
 
         if self._operator:
             s += ')'
-        #if itemcnt > 1 and self._operator is None:
-        #    s = '(' + s + ')'
         if list(self._linCoef.keys()) == ['CONST'] and\
            self._linCoef['CONST']['val'] == 0:
             s += '0'
@@ -354,9 +350,7 @@ class Expression:
                     refs = op.join(refs_str)
                 else:
                     refs = ' * '.join([
-                        i._expr() #str(i) 
-                        #if i._operator is None
-                        #else i._expr()
+                        i._expr()
                         for i in list(vx['ref'])])
                 if vx['val'] == 1 or vx['val'] == -1:
                     s += ' {} '.format(refs)
@@ -470,8 +464,6 @@ class Expression:
           3*(x-y) and (x-y).mult(3) are interchangeable.
 
         '''
-        #if isinstance(other, sasoptpy.data.Parameter):
-        #  TODO r=self could be used whenever expression has no name
         if isinstance(other, Expression):
             r = Expression()
             if self._abstract or other._abstract:
@@ -493,7 +485,8 @@ class Expression:
                     else:  # TODO indexing is not interchangable,
                         if x['val'] * y['val'] != 0:
                             if x.get('op') is None and y.get('op') is None:
-                                newkey = sasoptpy.utils.tuple_pack(i) + sasoptpy.utils.tuple_pack(j)
+                                newkey = sasoptpy.utils.tuple_pack(i) +\
+                                         sasoptpy.utils.tuple_pack(j)
                                 target[newkey] = {
                                     'ref': list(x['ref']) + list(y['ref']),
                                     'val': x['val'] * y['val']}
@@ -564,9 +557,6 @@ class Expression:
                 r._linCoef['CONST']['val'] -= other
             elif isinstance(other, Expression):
                 r -= other
-                #for v in other._linCoef:
-                #    r._add_coef_value(other._linCoef[v]['ref'], v,
-                #                      -other._linCoef[v]['val'])
             generated_constraint = Constraint(exp=r, direction=direction_,
                                               crange=0)
             return generated_constraint
@@ -870,34 +860,14 @@ class Variable(Expression):
 
     def _expr(self):
         if self._parent is not None and self._key is not None:
-            key = ', '.join([str(i) if not isinstance(i, str) else "'{}'".format(i) for i in self._key])
+            key = ', '.join([str(i) if not isinstance(i, str)
+                             else "'{}'".format(i) for i in self._key])
             return ('{}[{}]'.format(self._parent._name, key))
         if self._shadow and self._iterkey:
-            key = ', '.join([str(i) if not isinstance(i, str) else "'{}'".format(i) for i in self._iterkey])
+            key = ', '.join([str(i) if not isinstance(i, str)
+                             else "'{}'".format(i) for i in self._iterkey])
             return('{}[{}]'.format(self._name, key))
         return('{}'.format(self._name))
-
-    #==========================================================================
-    # def _to_optmodel(self):
-    #     s = 'var {} '.format(self._name)
-    #     BIN = sasoptpy.utils.BIN
-    #     CONT = sasoptpy.utils.CONT
-    #     if self._type != CONT:
-    #         if self._type == BIN:
-    #             s += 'binary '
-    #         else:
-    #             s += 'integer '
-    #     if self._lb != -inf:
-    #         if not (self._lb == 0 and self._type == BIN):
-    #             s += '>= {} '.format(self._lb)
-    #     if self._ub != inf:
-    #         if not (self._ub == 1 and self._type == BIN):
-    #             s += '<= {} '.format(self._ub)
-    #     if self._init is not None:
-    #         s += 'init {} '.format(self._init)
-    #     s += ';'
-    #     return(s)
-    #==========================================================================
 
     def _defn(self):
         s = 'var {}'.format(self._name)
@@ -1143,7 +1113,6 @@ class Constraint(Expression):
         self._parent = parent
         self._key = key
 
-    #def _to_optmodel(self):
     def _defn(self):
         s = ''
         if self._parent is None:
@@ -1284,11 +1253,10 @@ class VariableGroup:
             self._objorder = sasoptpy.utils.register_name(name, self)
         else:
             self._name = None
-        #for arg in argv:
-        #    self._keyset.append(arg)
         for arg in argv:
             if isinstance(arg, int):
-                self._keyset.append(sasoptpy.utils.extract_argument_as_list(arg))
+                self._keyset.append(
+                    sasoptpy.utils.extract_argument_as_list(arg))
             else:
                 self._keyset.append(arg)
         self._abstract = abstract
@@ -1373,14 +1341,14 @@ class VariableGroup:
                 k = list(self._vardict)[0]
                 v = self._vardict[k]
                 vname = self._name
-                #vname = self._name + '[' +\
-                #    ','.join([str(i) for i in tuple_key]) + ']'
                 vname = vname.replace(' ', '')
                 shadow = Variable(name=vname, vartype=v._type, lb=v._lb,
                                   ub=v._ub, init=v._init, abstract=True,
                                   shadow=True)
-                ub = sasoptpy.data.ParameterValue(shadow, key=tuple_key, postfix='.ub')
-                lb = sasoptpy.data.ParameterValue(shadow, key=tuple_key, postfix='.lb')
+                ub = sasoptpy.data.ParameterValue(shadow, key=tuple_key,
+                                                  postfix='.ub')
+                lb = sasoptpy.data.ParameterValue(shadow, key=tuple_key,
+                                                  postfix='.lb')
                 shadow._ub = ub
                 shadow._lb = lb
                 shadow._iterkey = tuple_key
@@ -1415,7 +1383,6 @@ class VariableGroup:
     def __iter__(self):
         return iter([self._vardict[i] for i in self._varlist])
 
-    #def _to_optmodel(self, tabs=None):
     def _defn(self, tabs=''):
         s = tabs + 'var {}'.format(self._name)
         s += ' {'
@@ -1491,7 +1458,7 @@ class VariableGroup:
                     s += ' '
                 s = s.rstrip()
                 s += ';'
-            initparam = v._init != None
+            initparam = v._init is not None
             if initparam:
                 s += '\n' + tabs
                 loop_text = sasoptpy.utils._to_optmodel_loop(i)

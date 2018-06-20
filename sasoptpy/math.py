@@ -23,6 +23,7 @@ Math includes the definition of mathematical operations
 
 import sasoptpy.utils
 
+
 def sin(exp):
     try:
         exp = sasoptpy.utils.get_mutable(exp)

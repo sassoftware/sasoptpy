@@ -86,7 +86,6 @@ class Model:
         self._parameters = []
         self._impvars = []
         self._statements = []
-        # self._events = [] 
         self._objorder = sasoptpy.utils.register_name(name, self)
         print('NOTE: Initialized model {}.'.format(name))
 
@@ -98,7 +97,7 @@ class Model:
         return super().__eq__(other)
 
     def add_variable(self, var=None, vartype=sasoptpy.utils.CONT, name=None,
-                     lb=0, ub=inf, init=None, abstract=False):
+                     lb=0, ub=inf, init=None):
         '''
         Adds a new variable to the model
 
@@ -406,8 +405,8 @@ class Model:
                         keyrefs += (localdict[i],)
                     iv[keyrefs] = arg
                 self._impvars.append(iv)
-            elif type(argv) == sasoptpy.components.Expression and\
-                 argv._abstract:
+            elif (type(argv) == sasoptpy.components.Expression and
+                  argv._abstract):
                 iv[''] = argv
                 iv['']._objorder = iv._objorder
                 self._impvars.append(iv)
@@ -528,7 +527,7 @@ class Model:
         '''
 
         if (upload and type(table).__name__ != 'CASTable' and
-            self.test_session() == 'CAS'):
+                self.test_session() == 'CAS'):
             table = self._session.upload_frame(table)
         elif (upload and type(table).__name__ == 'DataFrame' and
               self.test_session() == 'SAS'):
@@ -1936,7 +1935,7 @@ class Model:
                       ' runOptmodel action is not available in CAS Server.')
                 return None
 
-        if frame:
+        if frame:  # MPS
             print('NOTE: Converting model {} to DataFrame.'.format(self._name))
             # Pre-upload argument parse
 
@@ -1985,7 +1984,8 @@ class Model:
                     data=mps_table.name, **lp_opts,
                     primalOut={'caslib': 'CASUSER', 'name': 'primal',
                                'replace': True},
-                    dualOut={'caslib': 'CASUSER', 'name': 'dual', 'replace': True},
+                    dualOut={'caslib': 'CASUSER', 'name': 'dual',
+                             'replace': True},
                     objSense=self._sense)
             elif ptype == 2:
                 valid_opts = inspect.signature(session.solveMilp).parameters
@@ -2011,7 +2011,8 @@ class Model:
                 for _, row in self._primalSolution.iterrows():
                     if ('_SOL_' in self._primalSolution and row['_SOL_'] == 1)\
                          or '_SOL_' not in self._primalSolution:
-                        self._variableDict[row['_VAR_']]._value = row['_VALUE_']
+                        self._variableDict[row['_VAR_']]._value =\
+                            row['_VALUE_']
 
                 # Capturing dual values for LP problems
                 if ptype == 1:
@@ -2029,15 +2030,19 @@ class Model:
                 elif ptype == 2:
                     try:
                         self._primalSolution = self._primalSolution[
-                            ['_VAR_', '_LBOUND_', '_UBOUND_', '_VALUE_', '_SOL_']]
-                        self._primalSolution.columns = ['var', 'lb', 'ub', 'value', 'solution']
+                            ['_VAR_', '_LBOUND_', '_UBOUND_', '_VALUE_',
+                             '_SOL_']]
+                        self._primalSolution.columns = ['var', 'lb', 'ub',
+                                                        'value', 'solution']
                         self._dualSolution = self._dualSolution[
                             ['_ROW_', '_ACTIVITY_', '_SOL_']]
-                        self._dualSolution.columns = ['con', 'value', 'solution']
+                        self._dualSolution.columns = ['con', 'value',
+                                                      'solution']
                     except:
                         self._primalSolution = self._primalSolution[
                             ['_VAR_', '_LBOUND_', '_UBOUND_', '_VALUE_']]
-                        self._primalSolution.columns = ['var', 'lb', 'ub', 'value']
+                        self._primalSolution.columns = ['var', 'lb', 'ub',
+                                                        'value']
                         self._dualSolution = self._dualSolution[
                             ['_ROW_', '_ACTIVITY_']]
                         self._dualSolution.columns = ['con', 'value']
@@ -2079,7 +2084,7 @@ class Model:
             else:
                 print('ERROR: {}'.format(response.get_tables('status')[0]))
                 return None
-        else:  # OPTMODEL variant
+        else:  # OPTMODEL
 
             # Find problem type and initial values
             ptype = 1  # LP
@@ -2108,8 +2113,10 @@ class Model:
             if(response.get_tables('status')[0] == 'OK'):
                 self._primalSolution = session.CASTable('primal').to_frame()
                 self._primalSolution = self._primalSolution[
-                    ['_VAR__NAME', '_VAR__LB', '_VAR__UB', '_VAR_', '_VAR__RC']]
-                self._primalSolution.columns = ['var', 'lb', 'ub', 'value', 'rc']
+                    ['_VAR__NAME', '_VAR__LB', '_VAR__UB', '_VAR_',
+                     '_VAR__RC']]
+                self._primalSolution.columns = ['var', 'lb', 'ub', 'value',
+                                                'rc']
                 self._dualSolution = session.CASTable('dual').to_frame()
                 self._dualSolution = self._dualSolution[
                     ['_CON__NAME', '_CON__BODY', '_CON__DUAL']]
@@ -2126,7 +2133,8 @@ class Model:
                             self._variableDict[row['var']]._dual = row['rc']
                     for _, row in self._dualSolution.iterrows():
                         if row['con'] in self._constraintDict:
-                            self._constraintDict[row['con']]._dual = row['dual']
+                            self._constraintDict[row['con']]._dual =\
+                                row['dual']
 
             self._solutionSummary = session.CASTable('solutionSummary').\
                 to_sparse()[['Label1', 'cValue1']].set_index(['Label1'])
@@ -2167,7 +2175,7 @@ class Model:
         >>> m.add_constraint(56.25*toffee <= 27000, name='process2')
         >>> m.add_constraint(18.75*choco <= 27000, name='process3')
         >>> m.add_constraint(12*choco + 50*toffee <= 27000, name='process4')
-        >>> 
+        >>>
         >>> m.solve_local()
         >>> # or m.solve()
         SAS Connection established. Subprocess id is 18192
@@ -2236,7 +2244,7 @@ class Model:
             if switch:
                 frame = False
 
-        if frame:
+        if frame:  # MPS
 
             # Get the MPS data
             df = self.to_frame()
@@ -2301,7 +2309,8 @@ class Model:
             # Get Problem Summary
             self._problemSummary = session.sd2df('PROB_SUMMARY')
             self._problemSummary.replace(np.nan, '', inplace=True)
-            self._problemSummary = self._problemSummary[['Label1', 'cValue1']]
+            self._problemSummary = self._problemSummary[['Label1',
+                                                         'cValue1']]
             self._problemSummary.set_index(['Label1'], inplace=True)
             self._problemSummary.columns = ['Value']
             self._problemSummary.index.names = ['Label']
@@ -2309,7 +2318,8 @@ class Model:
             # Get Solution Summary
             self._solutionSummary = session.sd2df('SOL_SUMMARY')
             self._solutionSummary.replace(np.nan, '', inplace=True)
-            self._solutionSummary = self._solutionSummary[['Label1', 'cValue1']]
+            self._solutionSummary = self._solutionSummary[['Label1',
+                                                           'cValue1']]
             self._solutionSummary.set_index(['Label1'], inplace=True)
             self._solutionSummary.columns = ['Value']
             self._solutionSummary.index.names = ['Label']
@@ -2320,7 +2330,7 @@ class Model:
 
             return self._primalSolution
 
-        else: # OPTMODEL version
+        else:  # OPTMODEL
 
             # Find problem type and initial values
             ptype = 1  # LP

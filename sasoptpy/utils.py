@@ -153,6 +153,7 @@ def recursive_walk(obj, func, attr=None, alt=None):
                 result.append(m_call())
     return result
 
+
 def quick_sum(argv):
     '''
     Quick summation function for :class:`Expression` objects
@@ -177,18 +178,6 @@ def quick_sum(argv):
     '''
     clocals = argv.gi_frame.f_locals.copy()
     exp = sasoptpy.components.Expression(temp=True)
-    #==========================================================================
-    # for i in argv:
-    #     exp = exp + i
-    #     if isinstance(i, sasoptpy.components.Expression):
-    #         if i._abstract:
-    #             newlocals = argv.gi_frame.f_locals
-    #             iterators = []
-    #             for nl in newlocals.keys():
-    #                 if nl not in clocals:
-    #                     iterators.append(newlocals[nl])
-    #             exp = _check_iterator(exp, 'sum', iterators)
-    #==========================================================================
     iterators = []
     for i in argv:
         exp = exp + i
@@ -198,7 +187,7 @@ def quick_sum(argv):
                 for nl in newlocals.keys():
                     if nl not in clocals and\
                        type(newlocals[nl]) == sasoptpy.data.SetIterator:
-                        iterators.append((nl, newlocals[nl])) # Tuple: name, ref
+                        iterators.append((nl, newlocals[nl]))  # Tuple: nm ref
     if iterators:
         # First pass: make set iterators uniform
         for i in iterators:
@@ -433,6 +422,7 @@ def _to_optmodel_loop(keys):
         s += '}'
     return s
 
+
 def get_iterators(keys):
     iterators = []
     groups = {}
@@ -515,7 +505,8 @@ def reset_globals():
     >>> print(so.get_namespace())
     Global namespace:
         Model
-               0 my_model <class 'sasoptpy.model.Model'>, sasoptpy.Model(name='my_model', session=None)
+               0 my_model <class 'sasoptpy.model.Model'>,\
+               sasoptpy.Model(name='my_model', session=None)
         VariableGroup
         ConstraintGroup
         Expression
@@ -543,7 +534,8 @@ def reset_globals():
 
 def read_frame(df, cols=None):
     '''
-    Reads each column in :class:`pandas.DataFrame` into a list of :class:`pandas.Series` objects
+    Reads each column in :class:`pandas.DataFrame` into a list of\
+    :class:`pandas.Series` objects
 
     Parameters
     ----------
@@ -713,7 +705,8 @@ def get_namespace():
         for i, k in enumerate(__namedict):
             if type(__namedict[k]['ref']) is c:
                 s += '\n\t\t{:4d} {:{width}} {}, {}'.format(
-                    i, k, type(__namedict[k]['ref']), repr(__namedict[k]['ref']),
+                    i, k, type(__namedict[k]['ref']),
+                    repr(__namedict[k]['ref']),
                     width=len(max(__namedict, key=len)))
     return s
 
@@ -723,7 +716,6 @@ def get_namedict():
 
 
 def set_namedict(ss):
-    #__namedict = ss
     for i in ss:
         register_name(i, ss[i])
 
