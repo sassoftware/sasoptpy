@@ -1020,7 +1020,10 @@ class Model:
         else:
             if self._primalSolution is not None:
                 for _, row in self._primalSolution.iterrows():
-                    if row['var'] == name:
+                    if (row['var'] == name and
+                            ('solution' in self._primalSolution and
+                             row['solution'] == 1) or
+                            'solution' not in self._primalSolution):
                         return row['value']
         return None
 
@@ -1126,7 +1129,7 @@ class Model:
         '''
         return self._solutionSummary
 
-    def get_solution(self, vtype='Primal'):
+    def get_solution(self, vtype='Primal', solution=None, pivot=False):
         '''
         Returns the solution details associated with the primal or dual
         solution
@@ -1135,6 +1138,10 @@ class Model:
         ----------
         vtype : string, optional
             'Primal' or 'Dual'
+        solution : integer, optional
+            Solution number to be returned (for MILP)
+        pivot : boolean, optional
+            Switch for returning multiple solutions in columns as a pivot table
 
         Returns
         -------
@@ -1146,38 +1153,90 @@ class Model:
 
         >>> m.solve()
         >>> print(m.get_solution('Primal'))
-              _OBJ_ID_ _RHS_ID_               _VAR_ _TYPE_  _OBJCOEF_  _LBOUND_
-        0  totalProfit      RHS      production_cap      I      -10.0       0.0
-        1  totalProfit      RHS  production_Period1      I       10.0       5.0
-        2  totalProfit      RHS  production_Period2      I       10.0       5.0
-        3  totalProfit      RHS  production_Period3      I       10.0       0.0
-             _UBOUND_  _VALUE_
-        1.797693e+308     25.0
-        1.797693e+308     25.0
-        1.797693e+308     15.0
-        1.797693e+308     25.0
+                     var   lb             ub  value  solution
+        0       x[clock]  0.0  1.797693e+308    0.0       1.0
+        1          x[pc]  0.0  1.797693e+308    5.0       1.0
+        2   x[headphone]  0.0  1.797693e+308    2.0       1.0
+        3         x[mug]  0.0  1.797693e+308    0.0       1.0
+        4        x[book]  0.0  1.797693e+308    0.0       1.0
+        5         x[pen]  0.0  1.797693e+308    1.0       1.0
+        6       x[clock]  0.0  1.797693e+308    0.0       2.0
+        7          x[pc]  0.0  1.797693e+308    5.0       2.0
+        8   x[headphone]  0.0  1.797693e+308    2.0       2.0
+        9         x[mug]  0.0  1.797693e+308    0.0       2.0
+        10       x[book]  0.0  1.797693e+308    0.0       2.0
+        11        x[pen]  0.0  1.797693e+308    0.0       2.0
+        12      x[clock]  0.0  1.797693e+308    1.0       3.0
+        13         x[pc]  0.0  1.797693e+308    4.0       3.0
+        ...
+
+        >>> print(m.get_solution('Primal', solution=2))
+                     var   lb             ub  value  solution
+        6       x[clock]  0.0  1.797693e+308    0.0       2.0
+        7          x[pc]  0.0  1.797693e+308    5.0       2.0
+        8   x[headphone]  0.0  1.797693e+308    2.0       2.0
+        9         x[mug]  0.0  1.797693e+308    0.0       2.0
+        10       x[book]  0.0  1.797693e+308    0.0       2.0
+        11        x[pen]  0.0  1.797693e+308    0.0       2.0
+
+        >>> print(m.get_solution(pivot=True))
+        solution      1.0  2.0  3.0  4.0  5.0
+        var
+        x[book]       0.0  0.0  0.0  1.0  0.0
+        x[clock]      0.0  0.0  1.0  1.0  0.0
+        x[headphone]  2.0  2.0  1.0  1.0  0.0
+        x[mug]        0.0  0.0  0.0  1.0  0.0
+        x[pc]         5.0  5.0  4.0  1.0  0.0
+        x[pen]        1.0  0.0  0.0  1.0  0.0
 
         >>> print(m.get_solution('Dual'))
-              _OBJ_ID_ _RHS_ID_       _ROW_ _TYPE_  _RHS_  _L_RHS_  _U_RHS_
-        0  totalProfit      RHS  capacity_0      L    0.0      NaN      NaN
-        1  totalProfit      RHS  capacity_1      L    0.0      NaN      NaN
-        2  totalProfit      RHS  capacity_2      L    0.0      NaN      NaN
-        3  totalProfit      RHS    demand_0      L   30.0      NaN      NaN
-        4  totalProfit      RHS    demand_1      L   15.0      NaN      NaN
-        5  totalProfit      RHS    demand_2      L   25.0      NaN      NaN
-        _ACTIVITY_
-               0.0
-             -10.0
-               0.0
-              25.0
-              15.0
-              25.0
+                             con  value  solution
+        0             weight_con   20.0       1.0
+        1       limit_con[clock]    0.0       1.0
+        2          limit_con[pc]    5.0       1.0
+        3   limit_con[headphone]    2.0       1.0
+        4         limit_con[mug]    0.0       1.0
+        5        limit_con[book]    0.0       1.0
+        6         limit_con[pen]    1.0       1.0
+        7             weight_con   19.0       2.0
+        8       limit_con[clock]    0.0       2.0
+        9          limit_con[pc]    5.0       2.0
+        10  limit_con[headphone]    2.0       2.0
+        11        limit_con[mug]    0.0       2.0
+        12       limit_con[book]    0.0       2.0
+        13        limit_con[pen]    0.0       2.0
+        ...
+
+        >>> print(m.get_solution('dual', pivot=True))
+        solution               1.0   2.0   3.0   4.0  5.0
+        con
+        limit_con[book]        0.0   0.0   0.0   1.0  0.0
+        limit_con[clock]       0.0   0.0   1.0   1.0  0.0
+        limit_con[headphone]   2.0   2.0   1.0   1.0  0.0
+        limit_con[mug]         0.0   0.0   0.0   1.0  0.0
+        limit_con[pc]          5.0   5.0   4.0   1.0  0.0
+        limit_con[pen]         1.0   0.0   0.0   1.0  0.0
+        weight_con            20.0  19.0  20.0  19.0  0.0
 
         '''
         if vtype == 'Primal' or vtype == 'primal':
-            return self._primalSolution
+            if pivot:
+                return self._primalSolution.pivot_table(
+                    index=['var'], columns=['solution'], values='value')
+            elif solution and 'solution' in self._primalSolution:
+                return self._primalSolution.loc[
+                    self._primalSolution['solution'] == solution]
+            else:
+                return self._primalSolution
         elif vtype == 'Dual' or vtype == 'dual':
-            return self._dualSolution
+            if pivot:
+                return self._dualSolution.pivot_table(
+                    index=['con'], columns=['solution'], values='value')
+            elif solution and 'solution' in self._dualSolution:
+                return self._dualSolution.loc[
+                    self._dualSolution['solution'] == solution]
+            else:
+                return self._dualSolution
         else:
             return None
 
@@ -1441,7 +1500,7 @@ class Model:
         return mpsdata
 
     def to_optmodel(self, header=True, expand=False, ordered=False,
-                    options={}):
+                    ods=False, options={}):
         '''
         Generates the equivalent PROC OPTMODEL code for the model.
 
@@ -1533,9 +1592,11 @@ class Model:
                     s += ' /' + optstring
             s += ';\n'
 
-            s += tab + 'ods output PrintTable=primal_out;\n'
+            if ods:
+                s += tab + 'ods output PrintTable=primal_out;\n'
             s += tab + 'print _var_.name _var_.lb _var_.ub _var_ _var_.rc;\n'
-            s += tab + 'ods output PrintTable=dual_out;\n'
+            if ods:
+                s += tab + 'ods output PrintTable=dual_out;\n'
             s += tab + 'print _con_.name _con_.body _con_.dual;\n'
 
             if header:
@@ -1585,9 +1646,11 @@ class Model:
                     s += ' /' + optstring
             s += ';\n'
             # Output ODS tables
-            s += 'ods output PrintTable=primal_out;\n'
+            if ods:
+                s += 'ods output PrintTable=primal_out;\n'
             s += 'print _var_.name _var_.lb _var_.ub _var_ _var_.rc;\n'
-            s += 'ods output PrintTable=dual_out;\n'
+            if ods:
+                s += 'ods output PrintTable=dual_out;\n'
             s += 'print _con_.name _con_.body _con_.dual;\n'
             if header:
                 s += 'quit;\n'
@@ -1946,7 +2009,9 @@ class Model:
                     'dual', caslib='CASUSER').to_frame()
                 # Bring solution to variables
                 for _, row in self._primalSolution.iterrows():
-                    self._variableDict[row['_VAR_']]._value = row['_VALUE_']
+                    if ('_SOL_' in self._primalSolution and row['_SOL_'] == 1)\
+                         or '_SOL_' not in self._primalSolution:
+                        self._variableDict[row['_VAR_']]._value = row['_VALUE_']
 
                 # Capturing dual values for LP problems
                 if ptype == 1:
@@ -1962,12 +2027,20 @@ class Model:
                     for _, row in self._dualSolution.iterrows():
                         self._constraintDict[row['con']]._dual = row['dual']
                 elif ptype == 2:
-                    self._primalSolution = self._primalSolution[
-                        ['_VAR_', '_LBOUND_', '_UBOUND_', '_VALUE_']]
-                    self._primalSolution.columns = ['var', 'lb', 'ub', 'value']
-                    self._dualSolution = self._dualSolution[
-                        ['_ROW_', '_ACTIVITY_']]
-                    self._dualSolution.columns = ['con', 'value']
+                    try:
+                        self._primalSolution = self._primalSolution[
+                            ['_VAR_', '_LBOUND_', '_UBOUND_', '_VALUE_', '_SOL_']]
+                        self._primalSolution.columns = ['var', 'lb', 'ub', 'value', 'solution']
+                        self._dualSolution = self._dualSolution[
+                            ['_ROW_', '_ACTIVITY_', '_SOL_']]
+                        self._dualSolution.columns = ['con', 'value', 'solution']
+                    except:
+                        self._primalSolution = self._primalSolution[
+                            ['_VAR_', '_LBOUND_', '_UBOUND_', '_VALUE_']]
+                        self._primalSolution.columns = ['var', 'lb', 'ub', 'value']
+                        self._dualSolution = self._dualSolution[
+                            ['_ROW_', '_ACTIVITY_']]
+                        self._dualSolution.columns = ['con', 'value']
 
             # Drop tables
             if drop:
@@ -2016,7 +2089,8 @@ class Model:
                     break
 
             print('NOTE: Converting model {} to OPTMODEL.'.format(self._name))
-            optmodel_string = self.to_optmodel(header=False, options=options)
+            optmodel_string = self.to_optmodel(header=False, options=options,
+                                               ods=False)
             if not submit:
                 return optmodel_string
             print('NOTE: Submitting OPTMODEL codes to CAS server.')
@@ -2256,7 +2330,8 @@ class Model:
                     break
 
             print('NOTE: Converting model {} to OPTMODEL.'.format(self._name))
-            optmodel_string = self.to_optmodel(header=True, options=options)
+            optmodel_string = self.to_optmodel(header=True, options=options,
+                                               ods=True)
             if not submit:
                 return optmodel_string
             print('NOTE: Submitting OPTMODEL codes to SAS server.')

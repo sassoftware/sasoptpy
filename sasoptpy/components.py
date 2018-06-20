@@ -627,7 +627,7 @@ class Expression:
     def _clean(self):
         keys_to_clean = []
         for key in self._linCoef.keys():
-            if self._linCoef[key]['val'] == 0:
+            if key != 'CONST' and self._linCoef[key]['val'] == 0:
                 keys_to_clean.append(key)
         for key in keys_to_clean:
             del self._linCoef[key]
