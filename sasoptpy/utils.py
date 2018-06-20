@@ -754,6 +754,17 @@ def _to_bracket(prefix, keys):
         return s
 
 
+def _to_quoted_string(item):
+    if isinstance(item, int):
+        return str(item)
+    elif isinstance(item, str):
+        return "'{}'".format(item)
+    elif isinstance(item, tuple):
+        return '<' + ','.join(_to_quoted_string(j) for j in item) + '>'
+    else:
+        return str(item)
+
+
 def _sort_tuple(i):
     i = sasoptpy.utils.tuple_pack(i)
     key = (len(i),)

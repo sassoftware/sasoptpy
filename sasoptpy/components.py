@@ -1423,7 +1423,10 @@ class VariableGroup:
             if isinstance(i, sasoptpy.data.Set):
                 s += '{}, '.format(i._name)
             elif isinstance(i, list):
-                s += '{{{}}}, '.format(','.join([str(j) if isinstance(j, int) else "'{}'".format(j) for j in i]))
+                ind_list = []
+                for j in i:
+                    ind_list.append(sasoptpy.utils._to_quoted_string(j))
+                s += '{{{}}}, '.format(','.join(ind_list))
             else:
                 try:
                     s += '{}, '.format(i)
