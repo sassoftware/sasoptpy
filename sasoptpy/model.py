@@ -1332,9 +1332,15 @@ class Model:
         self._id = self._id+1
         return rowid
 
-    def to_frame(self):
+    def to_frame(self, constant=False):
         '''
         Converts the Python model into a DataFrame object in MPS format
+
+        Parameters
+        ----------
+        constant : boolean, optional
+            Switching for using objConstant argument for solveMilp, solveLp. \
+            Adds the constant as an auxiliary variable if value is True.
 
         Returns
         -------
@@ -1379,7 +1385,7 @@ class Model:
             for v in c._linCoef:
                 var_con.setdefault(v, []).append(c._name)
         # Check if objective has a constant field
-        if self._objective._linCoef['CONST']['val'] != 0:
+        if constant and self._objective._linCoef['CONST']['val'] != 0:
             obj_constant = self.add_variable(name=sasoptpy.utils.check_name(
                 'obj_constant', 'var'))
             constant_value = self._objective._linCoef['CONST']['val']
@@ -1388,8 +1394,8 @@ class Model:
             obj_name = self._objective._name + '_constant'
             self._objective = self._objective - constant_value + obj_constant
             self._objective._name = obj_name
-            print('WARNING: The objective function contains a constant term.' +
-                  ' An auxiliary variable is added.')
+            print('WARNING: The objective function contains a constant term,' +
+                  ' an auxiliary variable is added.')
         # self._append_row(['*','SAS-Viya-Opt','MPS-Free Format','0','0','0'])
         self._append_row(['NAME', '', self._name, 0, '', 0])
         self._append_row(['ROWS', '', '', '', '', ''])
@@ -1773,7 +1779,7 @@ class Model:
                 print('ERROR: Unrecognized session type: {}'.format(sess_type))
                 return None
 
-    def upload_model(self, name=None, replace=True):
+    def upload_model(self, name=None, replace=True, constant=False):
         '''
         Converts internal model to MPS table and upload to CAS session
 
@@ -1801,7 +1807,7 @@ class Model:
         '''
         if self.test_session():
             # Conversion and upload
-            df = self.to_frame()
+            df = self.to_frame(constant=constant)
             print('NOTE: Uploading the problem DataFrame to the server.')
             if name is not None:
                 return self._session.upload_frame(
@@ -1973,7 +1979,16 @@ class Model:
                                 'name': 'PRIMALINTABLE', 'replace': True})
                         options['primalin'] = 'PRIMALINTABLE'
 
-            mps_table = self.upload_model(name, replace=replace)
+            # Check if objective constant workaround is needed
+            sfunc = session.solveLp if ptype == 1 else session.solveMilp
+            has_arg = 'objconstant' in inspect.signature(sfunc).parameters
+            if has_arg and 'objconstant' not in options:
+                objconstant = self._objective._linCoef['CONST']['val']
+                options['objconstant'] = objconstant
+
+            # Upload the problem
+            mps_table = self.upload_model(name, replace=replace,
+                                          constant=not has_arg)
 
             if ptype == 1:
                 valid_opts = inspect.signature(session.solveLp).parameters
@@ -2018,7 +2033,8 @@ class Model:
                 # Capturing dual values for LP problems
                 if ptype == 1:
                     self._primalSolution = self._primalSolution[
-                        ['_VAR_', '_VALUE_', '_R_COST_']]
+                        ['_VAR_', '_LBOUND_', '_UBOUND_', '_VALUE_',
+                         '_R_COST_']]
                     self._primalSolution.columns = ['var', 'lb', 'ub',
                                                     'value', 'rc']
                     self._dualSolution = self._dualSolution[
@@ -2248,7 +2264,7 @@ class Model:
         if frame:  # MPS
 
             # Get the MPS data
-            df = self.to_frame()
+            df = self.to_frame(constant=True)
 
             # Prepare for the upload
             for f in ['Field4', 'Field6']:
