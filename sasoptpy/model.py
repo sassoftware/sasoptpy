@@ -472,9 +472,11 @@ class Model:
 
         Parameters
         ----------
-        table : :class:`swat.cas.table.CASTable` or :class:`pandas.DataFrame`\
-                object
-            CASTable or DataFrame object to read the data from
+        table : :class:`swat.cas.table.CASTable`, :class:`pandas.DataFrame`\
+                object or string
+            Pointer to CAS Table (server data, CASTable),\
+            DataFrame (local data) or\
+            the name of the table at execution (server data, string)
         key : list, optional
             List of key columns (for CASTable) or index columns (for DataFrame)
         columns : list, optional
@@ -494,6 +496,9 @@ class Model:
         Notes
         -----
 
+        - This method can take either a :class:`swat.cas.table.CASTable`,
+          a :class:`pandas.DataFrame` or name of the data set as a string as
+          the first argument.
         - If the model is running in saspy or MPS mode, then the data is read
           to client from the CAS server.
         - If the model is running in OPTMODEL mode, then this method generates
@@ -526,36 +531,32 @@ class Model:
 
         '''
 
-        if (upload and type(table).__name__ != 'CASTable' and
-                self.test_session() == 'CAS'):
+        # Type of the given table and the session
+        t_type = type(table).__name__
+        s_type = self.test_session()
+
+        if (upload and t_type == 'DataFrame' and s_type == 'CAS'):
             table = self._session.upload_frame(table)
-        elif (upload and type(table).__name__ == 'DataFrame' and
-              self.test_session() == 'SAS'):
-            tname = sasoptpy.utils.check_name(None, 'table')
-            sasoptpy.utils.register_name(tname, table)
-            table = self._session.df2sd(table, table=tname)
+        elif (upload and t_type == 'DataFrame' and s_type == 'SAS'):
+            upname = sasoptpy.utils.check_name(None, 'table')
+            sasoptpy.utils.register_name(upname, table)
+            table = self._session.df2sd(table, table=upname)
 
         if type(table).__name__ == 'CASTable':
-            if not key or key == [None]:
-                key = ['_N_']
-            keyset = self.add_set(
-                name='set_' + ('_'.join([str(i) for i in key])
-                               if key != ['_N_'] else table.name + '_N'),
-                settype=key_type
-                )
-            pars = []
-            for col in columns:
-                pars.append(self.add_parameter(keyset, name=col))
-
-            self.read_data(table, keyset=[keyset], key=key, params=[
-                {'param': pars[i], 'column': columns[i]}
-                for i in range(len(pars))])
+            tname = table.name
         elif type(table).__name__ == 'SASdata':
+            tname = table.table
+        elif type(table) == str:
+            tname = table
+        else:
+            tname = str(table)
+
+        if t_type == 'CASTable' or t_type == 'SASdata' or t_type == 'str':
             if not key or key == [None]:
                 key = ['_N_']
             keyset = self.add_set(
                 name='set_' + ('_'.join([str(i) for i in key])
-                               if key != ['_N_'] else table.table + '_N'),
+                               if key != ['_N_'] else tname + '_N'),
                 settype=key_type
                 )
             pars = []
@@ -565,7 +566,7 @@ class Model:
             self.read_data(table, keyset=[keyset], key=key, params=[
                 {'param': pars[i], 'column': columns[i]}
                 for i in range(len(pars))])
-        elif type(table).__name__ == 'DataFrame':
+        elif t_type == 'DataFrame':
             if key and key != [None] and key != ['_N_']:
                 table = table.set_index(key)
             keyset = table.index.tolist()
