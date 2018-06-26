@@ -420,9 +420,22 @@ class Model:
         if isinstance(statement, sasoptpy.components.Expression):
             self._statements.append(sasoptpy.data.Statement(str(statement)))
 
-    def read_data(self, table, keyset, option='', key=[], params=[]):
+    def read_data(self, table, keyset, key=[], option='', params=[]):
         '''
         Reads a CASTable into PROC OPTMODEL sets
+
+        Parameters
+        ----------
+        table : CASTable
+            The CAS table to be read to sets and parameters
+        keyset : list
+            List of sets to be used as a key (index)
+        key : list, optional
+            Column names of the key columns
+        option : string, optional
+            Additional options for read data command
+        params : list, optional
+            A list of dictionaries where each dictionary represent parameters
         '''
 
         # Reading key
@@ -541,6 +554,8 @@ class Model:
             upname = sasoptpy.utils.check_name(None, 'table')
             sasoptpy.utils.register_name(upname, table)
             table = self._session.df2sd(table, table=upname)
+
+        t_type = type(table).__name__
 
         if type(table).__name__ == 'CASTable':
             tname = table.name
