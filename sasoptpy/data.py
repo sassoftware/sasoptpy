@@ -182,25 +182,25 @@ class Set(sasoptpy.components.Expression):
     Represents index sets inside PROC OPTMODEL
     '''
 
-    def __init__(self, name, init=None, settype='num'):
+    def __init__(self, name, init=None, settype=['num']):
         super().__init__()
         self._name = sasoptpy.utils.check_name(name, 'set')
         self._objorder = sasoptpy.utils.register_name(self._name, self)
         self._init = init
-        self._type = settype
-        self._colname = name
+        self._type = sasoptpy.utils.list_pack(settype)
+        self._colname = sasoptpy.utils.list_pack(name)
         self._iterators = []
         self._abstract = True
         self._linCoef[str(self)] = {'ref': self,
                                     'val': 1.0}
 
     def __iter__(self):
-        if isinstance(self._type, list):
+        if len(self._type) > 1:
             itlist = tuple(SetIterator(
                 self, datatype=j,
                 group={'order': i, 'outof': len(self._type),
                        'id': id(self._type[0])})
-                for i, j in enumerate(self._type))
+                      for i, j in enumerate(self._type))
             self._iterators.append(itlist)
             return iter([itlist])
         else:
@@ -210,12 +210,10 @@ class Set(sasoptpy.components.Expression):
 
     def _defn(self):
         s = 'set '
-        if isinstance(self._type, list):
-            s += '<' + ','.join(self._type) + '> '
-        elif self._type == 'str':
-            s += '<str> '
-        elif self._type == 'num':
+        if len(self._type) == 1 and self._type[0] == 'num':
             s += ''
+        else:
+            s += '<' + ', '.join(self._type) + '> '
         s += self._name
         if self._init is not None:
             s += ' = ' + str(self._init)

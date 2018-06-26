@@ -359,7 +359,7 @@ class Model:
                 c = self.add_constraint(c=argv, name=name)
                 return c
 
-    def add_set(self, name, init=None, settype='num'):
+    def add_set(self, name, init=None, settype=['num']):
         if init:
             if isinstance(init, range):
                 newinit = str(init.start) + '..' + str(init.stop)
@@ -428,21 +428,24 @@ class Model:
         ----------
         table : CASTable
             The CAS table to be read to sets and parameters
-        key_set : list
-            List of sets to be used as a key (index)
-        key_cols : list, optional
+        key_set : :class:`sasoptpy.data.Set`
+            Set object to be read as the key (index)
+        key_cols : list or string, optional
             Column names of the key columns
         option : string, optional
             Additional options for read data command
         params : list, optional
             A list of dictionaries where each dictionary represent parameters
+
+        Notes
+        -----
+        - `key_set` and `key_cols` parameters should be a list. When passing
+          a single item, string type can be used instead.
         '''
 
         # Reading key
-        if key_set is not None:
-            if key_cols != []:
-                for i, k in enumerate(key_set):
-                    k._colname = str(key_cols[i])
+        if key_set is not None and key_cols:
+            key_set._colname = key_cols
 
         # Reading parameters
         for p in params:
@@ -459,18 +462,7 @@ class Model:
         if option:
             s += ' {}'.format(option)
         s += ' into '
-        if len(key_set) == 1:
-            k = key_set[0]
-            if isinstance(k._colname, str):
-                s += '{}=[{}] '.format(k._name, k._colname)
-            elif isinstance(k._colname, list):
-                s += '{}=[{}] '.format(k._name, ' '.join(k._colname))
-        else:
-            s += '['
-            for k in key_set:
-                s += k._colname + ' '
-            s = s[:-1]
-            s += '] '
+        s += '{}=[{}] '.format(key_set._name, ' '.join(key_set._colname))
         parlist = []
         for p in params:
             parlist.append(p['param']._to_read_data())
@@ -479,7 +471,7 @@ class Model:
         self._statements.append(sasoptpy.data.Statement(s))
 
     def read_table(self, table, key=['_N_'], columns=[],
-                   key_type='num', upload=False):
+                   key_type=['num'], upload=False, casout=None):
         '''
         Reads a CAS Table or pandas DataFrame into the model
 
@@ -494,11 +486,12 @@ class Model:
             List of key columns (for CASTable) or index columns (for DataFrame)
         columns : list, optional
             List of columns to read into parameters
-        key_type : string, optional
-            Type of the key columns, 'num' or 'str' or their comma separated\
-            combinations
+        key_type : list or string, optional
+            A list of column types consists of 'num' or 'str' values
         upload : boolean, optional
             Option for uploading a local data to CAS server first
+        casout : string or dict, optional
+            Casout options if data is uploaded
 
         Returns
         -------
@@ -518,8 +511,10 @@ class Model:
           the corresponding optmodel code.
         - When table is a CASTable object, since the actual data is stored
           on the CAS server, some of the functionalities may be limited.
-        - For the local data, `upload` argument can be passed for performance
+        - For the local data, ``upload`` argument can be passed for performance
           improvement.
+        - See :meth:`swat.CAS.upload_frame` and ``table.loadtable`` CAS action
+          for ``casout`` options.
 
         Examples
         --------
@@ -549,9 +544,10 @@ class Model:
         s_type = self.test_session()
 
         if (upload and t_type == 'DataFrame' and s_type == 'CAS'):
-            table = self._session.upload_frame(table)
+            table = self._session.upload_frame(table, casout=casout)
         elif (upload and t_type == 'DataFrame' and s_type == 'SAS'):
-            upname = sasoptpy.utils.check_name(None, 'table')
+            req_name = casout if isinstance(casout, str) else None
+            upname = sasoptpy.utils.check_name(req_name, 'table')
             sasoptpy.utils.register_name(upname, table)
             table = self._session.df2sd(table, table=upname)
 
@@ -578,7 +574,7 @@ class Model:
             for col in columns:
                 pars.append(self.add_parameter(keyset, name=col))
 
-            self.read_data(table, key_set=[keyset], key_cols=key, params=[
+            self.read_data(table, key_set=keyset, key_cols=key, params=[
                 {'param': pars[i], 'column': columns[i]}
                 for i in range(len(pars))])
         elif t_type == 'DataFrame':

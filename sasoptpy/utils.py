@@ -407,7 +407,8 @@ def _to_optmodel_loop(keys):
     s = ''
     subindex = []
     for key in keys:
-        if not isinstance(key, sasoptpy.data.SetIterator):
+        if not isinstance(key, sasoptpy.data.SetIterator) and not\
+           isinstance(key, tuple):
             subindex.append(str(key))
     if subindex:
         s += '_' + '_'.join(subindex)
@@ -428,11 +429,12 @@ def get_iterators(keys):
     groups = {}
     for key in keys:
         if isinstance(key, sasoptpy.data.SetIterator):
-            if key._group == 0:
+            if key._group == 0 or key._outof == 1:
                 iterators.append(key._defn())
-            else:
-                g = groups.setdefault(key._group, [])
-                g.append(key)
+        elif isinstance(key, tuple):
+            for subkey in key:
+                g = groups.setdefault(subkey._group, [])
+                g.append(subkey)
     if groups:
         for kg in groups.values():
             s = '<' + ','.join([i._name for i in kg]) + '> in ' +\
@@ -473,24 +475,46 @@ def tuple_pack(obj):
     '''
     Converts a given object to a tuple object
 
-    If the object is a tuple, the function returns itself, otherwise creates
-    a single dimensional tuple.
+    If the object is a tuple, the function returns the input,
+    otherwise creates a single dimensional tuple
 
     Parameters
     ----------
     obj : Object
-        Object that is converted to tuple
+        Object that is converted to a tuple
 
     Returns
     -------
     tuple
-        Corresponding tuple to the object.
+        Tuple that includes the original object
     '''
     if isinstance(obj, tuple):
         return obj
     elif isinstance(obj, str):
         return (obj,)
     return (obj,)
+
+
+def list_pack(obj):
+    '''
+    Converts a given object to a list
+
+    If the object is already a list, the function returns the input,
+    otherwise creates a list
+
+    Parameters
+    ----------
+    obj : Object
+        Object that is converted to a list
+
+    Returns
+    -------
+    list
+        List that includes the original object
+    '''
+    if isinstance(obj, list):
+        return obj
+    return [obj]
 
 
 def reset_globals():
