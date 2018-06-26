@@ -285,8 +285,16 @@ class SetIterator(sasoptpy.components.Expression):
         self.__add_condition('<=', key)  # or 'LE'
         return True
 
+    def __lt__(self, key):
+        self.__add_condition('<', key)
+        return True
+
     def __ge__(self, key):
         self.__add_condition('>=', key)  # or 'GE'
+        return True
+
+    def __gt__(self, key):
+        self.__add_condition('>', key)
         return True
 
     def __ne__(self, key):

@@ -31,3 +31,12 @@ def sin(exp):
         return exp
     except AttributeError:
         print('ERROR: sin function can only be used with Expression objects.')
+
+
+def abs(exp):
+    try:
+        exp = sasoptpy.utils.get_mutable(exp)
+        exp._operator = 'abs'
+        return exp
+    except AttributeError:
+        print('ERROR: sin function can only be used with Expression objects.')
