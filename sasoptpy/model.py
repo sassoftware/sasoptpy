@@ -420,7 +420,7 @@ class Model:
         if isinstance(statement, sasoptpy.components.Expression):
             self._statements.append(sasoptpy.data.Statement(str(statement)))
 
-    def read_data(self, table, keyset, key=[], option='', params=[]):
+    def read_data(self, table, key_set, key_cols=[], option='', params=[]):
         '''
         Reads a CASTable into PROC OPTMODEL sets
 
@@ -428,9 +428,9 @@ class Model:
         ----------
         table : CASTable
             The CAS table to be read to sets and parameters
-        keyset : list
+        key_set : list
             List of sets to be used as a key (index)
-        key : list, optional
+        key_cols : list, optional
             Column names of the key columns
         option : string, optional
             Additional options for read data command
@@ -439,16 +439,16 @@ class Model:
         '''
 
         # Reading key
-        if keyset is not None:
-            if key != []:
-                for i, k in enumerate(keyset):
-                    k._colname = str(key[i])
+        if key_set is not None:
+            if key_cols != []:
+                for i, k in enumerate(key_set):
+                    k._colname = str(key_cols[i])
 
         # Reading parameters
         for p in params:
             p.setdefault('column', None)
             p.setdefault('index', None)
-            p['param']._set_loop(table, keyset, p['column'], p['index'])
+            p['param']._set_loop(table, key_set, p['column'], p['index'])
 
         if type(table).__name__ == 'CASTable':
             s = 'read data {}'.format(table.name)
@@ -459,15 +459,15 @@ class Model:
         if option:
             s += ' {}'.format(option)
         s += ' into '
-        if len(keyset) == 1:
-            k = keyset[0]
+        if len(key_set) == 1:
+            k = key_set[0]
             if isinstance(k._colname, str):
                 s += '{}=[{}] '.format(k._name, k._colname)
             elif isinstance(k._colname, list):
                 s += '{}=[{}] '.format(k._name, ' '.join(k._colname))
         else:
             s += '['
-            for k in keyset:
+            for k in key_set:
                 s += k._colname + ' '
             s = s[:-1]
             s += '] '
@@ -578,7 +578,7 @@ class Model:
             for col in columns:
                 pars.append(self.add_parameter(keyset, name=col))
 
-            self.read_data(table, keyset=[keyset], key=key, params=[
+            self.read_data(table, key_set=[keyset], key_cols=key, params=[
                 {'param': pars[i], 'column': columns[i]}
                 for i in range(len(pars))])
         elif t_type == 'DataFrame':
