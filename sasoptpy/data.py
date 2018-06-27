@@ -196,13 +196,9 @@ class Set(sasoptpy.components.Expression):
 
     def __iter__(self):
         if len(self._type) > 1:
-            itlist = tuple(SetIterator(
-                self, datatype=j,
-                group={'order': i, 'outof': len(self._type),
-                       'id': id(self._type[0])})
-                      for i, j in enumerate(self._type))
-            self._iterators.append(itlist)
-            return iter([itlist])
+            s = SetIterator(self, datatype=self._type, multi_index=True)
+            self._iterators.append(s)
+            return iter([s])
         else:
             s = SetIterator(self)
             self._iterators.append(s)
@@ -249,20 +245,28 @@ class Set(sasoptpy.components.Expression):
 class SetIterator(sasoptpy.components.Expression):
 
     def __init__(self, initset, conditions=None, datatype='num',
-                 group={'order': 1, 'outof': 1, 'id': 0}):
+                 group={'order': 1, 'outof': 1, 'id': 0}, multi_index=False
+                 ):
         # TODO use self._name = initset._colname
         super().__init__()
         self._name = sasoptpy.utils.check_name(None, 'i')
         self._linCoef[self._name] = {'ref': self,
                                      'val': 1.0}
         self._set = initset
-        self._type = datatype
+        self._type = sasoptpy.utils.list_pack(datatype)
+        self._children = []
+        if len(self._type) > 1 or multi_index:
+            for i, ty in enumerate(self._type):
+                sc = SetIterator(
+                    self, conditions=None, datatype=ty,
+                    group={'order': i, 'outof': len(self._type),
+                           'id': id(self)}, multi_index=False)
+                self._children.append(sc)
         self._order = group['order']
         self._outof = group['outof']
         self._group = group['id']
-        if conditions is None:
-            conditions = []
-        self._conditions = conditions
+        self._multi = multi_index
+        self._conditions = conditions if conditions else []
 
     def __hash__(self):
         return hash('{}'.format(id(self)))
@@ -306,7 +310,11 @@ class SetIterator(sasoptpy.components.Expression):
         self.__add_condition('OR', key)
 
     def _defn(self, cond=0):
-        s = '{} in {}'.format(self._name, self._set._name)
+        if self._multi:
+            comb = '<' + ', '.join(str(i) for i in self._children) + '>'
+            s = '{} in {}'.format(comb, self._set._name)
+        else:
+            s = '{} in {}'.format(self._name, self._set._name)
         if cond and len(self._conditions) > 0:
             s += ':'
             s += self._to_conditions()
@@ -330,9 +338,13 @@ class SetIterator(sasoptpy.components.Expression):
         return s
 
     def _expr(self):
+        if self._multi:
+            return ', '.join(str(i) for i in self._children)
         return str(self)
 
     def __str__(self):
+        if self._multi:
+            print('WARNING: str is called for a multi-index set iterator.')
         return self._name
 
     def __repr__(self):
@@ -341,8 +353,8 @@ class SetIterator(sasoptpy.components.Expression):
         for i in self._conditions:
             s += '{{\'type\': \'{}\', \'key\': \'{}\'}}, '.format(
                 i['type'], i['key'])
-        s += '], datatype={}, order={}, outof={}, group={})'.format(
-            self._type, self._order, self._outof, self._group)
+        s += "], datatype={}, group={{'order': {}, 'outof': {}, 'id': {}}}, multi_index={})".format(
+            self._type, self._order, self._outof, self._group, self._multi)
         return(s)
 
 

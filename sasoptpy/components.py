@@ -362,9 +362,19 @@ class Expression:
 
         if self._operator:
             if self._iterkey:
-                s += ' ' + ' '.join(
-                    ['for {} in {}'.format(i._name, i._set._name)
-                     for i in self._iterkey])
+                forlist = []
+                for i in self._iterkey:
+                    if isinstance(i, sasoptpy.data.SetIterator):
+                        if i._multi:
+                            forlist.append('for ({}) in {}'.format(
+                                i._expr(), i._set._name))
+                        else:
+                            forlist.append('for {} in {}'.format(
+                                i._expr(), i._set._name))
+                    else:
+                        forlist.append('for {} in {}'.format(
+                            i._name, i._set._name))
+                s += ' '.join(forlist)
             s += ')'
         if list(self._linCoef.keys()) == ['CONST'] and\
            self._linCoef['CONST']['val'] == 0:
@@ -851,21 +861,25 @@ class Variable(Expression):
 
     def __str__(self):
         if self._parent is not None and self._key is not None:
-            key = ', '.join([str(i) for i in self._key])
+            keylist = [i._expr() if isinstance(i, Expression)
+                       else str(i) for i in self._key]
+            key = ', '.join(keylist)
             return ('{}[{}]'.format(self._parent._name, key))
         if self._shadow and self._iterkey:
-            key = ', '.join([str(i) for i in self._iterkey])
+            keylist = [i._expr() if isinstance(i, Expression)
+                       else str(i) for i in self._iterkey]
+            key = ', '.join(keylist)
             return('{}[{}]'.format(self._name, key))
         return('{}'.format(self._name))
 
     def _expr(self):
         if self._parent is not None and self._key is not None:
-            key = ', '.join([str(i) if not isinstance(i, str)
-                             else "'{}'".format(i) for i in self._key])
+            keylist = sasoptpy.utils._to_iterator_expression(self._key)
+            key = ', '.join(keylist)
             return ('{}[{}]'.format(self._parent._name, key))
         if self._shadow and self._iterkey:
-            key = ', '.join([str(i) if not isinstance(i, str)
-                             else "'{}'".format(i) for i in self._iterkey])
+            keylist = sasoptpy.utils._to_iterator_expression(self._iterkey)
+            key = ', '.join(keylist)
             return('{}[{}]'.format(self._name, key))
         return('{}'.format(self._name))
 
@@ -1253,13 +1267,15 @@ class VariableGroup:
             self._objorder = sasoptpy.utils.register_name(name, self)
         else:
             self._name = None
+        self._abstract = abstract
         for arg in argv:
             if isinstance(arg, int):
                 self._keyset.append(
                     sasoptpy.utils.extract_argument_as_list(arg))
             else:
                 self._keyset.append(arg)
-        self._abstract = abstract
+                if isinstance(arg, sasoptpy.data.Set):
+                    self._abstract = True
         self._shadows = {}
         self._set_var_info()
 
@@ -1333,6 +1349,7 @@ class VariableGroup:
         if self._abstract:
             # TODO check if number of keys correct e.g. x[I], x[1,2] requested
             tuple_key = sasoptpy.utils.tuple_pack(key)
+            tuple_key = tuple(i for i in sasoptpy.utils.flatten_tuple(tuple_key))
             if tuple_key in self._vardict:
                 return self._vardict[tuple_key]
             elif tuple_key in self._shadows:
@@ -1779,8 +1796,8 @@ class ConstraintGroup:
                 for ky in vnames:
                     if ky != '.0':
                         newkeys = newkeys + (vdict[ky],)
-            conname = '{}[{}]'.format(name, ','.join(format(k)
-                                                     for k in newkeys))
+            keylist = sasoptpy.utils._to_iterator_expression(newkeys)
+            conname = '{}[{}]'.format(name, ','.join(keylist))
             conname = sasoptpy.utils.check_name(conname, 'con')
             newcon = sasoptpy.Constraint(exp=c, name=conname, crange=c._range)
             condict[newkeys] = newcon

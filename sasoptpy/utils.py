@@ -192,8 +192,10 @@ def quick_sum(argv):
         # First pass: make set iterators uniform
         for i in iterators:
             for j in iterators:
-                if i[0] == j[0]:
-                    j[1]._name = i[1]._name
+                if isinstance(i, sasoptpy.data.SetIterator) and\
+                   isinstance(j, sasoptpy.data.SetIterator):
+                    if i[0] == j[0]:
+                        j[1]._name = i[1]._name
         it_names = []
         for i in iterators:
             unique = True
@@ -425,12 +427,14 @@ def _to_optmodel_loop(keys):
 
 
 def get_iterators(keys):
+    '''
+    Returns a list of definition strings for a given list of SetIterators
+    '''
     iterators = []
     groups = {}
     for key in keys:
         if isinstance(key, sasoptpy.data.SetIterator):
-            if key._group == 0 or key._outof == 1:
-                iterators.append(key._defn())
+            iterators.append(key._defn())
         elif isinstance(key, tuple):
             for subkey in key:
                 g = groups.setdefault(subkey._group, [])
@@ -648,6 +652,14 @@ def flatten_frame(df):
     return new_frame
 
 
+def flatten_tuple(tp):
+    for elem in tp:
+        if isinstance(elem, tuple):
+            yield from flatten_tuple(elem)
+        else:
+            yield elem
+
+
 def is_equal(a, b):
     '''
     Compares various sasoptpy object types
@@ -765,7 +777,7 @@ def _to_bracket(prefix, keys):
     else:
         s = prefix + '['
         k = tuple_pack(keys)
-        s += ', '.join([str(i) for i in k])
+        s += ', '.join(_to_iterator_expression(k))
         s += ']'
         return s
 
@@ -1025,3 +1037,15 @@ def union(*args):
         for i in args:
             r += i
         return r
+
+
+def _to_iterator_expression(itlist):
+    strlist = []
+    for i in itlist:
+        if isinstance(i, sasoptpy.components.Expression):
+            strlist.append(i._expr())
+        elif isinstance(i, str):
+            strlist.append("'{}'".format(i))
+        else:
+            strlist.append(str(i))
+    return strlist

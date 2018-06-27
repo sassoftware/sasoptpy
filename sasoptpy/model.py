@@ -1623,7 +1623,6 @@ class Model:
             s = ''
             if header:
                 s = 'proc optmodel;\n'
-            s += '/*Compact unordered format*/\n'
             allcomp = (
                 self._sets +
                 self._parameters +
