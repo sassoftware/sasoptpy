@@ -93,6 +93,7 @@ class Expression:
         self._temp = temp
         self._value = 0
         self._operator = None
+        self._arguments = []
         self._iterkey = []
         self._abstract = False
         self._conditions = []
@@ -288,13 +289,17 @@ class Expression:
                 refs = optext.join(strlist)
                 if val == 1 or val == -1:
                     s += '{}'.format(refs)
+                elif op:
+                    s += ' {} * ({}) '.format(abs(val), refs)
                 else:
-                    s += '{} * {}'.format(abs(float(val)), refs)
+                    s += ' {} * {} '.format(abs(val), refs)
             else:
                 s += '{}'.format(abs(val))
             itemcnt += 1
 
         if self._operator:
+            if self._arguments:
+                s += ', ' + ', '.join(i._expr() if hasattr(i, '_expr') else str(i) for i in self._arguments)
             s += ')'
         if list(self._linCoef.keys()) == ['CONST'] and\
            self._linCoef['CONST']['val'] == 0:
@@ -354,8 +359,10 @@ class Expression:
                         for i in list(vx['ref'])])
                 if vx['val'] == 1 or vx['val'] == -1:
                     s += ' {} '.format(refs)
+                elif 'op' in vx:
+                    s += ' {} * ({}) '.format(abs(vx['val']), refs)
                 else:
-                    s += ' {} * {} '.format(abs(float(vx['val'])), refs)
+                    s += ' {} * {} '.format(abs(vx['val']), refs)
             elif not isinstance(self, Constraint):
                 if vx['val'] is not 0:
                     s += ' {} '.format(abs(vx['val']))
@@ -432,7 +439,7 @@ class Expression:
                 sign = sign * -1
             elif self._operator is not None:
                 r = Expression()
-                r._linCoef[self.set_name()] = {'val': 1.0, 'ref': self}
+                r._linCoef[self.set_name()] = {'val': 1, 'ref': self}
             else:
                 r = self.copy()
         if isinstance(other, Expression):
@@ -648,7 +655,7 @@ class Expression:
         self.set_permanent()
         r._linCoef[self._name, other._name] = {
             'ref': [self, other],
-            'val': 1.0,
+            'val': 1,
             'op': '^'
             }
         r._abstract = self._abstract or other._abstract
@@ -660,7 +667,7 @@ class Expression:
             other = Expression(other, name='')
         r._linCoef[other._name, self._name] = {
             'ref': [other, self],
-            'val': 1.0,
+            'val': 1,
             'op': '^'
             }
         r._abstract = self._abstract or other._abstract
@@ -686,7 +693,7 @@ class Expression:
             other = Expression(other, name='')
         r._linCoef[self._name, other._name] = {
             'ref': [self, other],
-            'val': 1.0,
+            'val': 1,
             'op': '/'
             }
         r._abstract = self._abstract or other._abstract
@@ -698,7 +705,7 @@ class Expression:
             other = Expression(other, name='')
         r._linCoef[other._name, self._name] = {
             'ref': [other, self],
-            'val': 1.0,
+            'val': 1,
             'op': '/'
             }
         r._abstract = self._abstract or other._abstract
@@ -782,9 +789,9 @@ class Variable(Expression):
             self._lb = max(self._lb, 0)
             self._ub = min(self._ub, 1)
         if shadow:
-            self._linCoef[name + str(id(self))] = {'ref': self, 'val': 1.0}
+            self._linCoef[name + str(id(self))] = {'ref': self, 'val': 1}
         else:
-            self._linCoef[name] = {'ref': self, 'val': 1.0}
+            self._linCoef[name] = {'ref': self, 'val': 1}
             self._objorder = sasoptpy.utils.register_name(name, self)
         self._key = key
         self._parent = None

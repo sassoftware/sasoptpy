@@ -24,19 +24,39 @@ Math includes the definition of mathematical operations
 import sasoptpy.utils
 
 
-def sin(exp):
+def math_func(exp, op, *args):
     try:
         exp = sasoptpy.utils.get_mutable(exp)
-        exp._operator = 'sin'
-        return exp
+        exp._operator = op
+        for arg in args:
+            exp._arguments.append(arg)
+        r = sasoptpy.components.Expression()
+        r._linCoef[exp.set_name()] = {'val': 1, 'ref': exp}
+        return r
     except AttributeError:
-        print('ERROR: sin function can only be used with Expression objects.')
+        pass
 
 
-def abs(exp):
-    try:
-        exp = sasoptpy.utils.get_mutable(exp)
-        exp._operator = 'abs'
-        return exp
-    except AttributeError:
-        print('ERROR: sin function can only be used with Expression objects.')
+# Basic functions
+def abs(exp): return math_func(exp, 'abs')
+def mod(exp): return math_func(exp, 'mod')
+def log(exp): return math_func(exp, 'log')
+def log2(exp): return math_func(exp, 'log2')
+def log10(exp): return math_func(exp, 'log10')
+def exp(exp): return math_func(exp, 'exp')
+def sqrt(exp): return math_func(exp, 'sqrt')
+def mod(exp, divisor): return math_func(exp, 'mod', divisor)
+def int(exp): return math_func(exp, 'int')
+def sign(exp): return math_func(exp, 'sign')
+
+
+# Descriptive functions
+def max(exp, *args): return math_func(exp, 'max', *args)
+def min(exp, *args): return math_func(exp, 'min', *args)
+
+
+# Trigonometric functions
+def sin(exp): return math_func(exp, 'sin')
+def cos(exp): return math_func(exp, 'cos')
+def tan(exp): return math_func(exp, 'tan')
+
