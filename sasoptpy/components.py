@@ -290,9 +290,9 @@ class Expression:
                 if val == 1 or val == -1:
                     s += '{}'.format(refs)
                 elif op:
-                    s += ' {} * ({}) '.format(abs(val), refs)
+                    s += ' {} * ({}) '.format(round(abs(val), 12), refs)
                 else:
-                    s += ' {} * {} '.format(abs(val), refs)
+                    s += ' {} * {} '.format(round(abs(val), 12), refs)
             else:
                 s += '{}'.format(abs(val))
             itemcnt += 1
@@ -1267,6 +1267,10 @@ class VariableGroup:
                                  vartype=vartype, lb=lb, ub=ub, init=init,
                                  vardict=self._vardict, varlist=self._varlist,
                                  abstract=abstract)
+        self._lb = lb if lb is not None else 0
+        self._ub = ub if ub is not None else inf
+        self._init = init
+        self._type = vartype
 
         if name is not None:
             name = sasoptpy.utils.check_name(name, 'var')
@@ -1426,71 +1430,66 @@ class VariableGroup:
                           format(self._name, str(i), type(i)))
         s = s[:-2]
         s += '} '
-        # This part assumes all lb and ub are same!
-        # Type of variable
-        issame = {'_type': True, '_lb': True, '_ub': True, '_init': True}
-        k = list(self._vardict)[0]
-        v = self._vardict[k]
-        for _, i in self._vardict.items():
-            for attr in issame:
-                if issame[attr] and getattr(i, attr) != getattr(v, attr):
-                    issame[attr] = False
-        if issame['_type']:
-            BIN = sasoptpy.utils.BIN
-            CONT = sasoptpy.utils.CONT
-            if v._type != CONT:
-                if v._type == BIN:
-                    s += 'binary '
-                else:
-                    s += 'integer '
-        # Bound of variable
-        if issame['_lb']:
-            if v._lb != -inf:
-                if not (v._lb == 0 and v._type == BIN):
-                    s += '>= {} '.format(v._lb)
-        if issame['_ub']:
-            if v._ub != inf:
-                if not (v._ub == 1 and v._type == BIN):
-                    s += '<= {} '.format(v._ub)
-        if issame['_init']:
-            if v._init is not None:
-                s += 'init {} '.format(v._init)
+        # Grab features
+        CONT = sasoptpy.utils.CONT
+        BIN = sasoptpy.utils.BIN
+        INT = sasoptpy.utils.INT
+        if self._type != CONT:
+            if self._type == BIN:
+                s += 'binary '
+            if self._type == INT:
+                s += 'integer '
+        if self._lb is not None and self._lb != -inf and not(self._lb == 0 and self._type == BIN):
+            s += '>= {} '.format(self._lb)
+        if self._ub is not None and self._ub != inf and not(self._ub == 1 and self._type == BIN):
+            s += '<= {}'.format(self._ub)
+        if self._init is not None:
+            s += 'init {}'.format(self._init)
+
         s = s.rstrip()
         s += ';'
         # Check bounds to see if they are parameters
-        for i in self._shadows:
-            v = self._shadows[i]
-            lbparam = str(v) + '.lb' != str(v._lb)
-            ubparam = str(v) + '.ub' != str(v._ub)
-            if lbparam or ubparam:
-                s += '\n' + tabs
-                loop_text = sasoptpy.utils._to_optmodel_loop(i)
-                if loop_text != '':
-                    s += 'for ' + loop_text + ' '
-
-                if lbparam:
-                    if isinstance(v._lb, Expression):
-                        s += str(v) + '.lb=' + v._lb._defn()
-                    else:
-                        s += str(v) + '.lb=' + str(v._lb)
-                    s += ' '
-                if ubparam:
-                    if isinstance(v._ub, Expression):
-                        s += str(v) + '.ub=' + v._ub._defn()
-                    else:
-                        s += str(v) + '.ub=' + str(v._ub)
-                    s += ' '
-                s = s.rstrip()
-                s += ';'
-            initparam = v._init is not None
-            if initparam:
-                s += '\n' + tabs
-                loop_text = sasoptpy.utils._to_optmodel_loop(i)
-                if loop_text != '':
-                    s += 'for ' + loop_text
-                s += str(v) + ' = ' + str(v._init)
-                s = s.rstrip()
-                s += ';'
+        if self._abstract:
+            for i in self._shadows:
+                v = self._shadows[i]
+                lbparam = str(v) + '.lb' != str(v._lb)
+                ubparam = str(v) + '.ub' != str(v._ub)
+                if lbparam or ubparam:
+                    s += '\n' + tabs
+                    loop_text = sasoptpy.utils._to_optmodel_loop(i)
+                    if loop_text != '':
+                        s += 'for ' + loop_text + ' '
+                    if lbparam:
+                        if isinstance(v._lb, Expression):
+                            s += str(v) + '.lb=' + v._lb._defn()
+                        else:
+                            s += str(v) + '.lb=' + str(v._lb)
+                        s += ' '
+                    if ubparam:
+                        if isinstance(v._ub, Expression):
+                            s += str(v) + '.ub=' + v._ub._defn()
+                        else:
+                            s += str(v) + '.ub=' + str(v._ub)
+                        s += ' '
+                    s = s.rstrip()
+                    s += ';'
+                initparam = v._init is not None
+                if initparam:
+                    s += '\n' + tabs
+                    loop_text = sasoptpy.utils._to_optmodel_loop(i)
+                    if loop_text != '':
+                        s += 'for ' + loop_text
+                    s += str(v) + ' = ' + str(v._init)
+                    s = s.rstrip()
+                    s += ';'
+        else:
+            for _, v in self._vardict.items():
+                if v._lb != self._lb:
+                    s += '\n' + tabs + '{}.lb = {};'.format(v._expr(), v._lb)
+                if v._ub != self._ub:
+                    s += '\n' + tabs + '{}.ub = {};'.format(v._expr(), v._ub)
+                if v._init != self._init:
+                    s += '\n' + tabs + '{} = {};'.format(v._expr(), v._init)
 
         return(s)
 

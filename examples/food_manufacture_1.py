@@ -64,6 +64,8 @@ def test(cas_conn):
     m.add_constraints((so.quick_sum(hardness[o]*use[o, p] for o in OILS) <=
                       hardness_ub * manufacture[p-1] for p in PERIODS),
                       name='hardness_lb')
+
+    # Solver call
     res = m.solve()
 
     # With other solve options

@@ -1828,9 +1828,9 @@ class Model:
         else:
             return None
 
-    def solve(self, options={}, submit=True, name=None,
+    def solve(self, options=None, submit=True, name=None,
               frame=False, drop=False, replace=True, primalin=False,
-              milp={}, lp={}):
+              milp=None, lp=None):
         '''
         Solves the model by calling CAS or SAS optimization solvers
 
@@ -1891,6 +1891,8 @@ class Model:
         :func:`Model.solve_local`
 
         '''
+        if options is None:
+            options = {}
 
         # Check if session is defined
         session_type = self.test_session()
@@ -1906,16 +1908,18 @@ class Model:
             return None
 
         # Check backward compatibility for options
-        if milp:
+        if milp is not None:
             warnings.warn(
                 'WARNING: Solve method arguments `milp` and `lp` will be '
                 'deprecated, use `options` instead', DeprecationWarning)
             options.update(milp)
-        if lp:
+            options['with'] = 'milp'
+        if lp is not None:
             warnings.warn(
                 'WARNING: Solve method arguments `milp` and `lp` will be '
                 'deprecated, use `options` instead', DeprecationWarning)
             options.update(lp)
+            options['with'] = 'lp'
 
         # Call solver based on session type
         return solver_func(
