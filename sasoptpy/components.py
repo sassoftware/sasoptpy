@@ -1491,9 +1491,9 @@ class VariableGroup:
         else:
             for _, v in self._vardict.items():
                 if self._lb is not None and not np.issubdtype(type(self._lb), np.number) or v._lb != self._lb:
-                    s += '\n' + tabs + '{}.lb = {};'.format(v._expr(), v._lb)
+                    s += '\n' + tabs + '{}.lb = {};'.format(v._expr(), v._lb if v._lb != inf else "constant('BIG')")
                 if self._ub is not None and not np.issubdtype(type(self._ub), np.number) or v._ub != self._ub:
-                    s += '\n' + tabs + '{}.ub = {};'.format(v._expr(), v._ub)
+                    s += '\n' + tabs + '{}.ub = {};'.format(v._expr(), v._ub if v._ub != inf else "constant('BIG')")
                 if self._init is not None and not np.issubdtype(type(self._init), np.number) or v._init != self._init:
                     s += '\n' + tabs + '{} = {};'.format(v._expr(), v._init)
 

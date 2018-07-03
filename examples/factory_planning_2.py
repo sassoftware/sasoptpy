@@ -48,7 +48,7 @@ def test(cas_conn):
     PRODUCTS = product_list
     profit = product_data['profit']
     PERIODS = range(1, 7)
-    MACHINE_TYPES = machine_types_data.index.values
+    MACHINE_TYPES = machine_types_data.index.tolist()
 
     num_machines = machine_types_data['num_machines']
 

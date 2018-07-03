@@ -36,8 +36,8 @@ def test(cas_conn):
     shorttime_frac = 0.5
 
     # Sets
-    WORKERS = worker_data.index.values
-    PERIODS0 = demand_data.index.values
+    WORKERS = worker_data.index.tolist()
+    PERIODS0 = demand_data.index.tolist()
     PERIODS = PERIODS0[1:]
     RETRAIN_PAIRS = [i for i, _ in retrain_data.iterrows()]
     DOWNGRADE_PAIRS = [(row['worker1'], row['worker2'])
