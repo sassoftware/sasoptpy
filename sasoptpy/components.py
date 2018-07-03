@@ -1439,9 +1439,15 @@ class VariableGroup:
                 s += 'binary '
             if self._type == INT:
                 s += 'integer '
-        if self._lb is not None and self._lb != -inf and not(self._lb == 0 and self._type == BIN):
+        if self._lb is not None and\
+           np.issubdtype(type(self._lb), np.number) and\
+           self._lb != -inf and\
+           not(self._lb == 0 and self._type == BIN):
             s += '>= {} '.format(self._lb)
-        if self._ub is not None and self._ub != inf and not(self._ub == 1 and self._type == BIN):
+        if self._ub is not None and\
+           np.issubdtype(type(self._ub), np.number) and\
+           self._ub != inf and\
+           not(self._ub == 1 and self._type == BIN):
             s += '<= {}'.format(self._ub)
         if self._init is not None:
             s += 'init {}'.format(self._init)
@@ -1484,11 +1490,11 @@ class VariableGroup:
                     s += ';'
         else:
             for _, v in self._vardict.items():
-                if v._lb != self._lb:
+                if self._lb is not None and not np.issubdtype(type(self._lb), np.number) or v._lb != self._lb:
                     s += '\n' + tabs + '{}.lb = {};'.format(v._expr(), v._lb)
-                if v._ub != self._ub:
+                if self._ub is not None and not np.issubdtype(type(self._ub), np.number) or v._ub != self._ub:
                     s += '\n' + tabs + '{}.ub = {};'.format(v._expr(), v._ub)
-                if v._init != self._init:
+                if self._init is not None and not np.issubdtype(type(self._init), np.number) or v._init != self._init:
                     s += '\n' + tabs + '{} = {};'.format(v._expr(), v._init)
 
         return(s)
