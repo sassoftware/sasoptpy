@@ -2183,19 +2183,33 @@ class Model:
                             self._constraintDict[row['con']]._dual =\
                                 row['dual']
 
-            self._solutionSummary = session.CASTable('solutionSummary').\
-                to_sparse()[['Label1', 'cValue1']].set_index(['Label1'])
-            self._problemSummary = session.CASTable('problemSummary').\
-                to_sparse()[['Label1', 'cValue1']].set_index(['Label1'])
+                self._solutionSummary = session.CASTable('solutionSummary').\
+                    to_sparse()[['Label1', 'cValue1']].set_index(['Label1'])
+                self._problemSummary = session.CASTable('problemSummary').\
+                    to_sparse()[['Label1', 'cValue1']].set_index(['Label1'])
 
-            self._solutionSummary.index.names = ['Label']
-            self._solutionSummary.columns = ['Value']
+                self._solutionSummary.index.names = ['Label']
+                self._solutionSummary.columns = ['Value']
 
-            self._problemSummary.index.names = ['Label']
-            self._problemSummary.columns = ['Value']
+                self._problemSummary.index.names = ['Label']
+                self._problemSummary.columns = ['Value']
 
-            self._status = response.solutionStatus
-            self._soltime = response.solutionTime
+                self._status = response.solutionStatus
+                self._soltime = response.solutionTime
+
+                if('OPTIMAL' in response.solutionStatus):
+                    self._objval = response.objective
+                    # Replace initial values with current values
+                    for v in self._variables:
+                        v._init = v._value
+                    return self._primalSolution
+                else:
+                    print('NOTE: Response {}'.format(response.solutionStatus))
+                    self._objval = 0
+                    return None
+            else:
+                print('ERROR: {}'.format(response.get_tables('status')[0]))
+                return None
 
     def solve_on_mva(self, session, options, submit, name,
                      frame, drop, replace, primalin):
