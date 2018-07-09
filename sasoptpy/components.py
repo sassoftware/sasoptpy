@@ -1424,6 +1424,9 @@ class VariableGroup:
                 for j in i:
                     ind_list.append(sasoptpy.utils._to_quoted_string(j))
                 s += '{{{}}}, '.format(','.join(ind_list))
+            elif isinstance(i, dict):
+                s += '{{{}}}, '.format(','.join(
+                    sasoptpy.utils._to_quoted_string(j) for j in i.keys()))
             else:
                 try:
                     s += '{}, '.format(i)
