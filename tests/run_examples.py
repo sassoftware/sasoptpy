@@ -2,11 +2,12 @@ import unittest
 import os
 import sasoptpy
 import sys
+import time
 
 
 class NullWriter:
 
-    def write(self, str): pass
+    def write(self, text): pass
 
     def flush(self): pass
 
@@ -26,10 +27,10 @@ class TestExamples(unittest.TestCase):
 
     def run_test(self, test):
         sys.stdout = NullWriter()
+        t0 = time.time()
         val = test(TestExamples.conn)
         sys.stdout = TestExamples.defstdout
-        print(test.__globals__['__file__'])
-        print(val)
+        print(test.__globals__['__file__'], val, time.time()-t0)
         return val
 
     def test_fm1(self):
