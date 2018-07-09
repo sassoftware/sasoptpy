@@ -61,7 +61,7 @@ def test(cas_conn):
     IJKL = [(i, j, k, l)
             for i in DEPTS for j in CITIES for k in DEPTS for l in CITIES
             if i < k]
-    product = m.add_variables(IJKL, vartype=so.BIN)
+    product = m.add_variables(IJKL, vartype=so.BIN, name='product')
 
     totalBenefit = so.quick_sum(benefit[i, j] * assign[i, j]
                                 for i in DEPTS for j in CITIES)

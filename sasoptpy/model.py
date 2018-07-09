@@ -778,10 +778,21 @@ class Model:
             elif isinstance(c, sasoptpy.components.ConstraintGroup):
                 self.add_constraints(argv=None, cg=c)
             elif isinstance(c, Model):
-                for v in c._variables:
-                    self.add_variable(v)
-                for cn in c._constraints:
-                    self.add_constraint(cn)
+                self._sets.extend(s for s in c._sets)
+                self._parameters.extend(s for s in c._parameters)
+                self._statements.extend(s for s in c._statements)
+                for s in c._vargroups:
+                    self._vargroups.append(s)
+                    for subvar in s:
+                        self._variables.append(subvar)
+                for s in c._variables:
+                    self._variables.append(s)
+                for s in c._congroups:
+                    self._congroups.append(s)
+                    #for subcon in s:
+                    #    self._constraints.append(subcon)
+                for s in c._constraints:
+                    self._constraints.append(s)
                 self._objective = c._objective
             else:
                 print('WARNING: Cannot include argument {} {} {}'.format(

@@ -178,8 +178,6 @@ def test(cas_conn):
     m.add_constraint(flow.sum('premium_petrol', '*') >= premium_ratio *
                      flow.sum('regular_petrol', '*'), name='premium_ratio')
 
-    print(m.to_frame())
-
     res = m.solve()
     if res is not None:
         print(so.get_solution_table(crudeDistilled))

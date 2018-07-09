@@ -270,7 +270,7 @@ def get_obj_by_name(name):
 
     '''
     if name in __namedict:
-        return __namedict[name['ref']]
+        return __namedict[name]['ref']
     else:
         return None
 
@@ -409,8 +409,10 @@ def _to_optmodel_loop(keys):
     s = ''
     subindex = []
     for key in keys:
-        if not isinstance(key, sasoptpy.data.SetIterator) and not\
-           isinstance(key, tuple):
+        if isinstance(key, tuple):
+            for i in flatten_tuple(key):
+                subindex.append(str(i))
+        elif not isinstance(key, sasoptpy.data.SetIterator):
             subindex.append(str(key))
     if subindex:
         s += '_' + '_'.join(subindex)
@@ -437,8 +439,9 @@ def get_iterators(keys):
             iterators.append(key._defn())
         elif isinstance(key, tuple):
             for subkey in key:
-                g = groups.setdefault(subkey._group, [])
-                g.append(subkey)
+                if hasattr(subkey, '_group'):
+                    g = groups.setdefault(subkey._group, [])
+                    g.append(subkey)
     if groups:
         for kg in groups.values():
             s = '<' + ','.join([i._name for i in kg]) + '> in ' +\
@@ -887,6 +890,12 @@ def get_solution_table(*argv, sort=False, rhs=False):
                         listofkeys.append(m)
                 keylengths.append(sasoptpy.utils.list_length(
                     currentkeylist[0]))
+            elif isinstance(argv[i], sasoptpy.components.Expression):
+                if ('',) not in listofkeys:
+                    listofkeys.append(('',))
+                    keylengths.append(1)
+            else:
+                print('Unknown type: {} {}'.format(type(argv[i]), argv[i]))
         else:
             if ('',) not in listofkeys:
                 listofkeys.append(('',))
