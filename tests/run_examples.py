@@ -82,6 +82,16 @@ class TestExamples(unittest.TestCase):
         obj = self.run_test(test)
         self.assertEqual(obj, 14.9)
 
+    def test_kidney_exchange(self):
+        from examples.sas_kidney_exchange import test
+        obj = self.run_test(test)
+        self.assertEqual(obj, 17.111359)
+
+    def test_optimal_wedding(self):
+        from examples.sas_optimal_wedding import test
+        obj = self.run_test(test)
+        self.assertEqual(obj, 6.0)
+
 
 if __name__ == '__main__':
     # Default

@@ -1269,6 +1269,8 @@ class VariableGroup:
                                  abstract=abstract)
         self._lb = lb if lb is not None else 0
         self._ub = ub if ub is not None else inf
+        if vartype == sasoptpy.utils.BIN and ub is None:
+            self._ub = 1
         self._init = init
         self._type = vartype
 

@@ -1668,7 +1668,12 @@ class Model:
                 optstring = ''
                 for key, value in options.items():
                     if key not in ('with', 'relaxint'):
-                        optstring += ' {}={}'.format(key, value)
+                        if type(value) is dict:
+                            optstring += ' {}=('.format(key) + ','.join(
+                                '{}={}'.format(i, j)
+                                for i, j in value.items()) + ')'
+                        else:
+                            optstring += ' {}={}'.format(key, value)
                 if optstring:
                     s += ' /' + optstring
             s += ';\n'
