@@ -100,5 +100,6 @@ if __name__ == '__main__':
     # Frame method
     # Change 4th argument (frame) to True
     def_opts = sasoptpy.Model.solve.__defaults__
-    sasoptpy.Model.solve.__defaults__ = (None, True, None, True, False, True, False, None, None)
+    sasoptpy.Model.solve.__defaults__ = (
+        None, True, None, True, False, True, False, None, None, False)
     unittest.main()

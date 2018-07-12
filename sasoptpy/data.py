@@ -23,6 +23,8 @@ operations
 '''
 
 
+from types import GeneratorType
+
 import sasoptpy.components
 import sasoptpy.utils
 
@@ -32,11 +34,11 @@ class Parameter:
     Represents sets inside PROC OPTMODEL
     '''
 
-    def __init__(self, name, keys, order=1, init=None):
+    def __init__(self, name, keys=None, order=1, init=None):
         self._name = sasoptpy.utils.check_name(name, 'param')
         self._objorder = sasoptpy.utils.register_name(self._name, self)
-        self._keys = keys
-        self._keysize = len(keys)
+        self._keys = keys if keys is not None else ()
+        self._keysize = len(self._keys)
         self._order = order
         self._init = init
         self._source = None
@@ -70,7 +72,10 @@ class Parameter:
         if tabs is None:
             tabs = ''
         if self._keys == ():
-            s = tabs + 'num {} = {}'.format(self._name, self._init)
+            if self._init:
+                s = tabs + 'num {} = {}'.format(self._name, self._init)
+            else:
+                s = tabs + 'num {}'.format(self._name)
         else:
             s = tabs + 'num {} {{'.format(self._name)
             for k in self._keys:
@@ -137,10 +142,16 @@ class Parameter:
 
         return(s)
 
+    def set_init(self, val):
+        self._init = val
+
+    def __str__(self):
+        return self._name
+
 
 class ParameterValue(sasoptpy.components.Expression):
 
-    def __init__(self, param, key, prefix='', postfix=''):
+    def __init__(self, param, key=None, prefix='', postfix=''):
         super().__init__()
         # pvname = sasoptpy.utils._to_bracket(param._name, key)
         self._name = param._name
@@ -153,6 +164,10 @@ class ParameterValue(sasoptpy.components.Expression):
                                     'val': 1.0}
         self._ref = param
         self._assign = None
+
+    def set_init(self, val):
+        if self._key == ('',):
+            self._ref.set_init(val)
 
     def _tag_constraint(self, *argv):
         pass
@@ -186,6 +201,14 @@ class Set(sasoptpy.components.Expression):
         super().__init__()
         self._name = sasoptpy.utils.check_name(name, 'set')
         self._objorder = sasoptpy.utils.register_name(self._name, self)
+        if init:
+            if isinstance(init, range):
+                newinit = str(init.start) + '..' + str(init.stop)
+                if init.step != 1:
+                    newinit = ' by ' + init.step
+                init = newinit
+            elif isinstance(init, list):
+                init = '[' + ' '.join([str(i) for i in init]) + ']'
         self._init = init
         self._type = sasoptpy.utils.list_pack(settype)
         self._colname = sasoptpy.utils.list_pack(name)
@@ -360,23 +383,26 @@ class SetIterator(sasoptpy.components.Expression):
 
 class ExpressionDict:
 
-    def __init__(self, argv=None, name=None):
+    def __init__(self, name=None):
         name = sasoptpy.utils.check_name(name, 'impvar')
         self._name = name
         self._objorder = sasoptpy.utils.register_name(name, self)
         self._dict = dict()
         self._conditions = []
         self._shadows = dict()
+        self._abstract = False
 
     def __setitem__(self, key, value):
         key = sasoptpy.utils.tuple_pack(key)
         try:
             if value._name is None:
                 value._name = self._name
-            if isinstance(value, Parameter) or value._abstract:
+            if isinstance(value, Parameter):
                 self._dict[key] = ParameterValue(value, key)
             elif isinstance(value, sasoptpy.components.Expression):
                 self._dict[key] = value
+                if value._abstract:
+                    self._abstract = True
             else:
                 self._dict[key] = value
         except AttributeError:
@@ -389,10 +415,13 @@ class ExpressionDict:
         elif key in self._shadows:
             return self._shadows[key]
         else:
-            tuple_key = sasoptpy.utils.tuple_pack(key)
-            pv = ParameterValue(self, tuple_key)
-            self._shadows[key] = pv
-            return pv
+            if self._abstract and len(self._dict) <= 1:
+                tuple_key = sasoptpy.utils.tuple_pack(key)
+                pv = ParameterValue(self, tuple_key)
+                self._shadows[key] = pv
+                return pv
+            else:
+                return None
 
     def _defn(self):
         # Do not return a definition if it is a local dictionary
@@ -413,6 +442,17 @@ class ExpressionDict:
             else:
                 s += self._dict[key]._expr()
             s += ';'
+        # Currently we replace expdicts with expressions inside local models
+        #======================================================================
+        # else:
+        #     s = ''
+        #     for key, val in self._dict.items():
+        #         ref = self._name + sasoptpy.utils._to_optmodel_loop(key)
+        #         s += 'impvar {}'.format(ref)
+        #         self._refname[key] = ref
+        #         s += ' = ' + (val._expr()
+        #                       if hasattr(val, '_expr') else str(val)) + ';\n'
+        #======================================================================
         return s
 
     def _get_only_key(self):
@@ -435,6 +475,38 @@ class ExpressionDict:
             s += ')'
         s += ')'
         return s
+
+
+class ImplicitVar(ExpressionDict):
+
+    def __init__(self, argv=None, name=None):
+        super().__init__(name=name)
+        if argv:
+            if type(argv) == GeneratorType:
+                for arg in argv:
+                    keynames = ()
+                    keyrefs = ()
+                    if argv.gi_code.co_nlocals == 1:
+                        itlist = argv.gi_code.co_cellvars
+                    else:
+                        itlist = argv.gi_code.co_varnames
+                    localdict = argv.gi_frame.f_locals
+                    for i in itlist:
+                        if i != '.0':
+                            keynames += (i,)
+                    for i in keynames:
+                        keyrefs += (localdict[i],)
+                    self[keyrefs] = arg
+            elif (type(argv) == sasoptpy.components.Expression and
+                  argv._abstract):
+                self[''] = argv
+                self['']._objorder = self._objorder
+            elif type(argv) == sasoptpy.components.Expression:
+                self[''] = argv
+                self['']._objorder = self._objorder
+            else:
+                print('ERROR: Unrecognized type for ImplicitVar argument: {}'.
+                      format(type(argv)))
 
 
 class Statement:

@@ -1154,6 +1154,10 @@ class Constraint(Expression):
         s += '{}'.format(- self._linCoef['CONST']['val'] + self._range)
         if self._parent is None:
             s += ';'
+            # Currently we switch to frame when blocks are set
+            # if self._block:
+            #     s += '\n'
+            #     s += self._name + '.block = ' + str(self._block) + ';'
         return(s)
 
     def __str__(self):
@@ -1287,8 +1291,10 @@ class VariableGroup:
                     sasoptpy.utils.extract_argument_as_list(arg))
             else:
                 self._keyset.append(arg)
-                if isinstance(arg, sasoptpy.data.Set):
+                if not self._abstract and isinstance(arg, sasoptpy.data.Set):
                     self._abstract = True
+                    for _, v in self._vardict.items():
+                        v._abstract = True
         self._shadows = {}
         self._set_var_info()
 
@@ -1309,6 +1315,33 @@ class VariableGroup:
         x
         '''
         return self._name
+
+    def add_member(self, key, var=None, name=None, vartype=None, lb=None,
+                   ub=None, init=None, shadow=False):
+        '''
+        (Experimental) Adds a new member to Variable Group
+        '''
+
+        key = sasoptpy.utils.tuple_pack(key)
+        dict_to_add = self._vardict if not shadow else self._shadows
+
+        if var is not None:
+            dict_to_add[key] = var
+            return var
+        else:
+            vartype = vartype if vartype is not None else self._type
+            lb = lb if lb is not None else self._lb
+            ub = ub if ub is not None else self._ub
+            if name is not None:
+                varname = name
+            else:
+                varname = '{}['.format(self._name) + ','.join(
+                        format(k) for k in key) + ']'
+            new_var = sasoptpy.Variable(
+                name=varname, lb=lb, ub=ub, init=init, vartype=vartype,
+                shadow=shadow, abstract=False)
+            dict_to_add[key] = new_var
+            return new_var
 
     def _recursive_add_vars(self, *argv, name, vartype, lb, ub, init,
                             vardict={}, varlist=[], vkeys=(), abstract=False):
@@ -1574,7 +1607,7 @@ class VariableGroup:
         Parameters
         ----------
         vector : list, dictionary, :class:`pandas.Series` object,\
- or :class:`pandas.DataFrame` object
+                 or :class:`pandas.DataFrame` object
             Vector to be multiplied with the variable group
 
         Returns

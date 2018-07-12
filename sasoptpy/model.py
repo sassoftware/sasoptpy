@@ -360,14 +360,6 @@ class Model:
                 return c
 
     def add_set(self, name, init=None, settype=['num']):
-        if init:
-            if isinstance(init, range):
-                newinit = str(init.start) + '..' + str(init.stop)
-                if init.step != 1:
-                    newinit = ' by ' + init.step
-                init = newinit
-            elif isinstance(init, list):
-                init = '[' + ' '.join([str(i) for i in init]) + ']'
         newset = sasoptpy.data.Set(name, init=init, settype=settype)
         self._sets.append(newset)
         return newset
@@ -387,40 +379,15 @@ class Model:
         '''
         Adds an implicit variable to the model
         '''
-        iv = sasoptpy.data.ExpressionDict(name=name)
-        if argv:
-            if type(argv) == GeneratorType:
-                for arg in argv:
-                    keynames = ()
-                    keyrefs = ()
-                    if argv.gi_code.co_nlocals == 1:
-                        itlist = argv.gi_code.co_cellvars
-                    else:
-                        itlist = argv.gi_code.co_varnames
-                    localdict = argv.gi_frame.f_locals
-                    for i in itlist:
-                        if i != '.0':
-                            keynames += (i,)
-                    for i in keynames:
-                        keyrefs += (localdict[i],)
-                    iv[keyrefs] = arg
-                self._impvars.append(iv)
-            elif (type(argv) == sasoptpy.components.Expression and
-                  argv._abstract):
-                iv[''] = argv
-                iv['']._objorder = iv._objorder
-                self._impvars.append(iv)
-                return iv['']
-            else:
-                iv = argv
-
+        iv = sasoptpy.data.ImplicitVar(argv=argv, name=name)
+        self._impvars.append(iv)
         return iv
 
     def add_statement(self, statement):
         if isinstance(statement, sasoptpy.components.Expression):
             self._statements.append(sasoptpy.data.Statement(str(statement)))
 
-    def read_data(self, table, key_set, key_cols=[], option='', params=[]):
+    def read_data(self, table, key_set, key_cols=None, option='', params=None):
         '''
         Reads a CASTable into PROC OPTMODEL sets
 
@@ -443,34 +410,17 @@ class Model:
           a single item, string type can be used instead.
         '''
 
-        # Reading key
-        if key_set is not None and key_cols:
-            key_set._colname = key_cols
+        if key_cols is None:
+            key_cols = []
+        if params is None:
+            params = []
 
-        # Reading parameters
-        for p in params:
-            p.setdefault('column', None)
-            p.setdefault('index', None)
-            p['param']._set_loop(table, key_set, p['column'], p['index'])
+        s = sasoptpy.utils.read_data(
+            table=table, key_set=key_set, key_cols=key_cols, option=option,
+            params=params)
+        self._statements.append(s)
 
-        if type(table).__name__ == 'CASTable':
-            s = 'read data {}'.format(table.name)
-        elif type(table).__name__ == 'SASdata':
-            s = 'read data {}'.format(table.table)
-        else:
-            s = 'read data {}'.format(table)
-        if option:
-            s += ' {}'.format(option)
-        s += ' into '
-        s += '{}=[{}] '.format(key_set._name, ' '.join(key_set._colname))
-        parlist = []
-        for p in params:
-            parlist.append(p['param']._to_read_data())
-        s += ' '.join(parlist)
-        s += ';'
-        self._statements.append(sasoptpy.data.Statement(s))
-
-    def read_table(self, table, key=['_N_'], columns=[],
+    def read_table(self, table, key=['_N_'], columns=None,
                    key_type=['num'], upload=False, casout=None):
         '''
         Reads a CAS Table or pandas DataFrame into the model
@@ -539,59 +489,22 @@ class Model:
 
         '''
 
-        # Type of the given table and the session
-        t_type = type(table).__name__
-        s_type = self.test_session()
+        objs = sasoptpy.utils.read_table(
+            table=table, session=self._session, key=key, columns=columns,
+            key_type=key_type, upload=upload, casout=casout, ref=True)
 
-        if (upload and t_type == 'DataFrame' and s_type == 'CAS'):
-            table = self._session.upload_frame(table, casout=casout)
-        elif (upload and t_type == 'DataFrame' and s_type == 'SAS'):
-            req_name = casout if isinstance(casout, str) else None
-            upname = sasoptpy.utils.check_name(req_name, 'table')
-            sasoptpy.utils.register_name(upname, table)
-            table = self._session.df2sd(table, table=upname)
+        if isinstance(objs[0], sasoptpy.data.Set):
+            self._sets.append(objs[0])
+        for i in objs[1]:
+            if isinstance(i, sasoptpy.data.Parameter):
+                self._parameters.append(i)
+        if objs[2] is not None and isinstance(objs[2], sasoptpy.data.Statement):
+                self._statements.append(objs[2])
 
-        t_type = type(table).__name__
-
-        if type(table).__name__ == 'CASTable':
-            tname = table.name
-        elif type(table).__name__ == 'SASdata':
-            tname = table.table
-        elif type(table) == str:
-            tname = table
+        if objs[1]:
+            return (objs[0], objs[1])
         else:
-            tname = str(table)
-
-        if t_type == 'CASTable' or t_type == 'SASdata' or t_type == 'str':
-            if not key or key == [None]:
-                key = ['_N_']
-            keyset = self.add_set(
-                name='set_' + ('_'.join([str(i) for i in key])
-                               if key != ['_N_'] else tname + '_N'),
-                settype=key_type
-                )
-            pars = []
-            for col in columns:
-                pars.append(self.add_parameter(keyset, name=col))
-
-            self.read_data(table, key_set=keyset, key_cols=key, params=[
-                {'param': pars[i], 'column': columns[i]}
-                for i in range(len(pars))])
-        elif t_type == 'DataFrame':
-            if key and key != [None] and key != ['_N_']:
-                table = table.set_index(key)
-            keyset = table.index.tolist()
-            pars = []
-            for col in columns:
-                pars.append(table[col])
-        else:
-            print('ERROR: Data type is not recognized in read_table: {} ({})'
-                  .format(table, type(table)))
-            return None
-        if pars:
-            return (keyset, pars)
-        else:
-            return keyset
+            return objs[0]
 
     def drop_variable(self, variable):
         '''
@@ -769,7 +682,9 @@ class Model:
           original model to be included.
         '''
         for i, c in enumerate(argv):
-            if isinstance(c, sasoptpy.components.Variable):
+            if c is None or type(c) == pd.DataFrame or type(c) == pd.Series:
+                continue
+            elif isinstance(c, sasoptpy.components.Variable):
                 self.add_variable(var=c)
             elif isinstance(c, sasoptpy.components.VariableGroup):
                 self.add_variables(vg=c)
@@ -805,9 +720,6 @@ class Model:
                 for s in c._constraints:
                     self._constraints.append(s)
                 self._objective = c._objective
-            else:
-                print('WARNING: Cannot include argument {} {} {}'.format(
-                    i, c, type(c)))
 
     def set_objective(self, expression, sense, name=None):
         '''
@@ -1857,7 +1769,7 @@ class Model:
 
     def solve(self, options=None, submit=True, name=None,
               frame=False, drop=False, replace=True, primalin=False,
-              milp=None, lp=None):
+              milp=None, lp=None, verbose=False):
         '''
         Solves the model by calling CAS or SAS optimization solvers
 
@@ -1877,6 +1789,8 @@ class Model:
             Switch for replacing an existing MPS table (only CAS and MPS)
         primalin : boolean, optional
             Switch for using initial values (only MILP)
+        verbose : boolean, optional (experimental)
+            Switch for printing generated OPTMODEL code
 
         Returns
         -------
@@ -1951,15 +1865,20 @@ class Model:
         # Call solver based on session type
         return solver_func(
             sess, options=options, submit=submit, name=name,
-            drop=drop, frame=frame, replace=replace, primalin=primalin)
+            drop=drop, frame=frame, replace=replace, primalin=primalin,
+            verbose=verbose)
 
     def solve_on_cas(self, session, options, submit, name,
-                     frame, drop, replace, primalin):
+                     frame, drop, replace, primalin, verbose):
 
         # Check which method will be used for solve
         session.loadactionset(actionset='optimization')
 
         if frame or not hasattr(session.optimization, 'runoptmodel'):
+            frame = True
+
+        # OPTMODEL variant does not accept decomp blocks yet
+        if 'decomp' in options:
             frame = True
 
         # Check if OPTMODEL mode is needed
@@ -2154,6 +2073,8 @@ class Model:
             print('NOTE: Converting model {} to OPTMODEL.'.format(self._name))
             optmodel_string = self.to_optmodel(header=False, options=options,
                                                ods=False)
+            if verbose:
+                print(optmodel_string)
             if not submit:
                 return optmodel_string
             print('NOTE: Submitting OPTMODEL codes to CAS server.')
@@ -2183,6 +2104,9 @@ class Model:
                 for _, row in self._primalSolution.iterrows():
                     if row['var'] in self._variableDict:
                         self._variableDict[row['var']]._value = row['value']
+                    else:
+                        # Search in vargroups for the original name
+                        sasoptpy.utils._set_abstract_values(row)
 
                 # Capturing dual values for LP problems
                 if ptype == 1:
@@ -2223,7 +2147,7 @@ class Model:
                 return None
 
     def solve_on_mva(self, session, options, submit, name,
-                     frame, drop, replace, primalin):
+                     frame, drop, replace, primalin, verbose):
         '''
         Solves the model by calling SAS 9.4 solvers
 
@@ -2418,6 +2342,8 @@ class Model:
             print('NOTE: Converting model {} to OPTMODEL.'.format(self._name))
             optmodel_string = self.to_optmodel(header=True, options=options,
                                                ods=True)
+            if verbose:
+                print(optmodel_string)
             if not submit:
                 return optmodel_string
             print('NOTE: Submitting OPTMODEL codes to SAS server.')
