@@ -14,7 +14,7 @@ def test(cas_conn):
         [120, 110, 120, 120, 125],
         [100, 120, 150, 110, 105],
         [90, 100, 140,  80, 135]]
-    cost = pd.DataFrame(cost_data, columns=OILS)
+    cost = pd.DataFrame(cost_data, columns=OILS, index=PERIODS).transpose()
     hardness_data = [8.8, 6.1, 2.0, 4.2, 5.0]
     hardness = {OILS[i]: hardness_data[i] for i in range(len(OILS))}
 
@@ -35,7 +35,8 @@ def test(cas_conn):
     # Problem definition
     buy = m.add_variables(OILS, PERIODS, lb=0, name='buy')
     use = m.add_variables(OILS, PERIODS, lb=0, name='use')
-    manufacture = [use.sum('*', p) for p in PERIODS]
+    manufacture = m.add_implicit_variable((use.sum('*', p) for p in PERIODS),
+                                          name='manufacture')
     last_period = len(PERIODS)
     store = m.add_variables(OILS, [0] + list(PERIODS), lb=0, ub=store_ub,
                             name='store')
@@ -44,11 +45,11 @@ def test(cas_conn):
         store[oil, last_period].set_bounds(lb=init_storage, ub=init_storage)
     VEG = [i for i in OILS if 'veg' in i]
     NONVEG = [i for i in OILS if i not in VEG]
-    revenue = so.quick_sum(revenue_per_ton * manufacture[p-1] for p in PERIODS)
-    rawcost = so.quick_sum(cost.at[p-1, o] * buy[o, p]
+    revenue = so.quick_sum(revenue_per_ton * manufacture[p] for p in PERIODS)
+    rawcost = so.quick_sum(cost.at[o, p] * buy[o, p]
                            for o in OILS for p in PERIODS)
-    storagecost = so.quick_sum(storage_cost_per_ton * store[o, p] for o in OILS
-                               for p in PERIODS)
+    storagecost = so.quick_sum(storage_cost_per_ton * store[o, p]
+                               for o in OILS for p in PERIODS)
     m.set_objective(revenue - rawcost - storagecost, sense=so.MAX,
                     name='profit')
 
@@ -61,10 +62,10 @@ def test(cas_conn):
                       for o in OILS for p in PERIODS),
                       name='flow_balance')
     m.add_constraints((so.quick_sum(hardness[o]*use[o, p] for o in OILS) >=
-                      hardness_lb * manufacture[p-1] for p in PERIODS),
+                      hardness_lb * manufacture[p] for p in PERIODS),
                       name='hardness_ub')
     m.add_constraints((so.quick_sum(hardness[o]*use[o, p] for o in OILS) <=
-                      hardness_ub * manufacture[p-1] for p in PERIODS),
+                      hardness_ub * manufacture[p] for p in PERIODS),
                       name='hardness_lb')
 
     # Additions to the first problem

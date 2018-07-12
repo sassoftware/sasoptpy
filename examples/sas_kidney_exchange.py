@@ -53,7 +53,7 @@ def test(cas_conn):
                                         name="cardinality")
 
     # Solve
-    model.solve(milp={'maxtime': 300})
+    model.solve(options={'with': 'milp', 'maxtime': 300})
 
     # Define decomposition blocks
     for i in NODES:
@@ -63,7 +63,8 @@ def test(cas_conn):
     for m in MATCHINGS:
         Cardinality[m].set_block(m-1)
 
-    model.solve(milp={'maxtime': 300, 'presolver': 'basic',
-                      'decomp': {'method': 'user'}})
+    model.solve(verbose=True, options={
+        'with': 'milp', 'maxtime': 300, 'presolver': 'basic', 
+        'decomp': {'method': 'user'}})
 
     return model.get_objective_value()

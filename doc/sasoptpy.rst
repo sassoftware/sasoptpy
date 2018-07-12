@@ -39,7 +39,9 @@ Functions
    list_length
    print_model_mps
    quick_sum
+   read_data
    read_frame
+   read_table
    register_name
    reset_globals
    tuple_pack
