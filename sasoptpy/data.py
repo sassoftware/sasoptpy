@@ -442,14 +442,12 @@ class ExpressionDict:
             else:
                 s += self._dict[key]._expr()
             s += ';'
-        # Currently we replace expdicts with expressions inside local models
         #======================================================================
         # else:
         #     s = ''
         #     for key, val in self._dict.items():
         #         ref = self._name + sasoptpy.utils._to_optmodel_loop(key)
         #         s += 'impvar {}'.format(ref)
-        #         self._refname[key] = ref
         #         s += ' = ' + (val._expr()
         #                       if hasattr(val, '_expr') else str(val)) + ';\n'
         #======================================================================
@@ -511,10 +509,11 @@ class ImplicitVar(ExpressionDict):
 
 class Statement:
 
-    def __init__(self, statement):
+    def __init__(self, statement, after_solve=False):
         self.statement = statement
         self._name = sasoptpy.utils.check_name(None, None)
         self._objorder = sasoptpy.utils.register_name(self._name, self)
+        self._after = after_solve
 
     def _defn(self):
         return self.statement

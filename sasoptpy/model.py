@@ -383,9 +383,19 @@ class Model:
         self._impvars.append(iv)
         return iv
 
-    def add_statement(self, statement):
-        if isinstance(statement, sasoptpy.components.Expression):
-            self._statements.append(sasoptpy.data.Statement(str(statement)))
+    def add_statement(self, statement, after_solve=False):
+        if isinstance(statement, sasoptpy.data.Statement):
+            self._statements.append(statement)
+        elif isinstance(statement, sasoptpy.components.Expression):
+            self._statements.append(
+                sasoptpy.data.Statement(
+                    str(statement), after_solve=after_solve))
+        elif isinstance(statement, str):
+            if 'print' in statement and not after_solve:
+                print('WARNING: Moving print statement after solve.')
+                after_solve = True
+            self._statements.append(
+                sasoptpy.data.Statement(statement, after_solve=after_solve))
 
     def read_data(self, table, key_set, key_cols=None, option='', params=None):
         '''
@@ -707,6 +717,7 @@ class Model:
                 self._sets.extend(s for s in c._sets)
                 self._parameters.extend(s for s in c._parameters)
                 self._statements.extend(s for s in c._statements)
+                self._impvars.extend(s for s in c._impvars)
                 for s in c._vargroups:
                     self._vargroups.append(s)
                     for subvar in s:
@@ -1577,7 +1588,8 @@ class Model:
                 elif (cm._objorder > 0 and
                       not (hasattr(cm, '_shadow') and cm._shadow) and
                       not (hasattr(cm, '_parent') and cm._parent)):
-                    s += cm._defn() + '\n'
+                    if not hasattr(cm, '_after') or not cm._after:
+                        s += cm._defn() + '\n'
             if expand:
                 s += 'expand;\n'
 
@@ -1607,6 +1619,12 @@ class Model:
             if ods:
                 s += 'ods output PrintTable=dual_out;\n'
             s += 'print _con_.name _con_.body _con_.dual;\n'
+
+            # After-solve statements
+            for i in self._statements:
+                if i._after:
+                    s += i._defn() + '\n'
+
             if header:
                 s += 'quit;\n'
         return(s)
@@ -1977,6 +1995,8 @@ class Model:
                              'replace': True},
                     objSense=self._sense)
 
+            self.response = response
+
             # Parse solution
             if(response.get_tables('status')[0] == 'OK'):
                 self._primalSolution = session.CASTable(
@@ -2088,8 +2108,11 @@ class Model:
                     }
                 )
 
+            self.response = response
+
             # Parse solution
             if(response.get_tables('status')[0] == 'OK'):
+
                 self._primalSolution = response['Print1.PrintTable']
                 self._primalSolution = self._primalSolution[
                     ['_VAR__NAME', '_VAR__LB', '_VAR__UB', '_VAR_',
