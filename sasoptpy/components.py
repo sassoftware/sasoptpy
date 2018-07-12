@@ -771,7 +771,7 @@ class Variable(Expression):
 
     '''
 
-    def __init__(self, name, vartype=sasoptpy.utils.CONT, lb=0, ub=inf,
+    def __init__(self, name, vartype=sasoptpy.utils.CONT, lb=-inf, ub=inf,
                  init=None, abstract=False, shadow=False, key=None):
         super().__init__()
         if not shadow:
@@ -1257,7 +1257,7 @@ class VariableGroup:
 
     '''
 
-    def __init__(self, *argv, name, vartype=sasoptpy.utils.CONT, lb=0,
+    def __init__(self, *argv, name, vartype=sasoptpy.utils.CONT, lb=-inf,
                  ub=inf, init=None, abstract=False):
         self._vardict = {}
         self._varlist = []
@@ -1267,7 +1267,7 @@ class VariableGroup:
                                  vartype=vartype, lb=lb, ub=ub, init=init,
                                  vardict=self._vardict, varlist=self._varlist,
                                  abstract=abstract)
-        self._lb = lb if lb is not None else 0
+        self._lb = lb if lb is not None else -inf
         self._ub = ub if ub is not None else inf
         if vartype == sasoptpy.utils.BIN and ub is None:
             self._ub = 1

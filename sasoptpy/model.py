@@ -97,7 +97,7 @@ class Model:
         return super().__eq__(other)
 
     def add_variable(self, var=None, vartype=sasoptpy.utils.CONT, name=None,
-                     lb=0, ub=inf, init=None):
+                     lb=-inf, ub=inf, init=None):
         '''
         Adds a new variable to the model
 
@@ -777,6 +777,17 @@ class Model:
                 self.add_constraint(c)
             elif isinstance(c, sasoptpy.components.ConstraintGroup):
                 self.add_constraints(argv=None, cg=c)
+            elif isinstance(c, sasoptpy.data.Set):
+                self._sets.append(c)
+            elif isinstance(c, sasoptpy.data.Parameter):
+                self._parameters.append(c)
+            elif isinstance(c, sasoptpy.data.Statement):
+                self._statements.append(c)
+            elif isinstance(c, sasoptpy.data.ExpressionDict):
+                self._impvars.append(c)
+            elif isinstance(c, list):
+                for s in c:
+                    self.include(s)
             elif isinstance(c, Model):
                 self._sets.extend(s for s in c._sets)
                 self._parameters.extend(s for s in c._parameters)
@@ -2158,13 +2169,13 @@ class Model:
 
             # Parse solution
             if(response.get_tables('status')[0] == 'OK'):
-                self._primalSolution = session.CASTable('primal').to_frame()
+                self._primalSolution = response['Print1.PrintTable']
                 self._primalSolution = self._primalSolution[
                     ['_VAR__NAME', '_VAR__LB', '_VAR__UB', '_VAR_',
                      '_VAR__RC']]
                 self._primalSolution.columns = ['var', 'lb', 'ub', 'value',
                                                 'rc']
-                self._dualSolution = session.CASTable('dual').to_frame()
+                self._dualSolution = response['Print2.PrintTable']
                 self._dualSolution = self._dualSolution[
                     ['_CON__NAME', '_CON__BODY', '_CON__DUAL']]
                 self._dualSolution.columns = ['con', 'value', 'dual']
@@ -2183,10 +2194,10 @@ class Model:
                             self._constraintDict[row['con']]._dual =\
                                 row['dual']
 
-                self._solutionSummary = session.CASTable('solutionSummary').\
-                    to_sparse()[['Label1', 'cValue1']].set_index(['Label1'])
-                self._problemSummary = session.CASTable('problemSummary').\
-                    to_sparse()[['Label1', 'cValue1']].set_index(['Label1'])
+                self._solutionSummary = response['Solve1.SolutionSummary']\
+                    [['Label1', 'cValue1']].set_index(['Label1'])
+                self._problemSummary = response['Solve1.ProblemSummary']\
+                    [['Label1', 'cValue1']].set_index(['Label1'])
 
                 self._solutionSummary.index.names = ['Label']
                 self._solutionSummary.columns = ['Value']
@@ -2288,6 +2299,10 @@ class Model:
         if not isinstance(session, sp.SASsession):
             print('ERROR: session= argument is not a valid SAS session.')
             return False
+
+        # Will be enabled later when runOptmodel supports blocks
+        if 'decomp' in options:
+            frame = True
 
         # Check if OPTMODEL mode is needed
         if frame:
