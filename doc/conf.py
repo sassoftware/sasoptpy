@@ -34,6 +34,8 @@ sys.path.insert(0, os.path.abspath('..'))
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'matplotlib.sphinxext.only_directives',
+    'matplotlib.sphinxext.plot_directive',
     'sphinx.ext.autodoc',
     'sphinx.ext.doctest',
     'sphinx.ext.intersphinx',
@@ -95,6 +97,13 @@ pygments_style = 'sphinx'
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
+
+# -- Matplotlib options ---------------------------------------------------
+
+plot_include_source = True
+plot_formats = [("png", 90)]
+#plot_html_show_formats = False
+#plot_html_show_source_link = False
 
 
 # -- Options for HTML output ----------------------------------------------

@@ -14,8 +14,8 @@ Examples are provided from `SAS/OR documentation <http://go.documentation.sas.co
    from swat import CAS
    cas_conn = CAS(hostname, port)
 
-Viya (swat) Examples
---------------------
+Viya Examples / Concrete
+------------------------
 
 .. toctree::
    :maxdepth: 1
@@ -32,7 +32,15 @@ Viya (swat) Examples
    Decentralization <examples/decentralization.rst>
    SAS/OR Blog: Optimal Wedding <examples/optimal_wedding.rst>
    SAS/OR Blog: Kidney Exchange <examples/kidney_exchange.rst>
-	      
+
+Viya Examples / Abstract
+------------------------
+
+.. toctree::
+   :maxdepth: 1
+   
+   Curve Fitting <examples/curve_fitting.rst>
+
 SAS (saspy) Examples
 --------------------
 

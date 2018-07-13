@@ -2,7 +2,7 @@ import sasoptpy as so
 import pandas as pd
 
 
-def test(cas_conn):
+def test(cas_conn, sols=False):
 
     # Upload data to server first
     xy_raw = pd.DataFrame([
@@ -61,25 +61,32 @@ def test(cas_conn):
     L1.add_statement('print x y estimate surplus slack;', after_solve=True)
 
     L1.solve(verbose=True)
+    sol_data1 = L1.response['Print3.PrintTable'].sort_values('x')
     print(so.get_solution_table(beta))
-    print(L1.response['Print3.PrintTable'].to_string())
+    print(sol_data1.to_string())
 
     Linf = so.Model(name='Linf', session=cas_conn)
     Linf.include(L1, minmax, minmax_con)
     Linf.set_objective(objective2, sense=so.MIN)
 
     Linf.solve()
+    sol_data2 = Linf.response['Print3.PrintTable'].sort_values('x')
     print(so.get_solution_table(beta))
-    print(Linf.response['Print3.PrintTable'].to_string())
+    print(sol_data2.to_string())
 
     order.set_init(2)
 
     L1.solve()
+    sol_data3 = L1.response['Print3.PrintTable'].sort_values('x')
     print(so.get_solution_table(beta))
-    print(L1.response['Print3.PrintTable'].to_string())
+    print(sol_data3.to_string())
 
     Linf.solve()
+    sol_data4 = Linf.response['Print3.PrintTable'].sort_values('x')
     print(so.get_solution_table(beta))
-    print(L1.response['Print3.PrintTable'].to_string())
+    print(sol_data4.to_string())
 
-    # Add plots
+    if sols:
+        return (sol_data1, sol_data2, sol_data3, sol_data4)
+    else:
+        return Linf.get_objective_value()
