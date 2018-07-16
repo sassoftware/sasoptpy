@@ -732,7 +732,7 @@ class Model:
                     self._constraints.append(s)
                 self._objective = c._objective
 
-    def set_objective(self, expression, sense, name=None):
+    def set_objective(self, expression, sense=None, name=None):
         '''
         Sets the objective function for the model
 
@@ -740,7 +740,7 @@ class Model:
         ----------
         expression : :class:`Expression` object
             The objective function as an Expression
-        sense : string
+        sense : string, optional
             Objective value direction, 'MIN' or 'MAX'
         name : string, optional
             Name of the objective value
@@ -762,7 +762,14 @@ class Model:
         >>> print(repr(m.get_objective()))
         sasoptpy.Expression(exp =  4.0 * x  -  5.0 * y , name='obj')
 
+        Notes
+        -----
+        - Default objective sense is minimization (MIN)
+
         '''
+        if sense is None:
+            sense = sasoptpy.utils.MIN
+
         self._linCoef = {}
         if isinstance(expression, sasoptpy.components.Expression):
             if name is not None:

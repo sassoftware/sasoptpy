@@ -30,8 +30,7 @@ def math_func(exp, op, *args):
         exp._operator = op
         for arg in args:
             exp._arguments.append(arg)
-        r = sasoptpy.components.Expression()
-        r._linCoef[exp.set_name()] = {'val': 1, 'ref': exp}
+        r = sasoptpy.utils.wrap(exp)
         return r
     except AttributeError:
         pass

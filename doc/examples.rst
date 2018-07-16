@@ -40,6 +40,8 @@ Viya Examples / Abstract
    :maxdepth: 1
    
    Curve Fitting <examples/curve_fitting.rst>
+   Nonlinear 1 <examples/nonlinear_1.rst>
+   Nonlinear 2 <examples/nonlinear_2.rst>
 
 SAS (saspy) Examples
 --------------------

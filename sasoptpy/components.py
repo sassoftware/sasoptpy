@@ -248,6 +248,9 @@ class Expression:
         return self._name
 
     def _expr(self):
+        '''
+        Generates the string that is OPTMODEL compatible
+        '''
         s = ''
         if self._operator:
             s += self._operator
@@ -263,47 +266,58 @@ class Expression:
             ref = el['ref']
             op = el.get('op')
             csign = copysign(1, val)
-            if val == 0:
-                continue
-            if idx == 'CONST' and isinstance(self, Constraint):
+            if val == 0 or idx == 'CONST':
                 continue
             if not(firstel and csign == 1):
                 if csign == 1:
-                    s += ' + '
+                    s += '+ '
                 else:
-                    s += ' - '
+                    s += '- '
             firstel = False
-            if idx != 'CONST':
-                if op:
-                    optext = ' {} '.format(op)
-                else:
-                    optext = ' * '
 
-                if isinstance(ref, list):
-                    strlist = sasoptpy.utils.recursive_walk(
-                        ref, func='_expr')
-                else:
-                    strlist = [ref._expr()]
-                if optext != ' * ':
-                    strlist = ['({})'.format(stritem) for stritem in strlist]
-                refs = optext.join(strlist)
-                if val == 1 or val == -1:
-                    s += '{}'.format(refs)
-                elif op:
-                    s += ' {} * ({}) '.format(round(abs(val), 12), refs)
-                else:
-                    s += ' {} * {} '.format(round(abs(val), 12), refs)
+            if op:
+                optext = ' {} '.format(op)
             else:
-                s += '{}'.format(abs(val))
+                optext = ' * '
+
+            if isinstance(ref, list):
+                strlist = sasoptpy.utils.recursive_walk(
+                    ref, func='_expr')
+            else:
+                strlist = [ref._expr()]
+            if optext != ' * ':
+                strlist = ['({})'.format(stritem)
+                           for stritem in strlist]
+
+            refs = optext.join(strlist)
+            if val == 1 or val == -1:
+                s += '{} '.format(refs)
+            elif op:
+                s += '{} * ({}) '.format(round(abs(val), 12), refs)
+            else:
+                s += '{} * {} '.format(round(abs(val), 12), refs)
+
             itemcnt += 1
+
+        # CONST is always at the end
+        if itemcnt == 0 or (self._linCoef['CONST']['val'] != 0 and
+                            not isinstance(self, Constraint)):
+            val = self._linCoef['CONST']['val']
+            csign = copysign(1, val)
+            if csign < 0:
+                s += '- '
+            elif firstel:
+                pass
+            else:
+                s += '+ '
+            s += '{} '.format(abs(val))
 
         if self._operator:
             if self._arguments:
                 s += ', ' + ', '.join(i._expr() if hasattr(i, '_expr') else str(i) for i in self._arguments)
+            s = s.rstrip()
             s += ')'
-        if list(self._linCoef.keys()) == ['CONST'] and\
-           self._linCoef['CONST']['val'] == 0:
-            s += '0'
+        s = s.rstrip()
         return s
 
     def __repr__(self):
@@ -330,42 +344,66 @@ class Expression:
         return s
 
     def __str__(self):
+        '''
+        Generates the string that is Python compatible
+        '''
         s = ''
-        firstel = 1
+
+        itemcnt = 0
+        firstel = True
         if self._operator:
             s += str(self._operator) + '('
-        for v, vx in self._linCoef.items():
-            if (vx['val'] == 0 or
-               (v == 'CONST' and isinstance(self, Constraint))):
+        for idx, el in self._linCoef.items():
+            val = el['val']
+            ref = el['ref']
+            op = el.get('op')
+            csign = copysign(1, val)
+            if val == 0 or idx == 'CONST':
                 continue
-            if firstel == 1 and copysign(1, vx['val']) == 1:
-                s += ''
+            if not(firstel and csign == 1):
+                if csign == 1:
+                    s += '+ '
+                else:
+                    s += '- '
+            firstel = False
+
+            if op:
+                optext = ' {} '.format(
+                    sasoptpy.utils._py_symbol(op))
             else:
-                if copysign(1, vx['val']) == 1:
-                    s += '+'
-                else:
-                    s += '-'
-            firstel = 0
-            if(v is not 'CONST'):
-                if 'op' in vx:
-                    op = ' {} '.format(vx['op'])
-                    refs_str = sasoptpy.utils.recursive_walk(
-                        vx['ref'],  func='_expr',
-                        attr='_operator', alt='_defn')
-                    refs = op.join(refs_str)
-                else:
-                    refs = ' * '.join([
-                        i._expr()
-                        for i in list(vx['ref'])])
-                if vx['val'] == 1 or vx['val'] == -1:
-                    s += ' {} '.format(refs)
-                elif 'op' in vx:
-                    s += ' {} * ({}) '.format(abs(vx['val']), refs)
-                else:
-                    s += ' {} * {} '.format(abs(vx['val']), refs)
-            elif not isinstance(self, Constraint):
-                if vx['val'] is not 0:
-                    s += ' {} '.format(abs(vx['val']))
+                optext = ' * '
+
+            if isinstance(ref, list):
+                strlist = sasoptpy.utils.recursive_walk(
+                    ref, func='__str__')
+            else:
+                strlist = [ref.__str__()]
+            if optext != ' * ':
+                strlist = ['({})'.format(stritem)
+                           for stritem in strlist]
+
+            refs = optext.join(strlist)
+            refs = optext.join(strlist)
+            if val == 1 or val == -1:
+                s += '{} '.format(refs)
+            elif op:
+                s += '{} * ({}) '.format(round(abs(val), 12), refs)
+            else:
+                s += '{} * {} '.format(round(abs(val), 12), refs)
+            itemcnt += 1
+
+        # CONST is always at the end
+        if itemcnt == 0 or (self._linCoef['CONST']['val'] != 0 and
+                            not isinstance(self, Constraint)):
+            val = self._linCoef['CONST']['val']
+            csign = copysign(1, val)
+            if csign < 0:
+                s += '- '
+            elif firstel:
+                pass
+            else:
+                s += '+ '
+            s += '{} '.format(abs(val))
 
         if self._operator:
             if self._iterkey:
@@ -382,10 +420,9 @@ class Expression:
                         forlist.append('for {} in {}'.format(
                             i._name, i._set._name))
                 s += ' '.join(forlist)
+            s = s.rstrip()
             s += ')'
-        if list(self._linCoef.keys()) == ['CONST'] and\
-           self._linCoef['CONST']['val'] == 0:
-            s += '0'
+        s = s.rstrip()
         return s
 
     def _add_coef_value(self, var, key, value):
@@ -1492,9 +1529,9 @@ class VariableGroup:
            np.issubdtype(type(self._ub), np.number) and\
            self._ub != inf and\
            not(self._ub == 1 and self._type == BIN):
-            s += '<= {}'.format(self._ub)
+            s += '<= {} '.format(self._ub)
         if self._init is not None:
-            s += 'init {}'.format(self._init)
+            s += 'init {} '.format(self._init)
 
         s = s.rstrip()
         s += ';'
@@ -1508,7 +1545,7 @@ class VariableGroup:
                     s += '\n' + tabs
                     loop_text = sasoptpy.utils._to_optmodel_loop(i)
                     if loop_text != '':
-                        s += 'for ' + loop_text + ' '
+                        s += 'for' + loop_text + ' '
                     if lbparam:
                         if isinstance(v._lb, Expression):
                             s += str(v) + '.lb=' + v._lb._defn()
@@ -1523,8 +1560,14 @@ class VariableGroup:
                         s += ' '
                     s = s.rstrip()
                     s += ';'
-                initparam = v._init is not None
+                initparam = v._init is not None and v._init != self._init
                 if initparam:
+                    print(i)
+                    print(self._shadows[i])
+                    print(self._shadows[i]._init)
+                    print(self._init)
+                    print(v._init)
+                    print(str(v._init))
                     s += '\n' + tabs
                     loop_text = sasoptpy.utils._to_optmodel_loop(i)
                     if loop_text != '':
@@ -1695,6 +1738,17 @@ class VariableGroup:
                 r._linCoef[var._name] = {'ref': var, 'val': vector[i]}
         return r
 
+    def set_init(self, init):
+        '''
+        Sets / updates initial value for the given variable
+        '''
+        self._init = init
+        for v in self._vardict:
+            inval = sasoptpy.utils.extract_list_value(v, init)
+            self._vardict[v].set_init = inval
+        for v in self._shadows:
+            self._shadows[v].set_init = init
+
     def set_bounds(self, lb=None, ub=None):
         '''
         Sets / updates bounds for the given variable
@@ -1721,6 +1775,8 @@ class VariableGroup:
         sasoptpy.Variable(name='u_b', lb=4, ub=inf, vartype='CONT')
 
         '''
+        self._lb = lb
+        self._ub = ub
         for v in self._vardict:
             varlb = sasoptpy.utils.extract_list_value(v, lb)
             varub = sasoptpy.utils.extract_list_value(v, ub)

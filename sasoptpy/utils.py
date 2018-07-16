@@ -1014,6 +1014,7 @@ def get_mutable(exp):
         r = sasoptpy.components.Expression(exp)
     else:
         r = exp
+    r._abstract = exp._abstract
     return r
 
 
@@ -1269,6 +1270,13 @@ def wrap(e, abstract=False):
     elif isinstance(e, dict):
         wrapper._linCoef[name] = {**e}
     return wrapper
+
+
+def _py_symbol(symbol):
+    if symbol == '^':
+        return '**'
+    else:
+        return symbol
 
 
 def _to_iterator_expression(itlist):

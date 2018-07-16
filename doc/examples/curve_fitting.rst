@@ -2,6 +2,13 @@
 Curve Fitting
 =============
 
+Reference
+---------
+
+http://go.documentation.sas.com/?docsetId=ormpex&docsetTarget=ormpex_ex11_toc.htm&docsetVersion=14.3&locale=en
+
+http://support.sas.com/documentation/onlinedoc/or/ex_code/143/mpex11.html
+
 Model
 -----
 

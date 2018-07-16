@@ -26,7 +26,8 @@ def test(cas_conn, sols=False):
         [9.0, 6.8],
         [10.0, 7.3]
         ], columns=['x', 'y'])
-    xy_data = cas_conn.upload_frame(xy_raw, casout='xy_data')
+    xy_data = cas_conn.upload_frame(xy_raw, casout={'name': 'xy_data',
+                                                    'replace': True})
 
     # Read observations
     POINTS, (x, y), xy_table_ref = so.read_table(xy_data, columns=['x', 'y'])
