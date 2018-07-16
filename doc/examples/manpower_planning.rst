@@ -2,12 +2,15 @@
 Manpower Planning
 =================
 
-Model
------
+Reference
+---------
 
 http://go.documentation.sas.com/?docsetId=ormpex&docsetTarget=ormpex_ex5_toc.htm&docsetVersion=14.3&locale=en
 
 http://support.sas.com/documentation/onlinedoc/or/ex_code/143/mpex05.html
+
+Model
+-----
 
 .. literalinclude:: ../../examples/manpower_planning.py
 
