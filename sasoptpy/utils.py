@@ -1254,6 +1254,23 @@ def union(*args):
         return r
 
 
+def wrap(e, abstract=False):
+    '''
+    Wraps expression inside another expression
+    '''
+    wrapper = sasoptpy.components.Expression()
+    if hasattr(e, '_name'):
+        name = e._name
+    else:
+        name = check_name(None, 'expr')
+    if isinstance(e, sasoptpy.components.Expression):
+        wrapper._linCoef[name] = {'ref': e, 'val': 1.0}
+        wrapper._abstract = e._abstract or abstract
+    elif isinstance(e, dict):
+        wrapper._linCoef[name] = {**e}
+    return wrapper
+
+
 def _to_iterator_expression(itlist):
     strlist = []
     for i in itlist:

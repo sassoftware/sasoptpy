@@ -509,8 +509,14 @@ class Expression:
                                     'val': x['val'] * y['val']}
                             else:
                                 newkey = (i, j)
+                                x_actual = x['ref']
+                                if 'op' in x and x['op'] is not None:
+                                    x_actual = sasoptpy.utils.wrap(x)
+                                y_actual = y['ref']
+                                if 'op' in y and y['op'] is not None:
+                                    y_actual = sasoptpy.utils.wrap(y)
                                 target[newkey] = {
-                                    'ref': [x['ref'], other],
+                                    'ref': [x_actual, y_actual],
                                     'val': x['val'] * y['val']}
             r._conditions += self._conditions
             r._conditions += other._conditions

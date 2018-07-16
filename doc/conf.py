@@ -102,9 +102,6 @@ todo_include_todos = False
 
 plot_include_source = True
 plot_formats = [("png", 90)]
-#plot_html_show_formats = False
-#plot_html_show_source_link = False
-
 
 # -- Options for HTML output ----------------------------------------------
 
