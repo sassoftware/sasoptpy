@@ -46,7 +46,7 @@ extensions = [
     'IPython.sphinxext.ipython_directive',
     'sphinx.ext.imgmath',
     'sphinxcontrib.fulltoc',
-    'numpydoc'
+    'numpydoc',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -225,7 +225,7 @@ epub_exclude_files = ['search.html']
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'https://docs.python.org/': None,
+intersphinx_mapping = {'https://docs.python.org/3/': None,
                        'https://pandas.pydata.org/pandas-docs/stable/': None,
                        'https://sassoftware.github.io/python-swat/': None,
                        'https://sassoftware.github.io/saspy/': None
@@ -234,10 +234,27 @@ intersphinx_mapping = {'https://docs.python.org/': None,
 
 import glob
 import re
-autosummary_generate = glob.glob("*.rst")
+autosummary_generate = glob.glob("api/*.rst") + glob.glob("*.rst")
+
+# Custom settings
+
+html_last_updated_fmt = '%b %d, %Y (Timestamp: {}-%Y%m%d%H%M%S)'.format(version)
+
+autodoc_default_flags = ['show-inheritance']
+
+def remove_autosums(app, what, name, obj, options, lines):
+
+    if True or what == 'class':
+        lb = None
+        for i, line in enumerate(lines):
+            if 'Methods' in line:
+                lb = i
+                break
+        if lb is not None:
+            lines[:] = lines[:lb]
 
 def setup(app):
+    app.connect('autodoc-process-docstring', remove_autosums)
     app.add_stylesheet('css/sasoptpy.css') 
     app.add_javascript('js/url.js')
 
-html_last_updated_fmt = '%b %d, %Y (Timestamp: {}-%Y%m%d%H%M%S)'.format(version)

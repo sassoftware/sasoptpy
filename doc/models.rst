@@ -237,5 +237,3 @@ To print values of any object, :func:`get_solution_table` can be used:
 
 All variables and constraints passed into this method are returned based on
 their indices. See :ref:`examples` for more details.
-
-

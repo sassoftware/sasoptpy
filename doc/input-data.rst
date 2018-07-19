@@ -85,6 +85,50 @@ pandas.Index
 
    print(repr(y['r1']))
 
+Set
+~~~
+
+**sasoptpy** can work with data on the server and generate abstract
+expressions. For this purpose, you can use :class:`Set` objects to represent
+PROC OPTMODEL sets.
+
+.. ipython:: python
+
+   m2 = so.Model(name='m2')
+   I = m2.add_set(name='I')
+   u = m2.add_variables(I, name='u')
+   print(m2.to_optmodel())
+
+See :ref:`abstract-modeling` for more information on working with server-side
+data.
+
+Data
+----
+
+**sasoptpy** can work with both client-side and server-side data.
+Here are some options to load data into the optimization models.
+
+
+pandas DataFrame
+~~~~~~~~~~~~~~~~
+
+
+Dictionaries
+~~~~~~~~~~~~
+
+
+CASTable
+~~~~~~~~
+
+
+Abstract Data
+~~~~~~~~~~~~~
+
+
+
+
+
+
 Operations
 ----------
 
@@ -114,4 +158,6 @@ used for mathematical operations like :func:`VariableGroup.mult`.
    ps = pd.Series(sd)
    e2 = z.mult(ps)
    print(e2)
+
+
 

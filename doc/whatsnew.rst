@@ -47,11 +47,12 @@ Changes
   :meth:`Model.solve_on_viya` are merged into :meth:`Model.solve`
 - :meth:`Model.solve` method checks the available CAS actions and uses
   `runOptmodel` whenever possible
-- As part of the merging process, `lp` and `milp` arguments are replaced with
-  `options` argument in :meth:`Model.solve` and :meth:`Model.to_optmodel`
+- As part of the merging process, :code:`lp` and :code:`milp` arguments are
+  replaced with :code:`options` argument in :meth:`Model.solve` and
+  :meth:`Model.to_optmodel`
 - An optional argument :code:`frame` is added to :meth:`Model.solve` for
   forcing to use MPS mode and `solveLp`-`solveMilp` actions
-- Minor changes are applied to `__str__` and `__repr__` methods
+- Minor changes are applied to :code:`__str__` and :code:`__repr__` methods
 - Creation indices for objects are being kept using the return of the
   :func:`register_name` function
 - Objective constant values are now being passed using new CAS action arguments

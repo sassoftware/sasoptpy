@@ -40,15 +40,15 @@ See our SAS Global Forum paper: `Optimization Modeling with Python and SAS Viya 
 .. toctree::
    :glob:
    :name: mastertoc
-   :maxdepth: 3
+   :maxdepth: 2
 
    whatsnew
    install
+   license
    getting-started
    input-data
    models
    components
-   sasoptpy
    examples
-
+   api/api
 
