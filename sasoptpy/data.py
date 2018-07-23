@@ -34,7 +34,7 @@ class Parameter:
     Represents sets inside PROC OPTMODEL
     '''
 
-    def __init__(self, name, keys=None, order=1, init=None):
+    def __init__(self, name, keys=None, order=1, init=None, p_type=None):
         self._name = sasoptpy.utils.check_name(name, 'param')
         self._objorder = sasoptpy.utils.register_name(self._name, self)
         self._keys = keys if keys is not None else ()
@@ -46,6 +46,7 @@ class Parameter:
         self._colname = name
         self._index = None
         self._shadows = {}
+        self._type = 'num' if p_type is None else p_type
 
     def __getitem__(self, key):
         if key in self._shadows:
@@ -73,11 +74,12 @@ class Parameter:
             tabs = ''
         if self._keys == ():
             if self._init:
-                s = tabs + 'num {} = {}'.format(self._name, self._init)
+                s = tabs + '{} {} = {}'.format(self._type, self._name,
+                                               self._init)
             else:
-                s = tabs + 'num {}'.format(self._name)
+                s = tabs + '{} {}'.format(self._type, self._name)
         else:
-            s = tabs + 'num {} {{'.format(self._name)
+            s = tabs + '{} {} {{'.format(self._type, self._name)
             for k in self._keys:
                 s += '{}, '.format(k._name)
             s = s[:-2]

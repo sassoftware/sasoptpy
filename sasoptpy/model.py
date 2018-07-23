@@ -430,8 +430,9 @@ class Model:
             params=params)
         self._statements.append(s)
 
-    def read_table(self, table, key=['_N_'], columns=None,
-                   key_type=['num'], upload=False, casout=None):
+    def read_table(self, table, key=['_N_'], columns=None, 
+                   key_type=['num'], col_types=None,
+                   upload=False, casout=None):
         '''
         Reads a CAS Table or pandas DataFrame into the model
 
@@ -448,6 +449,8 @@ class Model:
             List of columns to read into parameters
         key_type : list or string, optional
             A list of column types consists of 'num' or 'str' values
+        col_types : dict, optional
+            Dictionary of column types
         upload : boolean, optional
             Option for uploading a local data to CAS server first
         casout : string or dict, optional
@@ -501,7 +504,8 @@ class Model:
 
         objs = sasoptpy.utils.read_table(
             table=table, session=self._session, key=key, columns=columns,
-            key_type=key_type, upload=upload, casout=casout, ref=True)
+            key_type=key_type, col_types=col_types,
+            upload=upload, casout=casout, ref=True)
 
         if isinstance(objs[0], sasoptpy.data.Set):
             self._sets.append(objs[0])

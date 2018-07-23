@@ -14,3 +14,4 @@ API Reference
 .. include:: constraint.rst
 .. include:: constraint_group.rst
 .. include:: others.rst
+.. include:: functions.rst

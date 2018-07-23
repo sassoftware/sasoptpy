@@ -668,8 +668,9 @@ def read_data(table, key_set, key_cols=None, option='', params=None):
     return sasoptpy.data.Statement(s)
 
 
-def read_table(table, session=None, key=['_N_'], columns=None,
-               key_type=['num'], upload=False, casout=None, ref=True):
+def read_table(table, session=None, key=['_N_'], columns=None, 
+               key_type=['num'], col_types=None,
+               upload=False, casout=None, ref=True):
     '''
     Reads a CAS Table or pandas DataFrame
 
@@ -688,6 +689,8 @@ def read_table(table, session=None, key=['_N_'], columns=None,
         List of columns to read into parameters
     key_type : list or string, optional
         A list of column types consists of 'num' or 'str' values
+    col_types : dict, optional
+        Dictionary of column types
     upload : boolean, optional
         Option for uploading a local data to CAS server first
     casout : string or dict, optional
@@ -707,6 +710,9 @@ def read_table(table, session=None, key=['_N_'], columns=None,
     :func:`Model.read_data`
 
     '''
+
+    if col_types is None:
+        col_types = {}
 
     # Type of the given table and the session
     t_type = type(table).__name__
@@ -748,7 +754,9 @@ def read_table(table, session=None, key=['_N_'], columns=None,
         if columns is None:
             columns = table.columns.tolist()
         for col in columns:
-            pars.append(sasoptpy.data.Parameter(name=col, keys=[keyset]))
+            coltype = col_types.get(col, 'num')
+            pars.append(sasoptpy.data.Parameter(name=col, keys=[keyset],
+                                                p_type=coltype))
 
         dat = read_data(table, key_set=keyset, key_cols=key, params=[
             {'param': pars[i], 'column': columns[i]}
@@ -772,7 +780,7 @@ def read_table(table, session=None, key=['_N_'], columns=None,
 
     if ref:
         return (keyset, pars, dat)
-    elif pars:
+    elif not pars:
         return (keyset, pars)
     else:
         return keyset
