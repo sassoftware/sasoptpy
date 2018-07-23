@@ -28,8 +28,6 @@ Methods
    ExpressionDict.__getitem__
    ExpressionDict.__setitem__
    Set.__iter__
-   SetIterator.__add_condition
-   SetIterator._to_conditions
    Parameter.set_init
    Parameter.__getitem__
    Parameter.__setitem__
