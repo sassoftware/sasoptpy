@@ -9,8 +9,8 @@ What's New
 
 This page outlines changes from each release.
 
-v0.2.0 (TBD)
-=======================
+v0.2.0 (July 30, 2018)
+======================
 
 New Features
 ++++++++++++
@@ -79,7 +79,7 @@ v0.1.2 (April 24, 2018)
 New Features
 ++++++++++++
 
-- As an experimental feature, **sasoptpy** supports *saspy* connections now
+- As an experimental feature, *sasoptpy* supports *saspy* connections now
 - :meth:`Model.solve_local` method is added for solving optimization
   problems using SAS 9.4 installations
 - :meth:`Model.drop_variable`, :meth:`Model.drop_variables`,

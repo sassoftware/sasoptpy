@@ -10,7 +10,7 @@ CAS Sessions
 ------------
 
 A :class:`swat.cas.connection.CAS` session is needed to solve optimization 
-problems with **sasoptpy**.
+problems with *sasoptpy*.
 See SAS documentation to learn more about CAS sessions and SAS Viya.
 
 A sample CAS Session can be created using the following commands.
@@ -193,17 +193,26 @@ Solve options
 
 **Solver Options**
 
-All options listed for the CAS solveLp and solveMilp actions can be used through
-:func:`Model.solve` method.
-LP options can passed to :func:`Model.solve` using ``lp`` argument, while MILP
-options can be passed using ``milp`` argument:
+Both PROC OPTMODEL solve options and ``solveLp``, ``solveMilp`` action options
+can be passed using ``options`` argument of the :meth:`Model.solve` method.
+>>> m.solve(options={'with': 'milp', 'maxtime': 600})
+>>> m.solve(options={'with': 'lp', 'algorithm': 'ipm'})
 
->>> m.solve(milp={'maxtime': 600})
->>> m.solve(lp={'algorithm': 'ipm'})
+The only special option for the :meth:`Model.solve` method is ``with``. If not
+passed, PROC OPTMODEL chooses a solver that depends on the problem type.
+Possible ``with`` options are listed in SAS/OR documentation:
+http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_optmodel_syntax11.htm&docsetVersion=14.3&locale=en#ormpug.optmodel.npxsolvestmt
+See specific solver options at following links:
+- See http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_lpsolver_syntax02.htm&docsetVersion=14.3&locale=en for a list of LP solver options.
+- See http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_milpsolver_syntax02.htm&docsetVersion=14.3&locale=en for a list of MILP solver options.
+- See http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_nlpsolver_syntax02.htm&docsetVersion=14.3&locale=en for a list of NLP solver options.
+- See http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_qpsolver_syntax02.htm&docsetVersion=14.3&locale=en for a list of QP solver options.
+- See http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_clpsolver_syntax01.htm&docsetVersion=14.3&locale=en for a list of CLP solver options.
 
-See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvelp_syntax.htm&locale=en for a list of LP options.
-
-See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvemilp_syntax.htm&locale=en for a list of MILP options.
+The ``options`` argument can also pass ``solveLp`` and ``solveMilp`` action
+options when ``frame=True`` is used when calling the :meth:`Model.solve` method.
+- See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvelp_syntax.htm&locale=en for a list of LP options.
+- See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvemilp_syntax.htm&locale=en for a list of MILP options.
 
 **Package Options**
 

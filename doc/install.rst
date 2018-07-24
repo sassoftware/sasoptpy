@@ -9,7 +9,7 @@ Installation
 Python version support and dependencies
 ---------------------------------------
 
-**sasoptpy** is developed and tested for Python version 3.5+.
+*sasoptpy* is developed and tested for Python version 3.5+.
 
 It depends on the following packages:
 
@@ -36,7 +36,6 @@ Getting saspy
 
 `saspy <https://github.com/sassoftware/saspy>`_ should be available to use
 SAS 9.4 solvers.
-The **sasoptpy** support for SAS 9.4 solvers is experimental.
 Note that saspy is not a requirement for using the SAS Viya solvers.
 
 saspy releases are listed at
@@ -49,7 +48,7 @@ The easiest way to download the latest stable version of saspy is to use::
 Getting sasoptpy
 ----------------
 
-The latest release of **sasoptpy** can be obtained from the online repository.
+The latest release of *sasoptpy* can be obtained from the online repository.
 Call::
 
   git clone https://github.com/sassoftware/sasoptpy.git

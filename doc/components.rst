@@ -34,7 +34,7 @@ define optimization models.
 Expressions
 -----------
 
-:class:`Expression` objects represent linear expressions in **sasoptpy**.
+:class:`Expression` objects represent linear expressions in *sasoptpy*.
 
 Creating expressions
 ~~~~~~~~~~~~~~~~~~~~
@@ -119,7 +119,7 @@ You can multiply expressions with scalar values:
 **Summation**
 
 For faster summations compared to Python's native :code:`sum` function,
-**sasoptpy** provides :func:`sasoptpy.quick_sum`.
+*sasoptpy* provides :func:`sasoptpy.quick_sum`.
 
 .. ipython:: python
 
@@ -147,7 +147,10 @@ Expressions can be renamed using :func:`Expression.set_name` method:
 
    e = so.Expression(x[5] + 2 * x[6], name='e1')
    print(repr(e))
-   e.set_name('e2')
+
+.. ipython:: python
+   
+   e.set_name('e2');
    print(repr(e))
 
 

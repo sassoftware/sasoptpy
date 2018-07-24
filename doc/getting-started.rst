@@ -6,7 +6,7 @@
 Getting Started
 ***************
 
-Solving an optimization problem via **sasoptpy**
+Solving an optimization problem via *sasoptpy*
 starts with having a running CAS Server.
 It is possible to model a problem without a server
 but solving a problem requires access to SAS Viya
@@ -15,7 +15,7 @@ Optimization solvers.
 Creating a session
 ------------------
 
-**sasoptpy** uses the CAS connection provided by the
+*sasoptpy* uses the CAS connection provided by the
 swat package.
 After installation simply use
 
@@ -63,7 +63,7 @@ This command creates an empty model.
 Processing input data
 ---------------------
 
-The easisest way to work with **sasoptpy** is to
+The easisest way to work with *sasoptpy* is to
 define problem inputs as Pandas DataFrames.
 Objective and cost coefficients, and 
 lower and upper bounds can 
@@ -166,7 +166,7 @@ minimization or maximization problems, respectively.
 Adding constraints
 ------------------
 
-In **sasoptpy**, constraints are simply expressions with a direction.
+In *sasoptpy*, constraints are simply expressions with a direction.
 It is possible to define an expression and add it to a model by defining which
 direction the linear relation should have.
 
