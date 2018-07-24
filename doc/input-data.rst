@@ -123,8 +123,8 @@ pandas DataFrame
       ['book', 20, 12, 10],
       ['pen', 1, 1, 15]
       ]
-   df = pd.DataFrame(data, columns=['item', 'value', 'weight', 'limit'])
-   get = so.VariableGroup(df['item'], ub=df['limit'], name='get')
+   df = pd.DataFrame(data, columns=['item', 'value', 'weight', 'limit']).set_index(['item'])
+   get = so.VariableGroup(df.index, ub=df['limit'], name='get')
    print(get)
 
 
@@ -161,10 +161,11 @@ passed. Note that, using CASTable and Abstract Data requires SAS Viya version
 .. ipython:: python
 
    m2 = so.Model(name='m2', session=session)
-   table = m2.upload_frame(df)
+   table = session.upload_frame(df)
    print(type(table), table)
 
 .. ipython:: python
+   df = pd.DataFrame(data, columns=['item', 'value', 'weight', 'limit'])
    ITEMS, (value, weight, limit) = m2.read_table(df, key=['item'],
       key_type='str', columns=['value', 'weight', 'limit'])
    get3 = m2.add_variables(ITEMS, name='get3')

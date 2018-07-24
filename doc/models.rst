@@ -195,6 +195,7 @@ Solve options
 
 Both PROC OPTMODEL solve options and ``solveLp``, ``solveMilp`` action options
 can be passed using ``options`` argument of the :meth:`Model.solve` method.
+
 >>> m.solve(options={'with': 'milp', 'maxtime': 600})
 >>> m.solve(options={'with': 'lp', 'algorithm': 'ipm'})
 
@@ -202,7 +203,9 @@ The only special option for the :meth:`Model.solve` method is ``with``. If not
 passed, PROC OPTMODEL chooses a solver that depends on the problem type.
 Possible ``with`` options are listed in SAS/OR documentation:
 http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_optmodel_syntax11.htm&docsetVersion=14.3&locale=en#ormpug.optmodel.npxsolvestmt
+
 See specific solver options at following links:
+
 - See http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_lpsolver_syntax02.htm&docsetVersion=14.3&locale=en for a list of LP solver options.
 - See http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_milpsolver_syntax02.htm&docsetVersion=14.3&locale=en for a list of MILP solver options.
 - See http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_nlpsolver_syntax02.htm&docsetVersion=14.3&locale=en for a list of NLP solver options.
@@ -211,18 +214,23 @@ See specific solver options at following links:
 
 The ``options`` argument can also pass ``solveLp`` and ``solveMilp`` action
 options when ``frame=True`` is used when calling the :meth:`Model.solve` method.
+
 - See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvelp_syntax.htm&locale=en for a list of LP options.
 - See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvemilp_syntax.htm&locale=en for a list of MILP options.
 
 **Package Options**
 
-Besides ``lp`` and ``milp`` arguments, there are 4 arguments that can be passed
+Besides the ``options`` argument, there are 7 arguments that can be passed
 into :func:`Model.solve` method:
 
-- name: Upload name of the MPS data
+- name: Name of the uploaded problem information
 - drop: Option for dropping the data from server after solve
 - replace: Option for replacing an existing data with the same name
 - primalin: Option for using the current values of the variables as an initial solution
+- submit: Option for calling the CAS / SAS action
+- frame: Option for using frame (MPS) method (if False, it uses OPTMODEL)
+- verbose: Option for printing the generated OPTMODEL code before solve
+
 
 When ``primalin`` argument is ``True``, it grabs :class:`Variable` objects
 ``_init`` field. This field can be modified with :func:`Variable.set_init`

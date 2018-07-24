@@ -114,18 +114,18 @@ def test(cas_conn):
     m.set_objective(redundancy, sense=so.MIN, name='redundancy_obj')
     res = m.solve()
     if res is not None:
-        print(redundancy.get_value())
-        print(cost.get_value())
-        print(so.get_solution_table(numWorkers, numRecruits, numRedundant,
-                                    numShortTime, numExcess))
+        print('Redundancy:', redundancy.get_value())
+        print('Cost:', cost.get_value())
+        print(so.get_solution_table(
+            numWorkers, numRecruits, numRedundant, numShortTime, numExcess))
         print(so.get_solution_table(numRetrain))
         print(so.get_solution_table(numDowngrade))
 
     m.set_objective(cost, sense=so.MIN, name='cost_obj')
     res = m.solve()
     if res is not None:
-        print(redundancy.get_value())
-        print(cost.get_value())
+        print('Redundancy:', redundancy.get_value())
+        print('Cost:', cost.get_value())
         print(so.get_solution_table(numWorkers, numRecruits, numRedundant,
                                     numShortTime, numExcess))
         print(so.get_solution_table(numRetrain))
