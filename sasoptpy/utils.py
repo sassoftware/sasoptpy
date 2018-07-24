@@ -1026,14 +1026,18 @@ def get_mutable(exp):
     return r
 
 
-def get_solution_table(*argv, sort=True, rhs=False):
+def get_solution_table(*argv, key=None, sort=True, rhs=False):
     '''
     Returns the requested variable names as a DataFrame table
 
     Parameters
     ----------
+    key : list, optional
+        Keys for objects
     sort : bool, optional
-        Sort option for the indices
+        Option for sorting the keys
+    rhs : bool, optional
+        Option for including constant values
 
     Returns
     -------
@@ -1047,75 +1051,80 @@ def get_solution_table(*argv, sort=True, rhs=False):
     if(len(argv) == 0):
         return None
 
-    for i, _ in enumerate(argv):
-        if isinstance(argv[i], Iterable):
-            if isinstance(argv[i], sasoptpy.components.VariableGroup):
-                currentkeylist = list(argv[i]._vardict.keys())
-                for m in argv[i]._vardict:
-                    if argv[i]._vardict[m]._abstract:
-                        continue
-                    m = sasoptpy.utils.tuple_unpack(m)
-                    if m not in listofkeys:
-                        listofkeys.append(m)
-                keylengths.append(sasoptpy.utils.list_length(
-                    currentkeylist[0]))
-            elif isinstance(argv[i], sasoptpy.components.ConstraintGroup):
-                currentkeylist = list(argv[i]._condict.keys())
-                for m in argv[i]._condict:
-                    m = sasoptpy.utils.tuple_unpack(m)
-                    if m not in listofkeys:
-                        listofkeys.append(m)
-                keylengths.append(sasoptpy.utils.list_length(
-                    currentkeylist[0]))
-            elif (isinstance(argv[i], pd.Series) or
-                  (isinstance(argv[i], pd.DataFrame) and
-                  len(argv[i].columns) == 1)):
-                # optinal method: converting to series, argv[i].iloc[0]
-                currentkeylist = argv[i].index.values
-                for m in currentkeylist:
-                    m = sasoptpy.utils.tuple_unpack(m)
-                    if m not in listofkeys:
-                        listofkeys.append(m)
-                keylengths.append(sasoptpy.utils.list_length(
-                    currentkeylist[0]))
-            elif isinstance(argv[i], pd.DataFrame):
-                index_list = argv[i].index.tolist()
-                col_list = argv[i].columns.tolist()
-                for m in index_list:
-                    for n in col_list:
-                        current_key = sasoptpy.utils.tuple_pack(m)
-                        + sasoptpy.utils.tuple_pack(n)
-                        if current_key not in listofkeys:
-                            listofkeys.append(current_key)
-                keylengths.append(sasoptpy.utils.list_length(
-                    current_key))
-            elif isinstance(argv[i], dict):
-                currentkeylist = list(argv[i].keys())
-                for m in currentkeylist:
-                    m = sasoptpy.utils.tuple_unpack(m)
-                    if m not in listofkeys:
-                        listofkeys.append(m)
-                keylengths.append(sasoptpy.utils.list_length(
-                    currentkeylist[0]))
-            elif isinstance(argv[i], sasoptpy.components.Expression):
+    if key is None:
+        for i, _ in enumerate(argv):
+            if isinstance(argv[i], Iterable):
+                if isinstance(argv[i], sasoptpy.components.VariableGroup):
+                    currentkeylist = list(argv[i]._vardict.keys())
+                    for m in argv[i]._vardict:
+                        if argv[i]._vardict[m]._abstract:
+                            continue
+                        m = sasoptpy.utils.tuple_unpack(m)
+                        if m not in listofkeys:
+                            listofkeys.append(m)
+                    keylengths.append(sasoptpy.utils.list_length(
+                        currentkeylist[0]))
+                elif isinstance(argv[i], sasoptpy.components.ConstraintGroup):
+                    currentkeylist = list(argv[i]._condict.keys())
+                    for m in argv[i]._condict:
+                        m = sasoptpy.utils.tuple_unpack(m)
+                        if m not in listofkeys:
+                            listofkeys.append(m)
+                    keylengths.append(sasoptpy.utils.list_length(
+                        currentkeylist[0]))
+                elif (isinstance(argv[i], pd.Series) or
+                      (isinstance(argv[i], pd.DataFrame) and
+                      len(argv[i].columns) == 1)):
+                    # optinal method: converting to series, argv[i].iloc[0]
+                    currentkeylist = argv[i].index.values
+                    for m in currentkeylist:
+                        m = sasoptpy.utils.tuple_unpack(m)
+                        if m not in listofkeys:
+                            listofkeys.append(m)
+                    keylengths.append(sasoptpy.utils.list_length(
+                        currentkeylist[0]))
+                elif isinstance(argv[i], pd.DataFrame):
+                    index_list = argv[i].index.tolist()
+                    col_list = argv[i].columns.tolist()
+                    for m in index_list:
+                        for n in col_list:
+                            current_key = sasoptpy.utils.tuple_pack(m)
+                            + sasoptpy.utils.tuple_pack(n)
+                            if current_key not in listofkeys:
+                                listofkeys.append(current_key)
+                    keylengths.append(sasoptpy.utils.list_length(
+                        current_key))
+                elif isinstance(argv[i], dict):
+                    currentkeylist = list(argv[i].keys())
+                    for m in currentkeylist:
+                        m = sasoptpy.utils.tuple_unpack(m)
+                        if m not in listofkeys:
+                            listofkeys.append(m)
+                    keylengths.append(sasoptpy.utils.list_length(
+                        currentkeylist[0]))
+                elif isinstance(argv[i], sasoptpy.components.Expression):
+                    if ('',) not in listofkeys:
+                        listofkeys.append(('',))
+                        keylengths.append(1)
+                else:
+                    print('Unknown type: {} {}'.format(type(argv[i]), argv[i]))
+            else:
                 if ('',) not in listofkeys:
                     listofkeys.append(('',))
                     keylengths.append(1)
-            else:
-                print('Unknown type: {} {}'.format(type(argv[i]), argv[i]))
-        else:
-            if ('',) not in listofkeys:
-                listofkeys.append(('',))
-                keylengths.append(1)
 
-    if(sort):
-        try:
-            listofkeys = sorted(listofkeys,
-                                key=_sort_tuple)
-        except TypeError:
-            listofkeys = listofkeys
+        if(sort):
+            try:
+                listofkeys = sorted(listofkeys,
+                                    key=_sort_tuple)
+            except TypeError:
+                listofkeys = listofkeys
 
-    maxk = max(keylengths)
+        maxk = max(keylengths)
+    else:
+        maxk = max(len(i) if isinstance(i, tuple) else 1 for i in key)
+        listofkeys = key
+
     for k in listofkeys:
         if isinstance(k, tuple):
             row = list(k)

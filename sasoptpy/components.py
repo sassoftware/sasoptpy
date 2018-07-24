@@ -1320,6 +1320,8 @@ class VariableGroup:
             self._ub = 1
         if vartype == sasoptpy.utils.BIN and lb is None:
             self._lb = 0
+        if vartype == sasoptpy.utils.INT and lb is None:
+            self._lb = 0
         self._init = init
         self._type = vartype
 

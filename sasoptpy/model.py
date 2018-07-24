@@ -72,7 +72,7 @@ class Model:
         self._constraintDict = {}
         self._vcid = {}
         self._soltime = 0
-        self._objval = 0
+        self._objval = None
         self._status = ''
         self._castablename = None
         self._mpsmode = 0
@@ -827,7 +827,10 @@ class Model:
         42.0
 
         '''
-        return self._objective.get_value()
+        if self._objval:
+            return self._objval
+        else:
+            return self._objective.get_value()
 
     def get_constraint(self, name):
         '''

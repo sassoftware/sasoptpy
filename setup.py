@@ -26,7 +26,7 @@ setup(
     packages=['sasoptpy'],
     description='sasoptpy: SAS Viya Optimization Interface for Python',
     url='https://github.com/sassoftware/sasoptpy',
-    author='SAS Institute',
+    author='Sertalp B. Cay (SAS Institute)',
     author_email='Sertalp.Cay@sas.com',
     license='Apache v2.0',
     install_requires=[
@@ -36,5 +36,11 @@ setup(
         ],
     setup_requires=[
         'numpy'
-        ]
+        ],
+    classifiers=(
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: Apache Software License",
+        "Operating System :: OS Independent",
+        "Topic :: Scientific/Engineering :: Mathematics"
+    ),
 )
