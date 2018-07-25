@@ -34,7 +34,8 @@ define optimization models.
 Expressions
 -----------
 
-:class:`Expression` objects represent linear expressions in *sasoptpy*.
+:class:`Expression` objects represent linear and nonlinear mathematical
+expressions in *sasoptpy*.
 
 Creating expressions
 ~~~~~~~~~~~~~~~~~~~~
@@ -51,6 +52,49 @@ An :class:`Expression` can be created as follows:
 
    profit = so.Expression(5 * sales - 3 * material, name='profit')
    print(repr(profit))
+
+
+Nonlinear expressions
+~~~~~~~~~~~~~~~~~~~~~
+
+:class:`Expression` objects are linear by default. It is possible to create
+nonlinear expressions, but there are some limitations.
+
+.. ipython:: python
+
+   nonexp = sales ** 2 + (1 / material) ** 3
+   print(nonexp)
+
+
+Currently, it is not possible to get or print values of nonlinear expressions.
+Moreover, if your model includes a nonlinear expression, you need to be using
+SAS Viya >= 3.4 or any SAS version for solving your problem.
+
+For using mathematical operations, you need to import `sasoptpy.math`
+functions.
+
+Mathematical expressions
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+*sasoptpy* provides mathematical functions for generating mathematical
+expressions to be used in optimization models.
+
+You need to import `sasoptpy.math` to your code to start using these functions.
+A list of available mathematical functions are listed at :ref:`math-functions`.
+
+.. ipython:: python
+
+   import sasoptpy.math as sm
+   newexp = sm.max(sales, 10) ** 2
+   print(newexp._expr())
+
+.. ipython:: python
+
+   import sasoptpy.math as sm
+   angle = so.Variable(name='angle')
+   newexp = sm.sin(angle) ** 2 + sm.cos(angle) ** 2
+   print(newexp._expr())
+
 
 Operations
 ~~~~~~~~~~

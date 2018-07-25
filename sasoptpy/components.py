@@ -29,7 +29,7 @@ import sasoptpy.utils
 
 class Expression:
     '''
-    Creates a linear expression to represent model components
+    Creates a mathematical expression to represent model components
 
     Parameters
     ----------
@@ -59,6 +59,13 @@ class Expression:
      5.0 * sales  -  3.0 * material
     >>> print(repr(profit))
     sasoptpy.Expression(exp =  5.0 * sales  -  3.0 * material , name=None)
+
+    >>> import sasoptpy.math as sm
+    >>> f = sm.sin(x) + sm.min(y[1],1) ** 2
+    >>> print(type(f))
+    <class 'sasoptpy.components.Expression'>
+    >>> print(f)
+    sin(x) + (min(y[1] , 1)) ** (2)
 
     Notes
     -----
@@ -134,7 +141,7 @@ class Expression:
 
     def get_value(self):
         '''
-        Returns the value of the expression after variable values are changed
+        Calculates and returns the value of the linear expression
 
         Returns
         -------
@@ -148,6 +155,11 @@ class Expression:
         >>> m.solve()
         >>> print(profit.get_value())
         41.0
+
+        Notes
+        -----
+
+        - Nonlinear expressions may not be evaluated.
 
         '''
         v = 0
@@ -249,7 +261,17 @@ class Expression:
 
     def _expr(self):
         '''
-        Generates the string that is OPTMODEL compatible
+        Generates the OPTMODEL compatible string representation of the object.
+
+        Examples
+        --------
+
+        >>> f = x + y ** 2
+        >>> print(f)
+        x + (y) ** (2)
+        >>> print(f._expr())
+        x + (y) ^ (2)
+
         '''
         s = ''
         if self._operator:
@@ -321,6 +343,17 @@ class Expression:
         return s
 
     def __repr__(self):
+        '''
+        Returns a string representation of the object.
+
+        Examples
+        --------
+
+        >>> f = x + y ** 2
+        >>> print(repr(f))
+        sasoptpy.Expression(exp = x + (y) ** (2), name=None)
+
+        '''
         s = 'sasoptpy.Expression('
         if self._name is not None:
             s += 'exp = {}, name=\'{}\''.format(str(self), self._name)
@@ -420,6 +453,8 @@ class Expression:
                         forlist.append('for {} in {}'.format(
                             i._name, i._set._name))
                 s += ' '.join(forlist)
+            if self._arguments:
+                s += ', ' + ', '.join(str(i) for i in self._arguments)
             s = s.rstrip()
             s += ')'
         s = s.rstrip()
@@ -585,9 +620,9 @@ class Expression:
 
         Parameters
         ----------
-        other: :class:`Expression`
+        other : :class:`Expression` object
             Expression on the other side of the relation wrt self
-        direction_: string
+        direction_ : string
             Direction of the logical relation, either 'E', 'L', or 'G'
 
         Returns
@@ -793,9 +828,10 @@ class Variable(Expression):
     init : float, optional
         Initial value of the variable
     abstract : boolean, optional
-        Indicator of whether the variable is abtract or not
+        Indicator of whether the variable is abstract or not
     shadow : boolean, optional
-        Indicator of whether the variable is shadow or not
+        Indicator of whether the variable is shadow or not\
+        Used for internal purposes
 
     Examples
     --------
@@ -822,7 +858,7 @@ class Variable(Expression):
         self._name = name
         self._type = vartype
         if lb is None:
-            lb = 0
+            lb = -inf
         if ub is None:
             ub = inf
         self._lb = lb
@@ -1310,18 +1346,21 @@ class VariableGroup:
         self._varlist = []
         self._groups = {}
         self._keyset = []
+
+        if vartype == sasoptpy.utils.BIN and ub is None:
+            ub = 1
+        if vartype == sasoptpy.utils.BIN and lb is None:
+            lb = 0
+        if vartype == sasoptpy.utils.INT and lb is None:
+            lb = 0
+
         self._recursive_add_vars(*argv, name=name,
                                  vartype=vartype, lb=lb, ub=ub, init=init,
                                  vardict=self._vardict, varlist=self._varlist,
                                  abstract=abstract)
+
         self._lb = lb if lb is not None else -inf
         self._ub = ub if ub is not None else inf
-        if vartype == sasoptpy.utils.BIN and ub is None:
-            self._ub = 1
-        if vartype == sasoptpy.utils.BIN and lb is None:
-            self._lb = 0
-        if vartype == sasoptpy.utils.INT and lb is None:
-            self._lb = 0
         self._init = init
         self._type = vartype
 
@@ -1439,7 +1478,7 @@ class VariableGroup:
         -------
         :class:`Variable` object or list of :class:`Variable` objects
         '''
-        if self._abstract:
+        if self._abstract or isinstance(key, sasoptpy.data.SetIterator):
             # TODO check if number of keys correct e.g. x[I], x[1,2] requested
             tuple_key = sasoptpy.utils.tuple_pack(key)
             tuple_key = tuple(i for i in sasoptpy.utils.flatten_tuple(tuple_key))
@@ -1581,11 +1620,11 @@ class VariableGroup:
                     s += ';'
         else:
             for _, v in self._vardict.items():
-                if self._lb is not None and not np.issubdtype(type(self._lb), np.number) or v._lb != self._lb:
+                if self._lb is not None and not np.issubdtype(type(self._lb), np.number) or v._lb != self._lb and v._lb is not None:
                     s += '\n' + tabs + '{}.lb = {};'.format(v._expr(), v._lb if v._lb != inf else "constant('BIG')")
-                if self._ub is not None and not np.issubdtype(type(self._ub), np.number) or v._ub != self._ub:
+                if self._ub is not None and not np.issubdtype(type(self._ub), np.number) or v._ub != self._ub and v._ub is not None:
                     s += '\n' + tabs + '{}.ub = {};'.format(v._expr(), v._ub if v._ub != inf else "constant('BIG')")
-                if self._init is not None and not np.issubdtype(type(self._init), np.number) or v._init != self._init:
+                if self._init is not None and not np.issubdtype(type(self._init), np.number) or v._init != self._init and v._init is not None:
                     s += '\n' + tabs + '{} = {};'.format(v._expr(), v._init)
 
         return(s)
@@ -1745,6 +1784,22 @@ class VariableGroup:
     def set_init(self, init):
         '''
         Sets / updates initial value for the given variable
+
+        Parameters
+        ----------
+        init : float, list, dict, :class:`pandas.Series`
+            Initial value of the variables
+
+        Examples
+        --------
+
+        >>> y = m.add_variables(3, name='y')
+        >>> print(y._defn())
+        var y {{0,1,2}};
+        >>> y.set_init(5)
+        >>> print(y._defn())
+        var y {{0,1,2}} init 5;
+
         '''
         self._init = init
         for v in self._vardict:

@@ -614,7 +614,7 @@ def read_frame(df, cols=None):
 
 def read_data(table, key_set, key_cols=None, option='', params=None):
     '''
-    Reads a CASTable into PROC OPTMODEL sets
+    (Experimental) Reads a CASTable into PROC OPTMODEL sets
 
     Parameters
     ----------
@@ -650,6 +650,7 @@ def read_data(table, key_set, key_cols=None, option='', params=None):
         p.setdefault('index', None)
         p['param']._set_loop(table, key_set, p['column'], p['index'])
 
+    # Beginning
     if type(table).__name__ == 'CASTable':
         s = 'read data {}'.format(table.name)
     elif type(table).__name__ == 'SASdata':
@@ -659,7 +660,12 @@ def read_data(table, key_set, key_cols=None, option='', params=None):
     if option:
         s += ' {}'.format(option)
     s += ' into '
-    s += '{}=[{}] '.format(key_set._name, ' '.join(key_set._colname))
+    # Key part
+    if key_set is not None:
+        s += '{}=[{}] '.format(key_set._name, ' '.join(key_set._colname))
+    else:
+        s += '[{}] '.format(' '.join(key_set._colname))
+    # Parameter list
     parlist = []
     for p in params:
         parlist.append(p['param']._to_read_data())

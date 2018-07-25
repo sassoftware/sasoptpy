@@ -89,6 +89,8 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 try:
     if os.environ['ignore'] == 'ex':
         exclude_patterns.append('examples')
+    if os.environ['ignore_api'] == 'true':
+        exclude_patterns.append('api')
 except:
     pass
 

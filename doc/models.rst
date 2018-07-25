@@ -191,6 +191,8 @@ NOTE: The Dual Simplex solve time is 0.01 seconds.
 Solve options
 ~~~~~~~~~~~~~
 
+.. _solver-options:
+
 **Solver Options**
 
 Both PROC OPTMODEL solve options and ``solveLp``, ``solveMilp`` action options

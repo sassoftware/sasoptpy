@@ -33,7 +33,6 @@ Private Methods
 .. autosummary::
    :toctree: generated/
 
-   Expression._defn
    Expression._expr
    Expression._is_linear
    Expression._relational

@@ -164,7 +164,9 @@ passed. Note that, using CASTable and Abstract Data requires SAS Viya version
    table = session.upload_frame(df)
    print(type(table), table)
 
+
 .. ipython:: python
+
    df = pd.DataFrame(data, columns=['item', 'value', 'weight', 'limit'])
    ITEMS, (value, weight, limit) = m2.read_table(df, key=['item'],
       key_type='str', columns=['value', 'weight', 'limit'])
@@ -181,7 +183,7 @@ pass a string for the data sets that will be available later. See following:
 .. ipython:: python
 
    m3 = so.Model(name='m3', session=session)
-   ITEMS, (limit) = m3.read_table('DF', key=['item'], key_type='str',
+   ITEMS, (limit) = m3.read_table('DF', key=['item'], key_type=['str'],
       columns=['limit'])
    print(type(ITEMS), ITEMS)
 
@@ -190,7 +192,8 @@ problem after having the data available with the same name, e.g. using the
 `upload_frame` function.
 
 .. ipython:: python
-   session.upload_frame(df, casout={'name': 'DF', 'replace': True})
+
+   session.upload_frame(df, casout='DF')
 
 
 Operations

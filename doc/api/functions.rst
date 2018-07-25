@@ -38,6 +38,8 @@ Utility Functions
    wrap
 
 
+.. _math-functions:
+
 Math Functions
 ~~~~~~~~~~~~~~
 
