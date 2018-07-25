@@ -108,7 +108,7 @@ def test(cas_conn):
     profit = final_product_data['profit']
 
     ARCS = ARCS + [(i, 'sink') for i in FINAL_PRODUCTS]
-    flow = m.add_variables(ARCS, name='flow')
+    flow = m.add_variables(ARCS, name='flow', lb=0)
     NODES = np.unique([i for j in ARCS for i in j])
 
     m.set_objective(so.quick_sum(profit[i] * flow[i, 'sink']
@@ -123,7 +123,7 @@ def test(cas_conn):
                       name='flow_balance')
 
     CRUDES = crude_data.index.tolist()
-    crudeDistilled = m.add_variables(CRUDES, name='crudesDistilled')
+    crudeDistilled = m.add_variables(CRUDES, name='crudesDistilled', lb=0)
     crudeDistilled.set_bounds(ub=crude_data['crude_ub'])
     m.add_constraints((flow[i, j] == crudeDistilled[i]
                       for (i, j) in ARCS if i in CRUDES), name='distillation')

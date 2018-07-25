@@ -1620,12 +1620,36 @@ class VariableGroup:
                     s += ';'
         else:
             for _, v in self._vardict.items():
-                if self._lb is not None and not np.issubdtype(type(self._lb), np.number) or v._lb != self._lb and v._lb is not None:
-                    s += '\n' + tabs + '{}.lb = {};'.format(v._expr(), v._lb if v._lb != inf else "constant('BIG')")
-                if self._ub is not None and not np.issubdtype(type(self._ub), np.number) or v._ub != self._ub and v._ub is not None:
+                # Check if LB needs to be printed
+                printlb = False
+                defaultlb = -inf if self._type is CONT else 0
+                if v._lb is not None:
+                    if self._lb is None or not np.issubdtype(type(self._lb), np.number):
+                        printlb = True
+                    elif v._lb == defaultlb and (self._lb is not None and self._lb != defaultlb):
+                        printlb = True
+                    elif v._lb != self._lb:
+                        printlb = True
+                if printlb:
+                    s += '\n' + tabs + '{}.lb = {};'.format(v._expr(), v._lb if v._lb != -inf else "-constant('BIG')")
+
+                # Check if UB needs to be printed
+                printub = False
+                defaultub = 1 if self._type is BIN else inf
+                if v._ub is not None:
+                    if self._ub is None or not np.issubdtype(type(self._ub), np.number):
+                        printub = True
+                    elif v._ub == defaultub and (self._ub is not None and self._ub != defaultub):
+                        printub = True
+                    elif v._ub != self._ub:
+                        printub = True
+                if printub:
                     s += '\n' + tabs + '{}.ub = {};'.format(v._expr(), v._ub if v._ub != inf else "constant('BIG')")
-                if self._init is not None and not np.issubdtype(type(self._init), np.number) or v._init != self._init and v._init is not None:
-                    s += '\n' + tabs + '{} = {};'.format(v._expr(), v._init)
+
+                # Check if init needs to be printed
+                if v._init is not None:
+                    if v._init != self._init:
+                        s += '\n' + tabs + '{} = {};'.format(v._expr(), v._init)
 
         return(s)
 
@@ -1834,12 +1858,17 @@ class VariableGroup:
         sasoptpy.Variable(name='u_b', lb=4, ub=inf, vartype='CONT')
 
         '''
-        self._lb = lb
-        self._ub = ub
+        if lb is not None:
+            self._lb = lb
+        if ub is not None:
+            self._ub = ub
         for v in self._vardict:
             varlb = sasoptpy.utils.extract_list_value(v, lb)
+            if lb is not None:
+                self._vardict[v].set_bounds(lb=varlb)
             varub = sasoptpy.utils.extract_list_value(v, ub)
-            self._vardict[v].set_bounds(lb=varlb, ub=varub)
+            if ub is not None:
+                self._vardict[v].set_bounds(ub=varub)
 
     def __str__(self):
         s = 'Variable Group ({}) [\n'.format(self._name)
