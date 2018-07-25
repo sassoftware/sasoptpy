@@ -30,4 +30,4 @@ def test(cas_conn):
     print(m.get_solution_summary())
     print(m.response['Print3.PrintTable'])
 
-    return m.response['objective']
+    return m.get_objective_value()

@@ -28,4 +28,4 @@ def test(cas_conn):
     m.solve(verbose=True, options={'with': 'nlp', 'algorithm': 'activeset'})
     print(m.get_solution_summary())
 
-    return m.response['objective']
+    return m.get_objective_value()

@@ -87,6 +87,7 @@ class Model:
         self._impvars = []
         self._statements = []
         self._objorder = sasoptpy.utils.register_name(name, self)
+        self.response = None
         print('NOTE: Initialized model {}.'.format(name))
 
     def __eq__(self, other):
@@ -972,7 +973,9 @@ class Model:
 
         '''
         if self._objval:
-            return self._objval
+            return round(self._objval, 6)
+        elif self.response:
+            return round(self.response.objective, 6)
         else:
             return self._objective.get_value()
 

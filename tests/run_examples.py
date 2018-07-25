@@ -93,6 +93,21 @@ class TestExamples(unittest.TestCase):
         obj = self.run_test(test)
         self.assertEqual(obj, 6.0)
 
+    def test_curve_fitting(self):
+        from examples.curve_fitting import test
+        obj = self.run_test(test)
+        self.assertEqual(obj, 1.475)
+
+    def test_nl1(self):
+        from examples.nonlinear_1 import test
+        obj = self.run_test(test)
+        self.assertEqual(obj, 3.951158)
+
+    def test_nl2(self):
+        from examples.nonlinear_2 import test
+        obj = self.run_test(test)
+        self.assertEqual(obj, -999.0)
+
 
 if __name__ == '__main__':
     # Default

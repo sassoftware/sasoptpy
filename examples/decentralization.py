@@ -41,7 +41,7 @@ def test(cas_conn):
     for city in CITIES:
         for dept in DEPTS:
             try:
-                benefit[dept, city] = benefit_data.ix[city, dept]
+                benefit[dept, city] = benefit_data.loc[city, dept]
             except:
                 benefit[dept, city] = 0
 

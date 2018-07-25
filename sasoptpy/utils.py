@@ -1173,7 +1173,7 @@ def get_solution_table(*argv, key=None, sort=True, rhs=False):
                   len(argv[i].columns) == 1):
                 for j in argv[i]:
                     if k in argv[i].index.tolist():
-                        cellv = argv[i].ix[k, j]
+                        cellv = argv[i].loc[k, j]
                         if type(cellv) == pd.Series:
                             cellv = cellv.iloc[0]
                         if type(cellv) == sasoptpy.components.Expression:
@@ -1182,7 +1182,7 @@ def get_solution_table(*argv, key=None, sort=True, rhs=False):
                             row.append(argv[i].ix[k, j])
                     elif sasoptpy.tuple_pack(k) in argv[i].index.tolist():
                         tk = sasoptpy.tuple_pack(k)
-                        cellv = argv[i].ix[tk, j]
+                        cellv = argv[i].loc[tk, j]
                         if type(cellv) == pd.Series:
                             cellv = cellv.iloc[0]
                         if type(cellv) == sasoptpy.components.Expression:
