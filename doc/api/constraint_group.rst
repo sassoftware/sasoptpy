@@ -22,12 +22,13 @@ Methods
    ConstraintGroup.get_name
    ConstraintGroup.get_expressions
 
-Private Methods
-~~~~~~~~~~~~~~~
-
-.. autosummary::
-   :toctree: generated/
-
-   ConstraintGroup.__getitem__
-   ConstraintGroup.__iter__
-   ConstraintGroup._defn
+..
+   Private Methods
+   ~~~~~~~~~~~~~~~
+   
+   .. autosummary::
+      :toctree: generated/
+   
+      ConstraintGroup.__getitem__
+      ConstraintGroup.__iter__
+      ConstraintGroup._defn

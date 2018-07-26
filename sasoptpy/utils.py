@@ -846,6 +846,27 @@ def flatten_frame(df, swap=False):
 
 
 def flatten_tuple(tp):
+    '''
+    Flattens nested tuples
+
+    Parameters
+    ----------
+
+    tp : tuple
+        Nested tuple to be flattened
+
+    Returns
+    -------
+    Generator
+        A generator object representing the flat tuple
+
+    Examples
+    --------
+    >>> tp = (3, 4, (5, (1, 0), 2))
+    >>> print(list(so.flatten_tuple(tp)))
+    [3, 4, 5, 1, 0, 2]
+
+    '''
     for elem in tp:
         if isinstance(elem, tuple):
             yield from flatten_tuple(elem)
@@ -950,6 +971,14 @@ def set_namedict(ss):
 
 
 def get_len(i):
+    '''
+    Safe wrapper of len() function
+
+    Returns
+    -------
+    int
+        len(i) if parameter i has len() function defined, othwerwise 1
+    '''
     try:
         return len(i)
     except TypeError:
@@ -1249,6 +1278,9 @@ def get_solution_table(*argv, key=None, sort=True, rhs=False):
 
 
 def union(*args):
+    '''
+    Returns a union of :class:`Set`, list or set objects
+    '''
     type0 = type(args[0])
     for i in args:
         if type(i) != type0:

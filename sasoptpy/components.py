@@ -378,7 +378,15 @@ class Expression:
 
     def __str__(self):
         '''
-        Generates the string that is Python compatible
+        Generates a representation string that is Python compatible
+
+        Examples
+        --------
+
+        >>> f = x + y ** 2
+        >>> print(str(f))
+        x + (y) ** (2)
+
         '''
         s = ''
 
@@ -931,6 +939,9 @@ class Variable(Expression):
         self._init = init
 
     def __repr__(self):
+        '''
+        Returns a string representation of the object.
+        '''
         st = 'sasoptpy.Variable(name=\'{}\', '.format(self._name)
         if self._lb is not 0:
             st += 'lb={}, '.format(self._lb)
@@ -946,6 +957,9 @@ class Variable(Expression):
         return st
 
     def __str__(self):
+        '''
+        Generates a representation string
+        '''
         if self._parent is not None and self._key is not None:
             keylist = [i._expr() if isinstance(i, Expression)
                        else str(i) for i in self._key]
@@ -1240,6 +1254,9 @@ class Constraint(Expression):
         return(s)
 
     def __str__(self):
+        '''
+        Generates a representation string
+        '''
         s = super().__str__()
         if self._direction == 'E':
             s += ' == '
@@ -1258,6 +1275,9 @@ class Constraint(Expression):
         return s
 
     def __repr__(self):
+        '''
+        Returns a string representation of the object.
+        '''
         if self._name is not None:
             st = 'sasoptpy.Constraint({}, name=\'{}\')'
             s = st.format(str(self), self._name)
@@ -1406,6 +1426,12 @@ class VariableGroup:
                    ub=None, init=None, shadow=False):
         '''
         (Experimental) Adds a new member to Variable Group
+
+        Notes
+        -----
+
+        - This method is mainly intended for internal use.
+
         '''
 
         key = sasoptpy.utils.tuple_pack(key)
@@ -1471,12 +1497,14 @@ class VariableGroup:
 
         Parameters
         ----------
-        key : string or int
+        key : tuple, string or int
             Key of the variable
 
         Returns
         -------
+
         :class:`Variable` object or list of :class:`Variable` objects
+
         '''
         if self._abstract or isinstance(key, sasoptpy.data.SetIterator):
             # TODO check if number of keys correct e.g. x[I], x[1,2] requested
@@ -1530,9 +1558,27 @@ class VariableGroup:
             return list_of_variables
 
     def __iter__(self):
+        '''
+        Returns an iterable list of variables inside the variable group
+
+        Returns
+        -------
+
+        Iterable list of :class:`Variable` objects
+        '''
         return iter([self._vardict[i] for i in self._varlist])
 
     def _defn(self, tabs=''):
+        '''
+        Returns string to be used in OPTMODEL definition
+
+        Parameters
+        ----------
+
+        tabs : string, optional
+            Tab string that is used in :meth:`Model.to_optmodel` method
+
+        '''
         s = tabs + 'var {}'.format(self._name)
         s += ' {'
         for i in self._keyset:
@@ -1838,8 +1884,10 @@ class VariableGroup:
 
         Parameters
         ----------
-        lb : Lower bound, optional
-        ub : Upper bound, optional
+        lb : float, :class:`pandas.Series`, optional
+            Lower bound
+        ub : float, :class:`pandas.Series`, optional
+            Upper bound
 
         Examples
         --------
@@ -1871,6 +1919,9 @@ class VariableGroup:
                 self._vardict[v].set_bounds(ub=varub)
 
     def __str__(self):
+        '''
+        Generates a representation string
+        '''
         s = 'Variable Group ({}) [\n'.format(self._name)
         try:
             vd = sorted(self._vardict)
@@ -1884,6 +1935,9 @@ class VariableGroup:
         return s
 
     def __repr__(self):
+        '''
+        Returns a string representation of the object.
+        '''
         s = 'sasoptpy.VariableGroup('
         keylen = max(map(len, self._vardict))
         for i in range(keylen):
@@ -2084,6 +2138,9 @@ class ConstraintGroup:
         return s
 
     def __str__(self):
+        '''
+        Generates a representation string
+        '''
         s = 'Constraint Group ({}) [\n'.format(self._name)
         for k in sorted(self._condict):
             v = self._condict[k]
@@ -2093,6 +2150,9 @@ class ConstraintGroup:
         return s
 
     def __repr__(self):
+        '''
+        Returns a string representation of the object.
+        '''
         s = 'sasoptpy.ConstraintGroup(['
         for i in self._condict:
             s += '{}, '.format(str(self._condict[i]))

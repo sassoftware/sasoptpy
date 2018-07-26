@@ -42,7 +42,8 @@ class Model:
     ----------
     name : string
         Name of the model
-    session : :class:`swat.cas.connection.CAS` object or :class:`saspy.SASsession` object, optional
+    session : :class:`swat.cas.connection.CAS` object or \
+:class:`saspy.SASsession` object, optional
         CAS or SAS Session object
 
     Examples
@@ -369,6 +370,35 @@ class Model:
                 return c
 
     def add_set(self, name, init=None, settype=['num']):
+        '''
+        Adds a set to the model
+
+        Parameters
+        ----------
+        name : string, optional
+            Name of the set
+        init : :class:`Set`, optional
+            Initial value of the set
+        settype : list, optional
+            Types of the set, a list consists of 'num' and 'str' values
+
+        Examples
+        --------
+
+        >>> I = m.add_set(name='I')
+        >>> print(I._defn())
+        set I;
+
+        >>> J = m.add_set(name='J', settype=['str'])
+        >>> print(J._defn())
+        set <str> J;
+
+        >>> N = m.add_parameter(name='N', init=4)
+        >>> K = m.add_set(name='K', init=so.exp_range(1, N))
+        >>> print(K._defn())
+        set K = 1..N;
+
+        '''
         newset = sasoptpy.data.Set(name, init=init, settype=settype)
         self._sets.append(newset)
         return newset
@@ -567,7 +597,7 @@ class Model:
             params=params)
         self._statements.append(s)
 
-    def read_table(self, table, key=['_N_'], columns=None, 
+    def read_table(self, table, key=['_N_'], columns=None,
                    key_type=['num'], col_types=None,
                    upload=False, casout=None):
         '''
@@ -649,7 +679,8 @@ class Model:
         for i in objs[1]:
             if isinstance(i, sasoptpy.data.Parameter):
                 self._parameters.append(i)
-        if objs[2] is not None and isinstance(objs[2], sasoptpy.data.Statement):
+        if objs[2] is not None and isinstance(objs[2],
+                                              sasoptpy.data.Statement):
                 self._statements.append(objs[2])
 
         if objs[1]:
@@ -836,7 +867,7 @@ class Model:
           original model to be included.
 
         '''
-        for i, c in enumerate(argv):
+        for _, c in enumerate(argv):
             if c is None or type(c) == pd.DataFrame or type(c) == pd.Series:
                 continue
             elif isinstance(c, sasoptpy.components.Variable):
@@ -871,8 +902,6 @@ class Model:
                     self._variables.append(s)
                 for s in c._congroups:
                     self._congroups.append(s)
-                    #for subcon in s:
-                    #    self._constraints.append(subcon)
                 for s in c._constraints:
                     self._constraints.append(s)
                 self._objective = c._objective
@@ -1677,9 +1706,10 @@ class Model:
         con limit_con_headphone : get['headphone'] <= 2;
         con limit_con_book : get['book'] <= 10;
         con limit_con_pen : get['pen'] <= 15;
-        
-        con weight_con : 4 * get['clock'] + 6 * get['mug'] + 7 * get['headphone'] + 12 * get['book'] + get['pen'] <= 55;
-        max total_value = 8 * get['clock'] + 10 * get['mug'] + 15 * get['headphone'] + 20 * get['book'] + get['pen']; 
+        con weight_con : 4 * get['clock'] + 6 * get['mug'] + \
+7 * get['headphone'] + 12 * get['book'] + get['pen'] <= 55;
+        max total_value = 8 * get['clock'] + 10 * get['mug'] + \
+15 * get['headphone'] + 20 * get['book'] + get['pen'];
         solve;
         print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
         print _con_.name _con_.body _con_.dual;
@@ -1842,7 +1872,8 @@ class Model:
         Model: [
           Name: knapsack
           Session: cashost:casport
-          Objective: MAX [8 * get[clock] + 10 * get[mug] + 15 * get[headphone] + 20 * get[book] + get[pen]]
+          Objective: MAX [8 * get[clock] + 10 * get[mug] + 15 * get[headphone]\
+ + 20 * get[book] + get[pen]]
           Variables (5): [
             get[clock]
             get[mug]
@@ -1856,7 +1887,8 @@ class Model:
             get[headphone] <=  2
             get[book] <=  10
             get[pen] <=  15
-            4 * get[clock] + 6 * get[mug] + 7 * get[headphone] + 12 * get[book] + get[pen] <=  55
+            4 * get[clock] + 6 * get[mug] + 7 * get[headphone] + \
+12 * get[book] + get[pen] <=  55
           ]
         ]
 
@@ -1883,25 +1915,24 @@ class Model:
         '''
         Returns a representation of the Model object.
 
-        Returns
-        -------
-        string : String representation of the object
-
         Examples
         --------
 
         >>> print(repr(m))
-        sasoptpy.Model(name='model1', session=CAS('cashost', 12345,\
-        'username', protocol='cas', name='py-session-1',\
-        session='594ad8d5-6a7b-3443-a155-be59177e8d23'))
+        sasoptpy.Model(name='model1', session=CAS('cashost', 12345,
+            'username', protocol='cas', name='py-session-1',
+            session='594ad8d5-6a7b-3443-a155-be59177e8d23'))
 
         '''
         if self._session is not None:
             stype = self.test_session()
             if stype == 'SAS':
-                s = 'sasoptpy.Model(name=\'{}\', session=saspy.SASsession(cfgname=\'{}\'))'.format(self._name, self._session.sascfg.name)
+                s = ('sasoptpy.Model(name=\'{}\', ',
+                     'session=saspy.SASsession(cfgname=\'{}\'))').format(
+                         self._name, self._session.sascfg.name)
             elif stype == 'CAS':
-                s = 'sasoptpy.Model(name=\'{}\', session={})'.format(self._name, self._session)
+                s = 'sasoptpy.Model(name=\'{}\', session={})'.format(
+                    self._name, self._session)
         else:
             s = 'sasoptpy.Model(name=\'{}\')'.format(self._name)
         return s
