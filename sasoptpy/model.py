@@ -754,6 +754,8 @@ class Model:
         '''
         for v in variables:
             self.drop_variable(v)
+        if variables in self._vargroups:
+            self._vargroups.remove(variables)
 
     def drop_constraints(self, constraints):
         '''
