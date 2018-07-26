@@ -784,6 +784,8 @@ class Model:
         '''
         for c in constraints:
             self.drop_constraint(c)
+        if constraints in self._congroups:
+            self._congroups.remove(constraints)
 
     def include(self, *argv):
         '''
@@ -1892,8 +1894,14 @@ class Model:
         session='594ad8d5-6a7b-3443-a155-be59177e8d23'))
 
         '''
-        s = 'sasoptpy.Model(name=\'{}\', session={})'.format(self._name,
-                                                             self._session)
+        if self._session is not None:
+            stype = self.test_session()
+            if stype == 'SAS':
+                s = 'sasoptpy.Model(name=\'{}\', session=saspy.SASsession(cfgname=\'{}\'))'.format(self._name, self._session.sascfg.name)
+            elif stype == 'CAS':
+                s = 'sasoptpy.Model(name=\'{}\', session={})'.format(self._name, self._session)
+        else:
+            s = 'sasoptpy.Model(name=\'{}\')'.format(self._name)
         return s
 
     def _defn(self):
