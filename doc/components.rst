@@ -383,7 +383,7 @@ created inside or outside optimization models.
 
 **Creating a constraint outside a model**
 
->>> c1 = sasoptpy.Constraint(3 * x - 5 * y <= 10, name='c1')
+>>> c1 = so.Constraint(3 * x - 5 * y <= 10, name='c1')
 >>> print(repr(c1))
 sasoptpy.Constraint( -  5.0 * y  +  3.0 * x  <=  10, name='c1')
 

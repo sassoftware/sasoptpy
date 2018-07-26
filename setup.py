@@ -16,7 +16,7 @@
 #  limitations under the License.
 #
 
-''' Install the SAS Viya Optimization Modeling for Python (sasoptpy) '''
+''' Install the SAS Optimization Modeling for Python (sasoptpy) '''
 
 from setuptools import setup
 
@@ -24,7 +24,7 @@ setup(
     name='sasoptpy',
     version='0.2.0.dev0',
     packages=['sasoptpy'],
-    description='sasoptpy: SAS Viya Optimization Interface for Python',
+    description='sasoptpy: SAS Optimization Interface for Python',
     url='https://github.com/sassoftware/sasoptpy',
     author='Sertalp B. Cay (SAS Institute)',
     author_email='Sertalp.Cay@sas.com',

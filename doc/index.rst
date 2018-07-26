@@ -1,7 +1,7 @@
 .. sasoptpy documentation master file
 
-sasoptpy: SAS Viya Optimization Interface for Python
-****************************************************
+sasoptpy: SAS Optimization Interface for Python
+***********************************************
 
 `PDF Version <sasoptpy.pdf>`_
 
@@ -11,8 +11,9 @@ sasoptpy: SAS Viya Optimization Interface for Python
 
 
 *sasoptpy* is a Python package providing a modeling interface for 
-`SAS Viya <https://www.sas.com/en_us/software/viya.html>`_  Optimization
-solvers. It provides a quick way for users to deploy optimization models and
+`SAS Viya <https://www.sas.com/en_us/software/viya.html>`_  and SAS/OR
+Optimization solvers. 
+It provides a quick way for users to deploy optimization models and
 solve them using
 `SAS Viya Optimization Action Set <http://go.documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.3&docsetId=casactmopt&docsetTarget=casactmopt_optimization_toc.htm&locale=en>`_.
 

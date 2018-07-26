@@ -21,7 +21,7 @@ It depends on the following packages:
 Getting swat
 ------------
 
-`swat <https://github.com/sassoftware/python-swat>`_ should be available
+`swat <https://github.com/sassoftware/python-swat>`_ package is a requirement
 to use SAS Viya solvers.
 
 swat releases are listed at
@@ -34,9 +34,8 @@ pip::
 Getting saspy
 -------------
 
-`saspy <https://github.com/sassoftware/saspy>`_ should be available to use
+`saspy <https://github.com/sassoftware/saspy>`_ package is a requirement to use
 SAS 9.4 solvers.
-Note that saspy is not a requirement for using the SAS Viya solvers.
 
 saspy releases are listed at
 `<https://github.com/sassoftware/saspy/releases>`_.
@@ -48,7 +47,8 @@ The easiest way to download the latest stable version of saspy is to use::
 Getting sasoptpy
 ----------------
 
-The latest release of *sasoptpy* can be obtained from the online repository.
+The latest available version of *sasoptpy* can be obtained from the online
+repository.
 Call::
 
   git clone https://github.com/sassoftware/sasoptpy.git
