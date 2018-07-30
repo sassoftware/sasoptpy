@@ -9,42 +9,106 @@ What's New
 
 This page outlines changes from each release.
 
+v0.2.0 (July 30, 2018)
+======================
+
+New Features
+++++++++++++
+
+- Support for the new `runOptmodel` CAS action is added
+- Nonlinear optimization model building support is added for both SAS 9.4 and
+  SAS Viya solvers.
+- Abstract model building support is added when using SAS Viya solvers
+- New object types, :class:`Set`, :class:`SetIterator`, :class:`Parameter`,
+  :class:`ParameterValue`, :class:`ImplicitVar`, :class:`ExpressionDict`, and
+  :class:`Statement` are added for abstract model building
+- :meth:`Model.to_optmodel` method is added for exporting model objects into
+  PROC OPTMODEL codes as a string
+- Wrapper functions :func:`read_table` and :func:`read_data` are added to
+  read CASTable and DataFrame objects into the models
+- Math function wrappers are added
+- :code:`_expr` and :code:`_defn` methods are added to all object types for
+  producing OPTMODEL expression and definitions
+- Multiple solutions are now being returned when using `solveMilp` action and
+  can be grabbed using :meth:`Model.get_solution` method
+- :meth:`Model.get_variable_value` is added to get solution values of abstract
+  variables
+
+Changes
++++++++
+
+- Variable and constraint naming schemes are replaced with OPTMODEL equivalent
+  versions
+- Variables and constraints now preserve the order they are inserted to the
+  problem
+- :meth:`Model.to_frame` method is updated to reflect changes to VG and CG
+  orderings
+- Two solve methods, :meth:`Model.solve_on_cas` and
+  :meth:`Model.solve_on_viya` are merged into :meth:`Model.solve`
+- :meth:`Model.solve` method checks the available CAS actions and uses
+  `runOptmodel` whenever possible
+- As part of the merging process, :code:`lp` and :code:`milp` arguments are
+  replaced with :code:`options` argument in :meth:`Model.solve` and
+  :meth:`Model.to_optmodel`
+- An optional argument :code:`frame` is added to :meth:`Model.solve` for
+  forcing to use MPS mode and `solveLp`-`solveMilp` actions
+- Minor changes are applied to :code:`__str__` and :code:`__repr__` methods
+- Creation indices for objects are being kept using the return of the
+  :func:`register_name` function
+- Objective constant values are now being passed using new CAS action arguments
+  when posssible
+- A linearity check is added for models
+- Test folder is added to the repository
+
+Bug Fixes
++++++++++
+
+- Nondeterministic behavior when generating MPS files is fixed.
+
+Notes
++++++
+
+- Abstract and nonlinear models can be solved on Viya if only `runOptmodel`
+  action is available on the CAS server.
+- Three new examples are added which demonstrate abstract model building.
+- Some minor changes are applied to the existing examples.
+
 v0.1.2 (April 24, 2018)
 =======================
 
 New Features
 ++++++++++++
 
-- As an experimental feature, **sasoptpy** supports *saspy* connections now
-- :func:`Model.solve_local` method is added for solving optimization
+- As an experimental feature, *sasoptpy* supports *saspy* connections now
+- :meth:`Model.solve_local` method is added for solving optimization
   problems using SAS 9.4 installations
-- :func:`Model.drop_variable`, :func:`Model.drop_variables`,
-  :func:`Model.drop_constraint`, :func:`Model.drop_constraints` methods are
+- :meth:`Model.drop_variable`, :meth:`Model.drop_variables`,
+  :meth:`Model.drop_constraint`, :meth:`Model.drop_constraints` methods are
   added
-- :func:`Model.get_constraint` and :func:`Model.get_constraints` methods are
+- :meth:`Model.get_constraint` and :meth:`Model.get_constraints` methods are
   added to grab :class:`Constraint` objects in a model
-- :func:`Model.get_variables` method is added
+- :meth:`Model.get_variables` method is added
 - :code:`_dual` attribute is added to the :class:`Expression` objects
-- :func:`Variable.get_dual` and :func:`Constraint.get_dual` methods are added
-- :func:`Expression.set_name` method is added
+- :meth:`Variable.get_dual` and :meth:`Constraint.get_dual` methods are added
+- :meth:`Expression.set_name` method is added
 
 Changes
 +++++++
 
 - Session argument accepts :class:`saspy.SASsession` objects
-- :func:`VariableGroup.mult` method now supports :class:`pandas.DataFrame`
-- Type check for the :func:`Model.set_session` is removed to support new session
+- :meth:`VariableGroup.mult` method now supports :class:`pandas.DataFrame`
+- Type check for the :meth:`Model.set_session` is removed to support new session
   types
 - Problem and solution summaries are not being printed by default anymore,
-  see :func:`Model.get_problem_summary` and :func:`Model.get_solution_summary`
+  see :meth:`Model.get_problem_summary` and :meth:`Model.get_solution_summary`
 - The default behavior of dropping the table after each solve is changed, but
-  can be controlled with the :code:`drop` argument of the :func:`Model.solve` method
+  can be controlled with the :code:`drop` argument of the :meth:`Model.solve` method
 
 Bug Fixes
 +++++++++
 
 - Fixed: Variables do not appear in MPS files if they are not used in the model
-- Fixed: :func:`Model.solve` primalin argument does not pass into options
+- Fixed: :meth:`Model.solve` primalin argument does not pass into options
 
 Notes
 +++++
@@ -67,15 +131,15 @@ New Features
 ++++++++++++
 
 - Initial value argument 'init' is added for :class:`Variable` objects
-- :func:`Variable.set_init` method is added for variables
-- Initial value option 'primalin' is added to :func:`Model.solve` method
+- :meth:`Variable.set_init` method is added for variables
+- Initial value option 'primalin' is added to :meth:`Model.solve` method
 - Table name argument 'name', table drop option 'drop' and replace
-  option 'replace' are added to :func:`Model.solve` method
+  option 'replace' are added to :meth:`Model.solve` method
 - Decomposition block implementation is rewritten, block numbers does
-  not need to be consecutive and ordered :func:`Model.upload_user_blocks`
-- :func:`VariableGroup.get_name` and :func:`ConstraintGroup.get_name` methods
+  not need to be consecutive and ordered :meth:`Model.upload_user_blocks`
+- :meth:`VariableGroup.get_name` and :meth:`ConstraintGroup.get_name` methods
   are added
-- :func:`Model.test_session` method is added for checking if session is defined
+- :meth:`Model.test_session` method is added for checking if session is defined
   for models
 - :func:`quick_sum` function is added for faster summation of
   :class:`Expression` objects

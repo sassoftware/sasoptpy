@@ -6,11 +6,14 @@
 Sessions and Models
 ===================
 
+Sessions
+--------
+
 CAS Sessions
-------------
+~~~~~~~~~~~~
 
 A :class:`swat.cas.connection.CAS` session is needed to solve optimization 
-problems with **sasoptpy**.
+problems with *sasoptpy* using SAS Viya OR solvers.
 See SAS documentation to learn more about CAS sessions and SAS Viya.
 
 A sample CAS Session can be created using the following commands.
@@ -39,9 +42,25 @@ A sample CAS Session can be created using the following commands.
 >>> import sasoptpy as so
 >>> from swat import CAS
 >>> s = CAS(hostname=cas_host, username=cas_username, password=cas_password, port=cas_port)
->>>  m = so.Model(name='demo', session=s)
+>>> m = so.Model(name='demo', session=s)
 >>> print(repr(m))
 sasoptpy.Model(name='demo', session=CAS(hostname, port, username, protocol='cas', name='py-session-1', session=session-no))
+
+
+SAS Sessions
+~~~~~~~~~~~~
+
+A :class:`saspy.SASsession` session is needed to solve optimization 
+problems with *sasoptpy* using SAS/OR solvers on SAS 9.4 clients.
+
+A sample SAS session can be created using the following commands.
+
+>>> import sasoptpy as so
+>>> import saspy
+>>> sas_session = saspy.SASsession(cfgname='winlocal')
+>>> m = so.Model(name='demo', session=sas_session)
+>>> print(repr(m))
+sasoptpy.Model(name='demo', session=saspy.SASsession(cfgname='winlocal'))
 
 
 Models
@@ -191,29 +210,50 @@ NOTE: The Dual Simplex solve time is 0.01 seconds.
 Solve options
 ~~~~~~~~~~~~~
 
-**Solver Options**
+.. _solver-options:
 
-All options listed for the CAS solveLp and solveMilp actions can be used through
-:func:`Model.solve` method.
-LP options can passed to :func:`Model.solve` using ``lp`` argument, while MILP
-options can be passed using ``milp`` argument:
+Solver Options
+++++++++++++++
 
->>> m.solve(milp={'maxtime': 600})
->>> m.solve(lp={'algorithm': 'ipm'})
+Both PROC OPTMODEL solve options and ``solveLp``, ``solveMilp`` action options
+can be passed using ``options`` argument of the :meth:`Model.solve` method.
 
-See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvelp_syntax.htm&locale=en for a list of LP options.
+>>> m.solve(options={'with': 'milp', 'maxtime': 600})
+>>> m.solve(options={'with': 'lp', 'algorithm': 'ipm'})
 
-See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvemilp_syntax.htm&locale=en for a list of MILP options.
+The only special option for the :meth:`Model.solve` method is ``with``. If not
+passed, PROC OPTMODEL chooses a solver that depends on the problem type.
+Possible ``with`` options are listed in SAS/OR documentation:
+http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_optmodel_syntax11.htm&docsetVersion=14.3&locale=en#ormpug.optmodel.npxsolvestmt
 
-**Package Options**
+See specific solver options at following links:
 
-Besides ``lp`` and ``milp`` arguments, there are 4 arguments that can be passed
+- See http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_lpsolver_syntax02.htm&docsetVersion=14.3&locale=en for a list of LP solver options.
+- See http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_milpsolver_syntax02.htm&docsetVersion=14.3&locale=en for a list of MILP solver options.
+- See http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_nlpsolver_syntax02.htm&docsetVersion=14.3&locale=en for a list of NLP solver options.
+- See http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_qpsolver_syntax02.htm&docsetVersion=14.3&locale=en for a list of QP solver options.
+- See http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_clpsolver_syntax01.htm&docsetVersion=14.3&locale=en for a list of CLP solver options.
+
+The ``options`` argument can also pass ``solveLp`` and ``solveMilp`` action
+options when ``frame=True`` is used when calling the :meth:`Model.solve` method.
+
+- See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvelp_syntax.htm&locale=en for a list of LP options.
+- See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvemilp_syntax.htm&locale=en for a list of MILP options.
+
+Package Options
++++++++++++++++
+
+Besides the ``options`` argument, there are 7 arguments that can be passed
 into :func:`Model.solve` method:
 
-- name: Upload name of the MPS data
+- name: Name of the uploaded problem information
 - drop: Option for dropping the data from server after solve
 - replace: Option for replacing an existing data with the same name
 - primalin: Option for using the current values of the variables as an initial solution
+- submit: Option for calling the CAS / SAS action
+- frame: Option for using frame (MPS) method (if False, it uses OPTMODEL)
+- verbose: Option for printing the generated OPTMODEL code before solve
+
 
 When ``primalin`` argument is ``True``, it grabs :class:`Variable` objects
 ``_init`` field. This field can be modified with :func:`Variable.set_init`
@@ -237,5 +277,3 @@ To print values of any object, :func:`get_solution_table` can be used:
 
 All variables and constraints passed into this method are returned based on
 their indices. See :ref:`examples` for more details.
-
-

@@ -34,7 +34,8 @@ define optimization models.
 Expressions
 -----------
 
-:class:`Expression` objects represent linear expressions in **sasoptpy**.
+:class:`Expression` objects represent linear and nonlinear mathematical
+expressions in *sasoptpy*.
 
 Creating expressions
 ~~~~~~~~~~~~~~~~~~~~
@@ -51,6 +52,49 @@ An :class:`Expression` can be created as follows:
 
    profit = so.Expression(5 * sales - 3 * material, name='profit')
    print(repr(profit))
+
+
+Nonlinear expressions
+~~~~~~~~~~~~~~~~~~~~~
+
+:class:`Expression` objects are linear by default. It is possible to create
+nonlinear expressions, but there are some limitations.
+
+.. ipython:: python
+
+   nonexp = sales ** 2 + (1 / material) ** 3
+   print(nonexp)
+
+
+Currently, it is not possible to get or print values of nonlinear expressions.
+Moreover, if your model includes a nonlinear expression, you need to be using
+SAS Viya >= 3.4 or any SAS version for solving your problem.
+
+For using mathematical operations, you need to import `sasoptpy.math`
+functions.
+
+Mathematical expressions
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+*sasoptpy* provides mathematical functions for generating mathematical
+expressions to be used in optimization models.
+
+You need to import `sasoptpy.math` to your code to start using these functions.
+A list of available mathematical functions are listed at :ref:`math-functions`.
+
+.. ipython:: python
+
+   import sasoptpy.math as sm
+   newexp = sm.max(sales, 10) ** 2
+   print(newexp._expr())
+
+.. ipython:: python
+
+   import sasoptpy.math as sm
+   angle = so.Variable(name='angle')
+   newexp = sm.sin(angle) ** 2 + sm.cos(angle) ** 2
+   print(newexp._expr())
+
 
 Operations
 ~~~~~~~~~~
@@ -119,7 +163,7 @@ You can multiply expressions with scalar values:
 **Summation**
 
 For faster summations compared to Python's native :code:`sum` function,
-**sasoptpy** provides :func:`sasoptpy.quick_sum`.
+*sasoptpy* provides :func:`sasoptpy.quick_sum`.
 
 .. ipython:: python
 
@@ -147,7 +191,10 @@ Expressions can be renamed using :func:`Expression.set_name` method:
 
    e = so.Expression(x[5] + 2 * x[6], name='e1')
    print(repr(e))
-   e.set_name('e2')
+
+.. ipython:: python
+   
+   e.set_name('e2');
    print(repr(e))
 
 
@@ -336,7 +383,7 @@ created inside or outside optimization models.
 
 **Creating a constraint outside a model**
 
->>> c1 = sasoptpy.Constraint(3 * x - 5 * y <= 10, name='c1')
+>>> c1 = so.Constraint(3 * x - 5 * y <= 10, name='c1')
 >>> print(repr(c1))
 sasoptpy.Constraint( -  5.0 * y  +  3.0 * x  <=  10, name='c1')
 
@@ -368,7 +415,7 @@ A set of constraints can be added using single or multiple indices.
 Valid index sets include list, dict, and :class:`pandas.Index` objects. 
 See :ref:`input-data` for more about allowed index types.
 
-**Creating a set of variables outside a model**
+**Creating a set of constraints outside a model**
 
 >>> z = so.VariableGroup(2, ['a', 'b', 'c'], name='z', lb=0, ub=10)
 >>> cg = so.ConstraintGroup((2 * z[i, j] + 3 * z[i-1, j] >= 2 for i in
@@ -381,7 +428,7 @@ Constraint Group (cg) [
 ]
 
 
-**Creating a set of variables inside a model**
+**Creating a set of constraints inside a model**
 
 >>> z = so.VariableGroup(2, ['a', 'b', 'c'], name='z', lb=0, ub=10)
 >>> cg2 = m.add_constraints((2 * z[i, j] + 3 * z[i-1, j] >= 2 for i in
@@ -393,3 +440,14 @@ Constraint Group (cg2) [
   [(1, 'c'):  2.0 * z[1, 'c']  +  3.0 * z[0, 'c']  >=  2]
 ]
 
+Range constraints
+~~~~~~~~~~~~~~~~~
+
+A range for an expression can be given using a list of two value (lower and
+upper bound) with an `==` sign:
+
+>>> x = m.add_variable(name='x')
+>>> y = m.add_variable(name='y')
+>>> c1 = m.add_constraint(x + 2*y == [2,9], name='c1')
+>>> print(repr(c1))
+sasoptpy.Constraint( x + 2.0 * y  ==  [2, 9], name='c1')

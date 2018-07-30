@@ -36,8 +36,8 @@ def test(cas_conn):
     shorttime_frac = 0.5
 
     # Sets
-    WORKERS = worker_data.index.values
-    PERIODS0 = demand_data.index.values
+    WORKERS = worker_data.index.tolist()
+    PERIODS0 = demand_data.index.tolist()
     PERIODS = PERIODS0[1:]
     RETRAIN_PAIRS = [i for i, _ in retrain_data.iterrows()]
     DOWNGRADE_PAIRS = [(row['worker1'], row['worker2'])
@@ -114,18 +114,18 @@ def test(cas_conn):
     m.set_objective(redundancy, sense=so.MIN, name='redundancy_obj')
     res = m.solve()
     if res is not None:
-        print(redundancy.get_value())
-        print(cost.get_value())
-        print(so.get_solution_table(numWorkers, numRecruits, numRedundant,
-                                    numShortTime, numExcess))
+        print('Redundancy:', redundancy.get_value())
+        print('Cost:', cost.get_value())
+        print(so.get_solution_table(
+            numWorkers, numRecruits, numRedundant, numShortTime, numExcess))
         print(so.get_solution_table(numRetrain))
         print(so.get_solution_table(numDowngrade))
 
     m.set_objective(cost, sense=so.MIN, name='cost_obj')
     res = m.solve()
     if res is not None:
-        print(redundancy.get_value())
-        print(cost.get_value())
+        print('Redundancy:', redundancy.get_value())
+        print('Cost:', cost.get_value())
         print(so.get_solution_table(numWorkers, numRecruits, numRedundant,
                                     numShortTime, numExcess))
         print(so.get_solution_table(numRetrain))

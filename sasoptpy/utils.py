@@ -39,7 +39,10 @@ BIN = 'BIN'
 __namedict = {}
 
 # Counters
-__ctr = {'obj': [0], 'var': [0], 'con': [0], 'expr': [0], 'model': [0]}
+__ctr = {'obj': [0], 'var': [0], 'con': [0], 'expr': [0], 'model': [0],
+         'i': [0], 'set': [0], 'param': [0], 'impvar': [0], 'table': [0]}
+
+__objcnt = 0
 
 
 def check_name(name, ctype=None):
@@ -55,10 +58,12 @@ def check_name(name, ctype=None):
     -------
     str : The given name if valid, a random string otherwise
     '''
-    if name is None:
+    if name and type(name) != str:
+        name = ctype + '_' + str(name) if ctype else str(name)
+    if name is None or name == '':
         if ctype is None:
-            name = ''.join(random.choice(string.ascii_lowercase) for
-                           _ in range(5))
+            name = 'TMP_' + ''.join(random.choice(string.ascii_uppercase) for
+                                    _ in range(5))
         else:
             name = '{}_{}'.format(ctype, get_counter(ctype))
     else:
@@ -80,18 +85,113 @@ def check_name(name, ctype=None):
 
 
 def _is_generated(expr):
-    if isinstance(expr, sasoptpy.Variable):
+    if isinstance(expr, sasoptpy.components.Variable):
         return
     caller = inspect.stack()[2][3]
     if caller == '<genexpr>':
         return True
 
 
+def exp_range(start, stop, step=1):
+    '''
+    Creates a set within given range
+
+    Parameters
+    ----------
+    start : :class:`Expression`
+        First value of the range
+    stop : :class:`Expression`
+        Last value of the range
+    step : :class:`Expression`, optional
+        Step size of the range
+
+    Returns
+    -------
+    :class:`Set`
+        Set that represents the range
+
+    Examples
+    --------
+
+    >>> N = so.Parameter(name='N')
+    >>> p = so.exp_range(1, N)
+    >>> print(p._defn())
+    set 1..N;
+
+    '''
+    regular = isinstance(start, int) and isinstance(stop, int) and\
+        isinstance(step, int)
+    if regular:
+        return range(start, stop, step)
+    stname = start._expr() if hasattr(start, '_expr') else str(start)
+    enname = stop._expr() if hasattr(stop, '_expr') else str(stop)
+    setname = stname + '..' + enname
+    setname = setname.replace(' ', '')
+    exset = get_obj_by_name(setname)
+    if exset:
+        return exset
+    return sasoptpy.data.Set(name=setname)
+
+
 def register_name(name, obj):
     '''
-    Adds the name of a component into the global reference list
+    Adds the name and order of a component into the global reference list
+
+    Parameters
+    ----------
+    name : string
+        Name of the object
+    obj : object
+        Object to be registered to the global name dictionary
+
+    Returns
+    -------
+    int
+        Unique object number to represent creation order
     '''
-    __namedict[name] = obj
+    global __objcnt
+    __objcnt += 1
+    __namedict[name] = {'ref': obj, 'order': __objcnt}
+    return __objcnt
+
+
+def recursive_walk(obj, func, attr=None, alt=None):
+    '''
+    Calls a given method recursively for given objects
+
+
+    Parameters
+    ----------
+    func : string
+        Name of the method / function be called
+    attr : string, optional
+        An attribute which triggers an alternative method to be called if\
+        exists
+    alt : string, optional
+        Name of the alternative method / function to be called if passed attr\
+        exists for given objects
+
+    Notes
+    -----
+    - This function is for internal consumption.
+
+    '''
+    result = []
+    for i in list(obj):
+        if isinstance(i, list):
+            result.append(recursive_walk(i, func))
+        else:
+            if attr is None:
+                m_call = getattr(i, func)
+                result.append(m_call())
+            else:
+                m_attr = getattr(i, attr)
+                if m_attr:
+                    m_call = getattr(i, alt)
+                else:
+                    m_call = getattr(i, func)
+                result.append(m_call())
+    return result
 
 
 def quick_sum(argv):
@@ -116,11 +216,58 @@ def quick_sum(argv):
     function.
 
     '''
-    exp = sasoptpy.Expression(temp=True)
+    clocals = argv.gi_frame.f_locals.copy()
+    exp = sasoptpy.components.Expression(temp=True)
+    iterators = []
     for i in argv:
         exp = exp + i
+        if isinstance(i, sasoptpy.components.Expression):
+            if i._abstract:
+                newlocals = argv.gi_frame.f_locals
+                for nl in newlocals.keys():
+                    if nl not in clocals and\
+                       type(newlocals[nl]) == sasoptpy.data.SetIterator:
+                        iterators.append((nl, newlocals[nl]))  # Tuple: nm ref
+    if iterators:
+        # First pass: make set iterators uniform
+        for i in iterators:
+            for j in iterators:
+                if isinstance(i, sasoptpy.data.SetIterator) and\
+                   isinstance(j, sasoptpy.data.SetIterator):
+                    if i[0] == j[0]:
+                        j[1]._name = i[1]._name
+        it_names = []
+        for i in iterators:
+            unique = True
+            for j in it_names:
+                if i[0] == j[0]:
+                    unique = False
+                    break
+            if unique:
+                it_names.append(i)
+        # Second pass: check for iterators
+        iterators = [p[1] for p in it_names]
+        exp = _check_iterator(exp, 'sum', iterators)
     exp._temp = False
     return exp
+
+
+def _check_iterator(exp, operator, iterators):
+    if isinstance(exp, sasoptpy.components.Variable):
+        r = exp.copy()
+    else:
+        r = exp
+    if r._name is None:
+        r._name = check_name(None, 'expr')
+    if r._operator is None:
+        r._operator = operator
+    for i in iterators:
+        if isinstance(i, sasoptpy.data.SetIterator):
+            r._iterkey.append(i)
+    wrapper = sasoptpy.components.Expression()
+    wrapper._linCoef[r._name] = {'ref': r, 'val': 1.0}
+    wrapper._abstract = True
+    return wrapper
 
 
 def get_obj_by_name(name):
@@ -163,7 +310,7 @@ def get_obj_by_name(name):
 
     '''
     if name in __namedict:
-        return __namedict[name]
+        return __namedict[name]['ref']
     else:
         return None
 
@@ -216,6 +363,8 @@ def extract_argument_as_list(inp):
         thelist = inp[0]
     elif isinstance(inp, list):
         thelist = inp
+    elif isinstance(inp, sasoptpy.data.Set):
+        thelist = [inp]
     else:
         thelist = list(inp)
     return thelist
@@ -263,12 +412,13 @@ def list_length(listobj):
 
     Parameters
     ----------
-    listobj : Python object
+    listobj : list, tuple or dict
+        Object whose length will be returned
 
     Returns
     -------
     int
-        Length of the list, tuple or dict, otherwise 1
+        Length of the list, tuple or dict
     '''
     if (isinstance(listobj, list) or isinstance(listobj, tuple) or
             isinstance(listobj, dict)):
@@ -296,6 +446,60 @@ def get_counter(ctrtype):
     return ctr[0]
 
 
+def _to_optmodel_loop(keys):
+    s = ''
+    subindex = []
+    for key in keys:
+        if isinstance(key, tuple):
+            for i in flatten_tuple(key):
+                subindex.append(str(i))
+        elif not isinstance(key, sasoptpy.data.SetIterator):
+            subindex.append(str(key))
+    if subindex:
+        s += '_' + '_'.join(subindex)
+    iters = get_iterators(keys)
+    conds = get_conditions(keys)
+    if len(iters) > 0:
+        s += ' {'
+        s += ', '.join(iters)
+        if len(conds) > 0:
+            s += ': '
+            s += ' and '.join(conds)
+        s += '}'
+    return s
+
+
+def get_iterators(keys):
+    '''
+    Returns a list of definition strings for a given list of SetIterators
+    '''
+    iterators = []
+    groups = {}
+    for key in keys:
+        if isinstance(key, sasoptpy.data.SetIterator):
+            iterators.append(key._defn())
+        elif isinstance(key, tuple):
+            for subkey in key:
+                if hasattr(subkey, '_group'):
+                    g = groups.setdefault(subkey._group, [])
+                    g.append(subkey)
+    if groups:
+        for kg in groups.values():
+            s = '<' + ','.join([i._name for i in kg]) + '> in ' +\
+                kg[0]._set._name
+            iterators.append(s)
+    return iterators
+
+
+def get_conditions(keys):
+    conditions = []
+    for key in keys:
+        if isinstance(key, sasoptpy.data.SetIterator):
+            if len(key._conditions) > 0:
+                conditions.append(key._to_conditions())
+    return conditions
+
+
 def tuple_unpack(tp):
     '''
     Grabs the first element in a tuple, if a tuple is given as argument
@@ -319,24 +523,46 @@ def tuple_pack(obj):
     '''
     Converts a given object to a tuple object
 
-    If the object is a tuple, the function returns itself, otherwise creates
-    a single dimensional tuple.
+    If the object is a tuple, the function returns the input,
+    otherwise creates a single dimensional tuple
 
     Parameters
     ----------
     obj : Object
-        Object that is converted to tuple
+        Object that is converted to a tuple
 
     Returns
     -------
     tuple
-        Corresponding tuple to the object.
+        Tuple that includes the original object
     '''
     if isinstance(obj, tuple):
         return obj
     elif isinstance(obj, str):
         return (obj,)
     return (obj,)
+
+
+def list_pack(obj):
+    '''
+    Converts a given object to a list
+
+    If the object is already a list, the function returns the input,
+    otherwise creates a list
+
+    Parameters
+    ----------
+    obj : Object
+        Object that is converted to a list
+
+    Returns
+    -------
+    list
+        List that includes the original object
+    '''
+    if isinstance(obj, list):
+        return obj
+    return [obj]
 
 
 def reset_globals():
@@ -351,7 +577,8 @@ def reset_globals():
     >>> print(so.get_namespace())
     Global namespace:
         Model
-               0 my_model <class 'sasoptpy.model.Model'>, sasoptpy.Model(name='my_model', session=None)
+               0 my_model <class 'sasoptpy.model.Model'>,\
+               sasoptpy.Model(name='my_model', session=None)
         VariableGroup
         ConstraintGroup
         Expression
@@ -379,7 +606,8 @@ def reset_globals():
 
 def read_frame(df, cols=None):
     '''
-    Reads each column in :class:`pandas.DataFrame` into a list of :class:`pandas.Series` objects
+    Reads each column in :class:`pandas.DataFrame` into a list of\
+    :class:`pandas.Series` objects
 
     Parameters
     ----------
@@ -420,13 +648,197 @@ def read_frame(df, cols=None):
     return series
 
 
-def flatten_frame(df):
+def read_data(table, key_set, key_cols=None, option='', params=None):
+    '''
+    (Experimental) Reads a CASTable into PROC OPTMODEL sets
+
+    Parameters
+    ----------
+    table : CASTable
+        The CAS table to be read to sets and parameters
+    key_set : :class:`sasoptpy.data.Set`
+        Set object to be read as the key (index)
+    key_cols : list or string, optional
+        Column names of the key columns
+    option : string, optional
+        Additional options for read data command
+    params : list, optional
+        A list of dictionaries where each dictionary represent parameters
+
+    Notes
+    -----
+    - `key_set` and `key_cols` parameters should be a list. When passing
+      a single item, string type can be used instead.
+    '''
+
+    if key_cols is None:
+        key_cols = []
+    if params is None:
+        params = []
+
+    # Reading key
+    if key_set is not None and key_cols:
+        key_set._colname = key_cols
+
+    # Reading parameters
+    for p in params:
+        p.setdefault('column', None)
+        p.setdefault('index', None)
+        p['param']._set_loop(table, key_set, p['column'], p['index'])
+
+    # Beginning
+    if type(table).__name__ == 'CASTable':
+        s = 'read data {}'.format(table.name)
+    elif type(table).__name__ == 'SASdata':
+        s = 'read data {}'.format(table.table)
+    else:
+        s = 'read data {}'.format(table)
+    if option:
+        s += ' {}'.format(option)
+    s += ' into '
+    # Key part
+    if key_set is not None:
+        s += '{}=[{}] '.format(key_set._name, ' '.join(key_set._colname))
+    else:
+        s += '[{}] '.format(' '.join(key_set._colname))
+    # Parameter list
+    parlist = []
+    for p in params:
+        parlist.append(p['param']._to_read_data())
+    s += ' '.join(parlist)
+    s += ';'
+    return sasoptpy.data.Statement(s)
+
+
+def read_table(table, session=None, key=['_N_'], columns=None, 
+               key_type=['num'], col_types=None,
+               upload=False, casout=None, ref=True):
+    '''
+    Reads a CAS Table or pandas DataFrame
+
+    Parameters
+    ----------
+    table : :class:`swat.cas.table.CASTable`, :class:`pandas.DataFrame`\
+            object or string
+        Pointer to CAS Table (server data, CASTable),\
+        DataFrame (local data) or\
+        the name of the table at execution (server data, string)
+    session : :class:`swat.CAS` or :class:`saspy.SASsession` object
+        Session object if the table will be uploaded
+    key : list, optional
+        List of key columns (for CASTable) or index columns (for DataFrame)
+    columns : list, optional
+        List of columns to read into parameters
+    key_type : list or string, optional
+        A list of column types consists of 'num' or 'str' values
+    col_types : dict, optional
+        Dictionary of column types
+    upload : boolean, optional
+        Option for uploading a local data to CAS server first
+    casout : string or dict, optional
+        Casout options if data is uploaded
+    ref : boolean, optional
+        Switch for returning the read data statement generated by the function
+
+    Returns
+    -------
+    tuple
+        A tuple where first element is the key (index), second element\
+        is a list of requested columns and the last element is reference to\
+        the original
+
+    See also
+    --------
+    :func:`Model.read_table`
+    :func:`Model.read_data`
+
+    '''
+
+    if col_types is None:
+        col_types = {}
+
+    # Type of the given table and the session
+    t_type = type(table).__name__
+    s_type = type(session).__name__
+
+    if (upload and t_type == 'DataFrame' and s_type == 'CAS'):
+        table = session.upload_frame(table, casout=casout)
+    elif (upload and t_type == 'Series' and s_type == 'CAS'):
+        table = pd.DataFrame(table)
+        table = session.upload_frame(table, casout=casout)
+    elif (upload and t_type == 'DataFrame' and s_type == 'SAS'):
+        req_name = casout if isinstance(casout, str) else None
+        upname = sasoptpy.utils.check_name(req_name, 'table')
+        sasoptpy.utils.register_name(upname, table)
+        table = session.df2sd(table, table=upname)
+
+    t_type = type(table).__name__
+
+    if type(table).__name__ == 'CASTable':
+        tname = table.name
+    elif type(table).__name__ == 'SASdata':
+        tname = table.table
+    elif type(table) == str:
+        tname = table
+    else:
+        tname = str(table)
+
+    pars = []
+    dat = None
+
+    if t_type == 'CASTable' or t_type == 'SASdata' or t_type == 'str':
+        if not key or key == [None]:
+            key = ['_N_']
+        keyset = sasoptpy.data.Set(
+            name='set_' + ('_'.join([str(i) for i in key])
+                           if key != ['_N_'] else tname + '_N'),
+            settype=key_type)
+        pars = []
+        if columns is None:
+            columns = table.columns.tolist()
+        for col in columns:
+            coltype = col_types.get(col, 'num')
+            pars.append(sasoptpy.data.Parameter(name=col, keys=[keyset],
+                                                p_type=coltype))
+
+        dat = read_data(table, key_set=keyset, key_cols=key, params=[
+            {'param': pars[i], 'column': columns[i]}
+            for i in range(len(pars))])
+    elif t_type == 'DataFrame':
+        if key and key != [None] and key != ['_N_']:
+            table = table.set_index(key)
+        keyset = table.index.tolist()
+        pars = []
+        if columns is None:
+            columns = list(table)
+        for col in columns:
+            pars.append(table[col])
+    elif t_type == 'Series':
+        keyset = table.index.tolist()
+        pars = [table]
+    else:
+        print('ERROR: Data type is not recognized in read_table: {} ({})'
+              .format(table, type(table)))
+        return None
+
+    if ref:
+        return (keyset, pars, dat)
+    elif not pars:
+        return (keyset, pars)
+    else:
+        return keyset
+
+
+def flatten_frame(df, swap=False):
     '''
     Converts a :class:`pandas.DataFrame` object into :class:`pandas.Series`
 
     Parameters
     ----------
     df : :class:`pandas.DataFrame` object
+        DataFrame object to be flattened
+    swap : boolean, optional
+        Option to use columns as first index
 
     Returns
     -------
@@ -464,8 +876,46 @@ def flatten_frame(df):
 
     '''
     new_frame = df.stack()
+    if swap:
+        new_frame = new_frame.swaplevel()
     new_frame.index = new_frame.index.to_series()
     return new_frame
+
+
+def flatten_tuple(tp):
+    '''
+    Flattens nested tuples
+
+    Parameters
+    ----------
+
+    tp : tuple
+        Nested tuple to be flattened
+
+    Returns
+    -------
+    Generator
+        A generator object representing the flat tuple
+
+    Examples
+    --------
+    >>> tp = (3, 4, (5, (1, 0), 2))
+    >>> print(list(so.flatten_tuple(tp)))
+    [3, 4, 5, 1, 0, 2]
+
+    '''
+    for elem in tp:
+        if isinstance(elem, tuple):
+            yield from flatten_tuple(elem)
+        else:
+            yield elem
+
+
+def is_equal(a, b):
+    '''
+    Compares various sasoptpy object types
+    '''
+    return a == b
 
 
 def print_model_mps(model):
@@ -474,7 +924,8 @@ def print_model_mps(model):
 
     Parameters
     ----------
-    model : :class:`Model` object
+    model : :class:`Model`
+        Model whose MPS format will be printed
 
     Examples
     --------
@@ -532,6 +983,11 @@ def get_namespace():
     Prints details of components registered to the global name dictionary
 
     The list includes models, variables, constraints and expressions
+
+    Returns
+    -------
+    string
+        A string representation of the namespace
     '''
     s = 'Global namespace:'
     for c in [sasoptpy.model.Model, sasoptpy.components.VariableGroup,
@@ -540,9 +996,10 @@ def get_namespace():
               sasoptpy.components.Constraint]:
         s += '\n\t{}'.format(c.__name__)
         for i, k in enumerate(__namedict):
-            if type(__namedict[k]) is c:
+            if type(__namedict[k]['ref']) is c:
                 s += '\n\t\t{:4d} {:{width}} {}, {}'.format(
-                    i, k, type(__namedict[k]), repr(__namedict[k]),
+                    i, k, type(__namedict[k]['ref']),
+                    repr(__namedict[k]['ref']),
                     width=len(max(__namedict, key=len)))
     return s
 
@@ -552,10 +1009,19 @@ def get_namedict():
 
 
 def set_namedict(ss):
-    __namedict = ss
+    for i in ss:
+        register_name(i, ss[i])
 
 
 def get_len(i):
+    '''
+    Safe wrapper of len() function
+
+    Returns
+    -------
+    int
+        len(i) if parameter i has len() function defined, othwerwise 1
+    '''
     try:
         return len(i)
     except TypeError:
@@ -568,6 +1034,48 @@ def _list_item(i):
         return i
     else:
         return [i]
+
+
+def _to_bracket(prefix, keys):
+    if keys is None:
+        return prefix
+    else:
+        s = prefix + '['
+        k = tuple_pack(keys)
+        s += ', '.join(_to_iterator_expression(k))
+        s += ']'
+        return s
+
+
+def _to_quoted_string(item):
+    if isinstance(item, int):
+        return str(item)
+    elif isinstance(item, str):
+        return "'{}'".format(item)
+    elif isinstance(item, tuple):
+        return '<' + ','.join(_to_quoted_string(j) for j in item) + '>'
+    else:
+        return str(item)
+
+
+def _set_abstract_values(row):
+    '''
+    Searches for the missing/abstract variable names and set their values
+    '''
+    orname = row['var'].split('[')[0]
+    group = get_obj_by_name(orname)
+    if group:
+        keys = row['var'].split('[')[1].split(']')[0]
+        keys = keys.split(',')
+        keys = tuple(int(k) if k.isdigit() else k
+                     for k in keys)
+        if keys in group._vardict:
+            group[keys]._value = row['value']
+        else:
+            group.add_member(keys)._value = row['value']
+        return True
+    else:
+        return False
 
 
 def _sort_tuple(i):
@@ -584,14 +1092,40 @@ def _sort_tuple(i):
     return(key)
 
 
-def get_solution_table(*argv, sort=True, rhs=False):
+def get_mutable(exp):
+    '''
+    Returns a mutable copy of the given expression if it is immutable
+
+    Parameters
+    ----------
+    exp : :class:`Variable` or :class:`Expression`
+        Object to be wrapped
+
+    Returns
+    -------
+    :class:`Expression`
+        Mutable copy of the expression, if the original is immutable
+    '''
+    if isinstance(exp, sasoptpy.components.Variable):
+        r = sasoptpy.components.Expression(exp)
+    else:
+        r = exp
+    r._abstract = exp._abstract
+    return r
+
+
+def get_solution_table(*argv, key=None, sort=True, rhs=False):
     '''
     Returns the requested variable names as a DataFrame table
 
     Parameters
     ----------
+    key : list, optional
+        Keys for objects
     sort : bool, optional
-        Sort option for the indices
+        Option for sorting the keys
+    rhs : bool, optional
+        Option for including constant values
 
     Returns
     -------
@@ -605,67 +1139,80 @@ def get_solution_table(*argv, sort=True, rhs=False):
     if(len(argv) == 0):
         return None
 
-    for i, _ in enumerate(argv):
-        if isinstance(argv[i], Iterable):
-            if isinstance(argv[i], sasoptpy.components.VariableGroup):
-                currentkeylist = list(argv[i]._vardict.keys())
-                for m in argv[i]._vardict:
-                    m = sasoptpy.utils.tuple_unpack(m)
-                    if m not in listofkeys:
-                        listofkeys.append(m)
-                keylengths.append(sasoptpy.utils.list_length(
-                    currentkeylist[0]))
-            elif isinstance(argv[i], sasoptpy.components.ConstraintGroup):
-                currentkeylist = list(argv[i]._condict.keys())
-                for m in argv[i]._condict:
-                    m = sasoptpy.utils.tuple_unpack(m)
-                    if m not in listofkeys:
-                        listofkeys.append(m)
-                keylengths.append(sasoptpy.utils.list_length(
-                    currentkeylist[0]))
-            elif (isinstance(argv[i], pd.Series) or
-                  (isinstance(argv[i], pd.DataFrame) and
-                  len(argv[i].columns) == 1)):
-                # optinal method: converting to series, argv[i].iloc[0]
-                currentkeylist = argv[i].index.values
-                for m in currentkeylist:
-                    m = sasoptpy.utils.tuple_unpack(m)
-                    if m not in listofkeys:
-                        listofkeys.append(m)
-                keylengths.append(sasoptpy.utils.list_length(
-                    currentkeylist[0]))
-            elif isinstance(argv[i], pd.DataFrame):
-                index_list = argv[i].index.tolist()
-                col_list = argv[i].columns.tolist()
-                for m in index_list:
-                    for n in col_list:
-                        current_key = sasoptpy.utils.tuple_pack(m)
-                        + sasoptpy.utils.tuple_pack(n)
-                        if current_key not in listofkeys:
-                            listofkeys.append(current_key)
-                keylengths.append(sasoptpy.utils.list_length(
-                    current_key))
-            elif isinstance(argv[i], dict):
-                currentkeylist = list(argv[i].keys())
-                for m in currentkeylist:
-                    m = sasoptpy.utils.tuple_unpack(m)
-                    if m not in listofkeys:
-                        listofkeys.append(m)
-                keylengths.append(sasoptpy.utils.list_length(
-                    currentkeylist[0]))
-        else:
-            if ('',) not in listofkeys:
-                listofkeys.append(('',))
-                keylengths.append(1)
+    if key is None:
+        for i, _ in enumerate(argv):
+            if isinstance(argv[i], Iterable):
+                if isinstance(argv[i], sasoptpy.components.VariableGroup):
+                    currentkeylist = list(argv[i]._vardict.keys())
+                    for m in argv[i]._vardict:
+                        if argv[i]._vardict[m]._abstract:
+                            continue
+                        m = sasoptpy.utils.tuple_unpack(m)
+                        if m not in listofkeys:
+                            listofkeys.append(m)
+                    keylengths.append(sasoptpy.utils.list_length(
+                        currentkeylist[0]))
+                elif isinstance(argv[i], sasoptpy.components.ConstraintGroup):
+                    currentkeylist = list(argv[i]._condict.keys())
+                    for m in argv[i]._condict:
+                        m = sasoptpy.utils.tuple_unpack(m)
+                        if m not in listofkeys:
+                            listofkeys.append(m)
+                    keylengths.append(sasoptpy.utils.list_length(
+                        currentkeylist[0]))
+                elif (isinstance(argv[i], pd.Series) or
+                      (isinstance(argv[i], pd.DataFrame) and
+                      len(argv[i].columns) == 1)):
+                    # optinal method: converting to series, argv[i].iloc[0]
+                    currentkeylist = argv[i].index.values
+                    for m in currentkeylist:
+                        m = sasoptpy.utils.tuple_unpack(m)
+                        if m not in listofkeys:
+                            listofkeys.append(m)
+                    keylengths.append(sasoptpy.utils.list_length(
+                        currentkeylist[0]))
+                elif isinstance(argv[i], pd.DataFrame):
+                    index_list = argv[i].index.tolist()
+                    col_list = argv[i].columns.tolist()
+                    for m in index_list:
+                        for n in col_list:
+                            current_key = sasoptpy.utils.tuple_pack(m)
+                            + sasoptpy.utils.tuple_pack(n)
+                            if current_key not in listofkeys:
+                                listofkeys.append(current_key)
+                    keylengths.append(sasoptpy.utils.list_length(
+                        current_key))
+                elif isinstance(argv[i], dict):
+                    currentkeylist = list(argv[i].keys())
+                    for m in currentkeylist:
+                        m = sasoptpy.utils.tuple_unpack(m)
+                        if m not in listofkeys:
+                            listofkeys.append(m)
+                    keylengths.append(sasoptpy.utils.list_length(
+                        currentkeylist[0]))
+                elif isinstance(argv[i], sasoptpy.components.Expression):
+                    if ('',) not in listofkeys:
+                        listofkeys.append(('',))
+                        keylengths.append(1)
+                else:
+                    print('Unknown type: {} {}'.format(type(argv[i]), argv[i]))
+            else:
+                if ('',) not in listofkeys:
+                    listofkeys.append(('',))
+                    keylengths.append(1)
 
-    if(sort):
-        try:
-            listofkeys = sorted(listofkeys,
-                                key=_sort_tuple)
-        except TypeError:
-            listofkeys = listofkeys
+        if(sort):
+            try:
+                listofkeys = sorted(listofkeys,
+                                    key=_sort_tuple)
+            except TypeError:
+                listofkeys = listofkeys
 
-    maxk = max(keylengths)
+        maxk = max(keylengths)
+    else:
+        maxk = max(len(i) if isinstance(i, tuple) else 1 for i in key)
+        listofkeys = key
+
     for k in listofkeys:
         if isinstance(k, tuple):
             row = list(k)
@@ -676,8 +1223,10 @@ def get_solution_table(*argv, sort=True, rhs=False):
         for i, _ in enumerate(argv):
             if type(argv[i]) == sasoptpy.components.VariableGroup:
                 tk = sasoptpy.utils.tuple_pack(k)
-                val = argv[i][tk].get_value()\
-                    if tk in argv[i]._vardict else '-'
+                if tk not in argv[i]._vardict or argv[i][tk]._abstract:
+                    val = '-'
+                else:
+                    val = argv[i][tk].get_value()
                 row.append(val)
             elif type(argv[i]) == sasoptpy.components.Variable:
                 val = argv[i].get_value() if k == ('',) else '-'
@@ -694,7 +1243,7 @@ def get_solution_table(*argv, sort=True, rhs=False):
                 val = argv[i].get_value() if k == ('',) else '-'
                 row.append(val)
             elif type(argv[i]) == pd.Series:
-                if k in argv[i].index.values:
+                if k in argv[i].index.tolist():
                     if type(argv[i][k]) == sasoptpy.components.Expression:
                         val = argv[i][k].get_value()
                     else:
@@ -706,7 +1255,7 @@ def get_solution_table(*argv, sort=True, rhs=False):
                   len(argv[i].columns) == 1):
                 for j in argv[i]:
                     if k in argv[i].index.tolist():
-                        cellv = argv[i].ix[k, j]
+                        cellv = argv[i].loc[k, j]
                         if type(cellv) == pd.Series:
                             cellv = cellv.iloc[0]
                         if type(cellv) == sasoptpy.components.Expression:
@@ -715,7 +1264,7 @@ def get_solution_table(*argv, sort=True, rhs=False):
                             row.append(argv[i].ix[k, j])
                     elif sasoptpy.tuple_pack(k) in argv[i].index.tolist():
                         tk = sasoptpy.tuple_pack(k)
-                        cellv = argv[i].ix[tk, j]
+                        cellv = argv[i].loc[tk, j]
                         if type(cellv) == pd.Series:
                             cellv = cellv.iloc[0]
                         if type(cellv) == sasoptpy.components.Expression:
@@ -735,6 +1284,12 @@ def get_solution_table(*argv, sort=True, rhs=False):
                 else:
                     val = '-'
                 row.append(val)
+            elif type(argv[i]) == sasoptpy.data.ImplicitVar:
+                tk = sasoptpy.utils.tuple_pack(k)
+                if tk in argv[i]._dict:
+                    row.append(argv[i][tk].get_value())
+                else:
+                    row.append('-')
             elif isinstance(argv[i], dict):
                 if k in argv[i]:
                     tk = sasoptpy.utils.tuple_pack(k)
@@ -773,3 +1328,72 @@ def get_solution_table(*argv, sort=True, rhs=False):
     soltablep2 = soltablep.set_index(indexcols)
     pd.set_option('display.multi_sparse', False)
     return soltablep2
+
+
+def union(*args):
+    '''
+    Returns a union of :class:`Set`, list or set objects
+    '''
+    type0 = type(args[0])
+    for i in args:
+        if type(i) != type0:
+            print('ERROR: Cannot perform union on {} {} objects'.format(
+                type0, type(i)))
+            return None
+    if type0 == sasoptpy.data.Set:
+        r = sasoptpy.components.Expression()
+        names = tuple(i._name for i in args)
+        refs = [i for i in args]
+        r._linCoef[names] = {
+            'ref': refs,
+            'val': 1.0,
+            'op': 'union'
+            }
+        r._abstract = True
+        return r
+    elif type0 == list:
+        r = []
+        for i in args:
+            r += i
+        return r
+    elif type0 == set:
+        r = set()
+        for i in args:
+            r += i
+        return r
+
+
+def wrap(e, abstract=False):
+    '''
+    Wraps expression inside another expression
+    '''
+    wrapper = sasoptpy.components.Expression()
+    if hasattr(e, '_name'):
+        name = e._name
+    else:
+        name = check_name(None, 'expr')
+    if isinstance(e, sasoptpy.components.Expression):
+        wrapper._linCoef[name] = {'ref': e, 'val': 1.0}
+        wrapper._abstract = e._abstract or abstract
+    elif isinstance(e, dict):
+        wrapper._linCoef[name] = {**e}
+    return wrapper
+
+
+def _py_symbol(symbol):
+    if symbol == '^':
+        return '**'
+    else:
+        return symbol
+
+
+def _to_iterator_expression(itlist):
+    strlist = []
+    for i in itlist:
+        if isinstance(i, sasoptpy.components.Expression):
+            strlist.append(i._expr())
+        elif isinstance(i, str):
+            strlist.append("'{}'".format(i))
+        else:
+            strlist.append(str(i))
+    return strlist

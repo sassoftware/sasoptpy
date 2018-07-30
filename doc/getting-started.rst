@@ -6,16 +6,18 @@
 Getting Started
 ***************
 
-Solving an optimization problem via **sasoptpy**
-starts with having a running CAS Server.
+Solving an optimization problem via *sasoptpy*
+starts with having a running CAS Server or having a SAS 9.4 installation.
 It is possible to model a problem without a server
-but solving a problem requires access to SAS Viya
-Optimization solvers.
+but solving a problem requires access to SAS/OR solvers.
 
 Creating a session
 ------------------
 
-**sasoptpy** uses the CAS connection provided by the
+Creating a SAS Viya session
++++++++++++++++++++++++++++
+
+*sasoptpy* uses the CAS connection provided by the
 swat package.
 After installation simply use
 
@@ -32,15 +34,18 @@ After installation simply use
    from swat import CAS
    s = CAS(hostname, port, userid, password)
 
-The last two parameters are optional for some
-cases. See `swat Documentation <https://sassoftware.github.io/python-swat/generated/swat.cas.connection.CAS.html#swat-cas-connection-cas>`_ for more details.
+The last two parameters are optional for some use
+cases.
+See `swat Documentation <https://sassoftware.github.io/python-swat/generated/swat.cas.connection.CAS.html#swat-cas-connection-cas>`_
+for more details.
 
 Creating a SAS 9.4 session
 ++++++++++++++++++++++++++
 
 To create a SAS 9.4 session, see
 `saspy Documentation <https://sassoftware.github.io/saspy/getting-started.html#start-a-sas-session>`_.
-After the configurations, a session can be created as follows:
+After customizing the configurations for your setup, a session can be created
+as follows:
 
 .. code-block:: python
 
@@ -50,8 +55,8 @@ After the configurations, a session can be created as follows:
 Initializing a model
 --------------------
 
-After having an active CAS session, now
-an empty model can be defined as follows:
+After having an active CAS/SAS session, an empty model can be defined as
+follows:
 
 .. ipython:: python
 
@@ -63,7 +68,7 @@ This command creates an empty model.
 Processing input data
 ---------------------
 
-The easisest way to work with **sasoptpy** is to
+The easisest way to work with *sasoptpy* is to
 define problem inputs as Pandas DataFrames.
 Objective and cost coefficients, and 
 lower and upper bounds can 
@@ -93,16 +98,12 @@ extracted as follows
    demand = prob_data['demand']
    min_production = prob_data['min_prod']
 
-Notice that ``PERIODS`` is a list, where both ``demand`` and ``min_production``
-are Pandas Series objects.
-
 Adding variables
 ----------------
 
-:class:`Model` objects have two different methods for adding variables.
+You can add a single variables or a set of variables to :class:`Model` objects.
 
-* The first one is :func:`Model.add_variable` which is used to add a single
-  variable.
+* :meth:`Model.add_variable` method is used to add a single variable.
   
   .. ipython:: python
   
@@ -110,11 +111,14 @@ Adding variables
   
   When working with multiple models, you can create a variable independent of
   the model, such as
-  ``production_cap = so.Variable(name='production_cap', vartype=so.INT, lb=0)``
-  and can be added to the model as ``m.add_variable(production_cap)``.
 
-* The second one is :func:`Model.add_variables` where a set of variables can
-  be added to the model.
+  >>> production_cap = so.Variable(name='production_cap', vartype=so.INT, lb=0)
+  
+  and add it to an existing model using
+
+  >>> m.include(production_cap)
+
+* :meth:`Model.add_variables` method is used to add a set of variables.
   
   .. ipython:: python
   
@@ -124,12 +128,13 @@ Adding variables
   When passed as a set of variables, individual variables can be obtained by
   using individual keys, such as ``production['Period1']``.
   To create multi-dimensional variables, simply list all the keys as
-  ``multivar = m.add_variables(KEYS1, KEYS2, KEYS3, name='multivar')``.
+
+  >>> multivar = m.add_variables(KEYS1, KEYS2, KEYS3, name='multivar')
 
 Creating expressions
 --------------------
 
-:class:`Expression` objects keep linear mathematical expressions.
+:class:`Expression` objects keep mathematical expressions.
 Although these objects are mostly used under the hood when defining a model,
 it is possible to define a custom :class:`Expression` to use later.
 
@@ -138,7 +143,7 @@ it is possible to define a custom :class:`Expression` to use later.
    totalRevenue = production.sum('*')*price_per_product
    totalCost = production_cap * capacity_cost
 
-The first thing to notice is the use of the :func:`VariableGroup.sum` method
+The first thing to notice is the use of the :meth:`VariableGroup.sum` method
 over a variable group. This method returns the sum of variables inside the
 group as an :class:`Expression` object. Its multiplication with a scalar
 ``profit_per_product`` gives the final expression.
@@ -149,7 +154,7 @@ with a scalar.
 Setting an objective function
 -----------------------------
 
-Objective functions can be written in terms of linear expressions. 
+Objective functions can be written in terms of expressions. 
 In this problem, the objective is to maximize the profit, so 
 :func:`Model.set_objective` method is used as follows:
 
@@ -158,7 +163,8 @@ In this problem, the objective is to maximize the profit, so
    m.set_objective(totalRevenue-totalCost, sense=so.MAX, name='totalProfit')
 
 Notice that you can define the same objective using
-``m.set_objective(production.sum('*')*price_per_product - production_cap*capacity_cost, sense=so.MAX, name='totalProfit')``
+
+>>> m.set_objective(production.sum('*')*price_per_product - production_cap*capacity_cost, sense=so.MAX, name='totalProfit')
 
 The mandatory argument ``sense`` should be assigned the value of either ``so.MIN`` or ``so.MAX`` for
 minimization or maximization problems, respectively.
@@ -166,15 +172,15 @@ minimization or maximization problems, respectively.
 Adding constraints
 ------------------
 
-In **sasoptpy**, constraints are simply expressions with a direction.
+In *sasoptpy*, constraints are simply expressions with a direction.
 It is possible to define an expression and add it to a model by defining which
 direction the linear relation should have.
 
 There are two methods to add constraints. The first one
-is  :func:`Model.add_constraint` where a single constraint can be inserted into a
+is :meth:`Model.add_constraint` where a single constraint can be inserted into a
 model.
 
-The second one is :func:`Model.add_constraints` where multiple constraints can
+The second one is :meth:`Model.add_constraints` where multiple constraints can
 be added to a model.
 
 .. ipython:: python
@@ -190,12 +196,13 @@ be added to a model.
 Here, the first term provides a Python generator, which then gets translated into
 constraints in the problem. The symbols ``<=``, ``>=``, and ``==`` are used for
 less than or equal to, greater than or equal to, and equal to constraints,
-respectively.
+respectively. Range constraints can be inserted using ``==`` and a list of 2
+values representing lower and upper bounds.
 
 Solving a problem
 -----------------
 
-Defined problems can be simply sent to CAS Servers by calling the 
+Defined problems can be simply sent to CAS server or SAS sesion by calling the 
 :func:`Model.solve` method.
 
 See the solution output to the problem.
@@ -204,7 +211,7 @@ See the solution output to the problem.
    
    m.solve()
 
-At the end of the solve operation, the CAS Server returns 
+At the end of the solve operation, the solver returns 
 both Problem Summary and Solution Summary tables. These tables can be
 later accessed using ``m.get_problem_summary()`` and
 ``m.get_solution_summary``.

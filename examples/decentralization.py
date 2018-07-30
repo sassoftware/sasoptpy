@@ -41,7 +41,7 @@ def test(cas_conn):
     for city in CITIES:
         for dept in DEPTS:
             try:
-                benefit[dept, city] = benefit_data.ix[city, dept]
+                benefit[dept, city] = benefit_data.loc[city, dept]
             except:
                 benefit[dept, city] = 0
 
@@ -61,7 +61,7 @@ def test(cas_conn):
     IJKL = [(i, j, k, l)
             for i in DEPTS for j in CITIES for k in DEPTS for l in CITIES
             if i < k]
-    product = m.add_variables(IJKL, vartype=so.BIN)
+    product = m.add_variables(IJKL, vartype=so.BIN, name='product')
 
     totalBenefit = so.quick_sum(benefit[i, j] * assign[i, j]
                                 for i in DEPTS for j in CITIES)

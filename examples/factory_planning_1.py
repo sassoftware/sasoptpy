@@ -8,8 +8,8 @@ def test(cas_conn):
 
     # Input data
     product_list = ['prod{}'.format(i) for i in range(1, 8)]
-    product_data = pd.DataFrame([[10], [6], [8], [4], [11], [9], [3]],
-                                columns=['profit']).set_index([product_list])
+    product_data = pd.DataFrame([10, 6, 8, 4, 11, 9, 3],
+                                columns=['profit'], index=product_list)
     demand_data = [
         [500, 1000, 300, 300,  800, 200, 100],
         [600,  500, 200,   0,  400, 300, 150],
@@ -17,8 +17,8 @@ def test(cas_conn):
         [200,  300, 400, 500,  200,   0, 100],
         [0,    100, 500, 100, 1000, 300,   0],
         [500,  500, 100, 300, 1100, 500,  60]]
-    demand_data = pd.DataFrame(demand_data, columns=product_list)\
-                    .set_index([[i for i in range(1, 7)]])
+    demand_data = pd.DataFrame(
+        demand_data, columns=product_list, index=range(1, 7))
     machine_types_data = [
         ['grinder', 4],
         ['vdrill', 2],
@@ -90,8 +90,5 @@ def test(cas_conn):
     res = m.solve()
     if res is not None:
         print(so.get_solution_table(make, sell, store))
-
-    print(m.get_solution('Primal'))
-    print(m.get_solution('Dual'))
 
     return m.get_objective_value()

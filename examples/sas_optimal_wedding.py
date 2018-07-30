@@ -2,7 +2,7 @@ import sasoptpy as so
 import math
 
 
-def test(cas_conn, num_guests=10, max_table_size=3, max_tables=None):
+def test(cas_conn, num_guests=20, max_table_size=3, max_tables=None):
 
     m = so.Model("wedding", session=cas_conn)
 
@@ -31,7 +31,8 @@ def test(cas_conn, num_guests=10, max_table_size=3, max_tables=None):
                       name="measurecon")
 
     # Solve
-    res = m.solve(milp={'decomp': {'method': 'set'}, 'presolver': 'none'})
+    res = m.solve(options={
+        'with': 'milp', 'decomp': {'method': 'set'}, 'presolver': 'none'})
 
     if res is not None:
 

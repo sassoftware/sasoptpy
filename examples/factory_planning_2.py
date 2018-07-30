@@ -9,8 +9,7 @@ def test(cas_conn):
     # Input data
     product_list = ['prod{}'.format(i) for i in range(1, 8)]
     product_data = pd.DataFrame([10, 6, 8, 4, 11, 9, 3],
-                                columns=['profit']).set_index([product_list])
-
+                                columns=['profit'], index=product_list)
     demand_data = [
         [500, 1000, 300, 300,  800, 200, 100],
         [600,  500, 200,   0,  400, 300, 150],
@@ -18,8 +17,8 @@ def test(cas_conn):
         [200,  300, 400, 500,  200,   0, 100],
         [0,    100, 500, 100, 1000, 300,   0],
         [500,  500, 100, 300, 1100, 500,  60]]
-    demand_data = pd.DataFrame(demand_data, columns=product_list)\
-                    .set_index([[i for i in range(1, 7)]])
+    demand_data = pd.DataFrame(
+        demand_data, columns=product_list, index=range(1, 7))
     machine_type_product_data = [
         ['grinder', 0.5,  0.7,  0,    0,    0.3,  0.2, 0.5],
         ['vdrill',  0.1,  0.2,  0,    0.3,  0,    0.6, 0],
@@ -48,7 +47,7 @@ def test(cas_conn):
     PRODUCTS = product_list
     profit = product_data['profit']
     PERIODS = range(1, 7)
-    MACHINE_TYPES = machine_types_data.index.values
+    MACHINE_TYPES = machine_types_data.index.tolist()
 
     num_machines = machine_types_data['num_machines']
 
