@@ -43,9 +43,7 @@ See our SAS Global Forum paper: `Optimization Modeling with Python and SAS Viya 
    :name: mastertoc
    :maxdepth: 2
 
-   whatsnew
-   install
-   license
+   overview
    getting-started
    input-data
    models

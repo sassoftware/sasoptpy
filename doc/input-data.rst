@@ -161,7 +161,13 @@ passed. Note that, using CASTable and Abstract Data requires SAS Viya version
 .. ipython:: python
 
    m2 = so.Model(name='m2', session=session)
+
+.. ipython:: python
+
    table = session.upload_frame(df)
+
+.. ipython:: python
+
    print(type(table), table)
 
 

@@ -83,6 +83,4 @@ Internal functions
    Model.upload_model
    Model.test_session
    Model._is_linear
-   Model.__repr__
-   Model.__str__
 

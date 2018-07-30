@@ -212,7 +212,8 @@ Solve options
 
 .. _solver-options:
 
-**Solver Options**
+Solver Options
+++++++++++++++
 
 Both PROC OPTMODEL solve options and ``solveLp``, ``solveMilp`` action options
 can be passed using ``options`` argument of the :meth:`Model.solve` method.
@@ -239,7 +240,8 @@ options when ``frame=True`` is used when calling the :meth:`Model.solve` method.
 - See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvelp_syntax.htm&locale=en for a list of LP options.
 - See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvemilp_syntax.htm&locale=en for a list of MILP options.
 
-**Package Options**
+Package Options
++++++++++++++++
 
 Besides the ``options`` argument, there are 7 arguments that can be passed
 into :func:`Model.solve` method:

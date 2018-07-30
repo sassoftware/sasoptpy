@@ -531,13 +531,13 @@ class Model:
 
     def read_data(self, table, key_set, key_cols=None, option='', params=None):
         '''
-        Reads a CASTable into PROC OPTMODEL sets and adds it to the model
+        Reads a CASTable into PROC OPTMODEL and adds it to the model
 
         Parameters
         ----------
         table : CASTable
             The CAS table to be read to sets and parameters
-        key_set : :class:`sasoptpy.data.Set`
+        key_set : :class:`Set`
             Set object to be read as the key (index)
         key_cols : list or string, optional
             Column names of the key columns
@@ -545,22 +545,29 @@ class Model:
             Additional options for read data command
         params : list, optional
             A list of dictionaries where each dictionary represent parameters
-            Values inside each dictionary should be as follows:
-            param : :class:`sasoptpy.data.Parameter` object
-                Paramter object, whose index is the same as table key
-            column : string, optional
-                Column name to be read
-            index : list, optional
-                List of sets if the parameter has to be read in a loop
 
         Notes
         -----
 
         - This function is intended to be used internally.
-        - It imitates the 'read data' statement of PROC OPTMODEL.
+        - It imitates the ``read data`` statement of PROC OPTMODEL.
         - This function is still under development and subject to change.
-        - key_cols` parameters should be a list. When passing
+        - `key_cols` parameters should be a list. When passing
           a single item, string type can be used instead.
+        - Values inside each dictionary in ``params`` list should be as follows:
+          
+          - **param** : :class:`Parameter` object
+
+            Paramter object, whose index is the same as table key
+
+          - **column** : string, optional
+
+            Column name to be read
+
+          - **index** : list, optional
+
+            List of sets if the parameter has to be read in a loop
+
 
         See also
         --------
@@ -572,8 +579,8 @@ class Model:
         >>> table = session.upload_frame(df, casout='df')
         >>> item = m.add_set(name='set_item')
         >>> value = m.add_parameter(item, name='value')
-        >>> m.read_data(table, key_set=item, key_cols=['items'],
-                params=[{'param': value, 'column': 'value'}])
+        >>> m.read_data(table, key_set=item, key_cols=['items'],\
+params=[{'param': value, 'column': 'value'}])
         >>> print(m.to_optmodel())
         proc optmodel;
         min m_obj = 0;

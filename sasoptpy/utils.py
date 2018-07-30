@@ -94,7 +94,30 @@ def _is_generated(expr):
 
 def exp_range(start, stop, step=1):
     '''
-    Creates a range using expressions
+    Creates a set within given range
+
+    Parameters
+    ----------
+    start : :class:`Expression`
+        First value of the range
+    stop : :class:`Expression`
+        Last value of the range
+    step : :class:`Expression`, optional
+        Step size of the range
+
+    Returns
+    -------
+    :class:`Set`
+        Set that represents the range
+
+    Examples
+    --------
+
+    >>> N = so.Parameter(name='N')
+    >>> p = so.exp_range(1, N)
+    >>> print(p._defn())
+    set 1..N;
+
     '''
     regular = isinstance(start, int) and isinstance(stop, int) and\
         isinstance(step, int)
@@ -113,6 +136,18 @@ def exp_range(start, stop, step=1):
 def register_name(name, obj):
     '''
     Adds the name and order of a component into the global reference list
+
+    Parameters
+    ----------
+    name : string
+        Name of the object
+    obj : object
+        Object to be registered to the global name dictionary
+
+    Returns
+    -------
+    int
+        Unique object number to represent creation order
     '''
     global __objcnt
     __objcnt += 1
@@ -377,12 +412,13 @@ def list_length(listobj):
 
     Parameters
     ----------
-    listobj : Python object
+    listobj : list, tuple or dict
+        Object whose length will be returned
 
     Returns
     -------
     int
-        Length of the list, tuple or dict, otherwise 1
+        Length of the list, tuple or dict
     '''
     if (isinstance(listobj, list) or isinstance(listobj, tuple) or
             isinstance(listobj, dict)):
@@ -707,8 +743,9 @@ def read_table(table, session=None, key=['_N_'], columns=None,
     Returns
     -------
     tuple
-        A tuple where first element is the key (index) and second element\
-        is a list of requested columns
+        A tuple where first element is the key (index), second element\
+        is a list of requested columns and the last element is reference to\
+        the original
 
     See also
     --------
@@ -887,7 +924,8 @@ def print_model_mps(model):
 
     Parameters
     ----------
-    model : :class:`Model` object
+    model : :class:`Model`
+        Model whose MPS format will be printed
 
     Examples
     --------
@@ -945,6 +983,11 @@ def get_namespace():
     Prints details of components registered to the global name dictionary
 
     The list includes models, variables, constraints and expressions
+
+    Returns
+    -------
+    string
+        A string representation of the namespace
     '''
     s = 'Global namespace:'
     for c in [sasoptpy.model.Model, sasoptpy.components.VariableGroup,
@@ -1052,6 +1095,16 @@ def _sort_tuple(i):
 def get_mutable(exp):
     '''
     Returns a mutable copy of the given expression if it is immutable
+
+    Parameters
+    ----------
+    exp : :class:`Variable` or :class:`Expression`
+        Object to be wrapped
+
+    Returns
+    -------
+    :class:`Expression`
+        Mutable copy of the expression, if the original is immutable
     '''
     if isinstance(exp, sasoptpy.components.Variable):
         r = sasoptpy.components.Expression(exp)

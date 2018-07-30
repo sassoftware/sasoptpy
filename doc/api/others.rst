@@ -31,6 +31,7 @@ Methods
 .. 
    ExpressionDict.__getitem__
    ExpressionDict.__setitem__
+   ExpressionDict.get_keys
    Set.__iter__
    Parameter.set_init
    Parameter.__getitem__

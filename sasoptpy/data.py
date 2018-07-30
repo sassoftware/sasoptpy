@@ -31,7 +31,35 @@ import sasoptpy.utils
 
 class Parameter:
     '''
-    Represents sets inside PROC OPTMODEL
+    Creates a parameter to be represented inside PROC OPTMODEL
+
+    Parameters
+    ----------
+    name : string
+        Name of the parameter
+    keys : list, optional
+        List of :class:`Set` to be used as keys for multi-index parameters
+    init : :class:`Expression`, optional
+        Initial value expression of the parameter
+    p_type : string, optional
+        Type of the parameter, 'num' or 'str'
+
+    Examples
+    --------
+
+    >>> p = so.Parameter('p', init=x + 2*y)
+    >>> print(p._defn())
+    num p = x + 2 * y;
+
+    >>> I = so.Set('I')
+    >>> r = so.Parameter('r', keys=I, p_type='str')
+    >>> print(r._defn())
+    str r {I};
+
+    See also
+    --------
+    :func:`read_table`, :meth:`Model.read_table`
+
     '''
 
     def __init__(self, name, keys=None, order=1, init=None, p_type=None):
@@ -152,8 +180,27 @@ class Parameter:
 
 
 class ParameterValue(sasoptpy.components.Expression):
+    '''
+    Represents a single value of a parameter
 
-    def __init__(self, param, key=None, prefix='', postfix=''):
+    Parameters
+    ----------
+    param : :class:`Parameter`
+        Parameter that the value belongs to
+    key : tuple, optional
+        Key of the parameter value in the multi-index parameter
+    prefix : string
+        Prefix of the parameter
+    suffix : string
+        Suffix of the parameter, such as ``.lb`` and ``.ub``
+
+    Notes
+    -----
+
+    - Parameter values are mainly used in abstract expressions
+    '''
+
+    def __init__(self, param, key=None, prefix='', suffix=''):
         super().__init__()
         # pvname = sasoptpy.utils._to_bracket(param._name, key)
         self._name = param._name
@@ -161,13 +208,36 @@ class ParameterValue(sasoptpy.components.Expression):
         self._key = tkey
         self._abstract = True
         self._prefix = prefix
-        self._postfix = postfix
+        self._suffix = suffix
         self._linCoef[str(self)] = {'ref': self,
                                     'val': 1.0}
         self._ref = param
         self._assign = None
 
     def set_init(self, val):
+        '''
+        Sets the initial value of the parameter
+
+        Parameters
+        ----------
+        val : :class:`Expression`
+            Initial value
+
+        Examples
+        --------
+
+        >>> p = so.Parameter(name='p')
+        >>> print(p._defn())
+        num p;
+        >>> p.set_init(10)
+        >>> print(p._defn())
+        num p = 10;
+
+        Notes
+        -----
+        - This method is only available for parameters without index/key.
+
+        '''
         if self._key == ('',):
             self._ref.set_init(val)
 
@@ -185,10 +255,10 @@ class ParameterValue(sasoptpy.components.Expression):
                 if self._key[0] == '':
                     return self._prefix +\
                            self._name +\
-                           self._postfix
+                           self._suffix
         return self._prefix +\
             sasoptpy.utils._to_bracket(self._name, self._key) +\
-            self._postfix
+            self._suffix
 
     def _expr(self):
         return str(self)
@@ -196,7 +266,33 @@ class ParameterValue(sasoptpy.components.Expression):
 
 class Set(sasoptpy.components.Expression):
     '''
-    Represents index sets inside PROC OPTMODEL
+    Creates an index set to be represented inside PROC OPTMODEL
+
+    Parameters
+    ----------
+    name : string
+        Name of the parameter
+    init : :class:`Expression`, optional
+        Initial value expression of the parameter
+    settype : list, optional
+        List of types for the set, consisting of 'num' and 'str' values
+
+    Examples
+    --------
+
+    >>> I = so.Set('I')
+    >>> print(I._defn())
+    set I;
+
+    >>> J = so.Set('J', settype=['num', 'str'])
+    >>> print(J._defn())
+    set <num, str> J;
+
+    >>> N = so.Parameter(name='N', init=5)
+    >>> K = so.Set('K', init=so.exp_range(1,N))
+    >>> print(K._defn())
+    set K = 1..N;
+
     '''
 
     def __init__(self, name, init=None, settype=['num']):
@@ -268,6 +364,38 @@ class Set(sasoptpy.components.Expression):
 
 
 class SetIterator(sasoptpy.components.Expression):
+    '''
+    Creates an iterator object for a given Set
+
+    Parameters
+    ----------
+    initset : :class:`Set`
+        Set to be iterated on
+    conditions : list, optional
+        List of conditions on the iterator
+    datatype : string, optional
+        Type of the iterator
+    group : dict, optional
+        Dictionary representing the order of iterator inside multi-index sets
+    multi_index : boolean, optional
+        Switch for representing multi-index iterators
+
+    Notes
+    -----
+
+    - SetIterator objects are automatically created when looping over a
+      :class:`Set`.
+    - This class is mainly intended for internal use.
+    - The ``group`` parameter consists of following keys
+
+      - **order** : int
+        Order of the parameter inside the group
+      - **outof** : int
+        Total number of indices inside the group
+      - **id** : int
+        ID number assigned to group by Python
+
+    '''
 
     def __init__(self, initset, conditions=None, datatype='num',
                  group={'order': 1, 'outof': 1, 'id': 0}, multi_index=False
@@ -384,6 +512,31 @@ class SetIterator(sasoptpy.components.Expression):
 
 
 class ExpressionDict:
+    '''
+    Creates a dictionary of :class:`Expression` objects
+
+    Parameters
+    ----------
+    name : string
+        Name of the object
+
+    Examples
+    --------
+
+    >>> e[0] = x + 2*y
+    >>> e[1] = 2*x + y**2
+    >>> print(e.get_keys())
+    >>> for i in e:
+    >>>     print(i, e[i])
+    (0,) x + 2 * y
+    (1,) 2 * x + (y) ** (2)
+
+
+    Notes
+    -----
+    - ExpressionDict is the underlying class for :class:`ImplicitVar`.
+    - It behaves as a regular dictionary for client-side models.
+    '''
 
     def __init__(self, name=None):
         name = sasoptpy.utils.check_name(name, 'impvar')
@@ -455,6 +608,20 @@ class ExpressionDict:
         #======================================================================
         return s
 
+    def get_keys(self):
+        '''
+        Returns the dictionary keys
+
+        Returns
+        -------
+        dictkeys
+            Dictionary keys stored in the object
+        '''
+        return self._dict.keys()
+
+    def __iter__(self):
+        return self._dict.__iter__()
+
     def _get_only_key(self):
         return list(self._dict.keys())[0]
 
@@ -478,6 +645,52 @@ class ExpressionDict:
 
 
 class ImplicitVar(ExpressionDict):
+    '''
+    Creates an implicit variable
+
+    Parameters
+    ----------
+    argv : Generator, optional
+        Generator object for the implicit variable
+    name : string, optional
+        Name of the implicit variable
+
+    Notes
+    -----
+
+    - If the loop inside generator is over an abstract object, a definition
+      for the object will be created inside :meth:`Model.to_optmodel` method.
+
+    Examples
+    --------
+
+    Regular Implicit Variable
+
+    >>> I = range(5)
+    >>> x = so.Variable(name='x')
+    >>> y = so.VariableGroup(I, name='y')
+    >>> z = so.ImplicitVar((x + i * y[i] for i in I), name='z')
+    >>> for i in z:
+    >>>     print(i, z[i])
+    (0,) x
+    (1,) x + y[1]
+    (2,) x + 2 * y[2]
+    (3,) x + 3 * y[3]
+    (4,) x + 4 * y[4]
+
+    Abstract Implicit Variable
+
+    >>> I = so.Set(name='I')
+    >>> x = so.Variable(name='x')
+    >>> y = so.VariableGroup(I, name='y')
+    >>> z = so.ImplicitVar((x + i * y[i] for i in I), name='z')
+    >>> print(z._defn())
+    impvar z {i_1 in I} = x + i_1 * y[i_1];
+    >>> for i in z:
+    >>>     print(i, z[i])
+    (sasoptpy.data.SetIterator(name=i_1, ...),) x + i_1 * y[i_1]
+
+    '''
 
     def __init__(self, argv=None, name=None):
         super().__init__(name=name)

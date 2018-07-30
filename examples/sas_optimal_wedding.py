@@ -2,7 +2,7 @@ import sasoptpy as so
 import math
 
 
-def test(cas_conn, num_guests=10, max_table_size=3, max_tables=None):
+def test(cas_conn, num_guests=20, max_table_size=3, max_tables=None):
 
     m = so.Model("wedding", session=cas_conn)
 

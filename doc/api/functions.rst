@@ -21,7 +21,6 @@ Utility Functions
    get_mutable
    get_namespace
    get_solution_table
-   is_equal
    list_length
    list_pack
    print_model_mps
@@ -48,7 +47,6 @@ Math Functions
 
    math.math_func
    math.abs
-   math.mod
    math.log
    math.log2
    math.log10

@@ -24,18 +24,3 @@ Methods
    VariableGroup.set_init
    VariableGroup.mult
    VariableGroup.sum
-
-..
-
-   Private Methods
-   ~~~~~~~~~~~~~~~
-   
-   .. autosummary::
-      :toctree: generated/
-   
-      VariableGroup.add_member
-      VariableGroup.__getitem__
-      VariableGroup.__iter__
-      VariableGroup._defn
-      VariableGroup.__str__
-      VariableGroup.__repr__

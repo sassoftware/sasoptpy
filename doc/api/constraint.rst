@@ -24,14 +24,3 @@ Methods
    Constraint.set_direction
    Constraint.set_rhs
 
-..
-
-   Private Methods
-   ~~~~~~~~~~~~~~~
-   
-   .. autosummary::
-      :toctree: generated/
-   
-      Constraint._defn
-      Constraint.__str__
-      Constraint.__repr__

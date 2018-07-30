@@ -4,7 +4,7 @@ import random
 
 def test(cas_conn):
     # Data generation
-    n = 80
+    n = 100
     p = 0.02
 
     random.seed(1)

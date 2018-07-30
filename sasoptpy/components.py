@@ -1523,9 +1523,9 @@ class VariableGroup:
                                   ub=v._ub, init=v._init, abstract=True,
                                   shadow=True)
                 ub = sasoptpy.data.ParameterValue(shadow, key=tuple_key,
-                                                  postfix='.ub')
+                                                  suffix='.ub')
                 lb = sasoptpy.data.ParameterValue(shadow, key=tuple_key,
-                                                  postfix='.lb')
+                                                  suffix='.lb')
                 shadow._ub = ub
                 shadow._lb = lb
                 shadow._iterkey = tuple_key
