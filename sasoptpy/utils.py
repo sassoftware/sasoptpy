@@ -47,7 +47,7 @@ __objcnt = 0
 
 def check_name(name, ctype=None):
     '''
-    Checks if a name is in valid and returns a random string if not
+    Checks if a name is valid and returns a random string if not
 
     Parameters
     ----------
