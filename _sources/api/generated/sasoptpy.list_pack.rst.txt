@@ -1,0 +1,6 @@
+sasoptpy.list\_pack
+===================
+
+.. currentmodule:: sasoptpy
+
+.. autofunction:: list_pack

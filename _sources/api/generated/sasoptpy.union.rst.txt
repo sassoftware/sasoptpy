@@ -1,0 +1,6 @@
+sasoptpy.union
+==============
+
+.. currentmodule:: sasoptpy
+
+.. autofunction:: union

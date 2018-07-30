@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+sasoptpy.ConstraintGroup
+========================
+
+.. currentmodule:: sasoptpy
+
+.. autoclass:: ConstraintGroup

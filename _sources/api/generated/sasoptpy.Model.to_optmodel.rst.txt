@@ -1,0 +1,6 @@
+sasoptpy.Model.to\_optmodel
+===========================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.to_optmodel

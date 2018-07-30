@@ -1,0 +1,6 @@
+sasoptpy.Model.drop\_constraints
+================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.drop_constraints

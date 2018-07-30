@@ -1,0 +1,6 @@
+sasoptpy.wrap
+=============
+
+.. currentmodule:: sasoptpy
+
+.. autofunction:: wrap

@@ -1,0 +1,6 @@
+sasoptpy.Model.add\_constraints
+===============================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.add_constraints

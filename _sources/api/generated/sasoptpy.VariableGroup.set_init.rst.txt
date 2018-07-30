@@ -1,0 +1,6 @@
+sasoptpy.VariableGroup.set\_init
+================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: VariableGroup.set_init

@@ -6,11 +6,11 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Farm Planning &#8212; sasoptpy 0.1.2 documentation</title>
+    <title>Farm Planning &#8212; sasoptpy 0.2.0 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
-    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
@@ -35,7 +35,7 @@
         <li class="right" >
           <a href="mining_optimization.html" title="Mining Optimization"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &#187;</li> 
       </ul>
     </div>  
@@ -47,6 +47,11 @@
             
   <div class="section" id="farm-planning">
 <h1>Farm Planning<a class="headerlink" href="#farm-planning" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="reference">
+<h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex8_toc.htm&amp;docsetVersion=14.3&amp;locale=en">http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex8_toc.htm&amp;docsetVersion=14.3&amp;locale=en</a></p>
+<p><a class="reference external" href="http://support.sas.com/documentation/onlinedoc/or/ex_code/143/mpex08.html">http://support.sas.com/documentation/onlinedoc/or/ex_code/143/mpex08.html</a></p>
+</div>
 <div class="section" id="model">
 <h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
@@ -295,20 +300,17 @@
 
 <span class="gp">In [2]: </span><span class="n">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">)</span>
 <span class="go">NOTE: Initialized model farm_planning.</span>
-<span class="go">NOTE: Converting model farm_planning to DataFrame.</span>
-<span class="go">WARNING: The objective function contains a constant term. An auxiliary variable is added.</span>
-<span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPF3Q4OA77 in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table TMPF3Q4OA77 has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
-<span class="go">NOTE: The problem farm_planning has 144 variables (0 free, 14 fixed).</span>
-<span class="go">NOTE: The problem has 101 constraints (25 LE, 70 EQ, 5 GE, 1 range).</span>
-<span class="go">NOTE: The problem has 780 constraint coefficients.</span>
-<span class="go">NOTE: The following columns have no constraint coefficients:</span>
-<span class="go">         numCows_12_0</span>
-<span class="go">         obj_constant</span>
+<span class="go">NOTE: Converting model farm_planning to OPTMODEL.</span>
+<span class="go">NOTE: Submitting OPTMODEL codes to CAS server.</span>
+<span class="go">NOTE: Problem generation will use 32 threads.</span>
+<span class="go">NOTE: The problem has 143 variables (0 free, 13 fixed).</span>
+<span class="go">NOTE: The problem has 101 linear constraints (25 LE, 70 EQ, 5 GE, 1 range).</span>
+<span class="go">NOTE: The problem has 780 linear constraint coefficients.</span>
+<span class="go">NOTE: The problem has 0 nonlinear constraints (0 LE, 0 EQ, 0 GE, 0 range).</span>
+<span class="go">NOTE: The OPTMODEL presolver is disabled for linear problems.</span>
 <span class="go">NOTE: The LP presolver value AUTOMATIC is applied.</span>
-<span class="go">NOTE: The LP presolver removed 85 variables and 69 constraints.</span>
+<span class="go">NOTE: The LP presolver removed 84 variables and 69 constraints.</span>
 <span class="go">NOTE: The LP presolver removed 533 constraint coefficients.</span>
 <span class="go">NOTE: The presolved problem has 59 variables, 32 constraints, and 247 constraint coefficients.</span>
 <span class="go">NOTE: The LP solver is called.</span>
@@ -321,6 +323,10 @@
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 121719.17286.</span>
 <span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
+<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 18 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 13 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;primal&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 143 rows and 6 columns.</span>
+<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 101 rows and 4 columns.</span>
 <span class="go">        numCows</span>
 <span class="go">1  2           </span>
 <span class="go">0  0  10.000000</span>
@@ -445,7 +451,7 @@
 <span class="go">3      200.0        115.433945</span>
 <span class="go">4      200.0        103.571429</span>
 <span class="go">5      200.0         92.460792</span>
-<span class="gh">Out[2]: </span><span class="go">121719.17286133829</span>
+<span class="gh">Out[2]: </span><span class="go">121719.172861</span>
 </pre></div>
 </div>
 </div>
@@ -459,15 +465,14 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../whatsnew.html">What’s New</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../input-data.html">Handling Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../models.html">Sessions and Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../components.html">Model components</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../sasoptpy.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../workflow.html">Workflows</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="../examples.html#viya-swat-examples">Viya (swat) Examples</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../examples.html#viya-examples-concrete">Viya Examples / Concrete</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="food_manufacture_1.html">Food Manufacture 1</a></li>
 <li class="toctree-l3"><a class="reference internal" href="food_manufacture_2.html">Food Manufacture 2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="factory_planning_1.html">Factory Planning 1</a></li>
@@ -476,6 +481,7 @@
 <li class="toctree-l3"><a class="reference internal" href="refinery_optimization.html">Refinery Optimization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mining_optimization.html">Mining Optimization</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Farm Planning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#reference">Reference</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#model">Model</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#output">Output</a></li>
 </ul>
@@ -486,9 +492,11 @@
 <li class="toctree-l3"><a class="reference internal" href="kidney_exchange.html">SAS/OR Blog: Kidney Exchange</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#viya-examples-abstract">Viya Examples / Abstract</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api.html">API Reference</a></li>
 </ul>
 
 <div id="searchbox" style="display: none" role="search">
@@ -522,14 +530,14 @@
         <li class="right" >
           <a href="mining_optimization.html" title="Mining Optimization"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2018, SAS Institute.
-      Last updated on Apr 30, 2018 (Timestamp: 0.1.2-20180430093702).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
+      Last updated on Jul 30, 2018 (Timestamp: 0.2.0-20180730103208).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
     </div>
   </body>
 </html>

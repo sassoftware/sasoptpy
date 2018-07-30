@@ -1,0 +1,6 @@
+sasoptpy.Model.solve\_on\_cas
+=============================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.solve_on_cas

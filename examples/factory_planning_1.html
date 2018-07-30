@@ -6,11 +6,11 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Factory Planning 1 &#8212; sasoptpy 0.1.2 documentation</title>
+    <title>Factory Planning 1 &#8212; sasoptpy 0.2.0 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
-    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
@@ -35,7 +35,7 @@
         <li class="right" >
           <a href="food_manufacture_2.html" title="Food Manufacture 2"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &#187;</li> 
       </ul>
     </div>  
@@ -47,6 +47,11 @@
             
   <div class="section" id="factory-planning-1">
 <h1>Factory Planning 1<a class="headerlink" href="#factory-planning-1" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="reference">
+<h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex3_toc.htm&amp;docsetVersion=14.3&amp;locale=en">http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex3_toc.htm&amp;docsetVersion=14.3&amp;locale=en</a></p>
+<p><a class="reference external" href="https://support.sas.com/documentation/onlinedoc/or/ex_code/143/mpex03.html">https://support.sas.com/documentation/onlinedoc/or/ex_code/143/mpex03.html</a></p>
+</div>
 <div class="section" id="model">
 <h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
@@ -59,8 +64,8 @@
 
     <span class="c1"># Input data</span>
     <span class="n">product_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;prod</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">)]</span>
-    <span class="n">product_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[</span><span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">11</span><span class="p">],</span> <span class="p">[</span><span class="mi">9</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">]],</span>
-                                <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;profit&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="n">product_list</span><span class="p">])</span>
+    <span class="n">product_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+                                <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;profit&#39;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">product_list</span><span class="p">)</span>
     <span class="n">demand_data</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">[</span><span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span>  <span class="mi">800</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
         <span class="p">[</span><span class="mi">600</span><span class="p">,</span>  <span class="mi">500</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>  <span class="mi">400</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">150</span><span class="p">],</span>
@@ -68,8 +73,8 @@
         <span class="p">[</span><span class="mi">200</span><span class="p">,</span>  <span class="mi">300</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span>  <span class="mi">200</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
         <span class="p">[</span><span class="mi">0</span><span class="p">,</span>    <span class="mi">100</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span>   <span class="mi">0</span><span class="p">],</span>
         <span class="p">[</span><span class="mi">500</span><span class="p">,</span>  <span class="mi">500</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">1100</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span>  <span class="mi">60</span><span class="p">]]</span>
-    <span class="n">demand_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">demand_data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">product_list</span><span class="p">)</span>\
-                    <span class="o">.</span><span class="n">set_index</span><span class="p">([[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">)]])</span>
+    <span class="n">demand_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="n">demand_data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">product_list</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
     <span class="n">machine_types_data</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">[</span><span class="s1">&#39;grinder&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
         <span class="p">[</span><span class="s1">&#39;vdrill&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
@@ -142,9 +147,6 @@
     <span class="k">if</span> <span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">make</span><span class="p">,</span> <span class="n">sell</span><span class="p">,</span> <span class="n">store</span><span class="p">))</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">get_solution</span><span class="p">(</span><span class="s1">&#39;Primal&#39;</span><span class="p">))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">get_solution</span><span class="p">(</span><span class="s1">&#39;Dual&#39;</span><span class="p">))</span>
-
     <span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="n">get_objective_value</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -155,18 +157,19 @@
 
 <span class="gp">In [2]: </span><span class="n">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">)</span>
 <span class="go">NOTE: Initialized model factory_planning_1.</span>
-<span class="go">NOTE: Converting model factory_planning_1 to DataFrame.</span>
-<span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMP4EM28S8Z in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table TMP4EM28S8Z has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
-<span class="go">NOTE: The problem factory_planning_1 has 126 variables (0 free, 6 fixed).</span>
-<span class="go">NOTE: The problem has 72 constraints (30 LE, 42 EQ, 0 GE, 0 range).</span>
-<span class="go">NOTE: The problem has 281 constraint coefficients.</span>
+<span class="go">NOTE: Converting model factory_planning_1 to OPTMODEL.</span>
+<span class="go">NOTE: Submitting OPTMODEL codes to CAS server.</span>
+<span class="go">NOTE: Problem generation will use 32 threads.</span>
+<span class="go">NOTE: The problem has 126 variables (0 free, 6 fixed).</span>
+<span class="go">NOTE: The problem has 72 linear constraints (30 LE, 42 EQ, 0 GE, 0 range).</span>
+<span class="go">NOTE: The problem has 281 linear constraint coefficients.</span>
+<span class="go">NOTE: The problem has 0 nonlinear constraints (0 LE, 0 EQ, 0 GE, 0 range).</span>
+<span class="go">NOTE: The OPTMODEL presolver is disabled for linear problems.</span>
 <span class="go">NOTE: The LP presolver value AUTOMATIC is applied.</span>
-<span class="go">NOTE: The LP presolver removed 24 variables and 21 constraints.</span>
-<span class="go">NOTE: The LP presolver removed 83 constraint coefficients.</span>
-<span class="go">NOTE: The presolved problem has 102 variables, 51 constraints, and 198 constraint coefficients.</span>
+<span class="go">NOTE: The LP presolver removed 24 variables and 23 constraints.</span>
+<span class="go">NOTE: The LP presolver removed 91 constraint coefficients.</span>
+<span class="go">NOTE: The presolved problem has 102 variables, 49 constraints, and 190 constraint coefficients.</span>
 <span class="go">NOTE: The LP solver is called.</span>
 <span class="go">NOTE: The Dual Simplex algorithm is used.</span>
 <span class="go">                              Objective</span>
@@ -176,6 +179,10 @@
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 93715.178571.</span>
 <span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
+<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 18 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 13 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;primal&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 126 rows and 6 columns.</span>
+<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 72 rows and 4 columns.</span>
 <span class="go">                make         sell  store</span>
 <span class="go">1     2                                 </span>
 <span class="go">prod1 1   500.000000   500.000000    0.0</span>
@@ -220,265 +227,7 @@
 <span class="go">prod7 4   100.000000   100.000000    0.0</span>
 <span class="go">prod7 5   100.000000     0.000000  100.0</span>
 <span class="go">prod7 6     0.000000    50.000000   50.0</span>
-<span class="go">Selected Rows from Table PRIMAL</span>
-
-<span class="go">         _OBJ_ID_ _RHS_ID_          _VAR_ _TYPE_  _OBJCOEF_  _LBOUND_  \</span>
-<span class="go">0    total_profit      RHS   make_prod1_1      N        0.0       0.0   </span>
-<span class="go">1    total_profit      RHS   make_prod1_2      N        0.0       0.0   </span>
-<span class="go">2    total_profit      RHS   make_prod1_3      N        0.0       0.0   </span>
-<span class="go">3    total_profit      RHS   make_prod1_4      N        0.0       0.0   </span>
-<span class="go">4    total_profit      RHS   make_prod1_5      N        0.0       0.0   </span>
-<span class="go">5    total_profit      RHS   make_prod1_6      N        0.0       0.0   </span>
-<span class="go">6    total_profit      RHS   make_prod2_1      N        0.0       0.0   </span>
-<span class="go">7    total_profit      RHS   make_prod2_2      N        0.0       0.0   </span>
-<span class="go">8    total_profit      RHS   make_prod2_3      N        0.0       0.0   </span>
-<span class="go">9    total_profit      RHS   make_prod2_4      N        0.0       0.0   </span>
-<span class="go">10   total_profit      RHS   make_prod2_5      N        0.0       0.0   </span>
-<span class="go">11   total_profit      RHS   make_prod2_6      N        0.0       0.0   </span>
-<span class="go">12   total_profit      RHS   make_prod3_1      N        0.0       0.0   </span>
-<span class="go">13   total_profit      RHS   make_prod3_2      N        0.0       0.0   </span>
-<span class="go">14   total_profit      RHS   make_prod3_3      N        0.0       0.0   </span>
-<span class="go">15   total_profit      RHS   make_prod3_4      N        0.0       0.0   </span>
-<span class="go">16   total_profit      RHS   make_prod3_5      N        0.0       0.0   </span>
-<span class="go">17   total_profit      RHS   make_prod3_6      N        0.0       0.0   </span>
-<span class="go">18   total_profit      RHS   make_prod4_1      N        0.0       0.0   </span>
-<span class="go">19   total_profit      RHS   make_prod4_2      N        0.0       0.0   </span>
-<span class="go">20   total_profit      RHS   make_prod4_3      N        0.0       0.0   </span>
-<span class="go">21   total_profit      RHS   make_prod4_4      N        0.0       0.0   </span>
-<span class="go">22   total_profit      RHS   make_prod4_5      N        0.0       0.0   </span>
-<span class="go">23   total_profit      RHS   make_prod4_6      N        0.0       0.0   </span>
-<span class="go">24   total_profit      RHS   make_prod5_1      N        0.0       0.0   </span>
-<span class="go">25   total_profit      RHS   make_prod5_2      N        0.0       0.0   </span>
-<span class="go">26   total_profit      RHS   make_prod5_3      N        0.0       0.0   </span>
-<span class="go">27   total_profit      RHS   make_prod5_4      N        0.0       0.0   </span>
-<span class="go">28   total_profit      RHS   make_prod5_5      N        0.0       0.0   </span>
-<span class="go">29   total_profit      RHS   make_prod5_6      N        0.0       0.0   </span>
-<span class="go">..            ...      ...            ...    ...        ...       ...   </span>
-<span class="go">96   total_profit      RHS  store_prod3_1      D       -0.5       0.0   </span>
-<span class="go">97   total_profit      RHS  store_prod3_2      D       -0.5       0.0   </span>
-<span class="go">98   total_profit      RHS  store_prod3_3      D       -0.5       0.0   </span>
-<span class="go">99   total_profit      RHS  store_prod3_4      D       -0.5       0.0   </span>
-<span class="go">100  total_profit      RHS  store_prod3_5      D       -0.5       0.0   </span>
-<span class="go">101  total_profit      RHS  store_prod3_6      D       -0.5      50.0   </span>
-<span class="go">102  total_profit      RHS  store_prod4_1      D       -0.5       0.0   </span>
-<span class="go">103  total_profit      RHS  store_prod4_2      D       -0.5       0.0   </span>
-<span class="go">104  total_profit      RHS  store_prod4_3      D       -0.5       0.0   </span>
-<span class="go">105  total_profit      RHS  store_prod4_4      D       -0.5       0.0   </span>
-<span class="go">106  total_profit      RHS  store_prod4_5      D       -0.5       0.0   </span>
-<span class="go">107  total_profit      RHS  store_prod4_6      D       -0.5      50.0   </span>
-<span class="go">108  total_profit      RHS  store_prod5_1      D       -0.5       0.0   </span>
-<span class="go">109  total_profit      RHS  store_prod5_2      D       -0.5       0.0   </span>
-<span class="go">110  total_profit      RHS  store_prod5_3      D       -0.5       0.0   </span>
-<span class="go">111  total_profit      RHS  store_prod5_4      D       -0.5       0.0   </span>
-<span class="go">112  total_profit      RHS  store_prod5_5      D       -0.5       0.0   </span>
-<span class="go">113  total_profit      RHS  store_prod5_6      D       -0.5      50.0   </span>
-<span class="go">114  total_profit      RHS  store_prod6_1      D       -0.5       0.0   </span>
-<span class="go">115  total_profit      RHS  store_prod6_2      D       -0.5       0.0   </span>
-<span class="go">116  total_profit      RHS  store_prod6_3      D       -0.5       0.0   </span>
-<span class="go">117  total_profit      RHS  store_prod6_4      D       -0.5       0.0   </span>
-<span class="go">118  total_profit      RHS  store_prod6_5      D       -0.5       0.0   </span>
-<span class="go">119  total_profit      RHS  store_prod6_6      D       -0.5      50.0   </span>
-<span class="go">120  total_profit      RHS  store_prod7_1      D       -0.5       0.0   </span>
-<span class="go">121  total_profit      RHS  store_prod7_2      D       -0.5       0.0   </span>
-<span class="go">122  total_profit      RHS  store_prod7_3      D       -0.5       0.0   </span>
-<span class="go">123  total_profit      RHS  store_prod7_4      D       -0.5       0.0   </span>
-<span class="go">124  total_profit      RHS  store_prod7_5      D       -0.5       0.0   </span>
-<span class="go">125  total_profit      RHS  store_prod7_6      D       -0.5      50.0   </span>
-
-<span class="go">          _UBOUND_      _VALUE_ _STATUS_   _R_COST_  </span>
-<span class="go">0    1.797693e+308   500.000000        B  -0.000000  </span>
-<span class="go">1    1.797693e+308   700.000000        B  -0.000000  </span>
-<span class="go">2    1.797693e+308     0.000000        B  -0.000000  </span>
-<span class="go">3    1.797693e+308   200.000000        B  -0.000000  </span>
-<span class="go">4    1.797693e+308     0.000000        L  -0.000000  </span>
-<span class="go">5    1.797693e+308   550.000000        B  -0.000000  </span>
-<span class="go">6    1.797693e+308   888.571429        B  -0.000000  </span>
-<span class="go">7    1.797693e+308   600.000000        B  -0.000000  </span>
-<span class="go">8    1.797693e+308     0.000000        L  -0.000000  </span>
-<span class="go">9    1.797693e+308   300.000000        B  -0.000000  </span>
-<span class="go">10   1.797693e+308   100.000000        B  -0.000000  </span>
-<span class="go">11   1.797693e+308   550.000000        B  -0.000000  </span>
-<span class="go">12   1.797693e+308   382.500000        B  -0.000000  </span>
-<span class="go">13   1.797693e+308   117.500000        B  -0.000000  </span>
-<span class="go">14   1.797693e+308     0.000000        L  -0.000000  </span>
-<span class="go">15   1.797693e+308   400.000000        B  -0.000000  </span>
-<span class="go">16   1.797693e+308   600.000000        B  -0.000000  </span>
-<span class="go">17   1.797693e+308     0.000000        B  -0.000000  </span>
-<span class="go">18   1.797693e+308   300.000000        B  -0.000000  </span>
-<span class="go">19   1.797693e+308     0.000000        L  -0.000000  </span>
-<span class="go">20   1.797693e+308     0.000000        L -14.500000  </span>
-<span class="go">21   1.797693e+308   500.000000        B  -0.000000  </span>
-<span class="go">22   1.797693e+308   100.000000        B  -0.000000  </span>
-<span class="go">23   1.797693e+308   350.000000        B  -0.000000  </span>
-<span class="go">24   1.797693e+308   800.000000        B  -0.000000  </span>
-<span class="go">25   1.797693e+308   500.000000        B  -0.000000  </span>
-<span class="go">26   1.797693e+308     0.000000        L  -9.000000  </span>
-<span class="go">27   1.797693e+308   200.000000        B  -0.000000  </span>
-<span class="go">28   1.797693e+308  1100.000000        B  -0.000000  </span>
-<span class="go">29   1.797693e+308     0.000000        L -29.000000  </span>
-<span class="go">..             ...          ...      ...        ...  </span>
-<span class="go">96    1.000000e+02    82.500000        B  -0.000000  </span>
-<span class="go">97    1.000000e+02     0.000000        L  -1.000000  </span>
-<span class="go">98    1.000000e+02     0.000000        L  -0.500000  </span>
-<span class="go">99    1.000000e+02     0.000000        L  -0.500000  </span>
-<span class="go">100   1.000000e+02   100.000000        U   7.500000  </span>
-<span class="go">101   5.100000e+01    50.000000        L  -8.500000  </span>
-<span class="go">102   1.000000e+02     0.000000        L  -0.500000  </span>
-<span class="go">103   1.000000e+02     0.000000        L  -1.000000  </span>
-<span class="go">104   1.000000e+02    -0.000000        B  -0.000000  </span>
-<span class="go">105   1.000000e+02     0.000000        L  -0.500000  </span>
-<span class="go">106   1.000000e+02     0.000000        L  -0.500000  </span>
-<span class="go">107   5.100000e+01    50.000000        L  -0.500000  </span>
-<span class="go">108   1.000000e+02     0.000000        L  -3.071429  </span>
-<span class="go">109   1.000000e+02   100.000000        U  10.500000  </span>
-<span class="go">110   1.000000e+02     0.000000        L -11.500000  </span>
-<span class="go">111   1.000000e+02     0.000000        L  -0.500000  </span>
-<span class="go">112   1.000000e+02   100.000000        U  10.500000  </span>
-<span class="go">113   5.100000e+01    50.000000        L -11.500000  </span>
-<span class="go">114   1.000000e+02     0.000000        L  -2.214286  </span>
-<span class="go">115   1.000000e+02     0.000000        L  -0.500000  </span>
-<span class="go">116   1.000000e+02     0.000000        L  -0.500000  </span>
-<span class="go">117   1.000000e+02     0.000000        L  -0.500000  </span>
-<span class="go">118   1.000000e+02     0.000000        L  -0.500000  </span>
-<span class="go">119   5.100000e+01    50.000000        L  -0.500000  </span>
-<span class="go">120   1.000000e+02     0.000000        L  -4.410714  </span>
-<span class="go">121   1.000000e+02   100.000000        U   2.125000  </span>
-<span class="go">122   1.000000e+02     0.000000        L  -3.500000  </span>
-<span class="go">123   1.000000e+02     0.000000        L  -0.500000  </span>
-<span class="go">124   1.000000e+02   100.000000        U   2.500000  </span>
-<span class="go">125   5.100000e+01    50.000000        L  -3.500000  </span>
-
-<span class="go">[126 rows x 10 columns]</span>
-<span class="go">Selected Rows from Table DUAL</span>
-
-<span class="go">        _OBJ_ID_ _RHS_ID_             _ROW_ _TYPE_   _RHS_  _L_RHS_  _U_RHS_  \</span>
-<span class="go">0   total_profit      RHS   machine_hours_4      L  1152.0      NaN      NaN   </span>
-<span class="go">1   total_profit      RHS  machine_hours_18      L   384.0      NaN      NaN   </span>
-<span class="go">2   total_profit      RHS  machine_hours_16      L  1152.0      NaN      NaN   </span>
-<span class="go">3   total_profit      RHS   machine_hours_6      L   768.0      NaN      NaN   </span>
-<span class="go">4   total_profit      RHS  machine_hours_20      L     0.0      NaN      NaN   </span>
-<span class="go">5   total_profit      RHS  machine_hours_14      L  1152.0      NaN      NaN   </span>
-<span class="go">6   total_profit      RHS   machine_hours_8      L   768.0      NaN      NaN   </span>
-<span class="go">7   total_profit      RHS  machine_hours_27      L   384.0      NaN      NaN   </span>
-<span class="go">8   total_profit      RHS  machine_hours_22      L   384.0      NaN      NaN   </span>
-<span class="go">9   total_profit      RHS  machine_hours_12      L  1152.0      NaN      NaN   </span>
-<span class="go">10  total_profit      RHS   machine_hours_1      L  1536.0      NaN      NaN   </span>
-<span class="go">11  total_profit      RHS   machine_hours_9      L   384.0      NaN      NaN   </span>
-<span class="go">12  total_profit      RHS  machine_hours_11      L   768.0      NaN      NaN   </span>
-<span class="go">13  total_profit      RHS   machine_hours_5      L  1536.0      NaN      NaN   </span>
-<span class="go">14  total_profit      RHS  machine_hours_29      L     0.0      NaN      NaN   </span>
-<span class="go">15  total_profit      RHS  machine_hours_17      L   768.0      NaN      NaN   </span>
-<span class="go">16  total_profit      RHS   machine_hours_3      L  1536.0      NaN      NaN   </span>
-<span class="go">17  total_profit      RHS  machine_hours_19      L   384.0      NaN      NaN   </span>
-<span class="go">18  total_profit      RHS  machine_hours_15      L  1152.0      NaN      NaN   </span>
-<span class="go">19  total_profit      RHS   machine_hours_7      L   768.0      NaN      NaN   </span>
-<span class="go">20  total_profit      RHS  machine_hours_21      L   384.0      NaN      NaN   </span>
-<span class="go">21  total_profit      RHS  machine_hours_24      L   384.0      NaN      NaN   </span>
-<span class="go">22  total_profit      RHS  machine_hours_13      L   384.0      NaN      NaN   </span>
-<span class="go">23  total_profit      RHS   machine_hours_2      L  1536.0      NaN      NaN   </span>
-<span class="go">24  total_profit      RHS  machine_hours_23      L   384.0      NaN      NaN   </span>
-<span class="go">25  total_profit      RHS  machine_hours_28      L   384.0      NaN      NaN   </span>
-<span class="go">26  total_profit      RHS   machine_hours_0      L  1152.0      NaN      NaN   </span>
-<span class="go">27  total_profit      RHS  machine_hours_10      L   384.0      NaN      NaN   </span>
-<span class="go">28  total_profit      RHS  machine_hours_26      L   384.0      NaN      NaN   </span>
-<span class="go">29  total_profit      RHS  machine_hours_25      L   384.0      NaN      NaN   </span>
-<span class="go">..           ...      ...               ...    ...     ...      ...      ...   </span>
-<span class="go">42  total_profit      RHS   flow_balance_28      E     0.0      NaN      NaN   </span>
-<span class="go">43  total_profit      RHS    flow_balance_6      E     0.0      NaN      NaN   </span>
-<span class="go">44  total_profit      RHS   flow_balance_13      E     0.0      NaN      NaN   </span>
-<span class="go">45  total_profit      RHS   flow_balance_36      E     0.0      NaN      NaN   </span>
-<span class="go">46  total_profit      RHS    flow_balance_4      E     0.0      NaN      NaN   </span>
-<span class="go">47  total_profit      RHS   flow_balance_18      E     0.0      NaN      NaN   </span>
-<span class="go">48  total_profit      RHS   flow_balance_11      E     0.0      NaN      NaN   </span>
-<span class="go">49  total_profit      RHS   flow_balance_20      E     0.0      NaN      NaN   </span>
-<span class="go">50  total_profit      RHS   flow_balance_34      E     0.0      NaN      NaN   </span>
-<span class="go">51  total_profit      RHS   flow_balance_27      E     0.0      NaN      NaN   </span>
-<span class="go">52  total_profit      RHS    flow_balance_9      E     0.0      NaN      NaN   </span>
-<span class="go">53  total_profit      RHS   flow_balance_26      E     0.0      NaN      NaN   </span>
-<span class="go">54  total_profit      RHS   flow_balance_38      E     0.0      NaN      NaN   </span>
-<span class="go">55  total_profit      RHS   flow_balance_24      E     0.0      NaN      NaN   </span>
-<span class="go">56  total_profit      RHS    flow_balance_1      E     0.0      NaN      NaN   </span>
-<span class="go">57  total_profit      RHS    flow_balance_7      E     0.0      NaN      NaN   </span>
-<span class="go">58  total_profit      RHS   flow_balance_16      E     0.0      NaN      NaN   </span>
-<span class="go">59  total_profit      RHS   flow_balance_30      E     0.0      NaN      NaN   </span>
-<span class="go">60  total_profit      RHS   flow_balance_37      E     0.0      NaN      NaN   </span>
-<span class="go">61  total_profit      RHS   flow_balance_21      E     0.0      NaN      NaN   </span>
-<span class="go">62  total_profit      RHS   flow_balance_14      E     0.0      NaN      NaN   </span>
-<span class="go">63  total_profit      RHS   flow_balance_25      E     0.0      NaN      NaN   </span>
-<span class="go">64  total_profit      RHS    flow_balance_5      E     0.0      NaN      NaN   </span>
-<span class="go">65  total_profit      RHS   flow_balance_23      E     0.0      NaN      NaN   </span>
-<span class="go">66  total_profit      RHS   flow_balance_12      E     0.0      NaN      NaN   </span>
-<span class="go">67  total_profit      RHS   flow_balance_41      E     0.0      NaN      NaN   </span>
-<span class="go">68  total_profit      RHS    flow_balance_3      E     0.0      NaN      NaN   </span>
-<span class="go">69  total_profit      RHS   flow_balance_32      E     0.0      NaN      NaN   </span>
-<span class="go">70  total_profit      RHS   flow_balance_33      E     0.0      NaN      NaN   </span>
-<span class="go">71  total_profit      RHS   flow_balance_29      E     0.0      NaN      NaN   </span>
-
-<span class="go">       _VALUE_ _STATUS_   _ACTIVITY_  </span>
-<span class="go">0     0.000000        B   510.000000  </span>
-<span class="go">1    -0.000000        B   152.657143  </span>
-<span class="go">2     0.000000        B   540.000000  </span>
-<span class="go">3    -0.000000        B   437.714286  </span>
-<span class="go">4   200.000000        L     0.000000  </span>
-<span class="go">5    -0.000000        B     0.000000  </span>
-<span class="go">6    -0.000000        B   240.000000  </span>
-<span class="go">7     0.000000        B    19.000000  </span>
-<span class="go">8     0.000000        B   128.000000  </span>
-<span class="go">9    -0.000000        B   406.000000  </span>
-<span class="go">10    0.000000        B  1105.000000  </span>
-<span class="go">11    0.000000        B   230.000000  </span>
-<span class="go">12    0.000000        B   600.000000  </span>
-<span class="go">13    0.000000        B   770.000000  </span>
-<span class="go">14  800.000000        L     0.000000  </span>
-<span class="go">15   -0.000000        B   110.000000  </span>
-<span class="go">16    0.000000        B   420.000000  </span>
-<span class="go">17    0.000000        B   123.000000  </span>
-<span class="go">18    0.000000        B   420.000000  </span>
-<span class="go">19    0.000000        B   370.000000  </span>
-<span class="go">20    0.000000        B    82.000000  </span>
-<span class="go">21   -0.000000        B    43.825000  </span>
-<span class="go">22    0.625000        L   384.000000  </span>
-<span class="go">23   -0.000000        B    80.000000  </span>
-<span class="go">24    0.000000        B    68.500000  </span>
-<span class="go">25   -0.000000        B    66.000000  </span>
-<span class="go">26    8.571429        L  1152.000000  </span>
-<span class="go">27    0.000000        B   230.000000  </span>
-<span class="go">28   -0.000000        B     0.000000  </span>
-<span class="go">29   -0.000000        B    38.675000  </span>
-<span class="go">..         ...      ...          ...  </span>
-<span class="go">42    0.000000        L     0.000000  </span>
-<span class="go">43   -6.000000        U     0.000000  </span>
-<span class="go">44   -0.500000        U     0.000000  </span>
-<span class="go">45   -4.285714        U     0.000000  </span>
-<span class="go">46    0.000000        B     0.000000  </span>
-<span class="go">47    0.000000        U     0.000000  </span>
-<span class="go">48    0.000000        L     0.000000  </span>
-<span class="go">49    0.500000        L     0.000000  </span>
-<span class="go">50    0.000000        L     0.000000  </span>
-<span class="go">51    0.000000        L     0.000000  </span>
-<span class="go">52    0.000000        L     0.000000  </span>
-<span class="go">53  -11.000000        U     0.000000  </span>
-<span class="go">54   -3.000000        U     0.000000  </span>
-<span class="go">55   -2.571429        U     0.000000  </span>
-<span class="go">56   -0.125000        U     0.000000  </span>
-<span class="go">57    0.000000        L     0.000000  </span>
-<span class="go">58    0.000000        L     0.000000  </span>
-<span class="go">59   -1.714286        U     0.000000  </span>
-<span class="go">60   -0.375000        U     0.000000  </span>
-<span class="go">61    0.000000        L     0.000000  </span>
-<span class="go">62    0.000000        B     0.000000  </span>
-<span class="go">63    0.000000        L     0.000000  </span>
-<span class="go">64    0.000000        L     0.000000  </span>
-<span class="go">65    0.000000        L     0.000000  </span>
-<span class="go">66    0.000000        U     0.000000  </span>
-<span class="go">67   -3.000000        U     0.000000  </span>
-<span class="go">68    0.000000        L     0.000000  </span>
-<span class="go">69    0.000000        L     0.000000  </span>
-<span class="go">70    0.000000        B     0.000000  </span>
-<span class="go">71  -11.000000        U     0.000000  </span>
-
-<span class="go">[72 rows x 10 columns]</span>
-<span class="gh">Out[2]: </span><span class="go">93715.17857142858</span>
+<span class="gh">Out[2]: </span><span class="go">93715.178571</span>
 </pre></div>
 </div>
 </div>
@@ -492,18 +241,18 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../whatsnew.html">What’s New</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../input-data.html">Handling Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../models.html">Sessions and Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../components.html">Model components</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../sasoptpy.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../workflow.html">Workflows</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="../examples.html#viya-swat-examples">Viya (swat) Examples</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../examples.html#viya-examples-concrete">Viya Examples / Concrete</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="food_manufacture_1.html">Food Manufacture 1</a></li>
 <li class="toctree-l3"><a class="reference internal" href="food_manufacture_2.html">Food Manufacture 2</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Factory Planning 1</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#reference">Reference</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#model">Model</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#output">Output</a></li>
 </ul>
@@ -519,9 +268,11 @@
 <li class="toctree-l3"><a class="reference internal" href="kidney_exchange.html">SAS/OR Blog: Kidney Exchange</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#viya-examples-abstract">Viya Examples / Abstract</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api.html">API Reference</a></li>
 </ul>
 
 <div id="searchbox" style="display: none" role="search">
@@ -555,14 +306,14 @@
         <li class="right" >
           <a href="food_manufacture_2.html" title="Food Manufacture 2"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2018, SAS Institute.
-      Last updated on Apr 30, 2018 (Timestamp: 0.1.2-20180430093702).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
+      Last updated on Jul 30, 2018 (Timestamp: 0.2.0-20180730103208).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
     </div>
   </body>
 </html>

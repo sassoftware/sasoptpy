@@ -1,0 +1,6 @@
+sasoptpy.Model.read\_table
+==========================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.read_table

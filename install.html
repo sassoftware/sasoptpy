@@ -6,18 +6,18 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Installation &#8212; sasoptpy 0.1.2 documentation</title>
+    <title>Installation &#8212; sasoptpy 0.2.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/css/sasoptpy.css" type="text/css" />
-    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/js/url.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Getting Started" href="getting-started.html" />
+    <link rel="next" title="License" href="license.html" />
     <link rel="prev" title="What’s New" href="whatsnew.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -30,12 +30,13 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="getting-started.html" title="Getting Started"
+          <a href="license.html" title="License"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="whatsnew.html" title="What’s New"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">sasoptpy 0.1.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">sasoptpy 0.2.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="overview.html" accesskey="U">Overview</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -48,7 +49,7 @@
 <span id="install"></span><h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="python-version-support-and-dependencies">
 <h2>Python version support and dependencies<a class="headerlink" href="#python-version-support-and-dependencies" title="Permalink to this headline">¶</a></h2>
-<p><strong>sasoptpy</strong> is developed and tested for Python version 3.5+.</p>
+<p><em>sasoptpy</em> is developed and tested for Python version 3.5+.</p>
 <p>It depends on the following packages:</p>
 <ul class="simple">
 <li>numpy</li>
@@ -59,7 +60,7 @@
 </div>
 <div class="section" id="getting-swat">
 <h2>Getting swat<a class="headerlink" href="#getting-swat" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="https://github.com/sassoftware/python-swat">swat</a> should be available
+<p><a class="reference external" href="https://github.com/sassoftware/python-swat">swat</a> package is a requirement
 to use SAS Viya solvers.</p>
 <p>swat releases are listed at
 <a class="reference external" href="https://github.com/sassoftware/python-swat/releases">https://github.com/sassoftware/python-swat/releases</a>.
@@ -71,10 +72,8 @@ pip:</p>
 </div>
 <div class="section" id="getting-saspy">
 <h2>Getting saspy<a class="headerlink" href="#getting-saspy" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="https://github.com/sassoftware/saspy">saspy</a> should be available to use
-SAS 9.4 solvers.
-The <strong>sasoptpy</strong> support for SAS 9.4 solvers is experimental.
-Note that saspy is not a requirement for using the SAS Viya solvers.</p>
+<p><a class="reference external" href="https://github.com/sassoftware/saspy">saspy</a> package is a requirement to use
+SAS 9.4 solvers.</p>
 <p>saspy releases are listed at
 <a class="reference external" href="https://github.com/sassoftware/saspy/releases">https://github.com/sassoftware/saspy/releases</a>.
 The easiest way to download the latest stable version of saspy is to use:</p>
@@ -84,7 +83,8 @@ The easiest way to download the latest stable version of saspy is to use:</p>
 </div>
 <div class="section" id="getting-sasoptpy">
 <h2>Getting sasoptpy<a class="headerlink" href="#getting-sasoptpy" title="Permalink to this headline">¶</a></h2>
-<p>The latest release of <strong>sasoptpy</strong> can be obtained from the online repository.
+<p>The latest available version of <em>sasoptpy</em> can be obtained from the online
+repository.
 Call:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">sassoftware</span><span class="o">/</span><span class="n">sasoptpy</span><span class="o">.</span><span class="n">git</span>
 </pre></div>
@@ -147,21 +147,26 @@ page.</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="whatsnew.html">What’s New</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#python-version-support-and-dependencies">Python version support and dependencies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#getting-swat">Getting swat</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#getting-saspy">Getting saspy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#getting-sasoptpy">Getting sasoptpy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#step-by-step-installation">Step-by-step installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="overview.html">Overview</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="whatsnew.html">What’s New</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#python-version-support-and-dependencies">Python version support and dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#getting-swat">Getting swat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#getting-saspy">Getting saspy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#getting-sasoptpy">Getting sasoptpy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-by-step-installation">Step-by-step installation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="license.html">License</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="input-data.html">Handling Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="models.html">Sessions and Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="components.html">Model components</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sasoptpy.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflow.html">Workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api.html">API Reference</a></li>
 </ul>
 
 <div id="searchbox" style="display: none" role="search">
@@ -190,18 +195,19 @@ page.</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="getting-started.html" title="Getting Started"
+          <a href="license.html" title="License"
              >next</a> |</li>
         <li class="right" >
           <a href="whatsnew.html" title="What’s New"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">sasoptpy 0.1.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">sasoptpy 0.2.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="overview.html" >Overview</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2018, SAS Institute.
-      Last updated on Apr 30, 2018 (Timestamp: 0.1.2-20180430093702).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.2.
+      Last updated on Jul 30, 2018 (Timestamp: 0.2.0-20180730103208).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
     </div>
   </body>
 </html>

@@ -1,0 +1,6 @@
+sasoptpy.dict\_to\_frame
+========================
+
+.. currentmodule:: sasoptpy
+
+.. autofunction:: dict_to_frame

@@ -1,0 +1,6 @@
+sasoptpy.Expression.\_relational
+================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Expression._relational

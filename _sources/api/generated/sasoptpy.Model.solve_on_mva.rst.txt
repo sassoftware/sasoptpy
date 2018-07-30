@@ -1,0 +1,6 @@
+sasoptpy.Model.solve\_on\_mva
+=============================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.solve_on_mva

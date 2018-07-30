@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+sasoptpy.Set
+============
+
+.. currentmodule:: sasoptpy
+
+.. autoclass:: Set

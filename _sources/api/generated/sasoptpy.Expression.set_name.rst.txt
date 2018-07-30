@@ -1,0 +1,6 @@
+sasoptpy.Expression.set\_name
+=============================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Expression.set_name

@@ -1,0 +1,6 @@
+sasoptpy.tuple\_unpack
+======================
+
+.. currentmodule:: sasoptpy
+
+.. autofunction:: tuple_unpack

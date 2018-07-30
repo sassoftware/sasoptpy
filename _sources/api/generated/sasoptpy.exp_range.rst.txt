@@ -1,0 +1,6 @@
+sasoptpy.exp\_range
+===================
+
+.. currentmodule:: sasoptpy
+
+.. autofunction:: exp_range

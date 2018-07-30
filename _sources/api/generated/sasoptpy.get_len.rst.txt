@@ -1,0 +1,6 @@
+sasoptpy.get\_len
+=================
+
+.. currentmodule:: sasoptpy
+
+.. autofunction:: get_len

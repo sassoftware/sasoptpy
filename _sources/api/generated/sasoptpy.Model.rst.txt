@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+sasoptpy.Model
+==============
+
+.. currentmodule:: sasoptpy
+
+.. autoclass:: Model

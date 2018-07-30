@@ -1,0 +1,6 @@
+sasoptpy.math.min
+=================
+
+.. currentmodule:: sasoptpy.math
+
+.. autofunction:: min

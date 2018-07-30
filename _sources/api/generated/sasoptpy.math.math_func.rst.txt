@@ -1,0 +1,6 @@
+sasoptpy.math.math\_func
+========================
+
+.. currentmodule:: sasoptpy.math
+
+.. autofunction:: math_func

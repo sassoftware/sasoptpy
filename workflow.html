@@ -1,0 +1,473 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Workflows &#8212; sasoptpy 0.2.0 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/sasoptpy.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/js/url.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Examples" href="examples.html" />
+    <link rel="prev" title="Model components" href="components.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="examples.html" title="Examples"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="components.html" title="Model components"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">sasoptpy 0.2.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="workflows">
+<span id="id1"></span><h1>Workflows<a class="headerlink" href="#workflows" title="Permalink to this headline">¶</a></h1>
+<p><em>sasoptpy</em> can work both with client-side data and server-side data.
+Some limitations to the functionalities may apply in terms of which
+workflow is being used. In this part, overall flow of the package
+is explained.</p>
+<div class="section" id="client-side-models">
+<h2>Client-side models<a class="headerlink" href="#client-side-models" title="Permalink to this headline">¶</a></h2>
+<p>If the data is on the client-side (Python), then a concrete model is generated
+on the client-side and uploaded using one of the available CAS actions.</p>
+<p>Using client-side models brings several advantages, such as accessing
+variables, expressions, and constraints directly. You may do more intensive
+operations like filter data, sort values, changing variable values,
+and print expressions more easily.</p>
+<p>There are two main disadvantages of working with client-side models.
+First, if your model is relatively big size, then the generated
+MPS DataFrame or OPTMODEL codes may allocate a large memory on your
+machine.
+Second, the information that needs to be passed from client to server
+might be bigger than using a server-side model.</p>
+<p>See the following representation of the client-side model workflow for CAS (Viya) servers:</p>
+<img alt="_images/clientside_cas.png" src="_images/clientside_cas.png" />
+<p>See the following representation of the client-side model workflow for SAS clients:</p>
+<img alt="_images/clientside_sas.png" src="_images/clientside_sas.png" />
+<p>Steps of modeling a simple Knapsack problem is shown in the following subsections.</p>
+<div class="section" id="reading-data">
+<h3>Reading data<a class="headerlink" href="#reading-data" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="kn">as</span> <span class="nn">so</span>
+
+<span class="gp">In [2]: </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+
+<span class="gp">In [3]: </span><span class="kn">from</span> <span class="nn">swat</span> <span class="kn">import</span> <span class="n">CAS</span>
+
+<span class="gp">In [4]: </span><span class="n">session</span> <span class="o">=</span> <span class="n">CAS</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+
+<span class="gp">In [5]: </span><span class="n">m</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;client_CAS&#39;</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">)</span>
+<span class="go">NOTE: Initialized model client_CAS.</span>
+
+<span class="gp">In [6]: </span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">   ...: </span>    <span class="p">[</span><span class="s1">&#39;clock&#39;</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+<span class="gp">   ...: </span>    <span class="p">[</span><span class="s1">&#39;mug&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+<span class="gp">   ...: </span>    <span class="p">[</span><span class="s1">&#39;headphone&#39;</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+<span class="gp">   ...: </span>    <span class="p">[</span><span class="s1">&#39;book&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+<span class="gp">   ...: </span>    <span class="p">[</span><span class="s1">&#39;pen&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">]</span>
+<span class="gp">   ...: </span>    <span class="p">]</span>
+<span class="gp">   ...: </span>
+
+<span class="gp">In [7]: </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;item&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">,</span> <span class="s1">&#39;limit&#39;</span><span class="p">])</span>
+
+<span class="gp">In [8]: </span><span class="n">ITEMS</span><span class="p">,</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span>
+<span class="gp">   ...: </span>    <span class="n">df</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;item&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">,</span> <span class="s1">&#39;limit&#39;</span><span class="p">])</span>
+<span class="gp">   ...: </span>
+
+<span class="gp">In [9]: </span><span class="n">total_weight</span> <span class="o">=</span> <span class="mi">55</span>
+</pre></div>
+</div>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [10]: </span><span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">ITEMS</span><span class="p">),</span> <span class="n">ITEMS</span><span class="p">)</span>
+<span class="go">&lt;class &#39;list&#39;&gt; [&#39;clock&#39;, &#39;mug&#39;, &#39;headphone&#39;, &#39;book&#39;, &#39;pen&#39;]</span>
+</pre></div>
+</div>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [11]: </span><span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">total_weight</span><span class="p">),</span> <span class="n">total_weight</span><span class="p">)</span>
+<span class="go">&lt;class &#39;int&#39;&gt; 55</span>
+</pre></div>
+</div>
+<p>Here,</p>
+<p>Instead of using <a class="reference internal" href="api/generated/sasoptpy.Model.read_table.html#sasoptpy.Model.read_table" title="sasoptpy.Model.read_table"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.read_table()</span></code></a> method, column values can be obtained
+one by one:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;item&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ITEMS</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">value</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">weight</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">limit</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;limit&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="model">
+<h3>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="go"># Variables</span>
+<span class="gp">In [12]: </span><span class="n">get</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">ITEMS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">INT</span><span class="p">)</span>
+
+<span class="go"># Constraints</span>
+<span class="gp">In [13]: </span><span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">get</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">limit</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ITEMS</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;limit_con&#39;</span><span class="p">);</span>
+
+<span class="gp">In [14]: </span><span class="n">m</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span>
+<span class="gp">   ....: </span>    <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">weight</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">get</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ITEMS</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">total_weight</span><span class="p">,</span>
+<span class="gp">   ....: </span>    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;weight_con&#39;</span><span class="p">);</span>
+<span class="gp">   ....: </span>
+
+<span class="go"># Objective</span>
+<span class="gp">In [15]: </span><span class="n">total_value</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">get</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ITEMS</span><span class="p">)</span>
+
+<span class="gp">In [16]: </span><span class="n">m</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">total_value</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_value&#39;</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MAX</span><span class="p">);</span>
+
+<span class="go"># Solve</span>
+<span class="gp">In [17]: </span><span class="n">m</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
+<span class="go">NOTE: Converting model client_CAS to OPTMODEL.</span>
+<span class="go">var get {{&#39;clock&#39;,&#39;mug&#39;,&#39;headphone&#39;,&#39;book&#39;,&#39;pen&#39;}} integer &gt;= 0;</span>
+<span class="go">con limit_con_clock : get[&#39;clock&#39;] &lt;= 3;</span>
+<span class="go">con limit_con_mug : get[&#39;mug&#39;] &lt;= 5;</span>
+<span class="go">con limit_con_headphone : get[&#39;headphone&#39;] &lt;= 2;</span>
+<span class="go">con limit_con_book : get[&#39;book&#39;] &lt;= 10;</span>
+<span class="go">con limit_con_pen : get[&#39;pen&#39;] &lt;= 15;</span>
+
+<span class="go">con weight_con : 7 * get[&#39;headphone&#39;] + 4 * get[&#39;clock&#39;] + get[&#39;pen&#39;] + 12 * get[&#39;book&#39;] + 6 * get[&#39;mug&#39;] &lt;= 55;</span>
+<span class="go">max total_value = 15 * get[&#39;headphone&#39;] + 8 * get[&#39;clock&#39;] + get[&#39;pen&#39;] + 20 * get[&#39;book&#39;] + 10 * get[&#39;mug&#39;]; </span>
+<span class="go">solve;</span>
+<span class="go">print _var_.name _var_.lb _var_.ub _var_ _var_.rc;</span>
+<span class="go">print _con_.name _con_.body _con_.dual;</span>
+
+<span class="go">NOTE: Submitting OPTMODEL codes to CAS server.</span>
+<span class="go">NOTE: Problem generation will use 32 threads.</span>
+<span class="go">NOTE: The problem has 5 variables (0 free, 0 fixed).</span>
+<span class="go">NOTE: The problem has 0 binary and 5 integer variables.</span>
+<span class="go">NOTE: The problem has 6 linear constraints (6 LE, 0 EQ, 0 GE, 0 range).</span>
+<span class="go">NOTE: The problem has 10 linear constraint coefficients.</span>
+<span class="go">NOTE: The problem has 0 nonlinear constraints (0 LE, 0 EQ, 0 GE, 0 range).</span>
+<span class="go">NOTE: The OPTMODEL presolver is disabled for linear problems.</span>
+<span class="go">NOTE: The initial MILP heuristics are applied.</span>
+<span class="go">NOTE: The MILP presolver value AUTOMATIC is applied.</span>
+<span class="go">NOTE: The MILP presolver removed 0 variables and 5 constraints.</span>
+<span class="go">NOTE: The MILP presolver removed 5 constraint coefficients.</span>
+<span class="go">NOTE: The MILP presolver modified 0 constraint coefficients.</span>
+<span class="go">NOTE: The presolved problem has 5 variables, 1 constraints, and 5 constraint coefficients.</span>
+<span class="go">NOTE: The MILP solver is called.</span>
+<span class="go">NOTE: The parallel Branch and Cut algorithm is used.</span>
+<span class="go">NOTE: The Branch and Cut algorithm is using up to 32 threads.</span>
+<span class="go">             Node   Active   Sols    BestInteger      BestBound      Gap    Time</span>
+<span class="go">                0        1      3     99.0000000    199.0000000   50.25%       0</span>
+<span class="go">                0        1      3     99.0000000    102.3333333    3.26%       0</span>
+<span class="go">                0        1      3     99.0000000    102.3333333    3.26%       0</span>
+<span class="go">NOTE: The MILP presolver is applied again.</span>
+<span class="go">                0        1      3     99.0000000    102.3333333    3.26%       1</span>
+<span class="go">                0        1      3     99.0000000    102.3333333    3.26%       1</span>
+<span class="go">NOTE: The MILP solver added 3 cuts with 7 cut coefficients at the root.</span>
+<span class="go">NOTE: Optimal.</span>
+<span class="go">NOTE: Objective = 99.</span>
+<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 20 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 18 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;primal&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 5 rows and 6 columns.</span>
+<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 6 rows and 4 columns.</span>
+<span class="gh">Out[17]: </span><span class="go"></span>
+<span class="go">              var   lb             ub  value  rc</span>
+<span class="go">0      get[clock] -0.0  1.797693e+308    3.0 NaN</span>
+<span class="go">1        get[mug] -0.0  1.797693e+308    4.0 NaN</span>
+<span class="go">2  get[headphone] -0.0  1.797693e+308    2.0 NaN</span>
+<span class="go">3       get[book] -0.0  1.797693e+308   -0.0 NaN</span>
+<span class="go">4        get[pen] -0.0  1.797693e+308    5.0 NaN</span>
+</pre></div>
+</div>
+<p>Using <code class="code docutils literal notranslate"><span class="pre">verbose</span></code> option shows the generated OPTMODEL code.
+Here, we can see the coefficient values of the parameters inside the model.</p>
+</div>
+<div class="section" id="parsing-results">
+<h3>Parsing results<a class="headerlink" href="#parsing-results" title="Permalink to this headline">¶</a></h3>
+<p>After the solve, primal and dual solution tables are obtained. We can print
+the solution tables using the <a class="reference internal" href="api/generated/sasoptpy.Model.get_solution.html#sasoptpy.Model.get_solution" title="sasoptpy.Model.get_solution"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.get_solution()</span></code></a> method.</p>
+<p>It is also possible to print the optimal solution using
+the <a class="reference internal" href="api/generated/sasoptpy.get_solution_table.html#sasoptpy.get_solution_table" title="sasoptpy.get_solution_table"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_solution_table()</span></code></a> function.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [18]: </span><span class="k">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">get_solution</span><span class="p">())</span>
+<span class="go">              var   lb             ub  value  rc</span>
+<span class="go">0      get[clock] -0.0  1.797693e+308    3.0 NaN</span>
+<span class="go">1        get[mug] -0.0  1.797693e+308    4.0 NaN</span>
+<span class="go">2  get[headphone] -0.0  1.797693e+308    2.0 NaN</span>
+<span class="go">3       get[book] -0.0  1.797693e+308   -0.0 NaN</span>
+<span class="go">4        get[pen] -0.0  1.797693e+308    5.0 NaN</span>
+</pre></div>
+</div>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [19]: </span><span class="k">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">get</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">ITEMS</span><span class="p">));</span>
+</pre></div>
+</div>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [20]: </span><span class="k">print</span><span class="p">(</span><span class="s1">&#39;Total value:&#39;</span><span class="p">,</span> <span class="n">total_value</span><span class="o">.</span><span class="n">get_value</span><span class="p">());</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="server-side-models">
+<h2>Server-side models<a class="headerlink" href="#server-side-models" title="Permalink to this headline">¶</a></h2>
+<p>If the data is on the server-side (CAS or SAS), then an abstract model
+is generated on the client-side. This abstract model is later converted to
+PROC OPTMODEL code, which combines the data on the server.</p>
+<p>The main advantage of the server-side models is faster upload times compared
+to client-side. This is especially very noticable when using large chunks of
+variable and constraint groups.</p>
+<p>The only disadvantage of using server-side models is that variables are often
+needs to be accessed directly from the resulting SASDataFrame objects. Since
+components of the models are abstract, accessing objects directly is often
+not possible.</p>
+<p>See the following representation of the server-side model workflow for CAS (Viya) servers:</p>
+<img alt="_images/serverside_cas.png" src="_images/serverside_cas.png" />
+<p>See the following representation of the server-side model workflow for SAS clients:</p>
+<img alt="_images/serverside_sas.png" src="_images/serverside_sas.png" />
+<p>In the following subsections, the same example will be solved using server-side
+data.</p>
+<div class="section" id="uploading-data-optional">
+<h3>Uploading data (Optional)<a class="headerlink" href="#uploading-data-optional" title="Permalink to this headline">¶</a></h3>
+<p>It is possible to upload client-side data to server-side when working with
+relatively big models.</p>
+<p><em>sasoptpy</em> supports using <a class="reference external" href="https://sassoftware.github.io/python-swat/generated/swat.cas.table.CASTable.html#swat.cas.table.CASTable" title="(in SWAT v1.4.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">swat.cas.table.CASTable</span></code></a> objects.
+The <a class="reference external" href="https://sassoftware.github.io/python-swat/generated/swat.cas.connection.CAS.upload_frame.html#swat.cas.connection.CAS.upload_frame" title="(in SWAT v1.4.0)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">swat.cas.connection.CAS.upload_frame()</span></code></a> method can be used to upload
+<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.23.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> objects to the CAS Server. Another way is to use
+<a class="reference internal" href="api/generated/sasoptpy.read_table.html#sasoptpy.read_table" title="sasoptpy.read_table"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_table()</span></code></a> function with <code class="code docutils literal notranslate"><span class="pre">upload=True</span></code> option.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [21]: </span><span class="n">session</span> <span class="o">=</span> <span class="n">CAS</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+
+<span class="gp">In [22]: </span><span class="n">m</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;server_CAS&#39;</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">)</span>
+<span class="go">NOTE: Initialized model server_CAS.</span>
+
+<span class="gp">In [23]: </span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">   ....: </span>    <span class="p">[</span><span class="s1">&#39;clock&#39;</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+<span class="gp">   ....: </span>    <span class="p">[</span><span class="s1">&#39;mug&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+<span class="gp">   ....: </span>    <span class="p">[</span><span class="s1">&#39;headphone&#39;</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+<span class="gp">   ....: </span>    <span class="p">[</span><span class="s1">&#39;book&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+<span class="gp">   ....: </span>    <span class="p">[</span><span class="s1">&#39;pen&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">]</span>
+<span class="gp">   ....: </span>    <span class="p">]</span>
+<span class="gp">   ....: </span>
+
+<span class="gp">In [24]: </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;item&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">,</span> <span class="s1">&#39;limit&#39;</span><span class="p">])</span>
+
+<span class="gp">In [25]: </span><span class="n">ITEMS</span><span class="p">,</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span>
+<span class="gp">   ....: </span>    <span class="n">df</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;item&#39;</span><span class="p">],</span> <span class="n">key_type</span><span class="o">=</span><span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">,</span> <span class="s1">&#39;limit&#39;</span><span class="p">],</span>
+<span class="gp">   ....: </span>    <span class="n">upload</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">casout</span><span class="o">=</span><span class="s1">&#39;df&#39;</span><span class="p">)</span>
+<span class="gp">   ....: </span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table DF in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table DF has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+
+<span class="gp">In [26]: </span><span class="n">total_weight</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="n">init</span> <span class="o">=</span> <span class="mi">55</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_weight&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [27]: </span><span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">ITEMS</span><span class="p">),</span> <span class="n">ITEMS</span><span class="p">)</span>
+<span class="go">&lt;class &#39;sasoptpy.data.Set&#39;&gt; set_item</span>
+</pre></div>
+</div>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [28]: </span><span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">total_weight</span><span class="p">),</span> <span class="n">total_weight</span><span class="p">)</span>
+<span class="go">&lt;class &#39;sasoptpy.data.ParameterValue&#39;&gt; total_weight</span>
+</pre></div>
+</div>
+<p>Since we use <code class="code docutils literal notranslate"><span class="pre">upload=True</span></code> option, the data is uploaded to the server and
+we get a CASTable object. Similarly, <code class="code docutils literal notranslate"><span class="pre">total_weight</span></code> is a parameter
+object here.</p>
+</div>
+<div class="section" id="id2">
+<h3>Model<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="go"># Variables</span>
+<span class="gp">In [29]: </span><span class="n">get</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">ITEMS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">INT</span><span class="p">)</span>
+
+<span class="go"># Constraints</span>
+<span class="gp">In [30]: </span><span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">get</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">limit</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ITEMS</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;limit_con&#39;</span><span class="p">);</span>
+
+<span class="gp">In [31]: </span><span class="n">m</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span>
+<span class="gp">   ....: </span>    <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">weight</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">get</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ITEMS</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">total_weight</span><span class="p">,</span>
+<span class="gp">   ....: </span>    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;weight_con&#39;</span><span class="p">);</span>
+<span class="gp">   ....: </span>
+
+<span class="go"># Objective</span>
+<span class="gp">In [32]: </span><span class="n">total_value</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">get</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ITEMS</span><span class="p">)</span>
+
+<span class="gp">In [33]: </span><span class="n">m</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">total_value</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_value&#39;</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MAX</span><span class="p">);</span>
+
+<span class="go"># Solve</span>
+<span class="gp">In [34]: </span><span class="n">m</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
+<span class="go">NOTE: Converting model server_CAS to OPTMODEL.</span>
+<span class="go">set &lt;str&gt; set_item;</span>
+<span class="go">num value {set_item};</span>
+<span class="go">num weight {set_item};</span>
+<span class="go">num limit {set_item};</span>
+<span class="go">read data DF into set_item=[item] value weight limit;</span>
+<span class="go">num total_weight = 55;</span>
+<span class="go">var get {set_item} integer &gt;= 0;</span>
+<span class="go">con limit_con {i_1 in set_item} : get[i_1] - limit[i_1] &lt;= 0;</span>
+
+<span class="go">con weight_con : - sum {i_2 in set_item}(weight[i_2] * get[i_2]) + total_weight &gt;= 0;</span>
+<span class="go">max total_value = sum {i_3 in set_item}(value[i_3] * get[i_3]); </span>
+<span class="go">solve;</span>
+<span class="go">print _var_.name _var_.lb _var_.ub _var_ _var_.rc;</span>
+<span class="go">print _con_.name _con_.body _con_.dual;</span>
+
+<span class="go">NOTE: Submitting OPTMODEL codes to CAS server.</span>
+<span class="go">NOTE: There were 5 rows read from table &#39;DF&#39; in caslib &#39;CASUSERHDFS(casuser)&#39;.</span>
+<span class="go">NOTE: Problem generation will use 32 threads.</span>
+<span class="go">NOTE: The problem has 5 variables (0 free, 0 fixed).</span>
+<span class="go">NOTE: The problem has 0 binary and 5 integer variables.</span>
+<span class="go">NOTE: The problem has 6 linear constraints (5 LE, 0 EQ, 1 GE, 0 range).</span>
+<span class="go">NOTE: The problem has 10 linear constraint coefficients.</span>
+<span class="go">NOTE: The problem has 0 nonlinear constraints (0 LE, 0 EQ, 0 GE, 0 range).</span>
+<span class="go">NOTE: The OPTMODEL presolver is disabled for linear problems.</span>
+<span class="go">NOTE: The initial MILP heuristics are applied.</span>
+<span class="go">NOTE: The MILP presolver value AUTOMATIC is applied.</span>
+<span class="go">NOTE: The MILP presolver removed 0 variables and 5 constraints.</span>
+<span class="go">NOTE: The MILP presolver removed 5 constraint coefficients.</span>
+<span class="go">NOTE: The MILP presolver modified 0 constraint coefficients.</span>
+<span class="go">NOTE: The presolved problem has 5 variables, 1 constraints, and 5 constraint coefficients.</span>
+<span class="go">NOTE: The MILP solver is called.</span>
+<span class="go">NOTE: The parallel Branch and Cut algorithm is used.</span>
+<span class="go">NOTE: The Branch and Cut algorithm is using up to 32 threads.</span>
+<span class="go">             Node   Active   Sols    BestInteger      BestBound      Gap    Time</span>
+<span class="go">                0        1      3     99.0000000    199.0000000   50.25%       0</span>
+<span class="go">                0        1      3     99.0000000    102.3333333    3.26%       0</span>
+<span class="go">                0        1      3     99.0000000    102.3333333    3.26%       0</span>
+<span class="go">NOTE: The MILP presolver is applied again.</span>
+<span class="go">                0        1      3     99.0000000    102.3333333    3.26%       2</span>
+<span class="go">NOTE: Optimal.</span>
+<span class="go">NOTE: Objective = 99.</span>
+<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 20 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 18 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;primal&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 5 rows and 6 columns.</span>
+<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 6 rows and 4 columns.</span>
+<span class="gh">Out[34]: </span><span class="go"></span>
+<span class="go">              var   lb             ub  value  rc</span>
+<span class="go">0       get[book] -0.0  1.797693e+308    2.0 NaN</span>
+<span class="go">1      get[clock] -0.0  1.797693e+308    3.0 NaN</span>
+<span class="go">2  get[headphone] -0.0  1.797693e+308    2.0 NaN</span>
+<span class="go">3        get[mug] -0.0  1.797693e+308   -0.0 NaN</span>
+<span class="go">4        get[pen] -0.0  1.797693e+308    5.0 NaN</span>
+</pre></div>
+</div>
+<p>There is no differences in terms of how client-side and server-side models are
+written. However, the generated OPTMODEL code is more compact for server-side
+models.</p>
+</div>
+<div class="section" id="id3">
+<h3>Parsing results<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="go"># Print results</span>
+<span class="gp">In [35]: </span><span class="k">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">get_solution</span><span class="p">())</span>
+<span class="go">              var   lb             ub  value  rc</span>
+<span class="go">0       get[book] -0.0  1.797693e+308    2.0 NaN</span>
+<span class="go">1      get[clock] -0.0  1.797693e+308    3.0 NaN</span>
+<span class="go">2  get[headphone] -0.0  1.797693e+308    2.0 NaN</span>
+<span class="go">3        get[mug] -0.0  1.797693e+308   -0.0 NaN</span>
+<span class="go">4        get[pen] -0.0  1.797693e+308    5.0 NaN</span>
+</pre></div>
+</div>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [36]: </span><span class="k">print</span><span class="p">(</span><span class="s1">&#39;Total value:&#39;</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">get_objective_value</span><span class="p">())</span>
+<span class="go">Total value: 99.0</span>
+</pre></div>
+</div>
+<p>Since there is no direct access to expressions and variables, the optimal
+solution is printed using the server response.</p>
+</div>
+</div>
+<div class="section" id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Nonlinear models can only be solved using runOptmodel action, hence
+requires SAS Viya version to be greater than or equal to 3.4.</li>
+<li>User defined decomposition blocks are only available in MPS mode, hence
+only works with client-side data.</li>
+<li>Mixed usage (client-side and server-side data) may not work in some cases.
+A quick fix would be transferring the data, in either direction.</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input-data.html">Handling Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">Sessions and Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components.html">Model components</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#client-side-models">Client-side models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#reading-data">Reading data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#model">Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parsing-results">Parsing results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#server-side-models">Server-side models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#uploading-data-optional">Uploading data (Optional)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Parsing results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#limitations">Limitations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api.html">API Reference</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="examples.html" title="Examples"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="components.html" title="Model components"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">sasoptpy 0.2.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2018, SAS Institute.
+      Last updated on Jul 30, 2018 (Timestamp: 0.2.0-20180730103208).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+    </div>
+  </body>
+</html>
