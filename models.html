@@ -133,7 +133,7 @@ problems with <em>sasoptpy</em> using SAS/OR solvers on SAS 9.4 clients.</p>
 <span class="go">    y</span>
 <span class="go">  ]</span>
 <span class="go">  Constraints (1): [</span>
-<span class="go">    2 * y + x &lt;=  10</span>
+<span class="go">    x + 2 * y &lt;=  10</span>
 <span class="go">  ]</span>
 <span class="go">]</span>
 </pre></div>
@@ -171,7 +171,7 @@ is to use the <a class="reference internal" href="api/generated/sasoptpy.Model.i
 <span class="go">    y</span>
 <span class="go">  ]</span>
 <span class="go">  Constraints (1): [</span>
-<span class="go">    2 * y + x &lt;=  10</span>
+<span class="go">    x + 2 * y &lt;=  10</span>
 <span class="go">  ]</span>
 <span class="go">]</span>
 
@@ -189,7 +189,7 @@ is to use the <a class="reference internal" href="api/generated/sasoptpy.Model.i
 <span class="go">    z</span>
 <span class="go">  ]</span>
 <span class="go">  Constraints (1): [</span>
-<span class="go">    2 * y + x &lt;=  10</span>
+<span class="go">    x + 2 * y &lt;=  10</span>
 <span class="go">  ]</span>
 <span class="go">]</span>
 </pre></div>
@@ -211,13 +211,13 @@ method.</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [18]: </span><span class="n">c2</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">-</span> <span class="n">y</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;c2&#39;</span><span class="p">)</span>
 
 <span class="gp">In [19]: </span><span class="k">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">get_constraints</span><span class="p">())</span>
-<span class="go">[sasoptpy.Constraint(2 * y + x &lt;=  10, name=&#39;c1&#39;), sasoptpy.Constraint(- y + 2 * x &gt;=  1, name=&#39;c2&#39;)]</span>
+<span class="go">[sasoptpy.Constraint(x + 2 * y &lt;=  10, name=&#39;c1&#39;), sasoptpy.Constraint(2 * x - y &gt;=  1, name=&#39;c2&#39;)]</span>
 </pre></div>
 </div>
 <p>To access a certain constraint using its name, you can use
 <a class="reference internal" href="api/generated/sasoptpy.Model.get_constraint.html#sasoptpy.Model.get_constraint" title="sasoptpy.Model.get_constraint"><code class="xref py py-func docutils literal notranslate"><span class="pre">Model.get_constraint()</span></code></a> method:</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [20]: </span><span class="k">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">get_constraint</span><span class="p">(</span><span class="s1">&#39;c2&#39;</span><span class="p">))</span>
-<span class="go">- y + 2 * x &gt;=  1</span>
+<span class="go">2 * x - y &gt;=  1</span>
 </pre></div>
 </div>
 </div>
@@ -236,8 +236,8 @@ using <a class="reference internal" href="api/generated/sasoptpy.Model.drop_vari
 <span class="go">    x</span>
 <span class="go">  ]</span>
 <span class="go">  Constraints (2): [</span>
-<span class="go">    2 * y + x &lt;=  10</span>
-<span class="go">    - y + 2 * x &gt;=  1</span>
+<span class="go">    x + 2 * y &lt;=  10</span>
+<span class="go">    2 * x - y &gt;=  1</span>
 <span class="go">  ]</span>
 <span class="go">]</span>
 </pre></div>
@@ -253,8 +253,8 @@ using <a class="reference internal" href="api/generated/sasoptpy.Model.drop_vari
 <span class="go">    y</span>
 <span class="go">  ]</span>
 <span class="go">  Constraints (2): [</span>
-<span class="go">    2 * y + x &lt;=  10</span>
-<span class="go">    - y + 2 * x &gt;=  1</span>
+<span class="go">    x + 2 * y &lt;=  10</span>
+<span class="go">    2 * x - y &gt;=  1</span>
 <span class="go">  ]</span>
 <span class="go">]</span>
 </pre></div>
@@ -290,7 +290,7 @@ Similarly, a set of constraints can be dropped using
 <span class="go">    y</span>
 <span class="go">  ]</span>
 <span class="go">  Constraints (1): [</span>
-<span class="go">    2 * y + x &lt;=  10</span>
+<span class="go">    x + 2 * y &lt;=  10</span>
 <span class="go">  ]</span>
 <span class="go">]</span>
 </pre></div>
@@ -314,7 +314,7 @@ object itself.</p>
 <span class="go">    y</span>
 <span class="go">  ]</span>
 <span class="go">  Constraints (1): [</span>
-<span class="go">    2 * y + x &lt;=  10</span>
+<span class="go">    x + 2 * y &lt;=  10</span>
 <span class="go">  ]</span>
 <span class="go">]</span>
 </pre></div>
@@ -481,7 +481,7 @@ their indices. See <a class="reference internal" href="examples.html#examples"><
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2018, SAS Institute.
-      Last updated on Jul 30, 2018 (Timestamp: 0.2.0-20180730103208).
+      Last updated on Jul 31, 2018 (Timestamp: 0.2.0-20180731093746).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
     </div>
   </body>

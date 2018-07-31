@@ -17,7 +17,7 @@ New Features
 
 - Support for the new `runOptmodel` CAS action is added
 - Nonlinear optimization model building support is added for both SAS 9.4 and
-  SAS Viya solvers.
+  SAS Viya solvers
 - Abstract model building support is added when using SAS Viya solvers
 - New object types, :class:`Set`, :class:`SetIterator`, :class:`Parameter`,
   :class:`ParameterValue`, :class:`ImplicitVar`, :class:`ExpressionDict`, and
@@ -68,7 +68,7 @@ Bug Fixes
 Notes
 +++++
 
-- Abstract and nonlinear models can be solved on Viya if only `runOptmodel`
+- Abstract and nonlinear models can be solved on Viya only if `runOptmodel`
   action is available on the CAS server.
 - Three new examples are added which demonstrate abstract model building.
 - Some minor changes are applied to the existing examples.

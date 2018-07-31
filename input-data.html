@@ -226,12 +226,12 @@ passed. Note that, using CASTable and Abstract Data requires SAS Viya version
 </pre></div>
 </div>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [32]: </span><span class="n">table</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">upload_frame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPD8T7Q6DG in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table TMPD8T7Q6DG has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMP_JV5PTTU in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMP_JV5PTTU has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 </pre></div>
 </div>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [33]: </span><span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">table</span><span class="p">),</span> <span class="n">table</span><span class="p">)</span>
-<span class="go">&lt;class &#39;swat.cas.table.CASTable&#39;&gt; CASTable(&#39;TMPD8T7Q6DG&#39;, caslib=&#39;CASUSERHDFS(casuser)&#39;)</span>
+<span class="go">&lt;class &#39;swat.cas.table.CASTable&#39;&gt; CASTable(&#39;TMP_JV5PTTU&#39;, caslib=&#39;CASUSERHDFS(casuser)&#39;)</span>
 </pre></div>
 </div>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [34]: </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;item&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">,</span> <span class="s1">&#39;limit&#39;</span><span class="p">])</span>
@@ -303,7 +303,7 @@ used for mathematical operations like <a class="reference internal" href="api/ge
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [46]: </span><span class="n">e1</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">mult</span><span class="p">(</span><span class="n">sd</span><span class="p">)</span>
 
 <span class="gp">In [47]: </span><span class="k">print</span><span class="p">(</span><span class="n">e1</span><span class="p">)</span>
-<span class="go">3 * z[0] + 5 * z[1] + 6 * z[2]</span>
+<span class="go">5 * z[1] + 6 * z[2] + 3 * z[0]</span>
 </pre></div>
 </div>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [48]: </span><span class="n">ps</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">sd</span><span class="p">)</span>
@@ -311,7 +311,7 @@ used for mathematical operations like <a class="reference internal" href="api/ge
 <span class="gp">In [49]: </span><span class="n">e2</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">mult</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span>
 
 <span class="gp">In [50]: </span><span class="k">print</span><span class="p">(</span><span class="n">e2</span><span class="p">)</span>
-<span class="go">3 * z[0] + 5 * z[1] + 6 * z[2]</span>
+<span class="go">5 * z[1] + 6 * z[2] + 3 * z[0]</span>
 </pre></div>
 </div>
 </div>
@@ -388,7 +388,7 @@ used for mathematical operations like <a class="reference internal" href="api/ge
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2018, SAS Institute.
-      Last updated on Jul 30, 2018 (Timestamp: 0.2.0-20180730103208).
+      Last updated on Jul 31, 2018 (Timestamp: 0.2.0-20180731093746).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
     </div>
   </body>

@@ -68,7 +68,7 @@ might be bigger than using a server-side model.</p>
 <img alt="_images/clientside_cas.png" src="_images/clientside_cas.png" />
 <p>See the following representation of the client-side model workflow for SAS clients:</p>
 <img alt="_images/clientside_sas.png" src="_images/clientside_sas.png" />
-<p>Steps of modeling a simple Knapsack problem is shown in the following subsections.</p>
+<p>Steps of modeling a simple Knapsack problem are shown in the following subsections.</p>
 <div class="section" id="reading-data">
 <h3>Reading data<a class="headerlink" href="#reading-data" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="kn">as</span> <span class="nn">so</span>
@@ -108,8 +108,7 @@ might be bigger than using a server-side model.</p>
 <span class="go">&lt;class &#39;int&#39;&gt; 55</span>
 </pre></div>
 </div>
-<p>Here,</p>
-<p>Instead of using <a class="reference internal" href="api/generated/sasoptpy.Model.read_table.html#sasoptpy.Model.read_table" title="sasoptpy.Model.read_table"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.read_table()</span></code></a> method, column values can be obtained
+<p>Here, instead of using <a class="reference internal" href="api/generated/sasoptpy.Model.read_table.html#sasoptpy.Model.read_table" title="sasoptpy.Model.read_table"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.read_table()</span></code></a> method, column values can be obtained
 one by one:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;item&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ITEMS</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
@@ -182,9 +181,9 @@ one by one:</p>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 99.</span>
 <span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 20 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 6 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 18 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;primal&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 5 rows and 6 columns.</span>
-<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 6 rows and 4 columns.</span>
 <span class="gh">Out[17]: </span><span class="go"></span>
 <span class="go">              var   lb             ub  value  rc</span>
 <span class="go">0      get[clock] -0.0  1.797693e+308    3.0 NaN</span>
@@ -228,8 +227,8 @@ PROC OPTMODEL code, which combines the data on the server.</p>
 <p>The main advantage of the server-side models is faster upload times compared
 to client-side. This is especially very noticable when using large chunks of
 variable and constraint groups.</p>
-<p>The only disadvantage of using server-side models is that variables are often
-needs to be accessed directly from the resulting SASDataFrame objects. Since
+<p>The only disadvantage of using server-side models is that variables often need
+to be accessed directly from the resulting SASDataFrame objects. Since
 components of the models are abstract, accessing objects directly is often
 not possible.</p>
 <p>See the following representation of the server-side model workflow for CAS (Viya) servers:</p>
@@ -313,7 +312,7 @@ object here.</p>
 <span class="go">read data DF into set_item=[item] value weight limit;</span>
 <span class="go">num total_weight = 55;</span>
 <span class="go">var get {set_item} integer &gt;= 0;</span>
-<span class="go">con limit_con {i_1 in set_item} : get[i_1] - limit[i_1] &lt;= 0;</span>
+<span class="go">con limit_con {i_1 in set_item} : - limit[i_1] + get[i_1] &lt;= 0;</span>
 
 <span class="go">con weight_con : - sum {i_2 in set_item}(weight[i_2] * get[i_2]) + total_weight &gt;= 0;</span>
 <span class="go">max total_value = sum {i_3 in set_item}(value[i_3] * get[i_3]); </span>
@@ -344,13 +343,13 @@ object here.</p>
 <span class="go">                0        1      3     99.0000000    102.3333333    3.26%       0</span>
 <span class="go">                0        1      3     99.0000000    102.3333333    3.26%       0</span>
 <span class="go">NOTE: The MILP presolver is applied again.</span>
-<span class="go">                0        1      3     99.0000000    102.3333333    3.26%       2</span>
+<span class="go">                0        1      3     99.0000000    102.3333333    3.26%       1</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 99.</span>
 <span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 20 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 6 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 18 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;primal&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 5 rows and 6 columns.</span>
-<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 6 rows and 4 columns.</span>
 <span class="gh">Out[34]: </span><span class="go"></span>
 <span class="go">              var   lb             ub  value  rc</span>
 <span class="go">0       get[book] -0.0  1.797693e+308    2.0 NaN</span>
@@ -360,7 +359,7 @@ object here.</p>
 <span class="go">4        get[pen] -0.0  1.797693e+308    5.0 NaN</span>
 </pre></div>
 </div>
-<p>There is no differences in terms of how client-side and server-side models are
+<p>There is no difference in terms of how client-side and server-side models are
 written. However, the generated OPTMODEL code is more compact for server-side
 models.</p>
 </div>
@@ -466,7 +465,7 @@ A quick fix would be transferring the data, in either direction.</li>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2018, SAS Institute.
-      Last updated on Jul 30, 2018 (Timestamp: 0.2.0-20180730103208).
+      Last updated on Jul 31, 2018 (Timestamp: 0.2.0-20180731093746).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
     </div>
   </body>

@@ -131,9 +131,9 @@
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 0.</span>
 <span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 12 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 0 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 12 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;primal&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 1000 rows and 6 columns.</span>
-<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 0 rows and 4 columns.</span>
 <span class="go">       COL1             x</span>
 <span class="go">0       1.0  1.000000e+00</span>
 <span class="go">1       2.0  1.000000e+00</span>
@@ -203,7 +203,7 @@
 <span class="go">NOTE: Converting model nlpse02_2 to OPTMODEL.</span>
 <span class="go">num N = 1000;</span>
 <span class="go">var x {1..N} &gt;= 1 &lt;= 2;</span>
-<span class="go">min f2 = sum {i_1 in 1..N-1}(cos(- 0.5 * x[i_1 + 1] - (x[i_1]) ^ (2))); </span>
+<span class="go">min f2 = sum {i_1 in 1..N-1}(cos(- (x[i_1]) ^ (2) - 0.5 * x[i_1 + 1])); </span>
 <span class="go">solve with nlp / algorithm=activeset;</span>
 <span class="go">print _var_.name _var_.lb _var_.ub _var_ _var_.rc;</span>
 <span class="go">print _con_.name _con_.body _con_.dual;</span>
@@ -232,9 +232,9 @@
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = -999.</span>
 <span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 12 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 0 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 12 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;primal&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 1000 rows and 6 columns.</span>
-<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 0 rows and 4 columns.</span>
 <span class="go">Solution Summary</span>
 
 <span class="go">                           Value</span>
@@ -327,7 +327,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2018, SAS Institute.
-      Last updated on Jul 30, 2018 (Timestamp: 0.2.0-20180730103208).
+      Last updated on Jul 31, 2018 (Timestamp: 0.2.0-20180731093746).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
     </div>
   </body>

@@ -107,12 +107,12 @@
 <span class="go">x[8] = 0.5;</span>
 <span class="go">x[3] = 0.4;</span>
 <span class="go">x[4] = 0.2;</span>
-<span class="go">min f = - x[1] + 0.4 * (((x[2]) / (x[8])) ^ (0.67)) - x[2] + 0.4 * (((x[1]) / (x[7])) ^ (0.67)) + 10.0; </span>
-<span class="go">con c1 : - 0.1 * x[1] - 0.0588 * x[5] * x[7] &gt;= -1.0;</span>
-<span class="go">con c2 : - 0.1 * x[1] - 0.1 * x[2] - 0.0588 * x[6] * x[8] &gt;= -1.0;</span>
-<span class="go">con c3 : - (4 * x[3]) / (x[5]) - (2) / ((x[3]) ^ (0.71) * x[5]) - 0.0588 * ((x[7]) / ((x[3]) ^ (1.3))) &gt;= -1.0;</span>
-<span class="go">con c4 : - (2) / ((x[4]) ^ (0.71) * x[6]) - (4 * x[4]) / (x[6]) - 0.0588 * ((x[8]) / ((x[4]) ^ (1.3))) &gt;= -1.0;</span>
-<span class="go">con con_1 : -9.9 &lt;= - x[1] + 0.4 * (((x[1]) / (x[7])) ^ (0.67)) - x[2] + 0.4 * (((x[2]) / (x[8])) ^ (0.67)) &lt;= -5.8;</span>
+<span class="go">min f = - x[2] - x[1] + 0.4 * (((x[2]) / (x[8])) ^ (0.67)) + 0.4 * (((x[1]) / (x[7])) ^ (0.67)) + 10.0; </span>
+<span class="go">con c1 : - 0.0588 * x[5] * x[7] - 0.1 * x[1] &gt;= -1.0;</span>
+<span class="go">con c2 : - 0.1 * x[2] - 0.1 * x[1] - 0.0588 * x[6] * x[8] &gt;= -1.0;</span>
+<span class="go">con c3 : - 0.0588 * ((x[7]) / ((x[3]) ^ (1.3))) - (4 * x[3]) / (x[5]) - (2) / ((x[3]) ^ (0.71) * x[5]) &gt;= -1.0;</span>
+<span class="go">con c4 : - (4 * x[4]) / (x[6]) - 0.0588 * ((x[8]) / ((x[4]) ^ (1.3))) - (2) / ((x[4]) ^ (0.71) * x[6]) &gt;= -1.0;</span>
+<span class="go">con con_1 : -9.9 &lt;= - x[2] - x[1] + 0.4 * (((x[2]) / (x[8])) ^ (0.67)) + 0.4 * (((x[1]) / (x[7])) ^ (0.67)) &lt;= -5.8;</span>
 <span class="go">solve with nlp / algorithm=activeset;</span>
 <span class="go">print _var_.name _var_.lb _var_.ub _var_ _var_.rc;</span>
 <span class="go">print _con_.name _con_.body _con_.dual;</span>
@@ -162,9 +162,9 @@
 <span class="go">NOTE: Objective of the best feasible solution found = 3.9511579677.</span>
 <span class="go">NOTE: The best feasible solution found is returned.</span>
 <span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 20 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 5 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 12 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;primal&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 8 rows and 6 columns.</span>
-<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 5 rows and 4 columns.</span>
 <span class="go">NOTE: Response BEST_FEASIBLE</span>
 <span class="go">Problem Summary</span>
 
@@ -205,7 +205,7 @@
 <span class="go">                                 </span>
 <span class="go">Iterations                     26</span>
 <span class="go">Presolve Time                0.00</span>
-<span class="go">Solution Time                0.01</span>
+<span class="go">Solution Time                0.04</span>
 <span class="go">   COL1         x</span>
 <span class="go">0   1.0  6.463315</span>
 <span class="go">1   2.0  2.234530</span>
@@ -291,7 +291,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2018, SAS Institute.
-      Last updated on Jul 30, 2018 (Timestamp: 0.2.0-20180730103208).
+      Last updated on Jul 31, 2018 (Timestamp: 0.2.0-20180731093746).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
     </div>
   </body>

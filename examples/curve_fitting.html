@@ -166,11 +166,11 @@
 <span class="go">read data XY_DATA into set_XY_DATA_N=[_N_] x y;</span>
 <span class="go">num order = 1;</span>
 <span class="go">var beta {0..order};</span>
-<span class="go">impvar estimate {i_1 in set_XY_DATA_N} = beta[0] + sum {i_2 in 1..order}(beta[i_2] * (x[i_1]) ^ (i_2));</span>
+<span class="go">impvar estimate {i_1 in set_XY_DATA_N} = sum {i_2 in 1..order}(beta[i_2] * (x[i_1]) ^ (i_2)) + beta[0];</span>
 <span class="go">var surplus {set_XY_DATA_N} &gt;= 0;</span>
 <span class="go">var slack {set_XY_DATA_N} &gt;= 0;</span>
 <span class="go">min objective1 = sum {i_3 in set_XY_DATA_N}(surplus[i_3] + slack[i_3]); </span>
-<span class="go">con abs_dev_con {i_4 in set_XY_DATA_N} : - estimate[i_4] + surplus[i_4] - slack[i_4] + y[i_4] = 0;</span>
+<span class="go">con abs_dev_con {i_4 in set_XY_DATA_N} : - estimate[i_4] - slack[i_4] + surplus[i_4] + y[i_4] = 0;</span>
 
 <span class="go">solve;</span>
 <span class="go">print _var_.name _var_.lb _var_.ub _var_ _var_.rc;</span>
@@ -200,9 +200,9 @@
 <span class="go">NOTE: Objective = 11.46625.</span>
 <span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
 <span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 18 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 19 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 13 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;primal&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 40 rows and 6 columns.</span>
-<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 19 rows and 4 columns.</span>
 <span class="go">      beta</span>
 <span class="go">1         </span>
 <span class="go">0  0.58125</span>
@@ -251,11 +251,11 @@
 <span class="go">          P 2         26    1.725000E+00         0</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 1.725.</span>
-<span class="go">NOTE: The Dual Simplex solve time is 0.03 seconds.</span>
+<span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
 <span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 18 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 38 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 13 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;primal&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 41 rows and 6 columns.</span>
-<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 38 rows and 4 columns.</span>
 <span class="go">    beta</span>
 <span class="go">1       </span>
 <span class="go">0 -0.400</span>
@@ -303,11 +303,11 @@
 <span class="go">          D 2         20    1.045896E+01         0</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 10.458964706.</span>
-<span class="go">NOTE: The Dual Simplex solve time is 0.02 seconds.</span>
+<span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
 <span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 18 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 19 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 13 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;primal&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 41 rows and 6 columns.</span>
-<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 19 rows and 4 columns.</span>
 <span class="go">       beta</span>
 <span class="go">1          </span>
 <span class="go">0  0.982353</span>
@@ -358,9 +358,9 @@
 <span class="go">NOTE: Objective = 1.475.</span>
 <span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
 <span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 18 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 38 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 13 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;primal&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 42 rows and 6 columns.</span>
-<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 38 rows and 4 columns.</span>
 <span class="go">    beta</span>
 <span class="go">1       </span>
 <span class="go">0  2.475</span>
@@ -398,7 +398,7 @@
 <span class="gp">In [6]: </span><span class="n">s2</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">p1</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;estimate&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Line2&#39;</span><span class="p">);</span>
 
 <span class="gp">In [7]: </span><span class="n">p1</span>
-<span class="gh">Out[7]: </span><span class="go">&lt;matplotlib.axes._subplots.AxesSubplot at 0x7fd45bf757b8&gt;</span>
+<span class="gh">Out[7]: </span><span class="go">&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f27e7a38128&gt;</span>
 
 <span class="gp">In [8]: </span><span class="n">p2</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">)</span>
 
@@ -407,7 +407,7 @@
 <span class="gp">In [10]: </span><span class="n">s4</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">p2</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;estimate&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Curve2&#39;</span><span class="p">);</span>
 
 <span class="gp">In [11]: </span><span class="n">p2</span>
-<span class="gh">Out[11]: </span><span class="go">&lt;matplotlib.axes._subplots.AxesSubplot at 0x7fd45bebcef0&gt;</span>
+<span class="gh">Out[11]: </span><span class="go">&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f27e7974eb8&gt;</span>
 </pre></div>
 </div>
 <img alt="../_images/cf_line.png" src="../_images/cf_line.png" />
@@ -485,7 +485,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2018, SAS Institute.
-      Last updated on Jul 30, 2018 (Timestamp: 0.2.0-20180730103208).
+      Last updated on Jul 31, 2018 (Timestamp: 0.2.0-20180731093746).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
     </div>
   </body>
