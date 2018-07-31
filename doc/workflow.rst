@@ -44,7 +44,7 @@ See the following representation of the client-side model workflow for SAS clien
 .. image:: _static/images/clientside_sas.png
 
 
-Steps of modeling a simple Knapsack problem is shown in the following subsections.
+Steps of modeling a simple Knapsack problem are shown in the following subsections.
 
 Reading data
 ++++++++++++
@@ -80,9 +80,7 @@ Reading data
    print(type(total_weight), total_weight)
 
 
-Here, 
-
-Instead of using :meth:`Model.read_table` method, column values can be obtained
+Here, instead of using :meth:`Model.read_table` method, column values can be obtained
 one by one:
 
 >>> df = df.set_index('item')
@@ -148,8 +146,8 @@ The main advantage of the server-side models is faster upload times compared
 to client-side. This is especially very noticable when using large chunks of
 variable and constraint groups.
 
-The only disadvantage of using server-side models is that variables are often
-needs to be accessed directly from the resulting SASDataFrame objects. Since
+The only disadvantage of using server-side models is that variables often need 
+to be accessed directly from the resulting SASDataFrame objects. Since
 components of the models are abstract, accessing objects directly is often
 not possible.
 
@@ -233,7 +231,7 @@ Model
    # Solve
    m.solve(verbose=True)
 
-There is no differences in terms of how client-side and server-side models are
+There is no difference in terms of how client-side and server-side models are
 written. However, the generated OPTMODEL code is more compact for server-side
 models.
 

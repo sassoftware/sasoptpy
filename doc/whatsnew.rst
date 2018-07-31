@@ -68,7 +68,7 @@ Bug Fixes
 Notes
 +++++
 
-- Abstract and nonlinear models can be solved on Viya if only `runOptmodel`
+- Abstract and nonlinear models can be solved on Viya only if `runOptmodel`
   action is available on the CAS server.
 - Three new examples are added which demonstrate abstract model building.
 - Some minor changes are applied to the existing examples.
