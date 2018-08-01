@@ -39,10 +39,11 @@ Download the release and install it using `pip`:
 
 where `vX.X.X` is the release you want to install.
 
-Alternatively, use
+Alternatively, use:
 
+``` shell
    pip install https://github.com/sassoftware/sasoptpy/archive/vX.X.X.tar.gz
-   
+```
 
 ## Getting Started
 
