@@ -34,7 +34,7 @@ To use **sasoptpy**, you need to have:
 
 **sasoptpy** can be installed from [project releases](https://github.com/sassoftware/sasoptpy/releases) page. Download the release and install it using `pip`:
 
-    pip install sasoptpy-X.X.X.tar.gz
+    pip install X.X.X.tar.gz
 
 where `X.X.X` is the release you want to install.
 
