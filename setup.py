@@ -22,7 +22,7 @@ from setuptools import setup
 
 setup(
     name='sasoptpy',
-    version='0.2.0',
+    version='0.2.1.dev0',
     packages=['sasoptpy'],
     description='sasoptpy: SAS Optimization Interface for Python',
     url='https://github.com/sassoftware/sasoptpy',

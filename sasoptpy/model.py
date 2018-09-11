@@ -2414,7 +2414,8 @@ params=[{'param': value, 'column': 'value'}])
             self.response = response
 
             # Parse solution
-            if(response.get_tables('status')[0] == 'OK'):
+            #if(response.get_tables('status')[0] == 'OK'):
+            if response['status'] == 'OK':
 
                 self._primalSolution = response['Print1.PrintTable']
                 self._primalSolution = self._primalSolution[
