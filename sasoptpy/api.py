@@ -21,10 +21,13 @@ API includes implementation of RESTful API for connecting other applications
 '''
 
 from swat import CAS
-from flask import Flask
+import sys
+from flask import Response, stream_with_context, Flask
 from flask.json import jsonify
 from flask_restful import Resource, Api, reqparse
+import threading
 import sasoptpy as so
+import time
 
 app = Flask('sasoptpy')
 api = Api(app)
@@ -39,6 +42,8 @@ expressions = {}
 parameters = {}
 sets = {}
 tables = {}
+dictlist = [sessions, models, variables, variable_groups, constraints,
+            constraint_groups, expressions, parameters, sets, tables]
 
 
 class Entry(Resource):
@@ -46,13 +51,24 @@ class Entry(Resource):
     Entry point for the API listing information about package.
     '''
 
-    '''
-    Get current sasoptpy version
-    '''
     def get(self):
-        return jsonify({
+        '''
+        Get current sasoptpy version
+        '''
+        return {
             'package': 'sasoptpy',
-            'version': so.__version__})
+            'version': so.__version__}, 200
+
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('action', type=str, help='Task for server')
+        args = parser.parse_args()
+
+        if args['action'] == 'clean':
+            so.reset_globals()
+            for i in dictlist:
+                i.clear()
+            return {'message': 'Cleaned the namespace'}, 200
 
 
 class Sessions(Resource):
@@ -60,33 +76,66 @@ class Sessions(Resource):
     Session objects for Viya connections
     '''
 
-    '''
-    Create a new CAS connection
-    '''
+    def get(self):
+        '''
+        Returns a list of sessions
+        '''
+        return {'sessions': [i for i in sessions]}, 200
+
     def post(self):
+        '''
+        Creates a new CAS connection
+        '''
         parser = reqparse.RequestParser()
         parser.add_argument('name', type=str, help='Name of the session')
-        parser.add_argument('host', type=str, required=True, help='Address of the CAS server')
-        parser.add_argument('port', type=int, required=True, help='Port number')
+        parser.add_argument(
+            'host', type=str, required=True, help='Address of the CAS server')
+        parser.add_argument(
+            'port', type=int, required=True, help='Port number')
         parser.add_argument('auth', type=str, help='Authentication info file')
         args = parser.parse_args()
 
         if all(args.values()) is False:
-            return jsonify({'status': 400, 'message': 'Some arguments are missing'})
+            return {'status': 400, 'message': 'Some arguments are missing'}, 400
 
-        s = sessions[args['name']] = CAS(args['host'], args['port'], protocol='http', authinfo=args['auth'])
+        try:
+            s = sessions[args['name']] = CAS(args['host'],
+                                             args['port'],
+                                             protocol='http',
+                                             authinfo=args['auth'])
+        except:
+            sessions[args['name']] = None
+            return {
+                'status': 400, 'message': 'Cannot create CAS session'}, 400
 
         return {
             'id': list(s.sessionid().values())[0],
             'name': args['name']}, 201
 
 
-class Model(Resource):
+class Models(Resource):
     '''
-    Represent a single model object
+    Model objects
     '''
 
-    def get(self, model_name):
+    def get(self, model_name=None):
+        '''
+        Returns a single model or a list of models
+
+        Parameters
+        ----------
+        model_name : string, optional
+            Name of a specific model requested
+        '''
+        if model_name is None:
+            return {'models': {i: models[i]._name for i in models}}, 200
+        else:
+            return self.getmodel(model_name)
+
+    def getmodel(self, model_name):
+        '''
+        Get info about a specific model name
+        '''
 
         parser = reqparse.RequestParser()
         parser.add_argument('format', type=str, help='Output format')
@@ -105,23 +154,18 @@ class Model(Resource):
             return {
                 'message': 'Model name is not found'}, 404
 
-
-class Models(Resource):
-    '''
-    Model objects
-    '''
-
-    '''
-    Create a new model
-    '''
     def post(self):
+        '''
+        Creates a new model
+        '''
         parser = reqparse.RequestParser()
         parser.add_argument('name', type=str, help='Name of the model')
         parser.add_argument('session', type=str, help='Session ID')
         args = parser.parse_args()
 
         if all(args.values()) is False:
-            return jsonify({'status': 400, 'message': 'Some arguments are missing'})
+            return jsonify({'status': 400,
+                            'message': 'Some arguments are missing'})
 
         m = so.Model(name=args['name'], session=sessions[args['session']])
         models[m._name] = m
@@ -133,15 +177,27 @@ class Models(Resource):
             }, 201
 
 
-class ModelVariables(Resource):
+class Variables(Resource):
     '''
     Represents variables inside models
     '''
 
-    '''
-    Add new variables to model
-    '''
-    def post(self, model_name):
+    def get(self, model_name=None):
+        if model_name is None:
+            return {'variables':
+                    {i: variables[i]._name for i in variables}}, 200
+        else:
+            if model_name in models:
+                m = models[model_name]
+                return {'variables': [i._name for i in m.get_variables()]}, 200
+            else:
+                return {
+                    'message': 'Model name is not found'}, 404
+
+    def post(self, model_name=None):
+        '''
+        Add new variables to model
+        '''
 
         if model_name in models:
             m = models[model_name]
@@ -151,12 +207,15 @@ class ModelVariables(Resource):
 
         parser = reqparse.RequestParser()
         parser.add_argument('name', type=str, help='Name of the variable')
-        parser.add_argument('lb', type=float, help='Lower bound of the variable')
-        parser.add_argument('ub', type=float, help='Upper bound of the variable')
+        parser.add_argument('lb', type=float,
+                            help='Lower bound of the variable')
+        parser.add_argument('ub', type=float,
+                            help='Upper bound of the variable')
         parser.add_argument('vartype', type=str, help='Type of the variable')
         args = parser.parse_args()
 
-        v = m.add_variable(name=args['name'], lb=args['lb'], ub=args['ub'], vartype=args['vartype'])
+        v = m.add_variable(name=args['name'], lb=args['lb'], ub=args['ub'],
+                           vartype=args['vartype'])
         variables[v._name] = v
 
         return {
@@ -165,10 +224,17 @@ class ModelVariables(Resource):
 
 class Expressions(Resource):
 
-    '''
-    Create new expression
-    '''
+    def get(self):
+        '''
+        Returns a list of expressions
+        '''
+        return {'expressions':
+                {i: str(expressions[i]) for i in expressions}}, 200
+
     def post(self, model_name=None):
+        '''
+        Creates a new expression
+        '''
         if model_name is not None and model_name not in models:
             return {
                 'message': 'Model name is not found'}, 404
@@ -203,10 +269,24 @@ class Expressions(Resource):
 
 class Constraints(Resource):
 
-    '''
-    Create new constraint
-    '''
+    def get(self):
+        '''
+        Returns a list of constraints
+        '''
+
+        return {'constraints':
+                {i: str(constraints[i]) for i in constraints}}, 200
+
     def post(self, model_name=None):
+        '''
+        Creates a new constraint
+
+        Parameters
+        ----------
+        model_name : string, optional
+            Name of the model
+        '''
+
         if model_name is not None and model_name not in models:
             return {
                 'message': 'Model name is not found'}, 404
@@ -245,25 +325,119 @@ class Constraints(Resource):
 
 class Solutions(Resource):
 
-    def post(self, model_name):
+    def get(self, model_name):
+
         if model_name not in models:
             return {
                 'message': 'Model name is not found'}, 404
         else:
             m = models[model_name]
 
-        # Get options, later!
-        m.solve()
+        varvalues = {i._name: m.get_variable_value(name=i._name)
+                     for i in m.get_variables()}
 
-        varvalues = {i._name: m.get_variable_value(name=i._name) for i in m.get_variables()}
+        return {'model': m._name,
+                'solutions': varvalues}, 200
 
-        return {'model': m._name, 'solutions': varvalues}, 200
+    def post(self, model_name):
+
+        if model_name not in models:
+            return {
+                'message': 'Model name is not found'}, 404
+        else:
+            m = models[model_name]
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('stream', type=str, help='Stream option')
+        args = parser.parse_args()
+
+        if args['stream'] == 'True':
+
+            @stream_with_context
+            def solve(model):
+                sys.stdout = stdout = Streamer(sys.stdout)
+                proc = threading.Thread(target=model.solve)
+                proc.start()
+                while proc.isAlive():
+                    for i in iter(stdout.read()):
+                        yield i
+                    time.sleep(0.05)
+ 
+                proc.join()
+                # Clean all output
+                for i in iter(stdout.read()):
+                    yield i
+                sys.stdout = stdout.close()
+                yield '\n'
+
+            return Response(stream_with_context(solve(m)))
+        else:
+            # Get options, later!
+            sys.stdout = stdout = Streamer(sys.stdout)
+            res = m.solve()
+            stream = ''.join(stdout.buffer)
+            sys.stdout = stdout.close()
+            if res is None:
+                return {'model': m._name,
+                        'message': 'Session is not defined'}, 400
+
+            varvalues = {i._name: m.get_variable_value(name=i._name)
+                         for i in m.get_variables()}
+
+            return {'model': m._name,
+                    'solutions': varvalues,
+                    'stream': stream}, 200
+
+
+class Streamer:
+    '''
+    A custom standard out for streaming processes like :meth:`Model.solve`.
+
+    Parameters
+    ----------
+    stdout : Object, optional
+        Original sys.stdout instance if simultaneous printing is needed
+    '''
+
+    def __init__(self, stdout=None):
+        self.stdout = stdout
+        self.buffer = list()
+
+    def write(self, text):
+        '''
+        Appends the text into buffer and writes to sys.stdout if exists
+        '''
+        if self.stdout is not None:
+            self.stdout.write(text)
+        self.buffer.append(text)
+        if len(self.buffer) > 5:
+            self.flush()
+
+    def read(self):
+        '''
+        Yields the first element in the buffer
+        '''
+        while len(self.buffer) > 0:
+            yield self.buffer.pop(0)
+        return
+
+    def flush(self):
+        if self.stdout is not None:
+            self.stdout.flush()
+
+    def close(self):
+        '''
+        Cleans the buffer and returns the original stdout object if exists
+        '''
+        self.buffer = list()
+        return self.stdout
+
 
 api.add_resource(Entry, '/')
 api.add_resource(Sessions, '/sessions')
-api.add_resource(Models, '/models')
-api.add_resource(Model, '/models/<string:model_name>')
-api.add_resource(ModelVariables, '/models/<string:model_name>/variables')
+api.add_resource(Models, '/models', '/models/<string:model_name>')
+api.add_resource(
+    Variables, '/variables', '/models/<string:model_name>/variables')
 api.add_resource(
     Expressions, '/expressions', '/models/<string:model_name>/objectives')
 api.add_resource(
@@ -273,7 +447,4 @@ api.add_resource(
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
-
-
-
+    app.run(debug=True, host='0.0.0.0')
