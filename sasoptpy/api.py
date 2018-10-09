@@ -507,7 +507,7 @@ class Solutions(Resource):
             m = ws.models[model_name]
 
         parser = reqparse.RequestParser()
-        parser.add_argument('stream', type=str, help='Stream option')
+        parser.add_argument('stream', type=str, help='Stream option', default='False')
         args = parser.parse_args()
 
         if args['stream'] == 'True':
