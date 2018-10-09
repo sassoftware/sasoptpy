@@ -31,8 +31,11 @@ setup(
     license='Apache v2.0',
     install_requires=[
         'pandas >= 0.16.0',
-        'swat >= 1.2.0.dist',
-        'numpy'
+        'swat >= 1.4.0',
+        'numpy',
+        'flask',
+        'flask_restful',
+        'itsdangerous'
         ],
     setup_requires=[
         'numpy'
