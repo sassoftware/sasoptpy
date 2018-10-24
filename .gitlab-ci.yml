@@ -1,0 +1,4 @@
+build:
+  script:
+  # Build and test sasoptpy
+  - pip install --force-upgrade setup.py
