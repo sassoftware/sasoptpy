@@ -1,7 +1,7 @@
 build:
   script:
   # Build and test sasoptpy
-  - apt-get update  -y
-  - apt-get install python-pip
+  - apt-get update -y
+  - apt-get install python-pip -y
   - pip install --upgrade pip
   - pip install --force-upgrade setup.py
