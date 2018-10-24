@@ -2,5 +2,4 @@ build:
   image: python:3.7
   script:
   # Build and test sasoptpy
-  - pip install --upgrade pip
-  - pip install setup.py
+  - python setup.py install
