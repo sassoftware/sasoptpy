@@ -1,5 +1,14 @@
-build:
+py37:
   image: python:3.7
   script:
-  # Build and test sasoptpy
+  - python setup.py install
+
+py36:
+  image: python:3.6
+  script:
+  - python setup.py install
+
+py35:
+  image: python:3.5
+  script:
   - python setup.py install
