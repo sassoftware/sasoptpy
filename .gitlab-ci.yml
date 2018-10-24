@@ -1,8 +1,6 @@
 build:
-  image: ubuntu:latest
+  image: python:3.7
   script:
   # Build and test sasoptpy
-  - apt-get update -y
-  - apt-get install python3 python3-pip -y
-  - pip3 install --upgrade pip
-  - pip3 install --force-upgrade setup.py
+  - pip install --upgrade pip
+  - pip install --force-upgrade setup.py
