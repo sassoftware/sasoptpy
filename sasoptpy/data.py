@@ -23,6 +23,7 @@ operations
 '''
 
 
+from collections import OrderedDict
 from types import GeneratorType
 
 import sasoptpy.components
@@ -542,9 +543,9 @@ class ExpressionDict:
         name = sasoptpy.utils.check_name(name, 'impvar')
         self._name = name
         self._objorder = sasoptpy.utils.register_name(name, self)
-        self._dict = dict()
+        self._dict = OrderedDict()
         self._conditions = []
-        self._shadows = dict()
+        self._shadows = OrderedDict()
         self._abstract = False
 
     def __setitem__(self, key, value):

@@ -16,6 +16,7 @@
 #  limitations under the License.
 #
 
+from collections import OrderedDict
 from itertools import product
 from math import copysign, inf
 from types import GeneratorType
@@ -85,15 +86,17 @@ class Expression:
             self._name = None
         self._value = 0
         self._dual = None
-        self._linCoef = {}
+        self._linCoef = OrderedDict()
         if exp is None:
-            self._linCoef = {'CONST': {'ref': None, 'val': 0}}
+            #self._linCoef = {'CONST': {'ref': None, 'val': 0}}
+            self._linCoef['CONST'] = {'ref': None, 'val': 0}
         else:
             if isinstance(exp, Expression):
                 for mylc in exp._linCoef:
                     self._linCoef[mylc] = dict(exp._linCoef[mylc])
             elif np.issubdtype(type(exp), np.number):
-                self._linCoef = {'CONST': {'ref': None, 'val': exp}}
+                #self._linCoef = {'CONST': {'ref': None, 'val': exp}}
+                self._linCoef['CONST'] = {'ref': None, 'val': exp}
             else:
                 print('WARNING: An invalid type is passed to create an ' +
                       'Expression: {}'.format(type(exp)))
@@ -604,7 +607,8 @@ class Expression:
         elif np.issubdtype(type(other), np.number):
             if self._temp and type(self) is Expression:
                 if other == 0:
-                    self._linCoef = {'CONST': {'ref': None, 'val': 0}}
+                    self._linCoef = OrderedDict()
+                    self._linCoef['CONST'] = {'ref': None, 'val': 0}
                 else:
                     for mylc in self._linCoef:
                         self._linCoef[mylc]['val'] *= other
@@ -1362,9 +1366,9 @@ class VariableGroup:
 
     def __init__(self, *argv, name, vartype=sasoptpy.utils.CONT, lb=-inf,
                  ub=inf, init=None, abstract=False):
-        self._vardict = {}
+        self._vardict = OrderedDict()
         self._varlist = []
-        self._groups = {}
+        self._groups = OrderedDict()
         self._keyset = []
 
         if vartype == sasoptpy.utils.BIN and ub is None:
@@ -1401,7 +1405,7 @@ class VariableGroup:
                     self._abstract = True
                     for _, v in self._vardict.items():
                         v._abstract = True
-        self._shadows = {}
+        self._shadows = OrderedDict()
         self._set_var_info()
 
     def get_name(self):
@@ -1468,10 +1472,9 @@ class VariableGroup:
                     format(k) for k in newfixed) + ']'
                 for j, k in enumerate(newfixed):
                     try:
-                        self._groups[j].add(k)
+                        self._groups[j].append(pd.Index([k]))
                     except KeyError:
-                        self._groups[j] = set()
-                        self._groups[j].add(k)
+                        self._groups[j] = pd.Index([k])  # pd.Index behaves as an ordered set
                 varlb = sasoptpy.utils.extract_list_value(newfixed, lb)
                 varub = sasoptpy.utils.extract_list_value(newfixed, ub)
                 varin = sasoptpy.utils.extract_list_value(newfixed, init)
@@ -2004,7 +2007,7 @@ class ConstraintGroup:
     '''
 
     def __init__(self, argv, name):
-        self._condict = {}
+        self._condict = OrderedDict()
         self._conlist = []
         if type(argv) == list or type(argv) == GeneratorType:
             self._recursive_add_cons(argv, name=name, condict=self._condict,
@@ -2094,7 +2097,7 @@ class ConstraintGroup:
         a   -  5  +  2.0 * t  +  u['a']
 
         '''
-        cd = {}
+        cd = OrderedDict()
         for i in self._condict:
             cd[i] = self._condict[i].copy()
             if rhs is False:

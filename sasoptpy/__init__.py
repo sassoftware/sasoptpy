@@ -28,6 +28,9 @@ from sasoptpy.model import *
 from sasoptpy.utils import *
 from sasoptpy.components import *
 from sasoptpy.data import *
-#  from sasoptpy.gui import start_gui
+# Optional items
+#  sasoptpy.math
+#  sasoptpy.gui
+#  sasoptpy.api
 
 __version__ = '0.2.1.dev0'
