@@ -2,13 +2,16 @@ py37:
   image: python:3.7
   script:
   - python setup.py install
+  - python tests/test_generators.py
 
 py36:
   image: python:3.6
   script:
   - python setup.py install
+  - python tests/test_generators.py
 
 py35:
   image: python:3.5
   script:
   - python setup.py install
+  - python tests/test_generators.py
