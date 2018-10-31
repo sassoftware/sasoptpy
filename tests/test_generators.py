@@ -23,8 +23,8 @@ This test file generates intermediate forms to run optimization models using SAS
 import unittest
 import os
 import sys
+import responses as expected
 import sasoptpy as so
-import tests.responses as expected
 import hashlib
 hash = hashlib.sha256
 
