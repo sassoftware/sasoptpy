@@ -20,10 +20,12 @@
 This test file generates intermediate forms to run optimization models using SAS/OR or SAS Viya Optimization solvers.
 """
 
-import unittest
-import os
 import sys
-import responses as expected
+import os
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
+
+import unittest
+import tests.responses as expected
 import sasoptpy as so
 import hashlib
 hash = hashlib.sha256
