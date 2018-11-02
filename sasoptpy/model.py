@@ -956,7 +956,7 @@ params=[{'param': value, 'column': 'value'}])
             if name is not None:
                 obj = expression.copy()
             else:
-                obj = expression
+                obj = sasoptpy.utils.get_mutable(expression)
         else:
             obj = sasoptpy.components.Expression(expression)
         self._objective = obj
