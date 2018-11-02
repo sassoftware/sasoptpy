@@ -19,6 +19,7 @@
 from collections import OrderedDict
 from itertools import product
 from math import copysign, inf
+import math
 from types import GeneratorType
 import warnings
 
@@ -168,10 +169,26 @@ class Expression:
         v = 0
         for mylc in self._linCoef:
             if self._linCoef[mylc]['ref'] is not None:
-                v += self._linCoef[mylc]['val'] * \
-                    self._linCoef[mylc]['ref']._value
+                if isinstance(mylc, tuple):
+                    #exec("v = v + (self._linCoef[mylc]['ref'][0].get_value() {} self._linCoef[mylc]['ref'][1].get_value()) * self._linCoef[mylc]['val']".format(
+                    #    sasoptpy.utils._py_symbol(self._linCoef[mylc]['op'])), globals(), locals())
+                    v += sasoptpy.utils._evaluate(self._linCoef[mylc])
+                else:
+                    v += self._linCoef[mylc]['val'] * \
+                        self._linCoef[mylc]['ref'].get_value()
             else:
                 v += self._linCoef[mylc]['val']
+        if self._operator:
+            try:
+                import sasoptpy.math as sm
+                if self._arguments:
+                    vals = [i.get_value() if isinstance(i, Expression) else i for i in self._arguments]
+                    v = sm.func_equivalent[self._operator](v, *vals)
+                else:
+                    v = sm.func_equivalent[self._operator](v)
+            except:
+                print(self._arguments)
+                print('ERROR: Unknown operator: {}'.format(self._operator))
         return round(v, 6)
 
     def get_dual(self):
@@ -941,6 +958,12 @@ class Variable(Expression):
 
         '''
         self._init = init
+
+    def get_value(self):
+        """
+        Returns value of a variable
+        """
+        return self._value
 
     def __repr__(self):
         '''

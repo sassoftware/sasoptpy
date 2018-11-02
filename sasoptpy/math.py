@@ -21,7 +21,26 @@ Math includes the definition of mathematical operations
 
 '''
 
+import math
 import sasoptpy.utils
+
+
+func_equivalent = {
+    'abs': abs,
+    'log': math.log,
+    'log2': math.log2,
+    'log10': math.log10,
+    'exp': math.exp,
+    'sqrt': math.sqrt,
+    'mod': lambda x,y: divmod(x,y)[1],
+    'int': int,
+    'sign': lambda x: math.copysign(1, x),
+    'max': max,
+    'min': min,
+    'sin': math.sin,
+    'cos': math.cos,
+    'tan': math.tan
+}
 
 
 def math_func(exp, op, *args):

@@ -1108,9 +1108,11 @@ def get_mutable(exp):
     '''
     if isinstance(exp, sasoptpy.components.Variable):
         r = sasoptpy.components.Expression(exp)
-    else:
+        r._abstract = exp._abstract
+    elif isinstance(exp, sasoptpy.components.Expression):
         r = exp
-    r._abstract = exp._abstract
+    else:
+        r = sasoptpy.components.Expression(exp)
     return r
 
 
@@ -1368,7 +1370,7 @@ def wrap(e, abstract=False):
     Wraps expression inside another expression
     '''
     wrapper = sasoptpy.components.Expression()
-    if hasattr(e, '_name'):
+    if hasattr(e, '_name') and e._name is not None:
         name = e._name
     else:
         name = check_name(None, 'expr')
@@ -1397,3 +1399,40 @@ def _to_iterator_expression(itlist):
         else:
             strlist.append(str(i))
     return strlist
+
+
+def _evaluate(comp):
+    """
+    Evaluates the value of a given expression component.
+
+    Parameters
+    ----------
+    comp : dict
+        Dictionary of references, coefficient and operator
+
+    Returns
+    -------
+    float
+        Current value of the expression.
+    """
+
+    ref = comp['ref']
+    val = comp['val']
+    op = comp.get('op')
+
+    if op is None:
+        op = '*'
+
+    if op == '*':
+        v = val
+        for i in ref:
+            v = v * i.get_value()
+    elif op == '/':
+        v = val * ref[0].get_value() / ref[1].get_value()
+    elif op == '^':
+        v = val * ref[0].get_value() ** ref[1].get_value()
+    else:
+        # Hacky way of doing this
+        exec("v = val * (ref[0].get_value() {} ref[1].get_value())".format(op), globals(), locals())
+
+    return v

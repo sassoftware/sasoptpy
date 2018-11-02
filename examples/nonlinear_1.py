@@ -28,6 +28,7 @@ def test(cas_conn):
     m.solve(verbose=True, options={'with': 'nlp', 'algorithm': 'activeset'})
     print(m.get_problem_summary())
     print(m.get_solution_summary())
-    print(m.response['Print3.PrintTable'])
+    if m.test_session() == 'CAS':
+        print(m.response['Print3.PrintTable'])
 
     return m.get_objective_value()
