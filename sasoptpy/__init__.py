@@ -16,13 +16,13 @@
 #  limitations under the License.
 #
 
-'''
+"""
 SAS Viya Optimization Modeling for Python (sasoptpy)
 ****************************************************
 
 This file includes static methods and imports.
 
-'''
+"""
 
 from sasoptpy.model import *
 from sasoptpy.utils import *

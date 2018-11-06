@@ -16,11 +16,11 @@
 #  limitations under the License.
 #
 
-'''
+"""
 Set includes :class:`Set` class and implementations for server-side data
 operations
 
-'''
+"""
 
 
 from collections import OrderedDict
@@ -31,7 +31,7 @@ import sasoptpy.utils
 
 
 class Parameter:
-    '''
+    """
     Creates a parameter to be represented inside PROC OPTMODEL
 
     Parameters
@@ -61,7 +61,7 @@ class Parameter:
     --------
     :func:`read_table`, :meth:`Model.read_table`
 
-    '''
+    """
 
     def __init__(self, name, keys=None, order=1, init=None, p_type=None):
         self._name = sasoptpy.utils.check_name(name, 'param')
@@ -181,7 +181,7 @@ class Parameter:
 
 
 class ParameterValue(sasoptpy.components.Expression):
-    '''
+    """
     Represents a single value of a parameter
 
     Parameters
@@ -199,7 +199,7 @@ class ParameterValue(sasoptpy.components.Expression):
     -----
 
     - Parameter values are mainly used in abstract expressions
-    '''
+    """
 
     def __init__(self, param, key=None, prefix='', suffix=''):
         super().__init__()
@@ -216,7 +216,7 @@ class ParameterValue(sasoptpy.components.Expression):
         self._assign = None
 
     def set_init(self, val):
-        '''
+        """
         Sets the initial value of the parameter
 
         Parameters
@@ -238,7 +238,7 @@ class ParameterValue(sasoptpy.components.Expression):
         -----
         - This method is only available for parameters without index/key.
 
-        '''
+        """
         if self._key == ('',):
             self._ref.set_init(val)
 
@@ -266,7 +266,7 @@ class ParameterValue(sasoptpy.components.Expression):
 
 
 class Set(sasoptpy.components.Expression):
-    '''
+    """
     Creates an index set to be represented inside PROC OPTMODEL
 
     Parameters
@@ -294,7 +294,7 @@ class Set(sasoptpy.components.Expression):
     >>> print(K._defn())
     set K = 1..N;
 
-    '''
+    """
 
     def __init__(self, name, init=None, settype=['num']):
         super().__init__()
@@ -365,7 +365,7 @@ class Set(sasoptpy.components.Expression):
 
 
 class SetIterator(sasoptpy.components.Expression):
-    '''
+    """
     Creates an iterator object for a given Set
 
     Parameters
@@ -396,7 +396,7 @@ class SetIterator(sasoptpy.components.Expression):
       - **id** : int
         ID number assigned to group by Python
 
-    '''
+    """
 
     def __init__(self, initset, conditions=None, datatype='num',
                  group={'order': 1, 'outof': 1, 'id': 0}, multi_index=False
@@ -513,7 +513,7 @@ class SetIterator(sasoptpy.components.Expression):
 
 
 class ExpressionDict:
-    '''
+    """
     Creates a dictionary of :class:`Expression` objects
 
     Parameters
@@ -537,7 +537,7 @@ class ExpressionDict:
     -----
     - ExpressionDict is the underlying class for :class:`ImplicitVar`.
     - It behaves as a regular dictionary for client-side models.
-    '''
+    """
 
     def __init__(self, name=None):
         name = sasoptpy.utils.check_name(name, 'impvar')
@@ -610,14 +610,14 @@ class ExpressionDict:
         return s
 
     def get_keys(self):
-        '''
+        """
         Returns the dictionary keys
 
         Returns
         -------
         dictkeys
             Dictionary keys stored in the object
-        '''
+        """
         return self._dict.keys()
 
     def __iter__(self):
@@ -646,7 +646,7 @@ class ExpressionDict:
 
 
 class ImplicitVar(ExpressionDict):
-    '''
+    """
     Creates an implicit variable
 
     Parameters
@@ -691,7 +691,7 @@ class ImplicitVar(ExpressionDict):
     >>>     print(i, z[i])
     (sasoptpy.data.SetIterator(name=i_1, ...),) x + i_1 * y[i_1]
 
-    '''
+    """
 
     def __init__(self, argv=None, name=None):
         super().__init__(name=name)
