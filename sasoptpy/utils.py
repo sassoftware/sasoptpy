@@ -1428,7 +1428,11 @@ def _evaluate(comp):
         for i in ref:
             v = v * i.get_value()
     elif op == '/':
-        v = val * ref[0].get_value() / ref[1].get_value()
+        try:
+            v = val * ref[0].get_value() / ref[1].get_value()
+        except ZeroDivisionError:
+            print('ERROR: Float division by zero')
+            return None
     elif op == '^':
         v = val * ref[0].get_value() ** ref[1].get_value()
     else:
