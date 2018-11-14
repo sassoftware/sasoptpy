@@ -63,13 +63,14 @@ class Parameter:
 
     """
 
-    def __init__(self, name, keys=None, order=1, init=None, p_type=None):
+    def __init__(self, name, keys=None, order=1, init=None, value=None, p_type=None):
         self._name = sasoptpy.utils.check_name(name, 'param')
         self._objorder = sasoptpy.utils.register_name(self._name, self)
         self._keys = keys if keys is not None else ()
         self._keysize = len(self._keys)
         self._order = order
         self._init = init
+        self._value = value
         self._source = None
         self._keyset = None
         self._colname = name
@@ -102,9 +103,12 @@ class Parameter:
         if tabs is None:
             tabs = ''
         if self._keys == ():
-            if self._init:
+            if self._init is not None:
+                s = tabs + '{} {} init {}'.format(self._type, self._name,
+                                               sasoptpy.utils._to_sas_string(self._init))
+            elif self._value is not None:
                 s = tabs + '{} {} = {}'.format(self._type, self._name,
-                                               self._init)
+                                               sasoptpy.utils._to_sas_string(self._value))
             else:
                 s = tabs + '{} {}'.format(self._type, self._name)
         else:
@@ -114,7 +118,9 @@ class Parameter:
             s = s[:-2]
             s += '}'
             if self._init is not None:
-                s += ' init {} '.format(self._init)
+                s += ' init {} '.format(sasoptpy.utils._to_sas_string(self._init))
+            elif self._value is not None:
+                s += ' = {} '.format(sasoptpy.utils._to_sas_string(self._value))
         s += ';'
 
         for key in self._shadows:
@@ -148,23 +154,36 @@ class Parameter:
             keyctr = 1
             s += '{'
             for k in self._index:
-                if k not in self._keyset:
+                if type(k) == GeneratorType:
+                    for i in k:
+                        key = 'jj{}'.format(keyctr)
+                        keyctr += 1
+                        tablekeys.append(key)
+                        jkeys.append(key)
+                        s += '{} in {}'.format(key, i._set._name)
+                elif k not in self._keyset:
                     key = 'j{}'.format(keyctr)
                     tablekeys.append(key)
                     jkeys.append(key)
                     s += '{} in {},'.format(key, k._name)
+                elif hasattr(k, '_colname'):
+                    if isinstance(k._colname, list):
+                        for i in k._colname:
+                            tablekeys.append(i)
+                    else:
+                        tablekeys.append(k._colname)
                 else:
-                    tablekeys.append(k._colname)
-            s = s[:-1]
+                    tablekeys.append(k)
             s += '} '
             s += '<{}['.format(self._name)
-            for j in tablekeys:
-                s += '{},'.format(j)
-            s = s[:-1]
+            s += ','.join([format(i) for i in tablekeys])
             s += ']=col('
-            for j in jkeys:
-                s += '{},'.format(j)
-            s = s[:-1]
+            if self._colname:
+                if callable(self._colname):
+                    s += self._colname(*jkeys) + '||'
+                else:
+                    s += '"{}"||'.format(self._colname)
+            s += ','.join([format(i) for i in jkeys])
             s += ')> '
         elif self._colname is not None and self._colname != self._name:
             s += '{}={}'.format(self._name, self._colname)
@@ -178,6 +197,17 @@ class Parameter:
 
     def __str__(self):
         return self._name
+
+    def get_value(self):
+        if self._keysize == 0:
+            if self._value is not None:
+                return self._value
+            elif self._init is not None:
+                return self._init
+            else:
+                return None
+        else:
+            return None
 
 
 class ParameterValue(sasoptpy.components.Expression):
@@ -264,6 +294,12 @@ class ParameterValue(sasoptpy.components.Expression):
     def _expr(self):
         return str(self)
 
+    def get_value(self):
+        if self._key == ('',):
+            return self._ref.get_value()
+        else:
+            return None
+
 
 class Set(sasoptpy.components.Expression):
     """
@@ -296,7 +332,7 @@ class Set(sasoptpy.components.Expression):
 
     """
 
-    def __init__(self, name, init=None, settype=['num']):
+    def __init__(self, name, init=None, value=None, settype=['num']):
         super().__init__()
         self._name = sasoptpy.utils.check_name(name, 'set')
         self._objorder = sasoptpy.utils.register_name(self._name, self)
@@ -306,9 +342,12 @@ class Set(sasoptpy.components.Expression):
                 if init.step != 1:
                     newinit = ' by ' + init.step
                 init = newinit
-            elif isinstance(init, list):
-                init = '[' + ' '.join([str(i) for i in init]) + ']'
+            #elif isinstance(init, list):
+            #    init = '[' + ' '.join([str(i) for i in init]) + ']'
+            else:
+                pass
         self._init = init
+        self._value = value
         self._type = sasoptpy.utils.list_pack(settype)
         self._colname = sasoptpy.utils.list_pack(name)
         self._iterators = []
@@ -334,7 +373,9 @@ class Set(sasoptpy.components.Expression):
             s += '<' + ', '.join(self._type) + '> '
         s += self._name
         if self._init is not None:
-            s += ' = ' + str(self._init)
+            s += ' init ' + sasoptpy.utils._to_sas_string(self._init) #str(self._init)
+        elif self._value is not None:
+            s += ' = ' + sasoptpy.utils._to_sas_string(self._value)
         s += ';'
         return(s)
 
@@ -348,7 +389,6 @@ class Set(sasoptpy.components.Expression):
             return False
 
     def __contains__(self, item):
-        print('Containts is called: {}'.format(item))
         return True
 
     def __str__(self):
@@ -363,6 +403,9 @@ class Set(sasoptpy.components.Expression):
     def _expr(self):
         return self._name
 
+    @property
+    def value(self):
+        return self._value
 
 class SetIterator(sasoptpy.components.Expression):
     """

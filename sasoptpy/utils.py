@@ -710,8 +710,8 @@ def read_data(table, key_set, key_cols=None, option='', params=None):
     return sasoptpy.data.Statement(s)
 
 
-def read_table(table, session=None, key=['_N_'], columns=None, 
-               key_type=['num'], col_types=None,
+def read_table(table, session=None, key=['_N_'], key_type=['num'], key_name=None,
+               columns=None, col_types=None, col_names=None,
                upload=False, casout=None, ref=True):
     """
     Reads a CAS Table or pandas DataFrame
@@ -727,10 +727,10 @@ def read_table(table, session=None, key=['_N_'], columns=None,
         Session object if the table will be uploaded
     key : list, optional
         List of key columns (for CASTable) or index columns (for DataFrame)
-    columns : list, optional
-        List of columns to read into parameters
     key_type : list or string, optional
         A list of column types consists of 'num' or 'str' values
+    columns : list, optional
+        List of columns to read into parameters
     col_types : dict, optional
         Dictionary of column types
     upload : boolean, optional
@@ -755,7 +755,9 @@ def read_table(table, session=None, key=['_N_'], columns=None,
     """
 
     if col_types is None:
-        col_types = {}
+        col_types = dict()
+    if col_names is None:
+        col_names = dict()
 
     # Type of the given table and the session
     t_type = type(table).__name__
@@ -789,21 +791,33 @@ def read_table(table, session=None, key=['_N_'], columns=None,
     if t_type == 'CASTable' or t_type == 'SASdata' or t_type == 'str':
         if not key or key == [None]:
             key = ['_N_']
+        if key_name is None:
+            key_name = 'set_' + ('_'.join([str(i) for i in key]) if key != ['_N_'] else tname + '_N')
         keyset = sasoptpy.data.Set(
-            name='set_' + ('_'.join([str(i) for i in key])
-                           if key != ['_N_'] else tname + '_N'),
+            name=key_name,
             settype=key_type)
         pars = []
         if columns is None:
             columns = table.columns.tolist()
-        for col in columns:
-            coltype = col_types.get(col, 'num')
-            pars.append(sasoptpy.data.Parameter(name=col, keys=[keyset],
-                                                p_type=coltype))
 
-        dat = read_data(table, key_set=keyset, key_cols=key, params=[
-            {'param': pars[i], 'column': columns[i]}
-            for i in range(len(pars))])
+        for col in columns:
+            if isinstance(col, str):
+                coltype = col_types.get(col, 'num')
+                colname = col_names.get(col, col)
+                #colname = col
+                current_param = sasoptpy.data.Parameter(name=colname, keys=[keyset],
+                                                    p_type=coltype)
+                pars.append({'param': current_param, 'column': col})
+            elif isinstance(col, dict):
+                coltype = col_types.get(col['name'], 'num')
+                colname = col_names.get(col['name'], col['name'])
+                #colname = col['name']
+                current_param = sasoptpy.data.Parameter(name=colname, keys=[keyset],
+                                                    p_type=coltype)
+                col['param'] = current_param
+                pars.append(col)
+
+        dat = read_data(table, key_set=keyset, key_cols=key, params=pars)
     elif t_type == 'DataFrame':
         if key and key != [None] and key != ['_N_']:
             table = table.set_index(key)
@@ -821,10 +835,12 @@ def read_table(table, session=None, key=['_N_'], columns=None,
               .format(table, type(table)))
         return None
 
+    par_refs = [p['param'] for p in pars]
+
     if ref:
-        return (keyset, pars, dat)
+        return (keyset, par_refs, dat)
     elif not pars:
-        return (keyset, pars)
+        return (keyset, par_refs)
     else:
         return keyset
 
@@ -1440,3 +1456,21 @@ def _evaluate(comp):
         exec("v = val * (ref[0].get_value() {} ref[1].get_value())".format(op), globals(), locals())
 
     return v
+
+
+def _to_sas_string(obj):
+    if isinstance(obj, str):
+        return "'{}'".format(obj)
+    elif isinstance(obj, list):
+        return '{{{}}}'.format(','.join([_to_sas_string(i) for i in obj]))
+    elif isinstance(obj, range):
+        if obj.step == 1:
+            return '{}..{}'.format(_to_sas_string(obj.start), _to_sas_string(obj.stop))
+        else:
+            return '{}..{} by {}'.format(_to_sas_string(obj.start), _to_sas_string(obj.stop), _to_sas_string(obj.step))
+    elif np.issubdtype(type(obj), np.number):
+        return str(obj)
+    else:
+        print('WARNING: Unknown type to transform {}'.format(type(obj)))
+        return '{}'.format(str(obj))
+

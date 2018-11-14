@@ -369,7 +369,7 @@ class Model:
                 c = self.add_constraint(c=argv, name=name)
                 return c
 
-    def add_set(self, name, init=None, settype=['num']):
+    def add_set(self, name, init=None, value=None, settype=['num']):
         """
         Adds a set to the model
 
@@ -379,6 +379,8 @@ class Model:
             Name of the set
         init : :class:`Set`, optional
             Initial value of the set
+        value : list, float, optional
+            Exact value of the set
         settype : list, optional
             Types of the set, a list consists of 'num' and 'str' values
 
@@ -399,11 +401,11 @@ class Model:
         set K = 1..N;
 
         """
-        newset = sasoptpy.data.Set(name, init=init, settype=settype)
+        newset = sasoptpy.data.Set(name, init=init, value=value, settype=settype)
         self._sets.append(newset)
         return newset
 
-    def add_parameter(self, *argv, name=None, init=None, p_type=None):
+    def add_parameter(self, *argv, name=None, init=None, value=None, p_type=None):
         """
         Adds a parameter to the model
 
@@ -429,13 +431,13 @@ class Model:
         """
         if len(argv) == 0:
             p = sasoptpy.data.Parameter(
-                name, keys=(), init=init, p_type=p_type)
+                name, keys=(), init=init, value=value, p_type=p_type)
             self._parameters.append(p)
             return p['']
         else:
             keylist = list(argv)
             p = sasoptpy.data.Parameter(
-                name, keys=keylist, init=init, p_type=p_type)
+                name, keys=keylist, init=init, value=value, p_type=p_type)
             self._parameters.append(p)
             return p
 
@@ -604,8 +606,8 @@ params=[{'param': value, 'column': 'value'}])
             params=params)
         self._statements.append(s)
 
-    def read_table(self, table, key=['_N_'], columns=None,
-                   key_type=['num'], col_types=None,
+    def read_table(self, table, key=['_N_'], key_type=['num'], key_name=None,
+                   columns=None, col_types=None, col_names=None,
                    upload=False, casout=None):
         """
         Reads a CAS Table or pandas DataFrame into the model
@@ -619,10 +621,10 @@ params=[{'param': value, 'column': 'value'}])
             the name of the table at execution (server data, string)
         key : list, optional
             List of key columns (for CASTable) or index columns (for DataFrame)
-        columns : list, optional
-            List of columns to read into parameters
         key_type : list or string, optional
             A list of column types consists of 'num' or 'str' values
+        columns : list, optional
+            List of columns to read into parameters
         col_types : dict, optional
             Dictionary of column types
         upload : boolean, optional
@@ -677,8 +679,9 @@ params=[{'param': value, 'column': 'value'}])
         """
 
         objs = sasoptpy.utils.read_table(
-            table=table, session=self._session, key=key, columns=columns,
-            key_type=key_type, col_types=col_types,
+            table=table, session=self._session,
+            key=key, key_type=key_type, key_name=key_name,
+            columns=columns, col_types=col_types, col_names=col_names,
             upload=upload, casout=casout, ref=True)
 
         if isinstance(objs[0], sasoptpy.data.Set):
@@ -1676,7 +1679,7 @@ params=[{'param': value, 'column': 'value'}])
         return mpsdata
 
     def to_optmodel(self, header=True, expand=False, ordered=False,
-                    ods=False, options={}):
+                    ods=False, solve=True, options={}):
         """
         Generates the equivalent PROC OPTMODEL code for the model.
 
@@ -1689,6 +1692,10 @@ params=[{'param': value, 'column': 'value'}])
         ordered : boolean, optional
             Option to generate OPTMODEL code in a specific order (True) or\
             in creation order (False)
+        ods : boolean, optional
+            Option for converting printed tables into ODS tables
+        solve : boolean, optional
+            Option to append solve command at the end
         options : dict, optional
             Solver options for the OPTMODEL solve command
 
@@ -1779,19 +1786,20 @@ params=[{'param': value, 'column': 'value'}])
             if expand:
                 s += tab + 'expand;\n'
 
-            s += tab + 'solve'
-            if options.get('with', None):
-                s += ' with ' + options['with']
-            if options.get('relaxint', False):
-                s += ' relaxint'
-            if options:
-                optstring = ''
-                for key, value in options.items():
-                    if key not in ('with', 'relaxint'):
-                        optstring += ' {}={}'.format(key, value)
-                if optstring:
-                    s += ' /' + optstring
-            s += ';\n'
+            if solve:
+                s += tab + 'solve'
+                if options.get('with', None):
+                    s += ' with ' + options['with']
+                if options.get('relaxint', False):
+                    s += ' relaxint'
+                if options:
+                    optstring = ''
+                    for key, value in options.items():
+                        if key not in ('with', 'relaxint'):
+                            optstring += ' {}={}'.format(key, value)
+                    if optstring:
+                        s += ' /' + optstring
+                s += ';\n'
 
             if ods:
                 s += tab + 'ods output PrintTable=primal_out;\n'
@@ -1833,24 +1841,26 @@ params=[{'param': value, 'column': 'value'}])
                 s += 'expand;\n'
 
             # Solve block
-            s += 'solve'
-            if options.get('with', None):
-                s += ' with ' + options['with']
-            if options.get('relaxint', False):
-                s += ' relaxint'
-            if options:
-                optstring = ''
-                for key, value in options.items():
-                    if key not in ('with', 'relaxint'):
-                        if type(value) is dict:
-                            optstring += ' {}=('.format(key) + ','.join(
-                                '{}={}'.format(i, j)
-                                for i, j in value.items()) + ')'
-                        else:
-                            optstring += ' {}={}'.format(key, value)
-                if optstring:
-                    s += ' /' + optstring
-            s += ';\n'
+            if solve:
+                s += 'solve'
+                if options.get('with', None):
+                    s += ' with ' + options['with']
+                if options.get('relaxint', False):
+                    s += ' relaxint'
+                if options:
+                    optstring = ''
+                    for key, value in options.items():
+                        if key not in ('with', 'relaxint'):
+                            if type(value) is dict:
+                                optstring += ' {}=('.format(key) + ','.join(
+                                    '{}={}'.format(i, j)
+                                    for i, j in value.items()) + ')'
+                            else:
+                                optstring += ' {}={}'.format(key, value)
+                    if optstring:
+                        s += ' /' + optstring
+                s += ';\n'
+
             # Output ODS tables
             if ods:
                 s += 'ods output PrintTable=primal_out;\n'
