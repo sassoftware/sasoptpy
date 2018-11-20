@@ -744,7 +744,7 @@ params=[{'param': value, 'column': 'value'}])
 
         >>> c1 = m.add_constraint(2 * x + y <= 15, name='c1')
         >>> print(m.get_constraint('c1'))
-          2.0 * x  +  y  <=  15
+        2 * x  +  y  <=  15
         >>> m.drop_constraint(c1)
         >>> print(m.get_constraint('c1'))
         None
@@ -2545,10 +2545,11 @@ params=[{'param': value, 'column': 'value'}])
             df['_id_'] = df['_id_'].astype('int')
             df[['Field4', 'Field6']] = df[['Field4', 'Field6']].astype(float)
 
-            # Upload MPS table
+            # Upload MPS table with new arguments
             try:
                 session.df2sd(df, table=name, keep_outer_quotes=True)
-            except:
+            except TypeError:
+                # If user is using an old version of saspy, apply the hack
                 print(df.to_string())
                 session.df2sd(df, table=name)
                 session.submit("""
