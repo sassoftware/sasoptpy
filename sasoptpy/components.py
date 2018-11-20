@@ -297,6 +297,7 @@ class Expression:
         x + (y) ^ (2)
 
         """
+        # Add the operator first if exists
         s = ''
         if self._operator:
             s += self._operator
@@ -307,25 +308,34 @@ class Expression:
 
         itemcnt = 0
         firstel = True
+
+        # Add every element into string one by one
         for idx, el in self._linCoef.items():
             val = el['val']
             ref = el['ref']
             op = el.get('op')
             csign = copysign(1, val)
+
+            # Skip elements with 0 coefficient or constant
             if val == 0 or idx == 'CONST':
                 continue
-            if not(firstel and csign == 1):
-                if csign == 1:
-                    s += '+ '
-                else:
-                    s += '- '
+
+            # Append sign of the value unless it is positive and first
+            if firstel and csign == 1:
+                pass
+            elif csign == 1:
+                s += '+ '
+            elif csign == -1:
+                s += '- '
             firstel = False
 
+            # Add operand if exists, default is product
             if op:
                 optext = ' {} '.format(op)
             else:
                 optext = ' * '
 
+            # For a list of expressions, a recursive function is called
             if isinstance(ref, list):
                 strlist = sasoptpy.utils.recursive_walk(
                     ref, func='_expr')
@@ -335,6 +345,7 @@ class Expression:
                 strlist = ['({})'.format(stritem)
                            for stritem in strlist]
 
+            # Merge all elements in strlist together
             refs = optext.join(strlist)
             if val == 1 or val == -1:
                 s += '{} '.format(refs)
@@ -358,6 +369,7 @@ class Expression:
                 s += '+ '
             s += '{} '.format(abs(val))
 
+        # Close operator parentheses and add remaining elements
         if self._operator:
             if self._arguments:
                 s += ', ' + ', '.join(i._expr() if hasattr(i, '_expr') else str(i) for i in self._arguments)
@@ -425,13 +437,18 @@ class Expression:
             ref = el['ref']
             op = el.get('op')
             csign = copysign(1, val)
+
+            # Skip elements with 0 coefficient or constant
             if val == 0 or idx == 'CONST':
                 continue
-            if not(firstel and csign == 1):
-                if csign == 1:
-                    s += '+ '
-                else:
-                    s += '- '
+
+            # Append sign of the value unless it is positive and first
+            if firstel and csign == 1:
+                pass
+            elif csign == 1:
+                s += '+ '
+            elif csign == -1:
+                s += '- '
             firstel = False
 
             if op:
@@ -546,6 +563,8 @@ class Expression:
                 r._linCoef[self.set_name()] = {'val': 1, 'ref': self}
             else:
                 r = self.copy()
+                if r._operator is not None:
+                    r = sasoptpy.utils.wrap(r)
         if isinstance(other, Expression):
             if other._abstract:
                 r._abstract = True
@@ -764,7 +783,7 @@ class Expression:
         if not isinstance(other, Expression):
             other = Expression(other, name='')
         self.set_permanent()
-        r._linCoef[self._name, other._name] = {
+        r._linCoef[self._name, other._name, '^'] = {
             'ref': [self, other],
             'val': 1,
             'op': '^'
@@ -776,7 +795,7 @@ class Expression:
         r = Expression()
         if not isinstance(other, Expression):
             other = Expression(other, name='')
-        r._linCoef[other._name, self._name] = {
+        r._linCoef[other._name, self._name, '^'] = {
             'ref': [other, self],
             'val': 1,
             'op': '^'
@@ -806,7 +825,7 @@ class Expression:
         r = Expression()
         if not isinstance(other, Expression):
             other = Expression(other, name='')
-        r._linCoef[self._name, other._name] = {
+        r._linCoef[self._name, other._name, '/'] = {
             'ref': [self, other],
             'val': 1,
             'op': '/'
@@ -818,7 +837,7 @@ class Expression:
         r = Expression()
         if not isinstance(other, Expression):
             other = Expression(other, name='')
-        r._linCoef[other._name, self._name] = {
+        r._linCoef[other._name, self._name, '/'] = {
             'ref': [other, self],
             'val': 1,
             'op': '/'
