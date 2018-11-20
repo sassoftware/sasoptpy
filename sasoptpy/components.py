@@ -1647,7 +1647,7 @@ class VariableGroup:
                 try:
                     s += '{}, '.format(i)
                 except:
-                    print('ERROR: VariableGroup {} has unproper index {} ({})'.
+                    print('ERROR: VariableGroup {} has invalid index {} ({})'.
                           format(self._name, str(i), type(i)))
         s = s[:-2]
         s += '} '
