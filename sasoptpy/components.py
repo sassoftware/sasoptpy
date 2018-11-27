@@ -1636,7 +1636,8 @@ class VariableGroup:
 
         Iterable list of :class:`Variable` objects
         """
-        return iter([self._vardict[i] for i in self._varlist])
+        for i in self._varlist:
+            yield self._vardict[i]
 
     def _defn(self, tabs=''):
         """
@@ -2200,7 +2201,8 @@ class ConstraintGroup:
         return self._condict.__getitem__(key)
 
     def __iter__(self):
-        return iter([self._condict[i] for i in self._conlist])
+        for i in self._conlist:
+            yield self._condict[i]
 
     def _set_con_info(self):
         for i in self._condict:
