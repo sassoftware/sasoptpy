@@ -33,7 +33,7 @@ setup(
         'pandas >= 0.16.0',
         'swat >= 1.4.0',
         'numpy',
-        'flask',
+        'Flask >= 1.0.2',
         'flask_restful',
         'itsdangerous'
         ],
