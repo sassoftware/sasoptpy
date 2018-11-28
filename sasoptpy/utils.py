@@ -46,7 +46,7 @@ __objcnt = 0
 
 
 def check_name(name, ctype=None):
-    '''
+    """
     Checks if a name is valid and returns a random string if not
 
     Parameters
@@ -57,7 +57,7 @@ def check_name(name, ctype=None):
     Returns
     -------
     str : The given name if valid, a random string otherwise
-    '''
+    """
     if name and type(name) != str:
         name = ctype + '_' + str(name) if ctype else str(name)
     if name is None or name == '':
@@ -93,7 +93,7 @@ def _is_generated(expr):
 
 
 def exp_range(start, stop, step=1):
-    '''
+    """
     Creates a set within given range
 
     Parameters
@@ -118,7 +118,7 @@ def exp_range(start, stop, step=1):
     >>> print(p._defn())
     set 1..N;
 
-    '''
+    """
     regular = isinstance(start, int) and isinstance(stop, int) and\
         isinstance(step, int)
     if regular:
@@ -134,7 +134,7 @@ def exp_range(start, stop, step=1):
 
 
 def register_name(name, obj):
-    '''
+    """
     Adds the name and order of a component into the global reference list
 
     Parameters
@@ -148,7 +148,7 @@ def register_name(name, obj):
     -------
     int
         Unique object number to represent creation order
-    '''
+    """
     global __objcnt
     __objcnt += 1
     __namedict[name] = {'ref': obj, 'order': __objcnt}
@@ -156,7 +156,7 @@ def register_name(name, obj):
 
 
 def recursive_walk(obj, func, attr=None, alt=None):
-    '''
+    """
     Calls a given method recursively for given objects
 
 
@@ -175,7 +175,7 @@ def recursive_walk(obj, func, attr=None, alt=None):
     -----
     - This function is for internal consumption.
 
-    '''
+    """
     result = []
     for i in list(obj):
         if isinstance(i, list):
@@ -195,7 +195,7 @@ def recursive_walk(obj, func, attr=None, alt=None):
 
 
 def quick_sum(argv):
-    '''
+    """
     Quick summation function for :class:`Expression` objects
 
     Returns
@@ -215,7 +215,7 @@ def quick_sum(argv):
     This function is faster for expressions compared to Python's native sum()
     function.
 
-    '''
+    """
     clocals = argv.gi_frame.f_locals.copy()
     exp = sasoptpy.components.Expression(temp=True)
     iterators = []
@@ -271,7 +271,7 @@ def _check_iterator(exp, operator, iterators):
 
 
 def get_obj_by_name(name):
-    '''
+    """
     Returns the reference to an object by using the unique name
 
     Returns
@@ -308,7 +308,7 @@ def get_obj_by_name(name):
     [(1,): Variable [ var_y_1 | INT ]]
     var_x  +  var_y_0  <=  3
 
-    '''
+    """
     if name in __namedict:
         return __namedict[name]['ref']
     else:
@@ -316,7 +316,7 @@ def get_obj_by_name(name):
 
 
 def dict_to_frame(dictobj, cols=None):
-    '''
+    """
     Converts dictionaries to DataFrame objects for pretty printing
 
     Parameters
@@ -344,7 +344,7 @@ def dict_to_frame(dictobj, cols=None):
     copper        5        7        9
     steel         8        4        3
 
-    '''
+    """
     frobj = pd.DataFrame.from_dict(dictobj, orient='index')
     if isinstance(cols, list):
         frobj.columns = cols
@@ -371,7 +371,7 @@ def extract_argument_as_list(inp):
 
 
 def extract_list_value(tuplist, listname):
-    '''
+    """
     Extracts values inside various object types
 
     Parameters
@@ -385,7 +385,7 @@ def extract_list_value(tuplist, listname):
     -------
     object
         Corresponding value inside listname
-    '''
+    """
     if listname is None:
         v = None
     elif isinstance(listname, dict):
@@ -407,7 +407,7 @@ def extract_list_value(tuplist, listname):
 
 
 def list_length(listobj):
-    '''
+    """
     Returns the length of an object if it is a list, tuple or dict
 
     Parameters
@@ -419,7 +419,7 @@ def list_length(listobj):
     -------
     int
         Length of the list, tuple or dict
-    '''
+    """
     if (isinstance(listobj, list) or isinstance(listobj, tuple) or
             isinstance(listobj, dict)):
         return len(listobj)
@@ -428,7 +428,7 @@ def list_length(listobj):
 
 
 def get_counter(ctrtype):
-    '''
+    """
     Returns and increments the list counter for naming
 
     Parameters
@@ -440,7 +440,7 @@ def get_counter(ctrtype):
     -------
     int
         Current value of the counter
-    '''
+    """
     ctr = __ctr[ctrtype]
     ctr[0] = ctr[0] + 1
     return ctr[0]
@@ -470,9 +470,9 @@ def _to_optmodel_loop(keys):
 
 
 def get_iterators(keys):
-    '''
+    """
     Returns a list of definition strings for a given list of SetIterators
-    '''
+    """
     iterators = []
     groups = {}
     for key in keys:
@@ -501,7 +501,7 @@ def get_conditions(keys):
 
 
 def tuple_unpack(tp):
-    '''
+    """
     Grabs the first element in a tuple, if a tuple is given as argument
 
     Parameters
@@ -512,7 +512,7 @@ def tuple_unpack(tp):
     -------
     object
         The first object inside the tuple.
-    '''
+    """
     if isinstance(tp, tuple):
         if len(tp) == 1:
             return tp[0]
@@ -520,7 +520,7 @@ def tuple_unpack(tp):
 
 
 def tuple_pack(obj):
-    '''
+    """
     Converts a given object to a tuple object
 
     If the object is a tuple, the function returns the input,
@@ -535,7 +535,7 @@ def tuple_pack(obj):
     -------
     tuple
         Tuple that includes the original object
-    '''
+    """
     if isinstance(obj, tuple):
         return obj
     elif isinstance(obj, str):
@@ -544,7 +544,7 @@ def tuple_pack(obj):
 
 
 def list_pack(obj):
-    '''
+    """
     Converts a given object to a list
 
     If the object is already a list, the function returns the input,
@@ -559,14 +559,14 @@ def list_pack(obj):
     -------
     list
         List that includes the original object
-    '''
+    """
     if isinstance(obj, list):
         return obj
     return [obj]
 
 
 def reset_globals():
-    '''
+    """
     Deletes the references inside the global dictionary and restarts counters
 
     Examples
@@ -598,14 +598,14 @@ def reset_globals():
     --------
     :func:`get_namespace`
 
-    '''
+    """
     __namedict.clear()
     for i in __ctr:
         __ctr[i] = [0]
 
 
 def read_frame(df, cols=None):
-    '''
+    """
     Reads each column in :class:`pandas.DataFrame` into a list of\
     :class:`pandas.Series` objects
 
@@ -636,7 +636,7 @@ def read_frame(df, cols=None):
     copper    7
     Name: period2, dtype: int64
 
-    '''
+    """
     series = []
     if cols is None:
         cols = df.columns
@@ -649,7 +649,7 @@ def read_frame(df, cols=None):
 
 
 def read_data(table, key_set, key_cols=None, option='', params=None):
-    '''
+    """
     (Experimental) Reads a CASTable into PROC OPTMODEL sets
 
     Parameters
@@ -669,7 +669,7 @@ def read_data(table, key_set, key_cols=None, option='', params=None):
     -----
     - `key_set` and `key_cols` parameters should be a list. When passing
       a single item, string type can be used instead.
-    '''
+    """
 
     if key_cols is None:
         key_cols = []
@@ -710,10 +710,10 @@ def read_data(table, key_set, key_cols=None, option='', params=None):
     return sasoptpy.data.Statement(s)
 
 
-def read_table(table, session=None, key=['_N_'], columns=None, 
-               key_type=['num'], col_types=None,
+def read_table(table, session=None, key=['_N_'], key_type=['num'], key_name=None,
+               columns=None, col_types=None, col_names=None,
                upload=False, casout=None, ref=True):
-    '''
+    """
     Reads a CAS Table or pandas DataFrame
 
     Parameters
@@ -727,10 +727,10 @@ def read_table(table, session=None, key=['_N_'], columns=None,
         Session object if the table will be uploaded
     key : list, optional
         List of key columns (for CASTable) or index columns (for DataFrame)
-    columns : list, optional
-        List of columns to read into parameters
     key_type : list or string, optional
         A list of column types consists of 'num' or 'str' values
+    columns : list, optional
+        List of columns to read into parameters
     col_types : dict, optional
         Dictionary of column types
     upload : boolean, optional
@@ -752,10 +752,12 @@ def read_table(table, session=None, key=['_N_'], columns=None,
     :func:`Model.read_table`
     :func:`Model.read_data`
 
-    '''
+    """
 
     if col_types is None:
-        col_types = {}
+        col_types = dict()
+    if col_names is None:
+        col_names = dict()
 
     # Type of the given table and the session
     t_type = type(table).__name__
@@ -789,21 +791,33 @@ def read_table(table, session=None, key=['_N_'], columns=None,
     if t_type == 'CASTable' or t_type == 'SASdata' or t_type == 'str':
         if not key or key == [None]:
             key = ['_N_']
+        if key_name is None:
+            key_name = 'set_' + ('_'.join([str(i) for i in key]) if key != ['_N_'] else tname + '_N')
         keyset = sasoptpy.data.Set(
-            name='set_' + ('_'.join([str(i) for i in key])
-                           if key != ['_N_'] else tname + '_N'),
+            name=key_name,
             settype=key_type)
         pars = []
         if columns is None:
             columns = table.columns.tolist()
-        for col in columns:
-            coltype = col_types.get(col, 'num')
-            pars.append(sasoptpy.data.Parameter(name=col, keys=[keyset],
-                                                p_type=coltype))
 
-        dat = read_data(table, key_set=keyset, key_cols=key, params=[
-            {'param': pars[i], 'column': columns[i]}
-            for i in range(len(pars))])
+        for col in columns:
+            if isinstance(col, str):
+                coltype = col_types.get(col, 'num')
+                colname = col_names.get(col, col)
+                #colname = col
+                current_param = sasoptpy.data.Parameter(name=colname, keys=[keyset],
+                                                    p_type=coltype)
+                pars.append({'param': current_param, 'column': col})
+            elif isinstance(col, dict):
+                coltype = col_types.get(col['name'], 'num')
+                colname = col_names.get(col['name'], col['name'])
+                #colname = col['name']
+                current_param = sasoptpy.data.Parameter(name=colname, keys=[keyset],
+                                                    p_type=coltype)
+                col['param'] = current_param
+                pars.append(col)
+
+        dat = read_data(table, key_set=keyset, key_cols=key, params=pars)
     elif t_type == 'DataFrame':
         if key and key != [None] and key != ['_N_']:
             table = table.set_index(key)
@@ -821,16 +835,18 @@ def read_table(table, session=None, key=['_N_'], columns=None,
               .format(table, type(table)))
         return None
 
+    par_refs = [p['param'] for p in pars]
+
     if ref:
-        return (keyset, pars, dat)
+        return (keyset, par_refs, dat)
     elif not pars:
-        return (keyset, pars)
+        return (keyset, par_refs)
     else:
         return keyset
 
 
 def flatten_frame(df, swap=False):
-    '''
+    """
     Converts a :class:`pandas.DataFrame` object into :class:`pandas.Series`
 
     Parameters
@@ -874,7 +890,7 @@ def flatten_frame(df, swap=False):
     (copper, period3)    9
     dtype: int64
 
-    '''
+    """
     new_frame = df.stack()
     if swap:
         new_frame = new_frame.swaplevel()
@@ -883,7 +899,7 @@ def flatten_frame(df, swap=False):
 
 
 def flatten_tuple(tp):
-    '''
+    """
     Flattens nested tuples
 
     Parameters
@@ -903,7 +919,7 @@ def flatten_tuple(tp):
     >>> print(list(so.flatten_tuple(tp)))
     [3, 4, 5, 1, 0, 2]
 
-    '''
+    """
     for elem in tp:
         if isinstance(elem, tuple):
             yield from flatten_tuple(elem)
@@ -912,14 +928,14 @@ def flatten_tuple(tp):
 
 
 def is_equal(a, b):
-    '''
+    """
     Compares various sasoptpy object types
-    '''
+    """
     return a == b
 
 
 def print_model_mps(model):
-    '''
+    """
     Prints the MPS representation of the model
 
     Parameters
@@ -973,13 +989,13 @@ def print_model_mps(model):
     --------
     :func:`sasoptpy.Model.to_frame`
 
-    '''
+    """
     with pd.option_context('display.max_rows', None):
         print(model.to_frame())
 
 
 def get_namespace():
-    '''
+    """
     Prints details of components registered to the global name dictionary
 
     The list includes models, variables, constraints and expressions
@@ -988,7 +1004,7 @@ def get_namespace():
     -------
     string
         A string representation of the namespace
-    '''
+    """
     s = 'Global namespace:'
     for c in [sasoptpy.model.Model, sasoptpy.components.VariableGroup,
               sasoptpy.components.ConstraintGroup,
@@ -1014,14 +1030,14 @@ def set_namedict(ss):
 
 
 def get_len(i):
-    '''
+    """
     Safe wrapper of len() function
 
     Returns
     -------
     int
         len(i) if parameter i has len() function defined, othwerwise 1
-    '''
+    """
     try:
         return len(i)
     except TypeError:
@@ -1059,9 +1075,9 @@ def _to_quoted_string(item):
 
 
 def _set_abstract_values(row):
-    '''
+    """
     Searches for the missing/abstract variable names and set their values
-    '''
+    """
     orname = row['var'].split('[')[0]
     group = get_obj_by_name(orname)
     if group:
@@ -1093,7 +1109,7 @@ def _sort_tuple(i):
 
 
 def get_mutable(exp):
-    '''
+    """
     Returns a mutable copy of the given expression if it is immutable
 
     Parameters
@@ -1105,17 +1121,19 @@ def get_mutable(exp):
     -------
     :class:`Expression`
         Mutable copy of the expression, if the original is immutable
-    '''
+    """
     if isinstance(exp, sasoptpy.components.Variable):
         r = sasoptpy.components.Expression(exp)
-    else:
+        r._abstract = exp._abstract
+    elif isinstance(exp, sasoptpy.components.Expression):
         r = exp
-    r._abstract = exp._abstract
+    else:
+        r = sasoptpy.components.Expression(exp)
     return r
 
 
 def get_solution_table(*argv, key=None, sort=True, rhs=False):
-    '''
+    """
     Returns the requested variable names as a DataFrame table
 
     Parameters
@@ -1131,7 +1149,7 @@ def get_solution_table(*argv, key=None, sort=True, rhs=False):
     -------
     :class:`pandas.DataFrame`
         DataFrame object that holds keys and values
-    '''
+    """
     soltable = []
     listofkeys = []
     keylengths = []
@@ -1331,9 +1349,9 @@ def get_solution_table(*argv, key=None, sort=True, rhs=False):
 
 
 def union(*args):
-    '''
+    """
     Returns a union of :class:`Set`, list or set objects
-    '''
+    """
     type0 = type(args[0])
     for i in args:
         if type(i) != type0:
@@ -1364,11 +1382,11 @@ def union(*args):
 
 
 def wrap(e, abstract=False):
-    '''
+    """
     Wraps expression inside another expression
-    '''
+    """
     wrapper = sasoptpy.components.Expression()
-    if hasattr(e, '_name'):
+    if hasattr(e, '_name') and e._name is not None:
         name = e._name
     else:
         name = check_name(None, 'expr')
@@ -1397,3 +1415,62 @@ def _to_iterator_expression(itlist):
         else:
             strlist.append(str(i))
     return strlist
+
+
+def _evaluate(comp):
+    """
+    Evaluates the value of a given expression component.
+
+    Parameters
+    ----------
+    comp : dict
+        Dictionary of references, coefficient and operator
+
+    Returns
+    -------
+    float
+        Current value of the expression.
+    """
+
+    ref = comp['ref']
+    val = comp['val']
+    op = comp.get('op')
+
+    if op is None:
+        op = '*'
+
+    if op == '*':
+        v = val
+        for i in ref:
+            v = v * i.get_value()
+    elif op == '/':
+        try:
+            v = val * ref[0].get_value() / ref[1].get_value()
+        except ZeroDivisionError:
+            print('ERROR: Float division by zero')
+            return None
+    elif op == '^':
+        v = val * ref[0].get_value() ** ref[1].get_value()
+    else:
+        # Hacky way of doing this
+        exec("v = val * (ref[0].get_value() {} ref[1].get_value())".format(op), globals(), locals())
+
+    return v
+
+
+def _to_sas_string(obj):
+    if isinstance(obj, str):
+        return "'{}'".format(obj)
+    elif isinstance(obj, list):
+        return '{{{}}}'.format(','.join([_to_sas_string(i) for i in obj]))
+    elif isinstance(obj, range):
+        if obj.step == 1:
+            return '{}..{}'.format(_to_sas_string(obj.start), _to_sas_string(obj.stop))
+        else:
+            return '{}..{} by {}'.format(_to_sas_string(obj.start), _to_sas_string(obj.stop), _to_sas_string(obj.step))
+    elif np.issubdtype(type(obj), np.number):
+        return str(obj)
+    else:
+        print('WARNING: Unknown type to transform {}'.format(type(obj)))
+        return '{}'.format(str(obj))
+

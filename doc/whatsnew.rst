@@ -14,15 +14,21 @@ v0.2.1 (TBD)
 
 New Features
 ++++++++++++
+- Support for evaluating nonlinear expressions is added, see :meth:`Expression.get_value` and :func:`_evaluate`
 
 Changes
 +++++++
+- Dictionaries inside components are replaced with ordered dictionaries
+  to preserve deterministic behaviour
 
 Bug Fixes
 +++++++++
 
 Notes
 +++++
+- Unit tests are added for development repository
+- CD/CI integration is done for the development repository on Gitlab
+- Generated models can be checked using the hash values inside tests.responses
 
 
 
