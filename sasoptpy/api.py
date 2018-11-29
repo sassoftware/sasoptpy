@@ -22,7 +22,7 @@ API includes implementation of RESTful API for connecting other applications
 
 from swat import CAS
 import sys
-from flask import Response, stream_with_context, Flask
+from flask import Response, stream_with_context, Flask, request
 from flask.json import jsonify
 from flask_restful import Resource, Api, reqparse
 from itsdangerous import (TimedJSONWebSignatureSerializer
@@ -32,12 +32,53 @@ import secrets
 import threading
 import time
 
-app = Flask('sasoptpy')
-api = Api(app)
-app.config['SECRET_KEY'] = secrets.token_urlsafe(32)
-print('App SECRET KEY', app.config['SECRET_KEY'])
 
-workspaces = {}
+class UserApi(Api):
+    """
+    Main class for using the API abilities
+    """
+
+    def __init__(self):
+        self.app = Flask('sasoptpy')
+        super().__init__(self.app)
+        self.app.config['SECRET_KEY'] = secrets.token_urlsafe(32)
+        self.workspaces = dict()
+        self.setup_resources()
+
+    def setup_resources(self):
+        self.add_resource(Entry, '/')
+        self.add_resource(Workspaces, '/workspaces', '/workspaces/<string:workspace>')
+        self.add_resource(Sessions, '/sessions')
+        self.add_resource(Data, '/data', '/data/<string:name>')
+        self.add_resource(Models, '/models', '/models/<string:model_name>')
+        self.add_resource(
+            Variables, '/variables', '/models/<string:model_name>/variables')
+        self.add_resource(
+            Expressions, '/expressions', '/models/<string:model_name>/objectives')
+        self.add_resource(
+            Constraints, '/constraints', '/models/<string:model_name>/constraints')
+        self.add_resource(
+            Solutions, '/models/<string:model_name>/solutions')
+        self.add_resource(
+            VariableGroups, '/variable_groups', '/models/<string:model_name>/variable_groups')
+
+    def start(self, host=None, port=None, thread=False):
+        if thread:
+            def flask_run():
+                self.app.run(debug=False, host=host, port=port)
+            self.t = threading.Thread(target=flask_run)
+            self.t.start()
+            time.sleep(2)
+        else:
+            self.app.run(debug=False, host=host, port=port)
+
+    def stop(self):
+        func = request.environ.get('werkzeug.server.shutdown')
+        if func is None:
+            raise RuntimeError('Not running with the Werkzeug Server')
+        func()
+        self.t = None
+        return 'Server shutting down...'
 
 
 def verify_auth_token(func):
@@ -52,7 +93,7 @@ def verify_auth_token(func):
         args = parser.parse_args()
         splittoken = args['Authorization'].split()
         if len(splittoken) == 2 and splittoken[0] == 'Bearer':
-            s = TimedSerializer(app.config['SECRET_KEY'])
+            s = TimedSerializer(api.app.config['SECRET_KEY'])
             try:
                 data = s.loads(splittoken[1])
             except SignatureExpired:
@@ -60,8 +101,8 @@ def verify_auth_token(func):
             except BadSignature:
                 return {'message': 'Error: Bad Signature. Token is not verified.'}, 400
             name = data['name']
-            if name in workspaces:
-                ws = workspaces[name]
+            if name in api.workspaces:
+                ws = api.workspaces[name]
                 return func(*args, **kwargs, ws=ws)
             else:
                 return {'message': 'Error: Workspace {} does not exist'.format(name)}, 400
@@ -75,7 +116,7 @@ def generate_auth_token(name, expiration=600):
     """
     Generates an authentication token for given expiration time.
     """
-    s = TimedSerializer(app.config['SECRET_KEY'], expires_in=expiration)
+    s = TimedSerializer(api.app.config['SECRET_KEY'], expires_in=expiration)
     return s.dumps({'name': name})
 
 
@@ -95,6 +136,7 @@ class Workspace:
         self.parameters = {}
         self.sets = {}
         self.tables = {}
+        self.data = {}
         self.dictlist = [
             self.sessions,
             self.models,
@@ -107,7 +149,7 @@ class Workspace:
             self.sets,
             self.tables]
 
-        s = Signer(app.config['SECRET_KEY'])
+        s = Signer(api.app.config['SECRET_KEY'])
         mystr = '{} {}'.format(name, password)
         self._secret = s.sign(mystr.encode('utf-8'))
 
@@ -127,7 +169,7 @@ class Workspace:
         bool : True if the passed identity is the original owner
         """
 
-        s = Signer(app.config['SECRET_KEY'])
+        s = Signer(api.app.config['SECRET_KEY'])
         current_secret = s.sign('{} {}'.format(name, password).encode('utf-8'))
 
         return current_secret == self._secret
@@ -143,20 +185,31 @@ class Workspaces(Resource):
         Creates a workspace using a workspace name and returns a token.
         """
         parser = reqparse.RequestParser()
+
+        # If no workspace is passed, user is trying to create a new one
         if workspace is None:
             parser.add_argument('name', type=str, help='Workspace name', required=True)
         else:
+            # Else, it is trying to renew the token
             if workspace not in workspace:
                 return {'message': 'Workspace does not exist, cannot renew token.'}, 400
+
         parser.add_argument('password', type=str, help='Password for workspace', required=True)
         args = parser.parse_args()
+
         if workspace is None:
-            if args['name'] in workspaces:
-                return {'message': 'A workspace with the same name exists.'}, 422
+            # If user is trying to create a new workspace but if the name already exists, give an error
+            if args['name'] in api.workspaces:
+                return {'message': 'A workspace with the same name already exists.'}, 422
             name = args['name']
         else:
+            # If renewing a token, check if workspace belongs to the user
+            if not api.workspaces[workspace].is_owner(workspace, args['password']):
+                return {'message': 'Wrong password, cannot renew token'}, 401
             name = workspace
-        workspaces[name] = Workspace(name, args['password'])
+
+
+        api.workspaces[name] = Workspace(name, args['password'])
         token = generate_auth_token(name, 600)
         return {'token': token.decode('ascii'), 'duration': 600}, 200
 
@@ -165,7 +218,7 @@ class Workspaces(Resource):
         Shows a list of available workspace names.
         """
         if workspace is None:
-            return {'workspaces': list(workspaces.keys())}, 200
+            return {'workspaces': list(api.workspaces.keys())}, 200
         else:
             return self.test(name=workspace)
 
@@ -214,6 +267,10 @@ class Entry(Resource):
                 i.clear()
             return {'message': 'Cleaned the workspace contents',
                     'workspace': ws.name}, 200
+        elif args['action'] == 'submit':
+            # Submit Python code as a string
+            return {'message': 'Not implemented'}, 501  # TODO finish python submission
+
 
 
 class Sessions(Resource):
@@ -328,6 +385,21 @@ class Models(Resource):
             }, 201
 
 
+class Data(Resource):
+    """
+    Represents data objects
+    """
+
+    @verify_auth_token
+    def get(self, name=None):
+        return {'message': 'Not implemented'}, 501
+
+    @verify_auth_token
+    def post(self):
+        return {'message': 'Not implemented'}, 501
+
+
+
 class Variables(Resource):
     """
     Represents variables inside models
@@ -370,6 +442,78 @@ class Variables(Resource):
         v = m.add_variable(name=args['name'], lb=args['lb'], ub=args['ub'],
                            vartype=args['vartype'])
         ws.variables[v._name] = v
+
+        return {
+            'name': v._name}, 201
+
+
+class VariableGroups(Resource):
+    """
+    Represents variables inside models
+    """
+
+    @verify_auth_token
+    def get(self, model_name=None, ws=None):
+        if model_name is None:
+            return {'variablegroups':
+                    {i: ws.variable_groups[i]._name for i in ws.variable_groups}}, 200
+        else:
+            if model_name in ws.models:
+                m = ws.models[model_name]
+                return {'variablegroups': [i._name for i in m.get_variables()]}, 200  # TODO to be updated for VGs
+            else:
+                return {
+                    'message': 'Model name is not found'}, 404
+
+    @verify_auth_token
+    def post(self, model_name=None, ws=None):
+        """
+        Add new variable groups to model
+        """
+
+        if model_name in ws.models:
+            m = ws.models[model_name]
+        else:
+            return {
+                'message': 'Model name is not found'}, 404
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('indices', type=str, help='Indices of the variable group')
+        parser.add_argument('name', type=str, help='Name of the variable group')
+        parser.add_argument('lb', type=float,
+                            help='Lower bound of the variable group')
+        parser.add_argument('ub', type=float,
+                            help='Upper bound of the variable group')
+        parser.add_argument('vartype', type=str, help='Type of the variable group')
+        parser.add_argument('init', type=float, help='Initial value of the variable group')
+        args = parser.parse_args()
+
+        #v = m.add_variable(name=args['name'], lb=args['lb'], ub=args['ub'],
+        #                   vartype=args['vartype'])
+        #ws.variables[v._name] = v
+
+        combined = {**ws.variables, **ws.variable_groups, 'ws': ws, 'so': ws.so}
+
+        exec(
+            '{} = so.Constraint({}, name=\'{}\')'.format(
+                args['name'], args['expression'], args['name']),
+            globals(), combined)
+        c = combined[args['name']]
+
+        if m is None:
+            return {
+                       'name': c._name,
+                       'expression': str(c)
+                   }, 201
+        else:
+            m = ws.models[model_name]
+            m.include(c)
+            return {
+                       'name': c._name,
+                       'model': model_name,
+                       'expression': str(c)
+                   }, 201
+
 
         return {
             'name': v._name}, 201
@@ -592,19 +736,5 @@ class Streamer:
         return self.stdout
 
 
-api.add_resource(Entry, '/')
-api.add_resource(Workspaces, '/workspaces', '/workspaces/<string:workspace>')
-api.add_resource(Sessions, '/sessions')
-api.add_resource(Models, '/models', '/models/<string:model_name>')
-api.add_resource(
-    Variables, '/variables', '/models/<string:model_name>/variables')
-api.add_resource(
-    Expressions, '/expressions', '/models/<string:model_name>/objectives')
-api.add_resource(
-    Constraints, '/constraints', '/models/<string:model_name>/constraints')
-api.add_resource(
-    Solutions, '/models/<string:model_name>/solutions')
-
-
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+# Create API as an object
+api = UserApi()

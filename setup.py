@@ -30,12 +30,12 @@ setup(
     author_email='Sertalp.Cay@sas.com',
     license='Apache v2.0',
     install_requires=[
-        'pandas >= 0.16.0',
+        'pandas >= 0.23.3',
         'swat >= 1.4.0',
-        'numpy',
-        'Flask >= 1.0.2',
-        'flask_restful',
-        'itsdangerous'
+        'numpy >= 1.14.5',
+        'flask >= 1.0.2',
+        'flask_restful >= 0.3.6',
+        'itsdangerous >= 0.24'
         ],
     setup_requires=[
         'numpy'
