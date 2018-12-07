@@ -916,7 +916,7 @@ params=[{'param': value, 'column': 'value'}])
                     self._constraints.append(s)
                 self._objective = c._objective
 
-    def set_objective(self, expression, sense=None, name=None):
+    def set_objective(self, expression, sense=None, name=None, multiobj=False):
         """
         Sets the objective function for the model
 
@@ -928,6 +928,8 @@ params=[{'param': value, 'column': 'value'}])
             Objective value direction, 'MIN' or 'MAX'
         name : string, optional
             Name of the objective value
+        multiobj : boolean, optional
+            Option for keeping the objective function when working with multiple objectives
 
         Returns
         -------
@@ -946,9 +948,24 @@ params=[{'param': value, 'column': 'value'}])
         >>> print(repr(m.get_objective()))
         sasoptpy.Expression(exp =  4.0 * x  -  5.0 * y , name='obj')
 
+        >>> m.set_objective(2 * x + y, sense=so.MIN, name='f1', multiobj=True)
+        >>> m.set_objective( (x - y) ** 2, sense=so.MIN, name='f2', multiobj=True)
+        >>> print(m.to_optmodel(options={'with': 'lso', 'obj': (f1, f2)}))
+        proc optmodel;
+        var x;
+        var y;
+        min f1 = 2 * x + y;
+        min f2 = (x - y) ^ (2);
+        solve with lso obj (f1 f2);
+        print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
+        print _con_.name _con_.body _con_.dual;
+        quit;
+
         Notes
         -----
         - Default objective sense is minimization (MIN)
+        - This method replaces the existing objective of the model. When working with multiple objectives, use the
+          `multiobj` parameter and use 'obj' option in :meth:`Model.solve` and :meth:`Model.to_optmodel` methods.
 
         """
         if sense is None:
@@ -962,6 +979,16 @@ params=[{'param': value, 'column': 'value'}])
                 obj = sasoptpy.utils.get_mutable(expression)
         else:
             obj = sasoptpy.components.Expression(expression)
+
+        if self._objective is not None and self._objective._keep:
+            st = '{} {} = '.format(self._sense.lower(), self._objective._name)
+            st += self._objective._defn() + ';'
+            self.add_statement(st)
+
+        if multiobj:
+            obj._keep = True
+
+
         self._objective = obj
         if self._objective._name is None:
             name = sasoptpy.utils.check_name(name, 'obj')
@@ -1735,6 +1762,7 @@ params=[{'param': value, 'column': 'value'}])
         * This method is called inside :func:`Model.solve`.
 
         """
+        solve_option_keys = ('with', 'obj', 'objective', 'noobj', 'noobjective', 'relaxint')
 
         if ordered:
             s = ''
@@ -1843,22 +1871,30 @@ params=[{'param': value, 'column': 'value'}])
             # Solve block
             if solve:
                 s += 'solve'
-                if options.get('with', None):
-                    s += ' with ' + options['with']
-                if options.get('relaxint', False):
-                    s += ' relaxint'
+                pre_opts = ''
+                pos_opts = ''
+
                 if options:
-                    optstring = ''
                     for key, value in options.items():
-                        if key not in ('with', 'relaxint'):
+                        if key in solve_option_keys:
+                            if key == 'with':
+                                pre_opts += ' with ' + options['with']
+                            elif key == 'relaxint' and options[key] is True:
+                                pre_opts += ' relaxint '
+                            elif key == 'obj' or key == 'objectives':
+                                pre_opts += ' obj ({})'.format(' '.join(i._name for i in options[key]))
+                        else:
                             if type(value) is dict:
-                                optstring += ' {}=('.format(key) + ','.join(
+                                pos_opts += ' {}=('.format(key) + ','.join(
                                     '{}={}'.format(i, j)
                                     for i, j in value.items()) + ')'
                             else:
-                                optstring += ' {}={}'.format(key, value)
-                    if optstring:
-                        s += ' /' + optstring
+                                pos_opts += ' {}={}'.format(key, value)
+
+                    if pre_opts != '':
+                        s += pre_opts
+                    if pos_opts != '':
+                        s += ' /' + pos_opts
                 s += ';\n'
 
             # Output ODS tables
@@ -2178,6 +2214,12 @@ params=[{'param': value, 'column': 'value'}])
             options.update(lp)
             options['with'] = 'lp'
 
+        # Check if multiple solution table is needed
+        if options.get('obj', None):
+            self.add_statement(
+                'create data allsols from [s]=(1.._NVAR_) ' +
+                'name=_VAR_[s].name {j in 1.._NSOL_} <col(\'sol_\'||j)=_VAR_[s].sol[j]>;', after_solve=True)
+
         # Call solver based on session type
         return solver_func(
             sess, options=options, submit=submit, name=name,
@@ -2469,7 +2511,7 @@ params=[{'param': value, 'column': 'value'}])
                 self._status = response.solutionStatus
                 self._soltime = response.solutionTime
 
-                if('OPTIMAL' in response.solutionStatus):
+                if('OPTIMAL' in response.solutionStatus or 'ABSFCONV' in response.solutionStatus):
                     self._objval = response.objective
                     # Replace initial values with current values
                     for v in self._variables:

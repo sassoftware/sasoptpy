@@ -106,6 +106,7 @@ class Expression:
         self._iterkey = []
         self._abstract = False
         self._conditions = []
+        self._keep = False
 
     def copy(self, name=None):
         """
