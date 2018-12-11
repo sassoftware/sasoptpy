@@ -2481,11 +2481,17 @@ params=[{'param': value, 'column': 'value'}])
                 self._dualSolution.columns = ['con', 'value', 'dual']
                 # Bring solution to variables
                 for _, row in self._primalSolution.iterrows():
+
                     if row['var'] in self._variableDict:
                         self._variableDict[row['var']]._value = row['value']
                     else:
-                        # Search in vargroups for the original name
-                        sasoptpy.utils._set_abstract_values(row)
+                        # OPTMODEL strings may have spaces in it
+                        str_safe = row['var'].replace(' ', '_').replace('\'', '')
+                        if str_safe in self._variableDict:
+                            self._variableDict[str_safe]._value = row['value']
+                        else:
+                            # Search in vargroups for the original name
+                            sasoptpy.utils._set_abstract_values(row)
 
                 # Capturing dual values for LP problems
                 if ptype == 1:
