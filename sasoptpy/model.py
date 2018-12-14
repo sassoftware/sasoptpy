@@ -1703,6 +1703,13 @@ params=[{'param': value, 'column': 'value'}])
                                columns=['Field1', 'Field2', 'Field3', 'Field4',
                                         'Field5', 'Field6', '_id_'])
         self._datarows = []
+
+        df = mpsdata
+        for f in ['Field4', 'Field6']:
+            df[f] = df[f].replace('', np.nan)
+        df['_id_'] = df['_id_'].astype('int')
+        df[['Field4', 'Field6']] = df[['Field4', 'Field6']].astype(float)
+
         return mpsdata
 
     def to_optmodel(self, header=True, expand=False, ordered=False,
@@ -2112,6 +2119,7 @@ params=[{'param': value, 'column': 'value'}])
         if self.test_session():
             # Conversion and upload
             df = self.to_frame(constant=constant)
+
             print('NOTE: Uploading the problem DataFrame to the server.')
             if name is not None:
                 return self._session.upload_frame(
@@ -2586,12 +2594,6 @@ params=[{'param': value, 'column': 'value'}])
 
             # Get the MPS data
             df = self.to_frame(constant=True)
-
-            # Prepare for the upload
-            for f in ['Field4', 'Field6']:
-                df[f] = df[f].replace('', np.nan)
-            df['_id_'] = df['_id_'].astype('int')
-            df[['Field4', 'Field6']] = df[['Field4', 'Field6']].astype(float)
 
             # Upload MPS table with new arguments
             try:

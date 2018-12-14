@@ -826,10 +826,10 @@ def read_table(table, session=None, key=['_N_'], key_type=['num'], key_name=None
         if columns is None:
             columns = list(table)
         for col in columns:
-            pars.append(table[col])
+            pars.append({'param': table[col]})
     elif t_type == 'Series':
         keyset = table.index.tolist()
-        pars = [table]
+        pars = [{'param': table}]
     else:
         print('ERROR: Data type is not recognized in read_table: {} ({})'
               .format(table, type(table)))

@@ -191,7 +191,6 @@ class Expression:
                 print('ERROR: Unknown operator: {}'.format(self._operator))
         return round(v, 6)
 
-    @property
     def get_dual(self):
         """
         Returns the dual value
