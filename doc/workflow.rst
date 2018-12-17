@@ -128,11 +128,11 @@ the :func:`get_solution_table` function.
 
 .. ipython:: python
    
-   print(so.get_solution_table(get, key=ITEMS));
+   print(so.get_solution_table(get, key=ITEMS))
 
 .. ipython:: python
 
-   print('Total value:', total_value.get_value());
+   print('Total value:', total_value.get_value())
 
 
 Server-side models

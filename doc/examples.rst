@@ -32,6 +32,7 @@ Viya Examples / Concrete
    Decentralization <examples/decentralization.rst>
    SAS/OR Blog: Optimal Wedding <examples/optimal_wedding.rst>
    SAS/OR Blog: Kidney Exchange <examples/kidney_exchange.rst>
+   Multiobjective <examples/multiobjective.rst>
 
 Viya Examples / Abstract
 ------------------------
