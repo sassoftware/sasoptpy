@@ -38,11 +38,29 @@ BIN = 'BIN'
 # Global dictionary
 __namedict = {}
 
+# Container for wrapped statements
+_transfer = {}
+transfer_allowed = False
+
 # Counters
 __ctr = {'obj': [0], 'var': [0], 'con': [0], 'expr': [0], 'model': [0],
          'i': [0], 'set': [0], 'param': [0], 'impvar': [0], 'table': [0]}
 
 __objcnt = 0
+
+# Transformation dictionary
+_transform = {
+    'binary': BIN,
+    'bin': BIN,
+    'integer': INT,
+    'int': INT,
+    'continuous': CONT,
+    'cont': CONT,
+    'maximize': MAX,
+    'max': MAX,
+    'minimize': MIN,
+    'min': MIN
+}
 
 
 def check_name(name, ctype=None):
@@ -217,6 +235,8 @@ def quick_sum(argv):
 
     """
     clocals = argv.gi_frame.f_locals.copy()
+    if transfer_allowed:
+        argv.gi_frame.f_globals.update(_transfer)
     exp = sasoptpy.components.Expression(temp=True)
     iterators = []
     for i in argv:
@@ -1042,6 +1062,16 @@ def get_len(i):
         return len(i)
     except TypeError:
         return 1
+
+
+def _load_transfer(d):
+    import sasoptpy as s
+    s.utils._transfer = {**s.utils._transfer, **d}
+
+
+def _clear_transfer():
+    import sasoptpy as s
+    s.utils._transfer = dict()
 
 
 def _list_item(i):
