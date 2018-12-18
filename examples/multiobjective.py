@@ -1,7 +1,7 @@
 import sasoptpy as so
 
 
-def test(cas_conn, sols=True):
+def test(cas_conn, sols=False):
 
     m = so.Model(name='multiobjective', session=cas_conn)
 
