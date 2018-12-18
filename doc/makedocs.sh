@@ -23,11 +23,12 @@ fi
 
 # Generate html
 make html
+# Make tex file
+make latex
 # Replace sensitive information
 grep -r -l 'CASUSERHDFS' _build/html | xargs -r -d'\n' sed -i 's/CASUSERHDFS\(([A-Za-z0-9]*)\)/CASUSERHDFS(casuser)/g'
-# Make pdf
-make latex
 sed -i -- 's/CASUSERHDFS([A-Za-z0-9]*)/CASUSERHDFS(casuser)/g' _build/latex/sasoptpy.tex 
+# Generate pdf
 cd _build/latex
 make
 cp sasoptpy.pdf ../html

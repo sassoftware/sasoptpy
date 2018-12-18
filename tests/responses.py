@@ -66,8 +66,8 @@ ow = [
 
 # Kidney Exchange
 kx = [
-    'de0124a1367ff9132c69dbc41dee6b5268c092b2cd39c8249d78a047a4adefef',
-    '35c3ad626fe7d97c130ec4c58dde382503c70b72db3367998a43d5ea3567293a'
+    '03c1391eda0f5dc981abae20ce8966cae55dbf9531e1572bd27a6a152c6c7a49',
+    '7d8b117f6511539d7a6b5802ef74afcb26f7b3e5066e763aa647267b02ff7c56'
 ]
 
 # Curve Fitting
