@@ -23,6 +23,7 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
+import matplotlib
 
 # -- General configuration ------------------------------------------------
 
@@ -34,8 +35,8 @@ sys.path.insert(0, os.path.abspath('..'))
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'matplotlib.sphinxext.only_directives',
-    'matplotlib.sphinxext.plot_directive',
+    #'matplotlib.sphinxext.only_directives',
+    #'matplotlib.sphinxext.plot_directive',
     'sphinx.ext.autodoc',
     'sphinx.ext.doctest',
     'sphinx.ext.intersphinx',
@@ -47,6 +48,10 @@ extensions = [
     'sphinx.ext.imgmath',
     'sphinxcontrib.fulltoc',
     'numpydoc',
+    'sphinxcontrib.httpdomain',
+    'sphinxcontrib.httpdomain',
+    'sphinxcontrib.httpexample',
+    'sphinxcontrib.excel_table',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -117,7 +122,7 @@ html_theme = 'nature'
 # documentation.
 #
 html_theme_options = {
-    "sidebarwidth": "400"
+    "sidebarwidth": "320"
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,

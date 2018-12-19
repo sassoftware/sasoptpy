@@ -51,4 +51,5 @@ See our SAS Global Forum paper: `Optimization Modeling with Python and SAS Viya 
    workflow
    examples
    api/api
+   web-api
 

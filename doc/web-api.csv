@@ -1,0 +1,33 @@
+Set,Verb,URL,Auth,Action
+Overview,GET,/,,Returns the server status and version
+,POST,/,Bearer,Performs the requested action
+,GET,/workspaces,,Returns the list of workspaces
+,POST,/workspaces,,Creates a new workspace and returns auth token
+,GET,/workspaces/{workspace},Bearer,Checks if workspace is reachable
+,POST,/workspaces/{workspace},,Renews an auth token using initial password
+,GET,/sessions,Bearer,Returns a list of CAS sessions
+,POST,/sessions,Bearer,Creates a new CAS session
+Models,GET,/models,Bearer,Returns a list of models
+,POST,/models,Bearer,Creates a new model
+,GET,/models/{model},Bearer,Returns the requested model
+Variables,GET,/variables,Bearer,Returns a list of variables
+,GET,/models/{model}/variables,Bearer,Returns a list of variables inside the model
+,POST,/variables,Bearer,Creates a new variable
+,POST,/models/{model}/variables,Bearer,Creates a new variable inside the model
+,GET,/variable_groups,Bearer,Returns a list of variable groups
+,GET,/models/{model}/variable_groups,Bearer,Returns a list of variable groups inside the model
+,POST,/variable_groups,Bearer,Creates a set of variable group
+,POST,/models/{model}/variable_groups,Bearer,Creates a set of variable group inside the model
+Expressions,GET,/expressions,Bearer,Returns a list of expressions
+,GET,/models/{model}/expressions,Bearer,Returns a list of expressions inside the model
+,POST,/expressions,Bearer,Creates a new expression
+,POST,/models/{model}/expressions,Bearer,Creates a new expression inside the model
+Constraints,GET,/constraints,Bearer,Returns a list of constraints
+,GET,/models/{model}/constraints,Bearer,Returns a list of constraints inside the model
+,POST,/constraints,Bearer,Creates a constraint
+,POST,/models/{model}/constraints,Bearer,Creates a constraint inside the model
+,GET,/constraint_groups,Bearer,Returns a list of constraint groups
+,GET,/models/{model}/constraint_groups,Bearer,Returns a list of constraint groups inside the model
+,POST,/constraint_groups,Bearer,Creates a set of constraint group
+,POST,/models/{model}/constraint_groups,Bearer,Creates a set of constraint group inside the model
+Data,POST,/data,Bearer,Creates a data object in the Python server

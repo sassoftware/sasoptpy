@@ -70,8 +70,9 @@ class UserApi(Api):
             def flask_run():
                 self.app.run(debug=False, host=host, port=port)
             self.t = threading.Thread(target=flask_run)
+            self.t.setDaemon(True)
             self.t.start()
-            time.sleep(2)
+            time.sleep(1)
         else:
             self.app.run(debug=True, host=host, port=port)
 
