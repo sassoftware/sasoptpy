@@ -25,7 +25,6 @@ import warnings
 import numpy as np
 import pandas as pd
 
-import sasoptpy as so
 import sasoptpy.utils
 
 
@@ -2112,6 +2111,10 @@ class ConstraintGroup:
 
     def _recursive_add_cons(self, argv, name, condict, conlist, ckeys=()):
         conctr = 0
+
+        if sasoptpy.utils.transfer_allowed:
+            argv.gi_frame.f_globals.update(sasoptpy.utils._transfer)
+
         for idx, c in enumerate(argv):
             if type(argv) == list:
                 newkeys = ckeys + (idx,)

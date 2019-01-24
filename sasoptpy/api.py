@@ -20,6 +20,7 @@
 API includes implementation of RESTful API for connecting other applications
 """
 
+from collections import OrderedDict
 from swat import CAS
 import sys
 from flask import Response, stream_with_context, Flask, request
@@ -135,17 +136,17 @@ class Workspace:
         import sasoptpy as so
         self.so = so
         self.name = name
-        self.sessions = {}
-        self.models = {}
-        self.variables = {}
-        self.variable_groups = {}
-        self.constraints = {}
-        self.constraint_groups = {}
-        self.expressions = {}
-        self.parameters = {}
-        self.sets = {}
-        self.tables = {}
-        self.data = {}
+        self.sessions = OrderedDict()
+        self.models = OrderedDict()
+        self.variables = OrderedDict()
+        self.variable_groups = OrderedDict()
+        self.constraints = OrderedDict()
+        self.constraint_groups = OrderedDict()
+        self.expressions = OrderedDict()
+        self.parameters = OrderedDict()
+        self.sets = OrderedDict()
+        self.tables = OrderedDict()
+        self.data = OrderedDict()
         self.dictlist = [
             self.sessions,
             self.models,
@@ -229,7 +230,7 @@ class Workspaces(Resource):
 
         api.workspaces[name] = Workspace(name, args['password'])
         token = generate_auth_token(name, 600)
-        return {'token': token.decode('ascii'), 'duration': 600}, 200
+        return {'token': token.decode('ascii'), 'duration': 600}, 201
 
     def get(self, workspace=None):
         """
@@ -425,16 +426,11 @@ class Data(Resource):
         args = parser.parse_args()
         # Save to the workspace
         ws.data[args['name']] = obj = json.loads(args['value'])
-        value = json.dumps(obj) if not isinstance(obj, list) else 'None'
-        size = 'None' if not isinstance(obj, list) else len(obj)
+        size = '' if getattr(obj, '__iter__', None) is None else len(obj)
         # Return
-        return {'message': 'Data object created',
-                'name': args['name'],
+        return {'name': args['name'],
                 'type': type(obj).__name__,
-                'value': value,
                 'len': size}, 201
-
-
 
 
 class Variables(Resource):
@@ -497,7 +493,7 @@ class VariableGroups(Resource):
         else:
             if model_name in ws.models:
                 m = ws.models[model_name]
-                return {'variablegroups': [i._name for i in m.get_variables()]}, 200  # TODO to be updated for VGs
+                return {'variablegroups': [i._name for i in m._vargroups]}, 200
             else:
                 return {
                     'message': 'Model name is not found'}, 404
@@ -515,7 +511,7 @@ class VariableGroups(Resource):
                 'message': 'Model name is not found'}, 404
 
         parser = reqparse.RequestParser()
-        parser.add_argument('indices', type=str, help='Indices of the variable group')
+        parser.add_argument('index', type=list, location='json', help='Indices of the variable group', action='append')
         parser.add_argument('name', type=str, help='Name of the variable group')
         parser.add_argument('lb', type=float,
                             help='Lower bound of the variable group')
@@ -527,40 +523,36 @@ class VariableGroups(Resource):
 
         combined = ws.get_combined()
 
-        indices = json.loads(args['indices'])
+        index = args['index']
+        indices = []
+        for i in index:
+            if isinstance(i, str) and i[0] == '$':
+                indices.append(combined[i[1:]])
+            else:
+                indices.append(i)
 
-        exec(
-            '{} = so.VariableGroup({}, name=\'{}\', lb={}, ub={}, vartype={}, init={})'.format(
-                args['name'], ', '.join(
-                    repr(i) if not(isinstance(i, str) and i[0] == '$') else str(i)[1:] for i in indices),
-                args['name'], args['lb'], args['ub'], UserApi.transform(args['vartype']), args['init']),
-            globals(), combined)
-        vg = ws.variable_groups[args['name']] = combined[args['name']]
+        vg = m.add_variables(
+            *indices, name=args.get('name', None), lb=args.get('lb', None), ub=args.get('ub', None),
+            vartype=args.get('vartype', None))
 
-        if m is None:
-            return {
-                       'name': vg._name,
-                       'definition': str(vg)
-                   }, 201
-        else:
-            m = ws.models[model_name]
-            m.include(vg)
-            return {
-                       'name': vg._name,
-                       'model': model_name
-                   }, 201
+        ws.variable_groups[args['name']] = vg
 
+        return {'message': 'Variable group is created', 'name': vg._name}, 201
 
 
 class Expressions(Resource):
 
     @verify_auth_token
-    def get(self, ws):
+    def get(self, model_name=None, ws=None):
         """
         Returns a list of expressions
         """
-        return {'expressions':
-                {i: str(ws.expressions[i]) for i in ws.expressions}}, 200
+        if model_name is None:
+            return {'expressions':
+                    {i: str(ws.expressions[i]) for i in ws.expressions}}, 200
+        else:
+            m = ws.models[model_name]
+            return {'objective': {m._objective._name: str(m._objective)}}
 
     @verify_auth_token
     def post(self, model_name=None, ws=None):
@@ -586,16 +578,11 @@ class Expressions(Resource):
         ws.so.utils.transfer_allowed = True
         ws.so.utils._load_transfer(combined)
 
-        # Execute
-        execstr = args['name'] + ' = ' + args['expression']
-        exec(execstr, globals(), combined)
+        e = eval(args['expression'], None, combined)
 
         # Clear transfer
         ws.so.utils.transfer_allowed = False
         ws.so.utils._clear_transfer()
-
-        # Grab the outcome
-        e = combined[args['name']]
 
         if m is not None:
             e = m.set_objective(e, sense=args['sense'], name=args['name'])
@@ -613,13 +600,21 @@ class Expressions(Resource):
 class Constraints(Resource):
 
     @verify_auth_token
-    def get(self, ws):
+    def get(self, model_name=None, ws=None):
         """
         Returns a list of constraints
         """
 
-        return {'constraints':
-                {i: str(ws.constraints[i]) for i in ws.constraints}}, 200
+        if model_name is None:
+            return {'constraints':
+                        {i: str(ws.constraints[i]) for i in ws.constraints}}, 200
+        else:
+            if model_name in ws.models:
+                m = ws.models[model_name]
+                return {'constraints': [i._name for i in m.get_constraints()]}, 200
+            else:
+                return {
+                    'message': 'Model name is not found'}, 404
 
     @verify_auth_token
     def post(self, model_name=None, ws=None):
@@ -632,13 +627,11 @@ class Constraints(Resource):
             Name of the model
         """
 
-        if model_name is not None and model_name not in ws.models:
-            return {
-                'message': 'Model name is not found'}, 404
-        elif model_name is not None:
+        if model_name in ws.models:
             m = ws.models[model_name]
         else:
-            m = None
+            return {
+                'message': 'Model name is not found'}, 404
 
         parser = reqparse.RequestParser()
         parser.add_argument('expression', type=str, help='Constraint')
@@ -647,25 +640,22 @@ class Constraints(Resource):
 
         combined = ws.get_combined()
 
-        exec(
-            '{} = so.Constraint({}, name=\'{}\')'.format(
-                args['name'], args['expression'], args['name']),
-            globals(), combined)
-        c = combined[args['name']]
+        ws.so.utils.transfer_allowed = True
+        ws.so.utils._load_transfer(combined)
 
-        if m is None:
-            return {
-                'name': c._name,
-                'expression': str(c)
-            }, 201
-        else:
-            m = ws.models[model_name]
-            m.include(c)
-            return {
-                'name': c._name,
-                'model': model_name,
-                'expression': str(c)
-            }, 201
+        e = eval(args['expression'], None, combined)
+        c = m.add_constraint(e, name=args.get('name', None))
+
+        ws.so.utils.transfer_allowed = False
+        ws.so.utils._clear_transfer()
+
+        ws.constraints[args['name']] = c
+
+        return {
+            'name': c._name,
+            'model': model_name,
+            'expression': str(c)
+        }, 201
 
 
 class ConstraintGroups(Resource):
@@ -674,11 +664,11 @@ class ConstraintGroups(Resource):
     def get(self, model_name=None, ws=None):
         if model_name is None:
             return {'constraintgroups':
-                        {i: str(ws.constraint_groups[i]) for i in ws.constraint_groups}}, 200
+                        {i: {j._name: str(j) for j in ws.constraint_groups[i]} for i in ws.constraint_groups}}, 200
         else:
             if model_name in ws.models:
                 m = ws.models[model_name]
-                return {'constraintgroups': [str(i) for i in m.get_constraints()]}, 200  # TODO to be updated for CGs
+                return {'constraintgroups': {i._name: {j._name: str(j) for j in i} for i in m._congroups}}, 200
             else:
                 return {
                            'message': 'Model name is not found'}, 404
@@ -694,13 +684,11 @@ class ConstraintGroups(Resource):
             Name of the model
         """
 
-        if model_name is not None and model_name not in ws.models:
-            return {
-                'message': 'Model name is not found'}, 404
-        elif model_name is not None:
+        if model_name in ws.models:
             m = ws.models[model_name]
         else:
-            m = None
+            return {
+                'message': 'Model name is not found'}, 404
 
         parser = reqparse.RequestParser()
         parser.add_argument('expression', type=str, help='Constraint expression')
@@ -710,24 +698,22 @@ class ConstraintGroups(Resource):
 
         combined = ws.get_combined()
 
-        exec(
-            '{} = so.ConstraintGroup(({} {}), name=\'{}\')'.format(
-                args['name'], args['expression'], args['index'], args['name']),
-            globals(), combined)
-        c = combined[args['name']]
+        ws.so.utils.transfer_allowed = True
+        ws.so.utils._load_transfer(combined)
 
-        if m is None:
-            return {
-                'name': c._name,
-                'expression': str(c)
-            }, 201
-        else:
-            m = ws.models[model_name]
-            m.include(c)
-            return {
-                'name': c._name,
-                'model': model_name
-            }, 201
+        c = eval('so.ConstraintGroup(({} {}), name=\'{}\')'.format(args['expression'], args['index'], args['name']),
+                 None, combined)
+        cg = m.add_constraints(None, cg = c, name=args.get('name', None))
+
+        ws.so.utils.transfer_allowed = False
+        ws.so.utils._clear_transfer()
+
+        ws.constraint_groups[args['name']] = cg
+
+        return {
+            'name': cg._name,
+            'model': model_name
+        }, 201
 
 
 class Solutions(Resource):

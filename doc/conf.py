@@ -49,8 +49,6 @@ extensions = [
     'sphinxcontrib.fulltoc',
     'numpydoc',
     'sphinxcontrib.httpdomain',
-    'sphinxcontrib.httpdomain',
-    'sphinxcontrib.httpexample',
     'sphinxcontrib.excel_table',
 ]
 
