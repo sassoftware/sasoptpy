@@ -674,7 +674,7 @@ def read_data(table, key_set, key_cols=None, option='', params=None):
 
     Parameters
     ----------
-    table : CASTable
+    table : :class:`swat.cas.table.CASTable`
         The CAS table to be read to sets and parameters
     key_set : :class:`sasoptpy.data.Set`
         Set object to be read as the key (index)

@@ -66,7 +66,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'sasoptpy'
-copyright = '2017-2018, SAS Institute'
+copyright = '2017-2019, SAS Institute'
 author = 'Sertalp B. Cay (SAS Institute)'
 
 # The version info for the project you're documenting, acts as replacement for

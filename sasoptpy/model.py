@@ -537,7 +537,7 @@ class Model:
 
         Parameters
         ----------
-        table : CASTable
+        table : :class:`swat.cas.table.CASTable`
             The CAS table to be read to sets and parameters
         key_set : :class:`Set`
             Set object to be read as the key (index)

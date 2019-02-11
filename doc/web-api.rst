@@ -32,7 +32,7 @@ Status of the server can be checked using a request to the `localhost` address.
 Overview
 ++++++++
 
-A plain `GET` request to the server returns the package name and current version of the package.
+A `GET` request to the server root returns the package name and current version of the package.
 
 .. http:get:: /
 
@@ -68,7 +68,6 @@ A plain `GET` request to the server returns the package name and current version
 You can perform actions on the server using a `POST` request to the root domain.
 In order to separate each user's work, an authentication token is required to identify the workspace you are working at.
 The action you are requesting can only be performed at the workspace level.
-Server-wide actions will be added in next releases.
 
 .. http:post:: /
 
@@ -113,7 +112,7 @@ Server-wide actions will be added in next releases.
 You can create a workspace to separate namespace when working on multiple projects at the same time.
 Each workspace requires a name and a password at initialization.
 It generates an OAuth2 token to authenticate your upcoming requests.
-You can see a list of workspaces as follows.
+You can see a list of workspaces as follows:
 
 .. http:get:: /workspaces
 
@@ -306,7 +305,7 @@ You can see a list of CAS sessions in the workspace as follows:
       }
 
 You can create a CAS session using a `POST` request.
-Note that, an ``authinfo`` file on the Python server is needed to make this connection.
+An ``authinfo`` file on the Python server might be needed to make this connection.
 
 .. http:post:: /sessions
 
@@ -677,7 +676,6 @@ A list of variable groups inside a model can be obtained as follows:
       Content-Type: application/json
       Content-Length: 29
       Server: Werkzeug/0.14.1 Python/3.6.5
-      Date: Mon, 07 Jan 2019 19:51:29 GMT
 
       {
         "variablegroups": [
@@ -816,7 +814,6 @@ Objective of a model can be obtained using a `GET` request:
       Content-Type: application/json
       Content-Length: 83
       Server: Werkzeug/0.14.1 Python/3.6.5
-      Date: Tue, 08 Jan 2019 19:43:14 GMT
 
       {
         "objective": {
@@ -865,7 +862,6 @@ Here, `expression` parameter should conform as a regular Python expression.
       Content-Type: application/json
       Content-Length: 90
       Server: Werkzeug/0.14.1 Python/3.6.5
-      Date: Tue, 08 Jan 2019 19:43:14 GMT
 
       {
         "name": "total_value",
@@ -907,7 +903,6 @@ A list of constraints in the workspace can be requested as follows:
       Content-Type: application/json
       Content-Length: 89
       Server: Werkzeug/0.14.1 Python/3.6.5
-      Date: Thu, 10 Jan 2019 18:58:40 GMT
 
       {
         "constraints": {
@@ -948,7 +943,6 @@ Constraints inside a model can be listed using a `GET` query.
       Content-Type: application/json
       Content-Length: 34
       Server: Werkzeug/0.14.1 Python/3.6.5
-      Date: Thu, 10 Jan 2019 18:58:40 GMT
 
       {
         "constraints": [
@@ -1034,7 +1028,6 @@ Constraint groups in the workspace can be requested as follows:
       Content-Type: application/json
       Content-Length: 147
       Server: Werkzeug/0.14.1 Python/3.6.5
-      Date: Fri, 18 Jan 2019 14:56:28 GMT
 
       {
         "constraintgroups": {
@@ -1078,7 +1071,6 @@ Constraint groups that appears inside a model can be requested as follows:
       Content-Type: application/json
       Content-Length: 147
       Server: Werkzeug/0.14.1 Python/3.6.5
-      Date: Fri, 18 Jan 2019 14:56:28 GMT
 
       {
         "constraintgroups": {
@@ -1130,13 +1122,63 @@ Constraint group generation is similar to generating variable groups or expressi
       Content-Type: application/json
       Content-Length: 40
       Server: Werkzeug/0.14.1 Python/3.6.5
-      Date: Fri, 18 Jan 2019 14:56:28 GMT
 
       {
         "name": "bounds",
         "model": "knapsack"
       }
 
+
+Solve
++++++
+
+A model can be submitted to be solved by SAS Optimization solvers as follows:
+
+.. http:post:: /models/(str:model)/solutions
+
+   Solves a model and requests solutions
+
+   :reqheader Authorization: Bearer token to authenticate
+   :query model: Name of the model
+   :form stream: `True` for real-time output or `False`
+   :statuscode 200: Valid request with response
+   :statuscode 400: Authentication error
+   
+   **Example request**:
+   
+   .. sourcecode:: http
+
+      POST /models/knapsack/solutions HTTP/1.1
+      Host: localhost:5000
+      User-Agent: python-requests/2.19.1
+      Accept-Encoding: gzip, deflate
+      Accept: */*
+      Connection: keep-alive
+      Authorization: Bearer eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0ODk1MjM5OSwiZXhwIjoxNTQ4OTUyOTk5fQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.gYvmWTc73e1mgQmQcKXPkrYOWmHfZfYOTbpqa4X4CZg
+      Content-Length: 12
+      Content-Type: application/x-www-form-urlencoded
+
+      stream=False
+
+   **Example response**:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+      Content-Length: 1888
+      Server: Werkzeug/0.14.1 Python/3.6.5
+
+      {
+        "model": "knapsack",
+        "objective": 125,
+        "solutions": {
+          "pick[pen]": 5.0,
+          "pick[watch]": 5.0,
+          "pick[cup]": 0.0
+        },
+        "stream": "..."
+      }
 
 
 Data
@@ -1187,7 +1229,6 @@ You can test if your request is valid beforehand using:
       Content-Type: application/json
       Content-Length: 47
       Server: Werkzeug/0.14.1 Python/3.6.5
-      Date: Fri, 18 Jan 2019 15:34:20 GMT
 
       {
         "name": "capacity",
@@ -1219,7 +1260,6 @@ You can test if your request is valid beforehand using:
       Content-Type: application/json
       Content-Length: 49
       Server: Werkzeug/0.14.1 Python/3.6.5
-      Date: Fri, 18 Jan 2019 15:34:20 GMT
 
       {
         "name": "value_data",
@@ -1251,7 +1291,6 @@ You can test if your request is valid beforehand using:
       Content-Type: application/json
       Content-Length: 50
       Server: Werkzeug/0.14.1 Python/3.6.5
-      Date: Fri, 18 Jan 2019 15:34:20 GMT
 
       {
         "name": "weight_data",

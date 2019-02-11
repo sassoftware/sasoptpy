@@ -21,7 +21,7 @@ New Features
   :meth:`Model.set_objective` and
   :ref:`Multiobjective <examples/multiobjective>` example
 - Support for spaces inside variable indices is added
-- Experimental Web API is added
+- Experimental RESTful API is added
 
 Changes
 +++++++
@@ -48,6 +48,9 @@ Bug Fixes
 Notes
 +++++
 
+- A Jupyter notebook example of the Diet Problem is added
+- A new example is added to show usage of experiment RESTful API:
+  :ref:`Knapsack <examples/rest_knapsack>`
 - Unit tests are added for development repository
 - CD/CI integration is added for the development repository on Gitlab
 - Generated models can be checked using the hash values inside tests.responses

@@ -88,7 +88,7 @@ class UserApi(Api):
     @classmethod
     def transform(cls, val):
         import sasoptpy as so
-        return repr(so.utils._transform.get(val, val))
+        return so.utils._transform.get(val, val)
 
 
 def verify_auth_token(func):
@@ -321,8 +321,7 @@ class Sessions(Resource):
         try:
             s = ws.sessions[args['name']] = CAS(args['host'],
                                                 args['port'],
-                                                protocol='http',
-                                                authinfo=args['auth'])
+                                                authinfo=args.get('auth', None))
         except:
             ws.sessions[args['name']] = None
             return {
@@ -533,7 +532,7 @@ class VariableGroups(Resource):
 
         vg = m.add_variables(
             *indices, name=args.get('name', None), lb=args.get('lb', None), ub=args.get('ub', None),
-            vartype=args.get('vartype', None))
+            vartype=UserApi.transform(args.get('vartype', None)))
 
         ws.variable_groups[args['name']] = vg
 
@@ -767,7 +766,7 @@ class Solutions(Resource):
 
             return Response(stream_with_context(solve(m)))
         else:
-            # Get options, later!
+            # TODO Get solver options
             sys.stdout = stdout = Streamer(sys.stdout)
             res = m.solve()
             stream = ''.join(stdout.buffer)
@@ -780,6 +779,7 @@ class Solutions(Resource):
                          for i in m.get_variables()}
 
             return {'model': m._name,
+                    'objective': m.get_objective_value(),
                     'solutions': varvalues,
                     'stream': stream}, 200
 

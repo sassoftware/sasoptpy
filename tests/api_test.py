@@ -156,7 +156,7 @@ print('--- Expressions ---')
 
 print(20, "Set objective function of a model")
 res = requests.post(host + '/models/knapsack/objectives', headers=headers,
-                    json={'expression': "5*pick['pen']+20*pick['watch']+2*pick['cup']", 'sense': 'minimize', 'name': 'total_value'})
+                    json={'expression': "5*pick['pen']+20*pick['watch']+2*pick['cup']", 'sense': 'maximize', 'name': 'total_value'})
 print_details(res)
 
 print(18, "Return the objective function of a model")
@@ -223,3 +223,9 @@ res = requests.get(host+'/models/knapsack', headers=headers,
                  params={'format': 'optmodel'})
 print_details(res)
 print(res.json()['optmodel'])
+
+
+# Solve
+res = requests.post(host+'/models/knapsack/solutions', headers=headers,
+              data={'stream': False})
+print_details(res)

@@ -25,4 +25,5 @@ Constraints,GET,/constraints,✓,Returns a list of constraints
 ,GET,/constraint_groups,✓,Returns a list of constraint groups
 ,GET,/models/{model}/constraint_groups,✓,Returns a list of constraint groups inside the model
 ,POST,/models/{model}/constraint_groups,✓,Creates a set of constraint group inside the model
+Solve,POST,/models/{model}/solutions,✓,Solves a model and request solutions
 Data,POST,/data,✓,Creates a data object in the Python server
