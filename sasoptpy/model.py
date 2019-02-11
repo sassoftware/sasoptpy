@@ -1713,7 +1713,7 @@ params=[{'param': value, 'column': 'value'}])
         return mpsdata
 
     def to_optmodel(self, header=True, expand=False, ordered=False,
-                    ods=False, solve=True, options={}):
+                    ods=False, solve=True, options={}, primalin=False):
         """
         Generates the equivalent PROC OPTMODEL code for the model.
 
@@ -1769,7 +1769,7 @@ params=[{'param': value, 'column': 'value'}])
         * This method is called inside :func:`Model.solve`.
 
         """
-        solve_option_keys = ('with', 'obj', 'objective', 'noobj', 'noobjective', 'relaxint')
+        solve_option_keys = ('with', 'obj', 'objective', 'noobj', 'noobjective', 'relaxint', 'primalin')
 
         if ordered:
             s = ''
@@ -1827,11 +1827,17 @@ params=[{'param': value, 'column': 'value'}])
                     s += ' with ' + options['with']
                 if options.get('relaxint', False):
                     s += ' relaxint'
-                if options:
+                if options or primalin:
+                    primalin_set = False
                     optstring = ''
                     for key, value in options.items():
-                        if key not in ('with', 'relaxint'):
+                        if key not in ('with', 'relaxint', 'primalin'):
                             optstring += ' {}={}'.format(key, value)
+                        if key is 'primalin':
+                            optstring += ' primalin'
+                            primalin_set = True
+                    if primalin and primalin_set is False and options['with'] is 'milp':
+                        optstring += ' primalin'
                     if optstring:
                         s += ' /' + optstring
                 s += ';\n'
@@ -1882,6 +1888,7 @@ params=[{'param': value, 'column': 'value'}])
                 pos_opts = ''
 
                 if options:
+                    primalin_set = False
                     for key, value in options.items():
                         if key in solve_option_keys:
                             if key == 'with':
@@ -1890,6 +1897,9 @@ params=[{'param': value, 'column': 'value'}])
                                 pre_opts += ' relaxint '
                             elif key == 'obj' or key == 'objectives':
                                 pre_opts += ' obj ({})'.format(' '.join(i._name for i in options[key]))
+                            elif key == 'primalin' and options[key] is True:
+                                pos_opts += ' primalin'
+                                primalin_set = True
                         else:
                             if type(value) is dict:
                                 pos_opts += ' {}=('.format(key) + ','.join(
@@ -1898,6 +1908,8 @@ params=[{'param': value, 'column': 'value'}])
                             else:
                                 pos_opts += ' {}={}'.format(key, value)
 
+                    if primalin and primalin_set is False and options['with'] is 'milp':
+                        pos_opts += ' primalin'
                     if pre_opts != '':
                         s += pre_opts
                     if pos_opts != '':
@@ -2455,7 +2467,7 @@ params=[{'param': value, 'column': 'value'}])
 
             print('NOTE: Converting model {} to OPTMODEL.'.format(self._name))
             optmodel_string = self.to_optmodel(header=False, options=options,
-                                               ods=False)
+                                               ods=False, primalin=primalin)
             if verbose:
                 print(optmodel_string)
             if not submit:
@@ -2682,7 +2694,7 @@ params=[{'param': value, 'column': 'value'}])
 
             print('NOTE: Converting model {} to OPTMODEL.'.format(self._name))
             optmodel_string = self.to_optmodel(header=True, options=options,
-                                               ods=True)
+                                               ods=True, primalin=primalin)
             if verbose:
                 print(optmodel_string)
             if not submit:
