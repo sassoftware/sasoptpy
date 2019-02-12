@@ -15,7 +15,7 @@ Variables,GET,/variables,✓,Returns a list of variables
 ,POST,/models/{model}/variables,✓,Creates a new variable inside the model
 ,GET,/variable_groups,✓,Returns a list of variable groups
 ,GET,/models/{model}/variable_groups,✓,Returns a list of variable groups inside the model
-,POST,/models/{model}/variable_groups,✓,Creates a set of variable group inside the model
+,POST,/models/{model}/variable_groups,✓,Creates a set of variable groups inside the model
 Expressions,GET,/expressions,✓,Returns a list of expressions
 ,GET,/models/{model}/objectives,✓,Returns the objective function of a model
 ,POST,/models/{model}/objectives,✓,Sets the objective function of a model
@@ -24,6 +24,6 @@ Constraints,GET,/constraints,✓,Returns a list of constraints
 ,POST,/models/{model}/constraints,✓,Creates a constraint inside the model
 ,GET,/constraint_groups,✓,Returns a list of constraint groups
 ,GET,/models/{model}/constraint_groups,✓,Returns a list of constraint groups inside the model
-,POST,/models/{model}/constraint_groups,✓,Creates a set of constraint group inside the model
-Solve,POST,/models/{model}/solutions,✓,Solves a model and request solutions
+,POST,/models/{model}/constraint_groups,✓,Creates a set of constraint groups inside the model
+Solve,POST,/models/{model}/solutions,✓,Solves a model and requests solutions
 Data,POST,/data,✓,Creates a data object in the Python server

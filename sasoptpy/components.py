@@ -161,11 +161,6 @@ class Expression:
         >>> print(profit.get_value())
         41
 
-        Notes
-        -----
-
-        - Nonlinear expressions may not be evaluated.
-
         """
         v = 0
         for mylc in self._linCoef:

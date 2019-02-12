@@ -749,10 +749,14 @@ def read_table(table, session=None, key=['_N_'], key_type=['num'], key_name=None
         List of key columns (for CASTable) or index columns (for DataFrame)
     key_type : list or string, optional
         A list of column types consists of 'num' or 'str' values
+    key_name : string, optional
+        Name of the key set
     columns : list, optional
         List of columns to read into parameters
     col_types : dict, optional
         Dictionary of column types
+    col_names : dict, optional
+        Dictionary of column names
     upload : boolean, optional
         Option for uploading a local data to CAS server first
     casout : string or dict, optional

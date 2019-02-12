@@ -89,7 +89,7 @@ The action you are requesting can only be performed at the workspace level.
       Accept-Encoding: gzip, deflate
       Accept: */*
       Connection: keep-alive
-      Authorization: Bearer eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0NTMzOTExMywiZXhwIjoxNTQ1MzM5NzEzfQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.UlnWtlVVqEhHGUlEoB0FFkBCInw9rK94HGNiARZaKik
+      Authorization: Bearer eyJhb...K1_Y
       Content-Length: 12
       Content-Type: application/x-www-form-urlencoded
 
@@ -210,7 +210,7 @@ This request can also be used to verify that token is valid.
       Accept-Encoding: gzip, deflate
       Accept: */*
       Connection: keep-alive
-      Authorization: Bearer eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0NjUzODY3OSwiZXhwIjoxNTQ2NTM5Mjc5fQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.6eNPrOTeK0Nbd42Ch3rPXoYQ558Vj8qL0crTQz8K1_Y
+      Authorization: Bearer eyJhb...K1_Y
 
    **Example response**:
 
@@ -287,7 +287,7 @@ You can see a list of CAS sessions in the workspace as follows:
       Accept-Encoding: gzip, deflate
       Accept: */*
       Connection: keep-alive
-      Authorization: Bearer eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0NjU0MTEzNiwiZXhwIjoxNTQ2NTQxNzM2fQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.T_4XoyLdnThLeaTF4f0a9YbdSvgh7b6ktvdOh9jybwc
+      Authorization: Bearer eyJhb...K1_Y
 
    **Example response**:
 
@@ -329,7 +329,7 @@ An ``authinfo`` file on the Python server might be needed to make this connectio
       Accept-Encoding: gzip, deflate
       Accept: */*
       Connection: keep-alive
-      Authorization: Bearer eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0NjU0MTEzNiwiZXhwIjoxNTQ2NTQxNzM2fQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.T_4XoyLdnThLeaTF4f0a9YbdSvgh7b6ktvdOh9jybwc
+      Authorization: Bearer eyJhb...K1_Y
       Content-Length: 70
       Content-Type: application/x-www-form-urlencoded
 
@@ -375,7 +375,7 @@ You can get a list of available models in a workspace using a `GET` request.
       Accept-Encoding: gzip, deflate
       Accept: */*
       Connection: keep-alive
-      Authorization: Bearer eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0NjU0NjUzMywiZXhwIjoxNTQ2NTQ3MTMzfQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.Cmq9Q4LZjMwyelypWS_V5HNpy8Fq1Iq-UstCIXaM1-8
+      Authorization: Bearer eyJhb...K1_Y
 
    **Example response**:
 
@@ -414,7 +414,7 @@ A new model can be created using a `POST` request.
       Accept-Encoding: gzip, deflate
       Accept: */*
       Connection: keep-alive
-      Authorization: Bearer eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0NjU0NjUzMywiZXhwIjoxNTQ2NTQ3MTMzfQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.Cmq9Q4LZjMwyelypWS_V5HNpy8Fq1Iq-UstCIXaM1-8
+      Authorization: Bearer eyJhb...K1_Y
       Content-Length: 27
       Content-Type: application/x-www-form-urlencoded
 
@@ -457,7 +457,7 @@ Information about an individual model can be requested using a `GET` request, wh
       Accept-Encoding: gzip, deflate
       Accept: */*
       Connection: keep-alive
-      Authorization: Bearer eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0NjU0NjUzMywiZXhwIjoxNTQ2NTQ3MTMzfQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.Cmq9Q4LZjMwyelypWS_V5HNpy8Fq1Iq-UstCIXaM1-8
+      Authorization: Bearer eyJhb...K1_Y
 
    **Example response**:
 
@@ -502,7 +502,7 @@ A list of variables in the workspace can be seen using a `GET` request.
       Accept-Encoding: gzip, deflate
       Accept: */*
       Connection: keep-alive
-      Authorization: Bearer eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0Njg4ODc5NiwiZXhwIjoxNTQ2ODg5Mzk2fQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.pKNFqKssUltz0qEzD5O_GsNI5CkKioK2SMO156RHWEw
+      Authorization: Bearer eyJhb...K1_Y
 
    **Example response**:
 
@@ -541,7 +541,7 @@ A list of variables that belongs to a certain model can be requested as follows:
       Accept-Encoding: gzip, deflate
       Accept: */*
       Connection: keep-alive
-      Authorization: Bearer eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0Njg4ODc5NiwiZXhwIjoxNTQ2ODg5Mzk2fQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.pKNFqKssUltz0qEzD5O_GsNI5CkKioK2SMO156RHWEw
+      Authorization: Bearer eyJhb...K1_Y
 
    **Example response**:
 
@@ -585,7 +585,7 @@ A variable can be created outside the model scope in *sasoptpy*, but this featur
       Accept-Encoding: gzip, deflate
       Accept: */*
       Connection: keep-alive
-      Authorization: Bearer eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0Njg4ODc5NiwiZXhwIjoxNTQ2ODg5Mzk2fQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.pKNFqKssUltz0qEzD5O_GsNI5CkKioK2SMO156RHWEw
+      Authorization: Bearer eyJhb...K1_Y
       Content-Length: 25
       Content-Type: application/x-www-form-urlencoded
 
@@ -627,7 +627,7 @@ A list of variable groups in a workspace can be obtained using a `GET` query.
       Accept-Encoding: gzip, deflate
       Accept: */*
       Connection: keep-alive
-      Authorization: Bearer eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0Njg5MDY4MywiZXhwIjoxNTQ2ODkxMjgzfQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.XghMGPlhFXFqMObn-zO8VWtqbchw9O1URidbVyvh-v4
+      Authorization: Bearer eyJhb...K1_Y
 
    **Example response**:
 
@@ -666,7 +666,7 @@ A list of variable groups inside a model can be obtained as follows:
       Accept-Encoding: gzip, deflate
       Accept: */*
       Connection: keep-alive
-      Authorization: Bearer eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0Njg5MDY4MywiZXhwIjoxNTQ2ODkxMjgzfQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.XghMGPlhFXFqMObn-zO8VWtqbchw9O1URidbVyvh-v4
+      Authorization: Bearer eyJhb...K1_Y
 
    **Example response**:
 
@@ -684,7 +684,7 @@ A list of variable groups inside a model can be obtained as follows:
       }
 
 
-Creating variable groups require an additional parameter, called `index`.
+Creating variable groups requires an additional parameter, called `index`.
 This parameter should be a JSON array.
 Each array element can be one of the following:
 - An integer representing the size, e.g. `4`
@@ -693,7 +693,7 @@ Each array element can be one of the following:
 
 .. http:post:: /models/(str:model)/variable_groups
 
-   Creates a set of variable group inside the model
+   Creates a set of variable groups inside the model
 
    :reqheader Authorization: Bearer token to authenticate
    :reqheader Content-Length: Length of the JSON object
@@ -719,7 +719,7 @@ Each array element can be one of the following:
       Accept-Encoding: gzip, deflate
       Accept: */*
       Connection: keep-alive
-      Authorization: Bearer eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0NzU4NDczOCwiZXhwIjoxNTQ3NTg1MzM4fQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.max9-XU4WOznN1bmKjlngAISAMUrblN22qHvfC12Kdc
+      Authorization: Bearer eyJhb...K1_Y
       Content-Length: 74
       Content-Type: application/json
 
@@ -764,7 +764,7 @@ Currently, RESTful API only allows adding expressions to be used as objective va
       Accept-Encoding: gzip, deflate
       Accept: */*
       Connection: keep-alive
-      Authorization: Bearer eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0Njk3NjU4OCwiZXhwIjoxNTQ2OTc3MTg4fQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.sk3x6u5xWjF_DijzfaoPdSYjTJhYDhaR2GRu9vGzLis
+      Authorization: Bearer eyJhb...K1_Y
 
 
    **Example response**:
@@ -804,7 +804,7 @@ Objective of a model can be obtained using a `GET` request:
       Accept-Encoding: gzip, deflate
       Accept: */*
       Connection: keep-alive
-      Authorization: Bearer eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0Njk3NjU4OCwiZXhwIjoxNTQ2OTc3MTg4fQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.sk3x6u5xWjF_DijzfaoPdSYjTJhYDhaR2GRu9vGzLis
+      Authorization: Bearer eyJhb...K1_Y
 
    **Example response**:
 
@@ -847,7 +847,7 @@ Here, `expression` parameter should conform as a regular Python expression.
       Accept-Encoding: gzip, deflate
       Accept: */*
       Connection: keep-alive
-      Authorization: Bearer eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0Njk3NjU4OCwiZXhwIjoxNTQ2OTc3MTg4fQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.sk3x6u5xWjF_DijzfaoPdSYjTJhYDhaR2GRu9vGzLis
+      Authorization: Bearer eyJhb...K1_Y
       Content-Length: 131
       Content-Type: application/x-www-form-urlencoded
 
@@ -892,7 +892,7 @@ A list of constraints in the workspace can be requested as follows:
       Accept-Encoding: gzip, deflate
       Accept: */*
       Connection: keep-alive
-      Authorization: Bearer eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0NzE0NjcxNCwiZXhwIjoxNTQ3MTQ3MzE0fQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.aEKF6B-hhHxGZ07Ao3bwZFt_X1mjjxqe6rR69XQrGPc
+      Authorization: Bearer eyJhb...K1_Y
 
 
    **Example response**:
@@ -932,7 +932,7 @@ Constraints inside a model can be listed using a `GET` query.
       Accept-Encoding: gzip, deflate
       Accept: */*
       Connection: keep-alive
-      Authorization: Bearer eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0NzE0NjcxNCwiZXhwIjoxNTQ3MTQ3MzE0fQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.aEKF6B-hhHxGZ07Ao3bwZFt_X1mjjxqe6rR69XQrGPc
+      Authorization: Bearer eyJhb...K1_Y
 
 
    **Example response**:
@@ -974,7 +974,7 @@ A single constraint can be created as follows:
       Accept-Encoding: gzip, deflate
       Accept: */*
       Connection: keep-alive
-      Authorization: Bearer eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0NzE0NjcxNCwiZXhwIjoxNTQ3MTQ3MzE0fQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.aEKF6B-hhHxGZ07Ao3bwZFt_X1mjjxqe6rR69XQrGPc
+      Authorization: Bearer eyJhb...K1_Y
       Content-Length: 115
       Content-Type: application/x-www-form-urlencoded
 
@@ -1018,7 +1018,7 @@ Constraint groups in the workspace can be requested as follows:
       Accept-Encoding: gzip, deflate
       Accept: */*
       Connection: keep-alive
-      Authorization: Bearer eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0NzgyMjcyNCwiZXhwIjoxNTQ3ODIzMzI0fQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.XWd24Gujp7CvrRv-2KSla_tPExQGPK1WdqXoXQoNAIg
+      Authorization: Bearer eyJhb...K1_Y
 
    **Example response**:
 
@@ -1060,7 +1060,7 @@ Constraint groups that appears inside a model can be requested as follows:
       Accept-Encoding: gzip, deflate
       Accept: */*
       Connection: keep-alive
-      Authorization: Bearer eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0NzgyMjcyNCwiZXhwIjoxNTQ3ODIzMzI0fQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.XWd24Gujp7CvrRv-2KSla_tPExQGPK1WdqXoXQoNAIg
+      Authorization: Bearer eyJhb...K1_Y
 
 
    **Example response**:
@@ -1086,7 +1086,7 @@ Constraint group generation is similar to generating variable groups or expressi
 
 .. http:post:: /models/(str:model)/constraint_groups
 
-   Creates a set of constraint group inside the model
+   Creates a set of constraint groups inside the model
 
    :reqheader Authorization: Bearer token to authenticate
    :reqheader Content-Type: `application/json`
@@ -1108,7 +1108,7 @@ Constraint group generation is similar to generating variable groups or expressi
       Accept-Encoding: gzip, deflate
       Accept: */*
       Connection: keep-alive
-      Authorization: Bearer eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0NzgyMzM4MywiZXhwIjoxNTQ3ODIzOTgzfQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.NwBw_2lBFkT0KdVIHUnow6_hTCDJ2cD5i29-p_nc2U8
+      Authorization: Bearer eyJhb...K1_Y
       Content-Length: 89
       Content-Type: application/json
 
@@ -1154,7 +1154,7 @@ A model can be submitted to be solved by SAS Optimization solvers as follows:
       Accept-Encoding: gzip, deflate
       Accept: */*
       Connection: keep-alive
-      Authorization: Bearer eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0ODk1MjM5OSwiZXhwIjoxNTQ4OTUyOTk5fQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.gYvmWTc73e1mgQmQcKXPkrYOWmHfZfYOTbpqa4X4CZg
+      Authorization: Bearer eyJhb...K1_Y
       Content-Length: 12
       Content-Type: application/x-www-form-urlencoded
 
@@ -1215,7 +1215,7 @@ You can test if your request is valid beforehand using:
       Accept-Encoding: gzip, deflate
       Accept: */*
       Connection: keep-alive
-      Authorization: Bearer eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0NzgyMzM4MywiZXhwIjoxNTQ3ODIzOTgzfQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.NwBw_2lBFkT0KdVIHUnow6_hTCDJ2cD5i29-p_nc2U8
+      Authorization: Bearer eyJhb...K1_Y
       Content-Length: 22
       Content-Type: application/x-www-form-urlencoded
 
@@ -1246,7 +1246,7 @@ You can test if your request is valid beforehand using:
       Accept-Encoding: gzip, deflate
       Accept: */*
       Connection: keep-alive
-      Authorization: Bearer eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0NzgyMzM4MywiZXhwIjoxNTQ3ODIzOTgzfQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.NwBw_2lBFkT0KdVIHUnow6_hTCDJ2cD5i29-p_nc2U8
+      Authorization: Bearer eyJhb...K1_Y
       Content-Length: 45
       Content-Type: application/json
 
@@ -1277,7 +1277,7 @@ You can test if your request is valid beforehand using:
       Accept-Encoding: gzip, deflate
       Accept: */*
       Connection: keep-alive
-      Authorization: Bearer eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0NzgyMzM4MywiZXhwIjoxNTQ3ODIzOTgzfQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.NwBw_2lBFkT0KdVIHUnow6_hTCDJ2cD5i29-p_nc2U8
+      Authorization: Bearer eyJhb...K1_Y
       Content-Length: 75
       Content-Type: application/json
 

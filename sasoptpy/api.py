@@ -26,6 +26,7 @@ import sys
 from flask import Response, stream_with_context, Flask, request
 from flask.json import jsonify
 from flask_restful import Resource, Api, reqparse
+from gevent.pywsgi import WSGIServer
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as TimedSerializer, Signer,
                           BadSignature, SignatureExpired)
@@ -66,23 +67,26 @@ class UserApi(Api):
         self.add_resource(
             ConstraintGroups, '/constraint_groups', '/models/<string:model_name>/constraint_groups')
 
-    def start(self, host=None, port=None, thread=False):
+    def start(self, host='', port=5000, thread=False):
         if thread:
-            def flask_run():
-                self.app.run(debug=False, host=host, port=port)
-            self.t = threading.Thread(target=flask_run)
+            def gevent_run():
+                self.http_server = WSGIServer((host, port), self.app)
+                self.http_server.serve_forever()
+            self.t = threading.Thread(target=gevent_run)
             self.t.setDaemon(True)
+            print('Starting WSGI Server...')
             self.t.start()
             time.sleep(1)
         else:
-            self.app.run(debug=True, host=host, port=port)
+            print('Starting WSGI Server...')
+            self.http_server = WSGIServer((host, port), self.app)
+            self.http_server.serve_forever()
 
     def stop(self):
-        func = request.environ.get('werkzeug.server.shutdown')
-        if func is None:
-            raise RuntimeError('Not running with the Werkzeug Server')
-        func()
+        if self.http_server is None:
+            raise RuntimeError('Not running HTTP Server')
         self.t = None
+        self.http_server.stop()
         return 'Server shutting down...'
 
     @classmethod

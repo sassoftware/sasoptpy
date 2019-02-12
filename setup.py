@@ -36,6 +36,7 @@ setup(
         'flask >= 1.0.2',
         'flask_restful >= 0.3.6',
         'itsdangerous >= 0.24',
+        'gevent >= 1.4.0'
         ],
     setup_requires=[
         'numpy'
