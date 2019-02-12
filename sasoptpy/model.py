@@ -2476,7 +2476,7 @@ params=[{'param': value, 'column': 'value'}])
                 print(optmodel_string)
             if not submit:
                 return optmodel_string
-            print('NOTE: Submitting OPTMODEL codes to CAS server.')
+            print('NOTE: Submitting OPTMODEL code to CAS server.')
             response = session.runOptmodel(
                 optmodel_string,
                 outputTables={
