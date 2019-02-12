@@ -47,7 +47,7 @@ Alternatively, use:
 
 ## Getting Started
 
-* The source code is currently hosted on Github at https://github.com/sassoftware/sasoptpy
+* The source code is currently hosted on GitHub at https://github.com/sassoftware/sasoptpy
 * Online documentation is at https://sassoftware.github.io/sasoptpy/
 * For the latest release go to https://github.com/sassoftware/sasoptpy/releases/latest
 

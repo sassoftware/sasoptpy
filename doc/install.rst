@@ -29,10 +29,10 @@ Getting sasoptpy
 
 Any dependencies should be installed automatically.
    
-Github repository
+GitHub repository
 +++++++++++++++++
 
-You can also get stable and development versions of *sasoptpy* from the Github repository.
+You can also get stable and development versions of *sasoptpy* from the GitHub repository.
 To get the latest version,  call::
 
   git clone https://github.com/sassoftware/sasoptpy.git

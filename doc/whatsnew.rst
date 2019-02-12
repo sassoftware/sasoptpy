@@ -27,7 +27,7 @@ Changes
 +++++++
 
 - Dictionaries inside components are replaced with ordered dictionaries
-  to preserve deterministic behaviour
+  to preserve deterministic behavior
 - Math operators are added into the keys of linear coefficient dictionaries
 - Some iterators are rewritten using `yield` keyword for performance
 - `key_name` and `col_names` parameters are added into :meth:`read_table`

@@ -33,15 +33,10 @@ Output
 
 .. ipython:: python
 
-   # Plots
    import matplotlib.pyplot as plt
-
    tr = sols.transpose()
    scvalues = tr.iloc[2:]
    scvalues = scvalues.astype({0: float, 1: float})
-
-.. ipython:: python
-
    x = sasoptpy.get_obj_by_name('x')
    f1 = sasoptpy.get_obj_by_name('f1')
    f2 = sasoptpy.get_obj_by_name('f2')
@@ -49,9 +44,7 @@ Output
    x[2].set_value(scvalues[1])
    scvalues['f1'] = f1.get_value()
    scvalues['f2'] = f2.get_value()
-
-.. ipython:: python   
-
    f = scvalues.plot.scatter(x='f1', y='f2')
+   f.set_title('Multiobjective: Plot of Pareto-Optimal Set');
    @savefig multiobj.png
    f
