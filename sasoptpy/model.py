@@ -2292,7 +2292,7 @@ params=[{'param': value, 'column': 'value'}])
                 switch = True
             # Check if model is nonlinear (or abstract)
             elif not self._is_linear():
-                print('INFO: Model {} includes nonlinear or abstract ',
+                print('INFO: Model {} includes nonlinear or abstract'.format(self._name),
                       'components, switching to OPTMODEL mode.')
                 switch = True
 
@@ -2300,7 +2300,7 @@ params=[{'param': value, 'column': 'value'}])
                 frame = False
             elif switch:
                 print('ERROR: Switching to OPTMODEL mode is failed,',
-                      ' runOptmodel action is not available in CAS Server.')
+                      'runOptmodel action is not available in CAS Server.')
                 return None
 
         if frame:  # MPS
