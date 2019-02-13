@@ -1456,7 +1456,7 @@ class VariableGroup:
                 self._keyset.append(
                     sasoptpy.utils.extract_argument_as_list(arg))
             else:
-                self._keyset.append(arg)
+                self._keyset.append(sasoptpy.utils.extract_argument_as_list(arg))
                 if not self._abstract and isinstance(arg, sasoptpy.data.Set):
                     self._abstract = True
                     for _, v in self._vardict.items():

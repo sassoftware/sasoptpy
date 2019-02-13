@@ -32,3 +32,4 @@ def test(cas_conn):
         print(m.response['Print3.PrintTable'])
 
     return m.get_objective_value()
+

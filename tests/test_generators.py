@@ -203,6 +203,29 @@ class TestGenerators(unittest.TestCase):
         test(TestGenerators.server)
         self.check_results()
 
+    def test_multiobj(self):
+        self.set_expectation('Multiobjective', expected.multiobj)
+        from examples.multiobjective import test
+        test(TestGenerators.server)
+        self.check_results()
+
+    #def test_cf(self):
+    #    self.set_expectation('Curve Fitting', expected.cf)
+    #    from examples.curve_fitting import test
+    #    test(TestGenerators.server)
+    #    self.check_results()
+
+    def test_nl1(self):
+        self.set_expectation('Nonlinear 1', expected.nl1)
+        from examples.nonlinear_1 import test
+        test(TestGenerators.server)
+        self.check_results()
+
+    def test_nl2(self):
+        self.set_expectation('Nonlinear 2', expected.nl2)
+        from examples.nonlinear_2 import test
+        test(TestGenerators.server)
+        self.check_results()
 
 if __name__ == '__main__':
     globals()['so'].Model.solve = mock_solve

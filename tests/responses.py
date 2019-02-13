@@ -66,8 +66,13 @@ ow = [
 
 # Kidney Exchange
 kx = [
-    '03c1391eda0f5dc981abae20ce8966cae55dbf9531e1572bd27a6a152c6c7a49',
-    '7d8b117f6511539d7a6b5802ef74afcb26f7b3e5066e763aa647267b02ff7c56'
+    'd9a0c8368dd13ace73344077fc89d96f13f931adb06f6ff6bd6deb13cfb73690',
+    'f9b30917e2774beae3e65449ccdadf652935a3ef4fd16c662cbc9242e3c625df'
+]
+
+# Multiobjective
+multiobj = [
+    '7d4f5d04ea6847f6805b4187d59aff42f00ab53f53ebdeb2041dbb1050201367'
 ]
 
 # Curve Fitting
@@ -77,10 +82,11 @@ cf = [
 
 # Nonlinear 1
 nl1 = [
-    ''
+    '98b81ccec678c1d7f033c3e3884aa4361bef904e0f4a0af111d8e12ed14666dd'
 ]
 
 # Nonlinear 2
 nl2 = [
-    ''
+    '65429312d4e95eff219bde79ad4ff5840437b593391342feb2bfef6f480593dd',
+    '385970a92dc38be5898fd5e596f1ab7ac88a11f984174863670e9605a1dc0963'
 ]

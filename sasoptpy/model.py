@@ -1051,7 +1051,11 @@ params=[{'param': value, 'column': 'value'}])
         elif self.response:
             return round(self.response.objective, 6)
         else:
-            return self._objective.get_value()
+            try:
+                return self._objective.get_value()
+            except TypeError:
+                print('ERROR: Cannot evaluate function at this time.')
+                return 0
 
     def get_constraint(self, name):
         """
