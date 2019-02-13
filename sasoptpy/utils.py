@@ -71,6 +71,8 @@ def check_name(name, ctype=None):
     ----------
     name : str
         Name to be checked if unique
+    ctype : str, optional
+        Type of the object
 
     Returns
     -------
@@ -730,7 +732,7 @@ def read_data(table, key_set, key_cols=None, option='', params=None):
     return sasoptpy.data.Statement(s)
 
 
-def read_table(table, session=None, key=['_N_'], key_type=['num'], key_name=None,
+def read_table(table, session=None, key=None, key_type=None, key_name=None,
                columns=None, col_types=None, col_names=None,
                upload=False, casout=None, ref=True):
     """
@@ -778,6 +780,10 @@ def read_table(table, session=None, key=['_N_'], key_type=['num'], key_name=None
 
     """
 
+    if key is None:
+        key = ['_N_']
+    if key_type is None:
+        key_type = ['num']
     if col_types is None:
         col_types = dict()
     if col_names is None:
@@ -787,12 +793,12 @@ def read_table(table, session=None, key=['_N_'], key_type=['num'], key_name=None
     t_type = type(table).__name__
     s_type = type(session).__name__
 
-    if (upload and t_type == 'DataFrame' and s_type == 'CAS'):
+    if upload and t_type == 'DataFrame' and s_type == 'CAS':
         table = session.upload_frame(table, casout=casout)
-    elif (upload and t_type == 'Series' and s_type == 'CAS'):
+    elif upload and t_type == 'Series' and s_type == 'CAS':
         table = pd.DataFrame(table)
         table = session.upload_frame(table, casout=casout)
-    elif (upload and t_type == 'DataFrame' and s_type == 'SAS'):
+    elif upload and t_type == 'DataFrame' and s_type == 'SAS':
         req_name = casout if isinstance(casout, str) else None
         upname = sasoptpy.utils.check_name(req_name, 'table')
         sasoptpy.utils.register_name(upname, table)
@@ -828,16 +834,14 @@ def read_table(table, session=None, key=['_N_'], key_type=['num'], key_name=None
             if isinstance(col, str):
                 coltype = col_types.get(col, 'num')
                 colname = col_names.get(col, col)
-                #colname = col
                 current_param = sasoptpy.data.Parameter(name=colname, keys=[keyset],
-                                                    p_type=coltype)
+                                                        p_type=coltype)
                 pars.append({'param': current_param, 'column': col})
             elif isinstance(col, dict):
                 coltype = col_types.get(col['name'], 'num')
                 colname = col_names.get(col['name'], col['name'])
-                #colname = col['name']
                 current_param = sasoptpy.data.Parameter(name=colname, keys=[keyset],
-                                                    p_type=coltype)
+                                                        p_type=coltype)
                 col['param'] = current_param
                 pars.append(col)
 
@@ -1060,7 +1064,7 @@ def get_len(i):
     Returns
     -------
     int
-        len(i) if parameter i has len() function defined, othwerwise 1
+        len(i) if parameter i has len() function defined, otherwise 1
     """
     try:
         return len(i)
@@ -1139,7 +1143,7 @@ def _sort_tuple(i):
         elif isinstance(s, tuple):
             key += (2,)
     key += i
-    return(key)
+    return key
 
 
 def get_mutable(exp):
@@ -1188,7 +1192,7 @@ def get_solution_table(*argv, key=None, sort=True, rhs=False):
     listofkeys = []
     keylengths = []
     # Get dimension from first argv
-    if(len(argv) == 0):
+    if len(argv) == 0:
         return None
 
     if key is None:
@@ -1228,8 +1232,7 @@ def get_solution_table(*argv, key=None, sort=True, rhs=False):
                     col_list = argv[i].columns.tolist()
                     for m in index_list:
                         for n in col_list:
-                            current_key = sasoptpy.utils.tuple_pack(m)
-                            + sasoptpy.utils.tuple_pack(n)
+                            current_key = sasoptpy.utils.tuple_pack(m) + sasoptpy.utils.tuple_pack(n)
                             if current_key not in listofkeys:
                                 listofkeys.append(current_key)
                     keylengths.append(sasoptpy.utils.list_length(
@@ -1253,7 +1256,7 @@ def get_solution_table(*argv, key=None, sort=True, rhs=False):
                     listofkeys.append(('',))
                     keylengths.append(1)
 
-        if(sort):
+        if sort:
             try:
                 listofkeys = sorted(listofkeys,
                                     key=_sort_tuple)
@@ -1313,7 +1316,7 @@ def get_solution_table(*argv, key=None, sort=True, rhs=False):
                         if type(cellv) == sasoptpy.components.Expression:
                             row.append(cellv.get_value())
                         else:
-                            row.append(argv[i].ix[k, j])
+                            row.append(argv[i].loc[k, j])
                     elif sasoptpy.tuple_pack(k) in argv[i].index.tolist():
                         tk = sasoptpy.tuple_pack(k)
                         cellv = argv[i].loc[tk, j]
@@ -1322,7 +1325,7 @@ def get_solution_table(*argv, key=None, sort=True, rhs=False):
                         if type(cellv) == sasoptpy.components.Expression:
                             row.append(cellv.get_value())
                         else:
-                            row.append(argv[i].ix[tk, j])
+                            row.append(argv[i].loc[tk, j])
                     else:
                         row.append('-')
             elif type(argv[i]) == pd.DataFrame:
@@ -1469,6 +1472,7 @@ def _evaluate(comp):
     ref = comp['ref']
     val = comp['val']
     op = comp.get('op')
+    v = 0
 
     if op is None:
         op = '*'
