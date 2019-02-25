@@ -62,7 +62,7 @@ A `GET` request to the server root returns the package name and current version 
 
       {
         "package": "sasoptpy",
-        "version": "0.2.1.dev0"
+        "version": "0.2.1"
       }
 
 You can perform actions on the server using a `POST` request to the root domain.
