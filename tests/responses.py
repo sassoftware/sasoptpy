@@ -55,8 +55,8 @@ econ = [
 
 # Decentralization
 dc = [
-    '07a871b50e9fcea7f8dc652285fd472930c561a8137e7c07fe6173624367a75a',
-    '386cb57a89f12ae3d39246ef7635cbf9ec70bbe4d0408d3dca28c8b316fbb7cb'
+    'aff16d8598e47b89adb160e08b5a56e0fee1340bf1b7cf7e2921d6277ce45ab7',
+    '5708dbf1f16c91e7f4cafb09c678d4826bea236b36c8936f8b95581ef9e04fc3'
 ]
 
 # Optimal Wedding

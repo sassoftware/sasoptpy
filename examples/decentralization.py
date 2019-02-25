@@ -80,15 +80,15 @@ def test(cas_conn):
     product_def1 = m.add_constraints((assign[i, j] + assign[k, l] - 1
                                      <= product[i, j, k, l]
                                      for (i, j, k, l) in IJKL),
-                                     name='product_def1')
+                                     name='pd1')
 
     product_def2 = m.add_constraints((product[i, j, k, l] <= assign[i, j]
                                       for (i, j, k, l) in IJKL),
-                                     name='product_def2')
+                                     name='pd2')
 
     product_def3 = m.add_constraints((product[i, j, k, l] <= assign[k, l]
                                       for (i, j, k, l) in IJKL),
-                                     name='product_def3')
+                                     name='pd3')
 
     m.solve()
     print(m.get_problem_summary())
@@ -101,13 +101,13 @@ def test(cas_conn):
         so.quick_sum(product[i, j, k, l]
                      for j in CITIES if (i, j, k, l) in IJKL) == assign[k, l]
         for i in DEPTS for k in DEPTS for l in CITIES if i < k),
-        name='product_def4')
+        name='pd4')
 
     m.add_constraints((
         so.quick_sum(product[i, j, k, l]
                      for l in CITIES if (i, j, k, l) in IJKL) == assign[i, j]
         for k in DEPTS for i in DEPTS for j in CITIES if i < k),
-        name='product_def4')
+        name='pd5')
 
     m.solve()
     print(m.get_problem_summary())
