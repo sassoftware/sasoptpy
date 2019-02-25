@@ -2213,7 +2213,13 @@ class ConstraintGroup:
         s = ''
         for key_ in self._conlist:
             s += tabs + 'con {}'.format(self._name)
-            s += sasoptpy.utils._to_optmodel_loop(key_)
+            keys = sasoptpy.utils._to_optmodel_loop(key_)
+            if len(self._name+keys) > 32:
+                rankey = sasoptpy.utils.check_name(None)
+                sasoptpy.utils.register_name(rankey, None)
+                s += rankey
+            else:
+                s += keys
             s += ' : ' + self._condict[key_]._defn()
             s += ';\n'
         return s

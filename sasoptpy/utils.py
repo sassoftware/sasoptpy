@@ -101,6 +101,8 @@ def check_name(name, ctype=None):
                            _ in range(5))
         else:
             name = '{}_{}'.format(ctype, get_counter(ctype))
+    if len(name) > 32:
+        name = check_name(None, ctype)
     return name
 
 
