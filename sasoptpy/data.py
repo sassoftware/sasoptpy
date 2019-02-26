@@ -40,7 +40,7 @@ class Parameter:
         Name of the parameter
     keys : list, optional
         List of :class:`Set` to be used as keys for multi-index parameters
-    init : :class:`Expression`, optional
+    init : Expression, optional
         Initial value expression of the parameter
     p_type : string, optional
         Type of the parameter, 'num' or 'str'
@@ -216,7 +216,7 @@ class ParameterValue(sasoptpy.components.Expression):
 
     Parameters
     ----------
-    param : :class:`Parameter`
+    param : Parameter
         Parameter that the value belongs to
     key : tuple, optional
         Key of the parameter value in the multi-index parameter
@@ -251,7 +251,7 @@ class ParameterValue(sasoptpy.components.Expression):
 
         Parameters
         ----------
-        val : :class:`Expression`
+        val : Expression
             Initial value
 
         Examples
@@ -309,7 +309,7 @@ class Set(sasoptpy.components.Expression):
     ----------
     name : string
         Name of the parameter
-    init : :class:`Expression`, optional
+    init : Expression, optional
         Initial value expression of the parameter
     settype : list, optional
         List of types for the set, consisting of 'num' and 'str' values
@@ -412,7 +412,7 @@ class SetIterator(sasoptpy.components.Expression):
 
     Parameters
     ----------
-    initset : :class:`Set`
+    initset : Set
         Set to be iterated on
     conditions : list, optional
         List of conditions on the iterator
@@ -659,7 +659,7 @@ class ExpressionDict:
 
         Returns
         -------
-        dictkeys
+        d : dict_keys
             Dictionary keys stored in the object
         """
         return self._dict.keys()

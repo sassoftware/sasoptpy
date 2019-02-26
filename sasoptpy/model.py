@@ -42,8 +42,8 @@ class Model:
     ----------
     name : string
         Name of the model
-    session : :class:`swat.cas.connection.CAS` object or \
-:class:`saspy.SASsession` object, optional
+    session : :class:`swat.cas.connection.CAS` or \
+:class:`saspy.SASsession`, optional
         CAS or SAS Session object
 
     Examples
@@ -108,7 +108,7 @@ class Model:
 
         Parameters
         ----------
-        var : :class:`Variable` object, optional
+        var : Variable, optional
             Existing variable to be added to the problem
         vartype : string, optional
             Type of the variable, either 'BIN', 'INT' or 'CONT'
@@ -123,7 +123,7 @@ class Model:
 
         Returns
         -------
-        :class:`Variable` object
+        var : Variable
             Variable that is added to the model
 
         Examples
@@ -179,7 +179,7 @@ class Model:
         ----------
         argv : list, dict, :class:`pandas.Index`
             Loop index for variable group
-        vg : :class:`VariableGroup` object, optional
+        vg : VariableGroup, optional
             An existing object if it is being added to the model
         name : string, optional
             Name of the variables
@@ -251,7 +251,8 @@ class Model:
 
         Returns
         -------
-        :class:`Constraint` object
+        c : Constraint
+            Reference to the constraint
 
         Examples
         --------
@@ -293,17 +294,17 @@ class Model:
 
         Parameters
         ----------
-        argv : Generator type objects
+        argv : Generator-type object
             List of constraints as a Generator-type object
-        cg : :class:`ConstraintGroup` object, optional
+        cg : ConstraintGroup, optional
             An existing list of constraints if an existing group is being added
         name : string, optional
             Name for the constraint group and individual constraint prefix
 
         Returns
         -------
-        :class:`ConstraintGroup` object
-            A group object for all constraints aded
+        cg : ConstraintGroup
+            Reference to the ConstraintGroup
 
         Examples
         --------
@@ -411,7 +412,7 @@ class Model:
 
         Parameters
         ----------
-        argv : :class:`sasoptpy.data.Set` object, optional
+        argv : :class:`Set`, optional
             Key set of the parameter
         name : string, optional
             Name of the parameter
@@ -447,7 +448,7 @@ class Model:
 
         Parameters
         ----------
-        argv : Generator type object
+        argv : Generator-type object
             Generator object where each item is an entry
         name : string, optional
             Name of the implicit variable
@@ -484,7 +485,7 @@ class Model:
 
         Parameters
         ----------
-        statement : :class:`Statement`, :class:`Expression` or string
+        statement : Expression or string
             Statement object
         after_solve : boolean, optional
             Option for putting the statement after 'solve' declaration
@@ -516,6 +517,7 @@ class Model:
 
         - If the statement string includes 'print', then it is automatically
           placed after solve.
+        - The first parameter, `statement` could be a Statement object when internally used.
 
         """
         if isinstance(statement, sasoptpy.data.Statement):
@@ -558,7 +560,7 @@ class Model:
           a single item, string type can be used instead.
         - Values inside each dictionary in ``params`` list should be as follows:
           
-          - **param** : :class:`Parameter` object
+          - **param** : :class:`Parameter`
 
             Paramter object, whose index is the same as table key
 
@@ -615,7 +617,7 @@ params=[{'param': value, 'column': 'value'}])
         Parameters
         ----------
         table : :class:`swat.cas.table.CASTable`, :class:`pandas.DataFrame`\
-                object or string
+                or string
             Pointer to CAS Table (server data, CASTable),\
             DataFrame (local data) or\
             the name of the table at execution (server data, string)
@@ -638,7 +640,7 @@ params=[{'param': value, 'column': 'value'}])
 
         Returns
         -------
-        tuple
+        objs : tuple
             A tuple where first element is the key (index) and second element\
             is a list of requested columns
 
@@ -708,7 +710,7 @@ params=[{'param': value, 'column': 'value'}])
 
         Parameters
         ----------
-        variable : :class:`Variable` object
+        variable : Variable
             The variable to be dropped from the model
 
         Examples
@@ -740,7 +742,7 @@ params=[{'param': value, 'column': 'value'}])
 
         Parameters
         ----------
-        constraint : :class:`Constraint` object
+        constraint : Constraint
             The constraint to be dropped from the model
 
         Examples
@@ -776,7 +778,7 @@ params=[{'param': value, 'column': 'value'}])
 
         Parameters
         ----------
-        variables : :class:`VariableGroup` object
+        variables : VariableGroup
             The variable group to be dropped from the model
 
         Examples
@@ -808,7 +810,7 @@ params=[{'param': value, 'column': 'value'}])
 
         Parameters
         ----------
-        constraints : :class:`ConstraintGroup` object
+        constraints : ConstraintGroup
             The constraint group to be dropped from the model
 
         Examples
@@ -926,7 +928,7 @@ params=[{'param': value, 'column': 'value'}])
 
         Parameters
         ----------
-        expression : :class:`Expression` object
+        expression : Expression
             The objective function as an Expression
         sense : string, optional
             Objective value direction, 'MIN' or 'MAX'
@@ -937,7 +939,7 @@ params=[{'param': value, 'column': 'value'}])
 
         Returns
         -------
-        :class:`Expression`
+        objective : Expression
             Objective function as an :class:`Expression` object
 
         Examples
@@ -1009,7 +1011,7 @@ params=[{'param': value, 'column': 'value'}])
 
         Returns
         -------
-        :class:`Expression` object
+        objective : Expression
             Objective function
 
         Examples
@@ -1028,7 +1030,8 @@ params=[{'param': value, 'column': 'value'}])
 
         Returns
         -------
-        float : Objective value at current solution
+        objective_value : float
+            Objective value at current solution
 
         Examples
         --------
@@ -1068,7 +1071,8 @@ params=[{'param': value, 'column': 'value'}])
 
         Returns
         -------
-        :class:`Constraint` object
+        constraint : Constraint
+            Reference to the constraint
 
         Examples
         --------
@@ -1086,7 +1090,8 @@ params=[{'param': value, 'column': 'value'}])
 
         Returns
         -------
-        list : A list of :class:`Constraint` objects
+        constraints : list
+            A list of Constraint objects
 
         Examples
         --------
@@ -1112,7 +1117,8 @@ params=[{'param': value, 'column': 'value'}])
 
         Returns
         -------
-        :class:`Variable` object
+        variable : Variable
+            Reference to the variable
 
         Examples
         --------
@@ -1134,7 +1140,8 @@ params=[{'param': value, 'column': 'value'}])
 
         Returns
         -------
-        list : A list of :class:`Variable` objects
+        variables : list
+            List of variables in the model
 
         Examples
         --------
@@ -1155,12 +1162,12 @@ params=[{'param': value, 'column': 'value'}])
 
         Parameters
         ----------
-        var : :class:`Variable` object or string
+        var : Variable or string
             Variable whose objective value is requested or its name
 
         Returns
         -------
-        float
+        coef : float
             Objective value coefficient of the given variable
 
         Examples
@@ -1190,7 +1197,7 @@ params=[{'param': value, 'column': 'value'}])
 
         Parameters
         ----------
-        var : :class:`Variable` object, optional
+        var : :Variable, optional
             Variable object
         name : string, optional
             Name of the variable
@@ -1228,7 +1235,7 @@ params=[{'param': value, 'column': 'value'}])
 
         Returns
         -------
-        :class:`swat.dataframe.SASDataFrame` object
+        ps : :class:`swat.dataframe.SASDataFrame`
             Problem summary obtained after :func:`Model.solve`
 
         Examples
@@ -1284,7 +1291,7 @@ params=[{'param': value, 'column': 'value'}])
 
         Returns
         -------
-        :class:`swat.dataframe.SASDataFrame` object
+        ss : :class:`swat.dataframe.SASDataFrame`
             Solution summary obtained after solve
 
         Examples
@@ -1340,7 +1347,7 @@ params=[{'param': value, 'column': 'value'}])
 
         Returns
         -------
-        :class:`pandas.DataFrame` object
+        solution : :class:`pandas.DataFrame`
             Primal or dual solution table returned from the CAS Action
 
         Examples
@@ -1449,7 +1456,7 @@ params=[{'param': value, 'column': 'value'}])
         Parameters
         ----------
         session : :class:`swat.cas.connection.CAS` or \
-:class:`saspy.SASsession` objects
+:class:`saspy.SASsession`
             CAS or SAS Session object
 
         Notes
@@ -1467,9 +1474,9 @@ params=[{'param': value, 'column': 'value'}])
 
         Parameters
         ----------
-        var : :class:`Variable` object
+        var : Variable
             Variable whose coefficient will be updated
-        con : :class:`Constraint` object
+        con : Constraint
             Constraint where the coefficient will be updated
         value : float
             The new value for the coefficient of the variable
@@ -1532,7 +1539,7 @@ params=[{'param': value, 'column': 'value'}])
 
         Returns
         -------
-        int
+        rowid : int
             Current number for the ID column
         """
         self._datarows.append(row + [str(self._id)])
@@ -1552,8 +1559,8 @@ params=[{'param': value, 'column': 'value'}])
 
         Returns
         -------
-        :class:`pandas.DataFrame` object
-            Problem in strict MPS format
+        mpsdata : :class:`pandas.DataFrame`
+            Problem representation in strict MPS format
 
         Examples
         --------
@@ -1743,7 +1750,7 @@ params=[{'param': value, 'column': 'value'}])
 
         Returns
         -------
-        string
+        s : string
             PROC OPTMODEL representation of the model
 
         Examples
@@ -2035,7 +2042,7 @@ params=[{'param': value, 'column': 'value'}])
 
         Returns
         -------
-        boolean
+        is_linear : boolean
             True if model does not have any nonlinear components or abstract\
             operations, False otherwise
         """
@@ -2052,7 +2059,7 @@ params=[{'param': value, 'column': 'value'}])
 
         Returns
         -------
-        string
+        name : string
             CAS table name of the user-defined decomposition blocks
 
         Examples
@@ -2090,7 +2097,7 @@ params=[{'param': value, 'column': 'value'}])
 
         Returns
         -------
-        string
+        session : string
             'CAS' for CAS sessions, 'SAS' for SAS sessions, None otherwise
 
         """
@@ -2123,7 +2130,7 @@ params=[{'param': value, 'column': 'value'}])
 
         Returns
         -------
-        :class:`swat.cas.table.CASTable` object
+        frame : :class:`swat.cas.table.CASTable`
             Reference to the uploaded CAS Table
 
         Notes
@@ -2177,7 +2184,7 @@ params=[{'param': value, 'column': 'value'}])
 
         Returns
         -------
-        :class:`pandas.DataFrame` object
+        solution : :class:`pandas.DataFrame`
             Solution of the optimization model
 
         Examples
@@ -2262,9 +2269,7 @@ params=[{'param': value, 'column': 'value'}])
         Notes
         -----
 
-        - This function is not supposed to be used directly. Instead, use
-          the :class:`swat.cas.CAS` type of session for :class:`Model`
-          objects and use :meth:`Model.solve`.
+        - This function should not be called directly. Instead, use :meth:`Model.solve`.
 
         See also
         --------
@@ -2567,9 +2572,7 @@ params=[{'param': value, 'column': 'value'}])
         Notes
         -----
 
-        - This function is not supposed to be used directly. Instead, use
-          the :class:`saspy.SASsession` type of session for :class:`Model`
-          objects and use :meth:`Model.solve`.
+        - This function should not be called directly. Instead, use :meth:`Model.solve`.
 
         See also
         --------

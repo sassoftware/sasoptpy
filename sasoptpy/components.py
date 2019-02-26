@@ -34,7 +34,7 @@ class Expression:
 
     Parameters
     ----------
-    exp : :class:`Expression` object, optional
+    exp : Expression, optional
         An existing expression where arguments are being passed
     name : string, optional
         A local name for the expression
@@ -118,7 +118,7 @@ class Expression:
 
         Returns
         -------
-        :class:`Expression` object
+        r : Expression
             Copy of the object
 
         Examples
@@ -149,7 +149,7 @@ class Expression:
 
         Returns
         -------
-        float
+        v : float
             Value of the expression
 
         Examples
@@ -191,7 +191,7 @@ class Expression:
 
         Returns
         -------
-        float
+        dual : float
             Dual value of the variable
 
         """
@@ -208,7 +208,7 @@ class Expression:
 
         Returns
         -------
-        string
+        name : string
             Name of the expression after resolving conflicts
 
         Examples
@@ -242,7 +242,7 @@ class Expression:
 
         Returns
         -------
-        string
+        name : string
             Name of the expression
 
         Examples
@@ -266,7 +266,7 @@ class Expression:
 
         Returns
         -------
-        string
+        name : string
             Name of the expression in the namespace
         """
         if self._name is None:
@@ -512,7 +512,7 @@ class Expression:
 
         Parameters
         ----------
-        var : :class:`Variable`
+        var : Variable
             Variable object whose value will be changed
         key : string
             Name of the variable object
@@ -530,14 +530,15 @@ class Expression:
 
         Parameters
         ----------
-        other : float or :class:`Expression` object
+        other : float or Expression
             Second expression or constant value to be added
         sign : int, optional
             Sign of the addition, 1 or -1
 
         Returns
         -------
-        :class:`Expression` object
+        r : Expression
+            Reference to the outcome of the operation
 
         Notes
         -----
@@ -583,12 +584,12 @@ class Expression:
 
         Parameters
         ----------
-        other : :class:`Expression` or int
+        other : Expression or int
             Second expression to be multiplied
 
         Returns
         -------
-        :class:`Expression` object
+        r : Expression
             A new :class:`Expression` that represents the multiplication
 
         Notes
@@ -666,14 +667,14 @@ class Expression:
 
         Parameters
         ----------
-        other : :class:`Expression` object
+        other : Expression
             Expression on the other side of the relation wrt self
         direction_ : string
             Direction of the logical relation, either 'E', 'L', or 'G'
 
         Returns
         -------
-        :class:`Constraint`
+        generated_constraint : Constraint
             Constraint generated as a result of linear relation
 
         """
@@ -723,7 +724,7 @@ class Expression:
 
         Returns
         -------
-        boolean
+        is_linear : boolean
             True if the expression is linear, False otherwise
 
         Examples
@@ -1076,7 +1077,7 @@ class Constraint(Expression):
 
     Parameters
     ----------
-    exp : :class:`Expression`
+    exp : Expression
         A logical expression that forms the constraint
     direction : string
         Direction of the logical expression, 'E' (=), 'L' (<=) or 'G' (>=)
@@ -1158,7 +1159,7 @@ class Constraint(Expression):
 
         Parameters
         ----------
-        var : :class:`Variable` object
+        var : Variable
             Variable to be updated
         value : float
             Coefficient of the variable in the constraint
@@ -1470,7 +1471,7 @@ class VariableGroup:
 
         Returns
         -------
-        string
+        name : string
             Name of the variable group
 
         Examples
@@ -1566,8 +1567,8 @@ class VariableGroup:
 
         Returns
         -------
-
-        :class:`Variable` object or list of :class:`Variable` objects
+        ref : Variable or list
+            Reference to a single Variable or a list of Variable objects
 
         """
         if self._abstract or isinstance(key, sasoptpy.data.SetIterator):
@@ -1623,12 +1624,12 @@ class VariableGroup:
 
     def __iter__(self):
         """
-        Returns an iterable list of variables inside the variable group
+        Yields an iterable list of variables inside the variable group
 
         Returns
         -------
-
-        Iterable list of :class:`Variable` objects
+        i : list
+            Iterable list of Variable objects
         """
         for i in self._varlist:
             yield self._vardict[i]
@@ -1775,7 +1776,7 @@ class VariableGroup:
 
         Returns
         -------
-        :class:`Expression` object
+        r : Expression
             Expression that represents the sum of all variables in the group
 
         Examples
@@ -1833,13 +1834,13 @@ class VariableGroup:
 
         Parameters
         ----------
-        vector : list, dictionary, :class:`pandas.Series` object,\
-                 or :class:`pandas.DataFrame` object
+        vector : list, dictionary, :class:`pandas.Series`,\
+                 or :class:`pandas.DataFrame`
             Vector to be multiplied with the variable group
 
         Returns
         -------
-        :class:`Expression` object
+        r : Expression
             An expression that is the product of the variable group with the
             given vector
 
@@ -2026,8 +2027,8 @@ class ConstraintGroup:
 
     Parameters
     ----------
-    argv : GeneratorType object
-        A Python generator that includes :class:`sasoptpy.Expression` objects
+    argv : Generator-type object
+        A Python generator that includes :class:`Expression` objects
     name : string, optional
         Name (prefix) of the constraints
 
@@ -2087,7 +2088,7 @@ class ConstraintGroup:
 
             Returns
             -------
-            string
+            name : string
                 Name of the constraint group
 
             Examples
@@ -2146,7 +2147,7 @@ class ConstraintGroup:
 
         Returns
         -------
-        :class:`pandas.DataFrame`
+        df : :class:`pandas.DataFrame`
             Returns a DataFrame consisting of constraints as expressions
 
         Examples
@@ -2193,7 +2194,8 @@ class ConstraintGroup:
 
         Returns
         -------
-        :class:`Constraint` object
+        item : Constraint
+            Reference to the constraint
         """
         key = sasoptpy.utils.tuple_pack(key)
         return self._condict.__getitem__(key)

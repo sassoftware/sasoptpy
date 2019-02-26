@@ -118,16 +118,16 @@ def exp_range(start, stop, step=1):
 
     Parameters
     ----------
-    start : :class:`Expression`
+    start : Expression
         First value of the range
-    stop : :class:`Expression`
+    stop : Expression
         Last value of the range
-    step : :class:`Expression`, optional
+    step : Expression, optional
         Step size of the range
 
     Returns
     -------
-    :class:`Set`
+    exset : Set
         Set that represents the range
 
     Examples
@@ -166,7 +166,7 @@ def register_name(name, obj):
 
     Returns
     -------
-    int
+    objcnt : int
         Unique object number to represent creation order
     """
     global __objcnt
@@ -220,7 +220,7 @@ def quick_sum(argv):
 
     Returns
     -------
-    :class:`Expression` object
+    exp : Expression
         Sum of given arguments
 
     Examples
@@ -296,11 +296,6 @@ def get_obj_by_name(name):
     """
     Returns the reference to an object by using the unique name
 
-    Returns
-    -------
-    object
-        Reference to the object that has the name
-
     Notes
     -----
 
@@ -350,7 +345,7 @@ def dict_to_frame(dictobj, cols=None):
 
     Returns
     -------
-    :class:`DataFrame` object
+    frobj : DataFrame
         DataFrame representation of the dictionary
 
     Examples
@@ -403,10 +398,6 @@ def extract_list_value(tuplist, listname):
     listname : dict or list or int or float or DataFrame or Series object
         List where the value will be extracted
 
-    Returns
-    -------
-    object
-        Corresponding value inside listname
     """
     if listname is None:
         v = None
@@ -439,7 +430,7 @@ def list_length(listobj):
 
     Returns
     -------
-    int
+    ln : int
         Length of the list, tuple or dict
     """
     if (isinstance(listobj, list) or isinstance(listobj, tuple) or
@@ -460,7 +451,7 @@ def get_counter(ctrtype):
 
     Returns
     -------
-    int
+    ctr : int
         Current value of the counter
     """
     ctr = __ctr[ctrtype]
@@ -530,10 +521,6 @@ def tuple_unpack(tp):
     ----------
     tp : tuple
 
-    Returns
-    -------
-    object
-        The first object inside the tuple.
     """
     if isinstance(tp, tuple):
         if len(tp) == 1:
@@ -555,7 +542,7 @@ def tuple_pack(obj):
 
     Returns
     -------
-    tuple
+    t : tuple
         Tuple that includes the original object
     """
     if isinstance(obj, tuple):
@@ -579,7 +566,7 @@ def list_pack(obj):
 
     Returns
     -------
-    list
+    p : list
         List that includes the original object
     """
     if isinstance(obj, list):
@@ -633,14 +620,14 @@ def read_frame(df, cols=None):
 
     Parameters
     ----------
-    df : :class:`pandas.DataFrame` object
+    df : :class:`pandas.DataFrame`
         DataFrame to be read
     cols : list of strings, optional
         Column names to be read. By default, it reads all columns
 
     Returns
     -------
-    list
+    series : list
         List of :class:`pandas.Series` objects
 
     Examples
@@ -678,7 +665,7 @@ def read_data(table, key_set, key_cols=None, option='', params=None):
     ----------
     table : :class:`swat.cas.table.CASTable`
         The CAS table to be read to sets and parameters
-    key_set : :class:`sasoptpy.data.Set`
+    key_set : Set
         Set object to be read as the key (index)
     key_cols : list or string, optional
         Column names of the key columns
@@ -745,7 +732,7 @@ def read_table(table, session=None, key=None, key_type=None, key_name=None,
         Pointer to CAS Table (server data, CASTable),\
         DataFrame (local data) or\
         the name of the table at execution (server data, string)
-    session : :class:`swat.CAS` or :class:`saspy.SASsession` object
+    session : :class:`swat.CAS` or :class:`saspy.SASsession`
         Session object if the table will be uploaded
     key : list, optional
         List of key columns (for CASTable) or index columns (for DataFrame)
@@ -768,7 +755,7 @@ def read_table(table, session=None, key=None, key_type=None, key_name=None,
 
     Returns
     -------
-    tuple
+    t : tuple
         A tuple where first element is the key (index), second element\
         is a list of requested columns and the last element is reference to\
         the original
@@ -879,14 +866,14 @@ def flatten_frame(df, swap=False):
 
     Parameters
     ----------
-    df : :class:`pandas.DataFrame` object
-        DataFrame object to be flattened
+    df : :class:`pandas.DataFrame`
+        DataFrame to be flattened
     swap : boolean, optional
         Option to use columns as first index
 
     Returns
     -------
-    :class:`pandas.DataFrame` object
+    new_frame : :class:`pandas.DataFrame`
         A new DataFrame where indices consist of index and columns names as
         tuples
 
@@ -938,8 +925,8 @@ def flatten_tuple(tp):
 
     Returns
     -------
-    Generator
-        A generator object representing the flat tuple
+    elem : Generator-type
+        A generator-type object representing the flat tuple
 
     Examples
     --------
@@ -968,7 +955,7 @@ def print_model_mps(model):
 
     Parameters
     ----------
-    model : :class:`Model`
+    model : Model
         Model whose MPS format will be printed
 
     Examples
@@ -1030,7 +1017,7 @@ def get_namespace():
 
     Returns
     -------
-    string
+    s : string
         A string representation of the namespace
     """
     s = 'Global namespace:'
@@ -1063,7 +1050,7 @@ def get_len(i):
 
     Returns
     -------
-    int
+    leni : int
         len(i) if parameter i has len() function defined, otherwise 1
     """
     try:
@@ -1152,12 +1139,12 @@ def get_mutable(exp):
 
     Parameters
     ----------
-    exp : :class:`Variable` or :class:`Expression`
+    exp : Variable or Expression
         Object to be wrapped
 
     Returns
     -------
-    :class:`Expression`
+    r : Expression
         Mutable copy of the expression, if the original is immutable
     """
     if isinstance(exp, sasoptpy.components.Variable):
@@ -1185,7 +1172,7 @@ def get_solution_table(*argv, key=None, sort=True, rhs=False):
 
     Returns
     -------
-    :class:`pandas.DataFrame`
+    soltable : :class:`pandas.DataFrame`
         DataFrame object that holds keys and values
     """
     soltable = []
@@ -1388,6 +1375,11 @@ def get_solution_table(*argv, key=None, sort=True, rhs=False):
 def union(*args):
     """
     Returns a union of :class:`Set`, list or set objects
+
+    Returns
+    -------
+    r : list, set, or Expression
+        Union of the given arguments
     """
     type0 = type(args[0])
     for i in args:
@@ -1465,7 +1457,7 @@ def _evaluate(comp):
 
     Returns
     -------
-    float
+    v : float
         Current value of the expression.
     """
 

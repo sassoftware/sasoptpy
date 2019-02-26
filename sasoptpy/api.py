@@ -350,7 +350,7 @@ class Models(Resource):
         ----------
         model_name : string, optional
             Name of a specific model requested
-        ws : :class:`Workspace` object
+        ws : Workspace
             Current workspace, parsed using the authorization token
         """
 

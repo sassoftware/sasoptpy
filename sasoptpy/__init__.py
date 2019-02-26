@@ -33,4 +33,5 @@ from sasoptpy.data import *
 #  sasoptpy.gui
 #  sasoptpy.api
 
+name = "sasoptpy"
 __version__ = '0.2.1'

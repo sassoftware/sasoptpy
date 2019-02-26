@@ -20,11 +20,16 @@
 
 from setuptools import setup
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 setup(
     name='sasoptpy',
     version='0.2.1',
     packages=['sasoptpy'],
     description='sasoptpy: SAS Optimization Interface for Python',
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     url='https://github.com/sassoftware/sasoptpy',
     author='Sertalp B. Cay (SAS Institute)',
     author_email='Sertalp.Cay@sas.com',
