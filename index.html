@@ -6,15 +6,16 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>sasoptpy: SAS Optimization Interface for Python &#8212; sasoptpy 0.2.0 documentation</title>
+    <title>sasoptpy: SAS Optimization Interface for Python &#8212; sasoptpy 0.2.1 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/css/sasoptpy.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/sasoptpy.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/js/url.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Overview" href="overview.html" /> 
@@ -26,12 +27,15 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="overview.html" title="Overview"
              accesskey="N">next</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">sasoptpy 0.2.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="#">sasoptpy 0.2.1 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -43,7 +47,7 @@
   <div class="section" id="sasoptpy-sas-optimization-interface-for-python">
 <h1>sasoptpy: SAS Optimization Interface for Python<a class="headerlink" href="#sasoptpy-sas-optimization-interface-for-python" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="sasoptpy.pdf">PDF Version</a></p>
-<span class="target" id="module-sasoptpy"></span><p><strong>Date</strong>: Jul 31, 2018 <strong>Version</strong>: 0.2.0</p>
+<span class="target" id="module-sasoptpy"></span><p><strong>Date</strong>: Feb 26, 2019 <strong>Version</strong>: 0.2.1</p>
 <p><em>sasoptpy</em> is a Python package providing a modeling interface for
 <a class="reference external" href="https://www.sas.com/en_us/software/viya.html">SAS Viya</a>  and SAS/OR
 Optimization solvers.
@@ -52,13 +56,13 @@ solve them using
 <a class="reference external" href="http://go.documentation.sas.com/?cdcId=pgmsascdc&amp;cdcVersion=9.4_3.3&amp;docsetId=casactmopt&amp;docsetTarget=casactmopt_optimization_toc.htm&amp;locale=en">SAS Viya Optimization Action Set</a>.</p>
 <p><em>sasoptpy</em> can handle linear optimization, mixed integer linear optimization,
 and nonlinear optimization problems. Users can benefit from native Python
-structures like dictionaries, tuples, and list to define an optimization
+structures like dictionaries, tuples, and lists to define an optimization
 problem. <em>sasoptpy</em> supports <a class="reference external" href="http://pandas.pydata.org/">Pandas</a>
 objects extensively.</p>
-<p>Under the hood, <em>sasoptpy</em> uses
-<a class="reference external" href="https://sassoftware.github.io/python-swat/">swat package</a> to communicate
-SAS Viya, and uses
-<a class="reference external" href="https://sassoftware.github.io/saspy/">saspy package</a> to communicate SAS 9.4
+<p>Under the hood, <em>sasoptpy</em> uses the
+<a class="reference external" href="https://sassoftware.github.io/python-swat/">swat package</a> to communicate with
+SAS Viya, and uses the
+<a class="reference external" href="https://sassoftware.github.io/saspy/">saspy package</a> to communicate with SAS 9.4
 installations.</p>
 <p><em>sasoptpy</em> is an interface to SAS Optimization solvers. Check
 <a class="reference external" href="http://go.documentation.sas.com/?cdcId=pgmsascdc&amp;cdcVersion=9.4_3.3&amp;docsetId=casmopt&amp;docsetTarget=titlepage.htm&amp;locale=en">SAS/OR</a>
@@ -116,6 +120,7 @@ model optimization problems inside SAS.</p>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#viya-examples-concrete">Viya Examples / Concrete</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#viya-examples-abstract">Viya Examples / Abstract</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#restful-api-examples">RESTful API Examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/api.html">API Reference</a><ul>
@@ -129,6 +134,17 @@ model optimization problems inside SAS.</p>
 <li class="toctree-l2"><a class="reference internal" href="api/functions.html">Functions</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="web-api.html">RESTful API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="web-api.html#setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web-api.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web-api.html#models">Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web-api.html#variables">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web-api.html#expressions">Expressions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web-api.html#constraints">Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web-api.html#solve">Solve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="web-api.html#data">Data</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -139,7 +155,7 @@ model optimization problems inside SAS.</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="#">Table Of Contents</a></h3>
+  <h3><a href="#">Table of Contents</a></h3>
   <ul>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a></li>
@@ -149,6 +165,7 @@ model optimization problems inside SAS.</p>
 <li class="toctree-l1"><a class="reference internal" href="workflow.html">Workflows</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web-api.html">RESTful API</a></li>
 </ul>
 
 <div id="searchbox" style="display: none" role="search">
@@ -174,18 +191,21 @@ model optimization problems inside SAS.</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="overview.html" title="Overview"
              >next</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">sasoptpy 0.2.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="#">sasoptpy 0.2.1 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017-2018, SAS Institute.
-      Last updated on Jul 31, 2018 (Timestamp: 0.2.0-20180731093746).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+        &#169; Copyright 2017-2019, SAS Institute.
+      Last updated on Feb 26, 2019 (Timestamp: 0.2.1-20190226133646).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
     </div>
   </body>
 </html>

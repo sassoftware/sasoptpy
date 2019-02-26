@@ -6,15 +6,16 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>sasoptpy.Model.read_table &#8212; sasoptpy 0.2.0 documentation</title>
+    <title>sasoptpy.Model.read_table &#8212; sasoptpy 0.2.1 documentation</title>
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/css/sasoptpy.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/sasoptpy.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <script type="text/javascript" src="../../_static/js/url.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="sasoptpy.Model.include" href="sasoptpy.Model.include.html" />
@@ -27,6 +28,9 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="../../http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
@@ -35,7 +39,7 @@
         <li class="right" >
           <a href="sasoptpy.Model.read_data.html" title="sasoptpy.Model.read_data"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 0.2.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 0.2.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../model.html" accesskey="U">Model</a> &#187;</li> 
       </ul>
@@ -50,46 +54,48 @@
 <h1>sasoptpy.Model.read_table<a class="headerlink" href="#sasoptpy-model-read-table" title="Permalink to this headline">¶</a></h1>
 <dl class="method">
 <dt id="sasoptpy.Model.read_table">
-<code class="descclassname">Model.</code><code class="descname">read_table</code><span class="sig-paren">(</span><em>table, key=['_N_'], columns=None, key_type=['num'], col_types=None, upload=False, casout=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/sasoptpy/model.html#Model.read_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.Model.read_table" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Model.</code><code class="descname">read_table</code><span class="sig-paren">(</span><em>table, key=['_N_'], key_type=['num'], key_name=None, columns=None, col_types=None, col_names=None, upload=False, casout=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/sasoptpy/model.html#Model.read_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.Model.read_table" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads a CAS Table or pandas DataFrame into the model</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>table</strong> : <a class="reference external" href="https://sassoftware.github.io/python-swat/generated/swat.cas.table.CASTable.html#swat.cas.table.CASTable" title="(in SWAT v1.4.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">swat.cas.table.CASTable</span></code></a>, <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.23.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a>                object or string</p>
-<blockquote>
-<div><p>Pointer to CAS Table (server data, CASTable),            DataFrame (local data) or            the name of the table at execution (server data, string)</p>
-</div></blockquote>
-<p><strong>key</strong> : list, optional</p>
-<blockquote>
-<div><p>List of key columns (for CASTable) or index columns (for DataFrame)</p>
-</div></blockquote>
-<p><strong>columns</strong> : list, optional</p>
-<blockquote>
-<div><p>List of columns to read into parameters</p>
-</div></blockquote>
-<p><strong>key_type</strong> : list or string, optional</p>
-<blockquote>
-<div><p>A list of column types consists of ‘num’ or ‘str’ values</p>
-</div></blockquote>
-<p><strong>col_types</strong> : dict, optional</p>
-<blockquote>
-<div><p>Dictionary of column types</p>
-</div></blockquote>
-<p><strong>upload</strong> : boolean, optional</p>
-<blockquote>
-<div><p>Option for uploading a local data to CAS server first</p>
-</div></blockquote>
-<p><strong>casout</strong> : string or dict, optional</p>
-<blockquote>
-<div><p>Casout options if data is uploaded</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>table</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><a class="reference external" href="https://sassoftware.github.io/python-swat/generated/swat.cas.table.CASTable.html#swat.cas.table.CASTable" title="(in SWAT v1.5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">swat.cas.table.CASTable</span></code></a>, <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.24.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a>                or string</span></dt>
+<dd><p class="first last">Pointer to CAS Table (server data, CASTable),            DataFrame (local data) or            the name of the table at execution (server data, string)</p>
+</dd>
+<dt><strong>key</strong> <span class="classifier-delimiter">:</span> <span class="classifier">list, optional</span></dt>
+<dd><p class="first last">List of key columns (for CASTable) or index columns (for DataFrame)</p>
+</dd>
+<dt><strong>key_type</strong> <span class="classifier-delimiter">:</span> <span class="classifier">list or string, optional</span></dt>
+<dd><p class="first last">A list of column types consists of ‘num’ or ‘str’ values</p>
+</dd>
+<dt><strong>key_name</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string, optional</span></dt>
+<dd><p class="first last">Name of the key set</p>
+</dd>
+<dt><strong>columns</strong> <span class="classifier-delimiter">:</span> <span class="classifier">list, optional</span></dt>
+<dd><p class="first last">List of columns to read into parameters</p>
+</dd>
+<dt><strong>col_types</strong> <span class="classifier-delimiter">:</span> <span class="classifier">dict, optional</span></dt>
+<dd><p class="first last">Dictionary of column types</p>
+</dd>
+<dt><strong>col_names</strong> <span class="classifier-delimiter">:</span> <span class="classifier">dict, optional</span></dt>
+<dd><p class="first last">Dictionary of column names</p>
+</dd>
+<dt><strong>upload</strong> <span class="classifier-delimiter">:</span> <span class="classifier">boolean, optional</span></dt>
+<dd><p class="first last">Option for uploading a local data to CAS server first</p>
+</dd>
+<dt><strong>casout</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string or dict, optional</span></dt>
+<dd><p class="first last">Casout options if data is uploaded</p>
+</dd>
+</dl>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">tuple</p>
-<blockquote class="last">
-<div><p>A tuple where first element is the key (index) and second element            is a list of requested columns</p>
-</div></blockquote>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>objs</strong> <span class="classifier-delimiter">:</span> <span class="classifier">tuple</span></dt>
+<dd><p class="first last">A tuple where first element is the key (index) and second element            is a list of requested columns</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -100,8 +106,8 @@
 </div>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li>This method can take either a <a class="reference external" href="https://sassoftware.github.io/python-swat/generated/swat.cas.table.CASTable.html#swat.cas.table.CASTable" title="(in SWAT v1.4.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">swat.cas.table.CASTable</span></code></a>,
-a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.23.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> or name of the data set as a string as
+<li>This method can take either a <a class="reference external" href="https://sassoftware.github.io/python-swat/generated/swat.cas.table.CASTable.html#swat.cas.table.CASTable" title="(in SWAT v1.5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">swat.cas.table.CASTable</span></code></a>,
+a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.24.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> or name of the data set as a string as
 the first argument.</li>
 <li>If the model is running in saspy or MPS mode, then the data is read
 to client from the CAS server.</li>
@@ -138,7 +144,7 @@ for <code class="docutils literal notranslate"><span class="pre">casout</span></
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <h3><a href="../../index.html">Table of Contents</a></h3>
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../getting-started.html">Getting Started</a></li>
@@ -191,6 +197,7 @@ for <code class="docutils literal notranslate"><span class="pre">casout</span></
 <li class="toctree-l2"><a class="reference internal" href="../functions.html">Functions</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../web-api.html">RESTful API</a></li>
 </ul>
 
 <div id="searchbox" style="display: none" role="search">
@@ -216,6 +223,9 @@ for <code class="docutils literal notranslate"><span class="pre">casout</span></
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="../../http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
@@ -224,15 +234,15 @@ for <code class="docutils literal notranslate"><span class="pre">casout</span></
         <li class="right" >
           <a href="sasoptpy.Model.read_data.html" title="sasoptpy.Model.read_data"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 0.2.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 0.2.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../model.html" >Model</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017-2018, SAS Institute.
-      Last updated on Jul 31, 2018 (Timestamp: 0.2.0-20180731093746).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+        &#169; Copyright 2017-2019, SAS Institute.
+      Last updated on Feb 26, 2019 (Timestamp: 0.2.1-20190226133646).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
     </div>
   </body>
 </html>

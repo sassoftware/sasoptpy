@@ -35,6 +35,7 @@ Utility Functions
    tuple_unpack
    union
    wrap
+   utils._evaluate
 
 
 .. _math-functions:

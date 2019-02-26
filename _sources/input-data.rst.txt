@@ -145,7 +145,8 @@ CASTable
 ~~~~~~~~
 
 When a data is available on the server-side, a reference to the object can be
-passed. Note that, using CASTable and Abstract Data requires SAS Viya version
+passed. Note that, using :class:`swat.cas.table.CASTable`
+and Abstract Data requires SAS Viya version
 3.4.
 
 .. ipython:: python

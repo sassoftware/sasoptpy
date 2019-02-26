@@ -19,14 +19,14 @@ solve them using
 
 *sasoptpy* can handle linear optimization, mixed integer linear optimization,
 and nonlinear optimization problems. Users can benefit from native Python
-structures like dictionaries, tuples, and list to define an optimization
+structures like dictionaries, tuples, and lists to define an optimization
 problem. *sasoptpy* supports `Pandas <http://pandas.pydata.org/>`_
 objects extensively.
 
-Under the hood, *sasoptpy* uses
-`swat package <https://sassoftware.github.io/python-swat/>`_ to communicate
-SAS Viya, and uses
-`saspy package <https://sassoftware.github.io/saspy/>`_ to communicate SAS 9.4
+Under the hood, *sasoptpy* uses the
+`swat package <https://sassoftware.github.io/python-swat/>`_ to communicate with
+SAS Viya, and uses the
+`saspy package <https://sassoftware.github.io/saspy/>`_ to communicate with SAS 9.4
 installations.
 
 *sasoptpy* is an interface to SAS Optimization solvers. Check
@@ -51,4 +51,5 @@ See our SAS Global Forum paper: `Optimization Modeling with Python and SAS Viya 
    workflow
    examples
    api/api
+   web-api
 

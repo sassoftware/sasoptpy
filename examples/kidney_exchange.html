@@ -6,18 +6,19 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Kidney Exchange &#8212; sasoptpy 0.2.0 documentation</title>
+    <title>Kidney Exchange &#8212; sasoptpy 0.2.1 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/sasoptpy.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/js/url.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Curve Fitting" href="curve_fitting.html" />
+    <link rel="next" title="Multiobjective" href="multiobjective.html" />
     <link rel="prev" title="Optimal Wedding" href="optimal_wedding.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -27,15 +28,18 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="../http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="curve_fitting.html" title="Curve Fitting"
+          <a href="multiobjective.html" title="Multiobjective"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="optimal_wedding.html" title="Optimal Wedding"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &#187;</li> 
       </ul>
     </div>  
@@ -59,7 +63,7 @@
 
 <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">):</span>
     <span class="c1"># Data generation</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">80</span>
     <span class="n">p</span> <span class="o">=</span> <span class="mf">0.02</span>
 
     <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -136,118 +140,63 @@
 <span class="go">Adding constraints...</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
 <span class="go">NOTE: Converting model kidney_exchange to OPTMODEL.</span>
-<span class="go">NOTE: Submitting OPTMODEL codes to CAS server.</span>
-<span class="go">NOTE: Problem generation will use 32 threads.</span>
-<span class="go">NOTE: The problem has 15828 variables (0 free, 0 fixed).</span>
-<span class="go">NOTE: The problem has 15828 binary and 0 integer variables.</span>
-<span class="go">NOTE: The problem has 9850 linear constraints (49 LE, 9801 EQ, 0 GE, 0 range).</span>
-<span class="go">NOTE: The problem has 47286 linear constraint coefficients.</span>
+<span class="go">NOTE: Submitting OPTMODEL code to CAS server.</span>
+<span class="go">NOTE: Problem generation will use 80 threads.</span>
+<span class="go">NOTE: The problem has 8133 variables (0 free, 0 fixed).</span>
+<span class="go">NOTE: The problem has 8133 binary and 0 integer variables.</span>
+<span class="go">NOTE: The problem has 5967 linear constraints (38 LE, 5929 EQ, 0 GE, 0 range).</span>
+<span class="go">NOTE: The problem has 24245 linear constraint coefficients.</span>
 <span class="go">NOTE: The problem has 0 nonlinear constraints (0 LE, 0 EQ, 0 GE, 0 range).</span>
-<span class="go">NOTE: The remaining solution time after problem generation and solver initialization is 299.59 seconds.</span>
+<span class="go">NOTE: The remaining solution time after problem generation and solver initialization is 299.61 seconds.</span>
 <span class="go">NOTE: The initial MILP heuristics are applied.</span>
 <span class="go">NOTE: The MILP presolver value AUTOMATIC is applied.</span>
-<span class="go">NOTE: The MILP presolver removed 8223 variables and 7096 constraints.</span>
-<span class="go">NOTE: The MILP presolver removed 22296 constraint coefficients.</span>
+<span class="go">NOTE: The MILP presolver removed 6193 variables and 5357 constraints.</span>
+<span class="go">NOTE: The MILP presolver removed 17478 constraint coefficients.</span>
 <span class="go">NOTE: The MILP presolver modified 0 constraint coefficients.</span>
-<span class="go">NOTE: The presolved problem has 7605 variables, 2754 constraints, and 24990 constraint coefficients.</span>
+<span class="go">NOTE: The presolved problem has 1940 variables, 610 constraints, and 6767 constraint coefficients.</span>
 <span class="go">NOTE: The MILP solver is called.</span>
 <span class="go">NOTE: The parallel Branch and Cut algorithm is used.</span>
-<span class="go">NOTE: The Branch and Cut algorithm is using up to 32 threads.</span>
+<span class="go">NOTE: The Branch and Cut algorithm is using up to 80 threads.</span>
 <span class="go">             Node   Active   Sols    BestInteger      BestBound      Gap    Time</span>
-<span class="go">                0        1      2      2.8934453     33.5480359   91.38%      10</span>
-<span class="go">NOTE: The MILP solver&#39;s symmetry detection found 531 orbits. The largest orbit contains 23 variables.</span>
-<span class="go">                0        1      2      2.8934453     33.5480359   91.38%      14</span>
-<span class="go">                0        1      2      2.8934453     33.5480359   91.38%      15</span>
-<span class="go">                0        1      2      2.8934453     33.5480359   91.38%      16</span>
-<span class="go">                0        1      2      2.8934453     33.5480359   91.38%      17</span>
-<span class="go">NOTE: The MILP solver added 5 cuts with 278 cut coefficients at the root.</span>
-<span class="go">                1        2      2      2.8934453     33.5480359   91.38%      19</span>
-<span class="go">                3        3      3     13.1640039     33.5480359   60.76%      21</span>
-<span class="go">                4        4      3     13.1640039     33.5480359   60.76%      22</span>
-<span class="go">               10        9      4     24.0492143     33.5480359   28.31%      24</span>
-<span class="go">               14       10      4     24.0492143     33.1877376   27.54%      25</span>
-<span class="go">               77       41      4     24.0492143     32.7482323   26.56%      30</span>
-<span class="go">              126       85      5     26.1164550     32.7482323   20.25%      30</span>
-<span class="go">              154       88      6     26.5523364     32.7482323   18.92%      33</span>
-<span class="go">              196      106      6     26.5523364     32.7482323   18.92%      35</span>
-<span class="go">              273      156      6     26.5523364     32.7482323   18.92%      40</span>
-<span class="go">              416      273      7     28.0518710     32.7482323   14.34%      42</span>
-<span class="go">              431      242      7     28.0518710     32.7482323   14.34%      46</span>
-<span class="go">              615      373      7     28.0518710     32.4428695   13.53%      50</span>
-<span class="go">              704      424      7     28.0518710     32.3460905   13.28%      55</span>
-<span class="go">              768        1      7     28.0518710     32.2947078   13.14%      62</span>
-<span class="go">              771        3      7     28.0518710     32.2947078   13.14%      65</span>
-<span class="go">              798       23      7     28.0518710     32.2947078   13.14%      70</span>
-<span class="go">              897       85      7     28.0518710     32.2947078   13.14%      75</span>
-<span class="go">             1016      176      7     28.0518710     32.2947078   13.14%      81</span>
-<span class="go">             1057      183      7     28.0518710     32.2947078   13.14%      85</span>
-<span class="go">             1245      313      7     28.0518710     32.2947078   13.14%      90</span>
-<span class="go">             1494      524      7     28.0518710     32.2947078   13.14%      96</span>
-<span class="go">             1713      690      7     28.0518710     32.2947078   13.14%     100</span>
-<span class="go">             1776      709      7     28.0518710     32.2947078   13.14%     105</span>
-<span class="go">             2005      880      7     28.0518710     32.2947078   13.14%     110</span>
-<span class="go">             2254     1081      7     28.0518710     32.2947078   13.14%     116</span>
-<span class="go">             2337     1123      7     28.0518710     32.2947078   13.14%     120</span>
-<span class="go">             2529     1271      7     28.0518710     32.2947078   13.14%     125</span>
-<span class="go">             2715     1411      7     28.0518710     32.2947078   13.14%     130</span>
-<span class="go">             3117     1700      7     28.0518710     32.2947078   13.14%     136</span>
-<span class="go">             3186     1718      7     28.0518710     32.0012943   12.34%     140</span>
-<span class="go">             3381     1866      7     28.0518710     32.0012943   12.34%     146</span>
-<span class="go">             3540     1978      7     28.0518710     31.9947066   12.32%     152</span>
-<span class="go">             3724     2089      7     28.0518710     31.9931742   12.32%     155</span>
-<span class="go">             4176     2421      7     28.0518710     31.9931742   12.32%     160</span>
-<span class="go">             4241     2446      7     28.0518710     31.7554361   11.66%     165</span>
-<span class="go">             4492     2629      7     28.0518710     31.7554361   11.66%     170</span>
-<span class="go">             4670     2737      7     28.0518710     31.7554361   11.66%     176</span>
-<span class="go">             4766     2799      7     28.0518710     31.7554361   11.66%     180</span>
-<span class="go">             4862     2849      7     28.0518710     31.7554361   11.66%     185</span>
-<span class="go">             5214     3081      7     28.0518710     31.7554361   11.66%     190</span>
-<span class="go">             5526     3282      7     28.0518710     31.7554361   11.66%     195</span>
-<span class="go">             5867     3520      7     28.0518710     31.7554361   11.66%     200</span>
-<span class="go">             6196     3675      7     28.0518710     31.6317022   11.32%     205</span>
-<span class="go">             6403     3805      7     28.0518710     31.6317022   11.32%     210</span>
-<span class="go">             6544     3884      7     28.0518710     31.6317022   11.32%     215</span>
-<span class="go">             6704     3961      7     28.0518710     31.6317022   11.32%     220</span>
-<span class="go">             6966     4099      7     28.0518710     31.6234431   11.29%     225</span>
-<span class="go">             7242     4267      7     28.0518710     31.6234431   11.29%     230</span>
-<span class="go">             7466     4393      7     28.0518710     31.5535230   11.10%     235</span>
-<span class="go">             7786     4589      7     28.0518710     31.5534247   11.10%     240</span>
-<span class="go">             7869     4643      7     28.0518710     31.5534247   11.10%     245</span>
-<span class="go">             8074     4782      7     28.0518710     31.5534247   11.10%     250</span>
-<span class="go">             8494     5027      7     28.0518710     31.5534247   11.10%     255</span>
-<span class="go">             8855     5244      7     28.0518710     31.5507961   11.09%     260</span>
-<span class="go">             9069     5365      7     28.0518710     31.5507961   11.09%     267</span>
-<span class="go">             9357     5560      7     28.0518710     31.4998544   10.95%     270</span>
-<span class="go">             9408     5565      7     28.0518710     31.4336628   10.76%     275</span>
-<span class="go">             9506     5613      7     28.0518710     31.4336628   10.76%     280</span>
-<span class="go">             9602     5661      7     28.0518710     31.4336628   10.76%     285</span>
-<span class="go">             9920     5841      7     28.0518710     31.4336628   10.76%     290</span>
-<span class="go">            10111     5953      7     28.0518710     31.4336628   10.76%     295</span>
-<span class="go">            10627     6234      7     28.0518710     31.4336628   10.76%     299</span>
-<span class="go">NOTE: Real time limit reached.</span>
-<span class="go">NOTE: Objective of the best integer solution found = 28.051870979.</span>
-<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 20 rows and 4 columns.</span>
-<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 9850 rows and 4 columns.</span>
+<span class="go">                0        1      4     12.0775275   2279.8770216   99.47%       1</span>
+<span class="go">                0        1      4     12.0775275     18.3085704   34.03%       1</span>
+<span class="go">NOTE: The MILP solver&#39;s symmetry detection found 140 orbits. The largest orbit contains 37 variables.</span>
+<span class="go">                0        1      4     12.0775275     18.3085704   34.03%       2</span>
+<span class="go">                0        1      4     12.0775275     18.3085704   34.03%       2</span>
+<span class="go">                0        1      4     12.0775275     18.3085704   34.03%       3</span>
+<span class="go">                0        1      4     12.0775275     18.3085704   34.03%       3</span>
+<span class="go">NOTE: The MILP solver added 4 cuts with 196 cut coefficients at the root.</span>
+<span class="go">               11        8      5     17.1113590     18.1252274    5.59%       4</span>
+<span class="go">               23        4      6     17.1113590     18.0210902    5.05%       4</span>
+<span class="go">               27        3      6     17.1113590     18.0210902    5.05%       5</span>
+<span class="go">               29        3      7     17.1113590     17.9798537    4.83%       5</span>
+<span class="go">               67       11      8     17.1113590     17.7951852    3.84%       6</span>
+<span class="go">               73        9      9     17.1113590     17.7951852    3.84%       6</span>
+<span class="go">               74        8     10     17.1113590     17.7951852    3.84%       6</span>
+<span class="go">              176        0     10     17.1113590     17.1113590    0.00%       7</span>
+<span class="go">NOTE: Optimal.</span>
+<span class="go">NOTE: Objective = 17.111358985.</span>
 <span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 18 rows and 4 columns.</span>
-<span class="go">NOTE: The CAS table &#39;primal&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 15828 rows and 6 columns.</span>
-<span class="go">NOTE: Response TIME_LIM_SOL</span>
+<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 20 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;primal&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 8133 rows and 6 columns.</span>
+<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 5967 rows and 4 columns.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
 <span class="go">NOTE: Converting model kidney_exchange to DataFrame.</span>
 <span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table BLOCKSTABLE in caslib CASUSERHDFS(casuser).</span>
 <span class="go">NOTE: The table BLOCKSTABLE has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPYGE321TR in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table TMPYGE321TR has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
-<span class="go">NOTE: The problem kidney_exchange has 15828 variables (15828 binary, 0 integer, 0 free, 0 fixed).</span>
-<span class="go">NOTE: The problem has 9850 constraints (49 LE, 9801 EQ, 0 GE, 0 range).</span>
-<span class="go">NOTE: The problem has 47286 constraint coefficients.</span>
-<span class="go">NOTE: The remaining solution time after solver initialization is 299.78 seconds.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPWRTEVWO4 in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMPWRTEVWO4 has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: The problem kidney_exchange has 8133 variables (8133 binary, 0 integer, 0 free, 0 fixed).</span>
+<span class="go">NOTE: The problem has 5967 constraints (38 LE, 5929 EQ, 0 GE, 0 range).</span>
+<span class="go">NOTE: The problem has 24245 constraint coefficients.</span>
+<span class="go">NOTE: The remaining solution time after solver initialization is 299.39 seconds.</span>
 <span class="go">NOTE: The initial MILP heuristics are applied.</span>
 <span class="go">NOTE: The MILP presolver value BASIC is applied.</span>
-<span class="go">NOTE: The MILP presolver removed 3156 variables and 2029 constraints.</span>
-<span class="go">NOTE: The MILP presolver removed 9526 constraint coefficients.</span>
+<span class="go">NOTE: The MILP presolver removed 2685 variables and 1925 constraints.</span>
+<span class="go">NOTE: The MILP presolver removed 8005 constraint coefficients.</span>
 <span class="go">NOTE: The MILP presolver modified 0 constraint coefficients.</span>
-<span class="go">NOTE: The presolved problem has 12672 variables, 7821 constraints, and 37760 constraint coefficients.</span>
+<span class="go">NOTE: The presolved problem has 5448 variables, 4042 constraints, and 16240 constraint coefficients.</span>
 <span class="go">NOTE: The MILP solver is called.</span>
 <span class="go">NOTE: The Decomposition algorithm is used.</span>
 <span class="go">NOTE: The Decomposition algorithm is executing in the distributed computing environment in single-machine mode.</span>
@@ -255,46 +204,33 @@
 <span class="go">NOTE: All blocks are identical and the master model is set partitioning.</span>
 <span class="go">NOTE: The Decomposition algorithm is using an aggregate formulation and Ryan-Foster branching.</span>
 <span class="go">NOTE: The number of block threads has been reduced to 1 threads.</span>
-<span class="go">NOTE: The problem has a decomposable structure with 49 blocks. The largest block covers 2.02% of the constraints in the problem.</span>
-<span class="go">NOTE: The decomposition subproblems cover 12593 (99.38%) variables and 7742 (98.99%) constraints.</span>
+<span class="go">NOTE: The problem has a decomposable structure with 38 blocks. The largest block covers 2.598% of the constraints in the problem.</span>
+<span class="go">NOTE: The decomposition subproblems cover 5396 (99.05%) variables and 3990 (98.71%) constraints.</span>
 <span class="go">NOTE: The deterministic parallel mode is enabled.</span>
 <span class="go">NOTE: The Decomposition algorithm is using up to 32 threads.</span>
 <span class="go">         Iter         Best       Master         Best       LP       IP  CPU Real</span>
 <span class="go">                     Bound    Objective      Integer      Gap      Gap Time Time</span>
-<span class="go">            .     358.5463       8.2725       8.2725   97.69%   97.69%    2    3</span>
-<span class="go">            3     350.4519       9.1816       9.1816   97.38%   97.38%    5    7</span>
-<span class="go">            4     350.4519      15.5468      15.5468   95.56%   95.56%    7   11</span>
-<span class="go">            5     344.6750      15.5468      15.5468   95.49%   95.49%    9   14</span>
-<span class="go">            6     316.2089      15.5468      15.5468   95.08%   95.08%   11   16</span>
-<span class="go">           10     316.2089      15.5468      22.7247   95.08%   92.81%   15   22</span>
-<span class="go">           11     260.4562      22.7247      22.7247   91.28%   91.28%   17   24</span>
-<span class="go">           14     259.6150      22.7247      22.7247   91.25%   91.25%   20   30</span>
-<span class="go">           15     242.7751      22.7554      22.7247   90.63%   90.64%   21   31</span>
-<span class="go">           16     219.3485      23.5204      22.7247   89.28%   89.64%   22   33</span>
-<span class="go">           17     204.8669      23.7674      22.7247   88.40%   88.91%   23   35</span>
-<span class="go">           18     155.3209      24.1564      22.7247   84.45%   85.37%   24   36</span>
-<span class="go">            .     155.3209      24.9509      22.7247   83.94%   85.37%   27   40</span>
-<span class="go">           20     147.4931      24.9509      22.7247   83.08%   84.59%   27   41</span>
-<span class="go">           22     113.1877      25.7096      23.7438   77.29%   79.02%   80   95</span>
-<span class="go">           23      79.4927      26.0422      23.7438   67.24%   70.13%   81   97</span>
-<span class="go">           30      79.4927      26.8911      23.7438   66.17%   70.13%   90  111</span>
-<span class="go">           32      75.0523      26.9424      23.7438   64.10%   68.36%   93  115</span>
-<span class="go">           38      74.7758      27.5362      23.7438   63.17%   68.25%  102  130</span>
-<span class="go">           39      37.7021      27.6625      23.7438   26.63%   37.02%  104  132</span>
-<span class="go">            .      37.7021      27.6678      27.1343   26.61%   28.03%  105  133</span>
-<span class="go">           40      37.7021      27.6678      27.1343   26.61%   28.03%  106  135</span>
-<span class="go">           43      37.7021      28.0519      28.0519   25.60%   25.60%  110  141</span>
-<span class="go">           45      30.7209      28.0519      28.0519    8.69%    8.69%  112  143</span>
-<span class="go">           47      30.6065      28.0519      28.0519    8.35%    8.35%  114  146</span>
-<span class="go">           50      28.0519      28.0519      28.0519    0.00%    0.00%  116  150</span>
+<span class="go">            .     283.4155      10.5814      10.5814   96.27%   96.27%    2    2</span>
+<span class="go">            1     259.0121      10.5814      10.5814   95.91%   95.91%    3    4</span>
+<span class="go">            2     230.6758      10.5814      10.5814   95.41%   95.41%    4    5</span>
+<span class="go">            3     204.2627      10.5814      10.5814   94.82%   94.82%    5    6</span>
+<span class="go">            4     192.9770      14.7394      14.7394   92.36%   92.36%    6    9</span>
+<span class="go">            6     162.6582      15.6274      15.6274   90.39%   90.39%   10   13</span>
+<span class="go">            7     140.2584      15.6274      15.6274   88.86%   88.86%   11   15</span>
+<span class="go">            8     110.8604      15.6274      15.6274   85.90%   85.90%   13   17</span>
+<span class="go">            9     108.1582      15.8122      15.6274   85.38%   85.55%   14   18</span>
+<span class="go">           10     108.1582      15.8122      17.1114   85.38%   84.18%   14   19</span>
+<span class="go">           11      46.6890      17.1114      17.1114   63.35%   63.35%   15   20</span>
+<span class="go">           12      39.3063      17.1114      17.1114   56.47%   56.47%   17   22</span>
+<span class="go">           13      17.1114      17.1114      17.1114    0.00%    0.00%   18   24</span>
 <span class="go">            Node  Active   Sols         Best         Best      Gap    CPU   Real</span>
 <span class="go">                                     Integer        Bound            Time   Time</span>
-<span class="go">               0       0     12      28.0519      28.0519    0.00%    116    150</span>
+<span class="go">               0       1      9      17.1114      17.1114    0.00%     18     24</span>
 <span class="go">NOTE: The Decomposition algorithm used 32 threads.</span>
-<span class="go">NOTE: The Decomposition algorithm time is 150.08 seconds.</span>
+<span class="go">NOTE: The Decomposition algorithm time is 24.75 seconds.</span>
 <span class="go">NOTE: Optimal within relative gap.</span>
-<span class="go">NOTE: Objective = 28.051870979.</span>
-<span class="gh">Out[2]: </span><span class="go">28.051871</span>
+<span class="go">NOTE: Objective = 17.111358985.</span>
+<span class="gh">Out[2]: </span><span class="go">17.111359</span>
 </pre></div>
 </div>
 </div>
@@ -306,7 +242,7 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
@@ -333,13 +269,16 @@
 <li class="toctree-l4"><a class="reference internal" href="#output">Output</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="multiobjective.html">Multiobjective</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../examples.html#viya-examples-abstract">Viya Examples / Abstract</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#restful-api-examples">RESTful API Examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../web-api.html">RESTful API</a></li>
 </ul>
 
 <div id="searchbox" style="display: none" role="search">
@@ -365,22 +304,25 @@
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="../http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="curve_fitting.html" title="Curve Fitting"
+          <a href="multiobjective.html" title="Multiobjective"
              >next</a> |</li>
         <li class="right" >
           <a href="optimal_wedding.html" title="Optimal Wedding"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017-2018, SAS Institute.
-      Last updated on Jul 31, 2018 (Timestamp: 0.2.0-20180731093746).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+        &#169; Copyright 2017-2019, SAS Institute.
+      Last updated on Feb 26, 2019 (Timestamp: 0.2.1-20190226133646).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
     </div>
   </body>
 </html>

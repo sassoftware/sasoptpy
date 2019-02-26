@@ -6,19 +6,20 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Curve Fitting &#8212; sasoptpy 0.2.0 documentation</title>
+    <title>Curve Fitting &#8212; sasoptpy 0.2.1 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/sasoptpy.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/js/url.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Nonlinear 1" href="nonlinear_1.html" />
-    <link rel="prev" title="Kidney Exchange" href="kidney_exchange.html" /> 
+    <link rel="prev" title="Multiobjective" href="multiobjective.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -27,15 +28,18 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="../http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="nonlinear_1.html" title="Nonlinear 1"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="kidney_exchange.html" title="Kidney Exchange"
+          <a href="multiobjective.html" title="Multiobjective"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &#187;</li> 
       </ul>
     </div>  
@@ -164,22 +168,22 @@
 <span class="go">num x {set_XY_DATA_N};</span>
 <span class="go">num y {set_XY_DATA_N};</span>
 <span class="go">read data XY_DATA into set_XY_DATA_N=[_N_] x y;</span>
-<span class="go">num order = 1;</span>
-<span class="go">var beta {0..order};</span>
-<span class="go">impvar estimate {i_1 in set_XY_DATA_N} = sum {i_2 in 1..order}(beta[i_2] * (x[i_1]) ^ (i_2)) + beta[0];</span>
-<span class="go">var surplus {set_XY_DATA_N} &gt;= 0;</span>
-<span class="go">var slack {set_XY_DATA_N} &gt;= 0;</span>
+<span class="go">num order init 1;</span>
+<span class="go">var beta {{0..order}};</span>
+<span class="go">impvar estimate {i_1 in set_XY_DATA_N} = beta[0] + sum {i_2 in 1..order}(beta[i_2] * (x[i_1]) ^ (i_2));</span>
+<span class="go">var surplus {{set_XY_DATA_N}} &gt;= 0;</span>
+<span class="go">var slack {{set_XY_DATA_N}} &gt;= 0;</span>
 <span class="go">min objective1 = sum {i_3 in set_XY_DATA_N}(surplus[i_3] + slack[i_3]); </span>
-<span class="go">con abs_dev_con {i_4 in set_XY_DATA_N} : - estimate[i_4] - slack[i_4] + surplus[i_4] + y[i_4] = 0;</span>
+<span class="go">con abs_dev_con {i_4 in set_XY_DATA_N} : y[i_4] - estimate[i_4] + surplus[i_4] - slack[i_4] = 0;</span>
 
 <span class="go">solve;</span>
 <span class="go">print _var_.name _var_.lb _var_.ub _var_ _var_.rc;</span>
 <span class="go">print _con_.name _con_.body _con_.dual;</span>
 <span class="go">print x y estimate surplus slack;</span>
 
-<span class="go">NOTE: Submitting OPTMODEL codes to CAS server.</span>
+<span class="go">NOTE: Submitting OPTMODEL code to CAS server.</span>
 <span class="go">NOTE: There were 19 rows read from table &#39;XY_DATA&#39; in caslib &#39;CASUSERHDFS(casuser)&#39;.</span>
-<span class="go">NOTE: Problem generation will use 32 threads.</span>
+<span class="go">NOTE: Problem generation will use 80 threads.</span>
 <span class="go">NOTE: The problem has 40 variables (2 free, 0 fixed).</span>
 <span class="go">NOTE: The problem uses 19 implicit variables.</span>
 <span class="go">NOTE: The problem has 19 linear constraints (0 LE, 19 EQ, 0 GE, 0 range).</span>
@@ -187,50 +191,52 @@
 <span class="go">NOTE: The problem has 0 nonlinear constraints (0 LE, 0 EQ, 0 GE, 0 range).</span>
 <span class="go">NOTE: The OPTMODEL presolver is disabled for linear problems.</span>
 <span class="go">NOTE: The LP presolver value AUTOMATIC is applied.</span>
-<span class="go">NOTE: The LP presolver removed 0 variables and 0 constraints.</span>
-<span class="go">NOTE: The LP presolver removed 0 constraint coefficients.</span>
-<span class="go">NOTE: The presolved problem has 40 variables, 19 constraints, and 75 constraint coefficients.</span>
+<span class="go">NOTE: The LP presolver time is 0.00 seconds.</span>
+<span class="go">NOTE: The LP presolver removed 38 variables and 0 constraints.</span>
+<span class="go">NOTE: The LP presolver removed 38 constraint coefficients.</span>
+<span class="go">NOTE: The LP presolver formulated the dual of the problem.</span>
+<span class="go">NOTE: The presolved problem has 19 variables, 2 constraints, and 37 constraint coefficients.</span>
 <span class="go">NOTE: The LP solver is called.</span>
 <span class="go">NOTE: The Dual Simplex algorithm is used.</span>
 <span class="go">                              Objective</span>
 <span class="go">         Phase Iteration        Value         Time</span>
-<span class="go">          D 2          1    0.000000E+00         0</span>
-<span class="go">          D 2         23    1.146625E+01         0</span>
+<span class="go">          D 2          1    6.160000E+01         0</span>
+<span class="go">          D 2          5    1.146625E+01         0</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 11.46625.</span>
 <span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
-<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 18 rows and 4 columns.</span>
-<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 19 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 13 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 18 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;primal&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 40 rows and 6 columns.</span>
+<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 19 rows and 4 columns.</span>
 <span class="go">      beta</span>
 <span class="go">1         </span>
 <span class="go">0  0.58125</span>
 <span class="go">1  0.63750</span>
-<span class="go">    COL1     x    y  estimate  surplus    slack</span>
-<span class="go">10  11.0   0.0  1.0   0.58125  0.00000  0.41875</span>
-<span class="go">18  19.0   0.5  0.9   0.90000  0.00000  0.00000</span>
-<span class="go">12  13.0   1.0  0.7   1.21875  0.51875  0.00000</span>
-<span class="go">4    5.0   1.5  1.5   1.53750  0.03750  0.00000</span>
-<span class="go">0    1.0   1.9  2.0   1.79250  0.00000  0.20750</span>
-<span class="go">15  16.0   2.5  2.4   2.17500  0.00000  0.22500</span>
-<span class="go">1    2.0   3.0  3.2   2.49375  0.00000  0.70625</span>
-<span class="go">11  12.0   3.5  2.0   2.81250  0.81250  0.00000</span>
-<span class="go">5    6.0   4.0  2.7   3.13125  0.43125  0.00000</span>
-<span class="go">3    4.0   4.5  3.5   3.45000  0.00000  0.05000</span>
-<span class="go">8    9.0   5.0  1.0   3.76875  2.76875  0.00000</span>
-<span class="go">14  15.0   5.5  4.0   4.08750  0.08750  0.00000</span>
-<span class="go">13  14.0   6.0  3.6   4.40625  0.80625  0.00000</span>
-<span class="go">7    8.0   6.6  2.7   4.78875  2.08875  0.00000</span>
-<span class="go">9   10.0   7.0  5.7   5.04375  0.00000  0.65625</span>
-<span class="go">17  18.0   7.6  4.6   5.42625  0.82625  0.00000</span>
-<span class="go">2    3.0   8.5  6.0   6.00000  0.00000  0.00000</span>
-<span class="go">6    7.0   9.0  6.8   6.31875  0.00000  0.48125</span>
-<span class="go">16  17.0  10.0  7.3   6.95625  0.00000  0.34375</span>
+<span class="go">    COL1     x    y  estimate       surplus    slack</span>
+<span class="go">10  11.0   0.0  1.0   0.58125  0.000000e+00  0.41875</span>
+<span class="go">18  19.0   0.5  0.9   0.90000  5.551115e-17  0.00000</span>
+<span class="go">12  13.0   1.0  0.7   1.21875  5.187500e-01  0.00000</span>
+<span class="go">4    5.0   1.5  1.5   1.53750  3.750000e-02  0.00000</span>
+<span class="go">0    1.0   1.9  2.0   1.79250  0.000000e+00  0.20750</span>
+<span class="go">15  16.0   2.5  2.4   2.17500  0.000000e+00  0.22500</span>
+<span class="go">1    2.0   3.0  3.2   2.49375  0.000000e+00  0.70625</span>
+<span class="go">11  12.0   3.5  2.0   2.81250  8.125000e-01  0.00000</span>
+<span class="go">5    6.0   4.0  2.7   3.13125  4.312500e-01  0.00000</span>
+<span class="go">3    4.0   4.5  3.5   3.45000  0.000000e+00  0.05000</span>
+<span class="go">8    9.0   5.0  1.0   3.76875  2.768750e+00  0.00000</span>
+<span class="go">14  15.0   5.5  4.0   4.08750  8.750000e-02  0.00000</span>
+<span class="go">13  14.0   6.0  3.6   4.40625  8.062500e-01  0.00000</span>
+<span class="go">7    8.0   6.6  2.7   4.78875  2.088750e+00  0.00000</span>
+<span class="go">9   10.0   7.0  5.7   5.04375  0.000000e+00  0.65625</span>
+<span class="go">17  18.0   7.6  4.6   5.42625  8.262500e-01  0.00000</span>
+<span class="go">2    3.0   8.5  6.0   6.00000  0.000000e+00  0.00000</span>
+<span class="go">6    7.0   9.0  6.8   6.31875  0.000000e+00  0.48125</span>
+<span class="go">16  17.0  10.0  7.3   6.95625  0.000000e+00  0.34375</span>
 <span class="go">NOTE: Initialized model Linf.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
 <span class="go">NOTE: Converting model Linf to OPTMODEL.</span>
-<span class="go">NOTE: Submitting OPTMODEL codes to CAS server.</span>
+<span class="go">NOTE: Submitting OPTMODEL code to CAS server.</span>
 <span class="go">NOTE: There were 19 rows read from table &#39;XY_DATA&#39; in caslib &#39;CASUSERHDFS(casuser)&#39;.</span>
 <span class="go">NOTE: Problem generation will use 32 threads.</span>
 <span class="go">NOTE: The problem has 41 variables (3 free, 0 fixed).</span>
@@ -240,6 +246,7 @@
 <span class="go">NOTE: The problem has 0 nonlinear constraints (0 LE, 0 EQ, 0 GE, 0 range).</span>
 <span class="go">NOTE: The OPTMODEL presolver is disabled for linear problems.</span>
 <span class="go">NOTE: The LP presolver value AUTOMATIC is applied.</span>
+<span class="go">NOTE: The LP presolver time is 0.00 seconds.</span>
 <span class="go">NOTE: The LP presolver removed 0 variables and 0 constraints.</span>
 <span class="go">NOTE: The LP presolver removed 0 constraint coefficients.</span>
 <span class="go">NOTE: The presolved problem has 41 variables, 38 constraints, and 132 constraint coefficients.</span>
@@ -247,15 +254,15 @@
 <span class="go">NOTE: The Dual Simplex algorithm is used.</span>
 <span class="go">                              Objective</span>
 <span class="go">         Phase Iteration        Value         Time</span>
-<span class="go">          D 2          1   -5.000000E-03         0</span>
+<span class="go">          D 2          1   -1.900000E+00         0</span>
 <span class="go">          P 2         26    1.725000E+00         0</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 1.725.</span>
 <span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
-<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 18 rows and 4 columns.</span>
-<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 38 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 13 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 18 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;primal&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 41 rows and 6 columns.</span>
+<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 38 rows and 4 columns.</span>
 <span class="go">    beta</span>
 <span class="go">1       </span>
 <span class="go">0 -0.400</span>
@@ -282,7 +289,7 @@
 <span class="go">16  17.0  10.0  7.3    5.8500    0.000  1.4500</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
 <span class="go">NOTE: Converting model L1 to OPTMODEL.</span>
-<span class="go">NOTE: Submitting OPTMODEL codes to CAS server.</span>
+<span class="go">NOTE: Submitting OPTMODEL code to CAS server.</span>
 <span class="go">NOTE: There were 19 rows read from table &#39;XY_DATA&#39; in caslib &#39;CASUSERHDFS(casuser)&#39;.</span>
 <span class="go">NOTE: Problem generation will use 32 threads.</span>
 <span class="go">NOTE: The problem has 41 variables (3 free, 0 fixed).</span>
@@ -292,50 +299,52 @@
 <span class="go">NOTE: The problem has 0 nonlinear constraints (0 LE, 0 EQ, 0 GE, 0 range).</span>
 <span class="go">NOTE: The OPTMODEL presolver is disabled for linear problems.</span>
 <span class="go">NOTE: The LP presolver value AUTOMATIC is applied.</span>
-<span class="go">NOTE: The LP presolver removed 0 variables and 0 constraints.</span>
-<span class="go">NOTE: The LP presolver removed 0 constraint coefficients.</span>
-<span class="go">NOTE: The presolved problem has 41 variables, 19 constraints, and 93 constraint coefficients.</span>
+<span class="go">NOTE: The LP presolver time is 0.00 seconds.</span>
+<span class="go">NOTE: The LP presolver removed 38 variables and 0 constraints.</span>
+<span class="go">NOTE: The LP presolver removed 38 constraint coefficients.</span>
+<span class="go">NOTE: The LP presolver formulated the dual of the problem.</span>
+<span class="go">NOTE: The presolved problem has 19 variables, 3 constraints, and 55 constraint coefficients.</span>
 <span class="go">NOTE: The LP solver is called.</span>
 <span class="go">NOTE: The Dual Simplex algorithm is used.</span>
 <span class="go">                              Objective</span>
 <span class="go">         Phase Iteration        Value         Time</span>
-<span class="go">          D 2          1    0.000000E+00         0</span>
-<span class="go">          D 2         20    1.045896E+01         0</span>
+<span class="go">          D 2          1    6.160000E+01         0</span>
+<span class="go">          D 2          5    1.045896E+01         0</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 10.458964706.</span>
 <span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
-<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 18 rows and 4 columns.</span>
-<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 19 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 13 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 18 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;primal&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 41 rows and 6 columns.</span>
+<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 19 rows and 4 columns.</span>
 <span class="go">       beta</span>
 <span class="go">1          </span>
 <span class="go">0  0.982353</span>
 <span class="go">1  0.294510</span>
 <span class="go">2  0.033725</span>
-<span class="go">    COL1     x    y  estimate   surplus     slack</span>
-<span class="go">10  11.0   0.0  1.0  0.982353  0.000000  0.017647</span>
-<span class="go">18  19.0   0.5  0.9  1.138039  0.238039  0.000000</span>
-<span class="go">12  13.0   1.0  0.7  1.310588  0.610588  0.000000</span>
-<span class="go">4    5.0   1.5  1.5  1.500000  0.000000  0.000000</span>
-<span class="go">0    1.0   1.9  2.0  1.663671  0.000000  0.336329</span>
-<span class="go">15  16.0   2.5  2.4  1.929412  0.000000  0.470588</span>
-<span class="go">1    2.0   3.0  3.2  2.169412  0.000000  1.030588</span>
-<span class="go">11  12.0   3.5  2.0  2.426275  0.426275  0.000000</span>
-<span class="go">5    6.0   4.0  2.7  2.700000  0.000000  0.000000</span>
-<span class="go">3    4.0   4.5  3.5  2.990588  0.000000  0.509412</span>
-<span class="go">8    9.0   5.0  1.0  3.298039  2.298039  0.000000</span>
-<span class="go">14  15.0   5.5  4.0  3.622353  0.000000  0.377647</span>
-<span class="go">13  14.0   6.0  3.6  3.963529  0.363529  0.000000</span>
-<span class="go">7    8.0   6.6  2.7  4.395200  1.695200  0.000000</span>
-<span class="go">9   10.0   7.0  5.7  4.696471  0.000000  1.003529</span>
-<span class="go">17  18.0   7.6  4.6  5.168612  0.568612  0.000000</span>
-<span class="go">2    3.0   8.5  6.0  5.922353  0.000000  0.077647</span>
-<span class="go">6    7.0   9.0  6.8  6.364706  0.000000  0.435294</span>
-<span class="go">16  17.0  10.0  7.3  7.300000  0.000000  0.000000</span>
+<span class="go">    COL1     x    y  estimate       surplus     slack</span>
+<span class="go">10  11.0   0.0  1.0  0.982353  0.000000e+00  0.017647</span>
+<span class="go">18  19.0   0.5  0.9  1.138039  2.380392e-01  0.000000</span>
+<span class="go">12  13.0   1.0  0.7  1.310588  6.105882e-01  0.000000</span>
+<span class="go">4    5.0   1.5  1.5  1.500000 -6.938894e-17  0.000000</span>
+<span class="go">0    1.0   1.9  2.0  1.663671  0.000000e+00  0.336329</span>
+<span class="go">15  16.0   2.5  2.4  1.929412  0.000000e+00  0.470588</span>
+<span class="go">1    2.0   3.0  3.2  2.169412  0.000000e+00  1.030588</span>
+<span class="go">11  12.0   3.5  2.0  2.426275  4.262745e-01  0.000000</span>
+<span class="go">5    6.0   4.0  2.7  2.700000 -1.110223e-16  0.000000</span>
+<span class="go">3    4.0   4.5  3.5  2.990588  0.000000e+00  0.509412</span>
+<span class="go">8    9.0   5.0  1.0  3.298039  2.298039e+00  0.000000</span>
+<span class="go">14  15.0   5.5  4.0  3.622353  0.000000e+00  0.377647</span>
+<span class="go">13  14.0   6.0  3.6  3.963529  3.635294e-01  0.000000</span>
+<span class="go">7    8.0   6.6  2.7  4.395200  1.695200e+00  0.000000</span>
+<span class="go">9   10.0   7.0  5.7  4.696471  0.000000e+00  1.003529</span>
+<span class="go">17  18.0   7.6  4.6  5.168612  5.686118e-01  0.000000</span>
+<span class="go">2    3.0   8.5  6.0  5.922353  0.000000e+00  0.077647</span>
+<span class="go">6    7.0   9.0  6.8  6.364706  0.000000e+00  0.435294</span>
+<span class="go">16  17.0  10.0  7.3  7.300000  4.440892e-16  0.000000</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
 <span class="go">NOTE: Converting model Linf to OPTMODEL.</span>
-<span class="go">NOTE: Submitting OPTMODEL codes to CAS server.</span>
+<span class="go">NOTE: Submitting OPTMODEL code to CAS server.</span>
 <span class="go">NOTE: There were 19 rows read from table &#39;XY_DATA&#39; in caslib &#39;CASUSERHDFS(casuser)&#39;.</span>
 <span class="go">NOTE: Problem generation will use 32 threads.</span>
 <span class="go">NOTE: The problem has 42 variables (4 free, 0 fixed).</span>
@@ -345,6 +354,7 @@
 <span class="go">NOTE: The problem has 0 nonlinear constraints (0 LE, 0 EQ, 0 GE, 0 range).</span>
 <span class="go">NOTE: The OPTMODEL presolver is disabled for linear problems.</span>
 <span class="go">NOTE: The LP presolver value AUTOMATIC is applied.</span>
+<span class="go">NOTE: The LP presolver time is 0.00 seconds.</span>
 <span class="go">NOTE: The LP presolver removed 0 variables and 0 constraints.</span>
 <span class="go">NOTE: The LP presolver removed 0 constraint coefficients.</span>
 <span class="go">NOTE: The presolved problem has 42 variables, 38 constraints, and 150 constraint coefficients.</span>
@@ -352,40 +362,40 @@
 <span class="go">NOTE: The Dual Simplex algorithm is used.</span>
 <span class="go">                              Objective</span>
 <span class="go">         Phase Iteration        Value         Time</span>
-<span class="go">          D 2          1   -5.000000E-03         0</span>
-<span class="go">          P 2         27    1.475000E+00         0</span>
+<span class="go">          D 2          1   -1.900000E+00         0</span>
+<span class="go">          P 2         29    1.475000E+00         0</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 1.475.</span>
 <span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
-<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 18 rows and 4 columns.</span>
-<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 38 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 13 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 18 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;primal&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 42 rows and 6 columns.</span>
+<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 38 rows and 4 columns.</span>
 <span class="go">    beta</span>
 <span class="go">1       </span>
 <span class="go">0  2.475</span>
 <span class="go">1 -0.625</span>
 <span class="go">2  0.125</span>
-<span class="go">    COL1     x    y  estimate  surplus    slack</span>
-<span class="go">10  11.0   0.0  1.0   2.47500  1.47500  0.00000</span>
-<span class="go">18  19.0   0.5  0.9   2.19375  1.29375  0.00000</span>
-<span class="go">12  13.0   1.0  0.7   1.97500  1.27500  0.00000</span>
-<span class="go">4    5.0   1.5  1.5   1.81875  0.31875  0.00000</span>
-<span class="go">0    1.0   1.9  2.0   1.73875  0.00000  0.26125</span>
-<span class="go">15  16.0   2.5  2.4   1.69375  0.00000  0.70625</span>
-<span class="go">1    2.0   3.0  3.2   1.72500  0.00000  1.47500</span>
-<span class="go">11  12.0   3.5  2.0   1.81875  0.00000  0.18125</span>
-<span class="go">5    6.0   4.0  2.7   1.97500  0.00000  0.72500</span>
-<span class="go">3    4.0   4.5  3.5   2.19375  0.00000  1.30625</span>
-<span class="go">8    9.0   5.0  1.0   2.47500  1.47500  0.00000</span>
-<span class="go">14  15.0   5.5  4.0   2.81875  0.00000  1.18125</span>
-<span class="go">13  14.0   6.0  3.6   3.22500  0.00000  0.37500</span>
-<span class="go">7    8.0   6.6  2.7   3.79500  1.09500  0.00000</span>
-<span class="go">9   10.0   7.0  5.7   4.22500  0.00000  1.47500</span>
-<span class="go">17  18.0   7.6  4.6   4.94500  0.34500  0.00000</span>
-<span class="go">2    3.0   8.5  6.0   6.19375  0.19375  0.00000</span>
-<span class="go">6    7.0   9.0  6.8   6.97500  0.17500  0.00000</span>
-<span class="go">16  17.0  10.0  7.3   8.72500  1.42500  0.00000</span>
+<span class="go">    COL1     x    y  estimate   surplus     slack</span>
+<span class="go">10  11.0   0.0  1.0   2.47500  1.475000  0.000000</span>
+<span class="go">18  19.0   0.5  0.9   2.19375  1.293750  0.000000</span>
+<span class="go">12  13.0   1.0  0.7   1.97500  1.275000  0.000000</span>
+<span class="go">4    5.0   1.5  1.5   1.81875  0.318750  0.000000</span>
+<span class="go">0    1.0   1.9  2.0   1.73875  0.606875  0.868125</span>
+<span class="go">15  16.0   2.5  2.4   1.69375  0.000000  0.706250</span>
+<span class="go">1    2.0   3.0  3.2   1.72500  0.000000  1.475000</span>
+<span class="go">11  12.0   3.5  2.0   1.81875  0.000000  0.181250</span>
+<span class="go">5    6.0   4.0  2.7   1.97500  0.000000  0.725000</span>
+<span class="go">3    4.0   4.5  3.5   2.19375  0.000000  1.306250</span>
+<span class="go">8    9.0   5.0  1.0   2.47500  1.475000  0.000000</span>
+<span class="go">14  15.0   5.5  4.0   2.81875  0.000000  1.181250</span>
+<span class="go">13  14.0   6.0  3.6   3.22500  0.000000  0.375000</span>
+<span class="go">7    8.0   6.6  2.7   3.79500  1.095000  0.000000</span>
+<span class="go">9   10.0   7.0  5.7   4.22500  0.000000  1.475000</span>
+<span class="go">17  18.0   7.6  4.6   4.94500  0.345000  0.000000</span>
+<span class="go">2    3.0   8.5  6.0   6.19375  0.193750  0.000000</span>
+<span class="go">6    7.0   9.0  6.8   6.97500  0.175000  0.000000</span>
+<span class="go">16  17.0  10.0  7.3   8.72500  1.425000  0.000000</span>
 </pre></div>
 </div>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="go"># Plots</span>
@@ -398,7 +408,7 @@
 <span class="gp">In [6]: </span><span class="n">s2</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">p1</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;estimate&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Line2&#39;</span><span class="p">);</span>
 
 <span class="gp">In [7]: </span><span class="n">p1</span>
-<span class="gh">Out[7]: </span><span class="go">&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f27e7a38128&gt;</span>
+<span class="gh">Out[7]: </span><span class="go">&lt;matplotlib.axes._subplots.AxesSubplot at 0x7fc5b98afbe0&gt;</span>
 
 <span class="gp">In [8]: </span><span class="n">p2</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">)</span>
 
@@ -407,7 +417,7 @@
 <span class="gp">In [10]: </span><span class="n">s4</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">p2</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;estimate&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Curve2&#39;</span><span class="p">);</span>
 
 <span class="gp">In [11]: </span><span class="n">p2</span>
-<span class="gh">Out[11]: </span><span class="go">&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f27e7974eb8&gt;</span>
+<span class="gh">Out[11]: </span><span class="go">&lt;matplotlib.axes._subplots.AxesSubplot at 0x7fc5a50f78d0&gt;</span>
 </pre></div>
 </div>
 <img alt="../_images/cf_line.png" src="../_images/cf_line.png" />
@@ -421,7 +431,7 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
@@ -443,9 +453,11 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#restful-api-examples">RESTful API Examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../web-api.html">RESTful API</a></li>
 </ul>
 
 <div id="searchbox" style="display: none" role="search">
@@ -471,22 +483,25 @@
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="../http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="nonlinear_1.html" title="Nonlinear 1"
              >next</a> |</li>
         <li class="right" >
-          <a href="kidney_exchange.html" title="Kidney Exchange"
+          <a href="multiobjective.html" title="Multiobjective"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017-2018, SAS Institute.
-      Last updated on Jul 31, 2018 (Timestamp: 0.2.0-20180731093746).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+        &#169; Copyright 2017-2019, SAS Institute.
+      Last updated on Feb 26, 2019 (Timestamp: 0.2.1-20190226133646).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
     </div>
   </body>
 </html>

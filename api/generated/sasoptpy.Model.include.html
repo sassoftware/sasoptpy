@@ -6,15 +6,16 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>sasoptpy.Model.include &#8212; sasoptpy 0.2.0 documentation</title>
+    <title>sasoptpy.Model.include &#8212; sasoptpy 0.2.1 documentation</title>
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/css/sasoptpy.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/sasoptpy.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <script type="text/javascript" src="../../_static/js/url.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="sasoptpy.Model.solve" href="sasoptpy.Model.solve.html" />
@@ -27,6 +28,9 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="../../http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
@@ -35,7 +39,7 @@
         <li class="right" >
           <a href="sasoptpy.Model.read_table.html" title="sasoptpy.Model.read_table"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 0.2.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 0.2.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../model.html" accesskey="U">Model</a> &#187;</li> 
       </ul>
@@ -56,10 +60,11 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>argv</strong> : <a class="reference internal" href="sasoptpy.Model.html#sasoptpy.Model" title="sasoptpy.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></a>, <a class="reference internal" href="sasoptpy.Variable.html#sasoptpy.Variable" title="sasoptpy.Variable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Variable</span></code></a>, <a class="reference internal" href="sasoptpy.Constraint.html#sasoptpy.Constraint" title="sasoptpy.Constraint"><code class="xref py py-class docutils literal notranslate"><span class="pre">Constraint</span></code></a>,            <a class="reference internal" href="sasoptpy.VariableGroup.html#sasoptpy.VariableGroup" title="sasoptpy.VariableGroup"><code class="xref py py-class docutils literal notranslate"><span class="pre">VariableGroup</span></code></a>, <a class="reference internal" href="sasoptpy.ConstraintGroup.html#sasoptpy.ConstraintGroup" title="sasoptpy.ConstraintGroup"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConstraintGroup</span></code></a>,            <a class="reference internal" href="sasoptpy.Set.html#sasoptpy.Set" title="sasoptpy.Set"><code class="xref py py-class docutils literal notranslate"><span class="pre">Set</span></code></a>, <a class="reference internal" href="sasoptpy.Parameter.html#sasoptpy.Parameter" title="sasoptpy.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Statement</span></code>,            <a class="reference internal" href="sasoptpy.ImplicitVar.html#sasoptpy.ImplicitVar" title="sasoptpy.ImplicitVar"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitVar</span></code></a></p>
-<blockquote class="last">
-<div><p>Objects to be included in the model</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>argv</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><a class="reference internal" href="sasoptpy.Model.html#sasoptpy.Model" title="sasoptpy.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></a>, <a class="reference internal" href="sasoptpy.Variable.html#sasoptpy.Variable" title="sasoptpy.Variable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Variable</span></code></a>, <a class="reference internal" href="sasoptpy.Constraint.html#sasoptpy.Constraint" title="sasoptpy.Constraint"><code class="xref py py-class docutils literal notranslate"><span class="pre">Constraint</span></code></a>,            <a class="reference internal" href="sasoptpy.VariableGroup.html#sasoptpy.VariableGroup" title="sasoptpy.VariableGroup"><code class="xref py py-class docutils literal notranslate"><span class="pre">VariableGroup</span></code></a>, <a class="reference internal" href="sasoptpy.ConstraintGroup.html#sasoptpy.ConstraintGroup" title="sasoptpy.ConstraintGroup"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConstraintGroup</span></code></a>,            <a class="reference internal" href="sasoptpy.Set.html#sasoptpy.Set" title="sasoptpy.Set"><code class="xref py py-class docutils literal notranslate"><span class="pre">Set</span></code></a>, <a class="reference internal" href="sasoptpy.Parameter.html#sasoptpy.Parameter" title="sasoptpy.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Statement</span></code>,            <a class="reference internal" href="sasoptpy.ImplicitVar.html#sasoptpy.ImplicitVar" title="sasoptpy.ImplicitVar"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitVar</span></code></a></span></dt>
+<dd><p class="first last">Objects to be included in the model</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -106,7 +111,7 @@ original model to be included.</li>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <h3><a href="../../index.html">Table of Contents</a></h3>
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../getting-started.html">Getting Started</a></li>
@@ -159,6 +164,7 @@ original model to be included.</li>
 <li class="toctree-l2"><a class="reference internal" href="../functions.html">Functions</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../web-api.html">RESTful API</a></li>
 </ul>
 
 <div id="searchbox" style="display: none" role="search">
@@ -184,6 +190,9 @@ original model to be included.</li>
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="../../http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
@@ -192,15 +201,15 @@ original model to be included.</li>
         <li class="right" >
           <a href="sasoptpy.Model.read_table.html" title="sasoptpy.Model.read_table"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 0.2.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 0.2.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../model.html" >Model</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017-2018, SAS Institute.
-      Last updated on Jul 31, 2018 (Timestamp: 0.2.0-20180731093746).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+        &#169; Copyright 2017-2019, SAS Institute.
+      Last updated on Feb 26, 2019 (Timestamp: 0.2.1-20190226133646).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
     </div>
   </body>
 </html>

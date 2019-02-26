@@ -6,15 +6,16 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Functions &#8212; sasoptpy 0.2.0 documentation</title>
+    <title>Functions &#8212; sasoptpy 0.2.1 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/sasoptpy.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/js/url.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="sasoptpy.check_name" href="generated/sasoptpy.check_name.html" />
@@ -27,6 +28,9 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="../http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
@@ -35,7 +39,7 @@
         <li class="right" >
           <a href="generated/sasoptpy.ParameterValue.set_init.html" title="sasoptpy.ParameterValue.set_init"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="api.html" accesskey="U">API Reference</a> &#187;</li> 
       </ul>
     </div>  
@@ -68,7 +72,7 @@
 <td>Extracts values inside various object types</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="generated/sasoptpy.flatten_frame.html#sasoptpy.flatten_frame" title="sasoptpy.flatten_frame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flatten_frame</span></code></a>(df[,&nbsp;swap])</td>
-<td>Converts a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.23.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> object into <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.html#pandas.Series" title="(in pandas v0.23.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code></a></td>
+<td>Converts a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.24.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> object into <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v0.24.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code></a></td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="generated/sasoptpy.flatten_tuple.html#sasoptpy.flatten_tuple" title="sasoptpy.flatten_tuple"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flatten_tuple</span></code></a>(tp)</td>
 <td>Flattens nested tuples</td>
@@ -104,9 +108,9 @@
 <td>(Experimental) Reads a CASTable into PROC OPTMODEL sets</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="generated/sasoptpy.read_frame.html#sasoptpy.read_frame" title="sasoptpy.read_frame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_frame</span></code></a>(df[,&nbsp;cols])</td>
-<td>Reads each column in <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.23.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> into a list of    <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.html#pandas.Series" title="(in pandas v0.23.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code></a> objects</td>
+<td>Reads each column in <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.24.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> into a list of    <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v0.24.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code></a> objects</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="generated/sasoptpy.read_table.html#sasoptpy.read_table" title="sasoptpy.read_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_table</span></code></a>(table[,&nbsp;session,&nbsp;key,&nbsp;columns,&nbsp;…])</td>
+<tr class="row-even"><td><a class="reference internal" href="generated/sasoptpy.read_table.html#sasoptpy.read_table" title="sasoptpy.read_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_table</span></code></a>(table[,&nbsp;session,&nbsp;key,&nbsp;key_type,&nbsp;…])</td>
 <td>Reads a CAS Table or pandas DataFrame</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="generated/sasoptpy.recursive_walk.html#sasoptpy.recursive_walk" title="sasoptpy.recursive_walk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">recursive_walk</span></code></a>(obj,&nbsp;func[,&nbsp;attr,&nbsp;alt])</td>
@@ -129,6 +133,9 @@
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="generated/sasoptpy.wrap.html#sasoptpy.wrap" title="sasoptpy.wrap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wrap</span></code></a>(e[,&nbsp;abstract])</td>
 <td>Wraps expression inside another expression</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/sasoptpy.utils._evaluate.html#sasoptpy.utils._evaluate" title="sasoptpy.utils._evaluate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils._evaluate</span></code></a>(comp)</td>
+<td>Evaluates the value of a given expression component.</td>
 </tr>
 </tbody>
 </table>
@@ -197,7 +204,7 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
@@ -241,6 +248,7 @@
 <li class="toctree-l4"><a class="reference internal" href="generated/sasoptpy.tuple_unpack.html">sasoptpy.tuple_unpack</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/sasoptpy.union.html">sasoptpy.union</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/sasoptpy.wrap.html">sasoptpy.wrap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/sasoptpy.utils._evaluate.html">sasoptpy.utils._evaluate</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#math-functions">Math Functions</a><ul>
@@ -265,6 +273,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../web-api.html">RESTful API</a></li>
 </ul>
 
 <div id="searchbox" style="display: none" role="search">
@@ -290,6 +299,9 @@
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="../http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
@@ -298,14 +310,14 @@
         <li class="right" >
           <a href="generated/sasoptpy.ParameterValue.set_init.html" title="sasoptpy.ParameterValue.set_init"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="api.html" >API Reference</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017-2018, SAS Institute.
-      Last updated on Jul 31, 2018 (Timestamp: 0.2.0-20180731093746).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+        &#169; Copyright 2017-2019, SAS Institute.
+      Last updated on Feb 26, 2019 (Timestamp: 0.2.1-20190226133646).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
     </div>
   </body>
 </html>

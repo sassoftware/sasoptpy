@@ -6,15 +6,16 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Decentralization &#8212; sasoptpy 0.2.0 documentation</title>
+    <title>Decentralization &#8212; sasoptpy 0.2.1 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/sasoptpy.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/js/url.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Optimal Wedding" href="optimal_wedding.html" />
@@ -27,6 +28,9 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="../http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
@@ -35,7 +39,7 @@
         <li class="right" >
           <a href="economic_planning.html" title="Economic Planning"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &#187;</li> 
       </ul>
     </div>  
@@ -136,15 +140,15 @@
     <span class="n">product_def1</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">assign</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">assign</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
                                      <span class="o">&lt;=</span> <span class="n">product</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span>
                                      <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span> <span class="ow">in</span> <span class="n">IJKL</span><span class="p">),</span>
-                                     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;product_def1&#39;</span><span class="p">)</span>
+                                     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;pd1&#39;</span><span class="p">)</span>
 
     <span class="n">product_def2</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">product</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">assign</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
                                       <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span> <span class="ow">in</span> <span class="n">IJKL</span><span class="p">),</span>
-                                     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;product_def2&#39;</span><span class="p">)</span>
+                                     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;pd2&#39;</span><span class="p">)</span>
 
     <span class="n">product_def3</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">product</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">assign</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span>
                                       <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span> <span class="ow">in</span> <span class="n">IJKL</span><span class="p">),</span>
-                                     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;product_def3&#39;</span><span class="p">)</span>
+                                     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;pd3&#39;</span><span class="p">)</span>
 
     <span class="n">m</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">get_problem_summary</span><span class="p">())</span>
@@ -157,13 +161,13 @@
         <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">product</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span>
                      <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">CITIES</span> <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span> <span class="ow">in</span> <span class="n">IJKL</span><span class="p">)</span> <span class="o">==</span> <span class="n">assign</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">DEPTS</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">DEPTS</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">CITIES</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">k</span><span class="p">),</span>
-        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;product_def4&#39;</span><span class="p">)</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;pd4&#39;</span><span class="p">)</span>
 
     <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span>
         <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">product</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span>
                      <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">CITIES</span> <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span> <span class="ow">in</span> <span class="n">IJKL</span><span class="p">)</span> <span class="o">==</span> <span class="n">assign</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">DEPTS</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">DEPTS</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">CITIES</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">k</span><span class="p">),</span>
-        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;product_def4&#39;</span><span class="p">)</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;pd5&#39;</span><span class="p">)</span>
 
     <span class="n">m</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">get_problem_summary</span><span class="p">())</span>
@@ -184,7 +188,7 @@
 <span class="go">NOTE: Initialized model decentralization.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
 <span class="go">NOTE: Converting model decentralization to OPTMODEL.</span>
-<span class="go">NOTE: Submitting OPTMODEL codes to CAS server.</span>
+<span class="go">NOTE: Submitting OPTMODEL code to CAS server.</span>
 <span class="go">NOTE: Problem generation will use 32 threads.</span>
 <span class="go">NOTE: The problem has 105 variables (0 free, 0 fixed).</span>
 <span class="go">NOTE: The problem has 105 binary and 0 integer variables.</span>
@@ -211,21 +215,26 @@
 <span class="go">                0        1      3      8.1000000     44.8375000   81.93%       0</span>
 <span class="go">                0        1      3      8.1000000     42.0000000   80.71%       0</span>
 <span class="go">                0        1      3      8.1000000     39.0666667   79.27%       0</span>
-<span class="go">                0        1      3      8.1000000     34.7500000   76.69%       0</span>
-<span class="go">                0        1      3      8.1000000     33.9000000   76.11%       0</span>
-<span class="go">                0        1      3      8.1000000     29.6800000   72.71%       0</span>
-<span class="go">                0        1      3      8.1000000     28.5000000   71.58%       0</span>
-<span class="go">                0        1      3      8.1000000     28.5000000   71.58%       0</span>
-<span class="go">                0        1      3      8.1000000     28.5000000   71.58%       0</span>
-<span class="go">                0        1      3      8.1000000     28.5000000   71.58%       0</span>
-<span class="go">NOTE: The MILP solver added 31 cuts with 168 cut coefficients at the root.</span>
-<span class="go">                2        0      4     14.9000000     14.9000000    0.00%       0</span>
+<span class="go">                0        1      3      8.1000000     34.7500000   76.69%       1</span>
+<span class="go">                0        1      3      8.1000000     33.3692308   75.73%       1</span>
+<span class="go">                0        1      3      8.1000000     32.6500000   75.19%       1</span>
+<span class="go">                0        1      3      8.1000000     31.9066667   74.61%       1</span>
+<span class="go">                0        1      3      8.1000000     30.7000000   73.62%       1</span>
+<span class="go">                0        1      3      8.1000000     30.1600000   73.14%       1</span>
+<span class="go">                0        1      3      8.1000000     29.8800000   72.89%       1</span>
+<span class="go">                0        1      3      8.1000000     29.8000000   72.82%       1</span>
+<span class="go">                0        1      3      8.1000000     29.4722222   72.52%       1</span>
+<span class="go">                0        1      3      8.1000000     28.9117647   71.98%       1</span>
+<span class="go">                0        1      3      8.1000000     28.6716667   71.75%       1</span>
+<span class="go">                0        1      3      8.1000000     28.5000000   71.58%       2</span>
+<span class="go">                0        1      4     14.9000000     14.9000000    0.00%       2</span>
+<span class="go">NOTE: The MILP solver added 34 cuts with 185 cut coefficients at the root.</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 14.9.</span>
-<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 20 rows and 4 columns.</span>
-<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 278 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 18 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 20 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;primal&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 105 rows and 6 columns.</span>
+<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 278 rows and 4 columns.</span>
 <span class="go">Problem Summary</span>
 
 <span class="go">                                Value</span>
@@ -252,7 +261,7 @@
 <span class="go">Constraint Coefficients           660</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
 <span class="go">NOTE: Converting model decentralization to OPTMODEL.</span>
-<span class="go">NOTE: Submitting OPTMODEL codes to CAS server.</span>
+<span class="go">NOTE: Submitting OPTMODEL code to CAS server.</span>
 <span class="go">NOTE: Problem generation will use 32 threads.</span>
 <span class="go">NOTE: The problem has 105 variables (0 free, 0 fixed).</span>
 <span class="go">NOTE: The problem has 105 binary and 0 integer variables.</span>
@@ -273,13 +282,15 @@
 <span class="go">                0        1      2    -28.1000000    135.0000000  120.81%       0</span>
 <span class="go">                0        1      2    -28.1000000     30.0000000  193.67%       0</span>
 <span class="go">                0        1      3    -16.3000000     30.0000000  154.33%       0</span>
-<span class="go">                0        1      4     14.9000000     14.9000000    0.00%       0</span>
+<span class="go">                0        1      3    -16.3000000     30.0000000  154.33%       0</span>
+<span class="go">NOTE: The MILP solver added 4 cuts with 24 cut coefficients at the root.</span>
+<span class="go">                2        0      4     14.9000000     14.9000000    0.00%       0</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 14.9.</span>
-<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 20 rows and 4 columns.</span>
-<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 68 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 18 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 20 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;primal&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 105 rows and 6 columns.</span>
+<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 68 rows and 4 columns.</span>
 <span class="go">Problem Summary</span>
 
 <span class="go">                                Value</span>
@@ -312,7 +323,7 @@
 <span class="go">1                        </span>
 <span class="go">A      0.0     1.0    0.0</span>
 <span class="go">B      1.0     0.0    0.0</span>
-<span class="go">C      1.0     0.0    0.0</span>
+<span class="go">C      1.0     0.0   -0.0</span>
 <span class="go">D      0.0     1.0    0.0</span>
 <span class="go">E      1.0     0.0    0.0</span>
 <span class="gh">Out[2]: </span><span class="go">14.9</span>
@@ -327,7 +338,7 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
@@ -354,13 +365,16 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="optimal_wedding.html">SAS/OR Blog: Optimal Wedding</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kidney_exchange.html">SAS/OR Blog: Kidney Exchange</a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiobjective.html">Multiobjective</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../examples.html#viya-examples-abstract">Viya Examples / Abstract</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#restful-api-examples">RESTful API Examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../web-api.html">RESTful API</a></li>
 </ul>
 
 <div id="searchbox" style="display: none" role="search">
@@ -386,6 +400,9 @@
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="../http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
@@ -394,14 +411,14 @@
         <li class="right" >
           <a href="economic_planning.html" title="Economic Planning"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017-2018, SAS Institute.
-      Last updated on Jul 31, 2018 (Timestamp: 0.2.0-20180731093746).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+        &#169; Copyright 2017-2019, SAS Institute.
+      Last updated on Feb 26, 2019 (Timestamp: 0.2.1-20190226133646).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
     </div>
   </body>
 </html>

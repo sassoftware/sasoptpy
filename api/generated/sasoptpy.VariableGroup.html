@@ -6,15 +6,16 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>sasoptpy.VariableGroup &#8212; sasoptpy 0.2.0 documentation</title>
+    <title>sasoptpy.VariableGroup &#8212; sasoptpy 0.2.1 documentation</title>
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/css/sasoptpy.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/sasoptpy.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <script type="text/javascript" src="../../_static/js/url.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="sasoptpy.VariableGroup.get_name" href="sasoptpy.VariableGroup.get_name.html" />
@@ -27,6 +28,9 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="../../http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
@@ -35,7 +39,7 @@
         <li class="right" >
           <a href="../variable_group.html" title="Variable Group"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 0.2.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 0.2.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../variable_group.html" accesskey="U">Variable Group</a> &#187;</li> 
       </ul>
@@ -57,30 +61,26 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>argv</strong> : list, dict, int, <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Index.html#pandas.Index" title="(in pandas v0.23.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Index</span></code></a></p>
-<blockquote>
-<div><p>Loop index for variable group</p>
-</div></blockquote>
-<p><strong>name</strong> : string, optional</p>
-<blockquote>
-<div><p>Name (prefix) of the variables</p>
-</div></blockquote>
-<p><strong>vartype</strong> : string, optional</p>
-<blockquote>
-<div><p>Type of variables, <cite>BIN</cite>, <cite>INT</cite>, or <cite>CONT</cite></p>
-</div></blockquote>
-<p><strong>lb</strong> : list, dict, <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.html#pandas.Series" title="(in pandas v0.23.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code></a>, optional</p>
-<blockquote>
-<div><p>Lower bounds of variables</p>
-</div></blockquote>
-<p><strong>ub</strong> : list, dict, <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.html#pandas.Series" title="(in pandas v0.23.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code></a>, optional</p>
-<blockquote>
-<div><p>Upper bounds of variables</p>
-</div></blockquote>
-<p><strong>init</strong> : float, optional</p>
-<blockquote class="last">
-<div><p>Initial values of variables</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>argv</strong> <span class="classifier-delimiter">:</span> <span class="classifier">list, dict, int, <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Index.html#pandas.Index" title="(in pandas v0.24.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Index</span></code></a></span></dt>
+<dd><p class="first last">Loop index for variable group</p>
+</dd>
+<dt><strong>name</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string, optional</span></dt>
+<dd><p class="first last">Name (prefix) of the variables</p>
+</dd>
+<dt><strong>vartype</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string, optional</span></dt>
+<dd><p class="first last">Type of variables, <cite>BIN</cite>, <cite>INT</cite>, or <cite>CONT</cite></p>
+</dd>
+<dt><strong>lb</strong> <span class="classifier-delimiter">:</span> <span class="classifier">list, dict, <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v0.24.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code></a>, optional</span></dt>
+<dd><p class="first last">Lower bounds of variables</p>
+</dd>
+<dt><strong>ub</strong> <span class="classifier-delimiter">:</span> <span class="classifier">list, dict, <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v0.24.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code></a>, optional</span></dt>
+<dd><p class="first last">Upper bounds of variables</p>
+</dd>
+<dt><strong>init</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
+<dd><p class="first last">Initial values of variables</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -151,7 +151,7 @@ the <a class="reference internal" href="sasoptpy.Model.include.html#sasoptpy.Mod
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <h3><a href="../../index.html">Table of Contents</a></h3>
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../getting-started.html">Getting Started</a></li>
@@ -178,6 +178,7 @@ the <a class="reference internal" href="sasoptpy.Model.include.html#sasoptpy.Mod
 <li class="toctree-l2"><a class="reference internal" href="../functions.html">Functions</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../web-api.html">RESTful API</a></li>
 </ul>
 
 <div id="searchbox" style="display: none" role="search">
@@ -203,6 +204,9 @@ the <a class="reference internal" href="sasoptpy.Model.include.html#sasoptpy.Mod
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="../../http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
@@ -211,15 +215,15 @@ the <a class="reference internal" href="sasoptpy.Model.include.html#sasoptpy.Mod
         <li class="right" >
           <a href="../variable_group.html" title="Variable Group"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 0.2.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 0.2.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../variable_group.html" >Variable Group</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017-2018, SAS Institute.
-      Last updated on Jul 31, 2018 (Timestamp: 0.2.0-20180731093746).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+        &#169; Copyright 2017-2019, SAS Institute.
+      Last updated on Feb 26, 2019 (Timestamp: 0.2.1-20190226133646).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
     </div>
   </body>
 </html>

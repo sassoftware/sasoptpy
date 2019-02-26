@@ -1,0 +1,6 @@
+sasoptpy.utils.\_evaluate
+=========================
+
+.. currentmodule:: sasoptpy.utils
+
+.. autofunction:: _evaluate
