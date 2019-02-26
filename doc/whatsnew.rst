@@ -9,6 +9,52 @@ What's New
 
 This page outlines changes from each release.
 
+v0.2.1 (February 26, 2019)
+==========================
+
+New Features
+++++++++++++
+
+- Support for evaluating nonlinear expressions is added, see
+  :meth:`Expression.get_value` and :func:`utils._evaluate`
+- Support for multiple objectives is added for LSO solver, see
+  :meth:`Model.set_objective` and
+  :ref:`Multiobjective <examples/multiobjective>` example
+- Support for spaces inside variable indices is added
+- Experimental RESTful API is added
+
+Changes
++++++++
+
+- Dictionaries inside components are replaced with ordered dictionaries
+  to preserve deterministic behavior
+- Math operators are added into the keys of linear coefficient dictionaries
+- Some iterators are rewritten using `yield` keyword for performance
+- `key_name` and `col_names` parameters are added into :meth:`read_table`
+
+Bug Fixes
++++++++++
+
+- Fixed: Using a single variable as an objective is producing incorrect input
+- Fixed: :meth:`Expression.get_value` fails to evaluate expressions with
+  operators
+- Fixed: :meth:`Expression.add` overrides operators in some instances
+- Fixed: Expressions with same components but different operators get summed
+  incorrectly
+- Fixed: New version of Viya complains about :class:`pandas.DataFrame` column
+  types
+- Syntax fixes for :pep:`8` compliance
+
+Notes
++++++
+
+- A Jupyter notebook example of the Diet Problem is added
+- A new example is added to show usage of experiment RESTful API:
+  :ref:`Knapsack <examples/rest_knapsack>`
+- Unit tests are added for development repository
+- CD/CI integration is added for the development repository on Gitlab
+- Generated models can be checked using the hash values inside tests.responses
+
 v0.2.0 (July 30, 2018)
 ======================
 

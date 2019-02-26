@@ -32,7 +32,15 @@ To use **sasoptpy**, you need to have:
 
 ### Installation
 
-**sasoptpy** can be installed from [project releases](https://github.com/sassoftware/sasoptpy/releases) page.
+**sasoptpy** can be installed using `pip`:
+
+    pip install sasoptpy
+
+or using `conda`:
+
+    conda install -c sas-institute sasoptpy
+
+Old releases can be found on the GitHub repository: https://github.com/sassoftware/sasoptpy/releases
 Download the release and install it using `pip`:
 
     pip install vX.X.X.tar.gz
@@ -47,7 +55,7 @@ Alternatively, use:
 
 ## Getting Started
 
-* The source code is currently hosted on Github at https://github.com/sassoftware/sasoptpy
+* The source code is currently hosted on GitHub at https://github.com/sassoftware/sasoptpy
 * Online documentation is at https://sassoftware.github.io/sasoptpy/
 * For the latest release go to https://github.com/sassoftware/sasoptpy/releases/latest
 

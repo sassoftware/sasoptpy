@@ -32,6 +32,7 @@ Viya Examples / Concrete
    Decentralization <examples/decentralization.rst>
    SAS/OR Blog: Optimal Wedding <examples/optimal_wedding.rst>
    SAS/OR Blog: Kidney Exchange <examples/kidney_exchange.rst>
+   Multiobjective <examples/multiobjective.rst>
 
 Viya Examples / Abstract
 ------------------------
@@ -50,3 +51,11 @@ SAS (saspy) Examples
    :maxdepth: 1
 
    Decentralization <examples/decentralization_saspy.rst>
+
+RESTful API Examples
+--------------------
+
+.. toctree::
+   :maxdepth: 1
+   
+   Knapsack <examples/knapsack.rst>

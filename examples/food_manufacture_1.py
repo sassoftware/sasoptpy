@@ -71,8 +71,8 @@ def test(cas_conn):
 
     # With other solve options
     m.solve(options={'with': 'lp', 'algorithm': 'PS'})
-    m.solve(options={'with': 'lp', 'algorithm': 'PS'})
-    m.solve(options={'with': 'lp', 'algorithm': 'PS'})
+    m.solve(options={'with': 'lp', 'algorithm': 'IP'})
+    m.solve(options={'with': 'lp', 'algorithm': 'NS'})
 
     if res is not None:
         print(so.get_solution_table(buy, use, store))

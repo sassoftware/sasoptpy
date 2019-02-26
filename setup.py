@@ -20,19 +20,28 @@
 
 from setuptools import setup
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 setup(
     name='sasoptpy',
-    version='0.2.0',
+    version='0.2.1',
     packages=['sasoptpy'],
     description='sasoptpy: SAS Optimization Interface for Python',
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     url='https://github.com/sassoftware/sasoptpy',
     author='Sertalp B. Cay (SAS Institute)',
     author_email='Sertalp.Cay@sas.com',
     license='Apache v2.0',
     install_requires=[
-        'pandas >= 0.16.0',
-        'swat >= 1.2.0.dist',
-        'numpy'
+        'pandas >= 0.23.3',
+        'swat >= 1.4.0',
+        'numpy >= 1.14.5',
+        'flask >= 1.0.2',
+        'flask_restful >= 0.3.6',
+        'itsdangerous >= 0.24',
+        'gevent >= 1.4.0'
         ],
     setup_requires=[
         'numpy'

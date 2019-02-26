@@ -1,0 +1,29 @@
+Group,Verb,URL,Auth,Action
+Overview,GET,/,,Returns the server status and version
+,POST,/,✓,Performs the requested action
+,GET,/workspaces,,Returns the list of workspaces
+,POST,/workspaces,,Creates a new workspace and returns auth token
+,GET,/workspaces/{workspace},✓,Checks if workspace is reachable
+,POST,/workspaces/{workspace},,Renews an auth token using initial password
+,GET,/sessions,✓,Returns a list of CAS sessions
+,POST,/sessions,✓,Creates a new CAS session
+Models,GET,/models,✓,Returns a list of models
+,POST,/models,✓,Creates a new model
+,GET,/models/{model},✓,Returns the requested model
+Variables,GET,/variables,✓,Returns a list of variables
+,GET,/models/{model}/variables,✓,Returns a list of variables inside the model
+,POST,/models/{model}/variables,✓,Creates a new variable inside the model
+,GET,/variable_groups,✓,Returns a list of variable groups
+,GET,/models/{model}/variable_groups,✓,Returns a list of variable groups inside the model
+,POST,/models/{model}/variable_groups,✓,Creates a set of variable groups inside the model
+Expressions,GET,/expressions,✓,Returns a list of expressions
+,GET,/models/{model}/objectives,✓,Returns the objective function of a model
+,POST,/models/{model}/objectives,✓,Sets the objective function of a model
+Constraints,GET,/constraints,✓,Returns a list of constraints
+,GET,/models/{model}/constraints,✓,Returns a list of constraints inside the model
+,POST,/models/{model}/constraints,✓,Creates a constraint inside the model
+,GET,/constraint_groups,✓,Returns a list of constraint groups
+,GET,/models/{model}/constraint_groups,✓,Returns a list of constraint groups inside the model
+,POST,/models/{model}/constraint_groups,✓,Creates a set of constraint groups inside the model
+Solve,POST,/models/{model}/solutions,✓,Solves a model and requests solutions
+Data,POST,/data,✓,Creates a data object in the Python server

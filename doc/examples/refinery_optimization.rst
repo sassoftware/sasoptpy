@@ -25,6 +25,7 @@ Output
 
 
 .. ipython:: python
+   :okwarning:
 
    from examples.refinery_optimization import test
    test(cas_conn)

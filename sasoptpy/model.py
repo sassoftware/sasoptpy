@@ -16,10 +16,10 @@
 #  limitations under the License.
 #
 
-'''
+"""
 Model includes :class:`Model` class, the main structure of an opt. model
 
-'''
+"""
 
 
 import inspect
@@ -35,15 +35,15 @@ import sasoptpy.utils
 
 
 class Model:
-    '''
+    """
     Creates an optimization model
 
     Parameters
     ----------
     name : string
         Name of the model
-    session : :class:`swat.cas.connection.CAS` object or \
-:class:`saspy.SASsession` object, optional
+    session : :class:`swat.cas.connection.CAS` or \
+:class:`saspy.SASsession`, optional
         CAS or SAS Session object
 
     Examples
@@ -57,7 +57,7 @@ class Model:
 
     >>> mip = so.Model(name='mip')
     NOTE: Initialized model mip
-    '''
+    """
 
     def __init__(self, name, session=None):
         self._name = sasoptpy.utils.check_name(name, 'model')
@@ -100,7 +100,7 @@ class Model:
 
     def add_variable(self, var=None, vartype=sasoptpy.utils.CONT, name=None,
                      lb=-inf, ub=inf, init=None):
-        '''
+        """
         Adds a new variable to the model
 
         New variables can be created via this method or existing variables
@@ -108,7 +108,7 @@ class Model:
 
         Parameters
         ----------
-        var : :class:`Variable` object, optional
+        var : Variable, optional
             Existing variable to be added to the problem
         vartype : string, optional
             Type of the variable, either 'BIN', 'INT' or 'CONT'
@@ -123,7 +123,7 @@ class Model:
 
         Returns
         -------
-        :class:`Variable` object
+        var : Variable
             Variable that is added to the model
 
         Examples
@@ -150,7 +150,7 @@ class Model:
         See also
         --------
         :class:`Variable`, :func:`Model.include`
-        '''
+        """
         # name = check_name(name, 'var')
         # Check bounds
         if lb is None:
@@ -172,14 +172,14 @@ class Model:
     def add_variables(self, *argv, vg=None, name=None,
                       vartype=sasoptpy.utils.CONT,
                       lb=None, ub=None, init=None, abstract=None):
-        '''
+        """
         Adds a group of variables to the model
 
         Parameters
         ----------
         argv : list, dict, :class:`pandas.Index`
             Loop index for variable group
-        vg : :class:`VariableGroup` object, optional
+        vg : VariableGroup, optional
             An existing object if it is being added to the model
         name : string, optional
             Name of the variables
@@ -215,7 +215,7 @@ class Model:
         sasoptpy.VariableGroup(['Period1', 'Period2', 'Period3'],
         name='production')
 
-        '''
+        """
         if vg is not None:
             if isinstance(vg, sasoptpy.components.VariableGroup):
                 for i in vg:
@@ -239,7 +239,7 @@ class Model:
         return vg
 
     def add_constraint(self, c, name=None):
-        '''
+        """
         Adds a single constraint to the model
 
         Parameters
@@ -251,7 +251,8 @@ class Model:
 
         Returns
         -------
-        :class:`Constraint` object
+        c : Constraint
+            Reference to the constraint
 
         Examples
         --------
@@ -270,7 +271,7 @@ class Model:
         --------
         :class:`Constraint`, :meth:`Model.include`
 
-        '''
+        """
         if isinstance(c, sasoptpy.components.Constraint):
             # Do not add if the constraint is not valid
             if ((c._direction == 'L' and c._linCoef['CONST']['val'] == -inf) or
@@ -288,22 +289,22 @@ class Model:
         return c
 
     def add_constraints(self, argv, cg=None, name=None):
-        '''
+        """
         Adds a set of constraints to the model
 
         Parameters
         ----------
-        argv : Generator type objects
+        argv : Generator-type object
             List of constraints as a Generator-type object
-        cg : :class:`ConstraintGroup` object, optional
+        cg : ConstraintGroup, optional
             An existing list of constraints if an existing group is being added
         name : string, optional
             Name for the constraint group and individual constraint prefix
 
         Returns
         -------
-        :class:`ConstraintGroup` object
-            A group object for all constraints aded
+        cg : ConstraintGroup
+            Reference to the ConstraintGroup
 
         Examples
         --------
@@ -342,7 +343,7 @@ class Model:
         --------
         :class:`ConstraintGroup`, :meth:`Model.include`
 
-        '''
+        """
         if cg is not None:
             if isinstance(cg, sasoptpy.components.ConstraintGroup):
                 for i in cg:
@@ -369,8 +370,8 @@ class Model:
                 c = self.add_constraint(c=argv, name=name)
                 return c
 
-    def add_set(self, name, init=None, settype=['num']):
-        '''
+    def add_set(self, name, init=None, value=None, settype=['num']):
+        """
         Adds a set to the model
 
         Parameters
@@ -379,6 +380,8 @@ class Model:
             Name of the set
         init : :class:`Set`, optional
             Initial value of the set
+        value : list, float, optional
+            Exact value of the set
         settype : list, optional
             Types of the set, a list consists of 'num' and 'str' values
 
@@ -398,18 +401,18 @@ class Model:
         >>> print(K._defn())
         set K = 1..N;
 
-        '''
-        newset = sasoptpy.data.Set(name, init=init, settype=settype)
+        """
+        newset = sasoptpy.data.Set(name, init=init, value=value, settype=settype)
         self._sets.append(newset)
         return newset
 
-    def add_parameter(self, *argv, name=None, init=None, p_type=None):
-        '''
+    def add_parameter(self, *argv, name=None, init=None, value=None, p_type=None):
+        """
         Adds a parameter to the model
 
         Parameters
         ----------
-        argv : :class:`sasoptpy.data.Set` object, optional
+        argv : :class:`Set`, optional
             Key set of the parameter
         name : string, optional
             Name of the parameter
@@ -426,26 +429,26 @@ class Model:
         >>> print(a._defn())
         num a {I} init 5 ;
 
-        '''
+        """
         if len(argv) == 0:
             p = sasoptpy.data.Parameter(
-                name, keys=(), init=init, p_type=p_type)
+                name, keys=(), init=init, value=value, p_type=p_type)
             self._parameters.append(p)
             return p['']
         else:
             keylist = list(argv)
             p = sasoptpy.data.Parameter(
-                name, keys=keylist, init=init, p_type=p_type)
+                name, keys=keylist, init=init, value=value, p_type=p_type)
             self._parameters.append(p)
             return p
 
     def add_implicit_variable(self, argv=None, name=None):
-        '''
+        """
         Adds an implicit variable to the model
 
         Parameters
         ----------
-        argv : Generator type object
+        argv : Generator-type object
             Generator object where each item is an entry
         name : string, optional
             Name of the implicit variable
@@ -471,18 +474,18 @@ class Model:
         - Based on whether generated by a regular expression or an abstract
           one, implicit variables may appear in generated OPTMODEL codes.
 
-        '''
+        """
         iv = sasoptpy.data.ImplicitVar(argv=argv, name=name)
         self._impvars.append(iv)
         return iv
 
     def add_statement(self, statement, after_solve=False):
-        '''
+        """
         Adds a PROC OPTMODEL statement to the model
 
         Parameters
         ----------
-        statement : :class:`Statement`, :class:`Expression` or string
+        statement : Expression or string
             Statement object
         after_solve : boolean, optional
             Option for putting the statement after 'solve' declaration
@@ -514,8 +517,9 @@ class Model:
 
         - If the statement string includes 'print', then it is automatically
           placed after solve.
+        - The first parameter, `statement` could be a Statement object when internally used.
 
-        '''
+        """
         if isinstance(statement, sasoptpy.data.Statement):
             self._statements.append(statement)
         elif isinstance(statement, sasoptpy.components.Expression):
@@ -530,12 +534,12 @@ class Model:
                 sasoptpy.data.Statement(statement, after_solve=after_solve))
 
     def read_data(self, table, key_set, key_cols=None, option='', params=None):
-        '''
+        """
         Reads a CASTable into PROC OPTMODEL and adds it to the model
 
         Parameters
         ----------
-        table : CASTable
+        table : :class:`swat.cas.table.CASTable`
             The CAS table to be read to sets and parameters
         key_set : :class:`Set`
             Set object to be read as the key (index)
@@ -556,7 +560,7 @@ class Model:
           a single item, string type can be used instead.
         - Values inside each dictionary in ``params`` list should be as follows:
           
-          - **param** : :class:`Parameter` object
+          - **param** : :class:`Parameter`
 
             Paramter object, whose index is the same as table key
 
@@ -592,7 +596,7 @@ params=[{'param': value, 'column': 'value'}])
         print _con_.name _con_.body _con_.dual;
         quit;
 
-        '''
+        """
 
         if key_cols is None:
             key_cols = []
@@ -604,27 +608,31 @@ params=[{'param': value, 'column': 'value'}])
             params=params)
         self._statements.append(s)
 
-    def read_table(self, table, key=['_N_'], columns=None,
-                   key_type=['num'], col_types=None,
+    def read_table(self, table, key=['_N_'], key_type=['num'], key_name=None,
+                   columns=None, col_types=None, col_names=None,
                    upload=False, casout=None):
-        '''
+        """
         Reads a CAS Table or pandas DataFrame into the model
 
         Parameters
         ----------
         table : :class:`swat.cas.table.CASTable`, :class:`pandas.DataFrame`\
-                object or string
+                or string
             Pointer to CAS Table (server data, CASTable),\
             DataFrame (local data) or\
             the name of the table at execution (server data, string)
         key : list, optional
             List of key columns (for CASTable) or index columns (for DataFrame)
-        columns : list, optional
-            List of columns to read into parameters
         key_type : list or string, optional
             A list of column types consists of 'num' or 'str' values
+        key_name : string, optional
+            Name of the key set
+        columns : list, optional
+            List of columns to read into parameters
         col_types : dict, optional
             Dictionary of column types
+        col_names : dict, optional
+            Dictionary of column names
         upload : boolean, optional
             Option for uploading a local data to CAS server first
         casout : string or dict, optional
@@ -632,7 +640,7 @@ params=[{'param': value, 'column': 'value'}])
 
         Returns
         -------
-        tuple
+        objs : tuple
             A tuple where first element is the key (index) and second element\
             is a list of requested columns
 
@@ -674,11 +682,12 @@ params=[{'param': value, 'column': 'value'}])
         :func:`Model.add_parameter`
         :func:`Model.add_set`
 
-        '''
+        """
 
         objs = sasoptpy.utils.read_table(
-            table=table, session=self._session, key=key, columns=columns,
-            key_type=key_type, col_types=col_types,
+            table=table, session=self._session,
+            key=key, key_type=key_type, key_name=key_name,
+            columns=columns, col_types=col_types, col_names=col_names,
             upload=upload, casout=casout, ref=True)
 
         if isinstance(objs[0], sasoptpy.data.Set):
@@ -696,12 +705,12 @@ params=[{'param': value, 'column': 'value'}])
             return objs[0]
 
     def drop_variable(self, variable):
-        '''
+        """
         Drops a variable from the model
 
         Parameters
         ----------
-        variable : :class:`Variable` object
+        variable : Variable
             The variable to be dropped from the model
 
         Examples
@@ -721,19 +730,19 @@ params=[{'param': value, 'column': 'value'}])
         :func:`Model.drop_constraint`
         :func:`Model.drop_constraints`
 
-        '''
+        """
         for i, v in enumerate(self._variables):
             if id(variable) == id(v):
                 del self._variables[i]
                 return
 
     def drop_constraint(self, constraint):
-        '''
+        """
         Drops a constraint from the model
 
         Parameters
         ----------
-        constraint : :class:`Constraint` object
+        constraint : Constraint
             The constraint to be dropped from the model
 
         Examples
@@ -741,7 +750,7 @@ params=[{'param': value, 'column': 'value'}])
 
         >>> c1 = m.add_constraint(2 * x + y <= 15, name='c1')
         >>> print(m.get_constraint('c1'))
-          2.0 * x  +  y  <=  15
+        2 * x  +  y  <=  15
         >>> m.drop_constraint(c1)
         >>> print(m.get_constraint('c1'))
         None
@@ -752,7 +761,7 @@ params=[{'param': value, 'column': 'value'}])
         :func:`Model.drop_variable`
         :func:`Model.drop_variables`
 
-        '''
+        """
         try:
             del self._constraintDict[constraint._name]
             for i, c in enumerate(self._constraints):
@@ -764,12 +773,12 @@ params=[{'param': value, 'column': 'value'}])
             pass
 
     def drop_variables(self, variables):
-        '''
+        """
         Drops a variable group from the model
 
         Parameters
         ----------
-        variables : :class:`VariableGroup` object
+        variables : VariableGroup
             The variable group to be dropped from the model
 
         Examples
@@ -789,19 +798,19 @@ params=[{'param': value, 'column': 'value'}])
         :func:`Model.drop_constraint`
         :func:`Model.drop_constraints`
 
-        '''
+        """
         for v in variables:
             self.drop_variable(v)
         if variables in self._vargroups:
             self._vargroups.remove(variables)
 
     def drop_constraints(self, constraints):
-        '''
+        """
         Drops a constraint group from the model
 
         Parameters
         ----------
-        constraints : :class:`ConstraintGroup` object
+        constraints : ConstraintGroup
             The constraint group to be dropped from the model
 
         Examples
@@ -821,14 +830,14 @@ params=[{'param': value, 'column': 'value'}])
         :func:`Model.drop_variable`
         :func:`Model.drop_variables`
 
-        '''
+        """
         for c in constraints:
             self.drop_constraint(c)
         if constraints in self._congroups:
             self._congroups.remove(constraints)
 
     def include(self, *argv):
-        '''
+        """
         Adds existing variables and constraints to a model
 
         Parameters
@@ -873,7 +882,7 @@ params=[{'param': value, 'column': 'value'}])
         * Including a model causes all variables and constraints inside the
           original model to be included.
 
-        '''
+        """
         for _, c in enumerate(argv):
             if c is None or type(c) == pd.DataFrame or type(c) == pd.Series:
                 continue
@@ -913,22 +922,24 @@ params=[{'param': value, 'column': 'value'}])
                     self._constraints.append(s)
                 self._objective = c._objective
 
-    def set_objective(self, expression, sense=None, name=None):
-        '''
+    def set_objective(self, expression, sense=None, name=None, multiobj=False):
+        """
         Sets the objective function for the model
 
         Parameters
         ----------
-        expression : :class:`Expression` object
+        expression : Expression
             The objective function as an Expression
         sense : string, optional
             Objective value direction, 'MIN' or 'MAX'
         name : string, optional
             Name of the objective value
+        multiobj : boolean, optional
+            Option for keeping the objective function when working with multiple objectives
 
         Returns
         -------
-        :class:`Expression`
+        objective : Expression
             Objective function as an :class:`Expression` object
 
         Examples
@@ -943,11 +954,26 @@ params=[{'param': value, 'column': 'value'}])
         >>> print(repr(m.get_objective()))
         sasoptpy.Expression(exp =  4.0 * x  -  5.0 * y , name='obj')
 
+        >>> m.set_objective(2 * x + y, sense=so.MIN, name='f1', multiobj=True)
+        >>> m.set_objective( (x - y) ** 2, sense=so.MIN, name='f2', multiobj=True)
+        >>> print(m.to_optmodel(options={'with': 'lso', 'obj': (f1, f2)}))
+        proc optmodel;
+        var x;
+        var y;
+        min f1 = 2 * x + y;
+        min f2 = (x - y) ^ (2);
+        solve with lso obj (f1 f2);
+        print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
+        print _con_.name _con_.body _con_.dual;
+        quit;
+
         Notes
         -----
         - Default objective sense is minimization (MIN)
+        - This method replaces the existing objective of the model. When working with multiple objectives, use the
+          `multiobj` parameter and use 'obj' option in :meth:`Model.solve` and :meth:`Model.to_optmodel` methods.
 
-        '''
+        """
         if sense is None:
             sense = sasoptpy.utils.MIN
 
@@ -956,9 +982,19 @@ params=[{'param': value, 'column': 'value'}])
             if name is not None:
                 obj = expression.copy()
             else:
-                obj = expression
+                obj = sasoptpy.utils.get_mutable(expression)
         else:
             obj = sasoptpy.components.Expression(expression)
+
+        if self._objective is not None and self._objective._keep:
+            st = '{} {} = '.format(self._sense.lower(), self._objective._name)
+            st += self._objective._defn() + ';'
+            self.add_statement(st)
+
+        if multiobj:
+            obj._keep = True
+
+
         self._objective = obj
         if self._objective._name is None:
             name = sasoptpy.utils.check_name(name, 'obj')
@@ -970,12 +1006,12 @@ params=[{'param': value, 'column': 'value'}])
         return self._objective
 
     def get_objective(self):
-        '''
+        """
         Returns the objective function as an :class:`Expression` object
 
         Returns
         -------
-        :class:`Expression` object
+        objective : Expression
             Objective function
 
         Examples
@@ -985,16 +1021,17 @@ params=[{'param': value, 'column': 'value'}])
         >>> print(repr(m.get_objective()))
         sasoptpy.Expression(exp =  4.0 * x  -  5.0 * y , name='obj')
 
-        '''
+        """
         return self._objective
 
     def get_objective_value(self):
-        '''
+        """
         Returns the optimal objective value, if it exists
 
         Returns
         -------
-        float : Objective value at current solution
+        objective_value : float
+            Objective value at current solution
 
         Examples
         --------
@@ -1011,16 +1048,20 @@ params=[{'param': value, 'column': 'value'}])
           the expression using optimal variable values. This may not be
           available for nonlinear expressions.
 
-        '''
+        """
         if self._objval:
             return round(self._objval, 6)
         elif self.response:
             return round(self.response.objective, 6)
         else:
-            return self._objective.get_value()
+            try:
+                return self._objective.get_value()
+            except TypeError:
+                print('ERROR: Cannot evaluate function at this time.')
+                return 0
 
     def get_constraint(self, name):
-        '''
+        """
         Returns the reference to a constraint in the model
 
         Parameters
@@ -1030,7 +1071,8 @@ params=[{'param': value, 'column': 'value'}])
 
         Returns
         -------
-        :class:`Constraint` object
+        constraint : Constraint
+            Reference to the constraint
 
         Examples
         --------
@@ -1039,16 +1081,17 @@ params=[{'param': value, 'column': 'value'}])
         >>> print(m.get_constraint('c1'))
         2.0 * x  +  y  <=  15
 
-        '''
+        """
         return self._constraintDict.get(name)
 
     def get_constraints(self):
-        '''
+        """
         Returns a list of constraints in the model
 
         Returns
         -------
-        list : A list of :class:`Constraint` objects
+        constraints : list
+            A list of Constraint objects
 
         Examples
         --------
@@ -1060,11 +1103,11 @@ params=[{'param': value, 'column': 'value'}])
          sasoptpy.Constraint( 2.0 * x[0]  -  y  >=  1, name='c2_0'),
          sasoptpy.Constraint( 2.0 * x[1]  -  y  >=  1, name='c2_1')]
 
-        '''
+        """
         return self._constraints
 
     def get_variable(self, name):
-        '''
+        """
         Returns the reference to a variable in the model
 
         Parameters
@@ -1074,7 +1117,8 @@ params=[{'param': value, 'column': 'value'}])
 
         Returns
         -------
-        :class:`Variable` object
+        variable : Variable
+            Reference to the variable
 
         Examples
         --------
@@ -1084,19 +1128,20 @@ params=[{'param': value, 'column': 'value'}])
         >>> print(repr(var1))
         sasoptpy.Variable(name='x', lb=3, ub=5, vartype='INT')
 
-        '''
+        """
         for v in self._variables:
             if v._name == name:
                 return v
         return None
 
     def get_variables(self):
-        '''
+        """
         Returns a list of variables
 
         Returns
         -------
-        list : A list of :class:`Variable` objects
+        variables : list
+            List of variables in the model
 
         Examples
         --------
@@ -1108,21 +1153,21 @@ params=[{'param': value, 'column': 'value'}])
          sasoptpy.Variable(name='x_1',  vartype='CONT'),
          sasoptpy.Variable(name='y',  vartype='CONT')]
 
-        '''
+        """
         return self._variables
 
     def get_variable_coef(self, var):
-        '''
+        """
         Returns the objective value coefficient of a variable
 
         Parameters
         ----------
-        var : :class:`Variable` object or string
+        var : Variable or string
             Variable whose objective value is requested or its name
 
         Returns
         -------
-        float
+        coef : float
             Objective value coefficient of the given variable
 
         Examples
@@ -1136,7 +1181,7 @@ params=[{'param': value, 'column': 'value'}])
         >>> print(m.get_variable_coef('y'))
         -5.0
 
-        '''
+        """
         if isinstance(var, sasoptpy.components.Variable):
             varname = var._name
         else:
@@ -1147,12 +1192,12 @@ params=[{'param': value, 'column': 'value'}])
             return 0
 
     def get_variable_value(self, var=None, name=None):
-        '''
+        """
         Returns the value of a variable.
 
         Parameters
         ----------
-        var : :class:`Variable` object, optional
+        var : :Variable, optional
             Variable object
         name : string, optional
             Name of the variable
@@ -1163,7 +1208,7 @@ params=[{'param': value, 'column': 'value'}])
           :func:`Variable.get_value` method, if the variable is not abstract.
         - This method is a wrapper around :func:`Variable.get_value` and an
           overlook function for model components
-        '''
+        """
         if var and not name:
             if var._shadow:
                 name = str(var).replace(' ', '')
@@ -1185,12 +1230,12 @@ params=[{'param': value, 'column': 'value'}])
         return None
 
     def get_problem_summary(self):
-        '''
+        """
         Returns the problem summary table to the user
 
         Returns
         -------
-        :class:`swat.dataframe.SASDataFrame` object
+        ps : :class:`swat.dataframe.SASDataFrame`
             Problem summary obtained after :func:`Model.solve`
 
         Examples
@@ -1237,16 +1282,16 @@ params=[{'param': value, 'column': 'value'}])
         >>> print(ps.loc['Constraint Coefficients', 'Value'])
         4
 
-        '''
+        """
         return self._problemSummary
 
     def get_solution_summary(self):
-        '''
+        """
         Returns the solution summary table to the user
 
         Returns
         -------
-        :class:`swat.dataframe.SASDataFrame` object
+        ss : :class:`swat.dataframe.SASDataFrame`
             Solution summary obtained after solve
 
         Examples
@@ -1283,11 +1328,11 @@ params=[{'param': value, 'column': 'value'}])
         >>> print(soln.loc['Solution Status', 'Value'])
         Optimal
 
-        '''
+        """
         return self._solutionSummary
 
     def get_solution(self, vtype='Primal', solution=None, pivot=False):
-        '''
+        """
         Returns the solution details associated with the primal or dual
         solution
 
@@ -1302,7 +1347,7 @@ params=[{'param': value, 'column': 'value'}])
 
         Returns
         -------
-        :class:`pandas.DataFrame` object
+        solution : :class:`pandas.DataFrame`
             Primal or dual solution table returned from the CAS Action
 
         Examples
@@ -1382,7 +1427,7 @@ params=[{'param': value, 'column': 'value'}])
           MILP solver returns multiple solutions. You can obtain different
           results using :code:`solution` parameter.
 
-        '''
+        """
         if vtype == 'Primal' or vtype == 'primal':
             if pivot:
                 return self._primalSolution.pivot_table(
@@ -1405,13 +1450,13 @@ params=[{'param': value, 'column': 'value'}])
             return None
 
     def set_session(self, session):
-        '''
+        """
         Sets the CAS session for model
 
         Parameters
         ----------
         session : :class:`swat.cas.connection.CAS` or \
-:class:`saspy.SASsession` objects
+:class:`saspy.SASsession`
             CAS or SAS Session object
 
         Notes
@@ -1420,18 +1465,18 @@ params=[{'param': value, 'column': 'value'}])
         * Session of a model can be set at initialization.
           See :class:`Model`.
 
-        '''
+        """
         self._session = session
 
     def set_coef(self, var, con, value):
-        '''
+        """
         Updates the coefficient of a variable inside constraints
 
         Parameters
         ----------
-        var : :class:`Variable` object
+        var : Variable
             Variable whose coefficient will be updated
-        con : :class:`Constraint` object
+        con : Constraint
             Constraint where the coefficient will be updated
         value : float
             The new value for the coefficient of the variable
@@ -1454,11 +1499,11 @@ params=[{'param': value, 'column': 'value'}])
         --------
         :func:`Constraint.update_var_coef`
 
-        '''
+        """
         con.update_var_coef(var=var, value=value)
 
     def print_solution(self):
-        '''
+        """
         Prints the current values of the variables
 
         Examples
@@ -1479,12 +1524,12 @@ params=[{'param': value, 'column': 'value'}])
         - This function may not work for abstract variables and nonlinear
           models.
 
-        '''
+        """
         for v in self._variables:
             print('{}: {}'.format(v._name, v._value))
 
     def _append_row(self, row):
-        '''
+        """
         Appends a new row to the model representation
 
         Parameters
@@ -1494,16 +1539,16 @@ params=[{'param': value, 'column': 'value'}])
 
         Returns
         -------
-        int
+        rowid : int
             Current number for the ID column
-        '''
+        """
         self._datarows.append(row + [str(self._id)])
         rowid = self._id
         self._id = self._id+1
         return rowid
 
     def to_frame(self, constant=False):
-        '''
+        """
         Converts the Python model into a DataFrame object in MPS format
 
         Parameters
@@ -1514,8 +1559,8 @@ params=[{'param': value, 'column': 'value'}])
 
         Returns
         -------
-        :class:`pandas.DataFrame` object
-            Problem in strict MPS format
+        mpsdata : :class:`pandas.DataFrame`
+            Problem representation in strict MPS format
 
         Examples
         --------
@@ -1541,7 +1586,7 @@ params=[{'param': value, 'column': 'value'}])
         Notes
         -----
         * This method is called inside :meth:`Model.solve`.
-        '''
+        """
         self._id = 1
         if(len(self._datarows) > 0):  # For future reference
             # take a copy?
@@ -1673,11 +1718,18 @@ params=[{'param': value, 'column': 'value'}])
                                columns=['Field1', 'Field2', 'Field3', 'Field4',
                                         'Field5', 'Field6', '_id_'])
         self._datarows = []
+
+        df = mpsdata
+        for f in ['Field4', 'Field6']:
+            df[f] = df[f].replace('', np.nan)
+        df['_id_'] = df['_id_'].astype('int')
+        df[['Field4', 'Field6']] = df[['Field4', 'Field6']].astype(float)
+
         return mpsdata
 
     def to_optmodel(self, header=True, expand=False, ordered=False,
-                    ods=False, options={}):
-        '''
+                    ods=False, solve=True, options={}, primalin=False):
+        """
         Generates the equivalent PROC OPTMODEL code for the model.
 
         Parameters
@@ -1689,12 +1741,16 @@ params=[{'param': value, 'column': 'value'}])
         ordered : boolean, optional
             Option to generate OPTMODEL code in a specific order (True) or\
             in creation order (False)
+        ods : boolean, optional
+            Option for converting printed tables into ODS tables
+        solve : boolean, optional
+            Option to append solve command at the end
         options : dict, optional
             Solver options for the OPTMODEL solve command
 
         Returns
         -------
-        string
+        s : string
             PROC OPTMODEL representation of the model
 
         Examples
@@ -1727,7 +1783,8 @@ params=[{'param': value, 'column': 'value'}])
         -----
         * This method is called inside :func:`Model.solve`.
 
-        '''
+        """
+        solve_option_keys = ('with', 'obj', 'objective', 'noobj', 'noobjective', 'relaxint', 'primalin')
 
         if ordered:
             s = ''
@@ -1779,19 +1836,26 @@ params=[{'param': value, 'column': 'value'}])
             if expand:
                 s += tab + 'expand;\n'
 
-            s += tab + 'solve'
-            if options.get('with', None):
-                s += ' with ' + options['with']
-            if options.get('relaxint', False):
-                s += ' relaxint'
-            if options:
-                optstring = ''
-                for key, value in options.items():
-                    if key not in ('with', 'relaxint'):
-                        optstring += ' {}={}'.format(key, value)
-                if optstring:
-                    s += ' /' + optstring
-            s += ';\n'
+            if solve:
+                s += tab + 'solve'
+                if options.get('with', None):
+                    s += ' with ' + options['with']
+                if options.get('relaxint', False):
+                    s += ' relaxint'
+                if options or primalin:
+                    primalin_set = False
+                    optstring = ''
+                    for key, value in options.items():
+                        if key not in ('with', 'relaxint', 'primalin'):
+                            optstring += ' {}={}'.format(key, value)
+                        if key is 'primalin':
+                            optstring += ' primalin'
+                            primalin_set = True
+                    if primalin and primalin_set is False and options['with'] is 'milp':
+                        optstring += ' primalin'
+                    if optstring:
+                        s += ' /' + optstring
+                s += ';\n'
 
             if ods:
                 s += tab + 'ods output PrintTable=primal_out;\n'
@@ -1833,24 +1897,40 @@ params=[{'param': value, 'column': 'value'}])
                 s += 'expand;\n'
 
             # Solve block
-            s += 'solve'
-            if options.get('with', None):
-                s += ' with ' + options['with']
-            if options.get('relaxint', False):
-                s += ' relaxint'
-            if options:
-                optstring = ''
-                for key, value in options.items():
-                    if key not in ('with', 'relaxint'):
-                        if type(value) is dict:
-                            optstring += ' {}=('.format(key) + ','.join(
-                                '{}={}'.format(i, j)
-                                for i, j in value.items()) + ')'
+            if solve:
+                s += 'solve'
+                pre_opts = ''
+                pos_opts = ''
+
+                if options:
+                    primalin_set = False
+                    for key, value in options.items():
+                        if key in solve_option_keys:
+                            if key == 'with':
+                                pre_opts += ' with ' + options['with']
+                            elif key == 'relaxint' and options[key] is True:
+                                pre_opts += ' relaxint '
+                            elif key == 'obj' or key == 'objectives':
+                                pre_opts += ' obj ({})'.format(' '.join(i._name for i in options[key]))
+                            elif key == 'primalin' and options[key] is True:
+                                pos_opts += ' primalin'
+                                primalin_set = True
                         else:
-                            optstring += ' {}={}'.format(key, value)
-                if optstring:
-                    s += ' /' + optstring
-            s += ';\n'
+                            if type(value) is dict:
+                                pos_opts += ' {}=('.format(key) + ','.join(
+                                    '{}={}'.format(i, j)
+                                    for i, j in value.items()) + ')'
+                            else:
+                                pos_opts += ' {}={}'.format(key, value)
+
+                    if primalin and primalin_set is False and options['with'] is 'milp':
+                        pos_opts += ' primalin'
+                    if pre_opts != '':
+                        s += pre_opts
+                    if pos_opts != '':
+                        s += ' /' + pos_opts
+                s += ';\n'
+
             # Output ODS tables
             if ods:
                 s += 'ods output PrintTable=primal_out;\n'
@@ -1869,7 +1949,7 @@ params=[{'param': value, 'column': 'value'}])
         return(s)
 
     def __str__(self):
-        '''
+        """
         Returns a string representation of the Model object.
 
         Examples
@@ -1899,7 +1979,7 @@ params=[{'param': value, 'column': 'value'}])
           ]
         ]
 
-        '''
+        """
         s = 'Model: [\n'
         s += '  Name: {}\n'.format(self._name)
         if self._session is not None:
@@ -1919,7 +1999,7 @@ params=[{'param': value, 'column': 'value'}])
         return s
 
     def __repr__(self):
-        '''
+        """
         Returns a representation of the Model object.
 
         Examples
@@ -1930,7 +2010,7 @@ params=[{'param': value, 'column': 'value'}])
             'username', protocol='cas', name='py-session-1',
             session='594ad8d5-6a7b-3443-a155-be59177e8d23'))
 
-        '''
+        """
         if self._session is not None:
             stype = self.test_session()
             if stype == 'SAS':
@@ -1957,15 +2037,15 @@ params=[{'param': value, 'column': 'value'}])
         return self._to_optmodel()
 
     def _is_linear(self):
-        '''
+        """
         Checks if the model can be written as a linear model (in MPS format)
 
         Returns
         -------
-        boolean
+        is_linear : boolean
             True if model does not have any nonlinear components or abstract\
             operations, False otherwise
-        '''
+        """
         for c in self._constraints:
             if not c._is_linear():
                 return False
@@ -1974,12 +2054,12 @@ params=[{'param': value, 'column': 'value'}])
         return True
 
     def upload_user_blocks(self):
-        '''
+        """
         Uploads user-defined decomposition blocks to the CAS server
 
         Returns
         -------
-        string
+        name : string
             CAS table name of the user-defined decomposition blocks
 
         Examples
@@ -1988,7 +2068,7 @@ params=[{'param': value, 'column': 'value'}])
         >>> userblocks = m.upload_user_blocks()
         >>> m.solve(milp={'decomp': {'blocks': userblocks}})
 
-        '''
+        """
         sess = self._session
         blocks_dict = {}
         block_counter = 0
@@ -2012,15 +2092,15 @@ params=[{'param': value, 'column': 'value'}])
         return(response.name)
 
     def test_session(self):
-        '''
+        """
         Tests if the model session is defined and still active
 
         Returns
         -------
-        string
+        session : string
             'CAS' for CAS sessions, 'SAS' for SAS sessions, None otherwise
 
-        '''
+        """
         # Check if session is defined
         sess = self._session
         if sess is None:
@@ -2038,7 +2118,7 @@ params=[{'param': value, 'column': 'value'}])
                 return None
 
     def upload_model(self, name=None, replace=True, constant=False):
-        '''
+        """
         Converts internal model to MPS table and upload to CAS session
 
         Parameters
@@ -2050,7 +2130,7 @@ params=[{'param': value, 'column': 'value'}])
 
         Returns
         -------
-        :class:`swat.cas.table.CASTable` object
+        frame : :class:`swat.cas.table.CASTable`
             Reference to the uploaded CAS Table
 
         Notes
@@ -2062,10 +2142,11 @@ params=[{'param': value, 'column': 'value'}])
         - This method should not be used if :func:`Model.solve` is going
           to be used. :func:`Model.solve` calls this method internally.
 
-        '''
+        """
         if self.test_session():
             # Conversion and upload
             df = self.to_frame(constant=constant)
+
             print('NOTE: Uploading the problem DataFrame to the server.')
             if name is not None:
                 return self._session.upload_frame(
@@ -2079,7 +2160,7 @@ params=[{'param': value, 'column': 'value'}])
     def solve(self, options=None, submit=True, name=None,
               frame=False, drop=False, replace=True, primalin=False,
               milp=None, lp=None, verbose=False):
-        '''
+        """
         Solves the model by calling CAS or SAS optimization solvers
 
         Parameters
@@ -2103,7 +2184,7 @@ params=[{'param': value, 'column': 'value'}])
 
         Returns
         -------
-        :class:`pandas.DataFrame` object
+        solution : :class:`pandas.DataFrame`
             Solution of the optimization model
 
         Examples
@@ -2137,7 +2218,7 @@ params=[{'param': value, 'column': 'value'}])
         --------
         :meth:`Model.solve_on_cas`, :meth:`Model.solve_on_mva`
 
-        '''
+        """
         if options is None:
             options = {}
 
@@ -2168,6 +2249,12 @@ params=[{'param': value, 'column': 'value'}])
             options.update(lp)
             options['with'] = 'lp'
 
+        # Check if multiple solution table is needed
+        if options.get('obj', None):
+            self.add_statement(
+                'create data allsols from [s]=(1.._NVAR_) ' +
+                'name=_VAR_[s].name {j in 1.._NSOL_} <col(\'sol_\'||j)=_VAR_[s].sol[j]>;', after_solve=True)
+
         # Call solver based on session type
         return solver_func(
             sess, options=options, submit=submit, name=name,
@@ -2176,21 +2263,19 @@ params=[{'param': value, 'column': 'value'}])
 
     def solve_on_cas(self, session, options, submit, name,
                      frame, drop, replace, primalin, verbose):
-        '''
+        """
         Solves the optimization problem on CAS Servers
 
         Notes
         -----
 
-        - This function is not supposed to be used directly. Instead, use
-          the :class:`swat.cas.CAS` type of session for :class:`Model`
-          objects and use :meth:`Model.solve`.
+        - This function should not be called directly. Instead, use :meth:`Model.solve`.
 
         See also
         --------
         :func:`Model.solve`
 
-        '''
+        """
 
         # Check which method will be used for solve
         session.loadactionset(actionset='optimization')
@@ -2212,7 +2297,7 @@ params=[{'param': value, 'column': 'value'}])
                 switch = True
             # Check if model is nonlinear (or abstract)
             elif not self._is_linear():
-                print('INFO: Model {} includes nonlinear or abstract ',
+                print('INFO: Model {} includes nonlinear or abstract'.format(self._name),
                       'components, switching to OPTMODEL mode.')
                 switch = True
 
@@ -2220,7 +2305,7 @@ params=[{'param': value, 'column': 'value'}])
                 frame = False
             elif switch:
                 print('ERROR: Switching to OPTMODEL mode is failed,',
-                      ' runOptmodel action is not available in CAS Server.')
+                      'runOptmodel action is not available in CAS Server.')
                 return None
 
         if frame:  # MPS
@@ -2395,12 +2480,12 @@ params=[{'param': value, 'column': 'value'}])
 
             print('NOTE: Converting model {} to OPTMODEL.'.format(self._name))
             optmodel_string = self.to_optmodel(header=False, options=options,
-                                               ods=False)
+                                               ods=False, primalin=primalin)
             if verbose:
                 print(optmodel_string)
             if not submit:
                 return optmodel_string
-            print('NOTE: Submitting OPTMODEL codes to CAS server.')
+            print('NOTE: Submitting OPTMODEL code to CAS server.')
             response = session.runOptmodel(
                 optmodel_string,
                 outputTables={
@@ -2414,7 +2499,8 @@ params=[{'param': value, 'column': 'value'}])
             self.response = response
 
             # Parse solution
-            if(response.get_tables('status')[0] == 'OK'):
+            #if(response.get_tables('status')[0] == 'OK'):
+            if response['status'] == 'OK':
 
                 self._primalSolution = response['Print1.PrintTable']
                 self._primalSolution = self._primalSolution[
@@ -2428,11 +2514,17 @@ params=[{'param': value, 'column': 'value'}])
                 self._dualSolution.columns = ['con', 'value', 'dual']
                 # Bring solution to variables
                 for _, row in self._primalSolution.iterrows():
+
                     if row['var'] in self._variableDict:
                         self._variableDict[row['var']]._value = row['value']
                     else:
-                        # Search in vargroups for the original name
-                        sasoptpy.utils._set_abstract_values(row)
+                        # OPTMODEL strings may have spaces in it
+                        str_safe = row['var'].replace(' ', '_').replace('\'', '')
+                        if str_safe in self._variableDict:
+                            self._variableDict[str_safe]._value = row['value']
+                        else:
+                            # Search in vargroups for the original name
+                            sasoptpy.utils._set_abstract_values(row)
 
                 # Capturing dual values for LP problems
                 if ptype == 1:
@@ -2458,7 +2550,7 @@ params=[{'param': value, 'column': 'value'}])
                 self._status = response.solutionStatus
                 self._soltime = response.solutionTime
 
-                if('OPTIMAL' in response.solutionStatus):
+                if('OPTIMAL' in response.solutionStatus or 'ABSFCONV' in response.solutionStatus):
                     self._objval = response.objective
                     # Replace initial values with current values
                     for v in self._variables:
@@ -2474,21 +2566,19 @@ params=[{'param': value, 'column': 'value'}])
 
     def solve_on_mva(self, session, options, submit, name,
                      frame, drop, replace, primalin, verbose):
-        '''
+        """
         Solves the optimization problem on SAS Clients
 
         Notes
         -----
 
-        - This function is not supposed to be used directly. Instead, use
-          the :class:`saspy.SASsession` type of session for :class:`Model`
-          objects and use :meth:`Model.solve`.
+        - This function should not be called directly. Instead, use :meth:`Model.solve`.
 
         See also
         --------
         :func:`Model.solve`
 
-        '''
+        """
 
         if not name:
             name = 'MPS'
@@ -2528,16 +2618,11 @@ params=[{'param': value, 'column': 'value'}])
             # Get the MPS data
             df = self.to_frame(constant=True)
 
-            # Prepare for the upload
-            for f in ['Field4', 'Field6']:
-                df[f] = df[f].replace('', np.nan)
-            df['_id_'] = df['_id_'].astype('int')
-            df[['Field4', 'Field6']] = df[['Field4', 'Field6']].astype(float)
-
-            # Upload MPS table
+            # Upload MPS table with new arguments
             try:
                 session.df2sd(df, table=name, keep_outer_quotes=True)
-            except:
+            except TypeError:
+                # If user is using an old version of saspy, apply the hack
                 print(df.to_string())
                 session.df2sd(df, table=name)
                 session.submit("""
@@ -2620,7 +2705,7 @@ params=[{'param': value, 'column': 'value'}])
 
             print('NOTE: Converting model {} to OPTMODEL.'.format(self._name))
             optmodel_string = self.to_optmodel(header=True, options=options,
-                                               ods=True)
+                                               ods=True, primalin=primalin)
             if verbose:
                 print(optmodel_string)
             if not submit:
