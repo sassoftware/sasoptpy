@@ -344,9 +344,9 @@ class Expression:
             if val == 1 or val == -1:
                 s += '{} '.format(refs)
             elif op:
-                s += '{} * ({}) '.format(round(abs(val), 12), refs)
+                s += '{} * ({}) '.format(abs(val), refs)
             else:
-                s += '{} * {} '.format(round(abs(val), 12), refs)
+                s += '{} * {} '.format(abs(val), refs)
 
             itemcnt += 1
 
