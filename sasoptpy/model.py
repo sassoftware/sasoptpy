@@ -2550,7 +2550,8 @@ params=[{'param': value, 'column': 'value'}])
                 self._status = response.solutionStatus
                 self._soltime = response.solutionTime
 
-                if('OPTIMAL' in response.solutionStatus or 'ABSFCONV' in response.solutionStatus):
+                if('OPTIMAL' in response.solutionStatus or 'ABSFCONV' in response.solutionStatus or
+                   'BEST_FEASIBLE' in response.solutionStatus):
                     self._objval = response.objective
                     # Replace initial values with current values
                     for v in self._variables:
