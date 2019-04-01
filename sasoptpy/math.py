@@ -39,7 +39,10 @@ func_equivalent = {
     'min': min,
     'sin': math.sin,
     'cos': math.cos,
-    'tan': math.tan
+    'tan': math.tan,
+    'sinh': math.sinh,
+    'cosh': math.cosh,
+    'tanh': math.tanh
 }
 
 
@@ -173,3 +176,25 @@ def tan(exp):
     Tangent function
     """
     return math_func(exp, 'tan')
+
+
+def sinh(exp):
+    """
+    Hyperbolic sine function
+    """
+    return math_func(exp, 'sinh')
+
+
+def cosh(exp):
+    """
+    Hyperbolic cosine function
+    """
+    return math_func(exp, 'cosh')
+
+
+def tanh(exp):
+    """
+    Hyperbolic tangent function
+    """
+    return math_func(exp, 'tanh')
+
