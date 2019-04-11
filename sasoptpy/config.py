@@ -26,40 +26,43 @@ class Config:
 
     def __init__(self, *args):
         self.defaults = _get_default_config()
-        self.overriden = dict()
+        self.overridden = dict()
 
         if len(args) > 1 and len(args) % 2 != 1:
             keys = args[::2]
             values = args[1::2]
-            self.overriden = dict(zip(keys, values))
+            self.overridden = dict(zip(keys, values))
 
     def __getitem__(self, key):
-        if key in self.overriden:
-            return self.overriden[key]
+        if key in self.overridden:
+            return self.overridden[key]
         return self.defaults.get(key, None)
 
     def __setitem__(self, key, value):
-        self.overriden[key] = value
+        self.overridden[key] = value
 
     def __delitem__(self, key):
-        if key in self.overriden:
-            del self.overriden[key]
+        if key in self.overridden:
+            del self.overridden[key]
         else:
-            raise KeyError('Invalid config key: {}'.format(key))
+            raise KeyError('ERROR: Invalid config key: {}'.format(key))
 
+    @property
     def keys(self):
-        dicts = [self.defaults, self.overriden]
+        dicts = [self.defaults, self.overridden]
         merged_keys = set().union(*dicts)
         return list(merged_keys)
 
     def __iter__(self):
-        for key in self.keys():
+        for key in self.keys:
             yield key
+
+    def reset(self):
+        self.overridden = dict()
 
 
 def _get_default_config():
     config = dict()
-    config['number_format'] = '{}'
     config['max_digits'] = 12
     config['valid_outcomes'] = ['OPTIMAL', 'ABSFCONV', 'BEST_FEASIBLE']
     config['default_sense'] = so.MIN
