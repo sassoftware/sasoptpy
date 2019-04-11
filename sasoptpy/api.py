@@ -92,7 +92,7 @@ class UserApi(Api):
     @classmethod
     def transform(cls, val):
         import sasoptpy as so
-        return so.utils._transform.get(val, val)
+        return so._transform.get(val, val)
 
 
 def verify_auth_token(func):
@@ -578,14 +578,14 @@ class Expressions(Resource):
 
         combined = ws.get_combined()
         # Open transfer of objects
-        ws.so.utils.transfer_allowed = True
-        ws.so.utils._load_transfer(combined)
+        ws.so.transfer_allowed = True
+        ws.so._load_transfer(combined)
 
         e = eval(args['expression'], None, combined)
 
         # Clear transfer
-        ws.so.utils.transfer_allowed = False
-        ws.so.utils._clear_transfer()
+        ws.so.transfer_allowed = False
+        ws.so._clear_transfer()
 
         if m is not None:
             e = m.set_objective(e, sense=args['sense'], name=args['name'])
@@ -643,14 +643,14 @@ class Constraints(Resource):
 
         combined = ws.get_combined()
 
-        ws.so.utils.transfer_allowed = True
-        ws.so.utils._load_transfer(combined)
+        ws.so.transfer_allowed = True
+        ws.so._load_transfer(combined)
 
         e = eval(args['expression'], None, combined)
         c = m.add_constraint(e, name=args.get('name', None))
 
-        ws.so.utils.transfer_allowed = False
-        ws.so.utils._clear_transfer()
+        ws.so.transfer_allowed = False
+        ws.so._clear_transfer()
 
         ws.constraints[args['name']] = c
 
@@ -701,15 +701,15 @@ class ConstraintGroups(Resource):
 
         combined = ws.get_combined()
 
-        ws.so.utils.transfer_allowed = True
-        ws.so.utils._load_transfer(combined)
+        ws.so.transfer_allowed = True
+        ws.so._load_transfer(combined)
 
         c = eval('so.ConstraintGroup(({} {}), name=\'{}\')'.format(args['expression'], args['index'], args['name']),
                  None, combined)
         cg = m.add_constraints(None, cg = c, name=args.get('name', None))
 
-        ws.so.utils.transfer_allowed = False
-        ws.so.utils._clear_transfer()
+        ws.so.transfer_allowed = False
+        ws.so._clear_transfer()
 
         ws.constraint_groups[args['name']] = cg
 

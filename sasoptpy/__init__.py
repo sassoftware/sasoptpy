@@ -24,14 +24,18 @@ This file includes static methods and imports.
 
 """
 
-from sasoptpy.model import *
+from sasoptpy.utils import load_package_globals
+load_package_globals()
+
 from sasoptpy.utils import *
+from sasoptpy.model import *
 from sasoptpy.components import *
 from sasoptpy.data import *
+
 # Optional items
 #  sasoptpy.math
-#  sasoptpy.gui
 #  sasoptpy.api
 
 name = "sasoptpy"
 __version__ = '1.0.0.dev0'
+load_package_globals()

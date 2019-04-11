@@ -344,9 +344,9 @@ class Expression:
             if val == 1 or val == -1:
                 s += '{} '.format(refs)
             elif op:
-                s += '{} * ({}) '.format(abs(val), refs)
+                s += '{} * ({}) '.format(sasoptpy.utils.get_formatted(abs(val)), refs)
             else:
-                s += '{} * {} '.format(abs(val), refs)
+                s += '{} * {} '.format(sasoptpy.utils.get_formatted(abs(val)), refs)
 
             itemcnt += 1
 
@@ -901,9 +901,11 @@ class Variable(Expression):
 
     """
 
-    def __init__(self, name, vartype=sasoptpy.utils.CONT, lb=-inf, ub=inf,
+    def __init__(self, name, vartype=None, lb=-inf, ub=inf,
                  init=None, abstract=False, shadow=False, key=None):
         super().__init__()
+        if vartype is None:
+            vartype = sasoptpy.CONT
         if not shadow:
             name = sasoptpy.utils.check_name(name, 'var')
         self._name = name
@@ -917,7 +919,7 @@ class Variable(Expression):
         self._init = init
         if self._init is not None:
             self._value = self._init
-        if vartype == sasoptpy.utils.BIN:
+        if vartype == sasoptpy.BIN:
             self._lb = max(self._lb, 0)
             self._ub = min(self._ub, 1)
         if shadow:
@@ -1042,8 +1044,8 @@ class Variable(Expression):
 
     def _defn(self):
         s = 'var {}'.format(self._name)
-        BIN = sasoptpy.utils.BIN
-        CONT = sasoptpy.utils.CONT
+        BIN = sasoptpy.BIN
+        CONT = sasoptpy.CONT
         if self._type != CONT:
             if self._type == BIN:
                 s += ' binary'
@@ -1421,18 +1423,20 @@ class VariableGroup:
 
     """
 
-    def __init__(self, *argv, name, vartype=sasoptpy.utils.CONT, lb=-inf,
+    def __init__(self, *argv, name, vartype=None, lb=-inf,
                  ub=inf, init=None, abstract=False):
         self._vardict = OrderedDict()
         self._varlist = []
         self._groups = OrderedDict()
         self._keyset = []
 
-        if vartype == sasoptpy.utils.BIN and ub is None:
+        if vartype is None:
+            vartype = sasoptpy.CONT
+        if vartype == sasoptpy.BIN and ub is None:
             ub = 1
-        if vartype == sasoptpy.utils.BIN and lb is None:
+        if vartype == sasoptpy.BIN and lb is None:
             lb = 0
-        if vartype == sasoptpy.utils.INT and lb is None:
+        if vartype == sasoptpy.INT and lb is None:
             lb = 0
 
         self._recursive_add_vars(*argv, name=name,
@@ -1667,9 +1671,9 @@ class VariableGroup:
         s = s[:-2]
         s += '} '
         # Grab features
-        CONT = sasoptpy.utils.CONT
-        BIN = sasoptpy.utils.BIN
-        INT = sasoptpy.utils.INT
+        CONT = sasoptpy.CONT
+        BIN = sasoptpy.BIN
+        INT = sasoptpy.INT
         if self._type != CONT:
             if self._type == BIN:
                 s += 'binary '
@@ -2108,8 +2112,8 @@ class ConstraintGroup:
     def _recursive_add_cons(self, argv, name, condict, conlist, ckeys=()):
         conctr = 0
 
-        if sasoptpy.utils.transfer_allowed:
-            argv.gi_frame.f_globals.update(sasoptpy.utils._transfer)
+        if sasoptpy.transfer_allowed:
+            argv.gi_frame.f_globals.update(sasoptpy._transfer)
 
         for idx, c in enumerate(argv):
             if type(argv) == list:

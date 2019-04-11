@@ -26,41 +26,47 @@ import pandas as pd
 
 import sasoptpy.model
 import sasoptpy.components
+from sasoptpy.config import Config
 
 
-# Constant values
-MIN = 'MIN'
-MAX = 'MAX'
-CONT = 'CONT'
-INT = 'INT'
-BIN = 'BIN'
+def load_package_globals():
 
-# Global dictionary
-__namedict = {}
+    # Constant values
+    sasoptpy.MIN = 'MIN'
+    sasoptpy.MAX = 'MAX'
+    sasoptpy.CONT = 'CONT'
+    sasoptpy.INT = 'INT'
+    sasoptpy.BIN = 'BIN'
 
-# Container for wrapped statements
-_transfer = {}
-transfer_allowed = False
+    # Global dictionary
+    sasoptpy.__namedict = {}
 
-# Counters
-__ctr = {'obj': [0], 'var': [0], 'con': [0], 'expr': [0], 'model': [0],
-         'i': [0], 'set': [0], 'param': [0], 'impvar': [0], 'table': [0]}
+    # Container for wrapped statements
+    sasoptpy._transfer = {}
+    sasoptpy.transfer_allowed = False
 
-__objcnt = 0
+    # Counters
+    sasoptpy.__ctr = {'obj': [0], 'var': [0], 'con': [0], 'expr': [0], 'model': [0],
+                      'i': [0], 'set': [0], 'param': [0], 'impvar': [0], 'table': [0]}
 
-# Transformation dictionary
-_transform = {
-    'binary': BIN,
-    'bin': BIN,
-    'integer': INT,
-    'int': INT,
-    'continuous': CONT,
-    'cont': CONT,
-    'maximize': MAX,
-    'max': MAX,
-    'minimize': MIN,
-    'min': MIN
-}
+    sasoptpy.__objcnt = 0
+
+    # Transformation dictionary
+    sasoptpy._transform = {
+        'binary': sasoptpy.BIN,
+        'bin': sasoptpy.BIN,
+        'integer': sasoptpy.INT,
+        'int': sasoptpy.INT,
+        'continuous': sasoptpy.CONT,
+        'cont': sasoptpy.CONT,
+        'maximize': sasoptpy.MAX,
+        'max': sasoptpy.MAX,
+        'minimize': sasoptpy.MIN,
+        'min': sasoptpy.MIN
+    }
+
+    # Load default configuration
+    sasoptpy.config = Config()
 
 
 def check_name(name, ctype=None):
@@ -69,7 +75,7 @@ def check_name(name, ctype=None):
 
     Parameters
     ----------
-    name : str
+    name : str or None
         Name to be checked if unique
     ctype : str, optional
         Type of the object
@@ -87,7 +93,7 @@ def check_name(name, ctype=None):
         else:
             name = '{}_{}'.format(ctype, get_counter(ctype))
     else:
-        if name in __namedict:
+        if name in sasoptpy.__namedict:
             if ctype is None:
                 name = ''.join(random.choice(string.ascii_lowercase) for
                                _ in range(5))
@@ -95,7 +101,7 @@ def check_name(name, ctype=None):
                 name = '{}_{}'.format(ctype, get_counter(ctype))
         else:
             name = name.replace(" ", "_")
-    while name in __namedict:
+    while name in sasoptpy.__namedict:
         if ctype is None:
             name = ''.join(random.choice(string.ascii_lowercase) for
                            _ in range(5))
@@ -110,6 +116,15 @@ def _is_generated(expr):
     caller = inspect.stack()[2][3]
     if caller == '<genexpr>':
         return True
+
+
+def get_package_classes():
+    return [sasoptpy.model.Model,
+            sasoptpy.components.VariableGroup,
+            sasoptpy.components.ConstraintGroup,
+            sasoptpy.components.Expression,
+            sasoptpy.components.Variable,
+            sasoptpy.components.Constraint]
 
 
 def exp_range(start, stop, step=1):
@@ -169,10 +184,9 @@ def register_name(name, obj):
     objcnt : int
         Unique object number to represent creation order
     """
-    global __objcnt
-    __objcnt += 1
-    __namedict[name] = {'ref': obj, 'order': __objcnt}
-    return __objcnt
+    sasoptpy.__objcnt += 1
+    sasoptpy.__namedict[name] = {'ref': obj, 'order': sasoptpy.__objcnt}
+    return sasoptpy.__objcnt
 
 
 def recursive_walk(obj, func, attr=None, alt=None):
@@ -237,8 +251,8 @@ def quick_sum(argv):
 
     """
     clocals = argv.gi_frame.f_locals.copy()
-    if transfer_allowed:
-        argv.gi_frame.f_globals.update(_transfer)
+    if sasoptpy.transfer_allowed:
+        argv.gi_frame.f_globals.update(sasoptpy._transfer)
     exp = sasoptpy.components.Expression(temp=True)
     iterators = []
     for i in argv:
@@ -326,8 +340,8 @@ def get_obj_by_name(name):
     var_x  +  var_y_0  <=  3
 
     """
-    if name in __namedict:
-        return __namedict[name]['ref']
+    if name in sasoptpy.__namedict:
+        return sasoptpy.__namedict[name]['ref']
     else:
         return None
 
@@ -454,7 +468,7 @@ def get_counter(ctrtype):
     ctr : int
         Current value of the counter
     """
-    ctr = __ctr[ctrtype]
+    ctr = sasoptpy.__ctr[ctrtype]
     ctr[0] = ctr[0] + 1
     return ctr[0]
 
@@ -608,9 +622,9 @@ def reset_globals():
     :func:`get_namespace`
 
     """
-    __namedict.clear()
-    for i in __ctr:
-        __ctr[i] = [0]
+    sasoptpy.__namedict.clear()
+    for i in sasoptpy.__ctr:
+        sasoptpy.__ctr[i] = [0]
 
 
 def read_frame(df, cols=None):
@@ -1021,22 +1035,19 @@ def get_namespace():
         A string representation of the namespace
     """
     s = 'Global namespace:'
-    for c in [sasoptpy.model.Model, sasoptpy.components.VariableGroup,
-              sasoptpy.components.ConstraintGroup,
-              sasoptpy.components.Expression, sasoptpy.components.Variable,
-              sasoptpy.components.Constraint]:
+    for c in so.get_package_classes():
         s += '\n\t{}'.format(c.__name__)
-        for i, k in enumerate(__namedict):
-            if type(__namedict[k]['ref']) is c:
+        for i, k in enumerate(sasoptpy.__namedict):
+            if type(sasoptpy.__namedict[k]['ref']) is c:
                 s += '\n\t\t{:4d} {:{width}} {}, {}'.format(
-                    i, k, type(__namedict[k]['ref']),
-                    repr(__namedict[k]['ref']),
-                    width=len(max(__namedict, key=len)))
+                    i, k, type(sasoptpy.__namedict[k]['ref']),
+                    repr(sasoptpy.__namedict[k]['ref']),
+                    width=len(max(sasoptpy.__namedict, key=len)))
     return s
 
 
 def get_namedict():
-    return __namedict
+    return sasoptpy.__namedict
 
 
 def set_namedict(ss):
@@ -1061,12 +1072,12 @@ def get_len(i):
 
 def _load_transfer(d):
     import sasoptpy as s
-    s.utils._transfer = {**s.utils._transfer, **d}
+    s._transfer = {**s._transfer, **d}
 
 
 def _clear_transfer():
     import sasoptpy as s
-    s.utils._transfer = dict()
+    s._transfer = dict()
 
 
 def _list_item(i):
@@ -1503,4 +1514,25 @@ def _to_sas_string(obj):
     else:
         print('WARNING: Unknown type to transform {}'.format(type(obj)))
         return '{}'.format(str(obj))
+
+
+def get_formatted(val):
+    """
+    Returns the default formatted string of the given numerical variable
+
+    Parameters
+    ----------
+    val : float or integer
+        Variable to be formatted into string
+
+    Returns
+    -------
+    for : str
+        Formatted string
+
+    """
+    digits = sasoptpy.config['max_digits']
+    if digits and digits > 0:
+        return str(round(val, digits))
+    return str(val)
 

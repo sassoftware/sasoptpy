@@ -68,7 +68,7 @@ class Model:
         self._congroups = []
         self._objective = sasoptpy.components.Expression(0, name=name+'_obj')
         self._datarows = []
-        self._sense = sasoptpy.utils.MIN
+        self._sense = sasoptpy.MIN
         self._variableDict = {}
         self._constraintDict = {}
         self._vcid = {}
@@ -98,7 +98,7 @@ class Model:
             return False
         return super().__eq__(other)
 
-    def add_variable(self, var=None, vartype=sasoptpy.utils.CONT, name=None,
+    def add_variable(self, var=None, vartype=None, name=None,
                      lb=-inf, ub=inf, init=None):
         """
         Adds a new variable to the model
@@ -151,7 +151,10 @@ class Model:
         --------
         :class:`Variable`, :func:`Model.include`
         """
-        # name = check_name(name, 'var')
+
+        if vartype is None:
+            vartype = sasoptpy.CONT
+
         # Check bounds
         if lb is None:
             lb = 0
@@ -170,7 +173,7 @@ class Model:
         return var
 
     def add_variables(self, *argv, vg=None, name=None,
-                      vartype=sasoptpy.utils.CONT,
+                      vartype=None,
                       lb=None, ub=None, init=None, abstract=None):
         """
         Adds a group of variables to the model
@@ -216,6 +219,10 @@ class Model:
         name='production')
 
         """
+
+        if vartype is None:
+            vartype = sasoptpy.CONT
+
         if vg is not None:
             if isinstance(vg, sasoptpy.components.VariableGroup):
                 for i in vg:
@@ -608,7 +615,7 @@ params=[{'param': value, 'column': 'value'}])
             params=params)
         self._statements.append(s)
 
-    def read_table(self, table, key=['_N_'], key_type=['num'], key_name=None,
+    def read_table(self, table, key=None, key_type=None, key_name=None,
                    columns=None, col_types=None, col_names=None,
                    upload=False, casout=None):
         """
@@ -683,6 +690,11 @@ params=[{'param': value, 'column': 'value'}])
         :func:`Model.add_set`
 
         """
+
+        if key is None:
+            key = ['_N_']
+        if key_type is None:
+            key_type = ['num']
 
         objs = sasoptpy.utils.read_table(
             table=table, session=self._session,
@@ -975,7 +987,7 @@ params=[{'param': value, 'column': 'value'}])
 
         """
         if sense is None:
-            sense = sasoptpy.utils.MIN
+            sense = sasoptpy.MIN
 
         self._linCoef = {}
         if isinstance(expression, sasoptpy.components.Expression):
@@ -1621,20 +1633,20 @@ params=[{'param': value, 'column': 'value'}])
         for c in self._constraints:
             self._append_row([c._direction, c._name, '', '', '', ''])
         self._append_row(['COLUMNS', '', '', '', '', ''])
-        curtype = sasoptpy.utils.CONT
+        curtype = sasoptpy.CONT
         for v in self._variables:
             f5 = 0
             self._vcid[v._name] = {}
-            if v._type is sasoptpy.utils.INT and\
-                    curtype is sasoptpy.utils.CONT:
+            if v._type is sasoptpy.INT and\
+                    curtype is sasoptpy.CONT:
                 self._append_row(['', 'MARK0000', '\'MARKER\'', '',
                                  '\'INTORG\'', ''])
-                curtype = sasoptpy.utils.INT
-            if v._type is not sasoptpy.utils.INT\
-                    and curtype is sasoptpy.utils.INT:
+                curtype = sasoptpy.INT
+            if v._type is not sasoptpy.INT\
+                    and curtype is sasoptpy.INT:
                 self._append_row(['', 'MARK0001', '\'MARKER\'', '',
                                  '\'INTEND\'', ''])
-                curtype = sasoptpy.utils.CONT
+                curtype = sasoptpy.CONT
             if v._name in self._objective._linCoef:
                 cv = self._objective._linCoef[v._name]
                 current_row = ['', v._name, self._objective._name, cv['val']]
@@ -1663,7 +1675,7 @@ params=[{'param': value, 'column': 'value'}])
                 current_row.append('')
                 ID = self._append_row(current_row)
                 self._vcid[v._name][current_row[2]] = ID
-        if curtype is sasoptpy.utils.INT:
+        if curtype is sasoptpy.INT:
             self._append_row(['', 'MARK0001', '\'MARKER\'', '', '\'INTEND\'',
                              ''])
         self._append_row(['RHS', '', '', '', '', ''])
@@ -1698,20 +1710,20 @@ params=[{'param': value, 'column': 'value'}])
                 continue
             if v._lb == v._ub:
                 self._append_row(['FX', 'BND', v._name, v._ub, '', ''])
-            if v._lb is not None and v._type is not sasoptpy.utils.BIN:
+            if v._lb is not None and v._type is not sasoptpy.BIN:
                 if v._ub == inf and v._lb == -inf:
                     self._append_row(['FR', 'BND', v._name, '', '', ''])
                 elif not v._ub == v._lb:
-                    if v._type == sasoptpy.utils.INT and\
+                    if v._type == sasoptpy.INT and\
                        v._lb == 0 and v._ub == inf:
                         self._append_row(['PL', 'BND', v._name, '', '', ''])
-                    elif not(v._type == sasoptpy.utils.CONT and v._lb == 0):
+                    elif not(v._type == sasoptpy.CONT and v._lb == 0):
                         self._append_row(['LO', 'BND', v._name, v._lb, '', ''])
             if v._ub != inf and v._ub is not None and not\
-               (v._type is sasoptpy.utils.BIN and v._ub == 1) and\
+               (v._type is sasoptpy.BIN and v._ub == 1) and\
                v._lb != v._ub:
                 self._append_row(['UP', 'BND', v._name, v._ub, '', ''])
-            if v._type is sasoptpy.utils.BIN:
+            if v._type is sasoptpy.BIN:
                 self._append_row(['BV', 'BND', v._name, '1.0', '', ''])
         self._append_row(['ENDATA', '', '', 0.0, '', 0.0])
         mpsdata = pd.DataFrame(data=self._datarows,
@@ -2315,7 +2327,7 @@ params=[{'param': value, 'column': 'value'}])
             # Find problem type and initial values
             ptype = 1  # LP
             for v in self._variables:
-                if v._type != sasoptpy.utils.CONT:
+                if v._type != sasoptpy.CONT:
                     ptype = 2
                     break
 
@@ -2474,7 +2486,7 @@ params=[{'param': value, 'column': 'value'}])
             # Find problem type and initial values
             ptype = 1  # LP
             for v in self._variables:
-                if v._type != sasoptpy.utils.CONT:
+                if v._type != sasoptpy.CONT:
                     ptype = 2
                     break
 
@@ -2641,7 +2653,7 @@ params=[{'param': value, 'column': 'value'}])
             # Find problem type and initial values
             ptype = 1  # LP
             for v in self._variables:
-                if v._type != sasoptpy.utils.CONT:
+                if v._type != sasoptpy.CONT:
                     ptype = 2
                     break
 
@@ -2700,7 +2712,7 @@ params=[{'param': value, 'column': 'value'}])
             # Find problem type and initial values
             ptype = 1  # LP
             for v in self._variables:
-                if v._type != sasoptpy.utils.CONT:
+                if v._type != sasoptpy.CONT:
                     ptype = 2
                     break
 
