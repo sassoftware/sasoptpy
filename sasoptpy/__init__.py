@@ -38,4 +38,3 @@ from sasoptpy.data import *
 
 name = "sasoptpy"
 __version__ = '1.0.0.dev0'
-load_package_globals()
