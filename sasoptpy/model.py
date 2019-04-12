@@ -1062,9 +1062,9 @@ params=[{'param': value, 'column': 'value'}])
 
         """
         if self._objval:
-            return round(self._objval, 6)
+            return sasoptpy.utils.get_in_digit_format(self._objval)
         elif self.response:
-            return round(self.response.objective, 6)
+            return sasoptpy.utils.get_in_digit_format(self.response.objective)
         else:
             try:
                 return self._objective.get_value()

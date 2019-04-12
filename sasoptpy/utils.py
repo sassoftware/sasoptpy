@@ -67,6 +67,7 @@ def load_package_globals():
 
     # Load default configuration
     sasoptpy.config = Config()
+    sasoptpy.default_config_keys = sasoptpy.config.keys
 
 
 def check_name(name, ctype=None):
@@ -625,6 +626,7 @@ def reset_globals():
     sasoptpy.__namedict.clear()
     for i in sasoptpy.__ctr:
         sasoptpy.__ctr[i] = [0]
+    sasoptpy.config.reset()
 
 
 def read_frame(df, cols=None):
@@ -1516,7 +1518,7 @@ def _to_sas_string(obj):
         return '{}'.format(str(obj))
 
 
-def get_formatted(val):
+def get_in_digit_format(val):
     """
     Returns the default formatted string of the given numerical variable
 

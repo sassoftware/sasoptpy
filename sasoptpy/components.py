@@ -183,7 +183,7 @@ class Expression:
             except:
                 print(self._arguments)
                 print('ERROR: Unknown operator: {}'.format(self._operator))
-        return round(v, 6)
+        return sasoptpy.utils.get_in_digit_format(v)
 
     def get_dual(self):
         """
@@ -344,9 +344,9 @@ class Expression:
             if val == 1 or val == -1:
                 s += '{} '.format(refs)
             elif op:
-                s += '{} * ({}) '.format(sasoptpy.utils.get_formatted(abs(val)), refs)
+                s += '{} * ({}) '.format(sasoptpy.utils.get_in_digit_format(abs(val)), refs)
             else:
-                s += '{} * {} '.format(sasoptpy.utils.get_formatted(abs(val)), refs)
+                s += '{} * {} '.format(sasoptpy.utils.get_in_digit_format(abs(val)), refs)
 
             itemcnt += 1
 
@@ -361,7 +361,7 @@ class Expression:
                 pass
             else:
                 s += '+ '
-            s += '{} '.format(abs(val))
+            s += '{} '.format(sasoptpy.utils.get_in_digit_format(abs(val)))
 
         # Close operator parentheses and add remaining elements
         if self._operator:
@@ -465,9 +465,9 @@ class Expression:
             if val == 1 or val == -1:
                 s += '{} '.format(refs)
             elif op:
-                s += '{} * ({}) '.format(round(abs(val), 12), refs)
+                s += '{} * ({}) '.format(sasoptpy.utils.get_in_digit_format(abs(val)), refs)
             else:
-                s += '{} * {} '.format(round(abs(val), 12), refs)
+                s += '{} * {} '.format(sasoptpy.utils.get_in_digit_format(abs(val)), refs)
             itemcnt += 1
 
         # CONST is always at the end
@@ -481,7 +481,7 @@ class Expression:
                 pass
             else:
                 s += '+ '
-            s += '{} '.format(abs(val))
+            s += '{} '.format(sasoptpy.utils.get_in_digit_format(abs(val)))
 
         if self._operator:
             if self._iterkey:
@@ -1295,7 +1295,7 @@ class Constraint(Expression):
         if self._parent is None:
             s = 'con {} : '.format(self._name)
         if self._range != 0:
-            s += '{} <= '.format(- self._linCoef['CONST']['val'])
+            s += '{} <= '.format(sasoptpy.utils.get_in_digit_format(- self._linCoef['CONST']['val']))
         s += super()._expr()
         if self._direction == 'E' and self._range == 0:
             s += ' = '
@@ -1307,7 +1307,7 @@ class Constraint(Expression):
             s += ' <= '
         else:
             raise Exception('Constraint has no direction!')
-        s += '{}'.format(- self._linCoef['CONST']['val'] + self._range)
+        s += '{}'.format(sasoptpy.utils.get_in_digit_format(- self._linCoef['CONST']['val'] + self._range))
         if self._parent is None:
             s += ';'
             # Currently we switch to frame when blocks are set
