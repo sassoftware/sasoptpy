@@ -80,6 +80,11 @@ class TestConfig(unittest.TestCase):
         del so.config[self.new_config_key]
         self.assertEqual(so.config[self.new_config_key], None)
 
+    def test_delete_key_exception(self):
+        def delete_nonexistent_key():
+            del so.config['nonexistent_key']
+        self.assertRaises(KeyError, delete_nonexistent_key)
+
     def test_config_iter(self):
         list_of_keys_via_iter = set()
         list_of_keys_via_keys = set()
