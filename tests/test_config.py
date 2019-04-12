@@ -20,6 +20,10 @@
 Unit test for configurations
 """
 
+import sys
+import os
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
+
 import unittest
 import sasoptpy as so
 
