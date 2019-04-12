@@ -183,7 +183,7 @@ class Expression:
             except:
                 print(self._arguments)
                 print('ERROR: Unknown operator: {}'.format(self._operator))
-        return sasoptpy.utils.get_in_digit_format(v)
+        return v
 
     def get_dual(self):
         """
