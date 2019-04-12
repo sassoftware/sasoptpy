@@ -4,6 +4,7 @@ py37:
   - python setup.py install
   - cd tests
   - python test_generators.py
+  - python test_config.py
 
 #py36:
 #  image: python:3.6
