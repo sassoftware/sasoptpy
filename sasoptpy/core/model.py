@@ -32,6 +32,7 @@ import pandas as pd
 
 import sasoptpy.components
 import sasoptpy.utils
+import sasoptpy.structures
 
 
 class Model:
@@ -486,6 +487,29 @@ class Model:
         self._impvars.append(iv)
         return iv
 
+    def insert_for_loop(self, func, variable, over_set):
+        """
+        Schedules a `for` loop to be run on the server-side
+
+        Parameters
+        ----------
+        func : Function
+            Python function including operations within the 'for loop'
+        variable : Parameter or SetIterator
+            Variable value to be iterated over given set
+        over : Set
+            Set to be looped over
+        """
+
+        loop = sasoptpy.structures.ForLoopStatement(func, variable, over_set)
+        #self._statements.append(loop)
+        self.add_statement(loop)
+        with sasoptpy.structures.inside_container(loop):
+            func(loop.actual_variable)
+
+    def insert_literal_statement(self, statement):
+        pass
+
     def add_statement(self, statement, after_solve=False):
         """
         Adds a PROC OPTMODEL statement to the model
@@ -539,6 +563,8 @@ class Model:
                 after_solve = True
             self._statements.append(
                 sasoptpy.data.Statement(statement, after_solve=after_solve))
+        elif isinstance(statement, sasoptpy.structures.Statement):
+            self._statements.append(statement)
 
     def read_data(self, table, key_set, key_cols=None, option='', params=None):
         """
@@ -546,7 +572,7 @@ class Model:
 
         Parameters
         ----------
-        table : :class:`swat.cas.table.CASTable`
+        table : :class:`swat.cas.table.CASTable` or str
             The CAS table to be read to sets and parameters
         key_set : :class:`Set`
             Set object to be read as the key (index)
@@ -748,6 +774,7 @@ params=[{'param': value, 'column': 'value'}])
                 del self._variables[i]
                 return
 
+    @sasoptpy.structures.containable
     def drop_constraint(self, constraint):
         """
         Drops a constraint from the model
@@ -934,6 +961,7 @@ params=[{'param': value, 'column': 'value'}])
                     self._constraints.append(s)
                 self._objective = c._objective
 
+    @sasoptpy.structures.containable
     def set_objective(self, expression, sense=None, name=None, multiobj=False):
         """
         Sets the objective function for the model
@@ -2169,6 +2197,7 @@ params=[{'param': value, 'column': 'value'}])
         else:
             return None
 
+    @sasoptpy.structures.containable
     def solve(self, options=None, submit=True, name=None,
               frame=False, drop=False, replace=True, primalin=False,
               milp=None, lp=None, verbose=False):

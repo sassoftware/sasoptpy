@@ -26,7 +26,7 @@ operations
 from collections import OrderedDict
 from types import GeneratorType
 
-import sasoptpy.components
+import sasoptpy.expression
 import sasoptpy.utils
 
 
@@ -210,7 +210,7 @@ class Parameter:
             return None
 
 
-class ParameterValue(sasoptpy.components.Expression):
+class ParameterValue(sasoptpy.expression.Expression):
     """
     Represents a single value of a parameter
 
@@ -244,6 +244,7 @@ class ParameterValue(sasoptpy.components.Expression):
                                     'val': 1.0}
         self._ref = param
         self._assign = None
+        self._value = 0
 
     def set_init(self, val):
         """
@@ -300,8 +301,12 @@ class ParameterValue(sasoptpy.components.Expression):
         else:
             return None
 
+    @sasoptpy.structures.containable
+    def set_value(self, value):
+        self._value = value
 
-class Set(sasoptpy.components.Expression):
+
+class Set(sasoptpy.expression.Expression):
     """
     Creates an index set to be represented inside PROC OPTMODEL
 
@@ -406,7 +411,7 @@ class Set(sasoptpy.components.Expression):
     def value(self):
         return self._value
 
-class SetIterator(sasoptpy.components.Expression):
+class SetIterator(sasoptpy.expression.Expression):
     """
     Creates an iterator object for a given Set
 
@@ -594,14 +599,14 @@ class ExpressionDict:
         key = sasoptpy.utils.tuple_pack(key)
 
         # Set name for named types
-        ntypes = [Parameter, sasoptpy.components.Expression]
+        ntypes = [Parameter, sasoptpy.expression.Expression]
         if any(isinstance(value, i) for i in ntypes) and value._name is None:
             value._name = self._name
 
         # Add the dictionary value
         if isinstance(value, Parameter):
             self._dict[key] = ParameterValue(value, key)
-        elif isinstance(value, sasoptpy.components.Expression):
+        elif isinstance(value, sasoptpy.expression.Expression):
             self._dict[key] = value
             if value._abstract:
                 self._abstract = True
@@ -755,11 +760,11 @@ class ImplicitVar(ExpressionDict):
                     for i in keynames:
                         keyrefs += (localdict[i],)
                     self[keyrefs] = arg
-            elif (type(argv) == sasoptpy.components.Expression and
+            elif (type(argv) == sasoptpy.expression.Expression and
                   argv._abstract):
                 self[''] = argv
                 self['']._objorder = self._objorder
-            elif type(argv) == sasoptpy.components.Expression:
+            elif type(argv) == sasoptpy.expression.Expression:
                 self[''] = argv
                 self['']._objorder = self._objorder
             else:

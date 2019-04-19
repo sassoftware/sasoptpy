@@ -67,5 +67,6 @@ def _get_default_config():
     config['max_digits'] = 12
     config['valid_outcomes'] = ['OPTIMAL', 'ABSFCONV', 'BEST_FEASIBLE']
     config['default_sense'] = so.MIN
+    config['submit_realtime'] = True
 
     return config

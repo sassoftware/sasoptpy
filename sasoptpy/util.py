@@ -26,7 +26,7 @@ import pandas as pd
 
 import sasoptpy.model
 import sasoptpy.components
-from sasoptpy.config import Config
+from sasoptpy.configuration import Config
 
 
 def load_package_globals():
@@ -50,6 +50,10 @@ def load_package_globals():
                       'i': [0], 'set': [0], 'param': [0], 'impvar': [0], 'table': [0]}
 
     sasoptpy.__objcnt = 0
+
+    # Statement container
+    sasoptpy.container = None
+    sasoptpy.statement_dictionary = read_statement_dictionary()
 
     # Transformation dictionary
     sasoptpy._transform = {
@@ -526,6 +530,18 @@ def get_conditions(keys):
             if len(key._conditions) > 0:
                 conditions.append(key._to_conditions())
     return conditions
+
+
+def is_variable(obj):
+    return isinstance(obj, sasoptpy.components.Variable)
+
+
+def is_constraint(obj):
+    return isinstance(obj, sasoptpy.components.Constraint)
+
+
+def new_constraint(exp, direction, crange):
+    return sasoptpy.components.Constraint(exp=exp, direction=direction, crange=crange)
 
 
 def tuple_unpack(tp):
@@ -1537,4 +1553,15 @@ def get_in_digit_format(val):
     if digits and digits > 0:
         return str(round(val, digits))
     return str(val)
+
+
+def read_statement_dictionary():
+    import sasoptpy.data
+    d = dict()
+    d[sasoptpy.model.Model.set_objective] = sasoptpy.structures.ObjectiveStatement.set_objective
+    d[sasoptpy.model.Model.solve] = sasoptpy.structures.SolveStatement.solve
+    d[sasoptpy.components.Variable.set_bounds] = sasoptpy.structures.Assignment.set_bounds
+    d[sasoptpy.data.ParameterValue.set_value] = sasoptpy.structures.Assignment.set_value
+    d[sasoptpy.model.Model.drop_constraint] = sasoptpy.structures.DropStatement.drop_constraint
+    return d
 
