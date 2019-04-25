@@ -1,5 +1,7 @@
 
 
+import sasoptpy
+from sasoptpy.core import Expression
 
 class Constraint(Expression):
     """
@@ -60,9 +62,9 @@ class Constraint(Expression):
     def __init__(self, exp, direction=None, name=None, crange=0):
         super().__init__()
         if name is not None:
-            name = sasoptpy.utils.check_name(name, 'con')
+            name = sasoptpy.util.assign_name(name, 'con')
             self._name = name
-            self._objorder = sasoptpy.utils.register_name(name, self)
+            self._objorder = sasoptpy.util.register_globally(name, self)
         else:
             self._name = None
         if exp._name is None:
@@ -238,7 +240,7 @@ class Constraint(Expression):
             s += ' <= '
         else:
             raise Exception('Constraint has no direction!')
-        s += '{}'.format(sasoptpy.utils.get_in_digit_format(- self._linCoef['CONST']['val'] + self._range))
+        s += '{}'.format(sasoptpy.util.get_in_digit_format(- self._linCoef['CONST']['val'] + self._range))
         if self._parent is None:
             s += ';'
             # Currently we switch to frame when blocks are set

@@ -24,13 +24,35 @@ This file includes static methods and imports.
 
 """
 
-from sasoptpy.utils import load_package_globals
-load_package_globals()
+# Package config
 
-from sasoptpy.utils import *
-from sasoptpy.model import *
-from sasoptpy.components import *
-from sasoptpy.data import *
+# Imports
+from sasoptpy._libs import *
+import sasoptpy.util
+sasoptpy.util.load_package_globals()
+
+from sasoptpy.util import (quick_sum)
+
+from sasoptpy.structure import (inside_container, containable)
+
+from sasoptpy.core import Expression
+from sasoptpy.core import (Variable, VariableGroup, Constraint, ConstraintGroup, Model)
+
+import sasoptpy.abstract
+
+import sasoptpy.config
+sasoptpy.config._load_default_config()
+sasoptpy.util.load_function_containers()
+
+
+
+#from sasoptpy.utils import load_package_globals
+#load_package_globals()
+
+#from sasoptpy.utils import *
+#from sasoptpy.model import *
+#from sasoptpy.components import *
+#from sasoptpy.data import *
 
 # Optional items
 #  sasoptpy.math

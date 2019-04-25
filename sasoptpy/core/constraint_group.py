@@ -1,4 +1,8 @@
 
+from collections import OrderedDict
+from types import GeneratorType
+
+import sasoptpy
 
 
 class ConstraintGroup:
@@ -56,9 +60,9 @@ class ConstraintGroup:
             self._recursive_add_cons(argv, name=name, condict=self._condict,
                                      conlist=self._conlist)
         if name is not None:
-            name = sasoptpy.utils.check_name(name, 'con')
+            name = sasoptpy.util.assign_name(name, 'con')
             self._name = name
-            self._objorder = sasoptpy.utils.register_name(name, self)
+            self._objorder = sasoptpy.util.register_globally(name, self)
         else:
             self._name = None
         self._shadows = dict()
@@ -108,9 +112,9 @@ class ConstraintGroup:
             else:
                 print('ERROR: Unknown argument type for constraint generation', type(argv))
                 return None
-            keylist = sasoptpy.utils._to_iterator_expression(newkeys)
+            keylist = sasoptpy.core.util._to_iterator_expression(newkeys)
             conname = '{}[{}]'.format(name, ','.join(keylist))
-            conname = sasoptpy.utils.check_name(conname, 'con')
+            conname = sasoptpy.util.assign_name(conname, 'con')
             newcon = sasoptpy.Constraint(exp=c, name=conname, crange=c._range)
             condict[newkeys] = newcon
             conlist.append(newkeys)
@@ -212,7 +216,7 @@ class ConstraintGroup:
         s = ''
         for key_ in self._conlist:
             s += tabs + 'con {}'.format(self._name)
-            keys = sasoptpy.utils._to_optmodel_loop(key_)
+            keys = sasoptpy.util._to_optmodel_loop(key_)
             s += keys
             s += ' : ' + self._condict[key_]._defn()
             s += ';\n'

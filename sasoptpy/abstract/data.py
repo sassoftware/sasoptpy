@@ -26,8 +26,7 @@ operations
 from collections import OrderedDict
 from types import GeneratorType
 
-import sasoptpy.expression
-import sasoptpy.utils
+import sasoptpy
 
 
 class Parameter:
@@ -210,7 +209,7 @@ class Parameter:
             return None
 
 
-class ParameterValue(sasoptpy.expression.Expression):
+class ParameterValue(sasoptpy.Expression):
     """
     Represents a single value of a parameter
 
@@ -301,12 +300,12 @@ class ParameterValue(sasoptpy.expression.Expression):
         else:
             return None
 
-    @sasoptpy.structures.containable
+    @sasoptpy.containable
     def set_value(self, value):
         self._value = value
 
 
-class Set(sasoptpy.expression.Expression):
+class Set(sasoptpy.Expression):
     """
     Creates an index set to be represented inside PROC OPTMODEL
 
@@ -411,7 +410,7 @@ class Set(sasoptpy.expression.Expression):
     def value(self):
         return self._value
 
-class SetIterator(sasoptpy.expression.Expression):
+class SetIterator(sasoptpy.Expression):
     """
     Creates an iterator object for a given Set
 

@@ -1,5 +1,8 @@
 
+from math import inf
 
+import sasoptpy
+from sasoptpy.core import Expression
 
 
 class Variable(Expression):
@@ -47,7 +50,7 @@ class Variable(Expression):
         if vartype is None:
             vartype = sasoptpy.CONT
         if not shadow:
-            name = sasoptpy.utils.check_name(name, 'var')
+            name = sasoptpy.util.assign_name(name, 'var')
         self._name = name
         self._type = vartype
         if lb is None:
@@ -66,7 +69,7 @@ class Variable(Expression):
             self._linCoef[name + str(id(self))] = {'ref': self, 'val': 1}
         else:
             self._linCoef[name] = {'ref': self, 'val': 1}
-            self._objorder = sasoptpy.utils.register_name(name, self)
+            self._objorder = sasoptpy.util.register_globally(name, self)
         self._key = key
         self._parent = None
         self._temp = False
@@ -77,7 +80,7 @@ class Variable(Expression):
         self._parent = parent
         self._key = key
 
-    @sasoptpy.structures.containable
+    @sasoptpy.containable
     def set_bounds(self, *, lb=None, ub=None):
         """
         Changes bounds on a variable
@@ -174,11 +177,11 @@ class Variable(Expression):
 
     def _expr(self):
         if self._parent is not None and self._key is not None:
-            keylist = sasoptpy.utils._to_iterator_expression(self._key)
+            keylist = sasoptpy.core.util._to_iterator_expression(self._key)
             key = ', '.join(keylist)
             return ('{}[{}]'.format(self._parent._name, key))
         if self._shadow and self._iterkey:
-            keylist = sasoptpy.utils._to_iterator_expression(self._iterkey)
+            keylist = sasoptpy.core.util._to_iterator_expression(self._iterkey)
             key = ', '.join(keylist)
             return('{}[{}]'.format(self._name, key))
         return('{}'.format(self._name))

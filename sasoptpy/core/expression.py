@@ -21,7 +21,8 @@ from math import copysign
 
 import numpy as np
 
-import sasoptpy.utils
+import sasoptpy
+import sasoptpy.util
 
 
 class Expression:
@@ -76,8 +77,8 @@ class Expression:
 
     def __init__(self, exp=None, name=None, temp=False):
         if name is not None:
-            self._name = sasoptpy.utils.check_name(name, 'expr')
-            self._objorder = sasoptpy.utils.register_name(self._name, self)
+            self._name = sasoptpy.util.assign_name(name, 'expr')
+            self._objorder = sasoptpy.util.register_globally(self._name, self)
         else:
             self._name = None
         self._value = 0
@@ -222,7 +223,7 @@ class Expression:
         if self._name is not None:
             if self._name in nd:
                 del nd[self._name]
-        safe_name = sasoptpy.utils.check_name(name, 'expr')
+        safe_name = sasoptpy.util.assign_name(name, 'expr')
         if name and name != safe_name:
             print('NOTE: Name {} is changed to {} to prevent a conflict'
                   .format(name, safe_name))
@@ -266,7 +267,7 @@ class Expression:
             Name of the expression in the namespace
         """
         if self._name is None:
-            self._name = sasoptpy.utils.check_name(name, 'expr')
+            self._name = sasoptpy.util.assign_name(name, 'expr')
             self._objorder = sasoptpy.utils.register_name(self._name, self)
         self._temp = False
         return self._name
@@ -340,15 +341,15 @@ class Expression:
             if val == 1 or val == -1:
                 s += '{} '.format(refs)
             elif op:
-                s += '{} * ({}) '.format(sasoptpy.utils.get_in_digit_format(abs(val)), refs)
+                s += '{} * ({}) '.format(sasoptpy.util.get_in_digit_format(abs(val)), refs)
             else:
-                s += '{} * {} '.format(sasoptpy.utils.get_in_digit_format(abs(val)), refs)
+                s += '{} * {} '.format(sasoptpy.util.get_in_digit_format(abs(val)), refs)
 
             itemcnt += 1
 
         # CONST is always at the end
         if itemcnt == 0 or (self._linCoef['CONST']['val'] != 0 and
-                            not sasoptpy.utils.is_constraint(self)):
+                            not sasoptpy.core.util.is_constraint(self)):
             val = self._linCoef['CONST']['val']
             csign = copysign(1, val)
             if csign < 0:
@@ -357,7 +358,7 @@ class Expression:
                 pass
             else:
                 s += '+ '
-            s += '{} '.format(sasoptpy.utils.get_in_digit_format(abs(val)))
+            s += '{} '.format(sasoptpy.util.get_in_digit_format(abs(val)))
 
         # Close operator parentheses and add remaining elements
         if self._operator:
@@ -682,7 +683,7 @@ class Expression:
             ranged_constraint = Constraint(exp=e, direction='E',
                                            crange=abs(other[1]-other[0]))
             return ranged_constraint
-        elif not sasoptpy.utils.is_variable(self):
+        elif not sasoptpy.core.util.is_variable(self):
             if self._temp and type(self) is Expression:
                 r = self
             else:
@@ -696,8 +697,7 @@ class Expression:
                 r._linCoef['CONST']['val'] -= other
             elif isinstance(other, Expression):
                 r -= other
-            generated_constraint = sasoptpy.utils.new_constraint(
-                exp=r, direction=direction_, crange=0)
+            generated_constraint = sasoptpy.core.Constraint(exp=r, direction=direction_, crange=0)
             return generated_constraint
         else:
             r = Expression()

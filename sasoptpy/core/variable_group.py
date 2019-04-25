@@ -1,5 +1,9 @@
 
+from collections import OrderedDict
+from math import inf
 
+import sasoptpy
+from sasoptpy._libs import (pd, np)
 
 
 class VariableGroup:
@@ -102,22 +106,20 @@ class VariableGroup:
         self._type = vartype
 
         if name is not None:
-            name = sasoptpy.utils.check_name(name, 'var')
+            name = sasoptpy.util.assign_name(name, 'var')
             self._name = name
-            self._objorder = sasoptpy.utils.register_name(name, self)
+            self._objorder = sasoptpy.util.register_globally(name, self)
         else:
             self._name = None
         self._abstract = abstract
         for arg in argv:
             if isinstance(arg, int):
-                self._keyset.append(
-                    sasoptpy.utils.extract_argument_as_list(arg))
+                self._keyset.append(sasoptpy.util.extract_argument_as_list(arg))
             else:
-                self._keyset.append(sasoptpy.utils.extract_argument_as_list(arg))
-                if not self._abstract and isinstance(arg, sasoptpy.data.Set):
-                    self._abstract = True
-                    for _, v in self._vardict.items():
-                        v._abstract = True
+                self._keyset.append(sasoptpy.util._extract_argument_as_list(arg))
+                if sasoptpy.util.is_set_abstract(arg):
+                    sasoptpy.core.util.set_group_abstract([self, self._vardict.values()])
+
         self._shadows = OrderedDict()
         self._set_var_info()
 
@@ -179,7 +181,7 @@ class VariableGroup:
             vardict = OrderedDict()
         if varlist is None:
             varlist = list()
-        the_list = sasoptpy.utils.extract_argument_as_list(argv[0])
+        the_list = sasoptpy.util._extract_argument_as_list(argv[0])
         for _, i in enumerate(the_list):
             if isinstance(i, tuple):
                 newfixed = vkeys + i
@@ -193,9 +195,9 @@ class VariableGroup:
                         self._groups[j] = self._groups[j].union(pd.Index([k]))
                     except KeyError:
                         self._groups[j] = pd.Index([k])  # pd.Index behaves as an ordered set
-                varlb = sasoptpy.utils.extract_list_value(newfixed, lb)
-                varub = sasoptpy.utils.extract_list_value(newfixed, ub)
-                varin = sasoptpy.utils.extract_list_value(newfixed, init)
+                varlb = sasoptpy.util.extract_list_value(newfixed, lb)
+                varub = sasoptpy.util.extract_list_value(newfixed, ub)
+                varin = sasoptpy.util.extract_list_value(newfixed, init)
                 new_var = sasoptpy.Variable(
                     name=varname, lb=varlb, ub=varub, init=varin,
                     vartype=vartype, abstract=abstract)
@@ -227,7 +229,7 @@ class VariableGroup:
             Reference to a single Variable or a list of Variable objects
 
         """
-        if self._abstract or isinstance(key, sasoptpy.data.SetIterator):
+        if self._abstract or sasoptpy.util.is_key_abstract(key):
             # TODO check if number of keys correct e.g. x[I], x[1,2] requested
             tuple_key = sasoptpy.utils.tuple_pack(key)
             tuple_key = tuple(i for i in sasoptpy.utils.flatten_tuple(tuple_key))
@@ -253,7 +255,7 @@ class VariableGroup:
                 self._shadows[tuple_key] = shadow
                 return shadow
 
-        k = sasoptpy.utils.tuple_pack(key)
+        k = sasoptpy.util.pack_to_tuple(key)
         if k in self._vardict:
             return self._vardict[k]
         else:
@@ -304,12 +306,12 @@ class VariableGroup:
         s = tabs + 'var {}'.format(self._name)
         s += ' {'
         for i in self._keyset:
-            if isinstance(i, sasoptpy.data.Set):
+            if sasoptpy.util.is_set_abstract(i):
                 s += '{}, '.format(i._name)
             elif isinstance(i, list) or isinstance(i, range):
                 ind_list = []
                 for j in i:
-                    ind_list.append(sasoptpy.utils._to_quoted_string(j))
+                    ind_list.append(sasoptpy.util._to_quoted_string(j))
                 s += '{{{}}}, '.format(','.join(ind_list))
             elif isinstance(i, dict):
                 s += '{{{}}}, '.format(','.join(
@@ -332,12 +334,12 @@ class VariableGroup:
             if self._type == INT:
                 s += 'integer '
         if self._lb is not None and\
-           np.issubdtype(type(self._lb), np.number) and\
+           np.isinstance(type(self._lb), np.number) and\
            self._lb != -inf and\
            not(self._lb == 0 and self._type == BIN):
             s += '>= {} '.format(self._lb)
         if self._ub is not None and\
-           np.issubdtype(type(self._ub), np.number) and\
+           np.isinstance(type(self._ub), np.number) and\
            self._ub != inf and\
            not(self._ub == 1 and self._type == BIN):
             s += '<= {} '.format(self._ub)
@@ -392,7 +394,7 @@ class VariableGroup:
                 printlb = False
                 defaultlb = -inf if self._type is CONT else 0
                 if v._lb is not None:
-                    if self._lb is None or not np.issubdtype(type(self._lb), np.number):
+                    if self._lb is None or not np.isinstance(type(self._lb), np.number):
                         printlb = True
                     elif v._lb == defaultlb and (self._lb is not None and self._lb != defaultlb):
                         printlb = True
@@ -405,7 +407,7 @@ class VariableGroup:
                 printub = False
                 defaultub = 1 if self._type is BIN else inf
                 if v._ub is not None:
-                    if self._ub is None or not np.issubdtype(type(self._ub), np.number):
+                    if self._ub is None or not np.isinstance(type(self._ub), np.number):
                         printub = True
                     elif v._ub == defaultub and (self._ub is not None and self._ub != defaultub):
                         printub = True
