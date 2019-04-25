@@ -22,7 +22,7 @@ Math includes the definition of mathematical operations
 """
 
 import math
-import sasoptpy.utils
+import sasoptpy.util
 
 
 func_equivalent = {
@@ -59,15 +59,12 @@ def math_func(exp, op, *args):
     args : float, optional
         Additional arguments
     """
-    try:
-        exp = sasoptpy.utils.get_mutable(exp)
-        exp._operator = op
-        for arg in args:
-            exp._arguments.append(arg)
-        r = sasoptpy.utils.wrap(exp)
-        return r
-    except AttributeError:
-        pass
+    exp = sasoptpy.util.get_mutable(exp)
+    exp._operator = op
+    for arg in args:
+        exp._arguments.append(arg)
+    r = sasoptpy.util.wrap_expression(exp)
+    return r
 
 
 # Basic functions

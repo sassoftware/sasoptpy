@@ -83,14 +83,14 @@ def assign_name(name, ctype=None):
             name = 'TMP_' + ''.join(random.choice(string.ascii_uppercase) for
                                     _ in range(5))
         else:
-            name = '{}_{}'.format(ctype, get_counter(ctype))
+            name = '{}_{}'.format(ctype, get_and_increment_counter(ctype))
     else:
         if name in sasoptpy.__namedict:
             if ctype is None:
                 name = ''.join(random.choice(string.ascii_lowercase) for
                                _ in range(5))
             else:
-                name = '{}_{}'.format(ctype, get_counter(ctype))
+                name = '{}_{}'.format(ctype, get_and_increment_counter(ctype))
         else:
             name = name.replace(" ", "_")
     while name in sasoptpy.__namedict:
@@ -98,7 +98,7 @@ def assign_name(name, ctype=None):
             name = ''.join(random.choice(string.ascii_lowercase) for
                            _ in range(5))
         else:
-            name = '{}_{}'.format(ctype, get_counter(ctype))
+            name = '{}_{}'.format(ctype, get_and_increment_counter(ctype))
     return name
 
 
@@ -371,4 +371,107 @@ def get_conditions(keys):
                 conditions.append(key._to_conditions())
     return conditions
 
+
+def reset():
+    """
+    Deletes the references inside the global dictionary and restarts counters
+
+    Examples
+    --------
+
+    >>> import sasoptpy as so
+    >>> m = so.Model(name='my_model')
+    >>> print(so.get_namespace())
+    Global namespace:
+        Model
+               0 my_model <class 'sasoptpy.model.Model'>,\
+               sasoptpy.Model(name='my_model', session=None)
+        VariableGroup
+        ConstraintGroup
+        Expression
+        Variable
+        Constraint
+    >>> so.reset()
+    >>> print(so.get_namespace())
+    Global namespace:
+        Model
+        VariableGroup
+        ConstraintGroup
+        Expression
+        Variable
+        Constraint
+
+    See also
+    --------
+    :func:`get_namespace`
+
+    """
+    sasoptpy.__namedict.clear()
+    for i in sasoptpy.__ctr:
+        sasoptpy.__ctr[i] = [0]
+    sasoptpy.config.reset()
+
+
+def reset_globals():
+    reset()
+
+
+def get_mutable(exp):
+    """
+    Returns a mutable copy of the given expression if it is immutable
+
+    Parameters
+    ----------
+    exp : Variable or Expression
+        Object to be wrapped
+
+    Returns
+    -------
+    r : Expression
+        Mutable copy of the expression, if the original is immutable
+    """
+    if isinstance(exp, sasoptpy.Variable):
+        r = sasoptpy.Expression(exp)
+        r._abstract = exp._abstract
+    elif isinstance(exp, sasoptpy.Expression):
+        r = exp
+    else:
+        r = sasoptpy.components.Expression(exp)
+    return r
+
+
+def wrap_expression(e, abstract=False):
+    """
+    Wraps expression inside another expression
+    """
+    wrapper = sasoptpy.Expression()
+    if hasattr(e, '_name') and e._name is not None:
+        name = e._name
+    else:
+        name = assign_name(None, 'expr')
+    if sasoptpy.core.util.is_expression(e):
+        wrapper._linCoef[name] = {'ref': e, 'val': 1.0}
+        wrapper._abstract = e._abstract or abstract
+    elif isinstance(e, dict):
+        wrapper._linCoef[name] = {**e}
+    return wrapper
+
+
+def get_and_increment_counter(ctrtype):
+    """
+    Returns and increments the list counter for naming
+
+    Parameters
+    ----------
+    ctrtype : string
+        Type of the counter, 'obj', 'var', 'con' or 'expr'
+
+    Returns
+    -------
+    ctr : int
+        Current value of the counter
+    """
+    ctr = sasoptpy.__ctr[ctrtype]
+    ctr[0] = ctr[0] + 1
+    return ctr[0]
 

@@ -710,7 +710,7 @@ class Expression:
                 for v in other._linCoef:
                     r._add_coef_value(other._linCoef[v]['ref'],
                                       v, -other._linCoef[v]['val'])
-            generated_constraint = Constraint(exp=r, direction=direction_,
+            generated_constraint = sasoptpy.Constraint(exp=r, direction=direction_,
                                               crange=0)
             return generated_constraint
         return self
