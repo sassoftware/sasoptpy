@@ -31,7 +31,7 @@ from sasoptpy._libs import *
 import sasoptpy.util
 sasoptpy.util.load_package_globals()
 
-from sasoptpy.util import (quick_sum)
+from sasoptpy.util import (quick_sum, reset, reset_globals)
 
 from sasoptpy.structure import (inside_container, containable)
 
