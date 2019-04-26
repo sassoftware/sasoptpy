@@ -228,7 +228,7 @@ class Constraint(Expression):
         if self._parent is None:
             s = 'con {} : '.format(self._name)
         if self._range != 0:
-            s += '{} <= '.format(sasoptpy.utils.get_in_digit_format(- self._linCoef['CONST']['val']))
+            s += '{} <= '.format(sasoptpy.util.get_in_digit_format(- self._linCoef['CONST']['val']))
         s += super()._expr()
         if self._direction == 'E' and self._range == 0:
             s += ' = '

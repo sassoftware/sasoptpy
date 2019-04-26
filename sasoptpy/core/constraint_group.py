@@ -165,7 +165,7 @@ class ConstraintGroup:
             cd[i] = self._condict[i].copy()
             if rhs is False:
                 cd[i]._linCoef['CONST']['val'] = 0
-        cd_df = sasoptpy.utils.dict_to_frame(cd, cols=[self._name])
+        cd_df = sasoptpy.util.dict_to_frame(cd, cols=[self._name])
         return cd_df
 
     def __getitem__(self, key):
@@ -183,8 +183,8 @@ class ConstraintGroup:
             Reference to the constraint
         """
         if isinstance(key, sasoptpy.data.SetIterator):
-            tuple_key = sasoptpy.utils.tuple_pack(key)
-            tuple_key = tuple(i for i in sasoptpy.utils.flatten_tuple(tuple_key))
+            tuple_key = sasoptpy.util.pack_to_tuple(key)
+            tuple_key = tuple(i for i in sasoptpy.util.flatten_tuple(tuple_key))
             if tuple_key in self._condict:
                 return self._condict[tuple_key]
             elif tuple_key in self._shadows:
@@ -198,7 +198,7 @@ class ConstraintGroup:
                 self._shadows[tuple_key] = shadow
                 return shadow
         else:
-            key = sasoptpy.utils.tuple_pack(key)
+            key = sasoptpy.util.pack_to_tuple(key)
             return self._condict.get(key)
 
     def __iter__(self):
@@ -229,8 +229,7 @@ class ConstraintGroup:
         s = 'Constraint Group ({}) [\n'.format(self._name)
         for k in sorted(self._condict):
             v = self._condict[k]
-            s += '  [{}: {}]\n'.format(sasoptpy.utils.tuple_unpack(k),
-                                       v)
+            s += '  [{}: {}]\n'.format(sasoptpy.util.get_first_member(k), v)
         s += ']'
         return s
 

@@ -16,6 +16,8 @@
 #  limitations under the License.
 #
 
+import warnings
+
 import sasoptpy
 from sasoptpy._libs import (pd, np)
 
@@ -121,6 +123,17 @@ def register_globally(name, obj):
     sasoptpy.__objcnt += 1
     sasoptpy.__namedict[name] = {'ref': obj, 'order': sasoptpy.__objcnt}
     return sasoptpy.__objcnt
+
+
+def delete_name(name):
+    nd = get_namedict()
+    if name is not None and name in nd:
+        del nd[name]
+
+
+def set_creation_order_if_empty(obj, order):
+    if hasattr(obj, '_objorder') and not obj._objorder:
+        obj._objorder = order
 
 
 def get_in_digit_format(val):
@@ -233,6 +246,26 @@ def pack_to_tuple(obj):
     return (obj,)
 
 
+def get_first_member(tp):
+    """
+    Grabs the first element in a tuple, if a tuple is given as argument
+
+    Parameters
+    ----------
+    tp : tuple
+
+    """
+    if isinstance(tp, tuple):
+        if len(tp) == 1:
+            return tp[0]
+    return tp
+
+
+def tuple_pack(obj):
+    warnings.warn('Use sasoptpy.util.pack_to_tuple', DeprecationWarning)
+    return pack_to_tuple(obj)
+
+
 def quick_sum(argv):
     return sasoptpy.util.expr_sum(argv)
 
@@ -335,6 +368,45 @@ def _to_optmodel_loop(keys):
             s += ' and '.join(conds)
         s += '}'
     return s
+
+
+def _recursive_walk(obj, func, attr=None, alt=None):
+    """
+    Calls a given method recursively for given objects
+
+
+    Parameters
+    ----------
+    func : string
+        Name of the method / function be called
+    attr : string, optional
+        An attribute which triggers an alternative method to be called if\
+        exists
+    alt : string, optional
+        Name of the alternative method / function to be called if passed attr\
+        exists for given objects
+
+    Notes
+    -----
+    - This function is for internal consumption.
+
+    """
+    result = []
+    for i in list(obj):
+        if isinstance(i, list):
+            result.append(recursive_walk(i, func))
+        else:
+            if attr is None:
+                m_call = getattr(i, func)
+                result.append(m_call())
+            else:
+                m_attr = getattr(i, attr)
+                if m_attr:
+                    m_call = getattr(i, alt)
+                else:
+                    m_call = getattr(i, func)
+                result.append(m_call())
+    return result
 
 
 def is_set_abstract(arg):
@@ -474,4 +546,70 @@ def get_and_increment_counter(ctrtype):
     ctr = sasoptpy.__ctr[ctrtype]
     ctr[0] = ctr[0] + 1
     return ctr[0]
+
+
+def dict_to_frame(dictobj, cols=None):
+    """
+    Converts dictionaries to DataFrame objects for pretty printing
+
+    Parameters
+    ----------
+    dictobj : dict
+        Dictionary to be converted
+    cols : list, optional
+        Column names
+
+    Returns
+    -------
+    frobj : DataFrame
+        DataFrame representation of the dictionary
+
+    Examples
+    --------
+
+    >>> d = {'coal': {'period1': 1, 'period2': 5, 'period3': 7},
+    >>>      'steel': {'period1': 8, 'period2': 4, 'period3': 3},
+    >>>      'copper': {'period1': 5, 'period2': 7, 'period3': 9}}
+    >>> df = so.dict_to_frame(d)
+    >>> print(df)
+            period1  period2  period3
+    coal          1        5        7
+    copper        5        7        9
+    steel         8        4        3
+
+    """
+    frobj = pd.convert_dict_to_frame(dictobj, cols)
+    return frobj
+
+
+def flatten_tuple(tp):
+    """
+    Flattens nested tuples
+
+    Parameters
+    ----------
+
+    tp : tuple
+        Nested tuple to be flattened
+
+    Returns
+    -------
+    elem : Generator-type
+        A generator-type object representing the flat tuple
+
+    Examples
+    --------
+    >>> tp = (3, 4, (5, (1, 0), 2))
+    >>> print(list(so.flatten_tuple(tp)))
+    [3, 4, 5, 1, 0, 2]
+
+    """
+    for elem in tp:
+        if isinstance(elem, tuple):
+            yield from flatten_tuple(elem)
+        else:
+            yield elem
+
+
+
 

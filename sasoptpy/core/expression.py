@@ -163,7 +163,7 @@ class Expression:
         for mylc in self._linCoef:
             if self._linCoef[mylc]['ref'] is not None:
                 if isinstance(mylc, tuple):
-                    v += sasoptpy.utils._evaluate(self._linCoef[mylc])
+                    v += sasoptpy.core.util._evaluate(self._linCoef[mylc])
                 else:
                     v += self._linCoef[mylc]['val'] * \
                         self._linCoef[mylc]['ref'].get_value()
@@ -217,20 +217,13 @@ class Expression:
 
         """
         if self._name is not None and not name:
-            # Expression has already a name and if no name is passed
+            # Expression has already a name and no name parameter is passed
             return self._name
-        nd = sasoptpy.utils.get_namedict()
-        if self._name is not None:
-            if self._name in nd:
-                del nd[self._name]
+        sasoptpy.util.delete_name(self._name)
         safe_name = sasoptpy.util.assign_name(name, 'expr')
-        if name and name != safe_name:
-            print('NOTE: Name {} is changed to {} to prevent a conflict'
-                  .format(name, safe_name))
-        order = sasoptpy.utils.register_name(self._name, self)
-        if hasattr(self, '_objorder') and not self._objorder:
-            self._objorder = order
         self._name = safe_name
+        order = sasoptpy.util.register_globally(safe_name, self)
+        sasoptpy.util.set_creation_order_if_empty(self, order)
         return self._name
 
     def get_name(self):
@@ -268,7 +261,7 @@ class Expression:
         """
         if self._name is None:
             self._name = sasoptpy.util.assign_name(name, 'expr')
-            self._objorder = sasoptpy.utils.register_name(self._name, self)
+            self._objorder = sasoptpy.util.register_globally(self._name, self)
         self._temp = False
         return self._name
 
@@ -294,7 +287,7 @@ class Expression:
             s += self._operator
             if self._iterkey:
                 if self._operator == 'sum':
-                    s += sasoptpy.utils._to_optmodel_loop(self._iterkey)
+                    s += sasoptpy.util._to_optmodel_loop(self._iterkey)
             s += '('
 
         itemcnt = 0
@@ -328,8 +321,7 @@ class Expression:
 
             # For a list of expressions, a recursive function is called
             if isinstance(ref, list):
-                strlist = sasoptpy.utils.recursive_walk(
-                    ref, func='_expr')
+                strlist = sasoptpy.util._recursive_walk(ref, func='_expr')
             else:
                 strlist = [ref._expr()]
             if optext != ' * ':
