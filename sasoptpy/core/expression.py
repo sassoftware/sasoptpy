@@ -436,12 +436,12 @@ class Expression:
 
             if op:
                 optext = ' {} '.format(
-                    sasoptpy.utils._py_symbol(op))
+                    sasoptpy.util._py_symbol(op))
             else:
                 optext = ' * '
 
             if isinstance(ref, list):
-                strlist = sasoptpy.utils.recursive_walk(
+                strlist = sasoptpy.util.recursive_walk(
                     ref, func='__str__')
             else:
                 strlist = [ref.__str__()]
@@ -454,9 +454,9 @@ class Expression:
             if val == 1 or val == -1:
                 s += '{} '.format(refs)
             elif op:
-                s += '{} * ({}) '.format(sasoptpy.utils.get_in_digit_format(abs(val)), refs)
+                s += '{} * ({}) '.format(sasoptpy.util.get_in_digit_format(abs(val)), refs)
             else:
-                s += '{} * {} '.format(sasoptpy.utils.get_in_digit_format(abs(val)), refs)
+                s += '{} * {} '.format(sasoptpy.util.get_in_digit_format(abs(val)), refs)
             itemcnt += 1
 
         # CONST is always at the end
@@ -471,7 +471,7 @@ class Expression:
                 pass
             else:
                 s += '+ '
-            s += '{} '.format(sasoptpy.utils.get_in_digit_format(abs(val)))
+            s += '{} '.format(sasoptpy.util.get_in_digit_format(abs(val)))
 
         if self._operator:
             if self._iterkey:
@@ -549,7 +549,7 @@ class Expression:
             else:
                 r = self.copy()
                 if r._operator is not None:
-                    r = sasoptpy.utils.wrap(r)
+                    r = sasoptpy.util.wrap_expression(r)
         if isinstance(other, Expression):
             if other._abstract:
                 r._abstract = True
@@ -610,8 +610,8 @@ class Expression:
                     else:  # TODO indexing is not interchangable,
                         if x['val'] * y['val'] != 0:
                             if x.get('op') is None and y.get('op') is None:
-                                newkey = sasoptpy.utils.tuple_pack(i) +\
-                                         sasoptpy.utils.tuple_pack(j)
+                                newkey = sasoptpy.util.pack_to_tuple(i) +\
+                                         sasoptpy.util.pack_to_tuple(j)
                                 target[newkey] = {
                                     'ref': list(x['ref']) + list(y['ref']),
                                     'val': x['val'] * y['val']}
@@ -619,10 +619,10 @@ class Expression:
                                 newkey = (i, j)
                                 x_actual = x['ref']
                                 if 'op' in x and x['op'] is not None:
-                                    x_actual = sasoptpy.utils.wrap(x)
+                                    x_actual = sasoptpy.util.wrap_expression(x)
                                 y_actual = y['ref']
                                 if 'op' in y and y['op'] is not None:
-                                    y_actual = sasoptpy.utils.wrap(y)
+                                    y_actual = sasoptpy.util.wrap_expression(y)
                                 target[newkey] = {
                                     'ref': [x_actual, y_actual],
                                     'val': x['val'] * y['val']}
@@ -668,44 +668,7 @@ class Expression:
             Constraint generated as a result of linear relation
 
         """
-        # If the user provides both an upper and a lower bnd.
-        if isinstance(other, list) and direction_ == 'E':
-            e = self.copy()
-            e._add_coef_value(None, 'CONST', -1*min(other[0], other[1]))
-            ranged_constraint = Constraint(exp=e, direction='E',
-                                           crange=abs(other[1]-other[0]))
-            return ranged_constraint
-        elif not sasoptpy.core.util.is_variable(self):
-            if self._temp and type(self) is Expression:
-                r = self
-            else:
-                if self._operator is None:
-                    r = self.copy()
-                else:
-                    r = Expression(0)
-                    r += self
-            #  TODO r=self could be used whenever expression has no name
-            if np.issubdtype(type(other), np.number):
-                r._linCoef['CONST']['val'] -= other
-            elif isinstance(other, Expression):
-                r -= other
-            generated_constraint = sasoptpy.core.Constraint(exp=r, direction=direction_, crange=0)
-            return generated_constraint
-        else:
-            r = Expression()
-            for v in self._linCoef:
-                r._add_coef_value(self._linCoef[v]['ref'], v,
-                                  self._linCoef[v]['val'])
-            if np.issubdtype(type(other), np.number):
-                r._linCoef['CONST']['val'] -= other
-            else:
-                for v in other._linCoef:
-                    r._add_coef_value(other._linCoef[v]['ref'],
-                                      v, -other._linCoef[v]['val'])
-            generated_constraint = sasoptpy.Constraint(exp=r, direction=direction_,
-                                              crange=0)
-            return generated_constraint
-        return self
+        return sasoptpy.core.util.expression_to_constraint(left=self, relation=direction_, right=other)
 
     def _is_linear(self):
         """

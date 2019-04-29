@@ -9,3 +9,6 @@ def is_abstract_set(arg):
 def is_key_abstract(arg):
     return isinstance(arg, sasoptpy.abstract.SetIterator)
 
+
+def is_parameter(arg):
+    return isinstance(arg, sasoptpy.abstract.Parameter)

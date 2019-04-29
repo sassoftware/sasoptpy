@@ -1,9 +1,11 @@
 
 from collections import OrderedDict
+from itertools import product
 from math import inf
 
 import sasoptpy
 from sasoptpy._libs import (pd, np)
+from sasoptpy.core import (Expression, Variable)
 
 
 class VariableGroup:
@@ -117,8 +119,10 @@ class VariableGroup:
                 self._keyset.append(sasoptpy.util.extract_argument_as_list(arg))
             else:
                 self._keyset.append(sasoptpy.util._extract_argument_as_list(arg))
-                if sasoptpy.util.is_set_abstract(arg):
-                    sasoptpy.core.util.set_group_abstract([self, self._vardict.values()])
+                if not self._abstract and sasoptpy.util.is_set_abstract(arg):
+                    self._abstract = True
+                    for _, v in self._vardict.items():
+                        v._abstract = True
 
         self._shadows = OrderedDict()
         self._set_var_info()
@@ -142,6 +146,9 @@ class VariableGroup:
         """
         return self._name
 
+    def set_abstract(self, abstract=True):
+        self._abstract = abstract
+
     def add_member(self, key, var=None, name=None, vartype=None, lb=None,
                    ub=None, init=None, shadow=False):
         """
@@ -154,7 +161,7 @@ class VariableGroup:
 
         """
 
-        key = sasoptpy.utils.tuple_pack(key)
+        key = sasoptpy.util.pack_to_tuple(key)
         dict_to_add = self._vardict if not shadow else self._shadows
 
         if var is not None:
@@ -231,8 +238,8 @@ class VariableGroup:
         """
         if self._abstract or sasoptpy.util.is_key_abstract(key):
             # TODO check if number of keys correct e.g. x[I], x[1,2] requested
-            tuple_key = sasoptpy.utils.tuple_pack(key)
-            tuple_key = tuple(i for i in sasoptpy.utils.flatten_tuple(tuple_key))
+            tuple_key = sasoptpy.util.pack_to_tuple(key)
+            tuple_key = tuple(i for i in sasoptpy.util.flatten_tuple(tuple_key))
             if tuple_key in self._vardict:
                 return self._vardict[tuple_key]
             elif tuple_key in self._shadows:
@@ -245,9 +252,9 @@ class VariableGroup:
                 shadow = Variable(name=vname, vartype=v._type, lb=v._lb,
                                   ub=v._ub, init=v._init, abstract=True,
                                   shadow=True)
-                ub = sasoptpy.data.ParameterValue(shadow, key=tuple_key,
+                ub = sasoptpy.abstract.ParameterValue(shadow, key=tuple_key,
                                                   suffix='.ub')
-                lb = sasoptpy.data.ParameterValue(shadow, key=tuple_key,
+                lb = sasoptpy.abstract.ParameterValue(shadow, key=tuple_key,
                                                   suffix='.lb')
                 shadow._ub = ub
                 shadow._lb = lb
@@ -265,7 +272,7 @@ class VariableGroup:
             for i, _ in enumerate(k):
                 if k[i] != '*':
                     indices_to_filter.append(i)
-                    filter_values[i] = sasoptpy.utils._list_item(k[i])
+                    filter_values[i] = sasoptpy.util.pack_to_list(k[i])
             for v in self._vardict:
                 eligible = True
                 for f in indices_to_filter:
@@ -311,11 +318,11 @@ class VariableGroup:
             elif isinstance(i, list) or isinstance(i, range):
                 ind_list = []
                 for j in i:
-                    ind_list.append(sasoptpy.util._to_quoted_string(j))
+                    ind_list.append(sasoptpy.util._to_optmodel_quoted_string(j))
                 s += '{{{}}}, '.format(','.join(ind_list))
             elif isinstance(i, dict):
                 s += '{{{}}}, '.format(','.join(
-                    sasoptpy.utils._to_quoted_string(j) for j in i.keys()))
+                    sasoptpy.util._to_optmodel_quoted_string(j) for j in i.keys()))
             else:
                 try:
                     s += '{}, '.format(i)
@@ -356,7 +363,7 @@ class VariableGroup:
                 ubparam = str(v) + '.ub' != str(v._ub)
                 if lbparam or ubparam:
                     s += '\n' + tabs
-                    loop_text = sasoptpy.utils._to_optmodel_loop(i)
+                    loop_text = sasoptpy.util._to_optmodel_loop(i)
                     if loop_text != '':
                         s += 'for' + loop_text + ' '
                     if lbparam:
@@ -382,7 +389,7 @@ class VariableGroup:
                     print(v._init)
                     print(str(v._init))
                     s += '\n' + tabs
-                    loop_text = sasoptpy.utils._to_optmodel_loop(i)
+                    loop_text = sasoptpy.util._to_optmodel_loop(i)
                     if loop_text != '':
                         s += 'for ' + loop_text
                     s += str(v) + ' = ' + str(v._init)
@@ -459,7 +466,7 @@ class VariableGroup:
             iter_key = list()
             for i, a in enumerate(argv):
                 if isinstance(a, str) and a == '*':
-                    si = sasoptpy.data.SetIterator(self._keyset[i])
+                    si = sasoptpy.abstract.SetIterator(self._keyset[i])
                     ind_set.append(si)
                     iter_key.append(si)
                 else:
@@ -480,7 +487,7 @@ class VariableGroup:
                     feas_set.append([a])
             combs = product(*feas_set)
             for i in combs:
-                var_key = sasoptpy.utils.tuple_pack(i)
+                var_key = sasoptpy.util.pack_to_tuple(i)
                 if var_key in self._vardict:
                     r.add(self._vardict[var_key], 1)
             r.set_permanent()
@@ -556,13 +563,13 @@ class VariableGroup:
                 r._linCoef[var._name] = {'ref': var, 'val': vector[i]}
         elif isinstance(vector, pd.Series):
             for key in vector.index:
-                k = sasoptpy.utils.tuple_pack(key)
+                k = sasoptpy.util.pack_to_tuple(key)
                 var = self._vardict[k]
                 r._linCoef[var._name] = {'ref': var, 'val': vector[key]}
         elif isinstance(vector, pd.DataFrame):
-            vectorflat = sasoptpy.utils.flatten_frame(vector)
+            vectorflat = sasoptpy.util.flatten_frame(vector)
             for key in vectorflat.index:
-                k = sasoptpy.utils.tuple_pack(key)
+                k = sasoptpy.util.pack_to_tuple(key)
                 var = self._vardict[k]
                 r._linCoef[var._name] = {'ref': var, 'val': vectorflat[key]}
         else:
@@ -598,7 +605,7 @@ class VariableGroup:
         """
         self._init = init
         for v in self._vardict:
-            inval = sasoptpy.utils.extract_list_value(v, init)
+            inval = sasoptpy.util.extract_list_value(v, init)
             self._vardict[v].set_init = inval
         for v in self._shadows:
             self._shadows[v].set_init = init
@@ -636,10 +643,10 @@ class VariableGroup:
         if ub is not None:
             self._ub = ub
         for v in self._vardict:
-            varlb = sasoptpy.utils.extract_list_value(v, lb)
+            varlb = sasoptpy.util.extract_list_value(v, lb)
             if lb is not None:
                 self._vardict[v].set_bounds(lb=varlb)
-            varub = sasoptpy.utils.extract_list_value(v, ub)
+            varub = sasoptpy.util.extract_list_value(v, ub)
             if ub is not None:
                 self._vardict[v].set_bounds(ub=varub)
 
@@ -654,8 +661,7 @@ class VariableGroup:
             vd = self._vardict
         for k in vd:
             v = self._vardict[k]
-            s += '  [{}: {}]\n'.format(sasoptpy.utils.tuple_unpack(k),
-                                       v)
+            s += '  [{}: {}]\n'.format(sasoptpy.util.get_first_member(k), v)
         s += ']'
         return s
 

@@ -2,11 +2,7 @@
 import warnings
 
 import sasoptpy
-
-
-def set_group_abstract(group):
-    for elem in group:
-        elem.set_abstract(True)
+from sasoptpy._libs import np
 
 
 def is_expression(obj):
@@ -74,4 +70,43 @@ def _evaluate(comp):
         exec("v = val * (ref[0].get_value() {} ref[1].get_value())".format(op), globals(), locals())
 
     return v
+
+
+def expression_to_constraint(left, relation, right):
+
+    if isinstance(right, list) and relation == 'E':
+        e = left.copy()
+        e._add_coef_value(None, 'CONST', -1 * min(right[0], right[1]))
+        ranged_constraint = sasoptpy.core.Constraint(exp=e, direction='E',
+                                                crange=abs(right[1] - right[0]))
+        return ranged_constraint
+    elif not is_variable(left):
+        if left._temp and is_expression(left):
+            r = left
+        else:
+            if left._operator is None:
+                r = left.copy()
+            else:
+                r = Expression(0)
+                r += left
+        #  TODO r=self could be used whenever expression has no name
+        if np.isinstance(type(right), np.number):
+            r._linCoef['CONST']['val'] -= right
+        elif is_expression(right):
+            r -= right
+        generated_constraint = sasoptpy.core.Constraint(exp=r, direction=relation, crange=0)
+        return generated_constraint
+    else:
+        r = sasoptpy.core.Expression()
+        for v in left._linCoef:
+            r._add_coef_value(left._linCoef[v]['ref'], v,
+                              left._linCoef[v]['val'])
+        if np.isinstance(type(right), np.number):
+            r._linCoef['CONST']['val'] -= right
+        else:
+            for v in right._linCoef:
+                r._add_coef_value(right._linCoef[v]['ref'],
+                                  v, -right._linCoef[v]['val'])
+        generated_constraint = sasoptpy.core.Constraint(exp=r, direction=relation, crange=0)
+        return generated_constraint
 

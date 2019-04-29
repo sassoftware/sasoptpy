@@ -31,7 +31,9 @@ from sasoptpy._libs import *
 import sasoptpy.util
 sasoptpy.util.load_package_globals()
 
-from sasoptpy.util import (quick_sum, reset, reset_globals)
+from sasoptpy.util import (
+    quick_sum, reset, reset, reset_globals, read_frame, flatten_frame,
+    get_solution_table, dict_to_frame, read_table, exp_range)
 
 from sasoptpy.structure import (inside_container, containable)
 
@@ -39,6 +41,7 @@ from sasoptpy.core import Expression
 from sasoptpy.core import (Variable, VariableGroup, Constraint, ConstraintGroup, Model)
 
 import sasoptpy.abstract
+from sasoptpy.abstract import (Parameter, ImplicitVar)
 
 import sasoptpy.config
 sasoptpy.config._load_default_config()

@@ -182,7 +182,7 @@ class ConstraintGroup:
         item : Constraint
             Reference to the constraint
         """
-        if isinstance(key, sasoptpy.data.SetIterator):
+        if isinstance(key, sasoptpy.abstract.SetIterator):
             tuple_key = sasoptpy.util.pack_to_tuple(key)
             tuple_key = tuple(i for i in sasoptpy.util.flatten_tuple(tuple_key))
             if tuple_key in self._condict:

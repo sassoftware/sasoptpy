@@ -163,7 +163,7 @@ class Model:
             ub = inf
         # Existing or new variable
         if var is not None:
-            if isinstance(var, sasoptpy.components.Variable):
+            if sasoptpy.core.util.is_variable(var):
                 self._variables.append(var)
             else:
                 print('ERROR: Use the appropriate argument name for variable.')
@@ -225,7 +225,7 @@ class Model:
             vartype = sasoptpy.CONT
 
         if vg is not None:
-            if isinstance(vg, sasoptpy.components.VariableGroup):
+            if isinstance(vg, sasoptpy.core.VariableGroup):
                 for i in vg:
                     self._variables.append(i)
             else:
@@ -354,7 +354,7 @@ class Model:
 
         """
         if cg is not None:
-            if isinstance(cg, sasoptpy.components.ConstraintGroup):
+            if isinstance(cg, sasoptpy.core.ConstraintGroup):
                 for i in cg:
                     self._constraints.append(i)
                     self._constraintDict[i._name] = i
@@ -484,7 +484,7 @@ class Model:
           one, implicit variables may appear in generated OPTMODEL codes.
 
         """
-        iv = sasoptpy.data.ImplicitVar(argv=argv, name=name)
+        iv = sasoptpy.abstract.ImplicitVar(argv=argv, name=name)
         self._impvars.append(iv)
         return iv
 
@@ -552,9 +552,9 @@ class Model:
         - The first parameter, `statement` could be a Statement object when internally used.
 
         """
-        if isinstance(statement, sasoptpy.data.Statement):
+        if isinstance(statement, sasoptpy.abstract.OldStatement):
             self._statements.append(statement)
-        elif isinstance(statement, sasoptpy.components.Expression):
+        elif isinstance(statement, sasoptpy.core.Expression):
             self._statements.append(
                 sasoptpy.data.Statement(
                     str(statement), after_solve=after_solve))
@@ -563,7 +563,7 @@ class Model:
                 print('WARNING: Moving print statement after solve.')
                 after_solve = True
             self._statements.append(
-                sasoptpy.data.Statement(statement, after_solve=after_solve))
+                sasoptpy.abstract.OldStatement(statement, after_solve=after_solve))
         elif isinstance(statement, sasoptpy.structures.Statement):
             self._statements.append(statement)
 
@@ -926,21 +926,21 @@ params=[{'param': value, 'column': 'value'}])
         for _, c in enumerate(argv):
             if c is None or type(c) == pd.DataFrame or type(c) == pd.Series:
                 continue
-            elif isinstance(c, sasoptpy.components.Variable):
+            elif isinstance(c, sasoptpy.core.Variable):
                 self.add_variable(var=c)
-            elif isinstance(c, sasoptpy.components.VariableGroup):
+            elif isinstance(c, sasoptpy.core.VariableGroup):
                 self.add_variables(vg=c)
-            elif isinstance(c, sasoptpy.components.Constraint):
+            elif isinstance(c, sasoptpy.core.Constraint):
                 self.add_constraint(c)
-            elif isinstance(c, sasoptpy.components.ConstraintGroup):
+            elif isinstance(c, sasoptpy.core.ConstraintGroup):
                 self.add_constraints(argv=None, cg=c)
-            elif isinstance(c, sasoptpy.data.Set):
+            elif isinstance(c, sasoptpy.abstract.Set):
                 self._sets.append(c)
-            elif isinstance(c, sasoptpy.data.Parameter):
+            elif isinstance(c, sasoptpy.abstract.Parameter):
                 self._parameters.append(c)
-            elif isinstance(c, sasoptpy.data.Statement):
+            elif isinstance(c, sasoptpy.abstract.OldStatement):
                 self._statements.append(c)
-            elif isinstance(c, sasoptpy.data.ExpressionDict):
+            elif isinstance(c, sasoptpy.abstract.ExpressionDict):
                 self._impvars.append(c)
             elif isinstance(c, list):
                 for s in c:
@@ -1023,7 +1023,7 @@ params=[{'param': value, 'column': 'value'}])
             if name is not None:
                 obj = expression.copy()
             else:
-                obj = sasoptpy.utils.get_mutable(expression)
+                obj = sasoptpy.util.get_mutable(expression)
         else:
             obj = Expression(expression)
 
@@ -1091,9 +1091,9 @@ params=[{'param': value, 'column': 'value'}])
 
         """
         if self._objval:
-            return sasoptpy.utils.get_in_digit_format(self._objval)
+            return sasoptpy.util.get_in_digit_format(self._objval)
         elif self.response:
-            return sasoptpy.utils.get_in_digit_format(self.response.objective)
+            return sasoptpy.util.get_in_digit_format(self.response.objective)
         else:
             try:
                 return self._objective.get_value()
@@ -1223,7 +1223,7 @@ params=[{'param': value, 'column': 'value'}])
         -5.0
 
         """
-        if isinstance(var, sasoptpy.components.Variable):
+        if isinstance(var, sasoptpy.core.Variable):
             varname = var._name
         else:
             varname = var
@@ -1642,7 +1642,7 @@ params=[{'param': value, 'column': 'value'}])
                 var_con.setdefault(v, []).append(c._name)
         # Check if objective has a constant field
         if constant and self._objective._linCoef['CONST']['val'] != 0:
-            obj_constant = self.add_variable(name=sasoptpy.utils.check_name(
+            obj_constant = self.add_variable(name=sasoptpy.util.check_name(
                 'obj_constant', 'var'))
             constant_value = self._objective._linCoef['CONST']['val']
             obj_constant.set_bounds(lb=constant_value, ub=constant_value)
@@ -2566,7 +2566,7 @@ params=[{'param': value, 'column': 'value'}])
                             self._variableDict[str_safe]._value = row['value']
                         else:
                             # Search in vargroups for the original name
-                            sasoptpy.utils._set_abstract_values(row)
+                            sasoptpy.util._set_abstract_values(row)
 
                 # Capturing dual values for LP problems
                 if ptype == 1:
