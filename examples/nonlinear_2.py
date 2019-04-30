@@ -1,5 +1,5 @@
 import sasoptpy as so
-import sasoptpy.math as sm
+import sasoptpy.abstract.math as sm
 
 
 def test(cas_conn):
