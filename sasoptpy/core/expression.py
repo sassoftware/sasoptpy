@@ -460,9 +460,8 @@ class Expression:
             itemcnt += 1
 
         # CONST is always at the end
-        from sasoptpy.components import Constraint
         if itemcnt == 0 or (self._linCoef['CONST']['val'] != 0 and
-                            not isinstance(self, Constraint)):
+                            not sasoptpy.core.util.is_constraint(self)):
             val = self._linCoef['CONST']['val']
             csign = copysign(1, val)
             if csign < 0:
@@ -477,7 +476,7 @@ class Expression:
             if self._iterkey:
                 forlist = []
                 for i in self._iterkey:
-                    if isinstance(i, sasoptpy.data.SetIterator):
+                    if isinstance(i, sasoptpy.abstract.SetIterator):
                         if i._multi:
                             forlist.append('for ({}) in {}'.format(
                                 i._expr(), i._set._name))

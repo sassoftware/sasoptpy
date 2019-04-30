@@ -440,13 +440,13 @@ class Model:
 
         """
         if len(argv) == 0:
-            p = sasoptpy.data.Parameter(
+            p = sasoptpy.abstract.Parameter(
                 name, keys=(), init=init, value=value, p_type=p_type)
             self._parameters.append(p)
             return p['']
         else:
             keylist = list(argv)
-            p = sasoptpy.data.Parameter(
+            p = sasoptpy.abstract.Parameter(
                 name, keys=keylist, init=init, value=value, p_type=p_type)
             self._parameters.append(p)
             return p

@@ -47,8 +47,6 @@ import sasoptpy.config
 sasoptpy.config._load_default_config()
 sasoptpy.util.load_function_containers()
 
-import sasoptpy.abstract.math as math
-import sasoptpy.interface.api as api
 
 #from sasoptpy.utils import load_package_globals
 #load_package_globals()
