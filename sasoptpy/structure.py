@@ -39,5 +39,5 @@ def containable(func):
                 raise NotImplementedError('Container support for {} is not implemented'.format(func.__name__))
             statement_func(*args, **kwargs)
         else:
-            func(*args, **kwargs)
+            return func(*args, **kwargs)
     return wrapper
