@@ -30,8 +30,9 @@ import warnings
 import numpy as np
 import pandas as pd
 
-import sasoptpy.components
-import sasoptpy.utils
+import sasoptpy
+import sasoptpy.util
+from sasoptpy.core import (Expression, Variable, VariableGroup, Constraint, ConstraintGroup)
 
 
 class Model:
@@ -60,13 +61,13 @@ class Model:
     """
 
     def __init__(self, name, session=None):
-        self._name = sasoptpy.utils.check_name(name, 'model')
+        self._name = sasoptpy.util.assign_name(name, 'model')
         self._session = session
         self._variables = []
         self._constraints = []
         self._vargroups = []
         self._congroups = []
-        self._objective = sasoptpy.components.Expression(0, name=name+'_obj')
+        self._objective = Expression(0, name=name+'_obj')
         self._datarows = []
         self._sense = sasoptpy.MIN
         self._variableDict = {}
@@ -87,7 +88,7 @@ class Model:
         self._parameters = []
         self._impvars = []
         self._statements = []
-        self._objorder = sasoptpy.utils.register_name(name, self)
+        self._objorder = sasoptpy.util.register_globally(name, self)
         self.response = None
         print('NOTE: Initialized model {}.'.format(name))
 
@@ -162,12 +163,12 @@ class Model:
             ub = inf
         # Existing or new variable
         if var is not None:
-            if isinstance(var, sasoptpy.components.Variable):
+            if sasoptpy.core.util.is_variable(var):
                 self._variables.append(var)
             else:
                 print('ERROR: Use the appropriate argument name for variable.')
         else:
-            var = sasoptpy.components.Variable(name, vartype, lb, ub, init)
+            var = Variable(name, vartype, lb, ub, init)
             self._variables.append(var)
         self._variableDict[var._name] = var
         return var
@@ -224,20 +225,21 @@ class Model:
             vartype = sasoptpy.CONT
 
         if vg is not None:
-            if isinstance(vg, sasoptpy.components.VariableGroup):
+            if isinstance(vg, sasoptpy.core.VariableGroup):
                 for i in vg:
                     self._variables.append(i)
             else:
                 print('ERROR: Cannot add variable group of type {}'.format(
                     type(vg)))
         else:
-            name = sasoptpy.utils.check_name(name, 'var')
+            name = sasoptpy.util.assign_name(name, 'var')
             if abstract is None:
-                abstract = isinstance(argv[0], sasoptpy.data.Set)
-            vg = sasoptpy.components.VariableGroup(*argv, name=name,
-                                                   vartype=vartype,
-                                                   lb=lb, ub=ub, init=init,
-                                                   abstract=abstract)
+                try:
+                    import sasoptpy.abstract as ab
+                    abstract = ab.is_abstract_set(argv[0])
+                except ModuleNotFoundError:
+                    abstract = False
+            vg = VariableGroup(*argv, name=name, vartype=vartype, lb=lb, ub=ub, init=init, abstract=abstract)
             for i in vg:
                 self._variables.append(i)
         for i in vg:
@@ -279,16 +281,16 @@ class Model:
         :class:`Constraint`, :meth:`Model.include`
 
         """
-        if isinstance(c, sasoptpy.components.Constraint):
+        if sasoptpy.core.util.is_constraint(c):
             # Do not add if the constraint is not valid
             if ((c._direction == 'L' and c._linCoef['CONST']['val'] == -inf) or
                (c._direction == 'G' and c._linCoef['CONST']['val'] == inf)):
                 return None
             self._constraints.append(c)
             if name is not None or (name is None and c._name is None):
-                name = sasoptpy.utils.check_name(name, 'con')
+                name = sasoptpy.util.assign_name(name, 'con')
                 c._name = name
-                c._objorder = sasoptpy.utils.register_name(name, c)
+                c._objorder = sasoptpy.util.register_globally(name, c)
             self._constraintDict[c._name] = c
         else:
             raise Exception('Expression is not a constraint!')
@@ -352,7 +354,7 @@ class Model:
 
         """
         if cg is not None:
-            if isinstance(cg, sasoptpy.components.ConstraintGroup):
+            if isinstance(cg, sasoptpy.core.ConstraintGroup):
                 for i in cg:
                     self._constraints.append(i)
                     self._constraintDict[i._name] = i
@@ -363,17 +365,17 @@ class Model:
             return cg
         else:
             if type(argv) == list or type(argv) == GeneratorType:
-                name = sasoptpy.utils.check_name(name, 'con')
-                cg = sasoptpy.components.ConstraintGroup(argv, name=name)
+                name = sasoptpy.util.assign_name(name, 'con')
+                cg = ConstraintGroup(argv, name=name)
                 for i in cg:
                     self._constraints.append(i)
                     self._constraintDict[i._name] = i
                 self._congroups.append(cg)
                 return cg
-            elif type(argv) == sasoptpy.components.Constraint:
+            elif sasoptpy.core.util.is_constraint(argv):
                 print('WARNING: add_constraints argument is a single' +
                       ' constraint, inserting as a single constraint')
-                name = sasoptpy.utils.check_name(name, 'con')
+                name = sasoptpy.util.assign_name(name, 'con')
                 c = self.add_constraint(c=argv, name=name)
                 return c
 
@@ -409,7 +411,7 @@ class Model:
         set K = 1..N;
 
         """
-        newset = sasoptpy.data.Set(name, init=init, value=value, settype=settype)
+        newset = sasoptpy.abstract.Set(name, init=init, value=value, settype=settype)
         self._sets.append(newset)
         return newset
 
@@ -438,13 +440,13 @@ class Model:
 
         """
         if len(argv) == 0:
-            p = sasoptpy.data.Parameter(
+            p = sasoptpy.abstract.Parameter(
                 name, keys=(), init=init, value=value, p_type=p_type)
             self._parameters.append(p)
             return p['']
         else:
             keylist = list(argv)
-            p = sasoptpy.data.Parameter(
+            p = sasoptpy.abstract.Parameter(
                 name, keys=keylist, init=init, value=value, p_type=p_type)
             self._parameters.append(p)
             return p
@@ -482,9 +484,32 @@ class Model:
           one, implicit variables may appear in generated OPTMODEL codes.
 
         """
-        iv = sasoptpy.data.ImplicitVar(argv=argv, name=name)
+        iv = sasoptpy.abstract.ImplicitVar(argv=argv, name=name)
         self._impvars.append(iv)
         return iv
+
+    def insert_for_loop(self, func, variable, over_set):
+        """
+        Schedules a `for` loop to be run on the server-side
+
+        Parameters
+        ----------
+        func : Function
+            Python function including operations within the 'for loop'
+        variable : Parameter or SetIterator
+            Variable value to be iterated over given set
+        over : Set
+            Set to be looped over
+        """
+
+        loop = sasoptpy.structures.ForLoopStatement(func, variable, over_set)
+        #self._statements.append(loop)
+        self.add_statement(loop)
+        with sasoptpy.structures.inside_container(loop):
+            func(loop.actual_variable)
+
+    def insert_literal_statement(self, statement):
+        pass
 
     def add_statement(self, statement, after_solve=False):
         """
@@ -527,18 +552,20 @@ class Model:
         - The first parameter, `statement` could be a Statement object when internally used.
 
         """
-        if isinstance(statement, sasoptpy.data.Statement):
+        if isinstance(statement, sasoptpy.abstract.OldStatement):
             self._statements.append(statement)
-        elif isinstance(statement, sasoptpy.components.Expression):
+        elif isinstance(statement, sasoptpy.core.Expression):
             self._statements.append(
-                sasoptpy.data.Statement(
+                sasoptpy.abstract.Statement(
                     str(statement), after_solve=after_solve))
         elif isinstance(statement, str):
             if 'print' in statement and not after_solve:
                 print('WARNING: Moving print statement after solve.')
                 after_solve = True
             self._statements.append(
-                sasoptpy.data.Statement(statement, after_solve=after_solve))
+                sasoptpy.abstract.OldStatement(statement, after_solve=after_solve))
+        elif isinstance(statement, sasoptpy.structures.Statement):
+            self._statements.append(statement)
 
     def read_data(self, table, key_set, key_cols=None, option='', params=None):
         """
@@ -546,7 +573,7 @@ class Model:
 
         Parameters
         ----------
-        table : :class:`swat.cas.table.CASTable`
+        table : :class:`swat.cas.table.CASTable` or str
             The CAS table to be read to sets and parameters
         key_set : :class:`Set`
             Set object to be read as the key (index)
@@ -582,7 +609,7 @@ class Model:
 
         See also
         --------
-        :func:`sasoptpy.utils.read_data`
+        :func:`sasoptpy.util.read_data`
 
         Examples
         --------
@@ -610,7 +637,7 @@ params=[{'param': value, 'column': 'value'}])
         if params is None:
             params = []
 
-        s = sasoptpy.utils.read_data(
+        s = sasoptpy.util.read_data(
             table=table, key_set=key_set, key_cols=key_cols, option=option,
             params=params)
         self._statements.append(s)
@@ -696,19 +723,19 @@ params=[{'param': value, 'column': 'value'}])
         if key_type is None:
             key_type = ['num']
 
-        objs = sasoptpy.utils.read_table(
+        objs = sasoptpy.util.read_table(
             table=table, session=self._session,
             key=key, key_type=key_type, key_name=key_name,
             columns=columns, col_types=col_types, col_names=col_names,
             upload=upload, casout=casout, ref=True)
 
-        if isinstance(objs[0], sasoptpy.data.Set):
+        if isinstance(objs[0], sasoptpy.abstract.Set):
             self._sets.append(objs[0])
         for i in objs[1]:
-            if isinstance(i, sasoptpy.data.Parameter):
+            if isinstance(i, sasoptpy.abstract.Parameter):
                 self._parameters.append(i)
         if objs[2] is not None and isinstance(objs[2],
-                                              sasoptpy.data.Statement):
+                                              sasoptpy.abstract.Statement):
                 self._statements.append(objs[2])
 
         if objs[1]:
@@ -748,6 +775,7 @@ params=[{'param': value, 'column': 'value'}])
                 del self._variables[i]
                 return
 
+    @sasoptpy.containable
     def drop_constraint(self, constraint):
         """
         Drops a constraint from the model
@@ -898,21 +926,21 @@ params=[{'param': value, 'column': 'value'}])
         for _, c in enumerate(argv):
             if c is None or type(c) == pd.DataFrame or type(c) == pd.Series:
                 continue
-            elif isinstance(c, sasoptpy.components.Variable):
+            elif isinstance(c, sasoptpy.core.Variable):
                 self.add_variable(var=c)
-            elif isinstance(c, sasoptpy.components.VariableGroup):
+            elif isinstance(c, sasoptpy.core.VariableGroup):
                 self.add_variables(vg=c)
-            elif isinstance(c, sasoptpy.components.Constraint):
+            elif isinstance(c, sasoptpy.core.Constraint):
                 self.add_constraint(c)
-            elif isinstance(c, sasoptpy.components.ConstraintGroup):
+            elif isinstance(c, sasoptpy.core.ConstraintGroup):
                 self.add_constraints(argv=None, cg=c)
-            elif isinstance(c, sasoptpy.data.Set):
+            elif isinstance(c, sasoptpy.abstract.Set):
                 self._sets.append(c)
-            elif isinstance(c, sasoptpy.data.Parameter):
+            elif isinstance(c, sasoptpy.abstract.Parameter):
                 self._parameters.append(c)
-            elif isinstance(c, sasoptpy.data.Statement):
+            elif isinstance(c, sasoptpy.abstract.OldStatement):
                 self._statements.append(c)
-            elif isinstance(c, sasoptpy.data.ExpressionDict):
+            elif isinstance(c, sasoptpy.abstract.ExpressionDict):
                 self._impvars.append(c)
             elif isinstance(c, list):
                 for s in c:
@@ -934,6 +962,7 @@ params=[{'param': value, 'column': 'value'}])
                     self._constraints.append(s)
                 self._objective = c._objective
 
+    @sasoptpy.containable
     def set_objective(self, expression, sense=None, name=None, multiobj=False):
         """
         Sets the objective function for the model
@@ -990,13 +1019,13 @@ params=[{'param': value, 'column': 'value'}])
             sense = sasoptpy.MIN
 
         self._linCoef = {}
-        if isinstance(expression, sasoptpy.components.Expression):
+        if isinstance(expression, Expression):
             if name is not None:
                 obj = expression.copy()
             else:
-                obj = sasoptpy.utils.get_mutable(expression)
+                obj = sasoptpy.util.get_mutable(expression)
         else:
-            obj = sasoptpy.components.Expression(expression)
+            obj = Expression(expression)
 
         if self._objective is not None and self._objective._keep:
             st = '{} {} = '.format(self._sense.lower(), self._objective._name)
@@ -1009,8 +1038,8 @@ params=[{'param': value, 'column': 'value'}])
 
         self._objective = obj
         if self._objective._name is None:
-            name = sasoptpy.utils.check_name(name, 'obj')
-            self._objective._objorder = sasoptpy.utils.register_name(
+            name = sasoptpy.util.assign_name(name, 'obj')
+            self._objective._objorder = sasoptpy.util.register_globally(
                 name, self._objective)
             self._objective._name = name
         self._sense = sense
@@ -1062,9 +1091,9 @@ params=[{'param': value, 'column': 'value'}])
 
         """
         if self._objval:
-            return sasoptpy.utils.get_in_digit_format(self._objval)
+            return sasoptpy.util.get_in_digit_format(self._objval)
         elif self.response:
-            return sasoptpy.utils.get_in_digit_format(self.response.objective)
+            return sasoptpy.util.get_in_digit_format(self.response.objective)
         else:
             try:
                 return self._objective.get_value()
@@ -1194,7 +1223,7 @@ params=[{'param': value, 'column': 'value'}])
         -5.0
 
         """
-        if isinstance(var, sasoptpy.components.Variable):
+        if isinstance(var, sasoptpy.core.Variable):
             varname = var._name
         else:
             varname = var
@@ -1613,7 +1642,7 @@ params=[{'param': value, 'column': 'value'}])
                 var_con.setdefault(v, []).append(c._name)
         # Check if objective has a constant field
         if constant and self._objective._linCoef['CONST']['val'] != 0:
-            obj_constant = self.add_variable(name=sasoptpy.utils.check_name(
+            obj_constant = self.add_variable(name=sasoptpy.util.check_name(
                 'obj_constant', 'var'))
             constant_value = self._objective._linCoef['CONST']['val']
             obj_constant.set_bounds(lb=constant_value, ub=constant_value)
@@ -2169,6 +2198,7 @@ params=[{'param': value, 'column': 'value'}])
         else:
             return None
 
+    @sasoptpy.containable
     def solve(self, options=None, submit=True, name=None,
               frame=False, drop=False, replace=True, primalin=False,
               milp=None, lp=None, verbose=False):
@@ -2536,7 +2566,7 @@ params=[{'param': value, 'column': 'value'}])
                             self._variableDict[str_safe]._value = row['value']
                         else:
                             # Search in vargroups for the original name
-                            sasoptpy.utils._set_abstract_values(row)
+                            sasoptpy.util._set_abstract_values(row)
 
                 # Capturing dual values for LP problems
                 if ptype == 1:

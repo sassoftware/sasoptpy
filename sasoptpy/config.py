@@ -16,7 +16,7 @@
 #  limitations under the License.
 #
 
-import sasoptpy as so
+import sasoptpy
 
 
 class Config:
@@ -66,6 +66,13 @@ def _get_default_config():
     config['verbosity'] = 3
     config['max_digits'] = 12
     config['valid_outcomes'] = ['OPTIMAL', 'ABSFCONV', 'BEST_FEASIBLE']
-    config['default_sense'] = so.MIN
+    config['default_sense'] = sasoptpy.MIN
+    config['submit_realtime'] = True
 
     return config
+
+
+def _load_default_config():
+    sasoptpy.config = Config()
+    sasoptpy.default_config_keys = sasoptpy.config.keys
+

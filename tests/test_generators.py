@@ -108,7 +108,7 @@ class TestGenerators(unittest.TestCase):
         sys.stderr = NullWriter()
 
     def tearDown(self):
-        so.reset_globals()
+        so.reset()
 
     def check_results(self):
         sys.stdout = self.old_stdout
