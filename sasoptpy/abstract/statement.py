@@ -25,12 +25,12 @@ import sasoptpy
 class Statement(ABC):
 
     def __init__(self):
-        import sasoptpy.utils
+        import sasoptpy.util
         self.parent = None
         self.header = OrderedDict()
         self.elements = list()
         self.workspace = dict()
-        self._objorder = sasoptpy.utils.register_name(None, self)
+        self._objorder = sasoptpy.util.register_globally(None, self)
         # TODO Remove '_after' after arranging data/structrues py files
         self._after = False
 
@@ -248,8 +248,8 @@ class ForLoopStatement(Statement):
 
     def _generate_actual_variable(self):
         import sasoptpy.data
-        if isinstance(self.variable, sasoptpy.data.ParameterValue):
-            self.actual_variable = sasoptpy.data.SetIterator(self.over_set)
+        if isinstance(self.variable, sasoptpy.abstract.ParameterValue):
+            self.actual_variable = sasoptpy.abstract.SetIterator(self.over_set)
         else:
             self.actual_variable = self.variable
 

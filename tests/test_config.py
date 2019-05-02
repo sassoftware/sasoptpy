@@ -101,7 +101,8 @@ class TestConfig(unittest.TestCase):
         self.assertEqual(list_of_keys_via_iter, list_of_keys_via_keys)
 
     def tearDown(self):
-        so.reset_globals()
+        so.reset()
+
 
 if __name__ == '__main__':
     unittest.main()

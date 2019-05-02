@@ -187,7 +187,7 @@ class ImplicitVar(ExpressionDict):
     impvar z {i_1 in I} = x + i_1 * y[i_1];
     >>> for i in z:
     >>>     print(i, z[i])
-    (sasoptpy.data.SetIterator(name=i_1, ...),) x + i_1 * y[i_1]
+    (sasoptpy.abstract.SetIterator(name=i_1, ...),) x + i_1 * y[i_1]
 
     """
 

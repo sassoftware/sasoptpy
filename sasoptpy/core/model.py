@@ -411,7 +411,7 @@ class Model:
         set K = 1..N;
 
         """
-        newset = sasoptpy.data.Set(name, init=init, value=value, settype=settype)
+        newset = sasoptpy.abstract.Set(name, init=init, value=value, settype=settype)
         self._sets.append(newset)
         return newset
 
@@ -556,7 +556,7 @@ class Model:
             self._statements.append(statement)
         elif isinstance(statement, sasoptpy.core.Expression):
             self._statements.append(
-                sasoptpy.data.Statement(
+                sasoptpy.abstract.Statement(
                     str(statement), after_solve=after_solve))
         elif isinstance(statement, str):
             if 'print' in statement and not after_solve:
@@ -609,7 +609,7 @@ class Model:
 
         See also
         --------
-        :func:`sasoptpy.utils.read_data`
+        :func:`sasoptpy.util.read_data`
 
         Examples
         --------
@@ -637,7 +637,7 @@ params=[{'param': value, 'column': 'value'}])
         if params is None:
             params = []
 
-        s = sasoptpy.utils.read_data(
+        s = sasoptpy.util.read_data(
             table=table, key_set=key_set, key_cols=key_cols, option=option,
             params=params)
         self._statements.append(s)
@@ -723,19 +723,19 @@ params=[{'param': value, 'column': 'value'}])
         if key_type is None:
             key_type = ['num']
 
-        objs = sasoptpy.utils.read_table(
+        objs = sasoptpy.util.read_table(
             table=table, session=self._session,
             key=key, key_type=key_type, key_name=key_name,
             columns=columns, col_types=col_types, col_names=col_names,
             upload=upload, casout=casout, ref=True)
 
-        if isinstance(objs[0], sasoptpy.data.Set):
+        if isinstance(objs[0], sasoptpy.abstract.Set):
             self._sets.append(objs[0])
         for i in objs[1]:
-            if isinstance(i, sasoptpy.data.Parameter):
+            if isinstance(i, sasoptpy.abstract.Parameter):
                 self._parameters.append(i)
         if objs[2] is not None and isinstance(objs[2],
-                                              sasoptpy.data.Statement):
+                                              sasoptpy.abstract.Statement):
                 self._statements.append(objs[2])
 
         if objs[1]:

@@ -399,7 +399,7 @@ class Set(sasoptpy.Expression):
         return(s)
 
     def __repr__(self):
-        s = 'sasoptpy.data.Set(name={}, settype={})'.format(
+        s = 'sasoptpy.abstract.Set(name={}, settype={})'.format(
             self._name, self._type)
         return(s)
 
@@ -547,7 +547,7 @@ class SetIterator(sasoptpy.Expression):
         return self._name
 
     def __repr__(self):
-        s = 'sasoptpy.data.SetIterator(name={}, initset={}, conditions=['.\
+        s = 'sasoptpy.abstract.SetIterator(name={}, initset={}, conditions=['.\
             format(self._name, self._set._name)
         for i in self._conditions:
             s += '{{\'type\': \'{}\', \'key\': \'{}\'}}, '.format(

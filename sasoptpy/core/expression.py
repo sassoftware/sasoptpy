@@ -61,7 +61,7 @@ class Expression:
     >>> import sasoptpy.math as sm
     >>> f = sm.sin(x) + sm.min(y[1],1) ** 2
     >>> print(type(f))
-    <class 'sasoptpy.components.Expression'>
+    <class 'sasoptpy.core.Expression'>
     >>> print(f)
     sin(x) + (min(y[1] , 1)) ** (2)
 

@@ -24,9 +24,6 @@ This file includes static methods and imports.
 
 """
 
-# Package config
-
-# Imports
 from sasoptpy._libs import *
 import sasoptpy.util
 sasoptpy.util.load_package_globals()
@@ -48,18 +45,5 @@ from sasoptpy.config import Config
 sasoptpy.config._load_default_config()
 sasoptpy.util.load_function_containers()
 
-
-#from sasoptpy.utils import load_package_globals
-#load_package_globals()
-
-#from sasoptpy.utils import *
-#from sasoptpy.model import *
-#from sasoptpy.components import *
-#from sasoptpy.data import *
-
-# Optional items
-#  sasoptpy.math
-#  sasoptpy.api
-
 name = "sasoptpy"
-__version__ = '1.0.0.dev0'
+__version__ = '1.0.0.dev1'
