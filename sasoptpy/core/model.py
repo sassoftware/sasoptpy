@@ -1928,7 +1928,7 @@ params=[{'param': value, 'column': 'value'}])
                 if id(cm) == id(self._objective):
                     s += '{} {} = '.format(self._sense.lower(),
                                            self._objective._name)
-                    s += self._objective._defn() + '; \n'
+                    s += self._objective._expr() + '; \n'
                 elif (cm._objorder > 0 and
                       not (hasattr(cm, '_shadow') and cm._shadow) and
                       not (hasattr(cm, '_parent') and cm._parent)):
