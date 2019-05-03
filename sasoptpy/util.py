@@ -1391,3 +1391,11 @@ def exp_range(start, stop, step=1):
     return sasoptpy.abstract.Set(name=setname)
 
 
+def get_python_symbol(symbol):
+    if symbol == '^':
+        return '**'
+    else:
+        return symbol
+
+
+

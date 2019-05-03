@@ -93,8 +93,7 @@ class Expression:
             elif np.issubdtype(type(exp), np.number):
                 self._linCoef['CONST'] = {'ref': None, 'val': exp}
             else:
-                print('WARNING: An invalid type is passed to create an ' +
-                      'Expression: {}'.format(type(exp)))
+                raise TypeError('ERROR: Invalid type for expression: {}, {}'.format(exp, type(exp)))
         self._temp = temp
         self._value = 0
         self._operator = None
@@ -171,7 +170,7 @@ class Expression:
                 v += self._linCoef[mylc]['val']
         if self._operator:
             try:
-                import sasoptpy.math as sm
+                import sasoptpy.abstract.math as sm
                 if self._arguments:
                     vals = [i.get_value() if isinstance(i, Expression) else i for i in self._arguments]
                     v = sm.func_equivalent[self._operator](v, *vals)
@@ -436,12 +435,12 @@ class Expression:
 
             if op:
                 optext = ' {} '.format(
-                    sasoptpy.util._py_symbol(op))
+                    sasoptpy.util.get_python_symbol(op))
             else:
                 optext = ' * '
 
             if isinstance(ref, list):
-                strlist = sasoptpy.util.recursive_walk(
+                strlist = sasoptpy.util._recursive_walk(
                     ref, func='__str__')
             else:
                 strlist = [ref.__str__()]
