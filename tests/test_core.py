@@ -88,24 +88,6 @@ class TestExpression(unittest.TestCase):
         exp_repr = repr(e)
         self.assertEqual(exp_repr, 'sasoptpy.Expression(exp = (x) ** (2) + 3 * x - 5, name=\'e\')')
 
-    def test_optmodel_definition(self):
-        # Regular
-        idx = [1,2,3]
-        x = so.VariableGroup(idx, name='x')
-        e = so.quick_sum(x[i] for i in idx)
-        self.assertEqual(e._defn(), 'x[1] + x[2] + x[3]')
-
-        # Symbolic
-        import sasoptpy.abstract.math as sm
-        y = so.Variable(name='y')
-        e = sm.min(y, sm.sqrt(y), 10)
-        self.assertEqual(e._defn(), 'min(y , sqrt(y), 10)')
-
-        # Abstract
-        I = so.abstract.Set(name='I')
-        e = so.Expression(so.quick_sum(i * x[i] for i in I), name='e')
-        self.assertEqual(e._defn(), 'sum {i_1 in I}(i_1 * x[i_1])')
-
     def tearDown(self):
         so.reset()
 

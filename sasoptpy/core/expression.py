@@ -382,19 +382,6 @@ class Expression:
         s += ')'
         return s
 
-    def _defn(self):
-        if self._operator is None:
-            s = self._expr()
-        else:
-            s = '{}'.format(self._operator)
-            if self._iterkey != []:
-                s += '{'
-                s += ', '.join([i._defn() for i in list(self._iterkey)])
-                s += '}'
-            s += '('
-            s += self._expr()
-            s += ')'
-        return s
 
     def __str__(self):
         """

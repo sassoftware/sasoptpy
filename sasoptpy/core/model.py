@@ -1029,7 +1029,7 @@ params=[{'param': value, 'column': 'value'}])
 
         if self._objective is not None and self._objective._keep:
             st = '{} {} = '.format(self._sense.lower(), self._objective._name)
-            st += self._objective._defn() + ';'
+            st += self._objective._expr() + ';'
             self.add_statement(st)
 
         if multiobj:
