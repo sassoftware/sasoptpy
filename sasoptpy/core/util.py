@@ -110,3 +110,70 @@ def expression_to_constraint(left, relation, right):
         generated_constraint = sasoptpy.core.Constraint(exp=r, direction=relation, crange=0)
         return generated_constraint
 
+
+def get_key_for_expr(key):
+    if isinstance(key, sasoptpy.abstract.SetIterator):
+        return key._get_for_expr()
+    else:
+        return 'for {} in {}'.format(key._name, key._set._name)
+
+
+def multiply_coefficients(left, right, target):
+
+    left = left.copy()
+    left['CONST'] = left.pop('CONST')
+    right = right.copy()
+    right['CONST'] = right.pop('CONST')
+
+    for i, x in left.items():
+        for j, y in right.items():
+            if x['ref'] is None and y['ref'] is None:
+                append_coef_value(
+                    target, ref=None, key='CONST', value=x['val'] * y['val'])
+            elif x['ref'] is None:
+                if x['val'] * y['val'] != 0:
+                    append_coef_value(
+                        target, ref=y['ref'], key=j, value=x['val'] * y['val'])
+            elif y['ref'] is None:
+                if x['val'] * y['val'] != 0:
+                    append_coef_value(
+                        target, ref=x['ref'], key=i, value=x['val'] * y['val'])
+            else:
+                if x['val'] * y['val'] != 0:
+                    if x.get('op') is None and y.get('op') is None:
+                        new_key = sasoptpy.util.pack_to_tuple(i) + \
+                                  sasoptpy.util.pack_to_tuple(j)
+                        alt_key = sasoptpy.util.pack_to_tuple(j) + \
+                                  sasoptpy.util.pack_to_tuple(i)
+                        new_ref = list(x['ref']) + list(y['ref'])
+                        if alt_key in target:
+                            append_coef_value(
+                                target, ref=new_ref, key=alt_key,
+                                value=x['val'] * y['val'])
+                        else:
+                            append_coef_value(
+                                target, ref=new_ref, key=new_key,
+                                value=x['val'] * y['val'])
+                    else:
+                        new_key = (i, j)
+                        x_actual = x['ref']
+                        if 'op' in x and x['op'] is not None:
+                            x_actual = sasoptpy.util.wrap_expression(x)
+                        y_actual = y['ref']
+                        if 'op' in y and y['op'] is not None:
+                            y_actual = sasoptpy.util.wrap_expression(y)
+
+                        append_coef_value(
+                            target, ref=[x_actual, y_actual], key=new_key,
+                            value=x['val'] * y['val'])
+
+
+def append_coef_value(original_dict, ref, key, value):
+    if key in original_dict:
+        original_dict[key]['val'] +=  value
+    else:
+        original_dict[key] = {'ref': ref, 'val': value}
+
+
+
+

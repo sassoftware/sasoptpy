@@ -34,9 +34,9 @@ class TestExpression(unittest.TestCase):
         pass
 
     def test_constructor(self):
-        def wrong_expression_type():
+        def unknown_expression_type():
             e = so.Expression(exp='abc')
-        self.assertRaises(TypeError, wrong_expression_type)
+        self.assertRaises(TypeError, unknown_expression_type)
 
     def test_get_value(self):
         import sasoptpy.abstract.math as sm
@@ -87,6 +87,122 @@ class TestExpression(unittest.TestCase):
         e.set_permanent('e')
         exp_repr = repr(e)
         self.assertEqual(exp_repr, 'sasoptpy.Expression(exp = (x) ** (2) + 3 * x - 5, name=\'e\')')
+
+    def test_string(self):
+        x = so.Variable(name='x')
+        e = 2 * x + 3 ** x + 10
+        self.assertEqual(str(e), '2 * x + (3) ** (x) + 10')
+
+        import sasoptpy.abstract.math as sm
+        e = sm.abs(x) + sm.min(x, 2, sm.sqrt(x))
+        self.assertEqual(str(e), 'abs(x) + min(x , 2, sqrt(x))')
+
+        from sasoptpy.abstract import Set
+        setI = Set(name='setI')
+        y = so.VariableGroup(setI, name='y')
+        e = - so.quick_sum(y[i] * i for i in setI)
+        self.assertEqual(str(e), '- sum(y[i_1] * i_1 for i_1 in setI)')
+
+        e = 2 * x ** y[0]
+        self.assertEqual(str(e), '2 * ((x) ** (y[0]))')
+
+    def test_addition(self):
+        x = so.Variable(name='x')
+        y = so.Variable(name='y')
+
+        exp1 = so.Expression(x+y, name='exp1')
+        exp2 = 2 * x - y
+        exp3 = exp1 + exp2
+        self.assertEqual(str(exp3), '3 * x')
+
+        import sasoptpy.abstract.math as sm
+        exp4 = sm.min(x, y, sm.sqrt(x * y)) + 4
+        self.assertEqual(str(exp4), 'min(x , y, sqrt(x * y)) + 4')
+
+        def unknown_addition_type():
+            exp5 = x + y + [3, 4]
+        self.assertRaises(TypeError, unknown_addition_type)
+
+    def test_multiplication(self):
+        K = [1, 2, 'a']
+        L = so.abstract.Set(name='L')
+
+        x = so.Variable(name='x')
+        y = so.Variable(name='y')
+        z = so.VariableGroup(K, name='z')
+        u = so.VariableGroup(L, name='u')
+
+        exp1 = (x + y + 5) * (2 * x - 4 * y - 10)
+        self.assertEqual(str(exp1), '2 * x * x - 2 * x * y - 4 * y * y - 30 * y - 50')
+
+        exp2 = (x + y + 5) * 0 + x
+        self.assertEqual(str(exp2), 'x')
+
+        def unknown_multiplication_type():
+            exp3 = x * ['a']
+        self.assertRaises(TypeError, unknown_multiplication_type)
+
+    def test_division(self):
+        x = so.Variable(name='x')
+        y = so.Variable(name='y')
+
+        exp1 = x/2
+        self.assertEqual(str(exp1), '0.5 * x')
+
+        exp2 = x/y
+        self.assertEqual(str(exp2), '(x) / (y)')
+
+        import sasoptpy.abstract.math as sm
+        exp3 = x**2 / (3*y) + 0 / sm.abs(x)
+        self.assertEqual(str(exp3), '((x) ** (2)) / (3 * y) + (0) / (abs(x))')
+
+        def division_by_zero():
+            exp4 = x / 0
+        self.assertWarns(RuntimeWarning, division_by_zero)
+
+        def unknown_division_type():
+            exp5 = x / 'a'
+        self.assertRaises(TypeError, unknown_division_type)
+
+    def test_is_linear(self):
+        x = so.Variable(name='x')
+        y = so.Variable(name='y')
+
+        exp1 = x
+        self.assertTrue(exp1._is_linear())
+
+        exp2 = 2 * x + 3 * y
+        self.assertTrue(exp2._is_linear())
+
+        exp3 = 5 * x * y
+        self.assertFalse(exp3._is_linear())
+
+        import sasoptpy.abstract.math as sm
+        exp4 = sm.max(x, y) + 5
+        self.assertFalse(exp4._is_linear())
+
+        exp5 = x ** 2
+        self.assertFalse(exp5._is_linear())
+
+    def test_relational(self):
+        x = so.Variable(name='x')
+        e = 2 * x + 5
+
+        f = e <= 2
+        self.assertTrue(type(f) == so.Constraint)
+
+        f = e >= 0
+        self.assertTrue(type(f) == so.Constraint)
+
+        f = e == 5
+        self.assertTrue(type(f) == so.Constraint)
+
+        f = 2 >= e
+        self.assertTrue(type(f) == so.Constraint)
+
+        f = 0 <= e
+        self.assertTrue(type(f) == so.Constraint)
+
 
     def tearDown(self):
         so.reset()

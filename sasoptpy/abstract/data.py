@@ -536,6 +536,12 @@ class SetIterator(sasoptpy.Expression):
             s = ''
         return s
 
+    def _get_for_expr(self):
+        if self._multi:
+            return 'for ({}) in {}'.format(self._expr(), self._set._name)
+        else:
+            return 'for {} in {}'.format(self._expr(), self._set._name)
+
     def _expr(self):
         if self._multi:
             return ', '.join(str(i) for i in self._children)

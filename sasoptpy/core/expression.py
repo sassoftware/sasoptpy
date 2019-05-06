@@ -18,8 +18,9 @@
 
 from collections import OrderedDict
 from math import copysign
+import warnings
 
-import numpy as np
+from sasoptpy._libs import np
 
 import sasoptpy
 import sasoptpy.util
@@ -462,16 +463,9 @@ class Expression:
             if self._iterkey:
                 forlist = []
                 for i in self._iterkey:
-                    if isinstance(i, sasoptpy.abstract.SetIterator):
-                        if i._multi:
-                            forlist.append('for ({}) in {}'.format(
-                                i._expr(), i._set._name))
-                        else:
-                            forlist.append('for {} in {}'.format(
-                                i._expr(), i._set._name))
-                    else:
-                        forlist.append('for {} in {}'.format(
-                            i._name, i._set._name))
+                    key_expr = sasoptpy.core.util.get_key_for_expr(i)
+                    if key_expr:
+                        forlist.append(key_expr)
                 s += ' '.join(forlist)
             if self._arguments:
                 s += ', ' + ', '.join(str(i) for i in self._arguments)
@@ -524,33 +518,26 @@ class Expression:
         if self._temp and type(self) is Expression:
             r = self
         else:
-            if isinstance(other, Expression) and other._temp:
-                r = other
-                other = self
-                sign = sign * -1
-            elif self._operator is not None:
-                r = Expression()
-                r._linCoef[self.set_name()] = {'val': 1, 'ref': self}
-            else:
-                r = self.copy()
-                if r._operator is not None:
-                    r = sasoptpy.util.wrap_expression(r)
+            r = self.copy()
+
         if isinstance(other, Expression):
-            if other._abstract:
-                r._abstract = True
-            if other._operator is None:
-                for v in other._linCoef:
-                    if v in r._linCoef:
-                        r._linCoef[v]['val'] += sign * other._linCoef[v]['val']
-                    else:
-                        r._linCoef[v] = dict(other._linCoef[v])
-                        r._linCoef[v]['val'] *= sign
-            else:
-                r._linCoef[other.set_name()] = {'val': sign, 'ref': other}
+            r._abstract = self._abstract or other._abstract
+
+            for v in other._linCoef:
+                if v in r._linCoef:
+                    r._linCoef[v]['val'] += sign * other._linCoef[v]['val']
+                else:
+                    r._linCoef[v] = dict(other._linCoef[v])
+                    r._linCoef[v]['val'] *= sign
+
             r._conditions += self._conditions
             r._conditions += other._conditions
+
         elif np.issubdtype(type(other), np.number):
             r._linCoef['CONST']['val'] += sign * other
+        else:
+            raise TypeError('Type for arithmetic operation is not valid.')
+
         return r
 
     def mult(self, other):
@@ -576,65 +563,23 @@ class Expression:
         """
         if isinstance(other, Expression):
             r = Expression()
-            if self._abstract or other._abstract:
-                r._abstract = True
-            target = r._linCoef
-            for i, x in self._linCoef.items():
-                for j, y in other._linCoef.items():
-                    if x['ref'] is None and y['ref'] is None:
-                        target['CONST'] = {
-                            'ref': None, 'val': x['val']*y['val']}
-                    elif x['ref'] is None:
-                        if x['val'] * y['val'] != 0:
-                            target[j] = {
-                                'ref': y['ref'], 'val': x['val']*y['val']}
-                    elif y['ref'] is None:
-                        if x['val'] * y['val'] != 0:
-                            target[i] = {
-                                'ref': x['ref'], 'val': x['val']*y['val']}
-                    else:  # TODO indexing is not interchangable,
-                        if x['val'] * y['val'] != 0:
-                            if x.get('op') is None and y.get('op') is None:
-                                newkey = sasoptpy.util.pack_to_tuple(i) +\
-                                         sasoptpy.util.pack_to_tuple(j)
-                                target[newkey] = {
-                                    'ref': list(x['ref']) + list(y['ref']),
-                                    'val': x['val'] * y['val']}
-                            else:
-                                newkey = (i, j)
-                                x_actual = x['ref']
-                                if 'op' in x and x['op'] is not None:
-                                    x_actual = sasoptpy.util.wrap_expression(x)
-                                y_actual = y['ref']
-                                if 'op' in y and y['op'] is not None:
-                                    y_actual = sasoptpy.util.wrap_expression(y)
-                                target[newkey] = {
-                                    'ref': [x_actual, y_actual],
-                                    'val': x['val'] * y['val']}
+            r._abstract = self._abstract or other._abstract
+
+            sasoptpy.core.util.multiply_coefficients(left=self._linCoef, right=other._linCoef, target=r._linCoef)
+
             r._conditions += self._conditions
             r._conditions += other._conditions
             return r
         elif np.issubdtype(type(other), np.number):
-            if self._temp and type(self) is Expression:
-                if other == 0:
-                    self._linCoef = OrderedDict()
-                    self._linCoef['CONST'] = {'ref': None, 'val': 0}
-                else:
-                    for mylc in self._linCoef:
-                        self._linCoef[mylc]['val'] *= other
-                r = self
-                return r
+            if other == 0:
+                r = Expression()
             else:
-                if other == 0:
-                    r = Expression()
-                else:
-                    r = self.copy()
-                    for mylc in r._linCoef:
-                        r._linCoef[mylc]['val'] *= other
-                return r
-
-    # def _tag_constraint(self, *argv):
-    #     pass
+                r = self.copy()
+                for e in r._linCoef:
+                    r._linCoef[e]['val'] *= other
+            return r
+        else:
+            raise TypeError('Type for arithmetic operation is not valid.')
 
     def _relational(self, other, direction_):
         """
@@ -678,8 +623,6 @@ class Expression:
 
         """
 
-        self._clean()
-
         # Loop over components
         for val in self._linCoef.values():
             if val.get('op', False):
@@ -692,14 +635,6 @@ class Expression:
 
     def __hash__(self):
         return hash('{}{}'.format(self._name, id(self)))
-
-    def _clean(self):
-        keys_to_clean = []
-        for key in self._linCoef.keys():
-            if key != 'CONST' and self._linCoef[key]['val'] == 0:
-                keys_to_clean.append(key)
-        for key in keys_to_clean:
-            del self._linCoef[key]
 
     def __add__(self, other):
         return self.add(other)
@@ -752,11 +687,11 @@ class Expression:
             try:
                 return self.mult(1/other)
             except ZeroDivisionError:
-                print('ERROR: Float division by zero')
+                warnings.warn('Expression is divided by zero', RuntimeWarning)
                 return None
         r = Expression()
         if not isinstance(other, Expression):
-            other = Expression(other, name='')
+            raise TypeError('Invalid type for division.')
         r._linCoef[self._name, other._name, '/'] = {
             'ref': [self, other],
             'val': 1,
@@ -785,12 +720,6 @@ class Expression:
 
     def __eq__(self, other):
         return self._relational(other, 'E')
-
-    def __rle__(self, other):
-        return self._relational(other, 'G')
-
-    def __rge__(self, other):
-        return self._relational(other, 'L')
 
     def __neg__(self):
         return self.mult(-1)
