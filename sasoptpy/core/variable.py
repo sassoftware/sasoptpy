@@ -146,9 +146,9 @@ class Variable(Expression):
         Returns a string representation of the object.
         """
         st = 'sasoptpy.Variable(name=\'{}\', '.format(self._name)
-        if self._lb is not 0:
+        if self._lb != -inf:
             st += 'lb={}, '.format(self._lb)
-        if self._ub is not inf:
+        if self._ub != inf:
             st += 'ub={}, '.format(self._ub)
         if self._init is not None:
             st += 'init={}, '.format(self._init)

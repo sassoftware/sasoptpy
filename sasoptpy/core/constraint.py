@@ -59,7 +59,7 @@ class Constraint(Expression):
     :func:`sasoptpy.Model.add_constraint`
     """
 
-    def __init__(self, exp, direction=None, name=None, crange=0):
+    def __init__(self, exp, direction=None, name=None, crange=None):
         super().__init__()
         if name is not None:
             name = sasoptpy.util.assign_name(name, 'con')
@@ -67,26 +67,27 @@ class Constraint(Expression):
             self._objorder = sasoptpy.util.register_globally(name, self)
         else:
             self._name = None
+
         if exp._name is None:
             self._linCoef = exp._linCoef
         else:
             for m in exp._linCoef:
                 self._linCoef[m] = dict(exp._linCoef[m])
+
         if direction is None:
             self._direction = exp._direction
         else:
             self._direction = direction
-        self._range = crange
+
+        if crange is not None:
+            self._range = crange
+        else:
+            self._range = exp._range
+
         self._key = None
         self._parent = None
         self._block = None
         self._temp = False
-
-    def __and__(self, other):
-        print('Called!')
-        print(self)
-        print(other)
-        return self
 
     def update_var_coef(self, var, value):
         """
@@ -168,8 +169,8 @@ class Constraint(Expression):
         if direction in ['E', 'L', 'G']:
             self._direction = direction
         else:
-            print('WARNING: Cannot change constraint direction {} {}'.format(
-                self._name, direction))
+            raise ValueError(
+                'Not a valid constraint direction {}'.format(direction))
 
     def set_block(self, block_number):
         """
@@ -239,7 +240,7 @@ class Constraint(Expression):
         elif self._direction == 'E' and self._range != 0:
             s += ' <= '
         else:
-            raise Exception('Constraint has no direction!')
+            raise ValueError('Constraint has no direction')
         s += '{}'.format(sasoptpy.util.get_in_digit_format(- self._linCoef['CONST']['val'] + self._range))
         if self._parent is None:
             s += ';'
@@ -261,7 +262,7 @@ class Constraint(Expression):
         elif self._direction == 'G':
             s += ' >= '
         else:
-            raise Exception('Constraint has no direction!')
+            raise ValueError('Constraint has no direction')
         if self._range == 0:
             s += ' {}'.format(- self._linCoef['CONST']['val'])
         else:
