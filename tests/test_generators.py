@@ -21,14 +21,10 @@ This test file generates intermediate forms to run optimization models using SAS
 """
 
 import sys
-import os
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
-
 import unittest
 import tests.responses as expected
 import sasoptpy as so
 import hashlib
-hash = hashlib.sha256
 
 
 class NullWriter:
@@ -84,7 +80,7 @@ def mock_solve(model, *args, **kwargs):
     if 'verbose' in kwargs:
         del kwargs['verbose']
     optmodel_code = model.to_optmodel(**kwargs)
-    obtained = hash(optmodel_code.encode()).hexdigest()
+    obtained = hashlib.sha256(optmodel_code.encode()).hexdigest()
     records.append(obtained)
     if obtained == expected_response[ctr]:
         print('Success!', obtained, expected_response[ctr])

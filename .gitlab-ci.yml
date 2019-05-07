@@ -3,9 +3,9 @@ py37:
   script:
   - python setup.py install
   - cd tests
-  - python test_generators.py
-  - python test_config.py
-  - python test_core.py
+  - python -m unittest test_generators.py
+  - python -m unittest test_config.py
+  - python -m unittest test_core.py
 
 #py36:
 #  image: python:3.6
