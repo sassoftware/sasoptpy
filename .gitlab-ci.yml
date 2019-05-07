@@ -2,21 +2,10 @@ py37:
   image: python:3.7
   script:
   - python setup.py install
-  - cd tests
-  - python -m unittest test_generators.py
-  - python -m unittest test_config.py
-  - python -m unittest test_core.py
+  - python -m unittest discover -s tests/ -p 'test*.py'
 
-#py36:
-#  image: python:3.6
-#  script:
-#  - python setup.py install
-#  - cd tests
-#  - python test_generators.py
-#
-#py35:
-#  image: python:3.5
-#  script:
-#  - python setup.py install
-#  - cd tests
-#  - python test_generators.py
+py36:
+  image: python:3.6
+  script:
+  - python setup.py install
+  - python -m unittest discover -s tests/ -p 'test*.py'
