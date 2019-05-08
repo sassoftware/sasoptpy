@@ -29,6 +29,38 @@ class TestVariableGroup(unittest.TestCase):
     def setUp(self):
         pass
 
+    def test_constructor(self):
+        idx = [1,2,3]
+        v = so.VariableGroup(idx, name=None)
+        self.assertEqual(repr(v),
+                         "sasoptpy.VariableGroup([1, 2, 3], name='vg_1')")
+
+        u = so.VariableGroup(5, name='u')
+        self.assertEqual(repr(u),
+                         "sasoptpy.VariableGroup([0, 1, 2, 3, 4], name='u')")
+
+    def test_get_name(self):
+        # Test regular name
+        u = so.VariableGroup(4, name='myvargroup')
+        self.assertEqual(u.get_name(), 'myvargroup')
+
+        # Test default name
+        v = so.VariableGroup(5, name=None)
+        self.assertEqual(v.get_name(), 'vg_1')
+
+    def test_abstract(self):
+        u = so.VariableGroup(4, name='u')
+        self.assertFalse(u._abstract)
+        u.set_abstract(True)
+        self.assertTrue(u._abstract)
+
+        from sasoptpy.abstract.data import Set
+        I = Set(name='I')
+        v = so.VariableGroup(I, name='v')
+        self.assertTrue(v._abstract)
+        v.set_abstract(False)
+        self.assertFalse(v._abstract)
+
     def tearDown(self):
         so.reset()
 

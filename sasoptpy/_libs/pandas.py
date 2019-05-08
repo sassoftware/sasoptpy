@@ -20,5 +20,10 @@ def convert_dict_to_frame(dictobj, cols=None):
 def display_dense():
     pd.set_option('display.multi_sparse', False)
 
+def display_all():
+    pd.set_option('display.max_columns', None)
+    pd.set_option('display.max_rows', None)
+
+
 
 

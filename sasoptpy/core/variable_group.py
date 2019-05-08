@@ -81,8 +81,8 @@ class VariableGroup:
 
     """
 
-    def __init__(self, *argv, name, vartype=None, lb=-inf,
-                 ub=inf, init=None, abstract=False):
+    def __init__(self, *argv, name, vartype=None, lb=None,
+                 ub=None, init=None, abstract=False):
         self._vardict = OrderedDict()
         self._varlist = []
         self._groups = OrderedDict()
@@ -90,33 +90,35 @@ class VariableGroup:
 
         if vartype is None:
             vartype = sasoptpy.CONT
+
         if vartype == sasoptpy.BIN and ub is None:
             ub = 1
         if vartype == sasoptpy.BIN and lb is None:
             lb = 0
-        if vartype == sasoptpy.INT and lb is None:
-            lb = 0
+
+        if lb is None:
+            lb = -inf
+        if ub is None:
+            ub = inf
 
         self._recursive_add_vars(*argv, name=name,
                                  vartype=vartype, lb=lb, ub=ub, init=init,
                                  vardict=self._vardict, varlist=self._varlist,
                                  abstract=abstract)
 
-        self._lb = lb if lb is not None else -inf
-        self._ub = ub if ub is not None else inf
+        self._lb = lb
+        self._ub = ub
         self._init = init
         self._type = vartype
 
-        if name is not None:
-            name = sasoptpy.util.assign_name(name, 'var')
-            self._name = name
-            self._objorder = sasoptpy.util.register_globally(name, self)
-        else:
-            self._name = None
+        name = sasoptpy.util.assign_name(name, 'vg')
+        self._name = name
+        self._objorder = sasoptpy.util.register_globally(name, self)
+
         self._abstract = abstract
         for arg in argv:
             if isinstance(arg, int):
-                self._keyset.append(sasoptpy.util.extract_argument_as_list(arg))
+                self._keyset.append(sasoptpy.util._extract_argument_as_list(arg))
             else:
                 self._keyset.append(sasoptpy.util._extract_argument_as_list(arg))
                 if not self._abstract and sasoptpy.util.is_set_abstract(arg):

@@ -43,8 +43,11 @@ def load_package_globals():
     sasoptpy.transfer_allowed = False
 
     # Counters
-    sasoptpy.__ctr = {'obj': [0], 'var': [0], 'con': [0], 'expr': [0], 'model': [0],
-                      'i': [0], 'set': [0], 'param': [0], 'impvar': [0], 'table': [0]}
+    sasoptpy.__ctr = {'obj': [0],
+                      'var': [0], 'con': [0], 'expr': [0], 'vg': [0], 'cg': [0],
+                      'model': [0],
+                      'i': [0], 'set': [0], 'param': [0],
+                      'impvar': [0], 'table': [0]}
 
     sasoptpy.__objcnt = 0
 
@@ -156,7 +159,7 @@ def set_creation_order_if_empty(obj, order):
 
 def get_in_digit_format(val):
     """
-    Returns the default formatted string of the given numerical variable
+    Returns a value by rounding it to config digits
 
     Parameters
     ----------
@@ -171,8 +174,15 @@ def get_in_digit_format(val):
     """
     digits = sasoptpy.config['max_digits']
     if digits and digits > 0:
-        return str(round(val, digits))
-    return str(val)
+        return round(val, digits)
+    return val
+
+
+def round_digits(val):
+    digits = sasoptpy.config['print_digits']
+    if digits and digits > 0:
+        return round(val, digits)
+    return val
 
 
 def _extract_argument_as_list(inp):
@@ -537,15 +547,14 @@ def reset():
     :func:`get_namespace`
 
     """
-    sasoptpy.__namedict.clear()
-    for i in sasoptpy.__ctr:
-        sasoptpy.__ctr[i] = [0]
+    reset_globals()
     sasoptpy.config.reset()
 
 
 def reset_globals():
-    warnings.warn('Use sasoptpy.util.reset', DeprecationWarning)
-    reset()
+    sasoptpy.__namedict.clear()
+    for i in sasoptpy.__ctr:
+        sasoptpy.__ctr[i] = [0]
 
 
 def get_mutable(exp):
@@ -1002,6 +1011,7 @@ def get_solution_table(*argv, key=None, sort=True, rhs=False):
     soltablep = pd.DataFrame(soltable, columns=colnames)
     soltablep2 = soltablep.set_index(indexcols)
     pd.display_dense()
+    pd.display_all()
     return soltablep2
 
 

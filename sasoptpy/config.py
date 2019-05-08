@@ -65,6 +65,7 @@ def _get_default_config():
     config = dict()
     config['verbosity'] = 3
     config['max_digits'] = 12
+    config['print_digits'] = 6
     config['valid_outcomes'] = ['OPTIMAL', 'ABSFCONV', 'BEST_FEASIBLE']
     config['default_sense'] = sasoptpy.MIN
     config['submit_realtime'] = True
