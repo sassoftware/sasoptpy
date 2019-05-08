@@ -46,10 +46,10 @@ setup(
     setup_requires=[
         'numpy'
         ],
-    classifiers=(
+    classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
         "Topic :: Scientific/Engineering :: Mathematics"
-    ),
+    ],
 )
