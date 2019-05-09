@@ -14,11 +14,11 @@ class Variable(Expression):
     name : string
         Name of the variable
     vartype : string, optional
-        Type of the variable
+        Type of the variable, default is continuous
     lb : float, optional
-        Lower bound of the variable
+        Lower bound of the variable, default is -inf
     ub : float, optional
-        Upper bound of the variable
+        Upper bound of the variable, default is inf
     init : float, optional
         Initial value of the variable
     abstract : boolean, optional
@@ -44,7 +44,7 @@ class Variable(Expression):
 
     """
 
-    def __init__(self, name, vartype=None, lb=-inf, ub=inf,
+    def __init__(self, name, vartype=None, lb=None, ub=None,
                  init=None, abstract=False, shadow=False, key=None):
         super().__init__()
         if vartype is None:
@@ -53,10 +53,12 @@ class Variable(Expression):
             name = sasoptpy.util.assign_name(name, 'var')
         self._name = name
         self._type = vartype
+
         if lb is None:
             lb = -inf
         if ub is None:
             ub = inf
+
         self._lb = lb
         self._ub = ub
         self._init = init

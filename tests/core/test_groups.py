@@ -61,6 +61,8 @@ class TestVariableGroup(unittest.TestCase):
         v.set_abstract(False)
         self.assertFalse(v._abstract)
 
+
+
     def tearDown(self):
         so.reset()
 
