@@ -29,6 +29,19 @@ def _to_iterator_expression(itlist):
     return strlist
 
 
+def _to_safe_iterator_expression(itlist):
+    strlist = []
+    for i in itlist:
+        if isinstance(i, sasoptpy.core.Expression):
+            strlist.append(i._expr())
+        elif isinstance(i, str):
+            safe_i = "".join(c if c.isalnum() else '_' for c in i)
+            strlist.append("'{}'".format(safe_i))
+        else:
+            strlist.append(str(i))
+    return strlist
+
+
 def _evaluate(comp):
     """
     Evaluates the value of a given expression component.
@@ -175,5 +188,7 @@ def append_coef_value(original_dict, ref, key, value):
         original_dict[key] = {'ref': ref, 'val': value}
 
 
+def get_name_from_keys(name, keys):
+    return '{}['.format(name) + ','.join(format(k) for k in keys) + ']'
 
 

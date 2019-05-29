@@ -29,7 +29,7 @@ from types import GeneratorType
 import sasoptpy
 
 
-class Parameter:
+class Parameter():
     """
     Creates a parameter to be represented inside PROC OPTMODEL
 

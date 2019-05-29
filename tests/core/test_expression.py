@@ -73,7 +73,7 @@ class TestExpression(unittest.TestCase):
         z = so.VariableGroup(setI, name='z')
         g = so.quick_sum(z[i] for i in setI) + 5
         g_exp = g._expr()
-        self.assertEqual(g_exp, 'sum {i_1 in I}(z[i_1]) + 5')
+        self.assertEqual(g_exp, 'sum {i_1 in I} (z[i_1]) + 5')
 
     def test_repr(self):
         x = so.Variable(name='x')

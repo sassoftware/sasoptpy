@@ -424,7 +424,7 @@ def _to_optmodel_loop(keys):
             for i in flatten_tuple(key):
                 subindex.append(str(i))
         elif not is_key_abstract(key):
-            subindex.append(str(key))
+            subindex.append(safe_string(str(key)))
     if subindex:
         s += '_' + '_'.join(subindex)
     iters = get_iterators(keys)
@@ -736,6 +736,14 @@ def flatten_tuple(tp):
             yield from flatten_tuple(elem)
         else:
             yield elem
+
+
+def _to_optmodel_expr(item):
+    expr_func = getattr(item, "_expr", None)
+    if callable(expr_func):
+        return item._expr()
+    else:
+        return str(item)
 
 
 def _to_optmodel_quoted_string(item):
@@ -1408,4 +1416,5 @@ def get_python_symbol(symbol):
         return symbol
 
 
-
+def safe_string(st):
+    return "".join(c if c.isalnum() else '_' for c in st)

@@ -22,6 +22,7 @@ Unit tests for core classes.
 
 import unittest
 import sasoptpy as so
+from sasoptpy._libs import pd
 
 
 class TestVariableGroup(unittest.TestCase):
@@ -60,6 +61,187 @@ class TestVariableGroup(unittest.TestCase):
         self.assertTrue(v._abstract)
         v.set_abstract(False)
         self.assertFalse(v._abstract)
+
+    def test_get_item(self):
+        from sasoptpy.abstract.data import Set
+        I = Set(name='I')
+        v = so.VariableGroup(I, name='v')
+
+        for i in I:
+            individual_variable = v[i]
+            self.assertEqual(str(individual_variable), 'v[i_1]')
+            same_variable = v[i]
+            self.assertEqual(str(same_variable), 'v[i_1]')
+
+        idx1 = [1, 2, 3]
+        idx2 = ['a', 'b', 'c']
+        x = so.VariableGroup(idx1, idx2, name='x')
+        self.assertEqual(len(x[1,]), 3)
+        self.assertEqual(type(x[1]), list)
+
+        for e, i in enumerate(x['*', 'a']):
+            self.assertEqual(str(i), 'x[{}, a]'.format(e+1))
+
+        def empty_list():
+            a = x['*', 'd']
+        self.assertWarns(RuntimeWarning, empty_list)
+
+    def test_defn(self):
+        idx1 = [1, 2, 3]
+        idx2 = ['a', 'b', 'c']
+        x = so.VariableGroup(idx1, idx2, name='x')
+        self.assertEqual(x._defn(), "var x {{1,2,3}, {'a','b','c'}};")
+
+        from sasoptpy.abstract.data import Set, Parameter
+        idx3 = Set(name='I')
+        y = so.VariableGroup(idx3, name='y')
+        self.assertEqual(y._defn(), "var y {{I}};")
+
+        y[0].set_bounds(ub=10)
+        self.assertEqual(y._defn(), "var y {{I}};\ny[0].ub=10;")
+
+        expected_def = "var y {{I}};\ny[0].ub=10;\nfor {i_1 in I} y[i_1].lb=1 y[i_1].ub=2;"
+        for i in idx3:
+            y[i].set_bounds(lb=1, ub=2)
+            self.assertEqual(y._defn(), expected_def)
+
+        # TODO This part will require an edit after Parameter system is changed
+        p = Parameter(name='p')
+        y[1].set_bounds(lb=2*p[''], ub=3*p[''])
+        expected_def = expected_def + "\ny[1].lb=2.0 * p;\ny[1].ub=3.0 * p;"
+        self.assertEqual(y._defn(), expected_def)
+
+        z = so.VariableGroup(4, vartype=so.INT, name='z', lb=1)
+        self.assertEqual(z._defn(), "var z {{0,1,2,3}} integer >= 1;")
+        z.set_bounds(ub=10)
+        self.assertEqual(z._defn(), "var z {{0,1,2,3}} integer >= 1 <= 10;")
+        z.set_init(5)
+        self.assertEqual(z._defn(), "var z {{0,1,2,3}} integer >= 1 <= 10 init 5;")
+
+        u = so.VariableGroup(5, vartype=so.BIN, name='u')
+        self.assertEqual(u._defn(), "var u {{0,1,2,3,4}} binary;")
+
+        t = so.VariableGroup(idx3, name='t', init=10)
+        self.assertEqual(t._defn(), "var t {{I}} init 10;")
+        t[0].set_init(5)
+        self.assertEqual(t._defn(), "var t {{I}} init 10;\nt[0] = 5;")
+        for i in idx3:
+            t[i].set_init(8)
+        self.assertEqual(
+            t._defn(),
+            "var t {{I}} init 10;\nt[0] = 5;\nfor {i_2 in I} t[i_2] = 8;"
+        )
+
+        w = so.VariableGroup(2, name='w', lb=0, ub=10)
+        w[0].set_bounds(lb=2, ub=8)
+        w[1].set_bounds(lb=1, ub=7)
+        expected_def = """var w {{0,1}} >= 0 <= 10;
+w[0].lb = 2;
+w[0].ub = 8;
+w[1].lb = 1;
+w[1].ub = 7;"""
+        self.assertEqual(w._defn(), expected_def)
+        w[0].set_init(4)
+        expected_def = """var w {{0,1}} >= 0 <= 10;
+w[0].lb = 2;
+w[0].ub = 8;
+w[0] = 4;
+w[1].lb = 1;
+w[1].ub = 7;"""
+        self.assertEqual(w._defn(), expected_def)
+
+    def test_add_member(self):
+        from sasoptpy.abstract import Set
+        I = Set(name='I')
+        x = so.VariableGroup(I, name='x')
+        x.add_member(key=0, var=None, init=5, name='z')
+        self.assertEqual(str(x[0]), "x[0]")
+        self.assertTrue(x[0]._abstract)
+
+        y = so.Variable(name='y')
+        x.add_member('y', var=y)
+        self.assertTrue(x['y']._abstract)
+
+    def test_sum(self):
+        from sasoptpy.abstract.data import Set
+        I = Set(name='I')
+        x = so.VariableGroup(I, name='x')
+        e = x.sum('*')
+        self.assertEqual(e._expr(), "sum {i_1 in I} (x[i_1])")
+
+        z = so.VariableGroup(3, 4, name='z')
+        e = z.sum(0, (1, 2))
+        self.assertEqual(e._expr(), "z[0, 1] + z[0, 2]")
+
+        idx1 = ['a', 'b', 'c']
+        y = so.VariableGroup(I, idx1, name='y')
+        e = y.sum('*', 'a')
+        self.assertEqual(e._expr(), "sum {i_2 in I} (y[i_2, 'a'])")
+
+        e = y.sum('*', ('a', 'b'))
+        self.assertEqual(e._expr(), "sum {i_3 in I} (y[i_3, 'a'] + y[i_3, 'b'])")
+
+        e = y.sum(1, '*')
+        self.assertEqual(e._expr(), "y[1, 'a'] + y[1, 'b'] + y[1, 'c']")
+
+    def test_mult(self):
+        x = so.VariableGroup(3, name='x')
+        m1 = [2, 3, 4]
+        e = x.mult(m1)
+        self.assertEqual(e._expr(), "2 * x[0] + 3 * x[1] + 4 * x[2]")
+
+        m2 = pd.Series(m1)
+        e = x.mult(m2)
+        self.assertEqual(e._expr(), "2 * x[0] + 3 * x[1] + 4 * x[2]")
+
+        data = [['a', 1, 3, 7], ['b', 4, 5, 6]]
+        df = pd.DataFrame(
+            data, columns=['idx', 'low', 'med', 'high']).set_index(['idx'])
+        y = so.VariableGroup(df.index, df.columns, name='y')
+        e = y.mult(df)
+        self.assertEqual(
+            e._expr(),
+            "y['a', 'low'] + 3 * y['a', 'med'] + 7 * y['a', 'high'] + 4 * y['b', 'low'] + 5 * y['b', 'med'] + 6 * y['b', 'high']"
+        )
+
+        idx = ['a', 'b', 'c']
+        z = so.VariableGroup(idx, name='z')
+        data_dict = {'a': 1, 'b': 2, 'c': -4}
+        e = z.mult(data_dict)
+        self.assertEqual(e._expr(), "z['a'] + 2 * z['b'] - 4 * z['c']")
+
+        idx = [1, 2]
+        w = so.VariableGroup(idx, idx, name='w')
+        data_dict = {(1, 1): 3, (1,2): 4, (2,1): 7, (2,2): 2}
+        e = w.mult(data_dict)
+        self.assertEqual(
+            e._expr(), "3 * w[1, 1] + 4 * w[1, 2] + 7 * w[2, 1] + 2 * w[2, 2]")
+
+        def unknown_key():
+            data_dict = {(1, 1): 3, (3, 3): 9}
+            e = w.mult(data_dict)
+            print(e._expr())
+        self.assertRaises(KeyError, unknown_key)
+
+    def test_init(self):
+        x = so.VariableGroup(3, name='x', init=4)
+        self.assertTrue(all(i._init == 4 for i in x))
+        x.set_init(5)
+        self.assertTrue(all(i._init == 5 for i in x))
+
+        from sasoptpy.abstract import Set
+        I = Set(name='I')
+        y = so.VariableGroup(I, name='y')
+        y[0].set_init(5)
+        self.assertEqual(y[0]._init, 5)
+        y.set_init(4)
+        self.assertEqual(y[0]._init, 4)
+
+    def test_str(self):
+        x = so.VariableGroup(2, name='x')
+        self.assertEqual(
+            str(x), "Variable Group (x) [\n  [0: x[0]]\n  [1: x[1]]\n]"
+        )
 
 
 
