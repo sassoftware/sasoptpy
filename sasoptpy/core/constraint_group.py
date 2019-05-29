@@ -112,7 +112,7 @@ class ConstraintGroup:
             else:
                 print('ERROR: Unknown argument type for constraint generation', type(argv))
                 return None
-            keylist = sasoptpy.core.util._to_iterator_expression(newkeys)
+            keylist = sasoptpy.core.util._to_safe_iterator_expression(newkeys)
             conname = '{}[{}]'.format(name, ','.join(keylist))
             conname = sasoptpy.util.assign_name(conname, 'con')
             newcon = sasoptpy.Constraint(exp=c, name=conname, crange=c._range)
