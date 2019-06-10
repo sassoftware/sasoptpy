@@ -40,6 +40,10 @@ class TestVariableGroup(unittest.TestCase):
         self.assertEqual(repr(u),
                          "sasoptpy.VariableGroup([0, 1, 2, 3, 4], name='u')")
 
+        w = so.VariableGroup([('a', 1), ('a', 2), ('b', 1), ('b', 2)], name='w')
+        self.assertEqual(repr(w),
+                         "sasoptpy.VariableGroup(['a', 'b'], [1, 2], name='w')")
+
     def test_get_name(self):
         # Test regular name
         u = so.VariableGroup(4, name='myvargroup')
@@ -156,11 +160,15 @@ w[1].ub = 7;"""
         x = so.VariableGroup(I, name='x')
         x.add_member(key=0, var=None, init=5, name='z')
         self.assertEqual(str(x[0]), "x[0]")
-        self.assertTrue(x[0]._abstract)
+        self.assertTrue(so.core.util.is_abstract(x[0]))
 
         y = so.Variable(name='y')
         x.add_member('y', var=y)
-        self.assertTrue(x['y']._abstract)
+        self.assertTrue(so.core.util.is_abstract(x['y']))
+
+        z = so.Variable(name='z')
+        x.add_member('z', vartype=so.BIN)
+        self.assertTrue(so.core.util.is_abstract(x['z']))
 
     def test_sum(self):
         from sasoptpy.abstract.data import Set
@@ -183,6 +191,10 @@ w[1].ub = 7;"""
 
         e = y.sum(1, '*')
         self.assertEqual(e._expr(), "y[1, 'a'] + y[1, 'b'] + y[1, 'c']")
+
+        w = so.VariableGroup([1, 2, 3], ['a', 'b'], name='w')
+        e = w.sum([1, 3], '*')
+        self.assertEqual(e._expr(), "w[1, 'a'] + w[1, 'b'] + w[3, 'a'] + w[3, 'b']")
 
     def test_mult(self):
         x = so.VariableGroup(3, name='x')
@@ -243,7 +255,12 @@ w[1].ub = 7;"""
             str(x), "Variable Group (x) [\n  [0: x[0]]\n  [1: x[1]]\n]"
         )
 
-
+    def test_set_bounds(self):
+        x = so.VariableGroup(2, name='x')
+        x.set_bounds(ub=2)
+        self.assertEqual(x._ub, 2)
+        x.set_bounds(lb=1)
+        self.assertEqual(x._lb, 1)
 
     def tearDown(self):
         so.reset()

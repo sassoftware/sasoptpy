@@ -582,10 +582,7 @@ class VariableGroup:
                 try:
                     r._linCoef[var._name] = {'ref': var, 'val': vector[i]}
                 except KeyError:
-                    try:
-                        r._linCoef[var._name] = {'ref': var, 'val': vector[key]}
-                    except KeyError:
-                        raise KeyError('Given argument is not valid for mult')
+                    r._linCoef[var._name] = {'ref': var, 'val': vector[key]}
 
         return r
 
@@ -662,11 +659,7 @@ class VariableGroup:
         Generates a representation string
         """
         s = 'Variable Group ({}) [\n'.format(self._name)
-        try:
-            vd = sorted(self._vardict)
-        except TypeError:
-            vd = self._vardict
-        for k in vd:
+        for k in self._vardict:
             v = self._vardict[k]
             s += '  [{}: {}]\n'.format(sasoptpy.util.get_first_member(k), v)
         s += ']'
@@ -680,11 +673,7 @@ class VariableGroup:
         keylen = max(map(len, self._vardict))
         for i in range(keylen):
             ls = []
-            try:
-                vd = sorted(self._vardict)
-            except TypeError:
-                vd = self._vardict
-            for k in vd:
+            for k in self._vardict:
                 if k[i] not in ls:
                     ls.append(k[i])
             s += '{}, '.format(ls)

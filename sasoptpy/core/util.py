@@ -17,6 +17,12 @@ def is_constraint(obj):
     return isinstance(obj, sasoptpy.core.Constraint)
 
 
+def is_abstract(obj):
+    if hasattr(obj, '_abstract') and obj._abstract:
+        return True
+    return False
+
+
 def _to_iterator_expression(itlist):
     strlist = []
     for i in itlist:
