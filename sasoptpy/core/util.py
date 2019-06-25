@@ -1,4 +1,5 @@
 
+from math import inf
 import warnings
 
 import sasoptpy
@@ -79,8 +80,7 @@ def _evaluate(comp):
         try:
             v = val * ref[0].get_value() / ref[1].get_value()
         except ZeroDivisionError:
-            print('ERROR: Float division by zero')
-            return None
+            raise ZeroDivisionError('Division error in evaluation')
     elif op == '^':
         v = val * ref[0].get_value() ** ref[1].get_value()
     else:
@@ -196,5 +196,42 @@ def append_coef_value(original_dict, ref, key, value):
 
 def get_name_from_keys(name, keys):
     return '{}['.format(name) + ','.join(format(k) for k in keys) + ']'
+
+
+def check_transfer_mode(argv):
+    if sasoptpy.transfer_allowed and hasattr(argv, 'gi_frame'):
+        argv.gi_frame.f_globals.update(sasoptpy._transfer)
+
+
+def get_generator_names(argv):
+    keys = tuple()
+    if argv.gi_code.co_nlocals == 1:
+        vnames = argv.gi_code.co_cellvars
+    else:
+        vnames = argv.gi_code.co_varnames
+    vdict = argv.gi_frame.f_locals
+    for ky in vnames:
+        if ky != '.0':
+            keys = keys + (vdict[ky],)
+    return keys
+
+
+def get_default_var_bounds(vartype, lb, ub):
+
+    if vartype == sasoptpy.BIN:
+        lb = 0 if lb is None else max(lb, 0)
+        ub = 1 if ub is None else min(ub, 1)
+    else:
+        if lb is None:
+            lb = - inf
+        if ub is None:
+            ub = inf
+
+    return lb, ub
+
+def is_regular_component(cm):
+    return (cm._objorder > 0 and
+            not (hasattr(cm, '_shadow') and cm._shadow) and
+            not (hasattr(cm, '_parent') and cm._parent))
 
 

@@ -335,7 +335,7 @@ class Set(sasoptpy.Expression):
 
     """
 
-    def __init__(self, name, init=None, value=None, settype=['num']):
+    def __init__(self, name, init=None, value=None, settype=None):
         super().__init__()
         self._name = sasoptpy.util.assign_name(name, 'set')
         self._objorder = sasoptpy.util.register_globally(self._name, self)
@@ -351,6 +351,8 @@ class Set(sasoptpy.Expression):
                 pass
         self._init = init
         self._value = value
+        if settype is None:
+            settype = ['num']
         self._type = sasoptpy.util.pack_to_list(settype)
         self._colname = sasoptpy.util.pack_to_list(name)
         self._iterators = []

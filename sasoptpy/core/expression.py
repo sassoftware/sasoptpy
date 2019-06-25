@@ -265,6 +265,9 @@ class Expression:
         self._temp = False
         return self._name
 
+    def get_constant(self):
+        return self._linCoef['CONST']['val']
+
     def _expr(self):
         """
         Generates the OPTMODEL compatible string representation of the object.

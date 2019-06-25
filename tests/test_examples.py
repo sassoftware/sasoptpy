@@ -41,13 +41,11 @@ class TestExamples(unittest.TestCase):
                            authinfo=os.environ.get('AUTHINFO'))
             cls.defstdout = sys.stdout
         except SWATError:
-            print()
             raise unittest.SkipTest('Cannot establish CAS connection. ' \
                   + 'Check your environment variables ' \
                   + '(CASHOST, CASPORT, AUTHINFO)')
         except TypeError:
-            raise unittest.SkipTest('CASPORT environment variable is not'
-                                    'defined')
+            raise unittest.SkipTest('Environment variable may not be defined')
 
 
     def setUp(self):
@@ -73,7 +71,7 @@ class TestExamples(unittest.TestCase):
     def test_fm2(self):
         from examples.food_manufacture_2 import test
         obj = self.run_test(test)
-        self.assertAlmostEqual(obj, 100278.7037037037, self.digits)
+        self.assertAlmostEqual(obj, 100278.7, 1)
 
     def test_fp1(self):
         from examples.factory_planning_1 import test
@@ -98,7 +96,7 @@ class TestExamples(unittest.TestCase):
     def test_mo(self):
         from examples.mining_optimization import test
         obj = self.run_test(test)
-        self.assertAlmostEqual(obj, 146.861980777726, self.digits)
+        self.assertAlmostEqual(obj, 146.86, 2)
 
     def test_farmp(self):
         from examples.farm_planning import test

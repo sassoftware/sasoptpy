@@ -36,10 +36,12 @@ from sasoptpy.util import (
 from sasoptpy.structure import (inside_container, containable)
 
 from sasoptpy.core import Expression
-from sasoptpy.core import (Variable, VariableGroup, Constraint, ConstraintGroup, Model)
+from sasoptpy.core import (Variable, VariableGroup, Constraint, ConstraintGroup,
+                           Model)
 
 import sasoptpy.abstract
-from sasoptpy.abstract import (Parameter, ImplicitVar)
+from sasoptpy.abstract import (Set, Parameter, ImplicitVar, ExpressionDict,
+                               OldStatement)
 
 import sasoptpy.config
 from sasoptpy.config import Config

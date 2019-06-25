@@ -59,7 +59,7 @@ def test(cas_conn, sols=False):
     L1.set_objective(objective1, sense=so.MIN)
     L1.include(POINTS, x, y, xy_table_ref)
     L1.include(order, beta, estimate, surplus, slack, abs_dev_con)
-    L1.add_statement('print x y estimate surplus slack;', after_solve=True)
+    L1.add_postsolve_statement('print x y estimate surplus slack;')
 
     L1.solve(verbose=True)
     sol_data1 = L1.response['Print3.PrintTable'].sort_values('x')

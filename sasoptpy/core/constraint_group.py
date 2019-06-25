@@ -59,12 +59,13 @@ class ConstraintGroup:
         if type(argv) == list or type(argv) == GeneratorType:
             self._recursive_add_cons(argv, name=name, condict=self._condict,
                                      conlist=self._conlist)
-        if name is not None:
-            name = sasoptpy.util.assign_name(name, 'con')
-            self._name = name
-            self._objorder = sasoptpy.util.register_globally(name, self)
         else:
-            self._name = None
+            raise(TypeError, "Invalid iterator type for constraint group")
+
+        name = sasoptpy.util.assign_name(name, 'cg')
+        self._name = name
+        self._objorder = sasoptpy.util.register_globally(name, self)
+
         self._shadows = dict()
 
     def get_name(self):
@@ -93,31 +94,20 @@ class ConstraintGroup:
     def _recursive_add_cons(self, argv, name, condict, conlist, ckeys=()):
         conctr = 0
 
-        if sasoptpy.transfer_allowed:
-            argv.gi_frame.f_globals.update(sasoptpy._transfer)
+        sasoptpy.core.util.check_transfer_mode(argv)
 
         for idx, c in enumerate(argv):
             if type(argv) == list:
-                newkeys = ckeys + (idx,)
+                new_keys = ckeys + (idx,)
             elif type(argv) == GeneratorType:
-                newkeys = ()
-                if argv.gi_code.co_nlocals == 1:
-                    vnames = argv.gi_code.co_cellvars
-                else:
-                    vnames = argv.gi_code.co_varnames
-                vdict = argv.gi_frame.f_locals
-                for ky in vnames:
-                    if ky != '.0':
-                        newkeys = newkeys + (vdict[ky],)
-            else:
-                print('ERROR: Unknown argument type for constraint generation', type(argv))
-                return None
-            keylist = sasoptpy.core.util._to_safe_iterator_expression(newkeys)
-            conname = '{}[{}]'.format(name, ','.join(keylist))
-            conname = sasoptpy.util.assign_name(conname, 'con')
-            newcon = sasoptpy.Constraint(exp=c, name=conname, crange=c._range)
-            condict[newkeys] = newcon
-            conlist.append(newkeys)
+                new_keys = sasoptpy.core.util.get_generator_names(argv)
+
+            key_list = sasoptpy.core.util._to_safe_iterator_expression(new_keys)
+            con_name = '{}[{}]'.format(name, ','.join(key_list))
+            con_name = sasoptpy.util.assign_name(con_name, 'con')
+            new_con = sasoptpy.Constraint(exp=c, name=con_name, crange=c._range)
+            condict[new_keys] = new_con
+            conlist.append(new_keys)
             conctr += 1
         self._set_con_info()
 
@@ -182,19 +172,18 @@ class ConstraintGroup:
         item : Constraint
             Reference to the constraint
         """
-        if isinstance(key, sasoptpy.abstract.SetIterator):
+        if sasoptpy.abstract.is_key_abstract(key):
             tuple_key = sasoptpy.util.pack_to_tuple(key)
             tuple_key = tuple(i for i in sasoptpy.util.flatten_tuple(tuple_key))
-            if tuple_key in self._condict:
-                return self._condict[tuple_key]
-            elif tuple_key in self._shadows:
-                return self._condict[tuple_key]
+            if tuple_key in self._shadows:
+                return self._shadows[tuple_key]
             else:
                 k = list(self._condict)[0]
                 c = self._condict[k]
                 cname = self._name
                 cname = cname.replace(' ', '')
-                shadow = Constraint(exp=c, direction=c._direction, name=cname, crange=c._range)
+                shadow = sasoptpy.Constraint(exp=c, direction=c._direction,
+                                             name=cname, crange=c._range)
                 self._shadows[tuple_key] = shadow
                 return shadow
         else:
@@ -208,9 +197,6 @@ class ConstraintGroup:
     def _set_con_info(self):
         for i in self._condict:
             self._condict[i]._set_info(parent=self, key=i)
-
-    def _get_keys(self):
-        return list(self._condict)[0]
 
     def _defn(self, tabs=''):
         s = ''
@@ -238,8 +224,7 @@ class ConstraintGroup:
         Returns a string representation of the object.
         """
         s = 'sasoptpy.ConstraintGroup(['
-        for i in self._condict:
-            s += '{}, '.format(str(self._condict[i]))
+        s += ', '.join(str(self._condict[i]) for i in self._condict)
         s += '], '
         s += 'name=\'{}\')'.format(self._name)
         return s

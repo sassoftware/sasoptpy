@@ -54,19 +54,13 @@ class Variable(Expression):
         self._name = name
         self._type = vartype
 
-        if lb is None:
-            lb = -inf
-        if ub is None:
-            ub = inf
+        self._lb, self._ub = sasoptpy.core.util.get_default_var_bounds(
+            vartype, lb, ub)
 
-        self._lb = lb
-        self._ub = ub
         self._init = init
         if self._init is not None:
             self._value = self._init
-        if vartype == sasoptpy.BIN:
-            self._lb = max(self._lb, 0)
-            self._ub = min(self._ub, 1)
+
         if shadow:
             self._linCoef[name + str(id(self))] = {'ref': self, 'val': 1}
         else:
@@ -130,6 +124,12 @@ class Variable(Expression):
 
         """
         self._init = init
+
+    def get_name(self):
+        if self._abstract:
+            return str(self)
+        else:
+            return self._name
 
     def get_value(self):
         """

@@ -7,8 +7,8 @@ def test(cas_conn, sols=False):
 
     x = m.add_variables([1, 2], lb=0, ub=5, name='x')
 
-    f1 = m.set_objective((x[1]-1)**2 + (x[1] - x[2])**2, name='f1', sense=so.MIN, multiobj=True)
-    f2 = m.set_objective((x[1]-x[2])**2 + (x[2] - 3)**2, name='f2', sense=so.MIN, multiobj=True)
+    f1 = m.set_objective((x[1]-1)**2 + (x[1] - x[2])**2, name='f1', sense=so.MIN)
+    f2 = m.append_objective((x[1]-x[2])**2 + (x[2] - 3)**2, name='f2', sense=so.MIN)
 
     m.solve(verbose=True, options={'with': 'lso', 'obj': (f1, f2), 'logfreq': 50})
 

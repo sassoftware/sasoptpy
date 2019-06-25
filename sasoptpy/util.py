@@ -141,6 +141,10 @@ def register_name(name, obj):
     warnings.warn('Use sasoptpy.util.register_globally', DeprecationWarning)
     return register_globally(name, obj)
 
+def save_object(obj, name, obj_type):
+    name = sasoptpy.util.assign_name(name, obj_type)
+    obj._objorder = register_globally(name, obj)
+    obj._name = name
 
 def get_namedict():
     return sasoptpy.__namedict
@@ -151,6 +155,21 @@ def delete_name(name):
     if name is not None and name in nd:
         del nd[name]
 
+def is_existing_object(obj):
+    if obj.get_name() is None:
+        return False
+    elif get_obj_by_name(obj.get_name()):
+        return True
+    else:
+        return False
+
+def need_name_assignment(obj, name):
+    if obj.get_name() is None:
+        return True
+    elif obj.get_name() == name:
+        return False
+    else:
+        return True
 
 def set_creation_order_if_empty(obj, order):
     if hasattr(obj, '_objorder') and not obj._objorder:

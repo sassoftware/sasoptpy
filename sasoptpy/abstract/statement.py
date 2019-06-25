@@ -56,13 +56,11 @@ class LiteralStatement(Statement):
         self.elements.append(literal)
 
     def _expr(self):
-        expr = ';\n'.join(self.elements)
+        expr = '\n'.join(self.elements)
         return expr
 
     def _defn(self):
-        defn = ''
-        for line in self.elements:
-            defn += line + ';\n'
+        defn = '\n'.join(self.elements)
         return defn
 
 
@@ -237,21 +235,13 @@ class CreateDataStatement(Statement):
 
 class ForLoopStatement(Statement):
 
-    def __init__(self, func=None, variable=None, over_set=None):
+    def __init__(self, func=None, over_set=None):
         super().__init__()
         self.func = func
-        self.variable = variable
-        self.actual_variable = None
         self.over_set = over_set
+        if sasoptpy.abstract.is_abstract_set(self.over_set):
+            self.variable = sasoptpy.abstract.SetIterator(self.over_set)
         self.conditions = None
-        self._generate_actual_variable()
-
-    def _generate_actual_variable(self):
-        import sasoptpy.data
-        if isinstance(self.variable, sasoptpy.abstract.ParameterValue):
-            self.actual_variable = sasoptpy.abstract.SetIterator(self.over_set)
-        else:
-            self.actual_variable = self.variable
 
     def append(self, element):
         self.elements.append(element)
@@ -259,15 +249,15 @@ class ForLoopStatement(Statement):
     def _defn(self):
 
         s = ''
-        s += 'for {{{} in {}'.format(self.actual_variable, self.over_set)
+        s += 'for {{{} in {}'.format(self.variable, self.over_set)
         if self.conditions:
             s += ': '
             for i in self.conditions:
                 s += i._expr()
         s += '} do;\n'
 
-        if self.actual_variable._name != self.variable._name:
-            s += '    ' + LiteralStatement('{} = {};\n'.format(self.variable, self.actual_variable))._expr()
+        # if self.variable and self.actual_variable._name != self.variable._name:
+        #     s += '    ' + LiteralStatement('{} = {};\n'.format(self.variable, self.actual_variable))._expr()
 
         for el in self.elements:
             s += '    ' + el._defn() + '\n'

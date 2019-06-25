@@ -199,6 +199,14 @@ class TestExpression(unittest.TestCase):
         f = 0 <= e
         self.assertTrue(type(f) == so.Constraint)
 
+    def test_get_constant(self):
+        x = so.Variable(name='x')
+
+        e = 2 * x
+        self.assertEqual(e.get_constant(), 0)
+
+        e = 2 * x + 5
+        self.assertEqual(e.get_constant(), 5)
 
     def tearDown(self):
         so.reset()
