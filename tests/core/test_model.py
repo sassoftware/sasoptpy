@@ -192,17 +192,20 @@ class TestModel(unittest.TestCase):
         I = m.add_set(name='I', value=range(1, 5))
         fl = m.insert_for_loop(the_loop, over_set=I)
         self.assertEqual([fl], m.get_statements())
-        self.assertEqual("""proc optmodel;
-min test_add_for_loop2_obj = 0;
-set I = 1..5;
-for {i_1 in I} do;
-    MIN loop_obj = i_1 * x + i_1;
-    solve with milp / primalin maxtime=300;
-end;
-solve;
-print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
-print _con_.name _con_.body _con_.dual;
-quit;\n""", m.to_optmodel())
+        self.assertEqual(m.to_optmodel(), inspect.cleandoc(
+            """
+            proc optmodel;
+            min test_add_for_loop2_obj = 0;
+            set I = 1..5;
+            for {i_1 in I} do;
+                MIN loop_obj = i_1 * x + i_1;
+                solve with milp / primalin maxtime=300;
+            end;
+            solve;
+            print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
+            print _con_.name _con_.body _con_.dual;
+            quit;
+            """))
 
     # TODO: Add test_read_data
 
@@ -220,7 +223,7 @@ quit;\n""", m.to_optmodel())
                 solve;
                 print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
                 print _con_.name _con_.body _con_.dual;
-                quit;''') + '\n')
+                quit;'''))
         s = so.abstract.LiteralStatement('print x;')
         m.include(s)
         self.assertEqual(
@@ -233,7 +236,7 @@ quit;\n""", m.to_optmodel())
                 print x;
                 print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
                 print _con_.name _con_.body _con_.dual;
-                quit;''') + '\n')
+                quit;'''))
 
     def test_postsolve_statement(self):
         m = so.Model(name='test_postsolve_statement')
@@ -247,7 +250,7 @@ quit;\n""", m.to_optmodel())
             solve;
             print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
             print _con_.name _con_.body _con_.dual;
-            quit;""") + '\n')
+            quit;"""))
 
         m.add_postsolve_statement('print x;')
         self.assertEqual(m.to_optmodel(), inspect.cleandoc(
@@ -259,7 +262,7 @@ quit;\n""", m.to_optmodel())
             print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
             print _con_.name _con_.body _con_.dual;
             print x;
-            quit;""") + '\n')
+            quit;"""))
 
         m.add_postsolve_statement(so.abstract.LiteralStatement('expand;'))
         self.assertEqual(m.to_optmodel(), inspect.cleandoc(
@@ -272,7 +275,7 @@ quit;\n""", m.to_optmodel())
             print _con_.name _con_.body _con_.dual;
             print x;
             expand;
-            quit;""") + '\n')
+            quit;"""))
 
     def test_include_model(self):
         m1 = so.Model(name='test_copy_model_1')
@@ -298,7 +301,7 @@ quit;\n""", m.to_optmodel())
             solve;
             print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
             print _con_.name _con_.body _con_.dual;
-            quit;""") + '\n')
+            quit;"""))
 
     def test_set_get_objective(self):
         m = so.Model(name='test_set_get_objective')
@@ -323,7 +326,7 @@ quit;\n""", m.to_optmodel())
             solve;
             print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
             print _con_.name _con_.body _con_.dual;
-            quit;""") + '\n')
+            quit;"""))
 
     def test_get_objective_value(self):
         m = so.Model(name='test_objective_value')
@@ -713,6 +716,19 @@ quit;\n""", m.to_optmodel())
         24       BV           BND              t     1.0                NaN    25
         25   ENDATA                                  0.0                0.0    26
         """
+        ))
+
+    def test_to_optmodel(self):
+        m = so.Model(name='test_to_optmodel')
+        self.assertEqual(m.to_optmodel(), inspect.cleandoc(
+            """
+            proc optmodel;
+            min test_to_optmodel_obj = 0;
+            solve;
+            print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
+            print _con_.name _con_.body _con_.dual;
+            quit;
+            """
         ))
 
 

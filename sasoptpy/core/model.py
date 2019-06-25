@@ -1679,7 +1679,7 @@ class Model:
             s += i._defn() + '\n'
 
         if header:
-            s += 'quit;\n'
+            s += 'quit;'
         return(s)
 
     def __str__(self):
