@@ -40,6 +40,9 @@ class TestModel(unittest.TestCase):
         except SWATError:
             warnings.warn('CAS connection is not available',
                           RuntimeWarning)
+        except TypeError:
+            warnings.warn('CAS variables are not available',
+                          RuntimeWarning)
 
     def setUp(self):
         pass
