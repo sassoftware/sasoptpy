@@ -28,7 +28,7 @@ def test(cas_conn):
 
     print(m.get_problem_summary())
     print(m.get_solution_summary())
-    if m.test_session() == 'CAS':
+    if m.get_session_type() == 'CAS':
         print(m.get_solution()[['var', 'value']])
 
     return m.get_objective_value()

@@ -1437,3 +1437,13 @@ def get_python_symbol(symbol):
 
 def safe_string(st):
     return "".join(c if c.isalnum() else '_' for c in st)
+
+def to_expression(item):
+    return item._expr()
+
+def to_definition(item):
+    return item._defn()
+
+def is_linear(item):
+    return item._is_linear()
+

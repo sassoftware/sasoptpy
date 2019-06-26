@@ -26,6 +26,16 @@ import sasoptpy as so
 import warnings
 import inspect
 
+class MockSASconfig:
+
+    def __init__(self, name):
+        self.name = name
+
+class SASsession:
+
+    def __init__(self, cfgname):
+        import saspy
+        self.sascfg = MockSASconfig(name=cfgname)
 
 class TestModel(unittest.TestCase):
 
@@ -46,6 +56,15 @@ class TestModel(unittest.TestCase):
 
     def setUp(self):
         pass
+
+    @classmethod
+    def get_standard_model(cls, name):
+        m = so.Model(name=name)
+        x = m.add_variable(name='x')
+        y = m.add_variables(2, name='y')
+        c1 = m.add_constraint(x <= 5, name='c1')
+        c2 = m.add_constraints((y[i] <= 3 for i in range(2)), name='c2')
+        return m
 
     def test_initialize(self):
         m = so.Model(name='test_initialize', session=None)
@@ -166,7 +185,7 @@ class TestModel(unittest.TestCase):
         m = so.Model(name='test_add_set')
         I = m.add_set(name='I', init=2)
         self.assertEqual(m.get_sets(), [I])
-        self.assertEqual(m.get_sets()[0]._defn(), "set I init 2;")
+        self.assertEqual(so.to_definition(m.get_sets()[0]), "set I init 2;")
 
     def test_add_parameter(self):
         m = so.Model(name='test_add_parameter')
@@ -388,7 +407,9 @@ class TestModel(unittest.TestCase):
             m.set_objective(x + y[0] + y[1], sense=so.MIN)
             m.solve()
             self.assertEqual(m.get_variable_value(y[0]), 0.5)
-            self.assertEqual(m.get_variable_value('z'), None)
+            def get_variable_warning():
+                self.assertEqual(m.get_variable_value('z'), None)
+            self.assertWarns(UserWarning, get_variable_warning)
 
             m2 = so.Model(name='test_get_var_value_copy')
             m2.include(m)
@@ -497,7 +518,7 @@ class TestModel(unittest.TestCase):
             """
         ))
 
-        m.solve(frame=True, options={'maxpoolsols': 3})
+        m.solve(mps=True, options={'maxpoolsols': 3}, verbose=True)
         self.assertEqual(m.get_solution().to_string(), inspect.cleandoc(
             """
                        var   lb             ub  value  solution
@@ -599,57 +620,57 @@ class TestModel(unittest.TestCase):
         m.set_variable_coef(z, 1)
         self.assertEqual(m.get_variable_coef(z), 1)
 
-    def test_to_frame(self):
-        m = so.Model(name='test_to_frame')
+    def test_to_mps(self):
+        m = so.Model(name='test_to_mps')
         x = m.add_variable(name='x', lb=0, ub=5, vartype=so.INT)
         y = m.add_variables(2, name='y', lb=1)
         m.set_objective(x + y[0], sense=so.MIN)
-        self.assertEqual(m.to_frame().to_string(), inspect.cleandoc(
+        self.assertEqual(m.to_mps().to_string(), inspect.cleandoc(
             """
-                 Field1    Field2         Field3  Field4    Field5  Field6  _id_
-            0      NAME            test_to_frame     0.0               0.0     1
-            1      ROWS                              NaN               NaN     2
-            2       MIN     obj_1                    NaN               NaN     3
-            3   COLUMNS                              NaN               NaN     4
-            4            MARK0000       'MARKER'     NaN  'INTORG'     NaN     5
-            5                   x          obj_1     1.0               NaN     6
-            6            MARK0001       'MARKER'     NaN  'INTEND'     NaN     7
-            7                y[0]          obj_1     1.0               NaN     8
-            8                y[1]          obj_1     0.0               NaN     9
-            9       RHS                              NaN               NaN    10
-            10   RANGES                              NaN               NaN    11
-            11   BOUNDS                              NaN               NaN    12
-            12       LO       BND              x     0.0               NaN    13
-            13       UP       BND              x     5.0               NaN    14
-            14       LO       BND           y[0]     1.0               NaN    15
-            15       LO       BND           y[1]     1.0               NaN    16
-            16   ENDATA                              0.0               0.0    17
+                 Field1    Field2       Field3  Field4    Field5  Field6  _id_
+            0      NAME            test_to_mps     0.0               0.0     1
+            1      ROWS                            NaN               NaN     2
+            2       MIN     obj_1                  NaN               NaN     3
+            3   COLUMNS                            NaN               NaN     4
+            4            MARK0000     'MARKER'     NaN  'INTORG'     NaN     5
+            5                   x        obj_1     1.0               NaN     6
+            6            MARK0001     'MARKER'     NaN  'INTEND'     NaN     7
+            7                y[0]        obj_1     1.0               NaN     8
+            8                y[1]        obj_1     0.0               NaN     9
+            9       RHS                            NaN               NaN    10
+            10   RANGES                            NaN               NaN    11
+            11   BOUNDS                            NaN               NaN    12
+            12       LO       BND            x     0.0               NaN    13
+            13       UP       BND            x     5.0               NaN    14
+            14       LO       BND         y[0]     1.0               NaN    15
+            15       LO       BND         y[1]     1.0               NaN    16
+            16   ENDATA                            0.0               0.0    17
             """
         ))
         m.set_objective(x + 10, name='o', sense=so.MAX)
-        self.assertEqual(m.to_frame(constant=True).to_string(),
+        self.assertEqual(m.to_mps(constant=True).to_string(),
                          inspect.cleandoc(
         """
-             Field1        Field2         Field3  Field4    Field5  Field6  _id_
-        0      NAME                test_to_frame     0.0               0.0     1
-        1      ROWS                                  NaN               NaN     2
-        2       MAX    o_constant                    NaN               NaN     3
-        3   COLUMNS                                  NaN               NaN     4
-        4                MARK0000       'MARKER'     NaN  'INTORG'     NaN     5
-        5                       x     o_constant     1.0               NaN     6
-        6                MARK0001       'MARKER'     NaN  'INTEND'     NaN     7
-        7                    y[0]     o_constant     0.0               NaN     8
-        8                    y[1]     o_constant     0.0               NaN     9
-        9            obj_constant     o_constant     1.0               NaN    10
-        10      RHS                                  NaN               NaN    11
-        11   RANGES                                  NaN               NaN    12
-        12   BOUNDS                                  NaN               NaN    13
-        13       LO           BND              x     0.0               NaN    14
-        14       UP           BND              x     5.0               NaN    15
-        15       LO           BND           y[0]     1.0               NaN    16
-        16       LO           BND           y[1]     1.0               NaN    17
-        17       FX           BND   obj_constant    10.0               NaN    18
-        18   ENDATA                                  0.0               0.0    19
+             Field1        Field2        Field3  Field4    Field5  Field6  _id_
+        0      NAME                 test_to_mps     0.0               0.0     1
+        1      ROWS                                 NaN               NaN     2
+        2       MAX    o_constant                   NaN               NaN     3
+        3   COLUMNS                                 NaN               NaN     4
+        4                MARK0000      'MARKER'     NaN  'INTORG'     NaN     5
+        5                       x    o_constant     1.0               NaN     6
+        6                MARK0001      'MARKER'     NaN  'INTEND'     NaN     7
+        7                    y[0]    o_constant     0.0               NaN     8
+        8                    y[1]    o_constant     0.0               NaN     9
+        9            obj_constant    o_constant     1.0               NaN    10
+        10      RHS                                 NaN               NaN    11
+        11   RANGES                                 NaN               NaN    12
+        12   BOUNDS                                 NaN               NaN    13
+        13       LO           BND             x     0.0               NaN    14
+        14       UP           BND             x     5.0               NaN    15
+        15       LO           BND          y[0]     1.0               NaN    16
+        16       LO           BND          y[1]     1.0               NaN    17
+        17       FX           BND  obj_constant    10.0               NaN    18
+        18   ENDATA                                 0.0               0.0    19
         """
                          ))
 
@@ -658,30 +679,30 @@ class TestModel(unittest.TestCase):
         c2 = m.add_constraint(y[0] <= 100, name='inf_ub')
         from math import inf
         c2.set_rhs(inf)
-        self.assertEqual(m.to_frame().to_string(), inspect.cleandoc(
+        self.assertEqual(m.to_mps().to_string(), inspect.cleandoc(
         """
-             Field1        Field2         Field3  Field4    Field5  Field6  _id_
-        0      NAME                test_to_frame     0.0               0.0     1
-        1      ROWS                                  NaN               NaN     2
-        2       MAX    o_constant                    NaN               NaN     3
-        3         G       zero_lb                    NaN               NaN     4
-        4         L        inf_ub                    NaN               NaN     5
-        5   COLUMNS                                  NaN               NaN     6
-        6                MARK0000       'MARKER'     NaN  'INTORG'     NaN     7
-        7                       x     o_constant     1.0   zero_lb     1.0     8
-        8                MARK0001       'MARKER'     NaN  'INTEND'     NaN     9
-        9                    y[0]        zero_lb     1.0    inf_ub     1.0    10
-        10                   y[1]     o_constant     0.0               NaN    11
-        11           obj_constant     o_constant     1.0               NaN    12
-        12      RHS                                  NaN               NaN    13
-        13   RANGES                                  NaN               NaN    14
-        14   BOUNDS                                  NaN               NaN    15
-        15       LO           BND              x     0.0               NaN    16
-        16       UP           BND              x     5.0               NaN    17
-        17       LO           BND           y[0]     1.0               NaN    18
-        18       LO           BND           y[1]     1.0               NaN    19
-        19       FX           BND   obj_constant    10.0               NaN    20
-        20   ENDATA                                  0.0               0.0    21
+             Field1        Field2        Field3  Field4    Field5  Field6  _id_
+        0      NAME                 test_to_mps     0.0               0.0     1
+        1      ROWS                                 NaN               NaN     2
+        2       MAX    o_constant                   NaN               NaN     3
+        3         G       zero_lb                   NaN               NaN     4
+        4         L        inf_ub                   NaN               NaN     5
+        5   COLUMNS                                 NaN               NaN     6
+        6                MARK0000      'MARKER'     NaN  'INTORG'     NaN     7
+        7                       x    o_constant     1.0   zero_lb     1.0     8
+        8                MARK0001      'MARKER'     NaN  'INTEND'     NaN     9
+        9                    y[0]       zero_lb     1.0    inf_ub     1.0    10
+        10                   y[1]    o_constant     0.0               NaN    11
+        11           obj_constant    o_constant     1.0               NaN    12
+        12      RHS                                 NaN               NaN    13
+        13   RANGES                                 NaN               NaN    14
+        14   BOUNDS                                 NaN               NaN    15
+        15       LO           BND             x     0.0               NaN    16
+        16       UP           BND             x     5.0               NaN    17
+        17       LO           BND          y[0]     1.0               NaN    18
+        18       LO           BND          y[1]     1.0               NaN    19
+        19       FX           BND  obj_constant    10.0               NaN    20
+        20   ENDATA                                 0.0               0.0    21
         """
         ))
 
@@ -689,37 +710,41 @@ class TestModel(unittest.TestCase):
         t = m.add_variable(name='t', vartype=so.BIN)
         m.drop_constraints([c1, c2])
         m.add_constraint(x + 2*y[0] == [3, 8], name='range_con')
-        self.assertEqual(m.to_frame().to_string(), inspect.cleandoc(
+        self.assertEqual(m.to_mps().to_string(), inspect.cleandoc(
         """
-             Field1        Field2         Field3  Field4     Field5  Field6  _id_
-        0      NAME                test_to_frame     0.0                0.0     1
-        1      ROWS                                  NaN                NaN     2
-        2       MAX    o_constant                    NaN                NaN     3
-        3         E     range_con                    NaN                NaN     4
-        4   COLUMNS                                  NaN                NaN     5
-        5                MARK0000       'MARKER'     NaN   'INTORG'     NaN     6
-        6                       x     o_constant     1.0  range_con     1.0     7
-        7                MARK0001       'MARKER'     NaN   'INTEND'     NaN     8
-        8                    y[0]      range_con     2.0                NaN     9
-        9                    y[1]     o_constant     0.0                NaN    10
-        10           obj_constant     o_constant     1.0                NaN    11
-        11                      u     o_constant     0.0                NaN    12
-        12                      t     o_constant     0.0                NaN    13
-        13      RHS                                  NaN                NaN    14
-        14                    RHS      range_con     3.0                NaN    15
-        15   RANGES                                  NaN                NaN    16
-        16                    rng      range_con     5.0                NaN    17
-        17   BOUNDS                                  NaN                NaN    18
-        18       LO           BND              x     0.0                NaN    19
-        19       UP           BND              x     5.0                NaN    20
-        20       LO           BND           y[0]     1.0                NaN    21
-        21       LO           BND           y[1]     1.0                NaN    22
-        22       FX           BND   obj_constant    10.0                NaN    23
-        23       FR           BND              u     NaN                NaN    24
-        24       BV           BND              t     1.0                NaN    25
-        25   ENDATA                                  0.0                0.0    26
+             Field1        Field2        Field3  Field4     Field5  Field6  _id_
+        0      NAME                 test_to_mps     0.0                0.0     1
+        1      ROWS                                 NaN                NaN     2
+        2       MAX    o_constant                   NaN                NaN     3
+        3         E     range_con                   NaN                NaN     4
+        4   COLUMNS                                 NaN                NaN     5
+        5                MARK0000      'MARKER'     NaN   'INTORG'     NaN     6
+        6                       x    o_constant     1.0  range_con     1.0     7
+        7                MARK0001      'MARKER'     NaN   'INTEND'     NaN     8
+        8                    y[0]     range_con     2.0                NaN     9
+        9                    y[1]    o_constant     0.0                NaN    10
+        10           obj_constant    o_constant     1.0                NaN    11
+        11                      u    o_constant     0.0                NaN    12
+        12                      t    o_constant     0.0                NaN    13
+        13      RHS                                 NaN                NaN    14
+        14                    RHS     range_con     3.0                NaN    15
+        15   RANGES                                 NaN                NaN    16
+        16                    rng     range_con     5.0                NaN    17
+        17   BOUNDS                                 NaN                NaN    18
+        18       LO           BND             x     0.0                NaN    19
+        19       UP           BND             x     5.0                NaN    20
+        20       LO           BND          y[0]     1.0                NaN    21
+        21       LO           BND          y[1]     1.0                NaN    22
+        22       FX           BND  obj_constant    10.0                NaN    23
+        23       FR           BND             u     NaN                NaN    24
+        24       BV           BND             t     1.0                NaN    25
+        25   ENDATA                                 0.0                0.0    26
         """
         ))
+
+        def get_frame_warning():
+            r = m.to_frame()
+        self.assertWarns(DeprecationWarning, get_frame_warning)
 
     def test_to_optmodel(self):
         m = so.Model(name='test_to_optmodel')
@@ -733,6 +758,141 @@ class TestModel(unittest.TestCase):
             quit;
             """
         ))
+        x = m.add_variable(name='x', init=5)
+        e1 = m.set_objective(x, sense=so.MIN)
+        e2 = m.append_objective(x**2, sense=so.MAX)
+        response = m.to_optmodel(options={
+            'with': 'lso',
+            'relaxint': True,
+            'obj': (e1, e2),
+            'primalin': True,
+        }, ods=True, primalin=True)
+        self.assertEqual(response, inspect.cleandoc(
+            """
+            proc optmodel;
+            var x init 5;
+            min obj_1 = x;
+            max obj_2 = (x) ^ (2);
+            solve with lso relaxint obj (obj_1 obj_2) / primalin;
+            ods output PrintTable=primal_out;
+            print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
+            ods output PrintTable=dual_out;
+            print _con_.name _con_.body _con_.dual;
+            quit;
+            """
+        ))
+
+        response = m.to_optmodel(options={
+            'with': 'nlp',
+            'multistart': {'loglevel': 3, 'maxstarts': 30}
+        })
+        self.assertEqual(response, inspect.cleandoc(
+            """
+            proc optmodel;
+            var x init 5;
+            min obj_1 = x;
+            max obj_2 = (x) ^ (2);
+            solve with nlp / multistart=(loglevel=3,maxstarts=30);
+            print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
+            print _con_.name _con_.body _con_.dual;
+            quit;
+            """
+        ))
+
+    def test_str(self):
+        m = TestModel.get_standard_model(name='test_model_str')
+
+        response = str(m)
+        self.assertEqual(response, inspect.cleandoc(
+            """
+            Model: [
+              Name: test_model_str
+              Objective: MIN [0]
+              Variables (3): [
+                x
+                y[0]
+                y[1]
+              ]
+              Constraints (3): [
+                x <=  5
+                y[0] <=  3
+                y[1] <=  3
+              ]
+            ]
+            """
+        ))
+        if TestModel.conn:
+            m.set_session(TestModel.conn)
+            response = str(m)
+            self.assertEqual(response, inspect.cleandoc(
+                """
+                Model: [
+                  Name: test_model_str
+                  Session: {}:{}
+                  Objective: MIN [0]
+                  Variables (3): [
+                    x
+                    y[0]
+                    y[1]
+                  ]
+                  Constraints (3): [
+                    x <=  5
+                    y[0] <=  3
+                    y[1] <=  3
+                  ]
+                ]
+                """.format(os.environ.get('CASHOST'), os.environ.get('CASPORT'))
+            ))
+
+    def test_model_repr(self):
+        m = so.Model(name='test_model_repr')
+        self.assertEqual(repr(m), "sasoptpy.Model(name='test_model_repr')")
+        s = SASsession(cfgname='winlocal')
+        m.set_session(s)
+        self.assertEqual(
+            repr(m),
+            "sasoptpy.Model(name='test_model_repr', "
+            "session=saspy.SASsession(cfgname='winlocal'))")
+
+        if TestModel.conn:
+            m.set_session(TestModel.conn)
+            cas_repr = repr(m.get_session())
+            self.assertEqual(
+                repr(m), "sasoptpy.Model(name='test_model_repr', session=" +
+                cas_repr + ')')
+
+        def invalid_session_type():
+            w = 5
+            m.set_session(w)
+            rp = repr(m)
+        self.assertRaises(TypeError, invalid_session_type)
+
+    def test_defn(self):
+        m = TestModel.get_standard_model('test_model_defn')
+        self.assertEqual(so.to_definition(m), "problem test_model_defn "
+                                              "include x y c1 c2;")
+
+    def test_expr(self):
+        m = TestModel.get_standard_model('test_model_expr')
+        self.assertEqual(m.to_optmodel(), so.to_expression(m))
+
+    def test_is_linear(self):
+        m = TestModel.get_standard_model('test_model_linearity')
+        self.assertEqual(so.is_linear(m), True)
+        x = so.get_obj_by_name('x')
+        qbound = m.add_constraint(x ** 2 + x <= 10, name='qbound')
+        self.assertEqual(so.is_linear(m), False)
+        m.drop_constraint(qbound)
+        self.assertEqual(so.is_linear(m), True)
+        m.set_objective(x ** 2, sense=so.MIN)
+        self.assertEqual(so.is_linear(m), False)
+
+    def test_session_type(self):
+        m = TestModel.get_standard_model('test_model_session_type')
+        self.assertEqual(m.get_session_type(), None)
+        if TestModel.conn:
+            m.set_session(TestModel.conn)
+            self.assertEqual(m.get_session_type(), 'CAS')
 
 
     def tearDown(self):
