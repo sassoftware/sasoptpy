@@ -125,7 +125,7 @@ class CASMediator(Mediator):
 
         # Upload the problem
         mps_table = self.upload_model(name, replace=replace,
-                                      constant=not has_arg)
+                                      constant=not has_arg, verbose=verbose)
 
         if ptype == 1:
             valid_opts = inspect.signature(session.solveLp).parameters
@@ -380,7 +380,8 @@ class CASMediator(Mediator):
                                              'replace': True})
         return(response.name)
 
-    def upload_model(self, name=None, replace=True, constant=False):
+    def upload_model(self, name=None, replace=True, constant=False,
+                     verbose=False):
         """
         Converts internal model to MPS table and upload to CAS session
 
@@ -408,6 +409,8 @@ class CASMediator(Mediator):
         """
         model = self.model
         df = model.to_mps(constant=constant)
+        if verbose:
+            print(df.to_string())
 
         print('NOTE: Uploading the problem DataFrame to the server.')
         if name is not None:

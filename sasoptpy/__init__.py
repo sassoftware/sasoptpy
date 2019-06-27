@@ -38,7 +38,7 @@ from sasoptpy.structure import (inside_container, containable)
 
 from sasoptpy.core import Expression
 from sasoptpy.core import (Variable, VariableGroup, Constraint, ConstraintGroup,
-                           Model)
+                           Model, Objective)
 
 import sasoptpy.abstract
 from sasoptpy.abstract import (Set, Parameter, ImplicitVar, ExpressionDict,

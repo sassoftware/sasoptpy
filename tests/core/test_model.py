@@ -20,11 +20,14 @@
 Unit tests for core classes.
 """
 
+from difflib import SequenceMatcher
+import inspect
 import os
 import unittest
-import sasoptpy as so
 import warnings
-import inspect
+
+import sasoptpy as so
+
 
 class MockSASconfig:
 
@@ -451,7 +454,9 @@ class TestModel(unittest.TestCase):
                             Linear Range                        0
                                                                  
                             Constraint Coefficients             3"""))
-        self.assertEqual(m.get_solution_summary().to_string(), inspect.cleandoc(
+
+        seq = SequenceMatcher(None, m.get_solution_summary().to_string(),
+                              inspect.cleandoc(
             """
                                          Value
             Label                             
@@ -469,6 +474,8 @@ class TestModel(unittest.TestCase):
             Presolve Time                 0.00
             Solution Time                 0.00"""
         ))
+        # There is a chance that the solution time is slightly different
+        self.assertTrue(seq.ratio() > 0.99)
 
     def test_get_solution(self):
         if not TestModel.conn:

@@ -71,7 +71,6 @@ class Model:
         self._congroups = []
         self._objective = Objective(0, name=name+'_obj')
         self._multiobjs = []
-        self._datarows = []
         self._variableDict = {}
         self._constraintDict = {}
         self._soltime = 0
@@ -1365,25 +1364,6 @@ class Model:
         """
         for v in self._variables:
             print('{}: {}'.format(v._name, v._value))
-
-    def _append_row(self, row):
-        """
-        Appends a new row to the model representation
-
-        Parameters
-        ----------
-        row : list
-            A new row to be added to the model representation for MPS format
-
-        Returns
-        -------
-        rowid : int
-            Current number for the ID column
-        """
-        self._datarows.append(row + [str(self._id)])
-        rowid = self._id
-        self._id = self._id+1
-        return rowid
 
     def to_frame(self, **kwargs):
         warnings.warn('Use to_mps for obtaining problem in MPS format',
