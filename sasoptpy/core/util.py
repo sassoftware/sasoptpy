@@ -67,7 +67,7 @@ def _evaluate(comp):
     ref = comp['ref']
     val = comp['val']
     op = comp.get('op')
-    v = 0
+    v = None
 
     if op is None:
         op = '*'
@@ -83,10 +83,6 @@ def _evaluate(comp):
             raise ZeroDivisionError('Division error in evaluation')
     elif op == '^':
         v = val * ref[0].get_value() ** ref[1].get_value()
-    else:
-        # Hacky way of doing this
-        warnings.warn('Operator {} is not supported, running with Python\'s exec function.'.format(op), SyntaxWarning)
-        exec("v = val * (ref[0].get_value() {} ref[1].get_value())".format(op), globals(), locals())
 
     return v
 
@@ -100,15 +96,11 @@ def expression_to_constraint(left, relation, right):
                                                 crange=abs(right[1] - right[0]))
         return ranged_constraint
     elif not is_variable(left):
-        if left._temp and is_expression(left):
-            r = left
+        if left._operator is None:
+            r = left.copy()
         else:
-            if left._operator is None:
-                r = left.copy()
-            else:
-                r = Expression(0)
-                r += left
-        #  TODO r=self could be used whenever expression has no name
+            r = Expression(0)
+            r += left
         if np.isinstance(type(right), np.number):
             r._linCoef['CONST']['val'] -= right
         elif is_expression(right):

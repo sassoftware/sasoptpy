@@ -101,6 +101,9 @@ class Model:
             return False
         return super().__eq__(other)
 
+    def get_name(self):
+        return self._name
+
     def add_variable(self, name=None, vartype=None,
                      lb=None, ub=None, init=None):
         """

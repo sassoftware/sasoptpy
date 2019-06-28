@@ -26,15 +26,15 @@ import tests.responses as expected
 import sasoptpy as so
 import hashlib
 
-
-class NullWriter:
-    """
-    Imitates system writer to hide print statements.
-    """
-
-    def write(self, text): pass
-
-    def flush(self): pass
+#
+# class NullWriter:
+#     """
+#     Imitates system writer to hide print statements.
+#     """
+#
+#     def write(self, text): pass
+#
+#     def flush(self): pass
 
 
 class MockCASServer:
@@ -49,7 +49,7 @@ class MockCASServer:
         pass
 
 
-def mock_solve(model, *args, **kwargs):
+def mock_solve(model, **kwargs):
     """
     Overrides :meth:`Model.solve` method to be used in unittests.
 
@@ -73,13 +73,15 @@ def mock_solve(model, *args, **kwargs):
     """
     global ctr
     global expected_response
-    global tests
+    global results
     global records
+    global codes
     success = True
     print('Mock solve is called!')
     if 'verbose' in kwargs:
         del kwargs['verbose']
     optmodel_code = model.to_optmodel(**kwargs)
+    codes.setdefault(model._name, []).append(optmodel_code)
     obtained = hashlib.sha256(optmodel_code.encode()).hexdigest()
     records.append(obtained)
     if obtained == expected_response[ctr]:
@@ -89,19 +91,20 @@ def mock_solve(model, *args, **kwargs):
         print('Failed!')
         print(obtained, expected_response[ctr])
     ctr += 1
-    tests.append(success)
+    results.append(success)
     return success
 
 
 class TestGenerators(unittest.TestCase):
+
     @classmethod
     def setUpClass(cls):
         cls.server = MockCASServer()
-
-    def setUp(self):
-        self.old_stdout = sys.stdout
-        sys.stdout = NullWriter()
-        sys.stderr = NullWriter()
+        global real_solve
+        real_solve = so.Model.solve
+        globals()['so'].Model.solve = mock_solve
+        global codes
+        codes = dict()
 
     def tearDown(self):
         so.reset()
@@ -116,11 +119,11 @@ class TestGenerators(unittest.TestCase):
     def set_expectation(self, problem, test):
         global ctr
         global expected_response
-        global tests
+        global results
         global records
         ctr = 0
         expected_response = test
-        self.results = tests = []
+        self.results = results = []
         self.problem = problem
         self.records = records = []
 
@@ -226,8 +229,13 @@ class TestGenerators(unittest.TestCase):
         test(TestGenerators.server)
         self.check_results()
 
-if __name__ == '__main__':
-    globals()['so'].Model.solve = mock_solve
-    unittest.main()
+    @classmethod
+    def tearDownClass(cls):
+        global real_solve
+        globals()['so'].Model.solve = real_solve
+        for i in codes:
+            print(i)
+            for j in codes[i]:
+                print(j)
 
 

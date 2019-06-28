@@ -63,8 +63,8 @@ class CASMediator(Mediator):
             if switch and enforced and mps_option:
                 raise RuntimeError('Problem requires runOptmodel action which '
                                    'is not available or appropriate')
-            else:
-                mps_option
+            elif switch:
+                mps_option = False
 
         return mps_option
 
