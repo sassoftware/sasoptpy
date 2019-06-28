@@ -226,4 +226,5 @@ def is_regular_component(cm):
             not (hasattr(cm, '_shadow') and cm._shadow) and
             not (hasattr(cm, '_parent') and cm._parent))
 
-
+def has_parent(cm):
+    return cm._parent is not None

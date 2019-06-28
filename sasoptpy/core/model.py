@@ -714,6 +714,8 @@ class Model:
                 meth(c)
 
     def _include_variable(self, var):
+        if sasoptpy.core.util.has_parent(var):
+            return
         self._variables.append(var)
         self._variableDict[var._name] = var
 
@@ -724,6 +726,8 @@ class Model:
         self._vargroups.append(vg)
 
     def _include_constraint(self, con):
+        if sasoptpy.core.util.has_parent(con):
+            return
         self._constraints.append(con)
         self._constraintDict[con._name] = con
 
@@ -752,15 +756,13 @@ class Model:
         self._postsolve_statements.extend(s for s in model._postsolve_statements)
         self._impvars.extend(s for s in model._impvars)
         for s in model._vargroups:
-            self._vargroups.append(s)
-            for subvar in s:
-                self._variables.append(subvar)
+            self._include_vargroup(s)
         for s in model._variables:
-            self._variables.append(s)
+            self._include_variable(s)
         for s in model._congroups:
-            self._congroups.append(s)
+            self._include_congroup(s)
         for s in model._constraints:
-            self._constraints.append(s)
+            self._include_constraint(s)
         self._objective = model._objective
 
     @sasoptpy.containable

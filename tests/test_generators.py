@@ -110,7 +110,6 @@ class TestGenerators(unittest.TestCase):
         so.reset()
 
     def check_results(self):
-        sys.stdout = self.old_stdout
         print('Problem:', self.problem)
         for i, v in enumerate(self.results):
             print('Model', i, v, records[i])

@@ -63,7 +63,7 @@ def test(cas_conn):
     for m in MATCHINGS:
         Cardinality[m].set_block(m-1)
 
-    model.solve(verbose=True, options={
+    model.solve(options={
         'with': 'milp', 'maxtime': 300, 'presolver': 'basic', 
         'decomp': {'method': 'user'}})
 

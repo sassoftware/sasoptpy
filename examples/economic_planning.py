@@ -64,7 +64,7 @@ def test(cas_conn):
                                  name='production')
     stock = m.add_variables(INDUSTRIES, range(0, num_years+2), lb=0,
                             name='stock')
-    extra_capacity = m.add_variables(INDUSTRIES, range(1, num_years+3), lb=0,
+    extra_capacity = m.add_variables(INDUSTRIES, range(2, num_years+3), lb=0,
                                      name='extra_capacity')
     productive_capacity = {}
     for i in INDUSTRIES:
