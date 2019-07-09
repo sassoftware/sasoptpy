@@ -2199,9 +2199,9 @@ params=[{'param': value, 'column': 'value'}])
         NOTE: Objective = 107842.59259.
         NOTE: The Dual Simplex solve time is 0.01 seconds.
 
-        >>> m.solve(options={'maxtime': 600})
+        >>> m.solve(options={'with': 'lp', 'maxtime': 600})
 
-        >>> m.solve(options={'algorithm': 'ipm'})
+        >>> m.solve(options={'with': 'lp', 'algorithm': 'ipm'})
 
         Notes
         -----
@@ -2210,8 +2210,8 @@ params=[{'param': value, 'column': 'value'}])
         * Some of the options listed under ``options`` argument may not be
           passed based on which CAS Action is being used.
         * The ``option`` argument should be a dictionary, where keys are
-          option names. For example, ``m.solve(options={'maxtime': 600})``
-          limits the solution time to 600 seconds.
+          option names. For example, ``m.solve(options={'with': 'lp', 
+          'maxtime': 600})`` limits the LP solution time to 600 seconds.
         * See :ref:`solver-options` for a list of solver options.
 
         See also
