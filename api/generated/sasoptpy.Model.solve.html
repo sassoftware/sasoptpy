@@ -89,7 +89,7 @@
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>solution</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.24.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></span></dt>
+<dt><strong>solution</strong> <span class="classifier-delimiter">:</span> <span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v0.24.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></span></dt>
 <dd><p class="first last">Solution of the optimization model</p>
 </dd>
 </dl>
@@ -107,8 +107,8 @@
 <li>Some of the options listed under <code class="docutils literal notranslate"><span class="pre">options</span></code> argument may not be
 passed based on which CAS Action is being used.</li>
 <li>The <code class="docutils literal notranslate"><span class="pre">option</span></code> argument should be a dictionary, where keys are
-option names. For example, <code class="docutils literal notranslate"><span class="pre">m.solve(options={'maxtime':</span> <span class="pre">600})</span></code>
-limits the solution time to 600 seconds.</li>
+option names. For example, <code class="docutils literal notranslate"><span class="pre">m.solve(options={'with':</span> <span class="pre">'lp',</span> 
+<span class="pre">'maxtime':</span> <span class="pre">600})</span></code> limits the LP solution time to 600 seconds.</li>
 <li>See <a class="reference internal" href="../../models.html#solver-options"><span class="std std-ref">Solver Options</span></a> for a list of solver options.</li>
 </ul>
 <p class="rubric">Examples</p>
@@ -122,10 +122,10 @@ limits the solution time to 600 seconds.</li>
 <span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">m</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;maxtime&#39;</span><span class="p">:</span> <span class="mi">600</span><span class="p">})</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">m</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;with&#39;</span><span class="p">:</span> <span class="s1">&#39;lp&#39;</span><span class="p">,</span> <span class="s1">&#39;maxtime&#39;</span><span class="p">:</span> <span class="mi">600</span><span class="p">})</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">m</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;algorithm&#39;</span><span class="p">:</span> <span class="s1">&#39;ipm&#39;</span><span class="p">})</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">m</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;with&#39;</span><span class="p">:</span> <span class="s1">&#39;lp&#39;</span><span class="p">,</span> <span class="s1">&#39;algorithm&#39;</span><span class="p">:</span> <span class="s1">&#39;ipm&#39;</span><span class="p">})</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -221,7 +221,7 @@ limits the solution time to 600 seconds.</li>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2019, SAS Institute.
-      Last updated on Feb 26, 2019 (Timestamp: 0.2.1-20190226133646).
+      Last updated on Jul 09, 2019 (Timestamp: 0.2.1-20190709133556).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
     </div>
   </body>
