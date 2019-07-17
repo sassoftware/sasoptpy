@@ -1477,8 +1477,10 @@ class Model:
 
     def _defn(self):
         s = 'problem {} include'.format(self._name)
-        s += ' ' + ' '.join([s._name for s in self.get_grouped_variables()])
-        s += ' ' + ' '.join([s._name for s in self.get_grouped_constraints()])
+        s += ' ' + ' '.join([
+            s.get_name() for s in self.get_grouped_variables().values()])
+        s += ' ' + ' '.join([
+            s.get_name() for s in self.get_grouped_constraints().values()])
         s += ';'
         return s
 

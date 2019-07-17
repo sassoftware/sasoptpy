@@ -89,11 +89,13 @@ class VariableGroup(Group):
         self._groups = OrderedDict()
         self._keyset = []
         self._abstract = False
+        self._lb = None
+        self._ub = None
 
         if vartype is None:
             vartype = sasoptpy.CONT
 
-        lb, ub = sasoptpy.core.util.get_default_var_bounds(vartype, lb, ub)
+        lb, ub = sasoptpy.core.util.get_default_bounds_if_none(vartype, lb, ub)
         self._name = name
         self._init = init
         self._type = vartype
@@ -173,6 +175,11 @@ class VariableGroup(Group):
         dict_to_add[key] = new_var
         new_var.set_parent(self)
         return new_var
+
+    def include_member(self, key, var):
+        if sasoptpy.core.util.is_variable(var):
+            key = sasoptpy.util.pack_to_tuple(key)
+            self._vardict[key] = var
 
     def set_abstract(self, abstract=True):
         self._abstract = abstract
@@ -608,8 +615,10 @@ class VariableGroup(Group):
 
         """
 
-        self._lb = sasoptpy.core.util.get_group_bound(lb)
-        self._ub = sasoptpy.core.util.get_group_bound(ub)
+        if lb is not None:
+            self._lb = sasoptpy.core.util.get_group_bound(lb)
+        if ub is not None:
+            self._ub = sasoptpy.core.util.get_group_bound(ub)
 
         if members:
             for v in self._vardict:

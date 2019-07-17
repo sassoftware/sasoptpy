@@ -22,19 +22,19 @@ This test file generates intermediate forms to run optimization models using SAS
 
 import sys
 import unittest
-import tests.responses as expected
+import tests.examples.responses as expected
 import sasoptpy as so
 import hashlib
 
-#
-# class NullWriter:
-#     """
-#     Imitates system writer to hide print statements.
-#     """
-#
-#     def write(self, text): pass
-#
-#     def flush(self): pass
+
+class NullWriter:
+    """
+    Imitates system writer to hide print statements.
+    """
+
+    def write(self, text): pass
+
+    def flush(self): pass
 
 
 class MockCASServer:
@@ -73,26 +73,13 @@ def mock_solve(model, **kwargs):
     """
     global ctr
     global expected_response
-    global results
     global records
-    global codes
-    success = True
-    print('Mock solve is called!')
     if 'verbose' in kwargs:
         del kwargs['verbose']
     optmodel_code = model.to_optmodel(**kwargs)
-    codes.setdefault(model._name, []).append(optmodel_code)
-    obtained = hashlib.sha256(optmodel_code.encode()).hexdigest()
-    records.append(obtained)
-    if obtained == expected_response[ctr]:
-        print('Success!', obtained, expected_response[ctr])
-    else:
-        success = False
-        print('Failed!')
-        print(obtained, expected_response[ctr])
+    records.append([optmodel_code, expected_response[ctr]])
     ctr += 1
-    results.append(success)
-    return success
+    return None
 
 
 class TestGenerators(unittest.TestCase):
@@ -101,30 +88,35 @@ class TestGenerators(unittest.TestCase):
     def setUpClass(cls):
         cls.server = MockCASServer()
         global real_solve
+        global realstdout
         real_solve = so.Model.solve
         globals()['so'].Model.solve = mock_solve
-        global codes
-        codes = dict()
+        realstdout = sys.stdout
+        unittest.util._MAX_LENGTH = 1e+6
+
+    def setUp(self):
+        sys.stdout = NullWriter()
+        self.maxDiff = None
 
     def tearDown(self):
         so.reset()
 
     def check_results(self):
+        sys.stdout = realstdout
         print('Problem:', self.problem)
-        for i, v in enumerate(self.results):
-            print('Model', i, v, records[i])
-            self.assertTrue(v)
+        for i, solve in enumerate(self.records):
+            self.assertMultiLineEqual(solve[0], solve[1])
+            print('Solve', i, ': True')
 
     def set_expectation(self, problem, test):
         global ctr
         global expected_response
-        global results
         global records
         ctr = 0
         expected_response = test
-        self.results = results = []
         self.problem = problem
         self.records = records = []
+
 
     def test_fm1(self):
         self.set_expectation('Food Manufacture 1', expected.fm1)

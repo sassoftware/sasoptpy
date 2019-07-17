@@ -214,7 +214,7 @@ def get_default_value(vartype, key):
     return sasoptpy.config['default_bounds'].get(vartype).get(key)
 
 
-def get_default_var_bounds(vartype, lb, ub):
+def get_default_bounds_if_none(vartype, lb, ub):
     lb = get_default_value(vartype, 'lb') if lb is None else lb
     ub = get_default_value(vartype, 'ub') if ub is None else ub
     return lb, ub

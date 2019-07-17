@@ -136,16 +136,16 @@ class TestVariableGroup(unittest.TestCase):
         from sasoptpy.abstract import Set
         I = Set(name='I')
         x = so.VariableGroup(I, name='x')
-        x.add_member(key=0, var=None, init=5, name='z')
+        x.add_member(key=0, init=5, name='z')
         self.assertEqual(str(x[0]), "x[0]")
         self.assertTrue(so.core.util.is_abstract(x[0]))
 
         y = so.Variable(name='y')
-        x.add_member('y', var=y)
+        x.include_member('y', var=y)
         self.assertTrue(so.core.util.is_abstract(x['y']))
 
         z = so.Variable(name='z')
-        x.add_member('z', vartype=so.BIN)
+        x.include_member(key='z', var=z)
         self.assertTrue(so.core.util.is_abstract(x['z']))
 
     def test_sum(self):

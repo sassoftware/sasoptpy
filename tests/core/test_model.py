@@ -20,6 +20,7 @@
 Unit tests for core classes.
 """
 
+from collections import OrderedDict
 from difflib import SequenceMatcher
 import inspect
 import os
@@ -118,15 +119,16 @@ class TestModel(unittest.TestCase):
         z = m.add_variables(I, name='z', lb=1, ub=10, init=5)
         w = so.VariableGroup(5, name='w')
         m.include(w)
-        self.assertEqual(m.get_grouped_variables(), [x, y, z, w])
+        vars = [('x', x), ('y', y), ('z', z), ('w', w)]
+        self.assertEqual(m.get_grouped_variables(), OrderedDict(vars))
         self.assertEqual(m.get_variable('x[0]'), x[0])
 
     def test_dropping_vargroup(self):
         m = so.Model(name='test_drop_vg')
         x = m.add_variables(2, name='x')
-        self.assertEqual(m.get_grouped_variables(), [x])
+        self.assertEqual(m.get_grouped_variables(), OrderedDict([('x', x)]))
         m.drop_variables(x)
-        self.assertEqual(m.get_grouped_variables(), [])
+        self.assertEqual(m.get_grouped_variables(), OrderedDict())
 
     def test_adding_constraint(self):
         m = so.Model(name='test_add_constraint')
@@ -166,11 +168,12 @@ class TestModel(unittest.TestCase):
         x = m.add_variables(5, name='x')
 
         c1 = m.add_constraints((x[i] >= i for i in range(5)), name='c1')
-        self.assertEqual([c1], m.get_grouped_constraints())
+        self.assertEqual(OrderedDict([('c1', c1)]), m.get_grouped_constraints())
 
         c2 = so.ConstraintGroup((i * x[i] <= 10 for i in range(5)), name='c2')
         m.include(c2)
-        self.assertEqual([c1, c2], m.get_grouped_constraints())
+        grouped_con_dict = OrderedDict([('c1', c1), ('c2', c2)])
+        self.assertEqual(grouped_con_dict, m.get_grouped_constraints())
 
         def warn_user_single_constraint():
             c3 = m.add_constraints(x[0] >= 1, name='c3')
@@ -180,9 +183,9 @@ class TestModel(unittest.TestCase):
         m = so.Model(name='test_drop_cg')
         x = m.add_variables(2, name='x')
         c1 = m.add_constraints((x[i] <= i for i in range(2)), name='c1')
-        self.assertEqual(m.get_grouped_constraints(), [c1])
+        self.assertEqual(m.get_grouped_constraints(), OrderedDict([('c1', c1)]))
         m.drop_constraints(c1)
-        self.assertEqual(m.get_grouped_constraints(), [])
+        self.assertEqual(m.get_grouped_constraints(), OrderedDict())
 
     def test_add_set(self):
         m = so.Model(name='test_add_set')
@@ -312,8 +315,10 @@ class TestModel(unittest.TestCase):
 
         m2 = so.Model(name='test_copy_model_2')
         m2.include(m1)
-        self.assertEqual(m2.get_grouped_variables(), [x, y])
-        self.assertEqual(m2.get_grouped_constraints(), [c1, c2])
+        vars = OrderedDict([('x', x), ('y', y)])
+        self.assertEqual(m2.get_grouped_variables(), vars)
+        cons = OrderedDict([('c1', c1), ('c2', c2)])
+        self.assertEqual(m2.get_grouped_constraints(), cons)
         self.assertEqual(m2.to_optmodel(),inspect.cleandoc("""
             proc optmodel;
             var x;

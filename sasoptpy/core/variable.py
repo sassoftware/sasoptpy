@@ -52,7 +52,7 @@ class Variable(Expression):
             vartype = sasoptpy.CONT
         self._type = vartype
 
-        self._lb, self._ub = sasoptpy.core.util.get_default_var_bounds(
+        self._lb, self._ub = sasoptpy.core.util.get_default_bounds_if_none(
             vartype, lb, ub)
 
         self._init = init
