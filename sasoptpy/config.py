@@ -16,6 +16,8 @@
 #  limitations under the License.
 #
 
+from math import inf
+
 import sasoptpy
 
 
@@ -69,6 +71,11 @@ def _get_default_config():
     config['valid_outcomes'] = ['OPTIMAL', 'ABSFCONV', 'BEST_FEASIBLE']
     config['default_sense'] = sasoptpy.MIN
     config['submit_realtime'] = True
+    config['default_bounds'] = {
+        sasoptpy.CONT: {'lb': -inf, 'ub': inf},
+        sasoptpy.INT: {'lb': -inf, 'ub': inf},
+        sasoptpy.BIN: {'lb': 0, 'ub': 1}
+    }
 
     return config
 

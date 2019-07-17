@@ -232,9 +232,9 @@ class TestGenerators(unittest.TestCase):
     def tearDownClass(cls):
         global real_solve
         globals()['so'].Model.solve = real_solve
-        for i in codes:
-            print(i)
-            for j in codes[i]:
-                print(j)
+        # for i in codes:
+        #     print(i)
+        #     for j in codes[i]:
+        #         print(j)
 
 

@@ -3,9 +3,10 @@ from collections import OrderedDict
 from types import GeneratorType
 
 import sasoptpy
+from sasoptpy.core import Group
 
 
-class ConstraintGroup:
+class ConstraintGroup(Group):
     """
     Creates a group of :class:`Constraint` objects
 
@@ -62,9 +63,8 @@ class ConstraintGroup:
         else:
             raise(TypeError, "Invalid iterator type for constraint group")
 
-        name = sasoptpy.util.assign_name(name, 'cg')
         self._name = name
-        self._objorder = sasoptpy.util.register_globally(name, self)
+        self._objorder = sasoptpy.util.get_creation_id()
 
         self._shadows = dict()
 
@@ -104,7 +104,6 @@ class ConstraintGroup:
 
             key_list = sasoptpy.core.util._to_safe_iterator_expression(new_keys)
             con_name = '{}[{}]'.format(name, ','.join(key_list))
-            con_name = sasoptpy.util.assign_name(con_name, 'con')
             new_con = sasoptpy.Constraint(exp=c, name=con_name, crange=c._range)
             condict[new_keys] = new_con
             conlist.append(new_keys)
@@ -197,6 +196,9 @@ class ConstraintGroup:
     def _set_con_info(self):
         for i in self._condict:
             self._condict[i]._set_info(parent=self, key=i)
+
+    def get_members(self):
+        return self._condict
 
     def _defn(self, tabs=''):
         s = ''

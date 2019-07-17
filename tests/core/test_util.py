@@ -74,8 +74,8 @@ class TestUtil(unittest.TestCase):
         y = TestUtil.y
         c = so.ConstraintGroup((y[i, 'a', 1] + p[i] <= 5 for i in S1),
                                name='it_exp')
-        self.assertEqual(so.to_definition(c), "con it_exp {i_1 in S1} : "
-                                              "y[i_1, 'a', 1] + p[i_1] <= 5;\n")
+        self.assertEqual(so.to_definition(c), "con it_exp {o1 in S1} : "
+                                              "y[o1, 'a', 1] + p[o1] <= 5;\n")
 
     def test_safe_iterator_expression(self):
         S1 = TestUtil.S1
@@ -86,15 +86,15 @@ class TestUtil(unittest.TestCase):
                                name='safe_it_exp')
         self.assertEqual(so.to_definition(c), inspect.cleandoc(
             """
-            con safe_it_exp_a_1 {i_1 in S1} : y[i_1, 'a', 1] <= 5;
-            con safe_it_exp_a_2 {i_1 in S1} : y[i_1, 'a', 2] <= 5;
-            con safe_it_exp_a_3 {i_1 in S1} : y[i_1, 'a', 3] <= 5;
-            con safe_it_exp_b_c_1 {i_1 in S1} : y[i_1, 'b c', 1] <= 5;
-            con safe_it_exp_b_c_2 {i_1 in S1} : y[i_1, 'b c', 2] <= 5;
-            con safe_it_exp_b_c_3 {i_1 in S1} : y[i_1, 'b c', 3] <= 5;
-            con safe_it_exp_d_1 {i_1 in S1} : y[i_1, 'd', 1] <= 5;
-            con safe_it_exp_d_2 {i_1 in S1} : y[i_1, 'd', 2] <= 5;
-            con safe_it_exp_d_3 {i_1 in S1} : y[i_1, 'd', 3] <= 5;
+            con safe_it_exp_a_1 {o1 in S1} : y[o1, 'a', 1] <= 5;
+            con safe_it_exp_a_2 {o1 in S1} : y[o1, 'a', 2] <= 5;
+            con safe_it_exp_a_3 {o1 in S1} : y[o1, 'a', 3] <= 5;
+            con safe_it_exp_b_c_1 {o1 in S1} : y[o1, 'b c', 1] <= 5;
+            con safe_it_exp_b_c_2 {o1 in S1} : y[o1, 'b c', 2] <= 5;
+            con safe_it_exp_b_c_3 {o1 in S1} : y[o1, 'b c', 3] <= 5;
+            con safe_it_exp_d_1 {o1 in S1} : y[o1, 'd', 1] <= 5;
+            con safe_it_exp_d_2 {o1 in S1} : y[o1, 'd', 2] <= 5;
+            con safe_it_exp_d_3 {o1 in S1} : y[o1, 'd', 3] <= 5;
             """
         ) + '\n')
 
@@ -149,8 +149,8 @@ class TestUtil(unittest.TestCase):
         S1 = TestUtil.S1
         e1 = so.quick_sum(y[i, 'a', 1] for i in S1)
         c = so.core.util.expression_to_constraint(e1, 'G', 5)
-        self.assertEqual(so.to_definition(c), "con None : sum {i_1 in S1} "
-                                              "(y[i_1, 'a', 1]) >= 5;")
+        self.assertEqual(so.to_definition(c), "con None : sum {o2 in S1} "
+                                              "(y[o2, 'a', 1]) >= 5;")
 
     def tearDown(self):
         so.reset()

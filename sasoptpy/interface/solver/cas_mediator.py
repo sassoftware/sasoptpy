@@ -26,9 +26,9 @@ class CASMediator(Mediator):
         mps_indicator = self.is_mps_format_needed(mps, options)
 
         if mps_indicator:
-            self.solve_with_mps(**kwargs)
+            return self.solve_with_mps(**kwargs)
         else:
-            self.solve_with_optmodel(**kwargs)
+            return self.solve_with_optmodel(**kwargs)
 
     def is_mps_format_needed(self, mps_option, options):
 
@@ -303,7 +303,7 @@ class CASMediator(Mediator):
                         model._variableDict[str_safe]._value = row['value']
                     else:
                         # Search in vargroups for the original name
-                        sasoptpy.util._set_abstract_values(row)
+                        model._set_abstract_values(row)
 
             # Capturing dual values for LP problems
             if ptype == 1:

@@ -30,7 +30,7 @@ class Statement(ABC):
         self.header = OrderedDict()
         self.elements = list()
         self.workspace = dict()
-        self._objorder = sasoptpy.util.register_globally(None, self)
+        self._objorder = sasoptpy.util.get_creation_id()
         # TODO Remove '_after' after arranging data/structrues py files
         self._after = False
 

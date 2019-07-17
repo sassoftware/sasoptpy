@@ -76,26 +76,24 @@ class Expression:
       expressions.
     """
 
-    def __init__(self, exp=None, name=None, temp=False):
-        if name is not None:
-            self._name = sasoptpy.util.assign_name(name, 'expr')
-            self._objorder = sasoptpy.util.register_globally(self._name, self)
-        else:
-            self._name = None
+    def __init__(self, exp=None, name=None):
+        self._name = name
+        if self._is_named_expression():
+            self._objorder = sasoptpy.util.get_creation_id()
         self._value = 0
         self._dual = None
         self._linCoef = OrderedDict()
         if exp is None:
-            self._linCoef['CONST'] = {'ref': None, 'val': 0}
+            self.set_member(key='CONST', ref=None, val=0)
         else:
             if isinstance(exp, Expression):
                 for mylc in exp._linCoef:
-                    self._linCoef[mylc] = dict(exp._linCoef[mylc])
+                    self.copy_member(mylc, exp)
             elif np.issubdtype(type(exp), np.number):
-                self._linCoef['CONST'] = {'ref': None, 'val': exp}
+                self.set_member(key='CONST', ref=None, val=exp)
             else:
                 raise TypeError('ERROR: Invalid type for expression: {}, {}'.format(exp, type(exp)))
-        self._temp = temp
+        self._temp = False
         self._value = 0
         self._operator = None
         self._arguments = []
@@ -140,6 +138,23 @@ class Expression:
         r._conditionts = self._conditions
         return r
 
+    def _is_named_expression(self):
+        return self._name is not None
+
+    def get_member(self, key):
+        return self._linCoef.get(key, None)
+
+    def set_member(self, key, ref, val, op=None):
+        self._linCoef[key] = {'ref': ref, 'val': val}
+        if op:
+            self._linCoef[key]['op'] = op
+
+    def delete_member(self, key):
+        self._linCoef.pop(key, None)
+
+    def copy_member(self, key, exp):
+        self._linCoef[key] = dict(exp.get_member(key))
+
     def get_value(self):
         """
         Calculates and returns the value of the linear expression
@@ -161,14 +176,13 @@ class Expression:
         """
         v = 0
         for mylc in self._linCoef:
-            if self._linCoef[mylc]['ref'] is not None:
+            if self.get_member(mylc)['ref'] is not None:
                 if isinstance(mylc, tuple):
-                    v += sasoptpy.core.util._evaluate(self._linCoef[mylc])
+                    v += sasoptpy.core.util._evaluate(self.get_member(mylc))
                 else:
-                    v += self._linCoef[mylc]['val'] * \
-                        self._linCoef[mylc]['ref'].get_value()
+                    v += self.get_member_value(mylc)
             else:
-                v += self._linCoef[mylc]['val']
+                v += self.get_member(mylc)['val']
         if self._operator:
             try:
                 import sasoptpy.abstract.math as sm
@@ -181,6 +195,10 @@ class Expression:
                 print(self._arguments)
                 print('ERROR: Unknown operator: {}'.format(self._operator))
         return v
+
+    def get_member_value(self, key):
+        member = self.get_member(key)
+        return member['ref'].get_value() * member['val']
 
     def get_dual(self):
         """
@@ -216,14 +234,10 @@ class Expression:
         >>> e.set_name('expansion')
 
         """
-        if self._name is not None and not name:
-            # Expression has already a name and no name parameter is passed
-            return self._name
-        sasoptpy.util.delete_name(self._name)
-        safe_name = sasoptpy.util.assign_name(name, 'expr')
-        self._name = safe_name
-        order = sasoptpy.util.register_globally(safe_name, self)
-        sasoptpy.util.set_creation_order_if_empty(self, order)
+        if name:
+            self._name = name
+        else:
+            self._name = 'o' + str(self._objorder)
         return self._name
 
     def get_name(self):
@@ -245,7 +259,12 @@ class Expression:
         """
         return self._name
 
-    def set_permanent(self, name=None):
+
+    def set_temporary(self):
+        self._temp = True
+
+
+    def set_permanent(self):
         """
         Converts a temporary expression into a permanent one
 
@@ -259,14 +278,14 @@ class Expression:
         name : string
             Name of the expression in the namespace
         """
-        if self._name is None:
-            self._name = sasoptpy.util.assign_name(name, 'expr')
-            self._objorder = sasoptpy.util.register_globally(self._name, self)
         self._temp = False
-        return self._name
+        if not sasoptpy.util.get_object_order(self):
+            self._objorder = sasoptpy.util.get_creation_id()
+        if self.get_name() is None:
+            self.set_name()
 
     def get_constant(self):
-        return self._linCoef['CONST']['val']
+        return self.get_member('CONST')['val']
 
     def _expr(self):
         """
@@ -494,7 +513,7 @@ class Expression:
         if key in self._linCoef:
             self._linCoef[key]['val'] += value
         else:
-            self._linCoef[key] = {'ref': var, 'val': value}
+            self.set_member(key=key, ref=var, val=value)
 
     def add(self, other, sign=1):
         """
@@ -527,10 +546,10 @@ class Expression:
             r._abstract = self._abstract or other._abstract
 
             for v in other._linCoef:
-                if v in r._linCoef:
+                if r.get_member(v):
                     r._linCoef[v]['val'] += sign * other._linCoef[v]['val']
                 else:
-                    r._linCoef[v] = dict(other._linCoef[v])
+                    r.copy_member(v, other)
                     r._linCoef[v]['val'] *= sign
 
             r._conditions += self._conditions
@@ -653,11 +672,11 @@ class Expression:
         if not isinstance(other, Expression):
             other = Expression(other, name='')
         self.set_permanent()
-        r._linCoef[self._name, other._name, '^'] = {
-            'ref': [self, other],
-            'val': 1,
-            'op': '^'
-            }
+        key = (self.get_name(), other.get_name(), '^')
+        ref = [self, other]
+        val = 1
+        op = '^'
+        r.set_member(key=key, ref=ref, val=val, op=op)
         r._abstract = self._abstract or other._abstract
         return r
 
@@ -665,11 +684,11 @@ class Expression:
         r = Expression()
         if not isinstance(other, Expression):
             other = Expression(other, name='')
-        r._linCoef[other._name, self._name, '^'] = {
-            'ref': [other, self],
-            'val': 1,
-            'op': '^'
-            }
+        key = (other.get_name(), self.get_name(), '^')
+        ref = [other, self]
+        val = 1
+        op = '^'
+        r.set_member(key=key, ref=ref, val=val, op=op)
         r._abstract = self._abstract or other._abstract
         return r
 
@@ -695,11 +714,11 @@ class Expression:
         r = Expression()
         if not isinstance(other, Expression):
             raise TypeError('Invalid type for division.')
-        r._linCoef[self._name, other._name, '/'] = {
-            'ref': [self, other],
-            'val': 1,
-            'op': '/'
-            }
+        key = (self.get_name(), other.get_name(), '/')
+        ref = [self, other]
+        val = 1
+        op = '/'
+        r.set_member(key=key, ref=ref, val=val, op=op)
         r._abstract = self._abstract or other._abstract
         return r
 
@@ -707,11 +726,11 @@ class Expression:
         r = Expression()
         if not isinstance(other, Expression):
             other = Expression(other, name='')
-        r._linCoef[other._name, self._name, '/'] = {
-            'ref': [other, self],
-            'val': 1,
-            'op': '/'
-            }
+        key = (other.get_name(), self.get_name(), '/')
+        ref = [other, self]
+        val = 1
+        op = '/'
+        r.set_member(key=key, ref=ref, val=val, op=op)
         r._abstract = self._abstract or other._abstract
         return r
 

@@ -7,7 +7,7 @@ def test(cas_conn):
     x = m.add_variables(range(1, 9), lb=0.1, ub=10, name='x')
 
     f = so.Expression(0.4 * (x[1]/x[7]) ** 0.67 + 0.4 * (x[2]/x[8]) ** 0.67 + 10 - x[1] - x[2], name='f')
-    m.set_objective(f, sense=so.MIN)
+    m.set_objective(f, sense=so.MIN, name='f1')
 
     m.add_constraint(1 - 0.0588*x[5]*x[7] - 0.1*x[1] >= 0, name='c1')
     m.add_constraint(1 - 0.0588*x[6]*x[8] - 0.1*x[1] - 0.1*x[2] >= 0, name='c2')

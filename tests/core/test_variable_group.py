@@ -244,8 +244,15 @@ class TestVariableGroup(unittest.TestCase):
         x = so.VariableGroup(2, name='x')
         x.set_bounds(ub=2)
         self.assertEqual(x._ub, 2)
+        self.assertEqual(so.to_definition(x), "var x {{0,1}} <= 2;")
         x.set_bounds(lb=1)
         self.assertEqual(x._lb, 1)
+        self.assertEqual(so.to_definition(x), "var x {{0,1}} >= 1 <= 2;")
+        x[0].set_bounds(lb=5)
+        self.assertEqual(so.to_definition(x), "var x {{0,1}} >= 1 <= 2;")
+        self.assertEqual(x._member_defn(), "x[0].lb = 5;")
+        x[1].set_bounds(ub=10)
+        self.assertEqual(x._member_defn(), "x[0].lb = 5;\nx[1].ub = 10;")
 
     def tearDown(self):
         so.reset()

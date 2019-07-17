@@ -1,4 +1,5 @@
 
+from collections import OrderedDict
 from math import inf
 
 import sasoptpy
@@ -46,12 +47,9 @@ class Variable(Expression):
 
     def __init__(self, name, vartype=None, lb=None, ub=None,
                  init=None, abstract=False, shadow=False, key=None):
-        super().__init__()
+        super().__init__(name=name)
         if vartype is None:
             vartype = sasoptpy.CONT
-        if not shadow:
-            name = sasoptpy.util.assign_name(name, 'var')
-        self._name = name
         self._type = vartype
 
         self._lb, self._ub = sasoptpy.core.util.get_default_var_bounds(
@@ -61,16 +59,17 @@ class Variable(Expression):
         if self._init is not None:
             self._value = self._init
 
-        if shadow:
-            self._linCoef[name + str(id(self))] = {'ref': self, 'val': 1}
-        else:
-            self._linCoef[name] = {'ref': self, 'val': 1}
-            self._objorder = sasoptpy.util.register_globally(name, self)
+        self._shadow = shadow
+        self._initialize_self_coef()
+
         self._key = key
         self._parent = None
         self._temp = False
         self._abstract = abstract
-        self._shadow = shadow
+
+
+    def _initialize_self_coef(self):
+        self.set_member(key=self._name, ref=self, val=1)
 
     def _set_info(self, parent, key):
         self._parent = parent
@@ -125,6 +124,13 @@ class Variable(Expression):
         """
         self._init = init
 
+    def get_attributes(self):
+        attributes = OrderedDict()
+        attributes['init'] = self._init
+        attributes['lb'] = self._lb
+        attributes['ub'] = self._ub
+        return attributes
+
     def get_name(self):
         if self._abstract:
             return str(self)
@@ -142,6 +148,12 @@ class Variable(Expression):
         Sets the value of a variable
         """
         self._value = value
+
+    def set_parent(self, parent):
+        self._parent = parent
+
+    def get_type(self):
+        return self._type
 
     def __repr__(self):
         """

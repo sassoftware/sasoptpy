@@ -208,7 +208,7 @@ class TestModel(unittest.TestCase):
         m = so.Model(name='test_add_for_loop1')
         x = m.add_variable(name='x')
         for i in range(1, 5):
-            m.add_constraint(i * x >= i)
+            m.add_constraint(i * x >= i, name='c{}'.format(i))
 
         m = so.Model(name='test_add_for_loop2')
         def the_loop(j):
@@ -222,8 +222,8 @@ class TestModel(unittest.TestCase):
             proc optmodel;
             min test_add_for_loop2_obj = 0;
             set I = 1..5;
-            for {i_1 in I} do;
-                MIN loop_obj = i_1 * x + i_1;
+            for {o13 in I} do;
+                MIN loop_obj = o13 * x + o13;
                 solve with milp / primalin maxtime=300;
             end;
             solve;
@@ -333,21 +333,21 @@ class TestModel(unittest.TestCase):
         x = m.add_variable(name='x')
 
         # Regular objective
-        obj1 = m.set_objective(2 * x, sense=so.MIN)
+        obj1 = m.set_objective(2 * x, sense=so.MIN, name='obj1')
         self.assertEqual(obj1, m.get_objective())
 
         # Multi objective
-        obj2 = m.set_objective(5 * x, sense=so.MIN)
+        obj2 = m.set_objective(5 * x, sense=so.MIN, name='obj2')
         self.assertEqual(obj2, m.get_objective())
-        obj3 = m.append_objective(10 * x, sense=so.MIN)
+        obj3 = m.append_objective(10 * x, sense=so.MIN, name='obj3')
         self.assertEqual([obj2, obj3], m.get_all_objectives())
         self.assertEqual(
             m.to_optmodel(),
             inspect.cleandoc("""
             proc optmodel;
             var x;
-            min obj_2 = 5 * x;
-            min obj_3 = 10 * x;
+            min obj2 = 5 * x;
+            min obj3 = 10 * x;
             solve;
             print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
             print _con_.name _con_.body _con_.dual;
@@ -379,7 +379,7 @@ class TestModel(unittest.TestCase):
     def test_variable_coef(self):
         m = so.Model(name='test_get_variable_coef')
         x = m.add_variable(name='x')
-        m.set_objective(5 * x, sense=so.MIN)
+        m.set_objective(5 * x, sense=so.MIN, name='obj1')
 
         self.assertEqual(m.get_variable_coef(x), 5)
         self.assertEqual(m.get_variable_coef('x'), 5)
@@ -389,7 +389,7 @@ class TestModel(unittest.TestCase):
             return m.get_variable_coef(y)
         self.assertRaises(RuntimeError, variable_not_in_model)
 
-        m.set_objective(2 * x + y ** 2, sense=so.MIN)
+        m.set_objective(2 * x + y ** 2, sense=so.MIN, name='obj1')
         self.assertEqual(m.get_variable_coef('x'), 2)
         def nonlinear_objective():
             return m.get_variable_coef('y')
@@ -400,14 +400,14 @@ class TestModel(unittest.TestCase):
         if TestModel.conn:
             m = so.Model(name='test_get_var_value')
             x = m.add_variable(name='x', lb=1.5, ub=10, vartype=so.INT)
-            m.set_objective(x, sense=so.MIN)
+            m.set_objective(x, sense=so.MIN, name='obj1')
             m.set_session(TestModel.conn)
             m.solve()
             self.assertEqual(m.get_variable_value(x), 2)
 
             I = m.add_set(name='I', value=range(2))
             y = m.add_variables(I, name='y', lb=0.5)
-            m.set_objective(x + y[0] + y[1], sense=so.MIN)
+            m.set_objective(x + y[0] + y[1], sense=so.MIN, name='obj1')
             m.solve()
             self.assertEqual(m.get_variable_value(y[0]), 0.5)
             def get_variable_warning():
@@ -416,8 +416,9 @@ class TestModel(unittest.TestCase):
 
             m2 = so.Model(name='test_get_var_value_copy')
             m2.include(m)
+            z = so.Variable(name='z')
             def raise_solution_error():
-                return m2.get_variable_value(x)
+                return m2.get_variable_value(z)
             self.assertRaises(RuntimeError, raise_solution_error)
 
         else:
@@ -429,7 +430,7 @@ class TestModel(unittest.TestCase):
         m = so.Model(name='test_get_summaries', session=TestModel.conn)
         x = m.add_variable(name='x', lb=1)
         y = m.add_variables(2, name='y', lb=1)
-        m.set_objective(x + y[0], sense=so.MIN)
+        m.set_objective(x + y[0], sense=so.MIN, name='obj1')
         m.add_constraint(x + 2 *y[0] + 3*y[1] >= 10, name='con1')
         m.solve()
         self.assertEqual(m.get_problem_summary().to_string(),
@@ -437,7 +438,7 @@ class TestModel(unittest.TestCase):
                                                             Value
                             Label                                
                             Objective Sense          Minimization
-                            Objective Function              obj_1
+                            Objective Function               obj1
                             Objective Type                 Linear
                                                                  
                             Number of Variables                 3
@@ -462,7 +463,7 @@ class TestModel(unittest.TestCase):
             Label                             
             Solver                          LP
             Algorithm             Dual Simplex
-            Objective Function           obj_1
+            Objective Function            obj1
             Solution Status            Optimal
             Objective Value                  2
                                               
@@ -496,7 +497,7 @@ class TestModel(unittest.TestCase):
         weight = data['weight']
         ub = data['ub']
         m.set_objective(so.quick_sum(get[i] * value[i] for i in items),
-                        sense=so.MAX)
+                        sense=so.MAX, name='obj1')
         m.add_constraint(so.quick_sum(get[i] * weight[i] for i in items)
                          <= 210, name='value_total')
         m.add_constraints((get[i] <= ub[i] for i in items), name='upper_bound')
@@ -631,19 +632,19 @@ class TestModel(unittest.TestCase):
         m = so.Model(name='test_to_mps')
         x = m.add_variable(name='x', lb=0, ub=5, vartype=so.INT)
         y = m.add_variables(2, name='y', lb=1)
-        m.set_objective(x + y[0], sense=so.MIN)
+        m.set_objective(x + y[0], sense=so.MIN, name='xyobj')
         self.assertEqual(m.to_mps().to_string(), inspect.cleandoc(
             """
                  Field1    Field2       Field3  Field4    Field5  Field6  _id_
             0      NAME            test_to_mps     0.0               0.0     1
             1      ROWS                            NaN               NaN     2
-            2       MIN     obj_1                  NaN               NaN     3
+            2       MIN     xyobj                  NaN               NaN     3
             3   COLUMNS                            NaN               NaN     4
             4            MARK0000     'MARKER'     NaN  'INTORG'     NaN     5
-            5                   x        obj_1     1.0               NaN     6
+            5                   x        xyobj     1.0               NaN     6
             6            MARK0001     'MARKER'     NaN  'INTEND'     NaN     7
-            7                y[0]        obj_1     1.0               NaN     8
-            8                y[1]        obj_1     0.0               NaN     9
+            7                y[0]        xyobj     1.0               NaN     8
+            8                y[1]        xyobj     0.0               NaN     9
             9       RHS                            NaN               NaN    10
             10   RANGES                            NaN               NaN    11
             11   BOUNDS                            NaN               NaN    12
@@ -766,8 +767,8 @@ class TestModel(unittest.TestCase):
             """
         ))
         x = m.add_variable(name='x', init=5)
-        e1 = m.set_objective(x, sense=so.MIN)
-        e2 = m.append_objective(x**2, sense=so.MAX)
+        e1 = m.set_objective(x, sense=so.MIN, name='e1')
+        e2 = m.append_objective(x**2, sense=so.MAX, name='e2')
         response = m.to_optmodel(options={
             'with': 'lso',
             'relaxint': True,
@@ -778,9 +779,9 @@ class TestModel(unittest.TestCase):
             """
             proc optmodel;
             var x init 5;
-            min obj_1 = x;
-            max obj_2 = (x) ^ (2);
-            solve with lso relaxint obj (obj_1 obj_2) / primalin;
+            min e1 = x;
+            max e2 = (x) ^ (2);
+            solve with lso relaxint obj (e1 e2) / primalin;
             ods output PrintTable=primal_out;
             print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
             ods output PrintTable=dual_out;
@@ -797,8 +798,8 @@ class TestModel(unittest.TestCase):
             """
             proc optmodel;
             var x init 5;
-            min obj_1 = x;
-            max obj_2 = (x) ^ (2);
+            min e1 = x;
+            max e2 = (x) ^ (2);
             solve with nlp / multistart=(loglevel=3,maxstarts=30);
             print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
             print _con_.name _con_.body _con_.dual;
@@ -886,12 +887,12 @@ class TestModel(unittest.TestCase):
     def test_is_linear(self):
         m = TestModel.get_standard_model('test_model_linearity')
         self.assertEqual(so.is_linear(m), True)
-        x = so.get_obj_by_name('x')
+        x = m.get_variable('x')
         qbound = m.add_constraint(x ** 2 + x <= 10, name='qbound')
         self.assertEqual(so.is_linear(m), False)
         m.drop_constraint(qbound)
         self.assertEqual(so.is_linear(m), True)
-        m.set_objective(x ** 2, sense=so.MIN)
+        m.set_objective(x ** 2, sense=so.MIN, name='x_squared')
         self.assertEqual(so.is_linear(m), False)
 
     def test_session_type(self):
@@ -900,6 +901,13 @@ class TestModel(unittest.TestCase):
         if TestModel.conn:
             m.set_session(TestModel.conn)
             self.assertEqual(m.get_session_type(), 'CAS')
+
+    def test_ub_set(self):
+        m = so.Model(name='test_model_var_ub')
+        x = m.add_variable(name='x')
+        print(m.to_optmodel())
+        x.set_bounds(ub=5)
+        print(m.to_optmodel())
 
 
     def tearDown(self):
