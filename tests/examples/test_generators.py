@@ -229,4 +229,3 @@ class TestGenerators(unittest.TestCase):
         #     for j in codes[i]:
         #         print(j)
 
-

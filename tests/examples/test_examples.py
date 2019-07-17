@@ -137,14 +137,3 @@ class TestExamples(unittest.TestCase):
         from examples.nonlinear_2 import test
         obj = self.run_test(test)
         self.assertAlmostEqual(obj, -999.0, self.digits)
-
-
-if __name__ == '__main__':
-    # Default
-    unittest.main(exit=False)
-    # Frame method
-    # Change 4th argument (frame) to True
-    def_opts = sasoptpy.Model.solve.__defaults__
-    sasoptpy.Model.solve.__defaults__ = (
-        None, True, None, True, False, True, False, None, None, False)
-    unittest.main()
