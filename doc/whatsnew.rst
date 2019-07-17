@@ -9,6 +9,19 @@ What's New
 
 This page outlines changes from each release.
 
+v1.0.0 (TBD)
+============
+
+New Features
+++++++++++++
+
+Changes
++++++++
+
+- `get_obj_by_name` function is removed
+
+
+
 v0.2.1 (February 26, 2019)
 ==========================
 

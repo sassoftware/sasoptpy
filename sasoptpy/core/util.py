@@ -3,7 +3,7 @@ from math import inf
 import warnings
 
 import sasoptpy
-from sasoptpy._libs import np
+from sasoptpy._libs import np, pd
 
 
 def is_expression(obj):
@@ -92,8 +92,8 @@ def expression_to_constraint(left, relation, right):
     if isinstance(right, list) and relation == 'E':
         e = left.copy()
         e._add_coef_value(None, 'CONST', -1 * min(right[0], right[1]))
-        ranged_constraint = sasoptpy.core.Constraint(exp=e, direction='E',
-                                                crange=abs(right[1] - right[0]))
+        ranged_constraint = sasoptpy.core.Constraint(
+            exp=e, direction='E', crange=abs(right[1] - right[0]))
         return ranged_constraint
     elif not is_variable(left):
         if left._operator is None:
@@ -105,7 +105,8 @@ def expression_to_constraint(left, relation, right):
             r._linCoef['CONST']['val'] -= right
         elif is_expression(right):
             r -= right
-        generated_constraint = sasoptpy.core.Constraint(exp=r, direction=relation, crange=0)
+        generated_constraint = sasoptpy.core.Constraint(
+            exp=r, direction=relation, crange=0)
         return generated_constraint
     else:
         r = sasoptpy.core.Expression()
@@ -118,7 +119,8 @@ def expression_to_constraint(left, relation, right):
             for v in right._linCoef:
                 r._add_coef_value(right._linCoef[v]['ref'],
                                   v, -right._linCoef[v]['val'])
-        generated_constraint = sasoptpy.core.Constraint(exp=r, direction=relation, crange=0)
+        generated_constraint = sasoptpy.core.Constraint(
+            exp=r, direction=relation, crange=0)
         return generated_constraint
 
 
@@ -181,7 +183,7 @@ def multiply_coefficients(left, right, target):
 
 def append_coef_value(original_dict, ref, key, value):
     if key in original_dict:
-        original_dict[key]['val'] +=  value
+        original_dict[key]['val'] += value
     else:
         original_dict[key] = {'ref': ref, 'val': value}
 
@@ -208,23 +210,29 @@ def get_generator_names(argv):
     return keys
 
 
-def get_default_var_bounds(vartype, lb, ub):
+def get_default_value(vartype, key):
+    return sasoptpy.config['default_bounds'].get(vartype).get(key)
 
-    if vartype == sasoptpy.BIN:
-        lb = 0 if lb is None else max(lb, 0)
-        ub = 1 if ub is None else min(ub, 1)
-    else:
-        if lb is None:
-            lb = - inf
-        if ub is None:
-            ub = inf
 
+def get_default_bounds_if_none(vartype, lb, ub):
+    lb = get_default_value(vartype, 'lb') if lb is None else lb
+    ub = get_default_value(vartype, 'ub') if ub is None else ub
     return lb, ub
+
 
 def is_regular_component(cm):
     return (cm._objorder > 0 and
             not (hasattr(cm, '_shadow') and cm._shadow) and
             not (hasattr(cm, '_parent') and cm._parent))
 
+
 def has_parent(cm):
-    return cm._parent is not None
+    return hasattr(cm, '_parent') and cm._parent is not None
+
+
+def get_group_bound(bound):
+    group_types = [pd.DataFrame, pd.Series, list, dict, tuple]
+    if any(isinstance(bound, g) for g in group_types):
+        return None
+    else:
+        return bound

@@ -56,7 +56,7 @@ def test(cas_conn, sols=False):
 
     order.set_init(1)
     L1 = so.Model(name='L1', session=cas_conn)
-    L1.set_objective(objective1, sense=so.MIN)
+    L1.set_objective(objective1, sense=so.MIN, name='L1obj')
     L1.include(POINTS, x, y, xy_table_ref)
     L1.include(order, beta, estimate, surplus, slack, abs_dev_con)
     L1.add_postsolve_statement('print x y estimate surplus slack;')
@@ -68,7 +68,7 @@ def test(cas_conn, sols=False):
 
     Linf = so.Model(name='Linf', session=cas_conn)
     Linf.include(L1, minmax, minmax_con)
-    Linf.set_objective(objective2, sense=so.MIN)
+    Linf.set_objective(objective2, sense=so.MIN, name='Linfobj')
 
     Linf.solve()
     sol_data2 = Linf.response['Print3.PrintTable'].sort_values('x')

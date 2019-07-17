@@ -6,10 +6,10 @@ import warnings
 
 import sasoptpy
 from sasoptpy._libs import (pd, np)
-from sasoptpy.core import (Expression, Variable)
+from sasoptpy.core import (Expression, Variable, Group)
 
 
-class VariableGroup:
+class VariableGroup(Group):
     """
     Creates a group of :class:`Variable` objects
 
@@ -83,40 +83,33 @@ class VariableGroup:
     """
 
     def __init__(self, *argv, name, vartype=None, lb=None,
-                 ub=None, init=None, abstract=False):
+                 ub=None, init=None):
         self._vardict = OrderedDict()
-        self._varlist = []
+        self._shadows = OrderedDict()
         self._groups = OrderedDict()
         self._keyset = []
+        self._abstract = False
+        self._lb = None
+        self._ub = None
 
         if vartype is None:
             vartype = sasoptpy.CONT
 
-        if vartype == sasoptpy.BIN and ub is None:
-            ub = 1
-        if vartype == sasoptpy.BIN and lb is None:
-            lb = 0
-
-        if lb is None:
-            lb = -inf
-        if ub is None:
-            ub = inf
-
-        self._recursive_add_vars(*argv, name=name,
-                                 vartype=vartype, lb=lb, ub=ub, init=init,
-                                 vardict=self._vardict, varlist=self._varlist,
-                                 abstract=abstract)
-
-        self._lb = lb
-        self._ub = ub
+        lb, ub = sasoptpy.core.util.get_default_bounds_if_none(vartype, lb, ub)
+        self._name = name
         self._init = init
         self._type = vartype
 
-        name = sasoptpy.util.assign_name(name, 'vg')
-        self._name = name
-        self._objorder = sasoptpy.util.register_globally(name, self)
+        if name is None:
+            name = sasoptpy.util.get_next_name()
 
-        self._abstract = abstract
+        self._recursive_add_vars(*argv, name=name,
+                                 vartype=vartype, lb=lb, ub=ub, init=init,
+                                 vardict=self._vardict)
+
+        self.set_bounds(lb=lb, ub=ub, members=False)
+        self._objorder = sasoptpy.util.get_creation_id()
+
         for arg in argv:
             if isinstance(arg, int):
                 self._keyset.append(sasoptpy.util._extract_argument_as_list(arg))
@@ -127,7 +120,6 @@ class VariableGroup:
                     for _, v in self._vardict.items():
                         v._abstract = True
 
-        self._shadows = OrderedDict()
         self._set_var_info()
 
     def get_name(self):
@@ -149,7 +141,7 @@ class VariableGroup:
         """
         return self._name
 
-    def add_member(self, key, var=None, name=None, vartype=None, lb=None,
+    def add_member(self, key, name=None, vartype=None, lb=None,
                    ub=None, init=None, shadow=False):
         """
         (Experimental) Adds a new member to Variable Group
@@ -159,31 +151,41 @@ class VariableGroup:
         """
 
         key = sasoptpy.util.pack_to_tuple(key)
-        dict_to_add = self._vardict if not shadow else self._shadows
 
-        if var is not None:
-            dict_to_add[key] = var
-            return var
+        if lb is None:
+            lb = sasoptpy.util.extract_list_value(key, self._lb)
+        if ub is None:
+            ub = sasoptpy.util.extract_list_value(key, self._ub)
+        if init is None:
+            init = sasoptpy.util.extract_list_value(key, self._init)
+        if vartype is None:
+            vartype = self._type
+
+        if shadow is True:
+            variable_class = sasoptpy.abstract.ShadowVariable
+            dict_to_add = self._shadows
         else:
-            vartype = vartype if vartype is not None else self._type
-            lb = lb if lb is not None else self._lb
-            ub = ub if ub is not None else self._ub
-            if name is not None:
-                varname = name
-            else:
-                varname = '{}['.format(self._name) + ','.join(
-                        format(k) for k in key) + ']'
-            new_var = sasoptpy.Variable(
-                name=varname, lb=lb, ub=ub, init=init, vartype=vartype,
-                shadow=shadow, abstract=False)
-            dict_to_add[key] = new_var
-            return new_var
+            variable_class = Variable
+            dict_to_add = self._vardict
+
+        if name is None:
+            name = sasoptpy.core.util.get_name_from_keys(self._name, key)
+        new_var = variable_class(name=name, lb=lb, ub=ub, init=init,
+                                 vartype=vartype)
+        dict_to_add[key] = new_var
+        new_var.set_parent(self)
+        return new_var
+
+    def include_member(self, key, var):
+        if sasoptpy.core.util.is_variable(var):
+            key = sasoptpy.util.pack_to_tuple(key)
+            self._vardict[key] = var
 
     def set_abstract(self, abstract=True):
         self._abstract = abstract
 
     def _recursive_add_vars(self, *argv, name, vartype, lb, ub, init,
-                            vardict, varlist, vkeys=(), abstract=False):
+                            vardict, vkeys=(), shadow=False):
 
         next_arg = sasoptpy.util._extract_argument_as_list(argv[0])
 
@@ -192,6 +194,9 @@ class VariableGroup:
                 current_keys = vkeys + i
             else:
                 current_keys = vkeys + (i,)
+
+            if sasoptpy.abstract.util.is_abstract(i):
+                shadow = True
 
             if len(argv) == 1:
                 varname = sasoptpy.core.util.get_name_from_keys(
@@ -203,17 +208,15 @@ class VariableGroup:
                 varub = sasoptpy.util.extract_list_value(current_keys, ub)
                 varin = sasoptpy.util.extract_list_value(current_keys, init)
 
-                new_var = sasoptpy.Variable(
-                    name=varname, lb=varlb, ub=varub, init=varin,
-                    vartype=vartype, abstract=abstract)
-                vardict[current_keys] = new_var
-                varlist.append(current_keys)
+                self.add_member(key=current_keys, name=varname, vartype=vartype,
+                                lb=varlb, ub=varub, init=varin, shadow=shadow)
+
             else:
                 self._recursive_add_vars(*argv[1:], vardict=vardict,
                                          vkeys=current_keys,
                                          name=name, vartype=vartype,
                                          lb=lb, ub=ub, init=init,
-                                         varlist=varlist)
+                                         shadow=shadow)
 
     def _register_keys(self, keys):
         for j, k in enumerate(keys):
@@ -244,23 +247,13 @@ class VariableGroup:
         if self._abstract or sasoptpy.util.is_key_abstract(key):
             tuple_key = sasoptpy.util.pack_to_tuple(key)
             tuple_key = tuple(i for i in sasoptpy.util.flatten_tuple(tuple_key))
-            if tuple_key in self._shadows:
+            if tuple_key in self._vardict:
+                return self._vardict[tuple_key]
+            elif tuple_key in self._shadows:
                 return self._shadows[tuple_key]
             else:
-                k = list(self._vardict)[0]
-                v = self._vardict[k]
-                vname = self._name
-                vname = vname.replace(' ', '')
-                shadow = Variable(name=vname, vartype=v._type, lb=v._lb,
-                                  ub=v._ub, init=v._init, abstract=True,
-                                  shadow=True)
-                ub = sasoptpy.abstract.ParameterValue(shadow, key=tuple_key,
-                                                  suffix='.ub')
-                lb = sasoptpy.abstract.ParameterValue(shadow, key=tuple_key,
-                                                  suffix='.lb')
-                shadow._ub = ub
-                shadow._lb = lb
-                shadow._iterkey = tuple_key
+                shadow = sasoptpy.abstract.ShadowVariable(self.get_name())
+                shadow.set_group_key(self, tuple_key)
                 self._shadows[tuple_key] = shadow
                 return shadow
 
@@ -298,8 +291,8 @@ class VariableGroup:
         i : list
             Iterable list of Variable objects
         """
-        for i in self._varlist:
-            yield self._vardict[i]
+        for v in self._vardict.values():
+            yield v
 
     def _defn(self, tabs=''):
         """
@@ -346,71 +339,49 @@ class VariableGroup:
 
         s = s.rstrip()
         s += ';'
-        # Check bounds to see if they are parameters
-        if self._abstract:
-            for i in self._shadows:
-                v = self._shadows[i]
-                lbparam = str(v) + '.lb' != str(v._lb)
-                ubparam = str(v) + '.ub' != str(v._ub)
-                if lbparam or ubparam:
-                    s += '\n' + tabs
-                    in_a_loop = False
-                    if any(sasoptpy.abstract.util.is_key_abstract(e) for e in i):
-                        loop_text = sasoptpy.util._to_optmodel_loop(i)
-                        s += 'for' + loop_text + ' '
-                        in_a_loop = True
-                    if lbparam:
-                        s += str(v) + '.lb=' + sasoptpy.util._to_optmodel_expr(v._lb)
-                        s += ' '
-                        if not in_a_loop:
-                            s = s.rstrip() + ';\n'
-                    if ubparam:
-                        s += str(v) + '.ub=' + sasoptpy.util._to_optmodel_expr(
-                            v._ub)
-                        s += ' '
-                    s = s.rstrip()
-                    s += ';'
-                initparam = v._init is not None and v._init != self._init
-                if initparam:
-                    s += '\n' + tabs
-                    if any(sasoptpy.abstract.util.is_key_abstract(e) for e in i):
-                        loop_text = sasoptpy.util._to_optmodel_loop(i)
-                        s += 'for' + loop_text + ' '
-                    s += str(v) + ' = ' + str(v._init)
-                    s = s.rstrip()
-                    s += ';'
-        else:
-            for _, v in self._vardict.items():
-                # Check if LB needs to be printed
-                printlb = False
-                defaultlb = 0 if self._type is BIN else -inf
-                if v._lb is not None:
-                    condition1 = self._lb is None or not np.isinstance(type(self._lb), np.number)
-                    condition2 = v._lb == defaultlb and (self._lb is not None and self._lb != defaultlb)
-                    condition3 = v._lb != self._lb
-                    if condition1 or condition2 or condition3:
-                        printlb = True
-                if printlb:
-                    s += '\n' + tabs + '{}.lb = {};'.format(v._expr(), v._lb if v._lb != -inf else "-constant('BIG')")
-
-                # Check if UB needs to be printed
-                printub = False
-                defaultub = 1 if self._type is BIN else inf
-                if v._ub is not None:
-                    condition1 = self._ub is None or not np.isinstance(type(self._ub), np.number)
-                    condition2 = v._ub == defaultub and (self._ub is not None and self._ub != defaultub)
-                    condition3 = v._ub != self._ub
-                    if condition1 or condition2 or condition3:
-                        printub = True
-                if printub:
-                    s += '\n' + tabs + '{}.ub = {};'.format(v._expr(), v._ub if v._ub != inf else "constant('BIG')")
-
-                # Check if init needs to be printed
-                if v._init is not None:
-                    if v._init != self._init:
-                        s += '\n' + tabs + '{} = {};'.format(v._expr(), v._init)
 
         return(s)
+
+    def _member_defn(self):
+        dependents = []
+        for v in self.get_members().values():
+            dependents.extend(self.get_different_attributes(v))
+        defn = sasoptpy.util.get_attribute_definitions(dependents)
+        return defn
+
+    def get_members(self):
+        return self._vardict
+
+    def get_attributes(self):
+        attributes = OrderedDict()
+        attributes['init'] = self._init
+        attributes['lb'] = self._lb
+        attributes['ub'] = self._ub
+        return attributes
+
+    def get_type(self):
+        return self._type
+
+    def get_different_attributes(self, var):
+        var_attr = var.get_attributes()
+        group_attr = self.get_attributes()
+
+        different_attrs = []
+        for key, var_value in var_attr.items():
+            if var_value is not None:
+                group_value = group_attr.get(key, None)
+
+                def is_equal_to_default(v, k):
+                    return v == sasoptpy.core.util.get_default_value(
+                        self.get_type(), k)
+
+                if group_value is None and is_equal_to_default(var_value, key):
+                    continue
+
+                if sasoptpy.util.is_comparable(group_value) and var_value != group_value:
+                    different_attrs.append(
+                        {'ref': var, 'key': key, 'value': var_value})
+        return different_attrs
 
     def sum(self, *argv):
         """
@@ -476,7 +447,8 @@ class VariableGroup:
                 r._iterkey = iter_key
             return r
         else:
-            r = Expression(temp=True)
+            r = Expression()
+            r.set_temporary()
             feas_set = []
             for i, a in enumerate(argv):
                 if a == '*':
@@ -614,7 +586,7 @@ class VariableGroup:
         for v in self._shadows:
             self._shadows[v].set_init(init)
 
-    def set_bounds(self, lb=None, ub=None):
+    def set_bounds(self, lb=None, ub=None, members=True):
         """
         Sets / updates bounds for the given variable
 
@@ -642,17 +614,33 @@ class VariableGroup:
         sasoptpy.Variable(name='u_b', lb=4, ub=inf, vartype='CONT')
 
         """
+
         if lb is not None:
-            self._lb = lb
+            self._lb = sasoptpy.core.util.get_group_bound(lb)
         if ub is not None:
-            self._ub = ub
-        for v in self._vardict:
-            varlb = sasoptpy.util.extract_list_value(v, lb)
-            if lb is not None:
-                self._vardict[v].set_bounds(lb=varlb)
-            varub = sasoptpy.util.extract_list_value(v, ub)
-            if ub is not None:
-                self._vardict[v].set_bounds(ub=varub)
+            self._ub = sasoptpy.core.util.get_group_bound(ub)
+
+        if members:
+            for v in self._vardict:
+                varlb = sasoptpy.util.extract_list_value(v, lb)
+                if lb is not None:
+                    self[v].set_bounds(lb=varlb)
+                varub = sasoptpy.util.extract_list_value(v, ub)
+                if ub is not None:
+                    self[v].set_bounds(ub=varub)
+
+    def set_member_value(self, key, value):
+        pass
+
+    def set_member_value_by_name(self, name, value):
+        keys = name.split('[')[1].split(']')[0]
+        keys = keys.split(',')
+        keys = tuple(int(k) if k.isdigit() else k
+                     for k in keys)
+        if keys in self._vardict:
+            self[keys].set_value(value)
+        else:
+            self.add_member(keys).set_value(value)
 
     def __str__(self):
         """

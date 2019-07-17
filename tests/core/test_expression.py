@@ -51,10 +51,10 @@ class TestExpression(unittest.TestCase):
         x = so.Variable(name='x')
         y = so.Variable(name='y')
         e = so.Expression(x + 2*x*y, name='nonlinear_exp')
-        new_name = e.set_name()
-        self.assertEqual(new_name, 'nonlinear_exp')
+        new_name = e.set_name('new_name')
+        self.assertEqual(new_name, 'new_name')
         f = so.Expression(2*x + y)
-        new_name = f.set_name()
+        new_name = f.set_name('f')
         self.assertIsNotNone(new_name)
         new_name = e.set_name('e')
         self.assertEqual(new_name, 'e')
@@ -73,14 +73,15 @@ class TestExpression(unittest.TestCase):
         z = so.VariableGroup(setI, name='z')
         g = so.quick_sum(z[i] for i in setI) + 5
         g_exp = g._expr()
-        self.assertEqual(g_exp, 'sum {i_1 in I} (z[i_1]) + 5')
+        self.assertEqual(g_exp, 'sum {o9 in I} (z[o9]) + 5')
 
     def test_repr(self):
         x = so.Variable(name='x')
         e = x ** 2 + 3 * x - 5
         exp_repr = repr(e)
         self.assertEqual(exp_repr, 'sasoptpy.Expression(exp = (x) ** (2) + 3 * x - 5, name=None)')
-        e.set_permanent('e')
+        e.set_permanent()
+        e.set_name('e')
         exp_repr = repr(e)
         self.assertEqual(exp_repr, 'sasoptpy.Expression(exp = (x) ** (2) + 3 * x - 5, name=\'e\')')
 
@@ -97,7 +98,7 @@ class TestExpression(unittest.TestCase):
         setI = Set(name='setI')
         y = so.VariableGroup(setI, name='y')
         e = - so.quick_sum(y[i] * i for i in setI)
-        self.assertEqual(str(e), '- sum(y[i_1] * i_1 for i_1 in setI)')
+        self.assertEqual(str(e), '- sum(y[o10] * o10 for o10 in setI)')
 
         e = 2 * x ** y[0]
         self.assertEqual(str(e), '2 * ((x) ** (y[0]))')

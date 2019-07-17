@@ -35,21 +35,9 @@ def load_package_globals():
     sasoptpy.INT = 'INT'
     sasoptpy.BIN = 'BIN'
 
-    # Global dictionary
-    sasoptpy.__namedict = {}
-
     # Container for wrapped statements
     sasoptpy._transfer = {}
     sasoptpy.transfer_allowed = False
-
-    # Counters
-    sasoptpy.__ctr = {'obj': [0],
-                      'var': [0], 'con': [0], 'expr': [0], 'vg': [0], 'cg': [0],
-                      'model': [0],
-                      'i': [0], 'set': [0], 'param': [0],
-                      'impvar': [0], 'table': [0]}
-
-    sasoptpy.__objcnt = 0
 
     # Transformation dictionary
     sasoptpy._transform = {
@@ -65,95 +53,16 @@ def load_package_globals():
         'min': sasoptpy.MIN
     }
 
-    # Load default configuration
-    # sasoptpy.config = Config()
-    # sasoptpy.default_config_keys = sasoptpy.config.keys
+    sasoptpy.itemid = 0
 
 
-def assign_name(name, ctype=None):
-    """
-    Checks if a name is valid and returns a random string if not
+def get_creation_id():
+    sasoptpy.itemid += 1
+    return sasoptpy.itemid
 
-    Parameters
-    ----------
-    name : str or None
-        Name to be checked if unique
-    ctype : str, optional
-        Type of the object
+def get_next_name():
+    return 'o' + str(get_creation_id())
 
-    Returns
-    -------
-    str : The given name if valid, a random string otherwise
-    """
-    if name and type(name) != str:
-        name = ctype + '_' + str(name) if ctype else str(name)
-    if name is None or name == '':
-        if ctype is None:
-            name = 'TMP_' + ''.join(random.choice(string.ascii_uppercase) for
-                                    _ in range(5))
-        else:
-            name = '{}_{}'.format(ctype, get_and_increment_counter(ctype))
-    else:
-        if name in sasoptpy.__namedict:
-            if ctype is None:
-                name = ''.join(random.choice(string.ascii_lowercase) for
-                               _ in range(5))
-            else:
-                name = '{}_{}'.format(ctype, get_and_increment_counter(ctype))
-        else:
-            name = name.replace(" ", "_")
-    while name in sasoptpy.__namedict:
-        if ctype is None:
-            name = ''.join(random.choice(string.ascii_lowercase) for
-                           _ in range(5))
-        else:
-            name = '{}_{}'.format(ctype, get_and_increment_counter(ctype))
-    return name
-
-
-def check_name(name, ctype=None):
-    warnings.warn('Use sasoptpy.util.assign_name', DeprecationWarning)
-    return assign_name(name, ctype)
-
-
-def register_globally(name, obj):
-    """
-    Adds the name and order of a component into the global reference list
-
-    Parameters
-    ----------
-    name : string
-        Name of the object
-    obj : object
-        Object to be registered to the global name dictionary
-
-    Returns
-    -------
-    objcnt : int
-        Unique object number to represent creation order
-    """
-    sasoptpy.__objcnt += 1
-    sasoptpy.__namedict[name] = {'ref': obj, 'order': sasoptpy.__objcnt}
-    return sasoptpy.__objcnt
-
-
-def register_name(name, obj):
-    warnings.warn('Use sasoptpy.util.register_globally', DeprecationWarning)
-    return register_globally(name, obj)
-
-def save_object(obj, name, obj_type):
-    name = sasoptpy.util.assign_name(name, obj_type)
-    obj._objorder = register_globally(name, obj)
-    obj._name = name
-
-def get_namedict():
-    return sasoptpy.__namedict
-
-
-def delete_name(name):
-    nd = get_namedict()
-    if name is not None and name in nd:
-        del nd[name]
 
 def is_existing_object(obj):
     if obj.get_name() is None:
@@ -171,9 +80,9 @@ def need_name_assignment(obj, name):
     else:
         return True
 
-def set_creation_order_if_empty(obj, order):
+def set_creation_order_if_empty(obj):
     if hasattr(obj, '_objorder') and not obj._objorder:
-        obj._objorder = order
+        obj._objorder = get_creation_id()
 
 
 def get_in_digit_format(val):
@@ -367,7 +276,8 @@ def expr_sum(argv):
     if sasoptpy.transfer_allowed:
         argv.gi_frame.f_globals.update(sasoptpy._transfer)
 
-    exp = sasoptpy.core.Expression(temp=True)
+    exp = sasoptpy.core.Expression()
+    exp.set_temporary()
     iterators = []
     for i in argv:
         exp = exp + i
@@ -408,7 +318,7 @@ def _wrap_expression_with_iterators(exp, operator, iterators):
     else:
         r = exp
     if r._name is None:
-        r._name = assign_name(None, 'expr')
+        r._name = get_next_name()
     if r._operator is None:
         r._operator = operator
     for i in iterators:
@@ -500,6 +410,15 @@ def _recursive_walk(obj, func, attr=None, alt=None):
 def is_set_abstract(arg):
     return sasoptpy.abstract.is_abstract_set(arg)
 
+def is_abstract(arg):
+    return hasattr(arg, '_abstract') and arg._abstract
+
+def is_comparable(arg):
+    forbidden_types = [pd.Series, pd.DataFrame, dict, tuple]
+    if any(isinstance(arg, f) for f in forbidden_types):
+        return False
+    else:
+        return True
 
 def get_iterators(keys):
     """
@@ -566,14 +485,17 @@ def reset():
     :func:`get_namespace`
 
     """
-    reset_globals()
+    #reset_globals()
     sasoptpy.config.reset()
+    sasoptpy.itemid = 0
 
 
 def reset_globals():
-    sasoptpy.__namedict.clear()
-    for i in sasoptpy.__ctr:
-        sasoptpy.__ctr[i] = [0]
+    reset()
+    #print('RESET GLOBALS IS CALLED')
+    # sasoptpy.__namedict.clear()
+    # for i in sasoptpy.__ctr:
+    #     sasoptpy.__ctr[i] = [0]
 
 
 def get_mutable(exp):
@@ -605,15 +527,18 @@ def wrap_expression(e, abstract=False):
     Wraps expression inside another expression
     """
     wrapper = sasoptpy.Expression()
+
     if hasattr(e, '_name') and e._name is not None:
         name = e._name
     else:
-        name = assign_name(None, 'expr')
+        name = get_next_name()
+
     if sasoptpy.core.util.is_expression(e):
-        wrapper._linCoef[name] = {'ref': e, 'val': 1.0}
+        wrapper.set_member(key=name, ref=e, val=1)
         wrapper._abstract = e._abstract or abstract
     elif isinstance(e, dict):
         wrapper._linCoef[name] = {**e}
+
     return wrapper
 
 
@@ -826,7 +751,7 @@ def read_frame(df, cols=None):
 
 
 # TODO this function is too long, needs to be split
-def get_solution_table(*argv, key=None, sort=True, rhs=False):
+def get_solution_table(*argv, key=None, sort=False, rhs=False):
     """
     Returns the requested variable names as a DataFrame table
 
@@ -1075,66 +1000,6 @@ def _sort_tuple(i):
             key += (2,)
     key += i
     return key
-
-
-def _set_abstract_values(row):
-    """
-    Searches for the missing/abstract variable names and set their values
-    """
-    original_name = row['var'].split('[')[0]
-    group = get_obj_by_name(original_name)
-    if group:
-        keys = row['var'].split('[')[1].split(']')[0]
-        keys = keys.split(',')
-        keys = tuple(int(k) if k.isdigit() else k
-                     for k in keys)
-        if keys in group._vardict:
-            group[keys]._value = row['value']
-        else:
-            group.add_member(keys)._value = row['value']
-        return True
-    else:
-        return False
-
-
-def get_obj_by_name(name):
-    """
-    Returns the reference to an object by using the unique name
-
-    Notes
-    -----
-
-    If there is a conflict in the namespace, you might not get the object
-    you request. Clear the namespace using
-    :func:`reset_globals` when needed.
-
-    See Also
-    --------
-    :func:`reset_globals`
-
-    Examples
-    --------
-
-    >>> m.add_variable(name='var_x', lb=0)
-    >>> m.add_variables(2, name='var_y', vartype=so.INT)
-    >>> x = so.get_obj_by_name('var_x')
-    >>> y = so.get_obj_by_name('var_y')
-    >>> print(x)
-    >>> print(y)
-    >>> m.add_constraint(x + y[0] <= 3, name='con_1')
-    >>> c1 = so.get_obj_by_name('con_1')
-    >>> print(c1)
-    var_x
-    Variable Group var_y
-    [(0,): Variable [ var_y_0 | INT ]]
-    [(1,): Variable [ var_y_1 | INT ]]
-    var_x  +  var_y_0  <=  3
-
-    """
-    if name in sasoptpy.__namedict:
-        return sasoptpy.__namedict[name]['ref']
-    else:
-        return None
 
 
 #TODO Both read_table and read_data functions are too long and out of place
@@ -1422,9 +1287,6 @@ def exp_range(start, stop, step=1):
     enname = stop._expr() if hasattr(stop, '_expr') else str(stop)
     setname = stname + '..' + enname
     setname = setname.replace(' ', '')
-    exset = get_obj_by_name(setname)
-    if exset:
-        return exset
     return sasoptpy.abstract.Set(name=setname)
 
 
@@ -1447,3 +1309,20 @@ def to_definition(item):
 def is_linear(item):
     return item._is_linear()
 
+def get_object_order(obj):
+    return getattr(obj, '_objorder', None)
+
+def get_attribute_definitions(members):
+    definitions = [_attribute_to_defn(i) for i in members]
+    defn = '\n'.join(definitions)
+    return defn
+
+def _attribute_to_defn(d):
+    expr = to_expression
+    if d['key'] == 'init':
+        return '{} = {};'.format(expr(d['ref']), d['value'])
+    if d['key'] == 'lb' or d['key'] == 'ub':
+        return '{}.{} = {};'.format(expr(d['ref']), d['key'], d['value'])
+    raise NotImplementedError('Attribute {} definition is not implemented'.format(
+        d['key']
+    ))

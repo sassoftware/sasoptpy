@@ -36,9 +36,8 @@ class ExpressionDict:
     """
 
     def __init__(self, name=None):
-        name = sasoptpy.util.assign_name(name, 'impvar')
         self._name = name
-        self._objorder = sasoptpy.util.register_globally(name, self)
+        self._objorder = sasoptpy.util.get_creation_id()
         self._dict = OrderedDict()
         self._conditions = []
         self._shadows = OrderedDict()

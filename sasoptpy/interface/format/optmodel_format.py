@@ -36,6 +36,10 @@ def to_optmodel(model, **kwargs):
     for cm in sorted_comp:
         if (sasoptpy.core.util.is_regular_component(cm)):
             s += cm._defn() + '\n'
+            if hasattr(cm, '_member_defn'):
+                mdefn = cm._member_defn()
+                if mdefn != '':
+                    s += mdefn + '\n'
 
     # Solve block
     if solve:

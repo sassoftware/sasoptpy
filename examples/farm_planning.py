@@ -228,9 +228,9 @@ def test(cas_conn):
         print(so.get_solution_table(
             grainBought, grainSold, sugarBeetAcres,
             sbg_df, sugarBeetBought, sugarBeetSold))
-        num_acres = so.get_obj_by_name('num_acres')
+        num_acres = m.get_constraint('num_acres')
         na_df = num_acres.get_expressions()
-        max_num_cows_con = so.get_obj_by_name('max_num_cows_def')
+        max_num_cows_con = m.get_constraint('max_num_cows_def')
         mnc_df = max_num_cows_con.get_expressions()
         print(so.get_solution_table(na_df, mnc_df))
 

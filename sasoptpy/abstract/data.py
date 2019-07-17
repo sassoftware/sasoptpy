@@ -63,8 +63,8 @@ class Parameter():
     """
 
     def __init__(self, name, keys=None, order=1, init=None, value=None, p_type=None):
-        self._name = sasoptpy.util.assign_name(name, 'param')
-        self._objorder = sasoptpy.util.register_globally(self._name, self)
+        self._name = name
+        self._objorder = sasoptpy.util.get_creation_id()
         self._keys = keys if keys is not None else ()
         self._keysize = len(self._keys)
         self._order = order
@@ -336,9 +336,8 @@ class Set(sasoptpy.Expression):
     """
 
     def __init__(self, name, init=None, value=None, settype=None):
-        super().__init__()
-        self._name = sasoptpy.util.assign_name(name, 'set')
-        self._objorder = sasoptpy.util.register_globally(self._name, self)
+        super().__init__(name=name)
+        self._objorder = sasoptpy.util.get_creation_id()
         if init:
             if isinstance(init, range):
                 newinit = str(init.start) + '..' + str(init.stop)
@@ -450,7 +449,7 @@ class SetIterator(sasoptpy.Expression):
                  ):
         # TODO use self._name = initset._colname
         super().__init__()
-        self._name = sasoptpy.util.assign_name(None, 'i')
+        self._name = sasoptpy.util.get_next_name()
         self._linCoef[self._name] = {'ref': self,
                                      'val': 1.0}
         self._set = initset
@@ -572,8 +571,8 @@ class OldStatement:
 
     def __init__(self, statement, after_solve=False):
         self.statement = statement
-        self._name = sasoptpy.util.assign_name(None, None)
-        self._objorder = sasoptpy.util.register_globally(self._name, self)
+        self._objorder = sasoptpy.util.get_creation_id()
+        self._name = sasoptpy.util.get_next_name()
         self._after = after_solve
 
     def _defn(self):

@@ -60,13 +60,9 @@ class Constraint(Expression):
     """
 
     def __init__(self, exp, direction=None, name=None, crange=None):
-        super().__init__()
+        super().__init__(name=name)
         if name is not None:
-            name = sasoptpy.util.assign_name(name, 'con')
-            self._name = name
-            self._objorder = sasoptpy.util.register_globally(name, self)
-        else:
-            self._name = None
+            self._objorder = sasoptpy.util.get_creation_id()
 
         if exp._name is None:
             self._linCoef = exp._linCoef

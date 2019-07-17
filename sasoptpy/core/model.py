@@ -22,6 +22,7 @@ Model includes :class:`Model` class, the main structure of an opt. model
 """
 
 
+from collections import OrderedDict
 import inspect
 from math import inf
 from types import GeneratorType
@@ -61,8 +62,8 @@ class Model:
     NOTE: Initialized model mip
     """
 
-    def __init__(self, name, session=None):
-        self._name = sasoptpy.util.assign_name(name, 'model')
+    def __init__(self, name=None, session=None):
+        self._name = name
         self._session = session
         self._mediator = None
         self._variables = []
@@ -89,7 +90,7 @@ class Model:
         self._impvars = []
         self._statements = []
         self._postsolve_statements = []
-        self._objorder = sasoptpy.util.register_globally(name, self)
+        self._objorder = sasoptpy.util.get_creation_id()
         self.response = None
 
         print('NOTE: Initialized model {}.'.format(name))
@@ -104,7 +105,7 @@ class Model:
     def get_name(self):
         return self._name
 
-    def add_variable(self, name=None, vartype=None,
+    def add_variable(self, name, vartype=None,
                      lb=None, ub=None, init=None):
         """
         Adds a new variable to the model
@@ -212,7 +213,7 @@ class Model:
         return vg
 
     @sasoptpy.containable
-    def add_constraint(self, c, name=None):
+    def add_constraint(self, c, name):
         """
         Adds a single constraint to the model
 
@@ -251,10 +252,9 @@ class Model:
            (c._direction == 'G' and c._linCoef['CONST']['val'] == inf)):
             raise ValueError("Invalid constant value for the constraint type")
 
-        if c._name is None or name is not None:
-            name = sasoptpy.util.assign_name(name, 'con')
-            c._name = name
-            c._objorder = sasoptpy.util.register_globally(name, c)
+        if c._name is None:
+            c.set_name(name)
+            c.set_permanent()
 
         self.include(c)
         return c
@@ -766,7 +766,7 @@ class Model:
         self._objective = model._objective
 
     @sasoptpy.containable
-    def set_objective(self, expression, sense=None, name=None):
+    def set_objective(self, expression, name, sense=None):
         """
         Sets the objective function for the model
 
@@ -819,10 +819,9 @@ class Model:
 
         obj = Objective(expression, sense=sense, name=name)
         self._objective = obj
-        self._objective._temp = False
         return self._objective
 
-    def append_objective(self, expression, sense=None, name=None):
+    def append_objective(self, expression, name, sense=None):
         obj = Objective(expression, name=name, sense=sense)
         self._multiobjs.append(obj)
         return obj
@@ -904,7 +903,16 @@ class Model:
         2.0 * x  +  y  <=  15
 
         """
-        return self._constraintDict.get(name)
+        if name in self._constraintDict:
+            return self._constraintDict[name]
+        else:
+            return self.get_constraint_group(name)
+
+    def get_constraint_group(self, name):
+        for i in self._congroups:
+            if i.get_name() == name:
+                return i
+        return None
 
     def get_constraints(self):
         """
@@ -932,13 +940,13 @@ class Model:
         return self._constraintDict
 
     def get_grouped_constraints(self):
-        grouped_cons = []
-        for i in self._congroups:
-            grouped_cons.append(i)
-        for i in self._constraints:
-            if i._parent is None:
-                grouped_cons.append(i)
-        grouped_cons = sorted(grouped_cons, key=lambda i: i._objorder)
+        all_cons = [*self._congroups, *self._constraints]
+        all_cons = sorted(all_cons, key=lambda i: i._objorder)
+        grouped_cons = OrderedDict()
+        for i in all_cons:
+            if sasoptpy.core.util.has_parent(i):
+                continue
+            grouped_cons[i.get_name()] = i
         return grouped_cons
 
     def get_variable(self, name):
@@ -964,7 +972,16 @@ class Model:
         sasoptpy.Variable(name='x', lb=3, ub=5, vartype='INT')
 
         """
-        return self._variableDict.get(name)
+        if name in self._variableDict:
+            return self._variableDict[name]
+        else:
+            return self.get_variable_group(name)
+
+    def get_variable_group(self, name):
+        for i in self._vargroups:
+            if i.get_name() == name:
+                return i
+        return None
 
     def get_variables(self):
         """
@@ -992,13 +1009,13 @@ class Model:
         return self._variableDict
 
     def get_grouped_variables(self):
-        grouped_vars = []
-        for i in self._vargroups:
-            grouped_vars.append(i)
-        for i in self._variables:
-            if i._parent is None:
-                grouped_vars.append(i)
-        grouped_vars = sorted(grouped_vars, key=lambda i: i._objorder)
+        all_vars = [*self._vargroups, *self._variables]
+        all_vars = sorted(all_vars, key=lambda i: i._objorder)
+        grouped_vars = OrderedDict()
+        for i in all_vars:
+            if sasoptpy.core.util.has_parent(i):
+                continue
+            grouped_vars[i.get_name()] = i
         return grouped_vars
 
     def get_variable_coef(self, var):
@@ -1460,8 +1477,10 @@ class Model:
 
     def _defn(self):
         s = 'problem {} include'.format(self._name)
-        s += ' ' + ' '.join([s._name for s in self.get_grouped_variables()])
-        s += ' ' + ' '.join([s._name for s in self.get_grouped_constraints()])
+        s += ' ' + ' '.join([
+            s.get_name() for s in self.get_grouped_variables().values()])
+        s += ' ' + ' '.join([
+            s.get_name() for s in self.get_grouped_constraints().values()])
         s += ';'
         return s
 
@@ -1588,6 +1607,15 @@ class Model:
 
         # Call solver based on session type
         return solver_func(**kwargs)
+
+    def _set_abstract_values(self, row):
+        """
+        Searches for the missing/abstract variable names and set their values
+        """
+        original_name = row['var'].split('[')[0]
+        group = self.get_variable_group(original_name)
+        if group:
+            group.set_member_value_by_name(row['var'], row['value'])
 
     def clear_solution(self):
         self._objval = None
