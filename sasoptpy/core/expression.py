@@ -191,9 +191,10 @@ class Expression:
                     v = sm.func_equivalent[self._operator](v, *vals)
                 else:
                     v = sm.func_equivalent[self._operator](v)
-            except:
-                print(self._arguments)
-                print('ERROR: Unknown operator: {}'.format(self._operator))
+            except KeyError:
+                warnings.warn(
+                    'Cannot evaluate operator: {} in {}'.format(
+                        self._operator, self._expr()), RuntimeWarning)
         return v
 
     def get_member_value(self, key):

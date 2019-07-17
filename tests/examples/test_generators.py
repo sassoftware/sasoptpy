@@ -99,7 +99,7 @@ class TestGenerators(unittest.TestCase):
         unittest.util._MAX_LENGTH = 1e+6
 
     def setUp(self):
-        #sys.stdout = NullWriter()
+        sys.stdout = NullWriter()
         self.maxDiff = None
 
     def tearDown(self):
