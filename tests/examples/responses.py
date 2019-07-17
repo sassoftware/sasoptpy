@@ -3,10 +3,13 @@ This file keeps a copy of expected responses to unit tests.
 """
 
 from inspect import cleandoc
+import os
+current_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 def read_file(problem):
-    return open('responses/{}.sas'.format(problem), 'r').read()
+    file_path = os.path.join(current_dir, 'responses/{}.sas'.format(problem))
+    return open(file_path, 'r').read()
 
 
 # Food Manufacture 1
@@ -43,7 +46,7 @@ ro = [
     read_file('refinery_optimization')
 ]
 
-#Mining Optimization
+# Mining Optimization
 mo = [
     read_file('mining_optimization')
 ]

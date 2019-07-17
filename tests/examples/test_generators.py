@@ -20,11 +20,15 @@
 This test file generates intermediate forms to run optimization models using SAS/OR or SAS Viya Optimization solvers.
 """
 
+import os
 import sys
 import unittest
 import tests.examples.responses as expected
 import sasoptpy as so
 import hashlib
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.abspath(os.path.join(current_dir, '../../examples')))
 
 
 class NullWriter:
@@ -95,7 +99,7 @@ class TestGenerators(unittest.TestCase):
         unittest.util._MAX_LENGTH = 1e+6
 
     def setUp(self):
-        sys.stdout = NullWriter()
+        #sys.stdout = NullWriter()
         self.maxDiff = None
 
     def tearDown(self):
@@ -120,43 +124,43 @@ class TestGenerators(unittest.TestCase):
 
     def test_fm1(self):
         self.set_expectation('Food Manufacture 1', expected.fm1)
-        from examples.food_manufacture_1 import test
+        from food_manufacture_1 import test
         test(TestGenerators.server)
         self.check_results()
 
     def test_fm2(self):
         self.set_expectation('Food Manufacture 2', expected.fm2)
-        from examples.food_manufacture_2 import test
+        from food_manufacture_2 import test
         test(TestGenerators.server)
         self.check_results()
 
     def test_fp1(self):
         self.set_expectation('Factory Planning 1', expected.fp1)
-        from examples.factory_planning_1 import test
+        from factory_planning_1 import test
         test(TestGenerators.server)
         self.check_results()
 
     def test_fp2(self):
         self.set_expectation('Factory Planning 2', expected.fp2)
-        from examples.factory_planning_2 import test
+        from factory_planning_2 import test
         test(TestGenerators.server)
         self.check_results()
 
     def test_mp(self):
         self.set_expectation('Manpower Planning', expected.mp)
-        from examples.manpower_planning import test
+        from manpower_planning import test
         test(TestGenerators.server)
         self.check_results()
 
     def test_ro(self):
         self.set_expectation('Refinery Optimization', expected.ro)
-        from examples.refinery_optimization import test
+        from refinery_optimization import test
         test(TestGenerators.server)
         self.check_results()
 
     def test_mo(self):
         self.set_expectation('Mining Optimization', expected.mo)
-        from examples.mining_optimization import test
+        from mining_optimization import test
         try:
             test(TestGenerators.server)
         except ZeroDivisionError:
@@ -165,49 +169,49 @@ class TestGenerators(unittest.TestCase):
 
     def test_farmp(self):
         self.set_expectation('Farm Planning', expected.farmp)
-        from examples.farm_planning import test
+        from farm_planning import test
         test(TestGenerators.server)
         self.check_results()
 
     def test_econ(self):
         self.set_expectation('Economic Planning', expected.econ)
-        from examples.economic_planning import test
+        from economic_planning import test
         test(TestGenerators.server)
         self.check_results()
 
     def test_dc(self):
         self.set_expectation('Decentralization', expected.dc)
-        from examples.decentralization import test
+        from decentralization import test
         test(TestGenerators.server)
         self.check_results()
 
     def test_ow(self):
         self.set_expectation('Optimal Wedding', expected.ow)
-        from examples.sas_optimal_wedding import test
+        from sas_optimal_wedding import test
         test(TestGenerators.server)
         self.check_results()
 
     def test_kx(self):
         self.set_expectation('Kidney Exchange', expected.kx)
-        from examples.sas_kidney_exchange import test
+        from sas_kidney_exchange import test
         test(TestGenerators.server)
         self.check_results()
 
     def test_multiobj(self):
         self.set_expectation('Multiobjective', expected.multiobj)
-        from examples.multiobjective import test
+        from multiobjective import test
         test(TestGenerators.server)
         self.check_results()
 
     #def test_cf(self):
     #    self.set_expectation('Curve Fitting', expected.cf)
-    #    from examples.curve_fitting import test
+    #    from curve_fitting import test
     #    test(TestGenerators.server)
     #    self.check_results()
 
     def test_nl1(self):
         self.set_expectation('Nonlinear 1', expected.nl1)
-        from examples.nonlinear_1 import test
+        from nonlinear_1 import test
         try:
             test(TestGenerators.server)
         except ZeroDivisionError:
@@ -216,7 +220,7 @@ class TestGenerators(unittest.TestCase):
 
     def test_nl2(self):
         self.set_expectation('Nonlinear 2', expected.nl2)
-        from examples.nonlinear_2 import test
+        from nonlinear_2 import test
         test(TestGenerators.server)
         self.check_results()
 
