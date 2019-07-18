@@ -1,0 +1,7 @@
+# Exclude certain folders from release
+/doc export-ignore
+/img export-ignore
+/tests export-ignore
+.gitignore export-ignore
+.gitattributes export-ignore
+.gitlab-ci.yml export-ignore
