@@ -1,5 +1,8 @@
 from .statement_base import Statement
 
+import sasoptpy
+
+
 class ObjectiveStatement(Statement):
 
     def __init__(self, expression, sense, name=None, multiobj=False):

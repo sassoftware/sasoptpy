@@ -1,5 +1,8 @@
 from .statement_base import Statement
 
+import sasoptpy
+
+
 class ForLoopStatement(Statement):
 
     def __init__(self, func=None, over_set=None):

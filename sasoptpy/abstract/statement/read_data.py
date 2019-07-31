@@ -1,5 +1,8 @@
 from .statement_base import Statement
 
+import sasoptpy
+
+
 class ReadDataStatement(Statement):
 
     def __init__(self, index=None, params=None):

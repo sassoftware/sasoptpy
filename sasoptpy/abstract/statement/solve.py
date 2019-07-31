@@ -1,5 +1,8 @@
 from .statement_base import Statement
 
+import sasoptpy
+
+
 class SolveStatement(Statement):
 
     def __init__(self, *args, **kwargs):

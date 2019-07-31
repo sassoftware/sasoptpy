@@ -1,5 +1,8 @@
 from .statement_base import Statement
 
+import sasoptpy
+
+
 class Assignment(Statement):
 
     def __init__(self, identifier, expression, keyword=None):

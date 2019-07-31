@@ -1,5 +1,8 @@
 from .statement_base import Statement
 
+import sasoptpy
+
+
 class DropStatement(Statement):
 
     def __init__(self, constraint):

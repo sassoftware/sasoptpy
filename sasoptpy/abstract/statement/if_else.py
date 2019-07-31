@@ -1,5 +1,8 @@
 from .statement_base import Statement
 
+import sasoptpy
+
+
 class IfElseStatement(Statement):
 
     def __init__(self, condition=None, then=None, elsethen=None):
