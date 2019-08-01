@@ -5,7 +5,7 @@ from sasoptpy.core import Expression
 class Parameter(Expression):
 
     def __init__(self, name, ptype=None, value=None, init=None):
-        super().__init__()
+        super().__init__(name=name)
         if name is None:
             name = sasoptpy.util.get_next_name()
         self._name = name
