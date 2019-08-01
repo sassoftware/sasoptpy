@@ -45,7 +45,7 @@ class TestUtil(unittest.TestCase):
         cls.S1 = S1 = so.abstract.Set(name='S1')
         cls.S2 = S2 = so.abstract.Set(name='S2', settype='str')
         cls.S3 = S3 = so.abstract.Set(name='S3')
-        cls.p = so.abstract.Parameter(keys=[S1], name='p')
+        cls.p = so.abstract.ParameterGroup(S1, name='p')
         cls.y = so.VariableGroup(S1, S2, S3, name='y')
 
     def test_expression(self):
@@ -74,8 +74,9 @@ class TestUtil(unittest.TestCase):
         y = TestUtil.y
         c = so.ConstraintGroup((y[i, 'a', 1] + p[i] <= 5 for i in S1),
                                name='it_exp')
-        self.assertEqual(so.to_definition(c), "con it_exp {o1 in S1} : "
-                                              "y[o1, 'a', 1] + p[o1] <= 5;\n")
+        self.assertEqual(so.to_definition(c),
+                         "con it_exp {{o{i} in S1}} : "
+                         "y[o{i}, 'a', 1] + p[o{i}] <= 5;\n".format(i=1))
 
     def test_safe_iterator_expression(self):
         S1 = TestUtil.S1

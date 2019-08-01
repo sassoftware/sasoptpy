@@ -236,3 +236,8 @@ def get_group_bound(bound):
         return None
     else:
         return bound
+
+@sasoptpy.containable
+def read_data(table, index, columns):
+    pass
+

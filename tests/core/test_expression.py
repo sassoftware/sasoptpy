@@ -73,7 +73,7 @@ class TestExpression(unittest.TestCase):
         z = so.VariableGroup(setI, name='z')
         g = so.quick_sum(z[i] for i in setI) + 5
         g_exp = g._expr()
-        self.assertEqual(g_exp, 'sum {o9 in I} (z[o9]) + 5')
+        self.assertEqual(g_exp, 'sum {o8 in I} (z[o8]) + 5')
 
     def test_repr(self):
         x = so.Variable(name='x')
@@ -98,7 +98,7 @@ class TestExpression(unittest.TestCase):
         setI = Set(name='setI')
         y = so.VariableGroup(setI, name='y')
         e = - so.quick_sum(y[i] * i for i in setI)
-        self.assertEqual(str(e), '- sum(y[o10] * o10 for o10 in setI)')
+        self.assertEqual(str(e), '- sum(y[o9] * o9 for o9 in setI)')
 
         e = 2 * x ** y[0]
         self.assertEqual(str(e), '2 * ((x) ** (y[0]))')

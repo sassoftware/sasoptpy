@@ -34,6 +34,13 @@ def load_package_globals():
     sasoptpy.CONT = 'CONT'
     sasoptpy.INT = 'INT'
     sasoptpy.BIN = 'BIN'
+    sasoptpy.STR = 'str'
+    sasoptpy.NUM = 'num'
+
+    sasoptpy.LSO = 'lso'
+    sasoptpy.MIP = 'mip'
+    sasoptpy.LP = 'lp'
+    sasoptpy.QP = 'qp'
 
     # Container for wrapped statements
     sasoptpy._transfer = {}
@@ -50,7 +57,11 @@ def load_package_globals():
         'maximize': sasoptpy.MAX,
         'max': sasoptpy.MAX,
         'minimize': sasoptpy.MIN,
-        'min': sasoptpy.MIN
+        'min': sasoptpy.MIN,
+        'string': sasoptpy.STR,
+        'str': sasoptpy.STR,
+        'number': sasoptpy.NUM,
+        'num': sasoptpy.NUM
     }
 
     sasoptpy.itemid = 0
@@ -340,6 +351,7 @@ def load_function_containers():
         d[sasoptpy.core.Variable.set_bounds] = sasoptpy.abstract.statement.Assignment.set_bounds
         d[sasoptpy.abstract.ParameterValue.set_value] = sasoptpy.abstract.statement.Assignment.set_value
         d[sasoptpy.core.Model.drop_constraint] = sasoptpy.abstract.statement.DropStatement.drop_constraint
+        d[sasoptpy.core.util.read_data] = sasoptpy.abstract.util.read_data
         return d
 
     sasoptpy.statement_dictionary = read_statement_dictionary()
@@ -419,6 +431,12 @@ def is_comparable(arg):
         return False
     else:
         return True
+
+def is_model(arg):
+    return isinstance(arg, sasoptpy.core.Model)
+
+def is_workspace(arg):
+    return isinstance(arg, sasoptpy.session.Workspace)
 
 def get_iterators(keys):
     """
@@ -1305,6 +1323,9 @@ def to_expression(item):
 
 def to_definition(item):
     return item._defn()
+
+def to_optmodel(item, **kwargs):
+    return sasoptpy.interface.to_optmodel(item, **kwargs)
 
 def is_linear(item):
     return item._is_linear()

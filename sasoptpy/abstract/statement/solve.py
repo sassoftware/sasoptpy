@@ -9,6 +9,8 @@ class SolveStatement(Statement):
         super().__init__()
         self.options = kwargs.get('options', dict())
         self.primalin = kwargs.get('primalin', False)
+        self._objorder = sasoptpy.util.get_creation_id()
+        self._name = sasoptpy.util.get_next_name()
 
     def append(self, element):
         pass

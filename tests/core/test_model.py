@@ -225,8 +225,8 @@ class TestModel(unittest.TestCase):
             proc optmodel;
             min test_add_for_loop2_obj = 0;
             set I = 1..5;
-            for {o13 in I} do;
-                MIN loop_obj = o13 * x + o13;
+            for {o12 in I} do;
+                MIN loop_obj = o12 * x + o12;
                 solve with milp / primalin maxtime=300;
             end;
             solve;

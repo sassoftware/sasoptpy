@@ -41,3 +41,12 @@ def containable(func):
         else:
             return func(*args, **kwargs)
     return wrapper
+
+
+def class_containable(func):
+    def class_append(*args, **kwargs):
+        func(*args, **kwargs)
+        if sasoptpy.container:
+            sasoptpy.container.append(args[0])
+
+    return class_append

@@ -294,18 +294,11 @@ class VariableGroup(Group):
         for v in self._vardict.values():
             yield v
 
-    def _defn(self, tabs=''):
+    def _defn(self):
         """
         Returns string to be used in OPTMODEL definition
-
-        Parameters
-        ----------
-
-        tabs : string, optional
-            Tab string that is used in :meth:`Model.to_optmodel` method
-
         """
-        s = tabs + 'var {}'.format(self._name)
+        s = 'var {}'.format(self._name)
         s += ' {'
         for i in self._keyset:
             ind_list = []

@@ -96,7 +96,7 @@ class TestVariableGroup(unittest.TestCase):
         x = so.VariableGroup(idx1, idx2, name='x')
         self.assertEqual(x._defn(), "var x {{1,2,3}, {'a','b','c'}};")
 
-        from sasoptpy.abstract.data import Set, Parameter
+        from sasoptpy.abstract import Set, Parameter
         idx3 = Set(name='I')
         y = so.VariableGroup(idx3, name='y')
         self.assertEqual(y._defn(), "var y {{I}};")

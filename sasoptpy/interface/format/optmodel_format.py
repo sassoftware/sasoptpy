@@ -6,8 +6,14 @@ import pandas as pd
 
 import sasoptpy
 
-def to_optmodel(model, **kwargs):
+def to_optmodel(caller, **kwargs):
+    if sasoptpy.util.is_model(caller):
+        return to_optmodel_for_solve(caller, **kwargs)
+    elif sasoptpy.util.is_workspace(caller):
+        return to_optmodel_for_session(caller, **kwargs)
 
+
+def to_optmodel_for_solve(model, **kwargs):
     solve_option_keys = ('with', 'obj', 'objective', 'noobj', 'noobjective', 'relaxint', 'primalin')
 
     header = kwargs.get('header', True)
@@ -91,3 +97,26 @@ def to_optmodel(model, **kwargs):
     if header:
         s += 'quit;'
     return(s)
+
+
+def to_optmodel_for_session(workspace, **kwargs):
+
+    header = kwargs.get('header', True)
+    s = ''
+
+    if header:
+        s += 'proc optmodel;\n'
+
+    allcomp = workspace.get_elements()
+
+    for cm in allcomp:
+        if (sasoptpy.core.util.is_regular_component(cm)):
+            s += '    ' + cm._defn() + '\n'
+            if hasattr(cm, '_member_defn'):
+                mdefn = cm._member_defn()
+                if mdefn != '':
+                    s += mdefn + '\n'
+
+    if header:
+        s += 'quit;'
+    return s

@@ -32,16 +32,18 @@ from sasoptpy.util import (
     quick_sum, expr_sum, reset, reset, reset_globals,
     read_frame, flatten_frame,
     get_solution_table, dict_to_frame, read_table, exp_range,
-    to_expression, to_definition, is_linear)
+    to_expression, to_definition, to_optmodel, is_linear)
 
-from sasoptpy.structure import (inside_container, containable)
+from sasoptpy.structure import (inside_container, containable,
+                                class_containable)
 
 from sasoptpy.core.expression import Expression
 from sasoptpy.core import (Variable, VariableGroup, Constraint, ConstraintGroup,
                            Model, Objective)
+from sasoptpy.core.util import read_data
 
 from sasoptpy.abstract import (Set, Parameter, ImplicitVar, ExpressionDict,
-                               OldStatement)
+                               OldStatement, ParameterGroup)
 
 import sasoptpy.config
 from sasoptpy.config import Config

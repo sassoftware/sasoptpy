@@ -62,6 +62,7 @@ class Model:
     NOTE: Initialized model mip
     """
 
+    @sasoptpy.class_containable
     def __init__(self, name=None, session=None):
         self._name = name
         self._session = session
@@ -388,13 +389,13 @@ class Model:
         """
         if len(argv) == 0:
             p = sasoptpy.abstract.Parameter(
-                name, keys=(), init=init, value=value, p_type=p_type)
+                name, init=init, value=value, ptype=p_type)
             self.include(p)
-            return p['']
+            return p
         else:
             keylist = list(argv)
-            p = sasoptpy.abstract.Parameter(
-                name, keys=keylist, init=init, value=value, p_type=p_type)
+            p = sasoptpy.abstract.ParameterGroup(keylist, name=name, init=init,
+                                                 value=value, ptype=p_type)
             self.include(p)
             return p
 
@@ -700,6 +701,7 @@ class Model:
             ConstraintGroup: self._include_congroup,
             sasoptpy.Set: self._include_set,
             sasoptpy.Parameter: self._include_parameter,
+            sasoptpy.ParameterGroup: self._include_parameter_group,
             sasoptpy.OldStatement: self._include_statement,
             sasoptpy.abstract.LiteralStatement: self._include_statement,
             sasoptpy.ExpressionDict: self._include_expdict,
@@ -742,6 +744,9 @@ class Model:
 
     def _include_parameter(self, p):
         self._parameters.append(p)
+
+    def _include_parameter_group(self, pg):
+        self._parameters.append(pg)
 
     def _include_statement(self, os):
         self._save_statement(os)
