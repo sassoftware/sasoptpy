@@ -200,10 +200,10 @@ class ConstraintGroup(Group):
     def get_members(self):
         return self._condict
 
-    def _defn(self, tabs=''):
+    def _defn(self):
         s = ''
         for key_ in self._conlist:
-            s += tabs + 'con {}'.format(self._name)
+            s += 'con {}'.format(self._name)
             keys = sasoptpy.util._to_optmodel_loop(key_)
             s += keys
             s += ' : ' + self._condict[key_]._defn()

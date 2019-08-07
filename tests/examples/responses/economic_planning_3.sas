@@ -57,6 +57,4 @@ con capacity_con_transport_6 : production['transport', 6] - extra_capacity['tran
 
 max total_manpower = 0.6 * production['coal', 2] + 0.4 * extra_capacity['coal', 3] + 0.6 * production['coal', 3] + 0.4 * extra_capacity['coal', 4] + 0.6 * production['coal', 4] + 0.4 * extra_capacity['coal', 5] + 0.6 * production['coal', 5] + 0.4 * extra_capacity['coal', 6] + 0.6 * production['coal', 6] + 0.4 * extra_capacity['coal', 7] + 0.3 * production['steel', 2] + 0.2 * extra_capacity['steel', 3] + 0.3 * production['steel', 3] + 0.2 * extra_capacity['steel', 4] + 0.3 * production['steel', 4] + 0.2 * extra_capacity['steel', 5] + 0.3 * production['steel', 5] + 0.2 * extra_capacity['steel', 6] + 0.3 * production['steel', 6] + 0.2 * extra_capacity['steel', 7] + 0.2 * production['transport', 2] + 0.1 * extra_capacity['transport', 3] + 0.2 * production['transport', 3] + 0.1 * extra_capacity['transport', 4] + 0.2 * production['transport', 4] + 0.1 * extra_capacity['transport', 5] + 0.2 * production['transport', 5] + 0.1 * extra_capacity['transport', 6] + 0.2 * production['transport', 6] + 0.1 * extra_capacity['transport', 7];
 solve;
-print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
-print _con_.name _con_.body _con_.dual;
 quit;

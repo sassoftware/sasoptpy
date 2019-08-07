@@ -29,184 +29,7 @@ from types import GeneratorType
 import sasoptpy
 
 
-class Parameter():
-    """
-    Creates a parameter to be represented inside PROC OPTMODEL
 
-    Parameters
-    ----------
-    name : string
-        Name of the parameter
-    keys : list, optional
-        List of :class:`Set` to be used as keys for multi-index parameters
-    init : Expression, optional
-        Initial value expression of the parameter
-    p_type : string, optional
-        Type of the parameter, 'num' or 'str'
-
-    Examples
-    --------
-
-    >>> p = so.Parameter('p', init=x + 2*y)
-    >>> print(p._defn())
-    num p = x + 2 * y;
-
-    >>> I = so.Set('I')
-    >>> r = so.Parameter('r', keys=I, p_type='str')
-    >>> print(r._defn())
-    str r {I};
-
-    See also
-    --------
-    :func:`read_table`, :meth:`Model.read_table`
-
-    """
-
-    def __init__(self, name, keys=None, order=1, init=None, value=None, p_type=None):
-        self._name = name
-        self._objorder = sasoptpy.util.get_creation_id()
-        self._keys = keys if keys is not None else ()
-        self._keysize = len(self._keys)
-        self._order = order
-        self._init = init
-        self._value = value
-        self._source = None
-        self._keyset = None
-        self._colname = name
-        self._index = None
-        self._shadows = {}
-        self._type = 'num' if p_type is None else p_type
-
-    def __getitem__(self, key):
-        if key in self._shadows:
-            return self._shadows[key]
-        else:
-            pv = ParameterValue(self, key)
-            self._shadows[key] = pv
-            return pv
-
-    def __setitem__(self, key, item):
-        pv = self[key]
-        pv._assign = item
-
-    def _set_loop(self, source, keyset, colname=None, index=None):
-        self._source = source
-        self._keyset = keyset
-        self._colname = colname
-        self._index = index
-
-    def _expr(self):
-        return self._name
-
-    def _defn(self, tabs=None):
-        if tabs is None:
-            tabs = ''
-        if self._keys == ():
-            if self._init is not None:
-                s = tabs + '{} {} init {}'.format(self._type, self._name,
-                                               sasoptpy.util._to_sas_string(self._init))
-            elif self._value is not None:
-                s = tabs + '{} {} = {}'.format(self._type, self._name,
-                                               sasoptpy.util._to_sas_string(self._value))
-            else:
-                s = tabs + '{} {}'.format(self._type, self._name)
-        else:
-            s = tabs + '{} {} {{'.format(self._type, self._name)
-            for k in self._keys:
-                s += '{}, '.format(k._name)
-            s = s[:-2]
-            s += '}'
-            if self._init is not None:
-                s += ' init {} '.format(sasoptpy.util._to_sas_string(self._init))
-            elif self._value is not None:
-                s += ' = {} '.format(sasoptpy.util._to_sas_string(self._value))
-        s += ';'
-
-        for key in self._shadows:
-            sh = self._shadows[key]
-            if sh._assign is not None:
-                s += '\n'
-                has_iterators = False
-                iter_list = []
-                for i in key:
-                    if isinstance(i, SetIterator):
-                        has_iterators = True
-                        iter_list.append(i._defn())
-                if has_iterators:
-                    forcond = 'for {'
-                    forcond += ', '.join(iter_list)
-                    forcond += '} '
-                else:
-                    forcond = ''
-                s += tabs + forcond + str(sh) + ' = ' + str(sh._assign) + ';'
-
-        return(s)
-
-    def _to_read_data(self):
-        if self._source is None:
-            print('ERROR: Parameter {} is not declared!'.format(self._name))
-            return ''
-        s = ''
-        if self._index:
-            tablekeys = []
-            jkeys = []
-            keyctr = 1
-            s += '{'
-            for k in self._index:
-                if type(k) == GeneratorType:
-                    for i in k:
-                        key = 'jj{}'.format(keyctr)
-                        keyctr += 1
-                        tablekeys.append(key)
-                        jkeys.append(key)
-                        s += '{} in {}'.format(key, i._set._name)
-                elif k not in self._keyset:
-                    key = 'j{}'.format(keyctr)
-                    tablekeys.append(key)
-                    jkeys.append(key)
-                    s += '{} in {},'.format(key, k._name)
-                elif hasattr(k, '_colname'):
-                    if isinstance(k._colname, list):
-                        for i in k._colname:
-                            tablekeys.append(i)
-                    else:
-                        tablekeys.append(k._colname)
-                else:
-                    tablekeys.append(k)
-            s += '} '
-            s += '<{}['.format(self._name)
-            s += ','.join([format(i) for i in tablekeys])
-            s += ']=col('
-            if self._colname:
-                if callable(self._colname):
-                    s += self._colname(*jkeys) + '||'
-                else:
-                    s += '"{}"||'.format(self._colname)
-            s += ','.join([format(i) for i in jkeys])
-            s += ')> '
-        elif self._colname is not None and self._colname != self._name:
-            s += '{}={}'.format(self._name, self._colname)
-        else:
-            s += '{}'.format(self._name)
-
-        return(s)
-
-    def set_init(self, val):
-        self._init = val
-
-    def __str__(self):
-        return self._name
-
-    def get_value(self):
-        if self._keysize == 0:
-            if self._value is not None:
-                return self._value
-            elif self._init is not None:
-                return self._init
-            else:
-                return None
-        else:
-            return None
 
 
 class ParameterValue(sasoptpy.Expression):
@@ -304,7 +127,7 @@ class ParameterValue(sasoptpy.Expression):
         self._value = value
 
 
-class Set(sasoptpy.Expression):
+class Set():
     """
     Creates an index set to be represented inside PROC OPTMODEL
 
@@ -335,9 +158,11 @@ class Set(sasoptpy.Expression):
 
     """
 
+    @sasoptpy.class_containable
     def __init__(self, name, init=None, value=None, settype=None):
-        super().__init__(name=name)
-        self._objorder = sasoptpy.util.get_creation_id()
+        self._name = name
+        if name is not None:
+            self._objorder = sasoptpy.util.get_creation_id()
         if init:
             if isinstance(init, range):
                 newinit = str(init.start) + '..' + str(init.stop)
@@ -355,9 +180,6 @@ class Set(sasoptpy.Expression):
         self._type = sasoptpy.util.pack_to_list(settype)
         self._colname = sasoptpy.util.pack_to_list(name)
         self._iterators = []
-        self._abstract = True
-        self._linCoef[str(self)] = {'ref': self,
-                                    'val': 1.0}
 
     def __iter__(self):
         if len(self._type) > 1:
@@ -448,8 +270,7 @@ class SetIterator(sasoptpy.Expression):
                  group={'order': 1, 'outof': 1, 'id': 0}, multi_index=False
                  ):
         # TODO use self._name = initset._colname
-        super().__init__()
-        self._name = sasoptpy.util.get_next_name()
+        super().__init__(name=sasoptpy.util.get_next_name())
         self._linCoef[self._name] = {'ref': self,
                                      'val': 1.0}
         self._set = initset
@@ -467,6 +288,9 @@ class SetIterator(sasoptpy.Expression):
         self._group = group['id']
         self._multi = multi_index
         self._conditions = conditions if conditions else []
+
+    def set_name(self, name):
+        self._name = name
 
     def __hash__(self):
         return hash('{}'.format(id(self)))
@@ -512,9 +336,9 @@ class SetIterator(sasoptpy.Expression):
     def _defn(self, cond=0):
         if self._multi:
             comb = '<' + ', '.join(str(i) for i in self._children) + '>'
-            s = '{} in {}'.format(comb, self._set._name)
+            s = '{} in {}'.format(comb, sasoptpy.to_expression(self._set))
         else:
-            s = '{} in {}'.format(self._name, self._set._name)
+            s = '{} in {}'.format(self._name, sasoptpy.to_expression(self._set))
         if cond and len(self._conditions) > 0:
             s += ':'
             s += self._to_conditions()

@@ -15,6 +15,4 @@ con c3 : - (4 * x[3]) / (x[5]) - (2) / ((x[3]) ^ (0.71) * x[5]) - 0.0588 * ((x[7
 con c4 : - (4 * x[4]) / (x[6]) - (2) / ((x[4]) ^ (0.71) * x[6]) - 0.0588 * ((x[8]) / ((x[4]) ^ (1.3))) >= -1.0;
 con frange : -9.9 <= 0.4 * (((x[1]) / (x[7])) ^ (0.67)) + 0.4 * (((x[2]) / (x[8])) ^ (0.67)) - x[1] - x[2] <= -5.8;
 solve with nlp / algorithm=activeset;
-print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
-print _con_.name _con_.body _con_.dual;
 quit;

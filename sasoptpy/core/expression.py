@@ -213,6 +213,9 @@ class Expression:
         """
         return self._dual
 
+    def set_dual(self, value):
+        self._dual = value
+
     def set_name(self, name=None):
         """
         Sets the name of the expression
@@ -263,6 +266,7 @@ class Expression:
 
     def set_temporary(self):
         self._temp = True
+
 
 
     def set_permanent(self):

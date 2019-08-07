@@ -10,14 +10,16 @@ from sasoptpy.interface import Mediator
 
 class CASMediator(Mediator):
 
-    def __init__(self, model, cas_session):
+    def __init__(self, caller, cas_session):
         if cas_session is None:
             raise RuntimeError('CAS Session is not available')
-        self.model = model
+        self.caller = caller
         self.session = cas_session
 
     def solve(self, **kwargs):
-
+        """
+        Solve action for single models
+        """
         self.session.loadactionset(actionset='optimization')
 
         mps = kwargs.get('mps', kwargs.get('frame', False))
@@ -30,12 +32,25 @@ class CASMediator(Mediator):
         else:
             return self.solve_with_optmodel(**kwargs)
 
+    def submit(self, **kwargs):
+        """
+        Submit action for custom input and workspaces
+        """
+        self.session.loadactionset(actionset='optimization')
+        return self.submit_optmodel_code(**kwargs)
+
+
     def is_mps_format_needed(self, mps_option, options):
 
         enforced = False
         mps_option = mps_option
         session = self.session
-        model = self.model
+        caller = self.caller
+
+        if not isinstance(caller, sasoptpy.Model):
+            return False
+
+        model = caller
 
         # If runOptmodel action is not available on server
         if not hasattr(session.optimization, 'runoptmodel'):
@@ -70,7 +85,7 @@ class CASMediator(Mediator):
 
     def solve_with_mps(self, **kwargs):
 
-        model = self.model
+        model = self.caller
         session = self.session
         verbose = kwargs.get('verbose', False)
         submit = kwargs.get('submit', True)
@@ -243,23 +258,17 @@ class CASMediator(Mediator):
 
     def solve_with_optmodel(self, **kwargs):
 
-        model = self.model
+        model = self.caller
         session = self.session
         verbose = kwargs.get('verbose', False)
         submit = kwargs.get('submit', True)
-
-        # Find problem type and initial values
-        ptype = 1  # LP
-        for v in model._variables:
-            if v._type != sasoptpy.CONT:
-                ptype = 2
-                break
 
         print('NOTE: Converting model {} to OPTMODEL.'.format(model._name))
         options = kwargs.get('options', dict())
         primalin = kwargs.get('primalin', False)
         optmodel_string = model.to_optmodel(header=False, options=options,
-                                           ods=False, primalin=primalin)
+                                           ods=False, primalin=primalin,
+                                            parse=True)
         if verbose:
             print(optmodel_string)
         if not submit:
@@ -269,80 +278,90 @@ class CASMediator(Mediator):
             optmodel_string,
             outputTables={
                 'names': {'solutionSummary': 'solutionSummary',
-                          'problemSummary': 'problemSummary',
-                          'Print1.PrintTable': 'primal',
-                          'Print2.PrintTable': 'dual'}
+                          'problemSummary': 'problemSummary'}
                 }
             )
 
         model.response = response
 
         # Parse solution
-        #if(response.get_tables('status')[0] == 'OK'):
-        if response['status'] == 'OK':
+        return self.parse_cas_solution()
 
-            model._primalSolution = response['Print1.PrintTable']
-            model._primalSolution = model._primalSolution[
-                ['_VAR__NAME', '_VAR__LB', '_VAR__UB', '_VAR_',
-                 '_VAR__RC']]
-            model._primalSolution.columns = ['var', 'lb', 'ub', 'value',
-                                            'rc']
-            model._dualSolution = response['Print2.PrintTable']
-            model._dualSolution = model._dualSolution[
-                ['_CON__NAME', '_CON__BODY', '_CON__DUAL']]
-            model._dualSolution.columns = ['con', 'value', 'dual']
-            # Bring solution to variables
-            for _, row in model._primalSolution.iterrows():
-
-                if row['var'] in model._variableDict:
-                    model._variableDict[row['var']]._value = row['value']
-                else:
-                    # OPTMODEL strings may have spaces in it
-                    str_safe = row['var'].replace(' ', '_').replace('\'', '')
-                    if str_safe in model._variableDict:
-                        model._variableDict[str_safe]._value = row['value']
-                    else:
-                        # Search in vargroups for the original name
-                        model._set_abstract_values(row)
-
-            # Capturing dual values for LP problems
-            if ptype == 1:
-                for _, row in model._primalSolution.iterrows():
-                    if row['var'] in model._variableDict:
-                        model._variableDict[row['var']]._dual = row['rc']
-                for _, row in model._dualSolution.iterrows():
-                    if row['con'] in model._constraintDict:
-                        model._constraintDict[row['con']]._dual =\
-                            row['dual']
-
-            model._solutionSummary = response['Solve1.SolutionSummary']\
-                [['Label1', 'cValue1']].set_index(['Label1'])
-            model._problemSummary = response['Solve1.ProblemSummary']\
-                [['Label1', 'cValue1']].set_index(['Label1'])
-
-            model._solutionSummary.index.names = ['Label']
-            model._solutionSummary.columns = ['Value']
-
-            model._problemSummary.index.names = ['Label']
-            model._problemSummary.columns = ['Value']
-
-            model._status = response.solutionStatus
-            model._soltime = response.solutionTime
-
-            if('OPTIMAL' in response.solutionStatus or 'ABSFCONV' in response.solutionStatus or
-               'BEST_FEASIBLE' in response.solutionStatus):
-                model._objval = response.objective
-                # Replace initial values with current values
-                for v in model._variables:
-                    v._init = v._value
-                return model._primalSolution
-            else:
-                print('NOTE: Response {}'.format(response.solutionStatus))
-                model._objval = 0
-                return None
+        if('OPTIMAL' in response.solutionStatus or 'ABSFCONV' in response.solutionStatus or
+           'BEST_FEASIBLE' in response.solutionStatus):
+            model._objval = response.objective
+            # Replace initial values with current values
+            for v in model._variables:
+                v._init = v._value
+            return model._primalSolution
         else:
-            print('ERROR: {}'.format(response.get_tables('status')[0]))
+            print('NOTE: Response {}'.format(response.solutionStatus))
+            model._objval = 0
             return None
+
+
+    def parse_cas_solution(self):
+        caller = self.caller
+        session = self.session
+        response = caller.response
+
+        solution = session.CASTable('solution').to_frame()
+        dual_solution = session.CASTable('dual').to_frame()
+
+        caller._primalSolution = solution
+        caller._dualSolution = dual_solution
+
+        caller._problemSummary = self.parse_optmodel_table('problemSummary')
+        caller._solutionSummary = self.parse_optmodel_table('solutionSummary')
+
+        caller._status = response.solutionStatus
+        caller._soltime = response.solutionTime
+
+        self.set_variable_values(solution)
+        self.set_constraint_values(dual_solution)
+
+        self.set_model_objective_value()
+        self.set_variable_init_values()
+
+        return solution
+
+    def parse_optmodel_table(self, table):
+        session = self.session
+        parsed_df = session.CASTable(table).to_frame()[['Label1', 'cValue1']]
+        parsed_df.columns = ['Label', 'Value']
+        parsed_df = parsed_df.set_index(['Label'])
+        return parsed_df
+
+    def set_variable_values(self, solution):
+        caller = self.caller
+        solver = caller.get_solution_summary().loc['Solver', 'Value']
+        for _, row in solution.iterrows():
+            caller.set_variable_value(row['var'], row['value'])
+            if solver == 'LP':
+                caller.set_dual_value(row['var'], row['rc'])
+
+    def set_constraint_values(self, solution):
+        caller = self.caller
+        solver = caller.get_solution_summary().loc['Solver', 'Value']
+        if solver == 'LP':
+            for _, row in solution.iterrows():
+                con = caller.get_constraint(row['con'])
+                if con is not None:
+                    con.set_dual(row['dual'])
+
+    def set_model_objective_value(self):
+        caller = self.caller
+        if not sasoptpy.core.util.is_model(caller):
+            return
+        objval = caller.response.objective
+        caller.set_objective_value(objval)
+
+    def set_variable_init_values(self):
+        caller = self.caller
+        if not sasoptpy.core.util.is_model(caller):
+            return
+        for v in caller.get_variables():
+            v.set_init(v.get_value())
 
     def upload_user_blocks(self):
         """
@@ -361,7 +380,7 @@ class CASMediator(Mediator):
 
         """
         sess = self.session
-        model = self.model
+        model = self.caller
 
         blocks_dict = {}
         block_counter = 0
@@ -407,7 +426,7 @@ class CASMediator(Mediator):
           to be used. :func:`Model.solve` calls this method internally.
 
         """
-        model = self.model
+        model = self.caller
         df = model.to_mps(constant=constant)
         if verbose:
             print(df.to_string())
@@ -421,8 +440,29 @@ class CASMediator(Mediator):
                 data=df, casout={'replace': replace})
 
 
-# # Check if multiple solution table is needed
-# if options.get('obj', None):
-#     self.add_statement(
-#         'create data allsols from [s]=(1.._NVAR_) ' +
-#         'name=_VAR_[s].name {j in 1.._NSOL_} <col(\'sol_\'||j)=_VAR_[s].sol[j]>;')
+    def submit_optmodel_code(self, **kwargs):
+
+        caller = self.caller
+        session = self.session
+        optmodel_code = sasoptpy.util.to_optmodel(caller, header=False, parse=True)
+        verbose = kwargs.get('verbose', None)
+
+        if verbose:
+            print(optmodel_code)
+
+        response = session.runOptmodel(
+            optmodel_code,
+            outputTables={
+                'names': {'solutionSummary': 'solutionSummary',
+                          'problemSummary': 'problemSummary',
+                          'Print1.PrintTable': 'primal',
+                          'Print2.PrintTable': 'dual'}
+            }
+        )
+
+        if response['status'] == 'OK':
+
+            for row in response['Print1.PrintTable']:
+                original_name = row['var'].split('[')[0]
+                print(locals().get(original_name))
+                print(globals().get(original_name))

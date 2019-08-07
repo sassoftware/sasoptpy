@@ -95,6 +95,4 @@ con quality_con_4 : 0.4 * extract['mine1', 4] + 0.1 * extract['mine2', 4] + 0.9 
 con quality_con_5 : - 0.3 * extract['mine2', 5] + 0.5 * extract['mine3', 5] - 0.5 * extract['mine4', 5] = 0.0;
 
 solve;
-print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
-print _con_.name _con_.body _con_.dual;
 quit;

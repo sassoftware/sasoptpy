@@ -1363,6 +1363,4 @@ con measurecon_7_18_20 : unhappy[7] - 2 * x[18, 7] - 2 * x[20, 7] >= -2;
 con measurecon_7_19_20 : unhappy[7] - x[19, 7] - x[20, 7] >= -1;
 
 solve with milp / decomp=(method=set) presolver=none;
-print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
-print _con_.name _con_.body _con_.dual;
 quit;

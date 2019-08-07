@@ -37,7 +37,23 @@ def containable(func):
                 statement_func = sasoptpy.statement_dictionary[wrapper]
             except KeyError:
                 raise NotImplementedError('Container support for {} is not implemented'.format(func.__name__))
-            statement_func(*args, **kwargs)
+            s = statement_func(*args, **kwargs)
+            sasoptpy.container.append(s)
+            return s
         else:
             return func(*args, **kwargs)
     return wrapper
+
+
+def class_containable(func):
+    def class_append(*args, **kwargs):
+        func(*args, **kwargs)
+        if sasoptpy.container:
+            sasoptpy.container.append(args[0])
+
+    return class_append
+
+def in_container():
+    if sasoptpy.container is not None:
+        return True
+    return False

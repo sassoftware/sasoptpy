@@ -38,11 +38,7 @@ setup(
         'pandas >= 0.23.3',
         'swat >= 1.4.0',
         'saspy >= 3.0.0',
-        'numpy >= 1.14.5',
-        'flask >= 1.0.2',
-        'flask_restful >= 0.3.6',
-        'itsdangerous >= 0.24',
-        'gevent >= 1.4.0'
+        'numpy >= 1.14.5'
         ],
     setup_requires=[
         'numpy'

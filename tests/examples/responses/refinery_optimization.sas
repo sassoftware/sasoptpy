@@ -57,6 +57,4 @@ con cracked_oil_ub : flow['light_oil_cracked', 'cracked_oil'] + flow['heavy_oil_
 con lube_oil_range : 500 <= flow['lube_oil', 'sink'] <= 1000;
 con premium_ratio : flow['premium_petrol', 'sink'] - 0.4 * flow['regular_petrol', 'sink'] >= 0.0;
 solve;
-print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
-print _con_.name _con_.body _con_.dual;
 quit;

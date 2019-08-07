@@ -6,8 +6,14 @@ import pandas as pd
 
 import sasoptpy
 
-def to_optmodel(model, **kwargs):
+def to_optmodel(caller, **kwargs):
+    if sasoptpy.util.is_model(caller):
+        return to_optmodel_for_solve(caller, **kwargs)
+    elif sasoptpy.util.is_workspace(caller):
+        return to_optmodel_for_session(caller, **kwargs)
 
+
+def to_optmodel_for_solve(model, **kwargs):
     solve_option_keys = ('with', 'obj', 'objective', 'noobj', 'noobjective', 'relaxint', 'primalin')
 
     header = kwargs.get('header', True)
@@ -15,6 +21,7 @@ def to_optmodel(model, **kwargs):
     solve = kwargs.get('solve', True)
     options = kwargs.get('options', dict())
     primalin = kwargs.get('primalin', False)
+    parse_results = kwargs.get('parse', False)
 
     # Based on creation order
     s = ''
@@ -79,10 +86,15 @@ def to_optmodel(model, **kwargs):
     # Output ODS tables
     if ods:
         s += 'ods output PrintTable=primal_out;\n'
-    s += 'print _var_.name _var_.lb _var_.ub _var_ _var_.rc;\n'
+
+    if parse_results:
+        s += 'create data solution from [i]= {1.._NVAR_} var=_VAR_.name value=_VAR_ lb=_VAR_.lb ub=_VAR_.ub rc=_VAR_.rc;\n'
+
     if ods:
         s += 'ods output PrintTable=dual_out;\n'
-    s += 'print _con_.name _con_.body _con_.dual;\n'
+
+    if parse_results:
+        s += 'create data dual from [j] = {1.._NCON_} con=_CON_.name value=_CON_.body dual=_CON_.dual;\n'
 
     # After-solve statements
     for i in model._postsolve_statements:
@@ -91,3 +103,29 @@ def to_optmodel(model, **kwargs):
     if header:
         s += 'quit;'
     return(s)
+
+
+def to_optmodel_for_session(workspace, **kwargs):
+
+    header = kwargs.get('header', True)
+    s = ''
+
+    if header:
+        s += 'proc optmodel;\n'
+
+    allcomp = workspace.get_elements()
+
+    memberdefs = ''
+    for cm in allcomp:
+        if (sasoptpy.core.util.is_regular_component(cm)):
+            memberdefs += cm._defn() + '\n'
+            if hasattr(cm, '_member_defn'):
+                mdefn = cm._member_defn()
+                if mdefn != '':
+                    memberdefs += mdefn + '\n'
+
+    s += sasoptpy.util.addSpaces(memberdefs, 4)
+
+    if header:
+        s += 'quit;'
+    return s
