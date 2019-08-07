@@ -66,7 +66,6 @@ class Model:
     def __init__(self, name=None, session=None):
         self._name = name
         self._session = session
-        self._mediator = None
         self._variables = []
         self._constraints = []
         self._vargroups = []
@@ -706,6 +705,7 @@ class Model:
             sasoptpy.abstract.LiteralStatement: self._include_statement,
             sasoptpy.ExpressionDict: self._include_expdict,
             sasoptpy.ImplicitVar: self._include_expdict,
+            sasoptpy.abstract.ReadDataStatement: self._include_statement,
             list: self.include,
             Model: self._include_model
         }
@@ -886,6 +886,9 @@ class Model:
         else:
             return self.get_objective().get_value()
 
+    def set_objective_value(self, value):
+        self._objval = value
+
     def get_constraint(self, name):
         """
         Returns the reference to a constraint in the model
@@ -977,10 +980,15 @@ class Model:
         sasoptpy.Variable(name='x', lb=3, ub=5, vartype='INT')
 
         """
-        if name in self._variableDict:
-            return self._variableDict[name]
+        variables = self.get_variable_dict()
+        if name in variables:
+            return variables[name]
         else:
-            return self.get_variable_group(name)
+            safe_name = sasoptpy.util.safe_variable_name(name)
+            if safe_name in variables:
+                return variables[safe_name]
+            else:
+                return self.get_variable_group(name)
 
     def get_variable_group(self, name):
         for i in self._vargroups:
@@ -1070,6 +1078,19 @@ class Model:
             self._objective._linCoef[varname]['val'] = coef
         else:
             self._objective += coef*var
+
+    def set_variable_value(self, name, value):
+
+        variable = self.get_variable(name)
+        if variable is not None:
+            variable.set_value(value)
+        else:
+            self._set_abstract_values(name, value)
+
+    def set_dual_value(self, name, value):
+        variable = self.get_variable(name)
+        if variable is not None:
+            variable.set_dual(value)
 
     def get_variable_value(self, var):
         """
@@ -1520,17 +1541,10 @@ class Model:
 
         """
         # Check if session is defined
-        sess = self._session
-        if sess is None:
-            return None
-        else:
-            sess_type = type(sess).__name__
-            if sess_type == 'CAS':
-                return 'CAS'
-            elif sess_type == 'SASsession':
-                return 'SAS'
-            else:
-                return None
+        return sasoptpy.util.get_session_type(self._session)
+
+    def get_session(self):
+        return self._session
 
     @sasoptpy.containable
     def solve(self, **kwargs):
@@ -1594,33 +1608,17 @@ class Model:
 
         """
 
-        # Check if session is defined
-        session_type = self.get_session_type()
-        solver_func = None
-        if session_type == 'CAS':
-            sess = self._session
-            self._mediator = sasoptpy.interface.CASMediator(
-                self, self.get_session())
-            solver_func = self._mediator.solve
-        elif session_type == 'SAS':
-            sess = self._session
-            self._mediator = sasoptpy.interface.SASMediator(
-                self, self.get_session())
-            solver_func = self._mediator.solve
-        else:
-            return None
+        return sasoptpy.util.submit_for_solve(self, **kwargs)
 
-        # Call solver based on session type
-        return solver_func(**kwargs)
 
-    def _set_abstract_values(self, row):
+    def _set_abstract_values(self, name, value):
         """
         Searches for the missing/abstract variable names and set their values
         """
-        original_name = row['var'].split('[')[0]
+        original_name = sasoptpy.util.get_group_name(name)
         group = self.get_variable_group(original_name)
         if group:
-            group.set_member_value_by_name(row['var'], row['value'])
+            group.set_member_value_by_name(name, value)
 
     def clear_solution(self):
         self._objval = None

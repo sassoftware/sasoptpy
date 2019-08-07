@@ -127,7 +127,7 @@ class ParameterValue(sasoptpy.Expression):
         self._value = value
 
 
-class Set(sasoptpy.Expression):
+class Set():
     """
     Creates an index set to be represented inside PROC OPTMODEL
 
@@ -160,8 +160,9 @@ class Set(sasoptpy.Expression):
 
     @sasoptpy.class_containable
     def __init__(self, name, init=None, value=None, settype=None):
-        super().__init__(name=name)
-        #self._objorder = sasoptpy.util.get_creation_id()
+        self._name = name
+        if name is not None:
+            self._objorder = sasoptpy.util.get_creation_id()
         if init:
             if isinstance(init, range):
                 newinit = str(init.start) + '..' + str(init.stop)
@@ -179,9 +180,6 @@ class Set(sasoptpy.Expression):
         self._type = sasoptpy.util.pack_to_list(settype)
         self._colname = sasoptpy.util.pack_to_list(name)
         self._iterators = []
-        self._abstract = True
-        self._linCoef[str(self)] = {'ref': self,
-                                    'val': 1.0}
 
     def __iter__(self):
         if len(self._type) > 1:
@@ -272,8 +270,7 @@ class SetIterator(sasoptpy.Expression):
                  group={'order': 1, 'outof': 1, 'id': 0}, multi_index=False
                  ):
         # TODO use self._name = initset._colname
-        super().__init__()
-        self._name = sasoptpy.util.get_next_name()
+        super().__init__(name=sasoptpy.util.get_next_name())
         self._linCoef[self._name] = {'ref': self,
                                      'val': 1.0}
         self._set = initset
@@ -291,6 +288,9 @@ class SetIterator(sasoptpy.Expression):
         self._group = group['id']
         self._multi = multi_index
         self._conditions = conditions if conditions else []
+
+    def set_name(self, name):
+        self._name = name
 
     def __hash__(self):
         return hash('{}'.format(id(self)))
@@ -336,9 +336,9 @@ class SetIterator(sasoptpy.Expression):
     def _defn(self, cond=0):
         if self._multi:
             comb = '<' + ', '.join(str(i) for i in self._children) + '>'
-            s = '{} in {}'.format(comb, self._set._name)
+            s = '{} in {}'.format(comb, sasoptpy.to_expression(self._set))
         else:
-            s = '{} in {}'.format(self._name, self._set._name)
+            s = '{} in {}'.format(self._name, sasoptpy.to_expression(self._set))
         if cond and len(self._conditions) > 0:
             s += ':'
             s += self._to_conditions()

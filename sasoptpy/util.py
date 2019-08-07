@@ -42,6 +42,8 @@ def load_package_globals():
     sasoptpy.LP = 'lp'
     sasoptpy.QP = 'qp'
 
+    sasoptpy.N = '_N_'
+
     # Container for wrapped statements
     sasoptpy._transfer = {}
     sasoptpy.transfer_allowed = False
@@ -94,6 +96,53 @@ def need_name_assignment(obj, name):
 def set_creation_order_if_empty(obj):
     if hasattr(obj, '_objorder') and not obj._objorder:
         obj._objorder = get_creation_id()
+
+
+def load_function_containers():
+    sasoptpy.container = None
+
+    def read_statement_dictionary():
+        d = dict()
+        d[sasoptpy.core.Model.set_objective] = sasoptpy.abstract.statement.ObjectiveStatement.set_objective_of_model
+        d[sasoptpy.core.Model.solve] = sasoptpy.abstract.statement.SolveStatement.solve
+        d[sasoptpy.core.Variable.set_bounds] = sasoptpy.abstract.statement.Assignment.set_bounds
+        d[sasoptpy.abstract.ParameterValue.set_value] = sasoptpy.abstract.statement.Assignment.set_value
+        d[sasoptpy.core.Model.drop_constraint] = sasoptpy.abstract.statement.DropStatement.drop_constraint
+        d[sasoptpy.core.util.read_data] = sasoptpy.abstract.statement.ReadDataStatement.read_data
+        return d
+
+    sasoptpy.statement_dictionary = read_statement_dictionary()
+
+
+def load_default_mediators():
+    sasoptpy.mediators['CAS'] = sasoptpy.interface.CASMediator
+    sasoptpy.mediators['SAS'] = sasoptpy.interface.SASMediator
+
+
+def submit(caller, *args, **kwargs):
+    session = caller.get_session()
+    session_type = get_session_type(session)
+    if session is None or session_type is None:
+        raise RuntimeError('No session is available')
+
+    mediator_class = sasoptpy.mediators[session_type]
+    mediator = mediator_class(caller, session)
+    return mediator.submit(*args, **kwargs)
+
+
+def submit_for_solve(caller, *args, **kwargs):
+    session = caller.get_session()
+    session_type = get_session_type(session)
+    if session is None or session_type is None:
+        raise RuntimeError('No session is available')
+
+    mediator_class = sasoptpy.mediators[session_type]
+    mediator = mediator_class(caller, session)
+    return mediator.solve(*args, **kwargs)
+
+
+def register_to_function_container(func1, func2):
+    sasoptpy.statement_dictionary[func1] = func2
 
 
 def get_in_digit_format(val):
@@ -299,6 +348,10 @@ def expr_sum(argv):
                     if nl not in clocals and\
                        type(newlocals[nl]) == sasoptpy.abstract.SetIterator:
                         iterators.append((nl, newlocals[nl]))  # Tuple: nm ref
+                        try:
+                            newlocals[nl].set_name(nl)
+                        except:
+                            pass
     if iterators:
         # First pass: make set iterators uniform
         for i in iterators:
@@ -318,6 +371,8 @@ def expr_sum(argv):
                 it_names.append(i)
         # Second pass: check for iterators
         iterators = [p[1] for p in it_names]
+        # Reorder iterators
+        iterators = sorted(iterators, key=lambda i: i._objorder)
         exp = _wrap_expression_with_iterators(exp, 'sum', iterators)
     exp._temp = False
     return exp
@@ -341,20 +396,7 @@ def _wrap_expression_with_iterators(exp, operator, iterators):
     return wrapper
 
 
-def load_function_containers():
-    sasoptpy.container = None
 
-    def read_statement_dictionary():
-        d = dict()
-        d[sasoptpy.core.Model.set_objective] = sasoptpy.abstract.statement.ObjectiveStatement.set_objective
-        d[sasoptpy.core.Model.solve] = sasoptpy.abstract.statement.SolveStatement.solve
-        d[sasoptpy.core.Variable.set_bounds] = sasoptpy.abstract.statement.Assignment.set_bounds
-        d[sasoptpy.abstract.ParameterValue.set_value] = sasoptpy.abstract.statement.Assignment.set_value
-        d[sasoptpy.core.Model.drop_constraint] = sasoptpy.abstract.statement.DropStatement.drop_constraint
-        d[sasoptpy.core.util.read_data] = sasoptpy.abstract.util.read_data
-        return d
-
-    sasoptpy.statement_dictionary = read_statement_dictionary()
 
 
 def _to_optmodel_loop(keys):
@@ -1123,8 +1165,10 @@ def read_table(table, session=None, key=None, key_type=None, key_name=None,
             if isinstance(col, str):
                 coltype = col_types.get(col, 'num')
                 colname = col_names.get(col, col)
-                current_param = sasoptpy.abstract.Parameter(name=colname, keys=[keyset],
-                                                        p_type=coltype)
+                #current_param = sasoptpy.abstract.Parameter(name=colname, keys=[keyset],
+                #                                        p_type=coltype)
+                current_param = sasoptpy.abstract.ParameterGroup(
+                    keyset, name=colname, ptype=coltype)
                 pars.append({'param': current_param, 'column': col})
             elif isinstance(col, dict):
                 coltype = col_types.get(col['name'], 'num')
@@ -1226,8 +1270,12 @@ def read_data(table, key_set, key_cols=None, option='', params=None):
 
 
 def _to_sas_string(obj):
-    if isinstance(obj, str):
+    if hasattr(obj, '_expr'):
+        return obj._expr()
+    elif isinstance(obj, str):
         return "'{}'".format(obj)
+    elif isinstance(obj, tuple):
+        return ', '.join(_to_sas_string(i) for i in obj)
     elif isinstance(obj, list):
         return '{{{}}}'.format(','.join([_to_sas_string(i) for i in obj]))
     elif isinstance(obj, range):
@@ -1301,11 +1349,8 @@ def exp_range(start, stop, step=1):
         isinstance(step, int)
     if regular:
         return range(start, stop, step)
-    stname = start._expr() if hasattr(start, '_expr') else str(start)
-    enname = stop._expr() if hasattr(stop, '_expr') else str(stop)
-    setname = stname + '..' + enname
-    setname = setname.replace(' ', '')
-    return sasoptpy.abstract.Set(name=setname)
+    s = sasoptpy.abstract.AbstractRange(start, stop, step)
+    return s
 
 
 def get_python_symbol(symbol):
@@ -1319,7 +1364,12 @@ def safe_string(st):
     return "".join(c if c.isalnum() else '_' for c in st)
 
 def to_expression(item):
-    return item._expr()
+    if hasattr(item, '_expr'):
+        return item._expr()
+    elif np.isinstance(type(item), np.number):
+        return str(item)
+    else:
+        return '"{}"'.format(str(item))
 
 def to_definition(item):
     return item._defn()
@@ -1347,3 +1397,25 @@ def _attribute_to_defn(d):
     raise NotImplementedError('Attribute {} definition is not implemented'.format(
         d['key']
     ))
+
+def addSpaces(s, space):
+    white = ' '*space
+    return white + white.join(s.splitlines(1))
+
+def get_session_type(sess):
+    if sess is None:
+        return None
+    else:
+        sess_type = type(sess).__name__
+        if sess_type == 'CAS':
+            return 'CAS'
+        elif sess_type == 'SASsession':
+            return 'SAS'
+        else:
+            return None
+
+def safe_variable_name(name):
+    return name.replace(' ', '_').replace('\'', '')
+
+def get_group_name(name):
+    return name.split('[')[0]

@@ -15,7 +15,7 @@ def test(cas_conn):
     m.add_statement('print x;', after_solve=True)
     m.solve(options={'with': 'nlp'}, verbose=True)
     if m.get_session_type() == 'CAS':
-        print(m.response['Print3.PrintTable'])
+        print(m.response['Print1.PrintTable'])
 
     # Model 2
     so.reset_globals()

@@ -82,6 +82,7 @@ class VariableGroup(Group):
 
     """
 
+    @sasoptpy.class_containable
     def __init__(self, *argv, name, vartype=None, lb=None,
                  ub=None, init=None):
         self._vardict = OrderedDict()
@@ -334,6 +335,9 @@ class VariableGroup(Group):
         s += ';'
 
         return(s)
+
+    def _expr(self):
+        return self.get_name()
 
     def _member_defn(self):
         dependents = []

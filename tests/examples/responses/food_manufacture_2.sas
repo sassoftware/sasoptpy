@@ -197,6 +197,4 @@ con logical3_veg2_5 : is_used['veg2', 5] - is_used['oil3', 5] <= 0;
 con logical3_veg2_6 : is_used['veg2', 6] - is_used['oil3', 6] <= 0;
 
 solve;
-print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
-print _con_.name _con_.body _con_.dual;
 quit;

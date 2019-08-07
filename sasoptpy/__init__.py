@@ -48,9 +48,18 @@ from sasoptpy.abstract import (Set, Parameter, ImplicitVar, ExpressionDict,
 import sasoptpy.config
 from sasoptpy.config import Config
 sasoptpy.config._load_default_config()
+
+sasoptpy.statement_dictionary = dict()
 sasoptpy.util.load_function_containers()
+from sasoptpy.actions import register_actions
+register_actions()
+#sasoptpy.core.util._load_function_containers()
+
 
 import sasoptpy.interface
+sasoptpy.mediators = dict()
+sasoptpy.util.load_default_mediators()
+
 
 from sasoptpy.session import Workspace
 

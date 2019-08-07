@@ -15,7 +15,8 @@ class Assignment(Statement):
         s = '';
         if self.keyword:
             s += self.keyword + ' '
-        s += '{} = {};'.format(self.identifier, self.expression)
+        s += '{} = {};'.format(sasoptpy.to_expression(self.identifier),
+                               sasoptpy.to_expression(self.expression))
         return s
 
     def append(self, elem):
@@ -46,4 +47,4 @@ class Assignment(Statement):
     @classmethod
     def set_value(cls, obj, value):
         st = Assignment(identifier=obj, expression=value)
-        sasoptpy.container.append(st)
+        return st

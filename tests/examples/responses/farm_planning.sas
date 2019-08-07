@@ -167,6 +167,4 @@ con cash_flow_5 : 30 * numBullocksSold[5] + 40 * numHeifersSold[5] + 120 * numCo
 
 con final_dairy_cows_range : 0.5 <= 0.01 * numCows[2, 5] + 0.01 * numCows[3, 5] + 0.01 * numCows[4, 5] + 0.01 * numCows[5, 5] + 0.01 * numCows[6, 5] + 0.01 * numCows[7, 5] + 0.01 * numCows[8, 5] + 0.01 * numCows[9, 5] + 0.01 * numCows[10, 5] + 0.01 * numCows[11, 5] <= 1.75;
 solve;
-print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
-print _con_.name _con_.body _con_.dual;
 quit;

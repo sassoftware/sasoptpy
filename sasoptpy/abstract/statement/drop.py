@@ -21,4 +21,4 @@ class DropStatement(Statement):
     @classmethod
     def drop_constraint(cls, _, constraint):
         st = DropStatement(constraint=constraint)
-        sasoptpy.container.append(st)
+        return st

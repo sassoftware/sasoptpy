@@ -59,7 +59,7 @@ class TestExamples(unittest.TestCase):
         sasoptpy.reset()
 
     def run_test(self, test):
-        sys.stdout = NullWriter()
+        #sys.stdout = NullWriter()
         t0 = time.time()
         val = test(TestExamples.conn)
         sys.stdout = TestExamples.defstdout

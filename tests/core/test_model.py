@@ -207,36 +207,6 @@ class TestModel(unittest.TestCase):
                                     name='y')
         self.assertEqual([y], m.get_implicit_variables())
 
-    def test_add_for_loop(self):
-        m = so.Model(name='test_add_for_loop1')
-        x = m.add_variable(name='x')
-        for i in range(1, 5):
-            m.add_constraint(i * x >= i, name='c{}'.format(i))
-
-        m = so.Model(name='test_add_for_loop2')
-        def the_loop(j):
-            m.set_objective(j * x + j, sense=so.MIN, name='loop_obj')
-            m.solve(options={'with': 'milp', 'primalin': True, 'maxtime': 300})
-        I = m.add_set(name='I', value=range(1, 5))
-        fl = m.insert_for_loop(the_loop, over_set=I)
-        self.assertEqual([fl], m.get_statements())
-        self.assertEqual(m.to_optmodel(), inspect.cleandoc(
-            """
-            proc optmodel;
-            min test_add_for_loop2_obj = 0;
-            set I = 1..5;
-            for {o12 in I} do;
-                MIN loop_obj = o12 * x + o12;
-                solve with milp / primalin maxtime=300;
-            end;
-            solve;
-            print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
-            print _con_.name _con_.body _con_.dual;
-            quit;
-            """))
-
-    # TODO: Add test_read_data
-
     def test_add_literal_statement(self):
         m = so.Model(name='test_add_literal_statement')
         m.set_objective(0, name='empty_obj')
@@ -249,8 +219,6 @@ class TestModel(unittest.TestCase):
                 min empty_obj = 0;
                 var x {0,1};
                 solve;
-                print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
-                print _con_.name _con_.body _con_.dual;
                 quit;'''))
         s = so.abstract.LiteralStatement('print x;')
         m.include(s)
@@ -262,8 +230,6 @@ class TestModel(unittest.TestCase):
                 var x {0,1};
                 solve;
                 print x;
-                print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
-                print _con_.name _con_.body _con_.dual;
                 quit;'''))
 
     def test_postsolve_statement(self):
@@ -276,8 +242,6 @@ class TestModel(unittest.TestCase):
             var x;
             con c1 : x <= 10;
             solve;
-            print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
-            print _con_.name _con_.body _con_.dual;
             quit;"""))
 
         m.add_postsolve_statement('print x;')
@@ -287,8 +251,6 @@ class TestModel(unittest.TestCase):
             var x;
             con c1 : x <= 10;
             solve;
-            print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
-            print _con_.name _con_.body _con_.dual;
             print x;
             quit;"""))
 
@@ -299,8 +261,6 @@ class TestModel(unittest.TestCase):
             var x;
             con c1 : x <= 10;
             solve;
-            print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
-            print _con_.name _con_.body _con_.dual;
             print x;
             expand;
             quit;"""))
@@ -329,8 +289,6 @@ class TestModel(unittest.TestCase):
             
             min model_obj = 2 * x + y[0] + 3 * y[1];
             solve;
-            print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
-            print _con_.name _con_.body _con_.dual;
             quit;"""))
 
     def test_set_get_objective(self):
@@ -354,8 +312,6 @@ class TestModel(unittest.TestCase):
             min obj2 = 5 * x;
             min obj3 = 10 * x;
             solve;
-            print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
-            print _con_.name _con_.body _con_.dual;
             quit;"""))
 
     def test_get_objective_value(self):
@@ -511,23 +467,23 @@ class TestModel(unittest.TestCase):
         m.solve()
         self.assertEqual(m.get_solution().to_string(), inspect.cleandoc(
             """
-                      var   lb             ub  value  rc
-            0    get[pen] -0.0  1.797693e+308    2.0 NaN
-            1    get[mug] -0.0  1.797693e+308   -0.0 NaN
-            2  get[watch] -0.0  1.797693e+308    2.0 NaN
-            3     get[pc] -0.0  1.797693e+308    1.0 NaN
+                 i         var  value   lb             ub  rc
+            0  1.0    get[pen]    2.0 -0.0  1.797693e+308 NaN
+            1  2.0    get[mug]   -0.0 -0.0  1.797693e+308 NaN
+            2  3.0  get[watch]    2.0 -0.0  1.797693e+308 NaN
+            3  4.0     get[pc]    1.0 -0.0  1.797693e+308 NaN
             """
         ))
 
         self.assertEqual(m.get_solution(vtype='dual').to_string(),
                          inspect.cleandoc(
             """
-                             con  value  dual
-            0        value_total  210.0   NaN
-            1    upper_bound_pen    2.0   NaN
-            2    upper_bound_mug   -0.0   NaN
-            3  upper_bound_watch    2.0   NaN
-            4     upper_bound_pc    1.0   NaN
+                 j                con  value  dual
+            0  1.0        value_total  210.0   NaN
+            1  2.0    upper_bound_pen    2.0   NaN
+            2  3.0    upper_bound_mug   -0.0   NaN
+            3  4.0  upper_bound_watch    2.0   NaN
+            4  5.0     upper_bound_pc    1.0   NaN
             """
         ))
 
@@ -766,8 +722,6 @@ class TestModel(unittest.TestCase):
             proc optmodel;
             min test_to_optmodel_obj = 0;
             solve;
-            print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
-            print _con_.name _con_.body _con_.dual;
             quit;
             """
         ))
@@ -779,7 +733,7 @@ class TestModel(unittest.TestCase):
             'relaxint': True,
             'obj': (e1, e2),
             'primalin': True,
-        }, ods=True, primalin=True)
+        }, ods=True, primalin=True, parse=False)
         self.assertEqual(response, inspect.cleandoc(
             """
             proc optmodel;
@@ -788,9 +742,7 @@ class TestModel(unittest.TestCase):
             max e2 = (x) ^ (2);
             solve with lso relaxint obj (e1 e2) / primalin;
             ods output PrintTable=primal_out;
-            print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
             ods output PrintTable=dual_out;
-            print _con_.name _con_.body _con_.dual;
             quit;
             """
         ))
@@ -806,8 +758,6 @@ class TestModel(unittest.TestCase):
             min e1 = x;
             max e2 = (x) ^ (2);
             solve with nlp / multistart=(loglevel=3,maxstarts=30);
-            print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
-            print _con_.name _con_.body _con_.dual;
             quit;
             """
         ))

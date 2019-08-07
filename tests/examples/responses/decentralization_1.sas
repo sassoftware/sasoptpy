@@ -75,6 +75,4 @@ con pd5_D_Brighton_E : assign['D', 'Brighton'] - product['D', 'Brighton', 'E', '
 con pd5_D_London_E : assign['D', 'London'] - product['D', 'London', 'E', 'Bristol'] - product['D', 'London', 'E', 'Brighton'] - product['D', 'London', 'E', 'London'] = 0;
 
 solve;
-print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
-print _con_.name _con_.body _con_.dual;
 quit;

@@ -44,7 +44,4 @@ class SolveStatement(Statement):
     @classmethod
     def solve(cls, *args, **kwargs):
         st = SolveStatement(*args, **kwargs)
-        if sasoptpy.container:
-            sasoptpy.container.append(st)
-        else:
-            model.add_statement(st)
+        return st

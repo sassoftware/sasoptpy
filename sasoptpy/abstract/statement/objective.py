@@ -5,12 +5,12 @@ import sasoptpy
 
 class ObjectiveStatement(Statement):
 
-    def __init__(self, expression, sense, name=None, multiobj=False):
+    def __init__(self, expression, **kwargs):
         super().__init__()
         self.model = None
-        self.name = name
+        self.name = kwargs.get('name')
         self.expr = expression
-        self.sense = sense
+        self.sense = kwargs.get('sense')
 
     def append(self):
         pass
@@ -19,10 +19,12 @@ class ObjectiveStatement(Statement):
         return '{} {} = {};'.format(self.sense, self.name, self.expr._expr())
 
     @classmethod
-    def set_objective(cls, model, expression, sense=None, name=None, multiobj=False):
-        st = ObjectiveStatement(expression, sense, name, multiobj)
+    def set_objective_of_model(cls, model, expression, **kwargs):
+        st = ObjectiveStatement(expression, **kwargs)
         st.model = model
-        if sasoptpy.container:
-            sasoptpy.container.append(st)
-        else:
-            model.add_statement(st)
+        return st
+
+    @classmethod
+    def set_objective(cls, expression, name, sense):
+        st = ObjectiveStatement(expression, name=name, sense=sense)
+        return st

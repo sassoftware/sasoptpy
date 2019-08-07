@@ -134,6 +134,4 @@ con flow_balance_prod7_5 : store['prod7', 4] + make['prod7', 5] - sell['prod7', 
 con flow_balance_prod7_6 : store['prod7', 5] + make['prod7', 6] - sell['prod7', 6] - store['prod7', 6] = 0;
 
 solve;
-print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
-print _con_.name _con_.body _con_.dual;
 quit;

@@ -18,6 +18,10 @@ def is_constraint(obj):
     return isinstance(obj, sasoptpy.core.Constraint)
 
 
+def is_model(obj):
+    return isinstance(obj, sasoptpy.core.Model)
+
+
 def is_abstract(obj):
     if hasattr(obj, '_abstract') and obj._abstract:
         return True
@@ -221,9 +225,14 @@ def get_default_bounds_if_none(vartype, lb, ub):
 
 
 def is_regular_component(cm):
-    return (cm._objorder > 0 and
-            not (hasattr(cm, '_shadow') and cm._shadow) and
-            not (hasattr(cm, '_parent') and cm._parent))
+    if not hasattr(cm, '_objorder'):
+        return False
+    if cm._objorder > 0:
+        if hasattr(cm, '_shadow') and cm._shadow is True:
+            return False
+        if hasattr(cm, '_parent') and cm._parent is not None:
+            return False
+    return True
 
 
 def has_parent(cm):
@@ -237,7 +246,7 @@ def get_group_bound(bound):
     else:
         return bound
 
-@sasoptpy.containable
+
 def read_data(table, index, columns):
     pass
 

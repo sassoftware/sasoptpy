@@ -3,9 +3,10 @@ import sasoptpy
 
 class Workspace:
 
-    def __init__(self, name):
+    def __init__(self, name, session=None):
         self.name = name
         self._load_workspace_defaults()
+        self._session = session
 
     def _load_workspace_defaults(self):
         self._elements = []
@@ -35,8 +36,8 @@ class Workspace:
         self.append(vg)
         return vg
 
-    def solve(self, *args, **kwargs):
-        sasoptpy.abstract.SolveStatement.solve(*args, **kwargs)
+    def get_session(self):
+        return self._session
 
-    def read_data(self, *args, **kwargs):
-        sasoptpy.abstract.ReadDataStatement.read_data(*args, **kwargs)
+    def submit(self, **kwargs):
+        return sasoptpy.util.submit(self, **kwargs)

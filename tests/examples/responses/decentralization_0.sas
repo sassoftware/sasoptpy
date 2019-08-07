@@ -286,6 +286,4 @@ con pd3_D_London_E_Brighton : product['D', 'London', 'E', 'Brighton'] - assign['
 con pd3_D_London_E_London : product['D', 'London', 'E', 'London'] - assign['E', 'London'] <= 0;
 
 solve;
-print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
-print _con_.name _con_.body _con_.dual;
 quit;

@@ -64,6 +64,4 @@ con capacity_con_transport_6 : production['transport', 6] - extra_capacity['tran
 
 max total_productive_capacity = extra_capacity['coal', 2] + extra_capacity['coal', 3] + extra_capacity['coal', 4] + extra_capacity['coal', 5] + extra_capacity['steel', 2] + extra_capacity['steel', 3] + extra_capacity['steel', 4] + extra_capacity['steel', 5] + extra_capacity['transport', 2] + extra_capacity['transport', 3] + extra_capacity['transport', 4] + extra_capacity['transport', 5] + 930;
 solve;
-print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
-print _con_.name _con_.body _con_.dual;
 quit;

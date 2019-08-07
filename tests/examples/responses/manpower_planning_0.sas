@@ -54,6 +54,4 @@ con overmanning_3 : numExcess['semiskilled', 3] + numExcess['skilled', 3] + numE
 
 min redundancy_obj = numRedundant['semiskilled', 1] + numRedundant['semiskilled', 2] + numRedundant['semiskilled', 3] + numRedundant['skilled', 1] + numRedundant['skilled', 2] + numRedundant['skilled', 3] + numRedundant['unskilled', 1] + numRedundant['unskilled', 2] + numRedundant['unskilled', 3];
 solve;
-print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
-print _con_.name _con_.body _con_.dual;
 quit;

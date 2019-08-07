@@ -23,18 +23,33 @@ class ReadDataStatement(Statement):
         self._columns.append(element)
 
     def get_table(self):
-        return str(self._table)
+        if hasattr(self._table, 'name'):
+            return self._table.name
+        else:
+            return str(self._table)
 
     def get_index(self):
         index = self._index
         s = '{}'.format(index['target'])
         if index.get('column') is not None:
-            s += ' = {}'.format(index['column'])
+            s += '=[{}]'.format(index['column'])
         return s
 
     def get_columns(self):
         cols = self._columns
-        s = ' '.join(sasoptpy.to_expression(c['column']) for c in cols)
+        columns_string = [ReadDataStatement.get_column(c) for c in cols]
+        s = ' '.join(columns_string)
+        return s
+
+    @classmethod
+    def get_column(cls, c):
+        target = c.get('target')
+        column = c.get('column')
+        s = ''
+        if target is not None:
+            s += '{}'.format(sasoptpy.to_expression(target))
+        if column is not None:
+            s += '={}'.format(column)
         return s
 
     def _defn(self):
@@ -49,6 +64,4 @@ class ReadDataStatement(Statement):
     @classmethod
     def read_data(cls, *args, **kwargs):
         r = ReadDataStatement(*args, **kwargs)
-        if sasoptpy.container:
-            sasoptpy.container.append(r)
         return r

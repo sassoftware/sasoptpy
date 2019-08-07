@@ -30,7 +30,18 @@ def test(cas_conn, sols=False):
                                                     'replace': True})
 
     # Read observations
-    POINTS, (x, y), xy_table_ref = so.read_table(xy_data, columns=['x', 'y'])
+    from sasoptpy.actions import read_data
+    POINTS = so.Set(name='POINTS')
+    x = so.ParameterGroup(POINTS, name='x')
+    y = so.ParameterGroup(POINTS, name='y')
+    read_st = read_data(
+        table=xy_data,
+        index={'target': POINTS, 'column': so.N},
+        columns=[
+            {'target': x, 'column': 'x'},
+            {'target': y, 'column': 'y'}
+        ]
+    )
 
     # Parameters and variables
     order = so.Parameter(name='order')
@@ -57,12 +68,12 @@ def test(cas_conn, sols=False):
     order.set_init(1)
     L1 = so.Model(name='L1', session=cas_conn)
     L1.set_objective(objective1, sense=so.MIN, name='L1obj')
-    L1.include(POINTS, x, y, xy_table_ref)
+    L1.include(POINTS, x, y, read_st)
     L1.include(order, beta, estimate, surplus, slack, abs_dev_con)
     L1.add_postsolve_statement('print x y estimate surplus slack;')
 
     L1.solve(verbose=True)
-    sol_data1 = L1.response['Print3.PrintTable'].sort_values('x')
+    sol_data1 = L1.response['Print1.PrintTable'].sort_values('x')
     print(so.get_solution_table(beta))
     print(sol_data1.to_string())
 
@@ -71,19 +82,19 @@ def test(cas_conn, sols=False):
     Linf.set_objective(objective2, sense=so.MIN, name='Linfobj')
 
     Linf.solve()
-    sol_data2 = Linf.response['Print3.PrintTable'].sort_values('x')
+    sol_data2 = Linf.response['Print1.PrintTable'].sort_values('x')
     print(so.get_solution_table(beta))
     print(sol_data2.to_string())
 
     order.set_init(2)
 
     L1.solve()
-    sol_data3 = L1.response['Print3.PrintTable'].sort_values('x')
+    sol_data3 = L1.response['Print1.PrintTable'].sort_values('x')
     print(so.get_solution_table(beta))
     print(sol_data3.to_string())
 
     Linf.solve()
-    sol_data4 = Linf.response['Print3.PrintTable'].sort_values('x')
+    sol_data4 = Linf.response['Print1.PrintTable'].sort_values('x')
     print(so.get_solution_table(beta))
     print(sol_data4.to_string())
 

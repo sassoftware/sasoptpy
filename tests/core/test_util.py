@@ -150,8 +150,8 @@ class TestUtil(unittest.TestCase):
         S1 = TestUtil.S1
         e1 = so.quick_sum(y[i, 'a', 1] for i in S1)
         c = so.core.util.expression_to_constraint(e1, 'G', 5)
-        self.assertEqual(so.to_definition(c), "con None : sum {o2 in S1} "
-                                              "(y[o2, 'a', 1]) >= 5;")
+        self.assertEqual(so.to_definition(c), "con None : sum {i in S1} "
+                                              "(y[i, 'a', 1]) >= 5;")
 
     def tearDown(self):
         so.reset()

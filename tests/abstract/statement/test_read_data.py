@@ -33,30 +33,33 @@ class TestReadData(unittest.TestCase):
 
     def test_read_regular_existing(self):
 
-        with so.Workspace('test_workspace') as ws:
+        from sasoptpy import Workspace, VariableGroup
+        from sasoptpy.abstract import Set, ParameterGroup
+        from sasoptpy.actions import read_data, solve
 
-            ITEMS = so.abstract.Set(name='ITEMS')
-            value = so.abstract.ParameterGroup(ITEMS, name='value', init=0)
-            get = ws.add_variables(ITEMS, name='get', vartype=so.INT, lb=0)
+        with Workspace('test_workspace') as ws:
 
-            ws.read_data(
+            ITEMS = Set(name='ITEMS')
+            value = ParameterGroup(ITEMS, name='value', init=0)
+            get = VariableGroup(ITEMS, name='get', vartype=so.INT, lb=0)
+
+            read_data(
                 table="values",
                 index={'target': ITEMS, 'column': None},
-                columns=[{'column': value}])
+                columns=[{'target': value}])
 
-            ws.solve(options={'with': so.LSO, 'maxgen': 10})
+            solve(options={'with': so.LSO, 'maxgen': 10})
 
         optmodel_code = so.to_optmodel(ws)
         self.assertEqual(optmodel_code, cleandoc("""
         proc optmodel;
             set ITEMS;
-            num value{ITEMS} init 0;
+            num value {ITEMS} init 0;
             var get {{ITEMS}} integer >= 0;
             read data values into ITEMS value;
             solve with lso / maxgen=10;
         quit;
         """))
-
 
     def tearDown(self):
         pass

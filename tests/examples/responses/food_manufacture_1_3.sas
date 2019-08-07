@@ -84,6 +84,4 @@ con hardness_lb_5 : 2.8 * use['veg1', 5] + 0.1 * use['veg2', 5] - 4.0 * use['oil
 con hardness_lb_6 : 2.8 * use['veg1', 6] + 0.1 * use['veg2', 6] - 4.0 * use['oil1', 6] - 1.8 * use['oil2', 6] - use['oil3', 6] <= 0.0;
 
 solve with lp / algorithm=NS;
-print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
-print _con_.name _con_.body _con_.dual;
 quit;

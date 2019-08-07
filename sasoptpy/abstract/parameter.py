@@ -4,6 +4,7 @@ from sasoptpy.core import Expression
 
 class Parameter(Expression):
 
+    @sasoptpy.class_containable
     def __init__(self, name, ptype=None, value=None, init=None):
         super().__init__(name=name)
         if name is None:
@@ -16,6 +17,7 @@ class Parameter(Expression):
         self._init = init
         self._parent = None
         self._initialize_self_coef()
+        self._abstract = True
 
     def set_parent(self, parent, key):
         self._parent = parent
@@ -23,6 +25,9 @@ class Parameter(Expression):
 
     def _initialize_self_coef(self):
         self.set_member(key=self._name, ref=self, val=1)
+
+    def set_init(self, value):
+        self._init = value
 
     def _expr(self):
         if self._parent:
