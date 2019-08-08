@@ -31,18 +31,17 @@ class TestReadData(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.conn = None
         from swat import CAS, SWATError
         try:
             cls.conn = CAS(os.environ.get('CASHOST'),
                            int(os.environ.get('CASPORT')),
                            authinfo=os.environ.get('AUTHINFO'))
         except SWATError:
-            warnings.warn('CAS connection is not available',
-                          RuntimeWarning)
+            raise unittest.SkipTest('Cannot establish CAS connection. ' \
+                                    + 'Check your environment variables ' \
+                                    + '(CASHOST, CASPORT, AUTHINFO)')
         except TypeError:
-            warnings.warn('CAS variables are not available',
-                          RuntimeWarning)
+            raise unittest.SkipTest('Environment variable may not be defined')
 
     def setUp(self):
         pass
