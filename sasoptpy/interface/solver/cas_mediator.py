@@ -287,19 +287,6 @@ class CASMediator(Mediator):
         # Parse solution
         return self.parse_cas_solution()
 
-        if('OPTIMAL' in response.solutionStatus or 'ABSFCONV' in response.solutionStatus or
-           'BEST_FEASIBLE' in response.solutionStatus):
-            model._objval = response.objective
-            # Replace initial values with current values
-            for v in model._variables:
-                v._init = v._value
-            return model._primalSolution
-        else:
-            print('NOTE: Response {}'.format(response.solutionStatus))
-            model._objval = 0
-            return None
-
-
     def parse_cas_solution(self):
         caller = self.caller
         session = self.session
@@ -451,18 +438,7 @@ class CASMediator(Mediator):
             print(optmodel_code)
 
         response = session.runOptmodel(
-            optmodel_code,
-            outputTables={
-                'names': {'solutionSummary': 'solutionSummary',
-                          'problemSummary': 'problemSummary',
-                          'Print1.PrintTable': 'primal',
-                          'Print2.PrintTable': 'dual'}
-            }
+            optmodel_code
         )
 
-        if response['status'] == 'OK':
-
-            for row in response['Print1.PrintTable']:
-                original_name = row['var'].split('[')[0]
-                print(locals().get(original_name))
-                print(globals().get(original_name))
+        return response

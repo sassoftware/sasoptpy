@@ -1,6 +1,6 @@
 import sasoptpy
 from sasoptpy.util import to_expression
-from .data import Set
+from .set import Set
 
 
 class AbstractRange(Set):

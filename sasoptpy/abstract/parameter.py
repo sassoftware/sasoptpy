@@ -5,7 +5,7 @@ from sasoptpy.core import Expression
 class Parameter(Expression):
 
     @sasoptpy.class_containable
-    def __init__(self, name, ptype=None, value=None, init=None):
+    def __init__(self, name, ptype=None, value=None, init=None, **kwargs):
         super().__init__(name=name)
         if name is None:
             name = sasoptpy.util.get_next_name()

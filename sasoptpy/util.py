@@ -21,6 +21,7 @@ from collections import Iterable
 import random
 import string
 import warnings
+from contextlib import contextmanager
 
 import sasoptpy
 from sasoptpy._libs import (pd, np)
@@ -598,6 +599,10 @@ def wrap_expression(e, abstract=False):
         wrapper._abstract = e._abstract or abstract
     elif isinstance(e, dict):
         wrapper._linCoef[name] = {**e}
+    elif isinstance(e, str):
+        wrapper = sasoptpy.Parameter(name=e)
+    elif np.isinstance(type(e), np.number):
+        wrapper += e
 
     return wrapper
 
@@ -1419,3 +1424,16 @@ def safe_variable_name(name):
 
 def get_group_name(name):
     return name.split('[')[0]
+
+@contextmanager
+def iterate(set, name):
+    yield sasoptpy.abstract.SetIterator(set, name=name)
+
+def concat(exp1, exp2):
+    pname = '{}||{}'.format(
+        _to_sas_string(exp1),
+        _to_sas_string(exp2)
+    )
+    p = sasoptpy.Parameter(name=pname, internal=True)
+    return p
+

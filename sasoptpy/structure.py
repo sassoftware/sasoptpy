@@ -48,7 +48,7 @@ def containable(func):
 def class_containable(func):
     def class_append(*args, **kwargs):
         func(*args, **kwargs)
-        if sasoptpy.container:
+        if sasoptpy.container and not kwargs.get('internal'):
             sasoptpy.container.append(args[0])
 
     return class_append
