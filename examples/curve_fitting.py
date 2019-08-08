@@ -36,7 +36,7 @@ def test(cas_conn, sols=False):
     y = so.ParameterGroup(POINTS, name='y')
     read_st = read_data(
         table=xy_data,
-        index={'target': POINTS, 'column': so.N},
+        index={'target': POINTS, 'key': so.N},
         columns=[
             {'target': x, 'column': 'x'},
             {'target': y, 'column': 'y'}
@@ -73,30 +73,34 @@ def test(cas_conn, sols=False):
     L1.add_postsolve_statement('print x y estimate surplus slack;')
 
     L1.solve(verbose=True)
-    sol_data1 = L1.response['Print1.PrintTable'].sort_values('x')
-    print(so.get_solution_table(beta))
-    print(sol_data1.to_string())
+    if sols:
+        sol_data1 = L1.response['Print1.PrintTable'].sort_values('x')
+        print(so.get_solution_table(beta))
+        print(sol_data1.to_string())
 
     Linf = so.Model(name='Linf', session=cas_conn)
     Linf.include(L1, minmax, minmax_con)
     Linf.set_objective(objective2, sense=so.MIN, name='Linfobj')
 
     Linf.solve()
-    sol_data2 = Linf.response['Print1.PrintTable'].sort_values('x')
-    print(so.get_solution_table(beta))
-    print(sol_data2.to_string())
+    if sols:
+        sol_data2 = Linf.response['Print1.PrintTable'].sort_values('x')
+        print(so.get_solution_table(beta))
+        print(sol_data2.to_string())
 
     order.set_init(2)
 
     L1.solve()
-    sol_data3 = L1.response['Print1.PrintTable'].sort_values('x')
-    print(so.get_solution_table(beta))
-    print(sol_data3.to_string())
+    if sols:
+        sol_data3 = L1.response['Print1.PrintTable'].sort_values('x')
+        print(so.get_solution_table(beta))
+        print(sol_data3.to_string())
 
     Linf.solve()
-    sol_data4 = Linf.response['Print1.PrintTable'].sort_values('x')
-    print(so.get_solution_table(beta))
-    print(sol_data4.to_string())
+    if sols:
+        sol_data4 = Linf.response['Print1.PrintTable'].sort_values('x')
+        print(so.get_solution_table(beta))
+        print(sol_data4.to_string())
 
     if sols:
         return (sol_data1, sol_data2, sol_data3, sol_data4)

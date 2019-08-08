@@ -36,7 +36,7 @@ class TestVariable(unittest.TestCase):
         y = so.Variable(name='y', lb=1, ub=10, init=3)
         self.assertEqual(repr(y), "sasoptpy.Variable(name='y', lb=1, ub=10, init=3,  vartype='CONT')")
 
-        I = so.abstract.data.Set(name='I')
+        I = so.Set(name='I')
         z = so.VariableGroup(I, name='z')
         self.assertEqual(repr(z[0]), "sasoptpy.Variable(name='z', abstract=True, shadow=True,  vartype='CONT')")
 

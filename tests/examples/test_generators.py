@@ -99,7 +99,7 @@ class TestGenerators(unittest.TestCase):
         unittest.util._MAX_LENGTH = 1e+6
 
     def setUp(self):
-        sys.stdout = NullWriter()
+        #sys.stdout = NullWriter()
         self.maxDiff = None
 
     def tearDown(self):
@@ -203,11 +203,11 @@ class TestGenerators(unittest.TestCase):
         test(TestGenerators.server)
         self.check_results()
 
-    #def test_cf(self):
-    #    self.set_expectation('Curve Fitting', expected.cf)
-    #    from curve_fitting import test
-    #    test(TestGenerators.server)
-    #    self.check_results()
+    def test_cf(self):
+       self.set_expectation('Curve Fitting', expected.cf)
+       from curve_fitting import test
+       test(TestGenerators.server)
+       self.check_results()
 
     def test_nl1(self):
         self.set_expectation('Nonlinear 1', expected.nl1)

@@ -88,7 +88,10 @@ multiobj = [
 
 # Curve Fitting
 cf = [
-    ''
+    read_file('curve_fitting_0'),
+    read_file('curve_fitting_1'),
+    read_file('curve_fitting_2'),
+    read_file('curve_fitting_3')
 ]
 
 # Nonlinear 1

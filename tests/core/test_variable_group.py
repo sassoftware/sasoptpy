@@ -59,16 +59,14 @@ class TestVariableGroup(unittest.TestCase):
         u.set_abstract(True)
         self.assertTrue(u._abstract)
 
-        from sasoptpy.abstract.data import Set
-        I = Set(name='I')
+        I = so.Set(name='I')
         v = so.VariableGroup(I, name='v')
         self.assertTrue(v._abstract)
         v.set_abstract(False)
         self.assertFalse(v._abstract)
 
     def test_get_item(self):
-        from sasoptpy.abstract.data import Set
-        I = Set(name='I')
+        I = so.Set(name='I')
         v = so.VariableGroup(I, name='v')
 
         for i in I:
@@ -144,8 +142,7 @@ class TestVariableGroup(unittest.TestCase):
         self.assertEqual(id(y), id(x['y']))
 
     def test_sum(self):
-        from sasoptpy.abstract.data import Set
-        I = Set(name='I')
+        I = so.Set(name='I')
         x = so.VariableGroup(I, name='x')
         e = x.sum('*')
         key = e._iterkey[0]
