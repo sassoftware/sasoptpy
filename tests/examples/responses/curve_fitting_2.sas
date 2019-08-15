@@ -2,7 +2,7 @@ proc optmodel;
 set POINTS;
 num x {POINTS};
 num y {POINTS};
-read data None into POINTS=[_N_] x=x y=y;
+read data None into POINTS=[_N_] x y;
 num order init 2;
 var beta {{0..order}};
 impvar estimate {o8 in POINTS} = beta[0] + sum {k in 1..order} (beta[k] * (x[o8]) ^ (k));

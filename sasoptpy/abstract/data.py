@@ -48,7 +48,7 @@ class ParameterValue(sasoptpy.Expression):
 
     def __init__(self, param, key=None, prefix='', suffix=''):
         super().__init__()
-        self._name = param._name
+        self._name = param.get_name()
         tkey = sasoptpy.util.pack_to_tuple(key)
         self._key = tkey
         self._abstract = True

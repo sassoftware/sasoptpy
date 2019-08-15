@@ -59,16 +59,25 @@ class ReadDataStatement(Statement):
         target = c.get('target')
         column = c.get('column')
         index = c.get('index')
-        s = ''
+        target_str = ''
+        connect_str = ''
+        column_str = ''
         if target:
-            s += '{}'.format(ReadDataStatement.get_target_expr(target))
+            target_str += '{}'.format(ReadDataStatement.get_target_expr(target))
         if target and column:
-            s += '='
+            connect_str += '='
         if column:
-            if hasattr(column, '_expr'):
-                s += 'col(' + column._expr() + ')'
+            if sasoptpy.util.has_expr(column):
+                column_str += 'col(' + column._expr() + ')'
             else:
-                s += '{}'.format(column)
+                column_str += '{}'.format(column)
+
+        # If both equal, no need for second part
+        if target_str == column_str:
+            connect_str = ''
+            column_str = ''
+
+        s = target_str + connect_str + column_str
 
         if index and sasoptpy.abstract.util.is_key_abstract(index):
             s = '{{{}}} < {} >'.format(sasoptpy.to_definition(index), s)
@@ -81,10 +90,15 @@ class ReadDataStatement(Statement):
 
     def _defn(self):
         s = 'read data '
-        s += self.get_table_expr() + ' into '
-        s += self.get_index_expr()
+        table_str = self.get_table_expr()
+        index_str = self.get_index_expr()
+        col_str = self.get_columns_expr()
+
+        s += table_str + ' into'
+        if index_str != '':
+            s += ' ' + index_str
         if self._columns is not None:
-            s += ' ' + self.get_columns_expr()
+            s += ' ' + col_str
         s += ';'
         return s
 

@@ -59,7 +59,7 @@ class Expression:
     >>> print(repr(profit))
     sasoptpy.Expression(exp =  5.0 * sales  -  3.0 * material , name=None)
 
-    >>> import sasoptpy.math as sm
+    >>> import sasoptpy.abstract.math as sm
     >>> f = sm.sin(x) + sm.min(y[1],1) ** 2
     >>> print(type(f))
     <class 'sasoptpy.core.Expression'>
@@ -351,7 +351,7 @@ class Expression:
                 strlist = sasoptpy.util._recursive_walk(ref, func='_expr')
             else:
                 strlist = [ref._expr()]
-            if optext != ' * ':
+            if optext != ' * ' and optext != ' || ':
                 strlist = ['({})'.format(stritem)
                            for stritem in strlist]
 
@@ -737,6 +737,15 @@ class Expression:
         op = '/'
         r.set_member(key=key, ref=ref, val=val, op=op)
         r._abstract = self._abstract or other._abstract
+        return r
+
+    def concat(self, other):
+        r = sasoptpy.Expression()
+        key = (self.get_name(), other.get_name(), '||')
+        ref = [self, other]
+        val = 1
+        op = '||'
+        r.set_member(key=key, ref=ref, val=val, op=op)
         return r
 
     def __le__(self, other):

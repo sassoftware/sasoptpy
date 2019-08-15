@@ -137,6 +137,14 @@ class Variable(Expression):
         else:
             return self._name
 
+    @property
+    def ub(self):
+        return sasoptpy.abstract.Auxiliary(self, suffix='ub', value=self._ub)
+
+    @property
+    def lb(self):
+        return sasoptpy.abstract.Auxiliary(self, suffix='lb', value=self._lb)
+
     def get_value(self):
         """
         Returns value of a variable

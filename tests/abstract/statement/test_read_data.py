@@ -151,7 +151,7 @@ class TestReadData(unittest.TestCase):
                 set indx;
                 num p {indx};
                 num q {indx};
-                read data exdata into indx=[_N_] p=column1 q=col('column'||n);
+                read data exdata into indx=[_N_] p=column1 q=col('column' || n);
             quit;
             """))
 
@@ -182,9 +182,8 @@ class TestReadData(unittest.TestCase):
                 set DOW = 1..5;
                 set <str> LOCS;
                 num demand {LOCS, DOW};
-                read data dmnd into LOCS=[loc] {d in DOW} < demand[loc, d]=col('day'||d) >;
+                read data dmnd into LOCS=[loc] {d in DOW} < demand[loc, d]=col('day' || d) >;
             quit;"""))
-
 
     def test_with_cas_data(self):
         if not TestReadData.conn:
@@ -227,7 +226,7 @@ class TestReadData(unittest.TestCase):
                 set indx;
                 num p {indx};
                 num q {indx};
-                read data EXDATA into indx=[_N_] p=column1 q=col('column'||n);
+                read data EXDATA into indx=[_N_] p=column1 q=col('column' || n);
                 print p q;
             quit;
             """))
@@ -240,6 +239,91 @@ class TestReadData(unittest.TestCase):
             1   2.0  3.0  4.0
             """
         ))
+
+    def test_read_data_no_index_target(self):
+
+        with so.Workspace('test_no_index_target') as ws:
+            NODES = so.Set(name='NODES', settype=so.STR)
+            nodesByPri = so.ParameterGroup(NODES, name='nodesByPri')
+
+            read_data(table='temppri',
+                      index={'key': so.N},
+                      columns=[
+                          {'target': nodesByPri, 'column': 'id'}
+                      ])
+
+        self.assertEqual(so.to_optmodel(ws), cleandoc("""
+            proc optmodel;
+                set <str> NODES;
+                num nodesByPri {NODES};
+                read data temppri into [_N_] nodesByPri=id;
+            quit;
+            """))
+
+    def test_read_data_same_name_cols(self):
+
+        from sasoptpy.actions import set_objective, solve
+
+        with so.Workspace('test_same_name_cols') as ws:
+            x = so.Variable(name='x')
+            y = so.Variable(name='y')
+            c_xx = so.Parameter(name='c_xx')
+            c_x = so.Parameter(name='c_x')
+            c_y = so.Parameter(name='c_y')
+            c_xy = so.Parameter(name='c_xy')
+            c_yy = so.Parameter(name='c_yy')
+            read_data(table='coeff',
+                      index={},
+                      columns=[
+                          {'target': c_xx, 'column': 'c_xx'},
+                          {'target': c_x},
+                          {'column': 'c_y'},
+                          {'target': c_xy, 'column': 'c_xy'},
+                          {'target': c_yy}
+                      ])
+            set_objective(c_xx * x**2 + c_x * x + c_xy * x * y + c_yy * y**2,
+                          name='z', sense=so.MIN)
+            solve()
+
+        self.assertEqual(so.to_optmodel(ws), cleandoc("""
+            proc optmodel;
+                num c_xx;
+                num c_x;
+                num c_y;
+                num c_xy;
+                num c_yy;
+                read data coeff into c_xx c_x c_y c_xy c_yy;
+                MIN z = c_xx * (x) ^ (2) + c_x * x + c_xy * x * y + c_yy * (y) ^ (2);
+                solve;
+            quit;
+            """))
+
+    def test_read_data_var_bound(self):
+
+        from sasoptpy.util import iterate
+
+        with so.Workspace('test_read_data_var_bound') as ws:
+            plants = so.Set(name='plants', settype=so.STR)
+            prod = so.VariableGroup(plants, name='prod', lb=0)
+            cost = so.Parameter(name='cost', ptype=so.NUM)
+            with iterate(plants, 'p') as p:
+                r = read_data(
+                    table='pdat',
+                    index={'target': plants, 'key': p},
+                    columns=[
+                        {'target': prod[p].ub, 'column': 'maxprod'},
+                        {'target': cost}
+                    ])
+
+        self.assertEqual(so.to_optmodel(ws), cleandoc("""
+            proc optmodel;
+                set <str> plants;
+                var prod {{plants}} >= 0;
+                num cost;
+                read data pdat into plants=[p] prod[p].ub=maxprod cost;
+            quit;
+            """))
+
 
     def tearDown(self):
         pass

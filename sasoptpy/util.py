@@ -600,7 +600,7 @@ def wrap_expression(e, abstract=False):
     elif isinstance(e, dict):
         wrapper._linCoef[name] = {**e}
     elif isinstance(e, str):
-        wrapper = sasoptpy.Parameter(name=e)
+        wrapper = sasoptpy.abstract.Auxiliary(base=e)
     elif np.isinstance(type(e), np.number):
         wrapper += e
 
@@ -1273,7 +1273,6 @@ def read_data(table, key_set, key_cols=None, option='', params=None):
     return sasoptpy.abstract.OldStatement(s)
 
 
-
 def _to_sas_string(obj):
     if hasattr(obj, '_expr'):
         return obj._expr()
@@ -1368,22 +1367,25 @@ def get_python_symbol(symbol):
 def safe_string(st):
     return "".join(c if c.isalnum() else '_' for c in st)
 
+
 def to_expression(item):
     if hasattr(item, '_expr'):
         return item._expr()
-    elif np.isinstance(type(item), np.number):
-        return str(item)
     else:
-        return '"{}"'.format(str(item))
+        return _to_sas_string(item)
+
 
 def to_definition(item):
     return item._defn()
 
+
 def to_optmodel(item, **kwargs):
     return sasoptpy.interface.to_optmodel(item, **kwargs)
 
+
 def is_linear(item):
     return item._is_linear()
+
 
 def get_object_order(obj):
     return getattr(obj, '_objorder', None)
@@ -1430,10 +1432,7 @@ def iterate(set, name):
     yield sasoptpy.abstract.SetIterator(set, name=name)
 
 def concat(exp1, exp2):
-    pname = '{}||{}'.format(
-        _to_sas_string(exp1),
-        _to_sas_string(exp2)
-    )
-    p = sasoptpy.Parameter(name=pname, internal=True)
-    return p
+    return wrap_expression(exp1).concat(wrap_expression(exp2))
 
+def has_expr(e):
+    return hasattr(e, '_expr')

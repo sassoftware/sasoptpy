@@ -106,6 +106,9 @@ class ExpressionDict:
         #======================================================================
         return s
 
+    def get_name(self):
+        return self._name
+
     def get_keys(self):
         """
         Returns the dictionary keys
