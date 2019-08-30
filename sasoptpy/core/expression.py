@@ -102,6 +102,19 @@ class Expression:
         self._conditions = []
         self._keep = False
 
+    @classmethod
+    def to_expression(cls, obj):
+        if sasoptpy.core.util.is_expression(obj):
+            return obj
+        else:
+            #if isinstance(obj, str):
+            #    return Symbol(name=obj)
+            #el
+            if np.isinstance(type(obj), np.number):
+                r = Expression(name=str(obj))
+                r.add_to_member_value('CONST', obj)
+                return r
+
     def copy(self, name=None):
         """
         Returns a copy of the :class:`Expression` object
@@ -131,7 +144,7 @@ class Expression:
         """
         r = Expression(name=name)
         for mylc in self._linCoef:
-            r._linCoef[mylc] = dict(self._linCoef[mylc])
+            r.copy_member(mylc, self)
         r._operator = self._operator
         r._iterkey = self._iterkey
         r._abstract = self._abstract
@@ -140,6 +153,9 @@ class Expression:
 
     def _is_named_expression(self):
         return self._name is not None
+
+    def get_member_dict(self):
+        return self._linCoef
 
     def get_member(self, key):
         return self._linCoef.get(key, None)
@@ -175,12 +191,13 @@ class Expression:
 
         """
         v = 0
-        for mylc in self._linCoef:
+        for mylc in self.get_member_dict():
             if self.get_member(mylc)['ref'] is not None:
                 if isinstance(mylc, tuple):
                     v += sasoptpy.core.util._evaluate(self.get_member(mylc))
                 else:
-                    v += self.get_member_value(mylc)
+                    m = self.get_member(mylc)
+                    v += m['val'] * m['ref'].get_value()
             else:
                 v += self.get_member(mylc)['val']
         if self._operator:
@@ -199,7 +216,21 @@ class Expression:
 
     def get_member_value(self, key):
         member = self.get_member(key)
-        return member['ref'].get_value() * member['val']
+        #if member.get('ref'):
+        #    return member['ref'].get_value() * member['val']
+        return member['val']
+
+    def set_member_value(self, key, value):
+        member = self.get_member(key)
+        member['val'] = value
+
+    def add_to_member_value(self, key, value):
+        member = self.get_member(key)
+        member['val'] += value
+
+    def mult_member_value(self, key, value):
+        member = self.get_member(key)
+        member['val'] *= value
 
     def get_dual(self):
         """
@@ -321,7 +352,7 @@ class Expression:
         firstel = True
 
         # Add every element into string one by one
-        for idx, el in self._linCoef.items():
+        for idx, el in self.get_member_dict().items():
             val = el['val']
             ref = el['ref']
             op = el.get('op')
@@ -349,8 +380,11 @@ class Expression:
             # For a list of expressions, a recursive function is called
             if isinstance(ref, list):
                 strlist = sasoptpy.util._recursive_walk(ref, func='_expr')
-            else:
+            elif sasoptpy.util.has_expr(ref):
                 strlist = [ref._expr()]
+            else:
+                strlist = [str(val)]
+
             if optext != ' * ' and optext != ' || ':
                 strlist = ['({})'.format(stritem)
                            for stritem in strlist]
@@ -367,7 +401,7 @@ class Expression:
             itemcnt += 1
 
         # CONST is always at the end
-        if itemcnt == 0 or (self._linCoef['CONST']['val'] != 0 and
+        if itemcnt == 0 or (self.get_member_value('CONST') != 0 and
                             not sasoptpy.core.util.is_constraint(self)):
             val = self._linCoef['CONST']['val']
             csign = copysign(1, val)
@@ -429,7 +463,7 @@ class Expression:
         firstel = True
         if self._operator:
             s += str(self._operator) + '('
-        for idx, el in self._linCoef.items():
+        for idx, el in self.get_member_dict().items():
             val = el['val']
             ref = el['ref']
             op = el.get('op')
@@ -474,9 +508,9 @@ class Expression:
             itemcnt += 1
 
         # CONST is always at the end
-        if itemcnt == 0 or (self._linCoef['CONST']['val'] != 0 and
+        if itemcnt == 0 or (self.get_member_value('CONST') != 0 and
                             not sasoptpy.core.util.is_constraint(self)):
-            val = self._linCoef['CONST']['val']
+            val = self.get_member_value('CONST')
             csign = copysign(1, val)
             if csign < 0:
                 s += '- '
@@ -515,8 +549,8 @@ class Expression:
         value : float
             New value or the addition to the existing value of the variable
         """
-        if key in self._linCoef:
-            self._linCoef[key]['val'] += value
+        if key in self.get_member_dict():
+            self.set_member_value(key, value)
         else:
             self.set_member(key=key, ref=var, val=value)
 
@@ -550,18 +584,18 @@ class Expression:
         if isinstance(other, Expression):
             r._abstract = self._abstract or other._abstract
 
-            for v in other._linCoef:
+            for v in other.get_member_dict():
                 if r.get_member(v):
-                    r._linCoef[v]['val'] += sign * other._linCoef[v]['val']
+                    r.add_to_member_value(v, sign * other.get_member_value(v))
                 else:
                     r.copy_member(v, other)
-                    r._linCoef[v]['val'] *= sign
+                    r.mult_member_value(v, sign)
 
             r._conditions += self._conditions
             r._conditions += other._conditions
 
         elif np.issubdtype(type(other), np.number):
-            r._linCoef['CONST']['val'] += sign * other
+            r.add_to_member_value('CONST', sign*other)
         else:
             raise TypeError('Type for arithmetic operation is not valid.')
 
@@ -592,7 +626,10 @@ class Expression:
             r = Expression()
             r._abstract = self._abstract or other._abstract
 
-            sasoptpy.core.util.multiply_coefficients(left=self._linCoef, right=other._linCoef, target=r._linCoef)
+            sasoptpy.core.util.multiply_coefficients(
+                left=self.get_member_dict(),
+                right=other.get_member_dict(),
+                target=r.get_member_dict())
 
             r._conditions += self._conditions
             r._conditions += other._conditions
@@ -602,8 +639,8 @@ class Expression:
                 r = Expression()
             else:
                 r = self.copy()
-                for e in r._linCoef:
-                    r._linCoef[e]['val'] *= other
+                for e in r.get_member_dict():
+                    r.mult_member_value(e, other)
             return r
         else:
             raise TypeError('Type for arithmetic operation is not valid.')
@@ -651,7 +688,7 @@ class Expression:
         """
 
         # Loop over components
-        for val in self._linCoef.values():
+        for val in self.get_member_dict().values():
             if val.get('op', False):
                 return False
             if type(val['ref']) is list:
@@ -674,9 +711,9 @@ class Expression:
 
     def __pow__(self, other):
         r = Expression()
-        if not isinstance(other, Expression):
-            other = Expression(other, name='')
+        other = Expression.to_expression(other)
         self.set_permanent()
+        other.set_permanent()
         key = (self.get_name(), other.get_name(), '^')
         ref = [self, other]
         val = 1
@@ -687,8 +724,9 @@ class Expression:
 
     def __rpow__(self, other):
         r = Expression()
-        if not isinstance(other, Expression):
-            other = Expression(other, name='')
+        other = Expression.to_expression(other)
+        self.set_permanent()
+        other.set_permanent()
         key = (other.get_name(), self.get_name(), '^')
         ref = [other, self]
         val = 1
@@ -702,8 +740,8 @@ class Expression:
 
     def __rsub__(self, other):
         tmp = self.add(other, -1)
-        for v in tmp._linCoef:
-            tmp._linCoef[v]['val'] *= -1
+        for v in tmp.get_member_dict():
+            tmp.mult_member_value(v, -1)
         return tmp
 
     def __rmul__(self, other):
@@ -716,9 +754,13 @@ class Expression:
             except ZeroDivisionError:
                 warnings.warn('Expression is divided by zero', RuntimeWarning)
                 return None
+        elif not isinstance(other, Expression):
+            raise TypeError('Type for arithmetic operation is not valid.')
+
         r = Expression()
-        if not isinstance(other, Expression):
-            raise TypeError('Invalid type for division.')
+        other = Expression.to_expression(other)
+        self.set_permanent()
+        other.set_permanent()
         key = (self.get_name(), other.get_name(), '/')
         ref = [self, other]
         val = 1
@@ -729,8 +771,9 @@ class Expression:
 
     def __rtruediv__(self, other):
         r = Expression()
-        if not isinstance(other, Expression):
-            other = Expression(other, name='')
+        other = Expression.to_expression(other)
+        self.set_permanent()
+        other.set_permanent()
         key = (other.get_name(), self.get_name(), '/')
         ref = [other, self]
         val = 1
@@ -762,3 +805,62 @@ class Expression:
 
     def __iter__(self):
         return iter([self])
+
+
+class Auxiliary(Expression):
+
+    def __init__(self, base, prefix=None, suffix=None, operator=None, value=None):
+        super().__init__()
+        self._base = base
+        self._prefix = prefix
+        self._suffix = suffix
+        self._operator = None
+        self._value = value
+
+    def get_prefix_str(self):
+        if self._prefix is None:
+            return ''
+        return self._prefix
+
+    def get_base_str(self):
+        if self._base is None:
+            return ''
+        return sasoptpy.to_expression(self._base)
+
+    def get_suffix_str(self):
+        if self._suffix is None:
+            return ''
+        return self._suffix
+
+    def wrap_operator_str(self, s):
+        if self._operator is None:
+            return s
+        return '{}({})'.format(
+            sasoptpy.to_expression(self._operator), s
+        )
+
+    def _expr(self):
+        prefix_str = self.get_prefix_str()
+        base_str = self.get_base_str()
+        suffix_str = self.get_suffix_str()
+        s = prefix_str + base_str
+        if suffix_str != '':
+            s += '.' + suffix_str
+        s = self.wrap_operator_str(s)
+        return s
+
+
+class Symbol(Expression):
+
+    def __init__(self, name):
+        super().__init__(name=name)
+        self.set_member(key=self._name, ref=self, val=1)
+
+    def _expr(self):
+        return self._name
+
+    def _defn(self):
+        pass
+
+    def __str__(self):
+        return self._name

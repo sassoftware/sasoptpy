@@ -158,8 +158,20 @@ class TestExpression(unittest.TestCase):
         self.assertWarns(RuntimeWarning, division_by_zero)
 
         def unknown_division_type():
-            exp5 = x / 'a'
+           exp5 = x / 'a'
         self.assertRaises(TypeError, unknown_division_type)
+
+    def test_power(self):
+        x = so.Variable(name='x')
+        e1 = x ** 2 + x ** 3
+        self.assertEqual(so.to_expression(e1),
+                         '(x) ^ (2) + (x) ^ (3)')
+
+    def test_truediv(self):
+        x = so.Variable(name='x')
+        e1 = x / (2 + x) + x / (3 + x)
+        self.assertEqual(so.to_expression(e1),
+                         '(x) / (x + 2) + (x) / (x + 3)')
 
     def test_is_linear(self):
         x = so.Variable(name='x')

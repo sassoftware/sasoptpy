@@ -1,6 +1,6 @@
 
 import sasoptpy.core.util
-from sasoptpy.core.expression import Expression
+from sasoptpy.core.expression import Expression, Auxiliary, Symbol
 from sasoptpy.core.objective import Objective
 from sasoptpy.core.variable import Variable
 from sasoptpy.core.group import Group

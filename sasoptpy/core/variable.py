@@ -139,11 +139,11 @@ class Variable(Expression):
 
     @property
     def ub(self):
-        return sasoptpy.abstract.Auxiliary(self, suffix='ub', value=self._ub)
+        return sasoptpy.Auxiliary(self, suffix='ub', value=self._ub)
 
     @property
     def lb(self):
-        return sasoptpy.abstract.Auxiliary(self, suffix='lb', value=self._lb)
+        return sasoptpy.Auxiliary(self, suffix='lb', value=self._lb)
 
     def get_value(self):
         """

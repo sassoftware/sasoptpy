@@ -95,7 +95,7 @@ def expression_to_constraint(left, relation, right):
 
     if isinstance(right, list) and relation == 'E':
         e = left.copy()
-        e._add_coef_value(None, 'CONST', -1 * min(right[0], right[1]))
+        e.add_to_member_value('CONST', -1 * min(right[0], right[1]))
         ranged_constraint = sasoptpy.core.Constraint(
             exp=e, direction='E', crange=abs(right[1] - right[0]))
         return ranged_constraint
@@ -121,8 +121,11 @@ def expression_to_constraint(left, relation, right):
             r._linCoef['CONST']['val'] -= right
         else:
             for v in right._linCoef:
-                r._add_coef_value(right._linCoef[v]['ref'],
-                                  v, -right._linCoef[v]['val'])
+                if r.get_member(v):
+                    r.add_to_member_value(v, -1 * right.get_member_value(v))
+                else:
+                    r.copy_member(v, right)
+                    r.mult_member_value(v, -1)
         generated_constraint = sasoptpy.core.Constraint(
             exp=r, direction=relation, crange=0)
         return generated_constraint

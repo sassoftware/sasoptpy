@@ -28,6 +28,7 @@ from sasoptpy._libs import (pd, np)
 
 
 def load_package_globals():
+    sasoptpy.itemid = 0
 
     # Constant values
     sasoptpy.MIN = 'MIN'
@@ -43,7 +44,7 @@ def load_package_globals():
     sasoptpy.LP = 'lp'
     sasoptpy.QP = 'qp'
 
-    sasoptpy.N = '_N_'
+    sasoptpy.N = sasoptpy.Symbol(name='_N_')
 
     # Container for wrapped statements
     sasoptpy._transfer = {}
@@ -66,8 +67,6 @@ def load_package_globals():
         'number': sasoptpy.NUM,
         'num': sasoptpy.NUM
     }
-
-    sasoptpy.itemid = 0
 
 
 def get_creation_id():
@@ -600,7 +599,7 @@ def wrap_expression(e, abstract=False):
     elif isinstance(e, dict):
         wrapper._linCoef[name] = {**e}
     elif isinstance(e, str):
-        wrapper = sasoptpy.abstract.Auxiliary(base=e)
+        wrapper = sasoptpy.Auxiliary(base=e)
     elif np.isinstance(type(e), np.number):
         wrapper += e
 

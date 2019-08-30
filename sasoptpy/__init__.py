@@ -26,7 +26,6 @@ This file includes static methods and imports.
 
 from sasoptpy._libs import *
 import sasoptpy.util
-sasoptpy.util.load_package_globals()
 
 from sasoptpy.util import (
     quick_sum, expr_sum, reset, reset, reset_globals,
@@ -39,11 +38,13 @@ from sasoptpy.structure import (inside_container, containable,
 
 from sasoptpy.core.expression import Expression
 from sasoptpy.core import (Variable, VariableGroup, Constraint, ConstraintGroup,
-                           Model, Objective)
+                           Model, Objective, Auxiliary, Symbol)
 from sasoptpy.core.util import read_data
 
 from sasoptpy.abstract import (Set, Parameter, ImplicitVar, ExpressionDict,
                                OldStatement, ParameterGroup)
+
+sasoptpy.util.load_package_globals()
 
 import sasoptpy.config
 from sasoptpy.config import Config
