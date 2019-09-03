@@ -1,3 +1,5 @@
+
+from collections import OrderedDict
 import sasoptpy
 
 
@@ -9,14 +11,10 @@ class SetIterator(sasoptpy.Expression):
     ----------
     initset : Set
         Set to be iterated on
-    conditions : list, optional
-        List of conditions on the iterator
+    name : string, optional
+        Name of the iterator
     datatype : string, optional
         Type of the iterator
-    group : dict, optional
-        Dictionary representing the order of iterator inside multi-index sets
-    multi_index : boolean, optional
-        Switch for representing multi-index iterators
 
     Notes
     -----
@@ -35,33 +33,22 @@ class SetIterator(sasoptpy.Expression):
 
     """
 
-    def __init__(self, initset, name=None, conditions=None, datatype='num',
-                 group={'order': 1, 'outof': 1, 'id': 0}, multi_index=False
-                 ):
-        # TODO use self._name = initset._colname
+    def __init__(self, initset, name=None, datatype=None):
         if name is None:
             name = sasoptpy.util.get_next_name()
         super().__init__(name=name)
-        self._linCoef[self._name] = {'ref': self,
-                                     'val': 1.0}
+        self.set_member(key=name, ref=self, val=1.0)
         self._set = initset
-        self._type = sasoptpy.util.pack_to_list(datatype)
-        self._children = []
-        if len(self._type) > 1 or multi_index:
-            for i, ty in enumerate(self._type):
-                sc = SetIterator(
-                    self, conditions=None, datatype=ty,
-                    group={'order': i, 'outof': len(self._type),
-                           'id': id(self)}, multi_index=False)
-                self._children.append(sc)
-        self._order = group['order']
-        self._outof = group['outof']
-        self._group = group['id']
-        self._multi = multi_index
-        self._conditions = conditions if conditions else []
+        if datatype is None:
+            datatype = sasoptpy.NUM
+        self._type = datatype
+        self._conditions = []
 
     def set_name(self, name):
         self._name = name
+
+    def get_type(self):
+        return self._type
 
     def __hash__(self):
         return hash('{}'.format(id(self)))
@@ -105,11 +92,7 @@ class SetIterator(sasoptpy.Expression):
         self.__add_condition('OR', key)
 
     def _defn(self, cond=0):
-        if self._multi:
-            comb = '<' + ', '.join(str(i) for i in self._children) + '>'
-            s = '{} in {}'.format(comb, sasoptpy.to_expression(self._set))
-        else:
-            s = '{} in {}'.format(self._name, sasoptpy.to_expression(self._set))
+        s = '{} in {}'.format(self._name, sasoptpy.to_expression(self._set))
         if cond and len(self._conditions) > 0:
             s += ':'
             s += self._to_conditions()
@@ -133,27 +116,58 @@ class SetIterator(sasoptpy.Expression):
         return s
 
     def _get_for_expr(self):
-        if self._multi:
-            return 'for ({}) in {}'.format(self._expr(), self._set._name)
-        else:
-            return 'for {} in {}'.format(self._expr(), self._set._name)
+        return 'for {} in {}'.format(self._expr(), self._set._name)
 
     def _expr(self):
-        if self._multi:
-            return ', '.join(str(i) for i in self._children)
         return str(self)
 
     def __str__(self):
-        if self._multi:
-            print('WARNING: str is called for a multi-index set iterator.')
         return self._name
 
     def __repr__(self):
-        s = 'sasoptpy.abstract.SetIterator(name={}, initset={}, conditions=['.\
-            format(self._name, self._set._name)
-        for i in self._conditions:
-            s += '{{\'type\': \'{}\', \'key\': \'{}\'}}, '.format(
-                i['type'], i['key'])
-        s += "], datatype={}, group={{'order': {}, 'outof': {}, 'id': {}}}, multi_index={})".format(
-            self._type, self._order, self._outof, self._group, self._multi)
-        return(s)
+        s = 'sasoptpy.SetIterator({}, name=\'{}\')'.format(self._set, self._name)
+        return s
+
+
+class SetIteratorGroup(OrderedDict):
+
+    def __init__(self, initset, datatype=None, names=None):
+        super()
+        self._set = initset
+        self._init_members(names, datatype)
+
+    def _init_members(self, names, datatype):
+        if names is not None:
+            for i, name in enumerate(names):
+                dt = datatype[i] if datatype is not None else None
+                it = SetIterator(None, name=name, datatype=dt)
+                self.append(it)
+
+    def append(self, object):
+        name = object.get_name()
+        self[name] = object
+
+    def _get_for_expr(self):
+        return 'for ({}) in {}'.format(self._expr(), self._set._name)
+
+    def _expr(self):
+        return ', '.join(str(i) for i in self.values())
+
+    def _defn(self):
+        comb = '<' + ', '.join(str(i) for i in self.values()) + '>'
+        s = '{} in {}'.format(comb, sasoptpy.to_expression(self._set))
+
+    def __iter__(self):
+        for i in self.values():
+            yield i
+
+    def __repr__(self):
+        return 'sasoptpy.SetIteratorGroup({}, datatype=[{}], names=[{}])'.format(
+            self._set,
+            ','.join('\'' + i.get_type() + '\'' for i in self.values()),
+            ', '.join('\'' + i.get_name() + '\'' for i in self.values())
+        )
+
+    def __str__(self):
+        s = ', '.join(str(i) for i in self.values())
+        return '(' + s + ')'

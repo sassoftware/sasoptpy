@@ -1428,7 +1428,10 @@ def get_group_name(name):
 
 @contextmanager
 def iterate(set, name):
-    yield sasoptpy.abstract.SetIterator(set, name=name)
+    if isinstance(name, list):
+        yield sasoptpy.abstract.SetIteratorGroup(set, names=name)
+    else:
+        yield sasoptpy.abstract.SetIterator(set, name=name)
 
 def concat(exp1, exp2):
     return wrap_expression(exp1).concat(wrap_expression(exp2))

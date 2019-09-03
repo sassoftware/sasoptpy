@@ -306,14 +306,14 @@ class TestReadData(unittest.TestCase):
             plants = so.Set(name='plants', settype=so.STR)
             prod = so.VariableGroup(plants, name='prod', lb=0)
             cost = so.Parameter(name='cost', ptype=so.NUM)
-            with iterate(plants, 'p') as p:
-                r = read_data(
-                    table='pdat',
-                    index={'target': plants, 'key': p},
-                    columns=[
-                        {'target': prod[p].ub, 'column': 'maxprod'},
-                        {'target': cost}
-                    ])
+            p = so.SetIterator(plants, name='p')
+            r = read_data(
+                table='pdat',
+                index={'target': plants, 'key': p},
+                columns=[
+                    {'target': prod[p].ub, 'column': 'maxprod'},
+                    {'target': cost}
+                ])
 
         self.assertEqual(so.to_optmodel(ws), cleandoc("""
             proc optmodel;
@@ -422,6 +422,43 @@ class TestReadData(unittest.TestCase):
                 num arcUpper {ARCS};
                 num arcCost {ARCS};
                 read data arcdata into ARCS=[_tail_ _head_] arcLower=_lo_ arcUpper=_capac_ arcCost=_cost_;
+            quit;
+            """))
+
+    def test_read_data_single_col(self):
+
+        from sasoptpy.util import concat, iterate
+
+        with so.Workspace('test_read_data_single_col') as ws:
+            daily_employee_slots = so.Set(
+                name='DailyEmployeeSlots', settype=[so.STR, so.NUM])
+            weekdays = so.Set(
+                name='WeekDays', value=['mon', 'tue', 'wed', 'thu', 'fri'])
+            preference_weights = so.ParameterGroup(
+                daily_employee_slots, weekdays, name='PreferenceWeights')
+
+            with iterate(daily_employee_slots, name=['name', 'slot']) as keys:
+                r = read_data(
+                    table='preferences',
+                    index={
+                        'target': daily_employee_slots,
+                        'key': keys
+                    }
+                )
+                with iterate(weekdays, name='day') as day:
+                    r.append({
+                        'index': day,
+                        'target': preference_weights[keys['name'], keys['slot'], day],
+                        'column': day
+                    })
+
+        optmodel_code = so.to_optmodel(ws)
+        self.assertEqual(optmodel_code, cleandoc("""
+            proc optmodel;
+                set <str, num> DailyEmployeeSlots;
+                set WeekDays = {'mon','tue','wed','thu','fri'};
+                num PreferenceWeights {DailyEmployeeSlots, WeekDays};
+                read data preferences into DailyEmployeeSlots=[name slot] {day in WeekDays} < PreferenceWeights[name, slot, day]=col(day) >;
             quit;
             """))
 

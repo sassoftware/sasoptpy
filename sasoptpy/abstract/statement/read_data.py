@@ -46,7 +46,7 @@ class ReadDataStatement(Statement):
 
     @classmethod
     def flatten_column(cls, col):
-        if isinstance(col, list):
+        if isinstance(col, list) or isinstance(col, sasoptpy.SetIteratorGroup):
             ind = [ReadDataStatement.flatten_column(c) for c in col]
             return ' '.join(ind)
         elif isinstance(col, str):
