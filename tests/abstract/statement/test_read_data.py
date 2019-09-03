@@ -462,5 +462,31 @@ class TestReadData(unittest.TestCase):
             quit;
             """))
 
+    def test_read_data_N_in_index(self):
+
+        from sasoptpy.util import concat
+
+        with so.Workspace('read_data_N_as_index') as ws:
+            tasks = so.Set(name='TASKS', value=so.exp_range(1, 24))
+            machines = so.Set(name='MACHINES', value=so.exp_range(1, 8))
+            profit = so.ParameterGroup(machines, tasks, name='profit')
+            j = so.SetIterator(tasks, name='j')
+            read_data(
+                table='profit_data',
+                index={'key': so.N},
+                columns=[
+                    {'index': j, 'target': profit[so.N, j], 'column': concat('p', j)}
+                ]
+            )
+
+        self.assertEqual(so.to_optmodel(ws), cleandoc("""
+            proc optmodel;
+                set TASKS = 1..24;
+                set MACHINES = 1..8;
+                num profit {MACHINES, TASKS};
+                read data profit_data into [_N_] {j in TASKS} < profit[_N_, j]=col('p' || j) >;
+            quit;
+            """))
+
     def tearDown(self):
         pass

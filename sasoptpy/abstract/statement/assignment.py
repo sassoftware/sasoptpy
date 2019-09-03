@@ -12,10 +12,18 @@ class Assignment(Statement):
         self.expression = expression
 
     def _defn(self):
-        s = '';
+        s = ''
         if self.keyword:
             s += self.keyword + ' '
         s += '{} = {};'.format(sasoptpy.to_expression(self.identifier),
+                               sasoptpy.to_expression(self.expression))
+        return s
+
+    def _expr(self):
+        s = ''
+        if self.keyword:
+            s += self.keyword + ' '
+        s += '{} = {}'.format(sasoptpy.to_expression(self.identifier),
                                sasoptpy.to_expression(self.expression))
         return s
 
