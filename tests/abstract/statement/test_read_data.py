@@ -324,6 +324,106 @@ class TestReadData(unittest.TestCase):
             quit;
             """))
 
+    def test_read_data_with_exp(self):
+
+        with so.Workspace('test_read_data_with_exp') as ws:
+
+            ss = so.Set(name='subscripts', value=so.exp_range(1,4), settype=so.NUM)
+            letter = so.ParameterGroup(ss, name='letter', ptype=so.STR)
+            read_data(
+                table='abcd',
+                index={'key': so.N},
+                columns=[
+                    {'target': letter[5-so.N]}
+                ]
+            )
+
+        self.assertEqual(so.to_optmodel(ws), cleandoc("""
+            proc optmodel;
+                set subscripts = 1..4;
+                str letter {subscripts};
+                read data abcd into [_N_] letter[- _N_ + 5];
+            quit;
+            """))
+
+    def test_read_data_append_later(self):
+
+        from sasoptpy.util import concat, iterate
+
+        with so.Workspace('let') as ws:
+            actors = so.Set(name='ACTORS')
+            actor_name = so.ParameterGroup(actors, ptype=so.STR,
+                                           name='actor_name')
+            daily_fee = so.ParameterGroup(actors, name='daily_fee')
+            most_scenes = so.Parameter(name='most_scenes', value=9)
+            scene_list = so.ParameterGroup(actors, so.exp_range(1, most_scenes),
+                                           name='scene_list')
+
+            r = read_data(
+                table='scene',
+                index={
+                    'target': actors,
+                    'key': so.N
+                },
+                columns=[
+                    {
+                        'target': actor_name,
+                        'column': 'Actor'
+                    },
+                    {
+                        'target': daily_fee,
+                        'column': 'DailyFee'
+                    }
+                ]
+            )
+            with iterate(so.exp_range(1, most_scenes), name='j') as j:
+                r.append({
+                    'index': j,
+                    'target': scene_list[so.N, j],
+                    'column': concat('S_Var', j)
+                })
+
+        self.assertEqual(so.to_optmodel(ws), cleandoc("""
+            proc optmodel;
+                set ACTORS;
+                str actor_name {ACTORS};
+                num daily_fee {ACTORS};
+                num most_scenes = 9;
+                num scene_list {ACTORS, 1..most_scenes};
+                read data scene into ACTORS=[_N_] actor_name=Actor daily_fee=DailyFee {j in 1..most_scenes} < scene_list[_N_, j]=col('S_Var' || j) >;
+            quit;
+            """))
+
+    def test_read_data_multi_index(self):
+
+        with so.Workspace('test_read_data_multi_index') as ws:
+            arcs = so.Set(name='ARCS', settype=[so.STR, so.STR])
+            arc_lower = so.ParameterGroup(arcs, name='arcLower')
+            arc_upper = so.ParameterGroup(arcs, name='arcUpper')
+            arc_cost = so.ParameterGroup(arcs, name='arcCost')
+
+            read_data(
+                table='arcdata',
+                index={
+                    'target': arcs,
+                    'key': ['_tail_', '_head_']
+                },
+                columns=[
+                    {'target': arc_lower, 'column': '_lo_'},
+                    {'target': arc_upper, 'column': '_capac_'},
+                    {'target': arc_cost, 'column': '_cost_'}
+                ]
+            )
+
+        self.assertEqual(so.to_optmodel(ws), cleandoc("""
+            proc optmodel;
+                set <str, str> ARCS;
+                num arcLower {ARCS};
+                num arcUpper {ARCS};
+                num arcCost {ARCS};
+                read data arcdata into ARCS=[_tail_ _head_] arcLower=_lo_ arcUpper=_capac_ arcCost=_cost_;
+            quit;
+            """))
 
     def tearDown(self):
         pass

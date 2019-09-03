@@ -5,7 +5,7 @@ import sasoptpy
 
 class ReadDataStatement(Statement):
 
-    def __init__(self, table, index=None, columns=None):
+    def __init__(self, table, index, columns=None):
         super().__init__()
         self._table = table
         self._index = index
