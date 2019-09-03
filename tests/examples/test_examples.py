@@ -23,7 +23,8 @@ import sys
 import time
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.abspath(os.path.join(current_dir, '../../examples')))
+sys.path.append(os.path.abspath(os.path.join(current_dir, '../../examples/client_side')))
+sys.path.append(os.path.abspath(os.path.join(current_dir, '../../examples/server_side')))
 
 
 class NullWriter:
