@@ -4,8 +4,9 @@ from types import GeneratorType
 
 import sasoptpy
 import sasoptpy.abstract
-from .util import (is_parameter)
+from .util import (is_parameter, is_abstract)
 from sasoptpy.core.util import (is_expression)
+from sasoptpy.util import to_expression, wrap_expression
 
 
 class ExpressionDict:
@@ -41,7 +42,6 @@ class ExpressionDict:
         self._dict = OrderedDict()
         self._conditions = []
         self._shadows = OrderedDict()
-        self._abstract = False
 
     def __setitem__(self, key, value):
         key = sasoptpy.util.pack_to_tuple(key)
@@ -49,15 +49,13 @@ class ExpressionDict:
         # Set name for named types
         ntypes = [sasoptpy.abstract.Parameter, sasoptpy.core.Expression]
         if any(isinstance(value, i) for i in ntypes) and value._name is None:
-            value._name = self._name
+            value._name = self._name + sasoptpy.util._to_optmodel_loop(key)
 
         # Add the dictionary value
         if is_parameter(value):
             self._dict[key] = sasoptpy.abstract.ParameterValue(value, key)
         elif is_expression(value):
             self._dict[key] = value
-            if value._abstract:
-                self._abstract = True
         else:
             self._dict[key] = value
 
@@ -68,13 +66,10 @@ class ExpressionDict:
         elif key in self._shadows:
             return self._shadows[key]
         else:
-            if self._abstract and len(self._dict) <= 1:
-                tuple_key = sasoptpy.util.pack_to_tuple(key)
-                pv = sasoptpy.abstract.ParameterValue(self, tuple_key)
-                self._shadows[key] = pv
-                return pv
-            else:
-                return None
+            tuple_key = sasoptpy.util.pack_to_tuple(key)
+            pv = sasoptpy.abstract.ParameterValue(self, tuple_key)
+            self._shadows[key] = pv
+            return pv
 
     def _defn(self):
         # Do not return a definition if it is a local dictionary
@@ -193,9 +188,11 @@ class ImplicitVar(ExpressionDict):
 
     """
 
-    def __init__(self, argv=None, name=None):
+    @sasoptpy.class_containable
+    def __init__(self, argv, name=None):
         super().__init__(name=name)
-        if argv:
+        if argv is not None:
+            # Generator type - multi
             if type(argv) == GeneratorType:
                 for arg in argv:
                     keynames = ()
@@ -210,14 +207,23 @@ class ImplicitVar(ExpressionDict):
                             keynames += (i,)
                     for i in keynames:
                         keyrefs += (localdict[i],)
-                    self[keyrefs] = arg
-            elif (type(argv) == sasoptpy.expression.Expression and
-                  argv._abstract):
+                    self[keyrefs] = wrap_expression(arg)
+            elif is_expression(argv) and is_abstract(argv):
                 self[''] = argv
                 self['']._objorder = self._objorder
-            elif type(argv) == sasoptpy.expression.Expression:
+            elif is_expression(argv):
                 self[''] = argv
                 self['']._objorder = self._objorder
             else:
-                print('ERROR: Unrecognized type for ImplicitVar argument: {}'.
-                      format(type(argv)))
+                exp = sasoptpy.Expression.to_expression(argv)
+                exp.set_name(name)
+                self[''] = exp
+                self['']._objorder = self._objorder
+
+    def _defn(self):
+        member_defn = []
+        for i in self._dict.values():
+            member_defn.append('impvar {} = {};'.format(i.get_name(),
+                                                        to_expression(i)))
+        s = '\n'.join(member_defn)
+        return s

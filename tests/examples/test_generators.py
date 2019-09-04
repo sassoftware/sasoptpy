@@ -205,10 +205,11 @@ class TestGenerators(unittest.TestCase):
         self.check_results()
 
     def test_cf(self):
-       self.set_expectation('Curve Fitting', expected.cf)
-       from curve_fitting import test
-       test(TestGenerators.server)
-       self.check_results()
+        so.reset()
+        self.set_expectation('Curve Fitting', expected.cf)
+        from curve_fitting import test
+        test(TestGenerators.server)
+        self.check_results()
 
     def test_nl1(self):
         self.set_expectation('Nonlinear 1', expected.nl1)

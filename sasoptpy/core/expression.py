@@ -107,13 +107,13 @@ class Expression:
         if sasoptpy.core.util.is_expression(obj):
             return obj
         else:
-            #if isinstance(obj, str):
-            #    return Symbol(name=obj)
-            #el
             if np.isinstance(type(obj), np.number):
                 r = Expression(name=str(obj))
                 r.add_to_member_value('CONST', obj)
                 return r
+            else:
+                raise RuntimeError(
+                    'Cannot convert type {} to Expression'.format(type(obj)))
 
     def copy(self, name=None):
         """
@@ -393,7 +393,7 @@ class Expression:
             refs = optext.join(strlist)
             if val == 1 or val == -1:
                 s += '{} '.format(refs)
-            elif op:
+            elif op or any(special_op in refs for special_op in sasoptpy.util.get_operators()):
                 s += '{} * ({}) '.format(sasoptpy.util.get_in_digit_format(abs(val)), refs)
             else:
                 s += '{} * {} '.format(sasoptpy.util.get_in_digit_format(abs(val)), refs)
@@ -498,7 +498,6 @@ class Expression:
                            for stritem in strlist]
 
             refs = optext.join(strlist)
-            refs = optext.join(strlist)
             if val == 1 or val == -1:
                 s += '{} '.format(refs)
             elif op:
@@ -597,7 +596,8 @@ class Expression:
         elif np.issubdtype(type(other), np.number):
             r.add_to_member_value('CONST', sign*other)
         else:
-            raise TypeError('Type for arithmetic operation is not valid.')
+            raise TypeError(
+                'Type {} for arithmetic operation is not valid.'.format(type(other)))
 
         return r
 

@@ -1363,6 +1363,10 @@ def get_python_symbol(symbol):
         return symbol
 
 
+def get_operators():
+    return ['+', '-', '/', '**', '^', '(', ')', 'sum']
+
+
 def safe_string(st):
     return "".join(c if c.isalnum() else '_' for c in st)
 
