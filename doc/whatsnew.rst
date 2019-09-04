@@ -15,11 +15,19 @@ v1.0.0 (TBD)
 New Features
 ++++++++++++
 
+- Added workspaces
+- Added `read_data` function for workspaces
+- Added `concat` function for concatenating expressions and strings
+
 Changes
 +++++++
 
 - `get_obj_by_name` function is removed
 
+Bug Fixes
++++++++++
+
+- Fixed the bug regarding arithmetic operations involving powers
 
 
 v0.2.1 (February 26, 2019)
