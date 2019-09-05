@@ -141,3 +141,8 @@ class TestExamples(unittest.TestCase):
         from nonlinear_2 import test
         obj = self.run_test(test)
         self.assertAlmostEqual(obj, -999.0, self.digits)
+
+    def test_least_squares(self):
+        from least_squares import test
+        obj = self.run_test(test)
+        self.assertAlmostEqual(obj, 7.186296783293, self.digits)

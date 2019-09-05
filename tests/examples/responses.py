@@ -104,3 +104,7 @@ nl2 = [
     read_file('nonlinear_2_0'),
     read_file('nonlinear_2_1')
 ]
+
+least_squares = [
+    read_file('least_squares')
+]

@@ -226,6 +226,12 @@ class TestGenerators(unittest.TestCase):
         test(TestGenerators.server)
         self.check_results()
 
+    def test_least_squares(self):
+        self.set_expectation('Least Squares', expected.least_squares)
+        from least_squares import test
+        test(TestGenerators.server)
+        self.check_results()
+
     @classmethod
     def tearDownClass(cls):
         global real_solve

@@ -33,6 +33,7 @@ Viya Examples / Concrete
    SAS/OR Blog: Optimal Wedding <examples/optimal_wedding.rst>
    SAS/OR Blog: Kidney Exchange <examples/kidney_exchange.rst>
    Multiobjective <examples/multiobjective.rst>
+   Least Squares <examples/least_squares.rst>
 
 Viya Examples / Abstract
 ------------------------
