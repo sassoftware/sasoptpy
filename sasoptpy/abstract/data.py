@@ -60,6 +60,9 @@ class ParameterValue(sasoptpy.Expression):
         self._assign = None
         self._value = 0
 
+    def get_name(self):
+        return self._name
+
     def set_init(self, val):
         """
         Sets the initial value of the parameter

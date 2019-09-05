@@ -208,9 +208,6 @@ class ImplicitVar(ExpressionDict):
                     for i in keynames:
                         keyrefs += (localdict[i],)
                     self[keyrefs] = wrap_expression(arg)
-            elif is_expression(argv) and is_abstract(argv):
-                self[''] = argv
-                self['']._objorder = self._objorder
             elif is_expression(argv):
                 self[''] = argv
                 self['']._objorder = self._objorder
@@ -222,8 +219,14 @@ class ImplicitVar(ExpressionDict):
 
     def _defn(self):
         member_defn = []
-        for i in self._dict.values():
-            member_defn.append('impvar {} = {};'.format(i.get_name(),
-                                                        to_expression(i)))
+        for key in self._dict:
+            i = self._dict[key]
+            #print(key, sasoptpy.util._to_optmodel_loop(key))
+            if key == ('',):
+                ext = ''
+            else:
+                ext = sasoptpy.util._to_optmodel_loop(key)
+            #member_defn.append('impvar {} = {};'.format(i.get_name(), to_expression(i)))
+            member_defn.append('impvar {} = {};'.format(self._name + ext, to_expression(i)))
         s = '\n'.join(member_defn)
         return s

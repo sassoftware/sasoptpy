@@ -71,6 +71,9 @@ class TestImplicitVariable(unittest.TestCase):
             impvar z_4 = 4 * p;
             """))
 
+        t = so.ImplicitVar(p, name='t')
+        self.assertEqual(so.to_definition(t), 'impvar t = p;')
+
     def test_impvar_combinations(self):
         # Constant
         x = so.ImplicitVar(4, name='x')
@@ -207,6 +210,7 @@ class TestImplicitVariable(unittest.TestCase):
         self.assertEqual(so.to_definition(y), cleandoc("""
             impvar y {o1 in S, o4 in S, o6 in S} = o1 + o4 + o6 + 2;
             """))
+
 
     def tearDown(self):
         pass
