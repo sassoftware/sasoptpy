@@ -77,26 +77,8 @@ class ExpressionDict:
     def __iter__(self):
         return self._dict.__iter__()
 
-    def _get_only_key(self):
-        return list(self._dict.keys())[0]
-
     def __str__(self):
         return self._name
-
-    def __repr__(self):
-        s = 'sasoptpy.ExpressionDict(name=\'{}\', '.format(self._name)
-        if len(self._dict) == 1:
-            key = self._get_only_key()
-            s += 'expr=('
-            try:
-                s += self._dict[key]._ref._expr()
-            except AttributeError:
-                s += str(self._dict[key])
-            if ('',) not in self._dict:
-                s += ' ' + ' '.join(['for ' + i._defn() for i in list(key)])
-            s += ')'
-        s += ')'
-        return s
 
 
 class ImplicitVar(ExpressionDict):

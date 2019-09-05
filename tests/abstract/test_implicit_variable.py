@@ -232,5 +232,20 @@ class TestImplicitVariable(unittest.TestCase):
             a = x[i]
             assert_equal_wo_temps(self, str(x[i]), 'x[o13]')
 
+    def test_impvar_keys(self):
+        x = so.ImplicitVar(0, name='x')
+        self.assertEqual(list(x.get_keys()), [('',)])
+
+        y = so.ImplicitVar((i for i in range(3)), name='y')
+        self.assertEqual(list(y.get_keys()), [(0,), (1,), (2,)])
+
+        S = so.Set(name='S')
+        z = so.ImplicitVar((2 * i for i in S), name='z')
+        first_key = list(z.get_keys())[0][0]
+        self.assertTrue(isinstance(first_key, so.SetIterator))
+
+        for i in y:
+            self.assertTrue(isinstance(y[i], so.Expression))
+
     def tearDown(self):
         pass
