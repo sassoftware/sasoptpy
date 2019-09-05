@@ -23,6 +23,7 @@ Unit tests for core classes.
 import os
 import sys
 import unittest
+import warnings
 import sasoptpy as so
 from inspect import cleandoc
 from sasoptpy.actions import read_data

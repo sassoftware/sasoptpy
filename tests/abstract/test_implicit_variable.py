@@ -224,6 +224,13 @@ class TestImplicitVariable(unittest.TestCase):
         f = y[0] / p + y[1] / p
         self.assertEqual(str(f), '(p) / (p) + (p + 1) / (p)')
 
+    def test_impvar_shadow(self):
+        p = so.Parameter(name='p', value=5)
+        x = so.ImplicitVar((p ** i for i in range(3)), name='x')
+        S = so.Set(name='S')
+        for i in S:
+            a = x[i]
+            assert_equal_wo_temps(self, str(x[i]), 'x[o13]')
 
     def tearDown(self):
         pass

@@ -45,21 +45,9 @@ class ExpressionDict:
 
     def __setitem__(self, key, value):
         key = sasoptpy.util.pack_to_tuple(key)
-
-        # Set name for named types
-        ntypes = [sasoptpy.abstract.Parameter, sasoptpy.core.Expression]
-        if any(isinstance(value, i) for i in ntypes) and value._name is None:
-            #value._name = self._name
-            value.set_permanent()
-            value._iterkey = key
-
-        # Add the dictionary value
-        if is_parameter(value):
-            self._dict[key] = sasoptpy.abstract.ParameterValue(value, key)
-        elif is_expression(value):
-            self._dict[key] = value
-        else:
-            self._dict[key] = value
+        value.set_permanent()
+        value._iterkey = key
+        self._dict[key] = value
 
     def __getitem__(self, key):
         key = sasoptpy.util.pack_to_tuple(key)
