@@ -41,7 +41,7 @@ from sasoptpy.core import (Variable, VariableGroup, Constraint, ConstraintGroup,
                            Model, Objective, Auxiliary, Symbol)
 from sasoptpy.core.util import read_data
 
-from sasoptpy.abstract import (Set, Parameter, ImplicitVar, ExpressionDict,
+from sasoptpy.abstract import (Set, Parameter, ImplicitVar,
                                OldStatement, ParameterGroup, SetIterator,
                                SetIteratorGroup)
 

@@ -32,7 +32,6 @@ class ExpressionDict:
 
     Notes
     -----
-    - ExpressionDict is the underlying class for :class:`ImplicitVar`.
     - It behaves as a regular dictionary for client-side models.
     """
 
@@ -60,27 +59,6 @@ class ExpressionDict:
             pv = sasoptpy.abstract.ParameterValue(self, tuple_key)
             self._shadows[key] = pv
             return pv
-
-    def _defn(self):
-        # Do not return a definition if it is a local dictionary
-        s = ''
-        if len(self._dict) == 1:
-            s = 'impvar {} '.format(self._name)
-            if ('',) not in self._dict:
-                s += '{'
-                key = self._get_only_key()
-                s += ', '.join([i._defn() for i in list(key)])
-                s += '} = '
-            else:
-                key = self._get_only_key()
-                s += '= '
-            item = self._dict[key]
-            if isinstance(item, sasoptpy.abstract.ParameterValue):
-                s += self._dict[key]._ref._expr()
-            else:
-                s += self._dict[key]._expr()
-            s += ';'
-        return s
 
     def get_name(self):
         return self._name

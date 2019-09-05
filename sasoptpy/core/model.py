@@ -703,7 +703,6 @@ class Model:
             sasoptpy.ParameterGroup: self._include_parameter_group,
             sasoptpy.OldStatement: self._include_statement,
             sasoptpy.abstract.LiteralStatement: self._include_statement,
-            sasoptpy.ExpressionDict: self._include_expdict,
             sasoptpy.ImplicitVar: self._include_expdict,
             sasoptpy.abstract.ReadDataStatement: self._include_statement,
             list: self.include,
