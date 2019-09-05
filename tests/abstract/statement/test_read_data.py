@@ -188,8 +188,8 @@ class TestReadData(unittest.TestCase):
             quit;"""))
 
     def test_with_cas_data(self):
-        if not TestReadData.conn:
-            unittest.skip('No session is available')
+        if TestReadData.conn is None:
+            self.skipTest('No session is available')
 
         from sasoptpy.util import concat
         import pandas as pd
