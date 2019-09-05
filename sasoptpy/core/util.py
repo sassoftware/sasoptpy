@@ -53,6 +53,10 @@ def _to_safe_iterator_expression(itlist):
     return strlist
 
 
+def is_key_empty(iterkey):
+    return str(iterkey) == "('',)"
+
+
 def _evaluate(comp):
     """
     Evaluates the value of a given expression component.

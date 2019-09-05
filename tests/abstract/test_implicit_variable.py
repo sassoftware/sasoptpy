@@ -21,10 +21,15 @@ Unit tests for implicit variables.
 """
 
 import os
+import sys
 import unittest
 import warnings
 import sasoptpy as so
 from inspect import cleandoc
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.abspath(os.path.join(current_dir, '..')))
+from util import assert_equal_wo_temps
 
 
 class TestImplicitVariable(unittest.TestCase):
@@ -109,10 +114,10 @@ class TestImplicitVariable(unittest.TestCase):
         # Double NS
         so.reset()
         y = so.ImplicitVar((i + j for i in range(3) for j in S), name='y')
-        self.assertEqual(so.to_definition(y), cleandoc("""
-            impvar y_0 {o2 in S} = o2;
-            impvar y_1 {o5 in S} = o5 + 1;
-            impvar y_2 {o8 in S} = o8 + 2;
+        assert_equal_wo_temps(self, so.to_definition(y), cleandoc("""
+            impvar y_0 {o1 in S} = o1;
+            impvar y_1 {o2 in S} = o2 + 1;
+            impvar y_2 {o3 in S} = o3 + 2;
             """))
 
         # Double SN
@@ -126,9 +131,9 @@ class TestImplicitVariable(unittest.TestCase):
         # Double SS
         id = so.itemid
         y = so.ImplicitVar((i + j for i in S for j in S), name='y')
-        self.assertEqual(so.to_definition(y), cleandoc("""
-            impvar y {{o{id1} in S, o{id2} in S}} = o{id1} + o{id2};
-            """.format(id1=id+1, id2=id+4)))
+        assert_equal_wo_temps(self, so.to_definition(y), cleandoc("""
+            impvar y {o8 in S, o11 in S} = o8 + o11;
+            """))
 
         # Triple NNN
         y = so.ImplicitVar((i + 2*j for i in range(1) for j in range(2) for k in ['A', 'B']), name='y')
@@ -143,39 +148,39 @@ class TestImplicitVariable(unittest.TestCase):
         so.reset()
         id = so.itemid
         y = so.ImplicitVar((i + j + k for i in range(2) for j in range(3) for k in S), name='y')
-        self.assertEqual(so.to_definition(y), cleandoc("""
-            impvar y_0_0 {{o{a} in S}} = o{a};
-            impvar y_0_1 {{o{b} in S}} = o{b} + 1;
-            impvar y_0_2 {{o{c} in S}} = o{c} + 2;
-            impvar y_1_0 {{o{d} in S}} = o{d} + 1;
-            impvar y_1_1 {{o{e} in S}} = o{e} + 2;
-            impvar y_1_2 {{o{f} in S}} = o{f} + 3;
-            """.format(a=id+2, b=id+5, c=id+8, d=id+11, e=id+14, f=id+17)))
+        assert_equal_wo_temps(self, so.to_definition(y), cleandoc("""
+            impvar y_0_0 {o2 in S} = o2;
+            impvar y_0_1 {o6 in S} = o6 + 1;
+            impvar y_0_2 {o10 in S} = o10 + 2;
+            impvar y_1_0 {o14 in S} = o14 + 1;
+            impvar y_1_1 {o18 in S} = o18 + 2;
+            impvar y_1_2 {o22 in S} = o22 + 3;
+            """))
 
         # Triple NSN
         so.reset()
         y = so.ImplicitVar((i + j + k for i in range(2) for j in S for k in range(3)), name='y')
-        self.assertEqual(so.to_definition(y), cleandoc("""
+        assert_equal_wo_temps(self, so.to_definition(y), cleandoc("""
             impvar y_0_0 {o2 in S} = o2;
             impvar y_0_1 {o2 in S} = o2 + 1;
             impvar y_0_2 {o2 in S} = o2 + 2;
-            impvar y_1_0 {o7 in S} = o7 + 1;
-            impvar y_1_1 {o7 in S} = o7 + 2;
-            impvar y_1_2 {o7 in S} = o7 + 3;
+            impvar y_1_0 {o10 in S} = o10 + 1;
+            impvar y_1_1 {o10 in S} = o10 + 2;
+            impvar y_1_2 {o10 in S} = o10 + 3;
             """))
 
         # Triple NSS
         so.reset()
         y = so.ImplicitVar((i + j + k for i in range(2) for j in S for k in S), name='y')
-        self.assertEqual(so.to_definition(y), cleandoc("""
+        assert_equal_wo_temps(self, so.to_definition(y), cleandoc("""
             impvar y_0 {o2 in S, o4 in S} = o2 + o4;
-            impvar y_1 {o7 in S, o9 in S} = o7 + o9 + 1;
+            impvar y_1 {o8 in S, o10 in S} = o8 + o10 + 1;
             """))
 
         # Triple SNN
         so.reset()
         y = so.ImplicitVar((i + j + k for i in S for j in range(3) for k in range(3)), name='y')
-        self.assertEqual(so.to_definition(y), cleandoc("""
+        assert_equal_wo_temps(self, so.to_definition(y), cleandoc("""
             impvar y_0_0 {o1 in S} = o1;
             impvar y_0_1 {o1 in S} = o1 + 1;
             impvar y_0_2 {o1 in S} = o1 + 2;
@@ -190,16 +195,16 @@ class TestImplicitVariable(unittest.TestCase):
         # Triple SNS
         so.reset()
         y = so.ImplicitVar((i + j + k for i in S for j in range(3) for k in S), name='y')
-        self.assertEqual(so.to_definition(y), cleandoc("""
+        assert_equal_wo_temps(self, so.to_definition(y), cleandoc("""
             impvar y_0 {o1 in S, o4 in S} = o1 + o4;
-            impvar y_1 {o1 in S, o7 in S} = o1 + o7 + 1;
-            impvar y_2 {o1 in S, o10 in S} = o1 + o10 + 2;
+            impvar y_1 {o1 in S, o8 in S} = o1 + o8 + 1;
+            impvar y_2 {o1 in S, o12 in S} = o1 + o12 + 2;
             """))
 
         # Triple SSN
         so.reset()
         y = so.ImplicitVar((i + j + k for i in S for j in S for k in range(2)), name='y')
-        self.assertEqual(so.to_definition(y), cleandoc("""
+        assert_equal_wo_temps(self, so.to_definition(y), cleandoc("""
             impvar y_0 {o1 in S, o4 in S} = o1 + o4;
             impvar y_1 {o1 in S, o4 in S} = o1 + o4 + 1;
             """))
@@ -207,9 +212,17 @@ class TestImplicitVariable(unittest.TestCase):
         # Triple SSS
         so.reset()
         y = so.ImplicitVar((i + j + k + 2 for i in S for j in S for k in S), name='y')
-        self.assertEqual(so.to_definition(y), cleandoc("""
+        assert_equal_wo_temps(self, so.to_definition(y), cleandoc("""
             impvar y {o1 in S, o4 in S, o6 in S} = o1 + o4 + o6 + 2;
             """))
+
+    def test_impvar_power(self):
+        p = so.Parameter(name='p')
+        y = so.ImplicitVar((i + p for i in range(2)), name='y')
+        e = y[0] ** 2 + y[1] ** 2
+        self.assertEqual(str(e), '(p) ** (2) + (p + 1) ** (2)')
+        f = y[0] / p + y[1] / p
+        self.assertEqual(str(f), '(p) / (p) + (p + 1) / (p)')
 
 
     def tearDown(self):

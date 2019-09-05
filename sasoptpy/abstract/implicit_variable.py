@@ -49,7 +49,9 @@ class ExpressionDict:
         # Set name for named types
         ntypes = [sasoptpy.abstract.Parameter, sasoptpy.core.Expression]
         if any(isinstance(value, i) for i in ntypes) and value._name is None:
-            value._name = self._name + sasoptpy.util._to_optmodel_loop(key)
+            #value._name = self._name
+            value.set_permanent()
+            value._iterkey = key
 
         # Add the dictionary value
         if is_parameter(value):
@@ -90,15 +92,6 @@ class ExpressionDict:
             else:
                 s += self._dict[key]._expr()
             s += ';'
-        #======================================================================
-        # else:
-        #     s = ''
-        #     for key, val in self._dict.items():
-        #         ref = self._name + sasoptpy.util._to_optmodel_loop(key)
-        #         s += 'impvar {}'.format(ref)
-        #         s += ' = ' + (val._expr()
-        #                       if hasattr(val, '_expr') else str(val)) + ';\n'
-        #======================================================================
         return s
 
     def get_name(self):
@@ -209,7 +202,9 @@ class ImplicitVar(ExpressionDict):
                         keyrefs += (localdict[i],)
                     self[keyrefs] = wrap_expression(arg)
             elif is_expression(argv):
-                self[''] = argv
+                exp = wrap_expression(argv)
+                exp.set_name(name)
+                self[''] = exp
                 self['']._objorder = self._objorder
             else:
                 exp = sasoptpy.Expression.to_expression(argv)
@@ -219,14 +214,9 @@ class ImplicitVar(ExpressionDict):
 
     def _defn(self):
         member_defn = []
-        for key in self._dict:
-            i = self._dict[key]
-            #print(key, sasoptpy.util._to_optmodel_loop(key))
-            if key == ('',):
-                ext = ''
-            else:
-                ext = sasoptpy.util._to_optmodel_loop(key)
-            #member_defn.append('impvar {} = {};'.format(i.get_name(), to_expression(i)))
-            member_defn.append('impvar {} = {};'.format(self._name + ext, to_expression(i)))
+        for i in self._dict.values():
+            member_defn.append('impvar {} = {};'.format(
+                i.get_name_with_keys(name=self._name),
+                to_expression(i)))
         s = '\n'.join(member_defn)
         return s

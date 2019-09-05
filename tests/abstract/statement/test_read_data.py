@@ -21,6 +21,7 @@ Unit tests for core classes.
 """
 
 import os
+import sys
 import unittest
 import sasoptpy as so
 from inspect import cleandoc
@@ -31,17 +32,16 @@ class TestReadData(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        so.reset()
         from swat import CAS, SWATError
         try:
             cls.conn = CAS(os.environ.get('CASHOST'),
                            int(os.environ.get('CASPORT')),
                            authinfo=os.environ.get('AUTHINFO'))
         except SWATError:
-            raise unittest.SkipTest('Cannot establish CAS connection. ' \
-                                    + 'Check your environment variables ' \
-                                    + '(CASHOST, CASPORT, AUTHINFO)')
+            warnings.warn('CAS connection is not available', RuntimeWarning)
         except TypeError:
-            raise unittest.SkipTest('Environment variable may not be defined')
+            warnings.warn('CAS variables are not available', RuntimeWarning)
 
     def setUp(self):
         pass

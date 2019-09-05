@@ -30,6 +30,9 @@ import hashlib
 current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.abspath(os.path.join(current_dir, '../../examples/client_side')))
 sys.path.append(os.path.abspath(os.path.join(current_dir, '../../examples/server_side')))
+sys.path.append(os.path.abspath(os.path.join(current_dir, '..')))
+
+from util import get_generic_form
 
 
 class NullWriter:
@@ -110,7 +113,9 @@ class TestGenerators(unittest.TestCase):
         sys.stdout = realstdout
         print('Problem:', self.problem)
         for i, solve in enumerate(self.records):
-            self.assertMultiLineEqual(solve[0], solve[1])
+            string0 = get_generic_form(solve[0])
+            string1 = get_generic_form(solve[1])
+            self.assertMultiLineEqual(string0, string1)
             print('Solve', i, ': True')
 
     def set_expectation(self, problem, test):

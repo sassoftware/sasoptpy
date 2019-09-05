@@ -294,11 +294,19 @@ class Expression:
         """
         return self._name
 
+    def get_name_with_keys(self, name=None):
+        if name is None:
+            name = self.get_name()
+
+        if sasoptpy.core.util.is_key_empty(self._iterkey):
+            return name
+        else:
+            return '{}{}'.format(
+                name,
+                sasoptpy.util._to_optmodel_loop(self._iterkey))
 
     def set_temporary(self):
         self._temp = True
-
-
 
     def set_permanent(self):
         """
