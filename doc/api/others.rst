@@ -12,7 +12,6 @@ Constructors
    :toctree: generated/
    :template: autosummary/class_without_autosummary.rst
 
-   ExpressionDict
    ImplicitVar
    Set
    SetIterator
@@ -28,10 +27,7 @@ Methods
 
    ParameterValue.set_init
 
-.. 
-   ExpressionDict.__getitem__
-   ExpressionDict.__setitem__
-   ExpressionDict.get_keys
+..
    Set.__iter__
    Parameter.set_init
    Parameter.__getitem__

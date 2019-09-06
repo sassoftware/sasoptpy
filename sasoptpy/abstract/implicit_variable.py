@@ -9,79 +9,7 @@ from sasoptpy.core.util import (is_expression)
 from sasoptpy.util import to_expression, wrap_expression
 
 
-class ExpressionDict:
-    """
-    Creates a dictionary of :class:`Expression` objects
-
-    Parameters
-    ----------
-    name : string
-        Name of the object
-
-    Examples
-    --------
-
-    >>> e[0] = x + 2*y
-    >>> e[1] = 2*x + y**2
-    >>> print(e.get_keys())
-    >>> for i in e:
-    >>>     print(i, e[i])
-    (0,) x + 2 * y
-    (1,) 2 * x + (y) ** (2)
-
-
-    Notes
-    -----
-    - It behaves as a regular dictionary for client-side models.
-    """
-
-    def __init__(self, name=None):
-        self._name = name
-        self._objorder = sasoptpy.util.get_creation_id()
-        self._dict = OrderedDict()
-        self._conditions = []
-        self._shadows = OrderedDict()
-
-    def __setitem__(self, key, value):
-        key = sasoptpy.util.pack_to_tuple(key)
-        value.set_permanent()
-        value._iterkey = key
-        self._dict[key] = value
-
-    def __getitem__(self, key):
-        key = sasoptpy.util.pack_to_tuple(key)
-        if key in self._dict:
-            return self._dict[key]
-        elif key in self._shadows:
-            return self._shadows[key]
-        else:
-            tuple_key = sasoptpy.util.pack_to_tuple(key)
-            pv = sasoptpy.abstract.ParameterValue(self, tuple_key)
-            self._shadows[key] = pv
-            return pv
-
-    def get_name(self):
-        return self._name
-
-    def get_keys(self):
-        """
-        Returns the dictionary keys
-
-        Returns
-        -------
-        d : dict_keys
-            Dictionary keys stored in the object
-        """
-        return self._dict.keys()
-
-    def __iter__(self):
-        return self._dict.__iter__()
-
-    def __str__(self):
-        return self._name
-
-
-class ImplicitVar(ExpressionDict):
+class ImplicitVar:
     """
     Creates an implicit variable
 
@@ -131,7 +59,11 @@ class ImplicitVar(ExpressionDict):
 
     @sasoptpy.class_containable
     def __init__(self, argv, name=None):
-        super().__init__(name=name)
+        self._name = name
+        self._objorder = sasoptpy.util.get_creation_id()
+        self._dict = OrderedDict()
+        self._conditions = []
+        self._shadows = OrderedDict()
         if argv is not None:
             # Generator type - multi
             if type(argv) == GeneratorType:
@@ -168,3 +100,46 @@ class ImplicitVar(ExpressionDict):
                 to_expression(i)))
         s = '\n'.join(member_defn)
         return s
+
+    def __setitem__(self, key, value):
+        key = sasoptpy.util.pack_to_tuple(key)
+        value.set_permanent()
+        value._iterkey = key
+        self._dict[key] = value
+
+    def __getitem__(self, key):
+        key = sasoptpy.util.pack_to_tuple(key)
+        if key in self._dict:
+            return self._dict[key]
+        elif key in self._shadows:
+            return self._shadows[key]
+        else:
+            tuple_key = sasoptpy.util.pack_to_tuple(key)
+            pv = sasoptpy.abstract.ParameterValue(self, tuple_key)
+            self._shadows[key] = pv
+            return pv
+
+    def get_name(self):
+        return self._name
+
+    def get_keys(self):
+        """
+        Returns the dictionary keys
+
+        Returns
+        -------
+        d : dict_keys
+            Dictionary keys stored in the object
+        """
+        return self._dict.keys()
+
+    def __iter__(self):
+        return self._dict.__iter__()
+
+    def __str__(self):
+        return self._name
+
+
+
+
+
