@@ -204,7 +204,7 @@ class ConstraintGroup(Group):
         s = ''
         for key_ in self._conlist:
             s += 'con {}'.format(self._name)
-            keys = sasoptpy.util._to_optmodel_loop(key_)
+            keys = sasoptpy.util.package_utils._to_optmodel_loop(key_)
             s += keys
             s += ' : ' + self._condict[key_]._defn()
             s += ';\n'

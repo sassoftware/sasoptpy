@@ -106,7 +106,7 @@ class ParameterValue(sasoptpy.Expression):
                            self._name +\
                            self._suffix
         return self._prefix +\
-            sasoptpy.util._insert_brackets(self._name, self._key) +\
+            sasoptpy.util.package_utils._insert_brackets(self._name, self._key) +\
             self._suffix
 
     def _expr(self):

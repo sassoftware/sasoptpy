@@ -18,7 +18,7 @@ def test(cas_conn):
         print(m.response['Print1.PrintTable'])
 
     # Model 2
-    so.reset_globals()
+    so.reset()
     m = so.Model(name='nlpse02_2', session=cas_conn)
     N = m.add_parameter(name='N', init=1000)
     x = m.add_variables(so.exp_range(1, N), name='x', lb=1, ub=2)

@@ -1,6 +1,7 @@
 
 from collections import OrderedDict
 import sasoptpy
+from .condition import Condition
 
 
 class SetIterator(sasoptpy.Expression):
@@ -44,52 +45,15 @@ class SetIterator(sasoptpy.Expression):
         self._type = datatype
         self._conditions = []
 
-    def set_name(self, name):
-        self._name = name
-
     def get_type(self):
         return self._type
 
     def __hash__(self):
         return hash('{}'.format(id(self)))
 
-    def __add_condition(self, operation, key):
-        c = {'type': operation, 'key': key}
+    def add_condition(self, operation, key):
+        c = Condition(left=self, c_type=operation, right=key)
         self._conditions.append(c)
-
-    def __contains__(self, key):
-        self.__add_condition('IN', key)
-        return True
-
-    def __eq__(self, key):
-        self.__add_condition('=', key)  # or 'EQ'
-        return True
-
-    def __le__(self, key):
-        self.__add_condition('<=', key)  # or 'LE'
-        return True
-
-    def __lt__(self, key):
-        self.__add_condition('<', key)
-        return True
-
-    def __ge__(self, key):
-        self.__add_condition('>=', key)  # or 'GE'
-        return True
-
-    def __gt__(self, key):
-        self.__add_condition('>', key)
-        return True
-
-    def __ne__(self, key):
-        self.__add_condition('NE', key)  # or 'NE'
-        return True
-
-    def __and__(self, key):
-        self.__add_condition('AND', key)
-
-    def __or__(self, key):
-        self.__add_condition('OR', key)
 
     def _defn(self, cond=0):
         s = '{} in {}'.format(self._name, sasoptpy.to_expression(self._set))
@@ -99,21 +63,11 @@ class SetIterator(sasoptpy.Expression):
         return(s)
 
     def _to_conditions(self):
-        s = ''
-        conds = []
-        if len(self._conditions) > 0:
-            for i in self._conditions:
-                c_cond = '{} {} '.format(self._name, i['type'])
-                if type(i['key']) == str:
-                    c_cond += '\'{}\''.format(i['key'])
-                else:
-                    c_cond += '{}'.format(i['key'])
-                conds.append(c_cond)
-
-            s = ' and '.join(conds)
+        conds = [sasoptpy.to_expression(c) for c in self._conditions]
+        if len(conds) > 0:
+            return ' and '.join(conds)
         else:
-            s = ''
-        return s
+            return ''
 
     def _get_for_expr(self):
         return 'for {} in {}'.format(self._expr(), self._set._name)
@@ -127,6 +81,10 @@ class SetIterator(sasoptpy.Expression):
     def __repr__(self):
         s = 'sasoptpy.SetIterator({}, name=\'{}\')'.format(self._set, self._name)
         return s
+
+    def __gt__(self, other):
+        self.add_condition('>', other)
+        return True
 
 
 class SetIteratorGroup(OrderedDict):
@@ -171,3 +129,39 @@ class SetIteratorGroup(OrderedDict):
     def __str__(self):
         s = ', '.join(str(i) for i in self.values())
         return '(' + s + ')'
+
+
+    #
+    # def __contains__(self, key):
+    #     self.__add_condition('IN', key)
+    #     return True
+    #
+    # def __eq__(self, key):
+    #     self.__add_condition('=', key)  # or 'EQ'
+    #     return True
+    #
+    # def __le__(self, key):
+    #     self.__add_condition('<=', key)  # or 'LE'
+    #     return True
+    #
+    # def __lt__(self, key):
+    #     self.__add_condition('<', key)
+    #     return True
+    #
+    # def __ge__(self, key):
+    #     self.__add_condition('>=', key)  # or 'GE'
+    #     return True
+    #
+    # def __gt__(self, key):
+    #     self.__add_condition('>', key)
+    #     return True
+    #
+    # def __ne__(self, key):
+    #     self.__add_condition('NE', key)  # or 'NE'
+    #     return True
+    #
+    # def __and__(self, key):
+    #     self.__add_condition('AND', key)
+    #
+    # def __or__(self, key):
+    #     self.__add_condition('OR', key)

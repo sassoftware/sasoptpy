@@ -23,7 +23,7 @@ class ParameterGroup():
         return self._name
 
     def get_element_name(self, key):
-        keyname = sasoptpy.util._to_sas_string(key)
+        keyname = sasoptpy.util.package_utils._to_sas_string(key)
         return '{}[{}]'.format(self._name, keyname)
 
     def __getitem__(self, key):

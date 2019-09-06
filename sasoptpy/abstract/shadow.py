@@ -28,7 +28,8 @@ class ShadowVariable(Shadow, Variable):
         self._iterkey = key
 
     def _expr(self):
-        keylist = sasoptpy.util._to_iterator_expression(self._iterkey)
+        keylist = sasoptpy.util.package_utils._to_iterator_expression(
+            self._iterkey)
         key = ', '.join(keylist)
         self_expr = '{}[{}]'.format(self._name, key)
         return self_expr

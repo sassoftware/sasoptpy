@@ -112,10 +112,13 @@ class VariableGroup(Group):
         self._objorder = sasoptpy.util.get_creation_id()
 
         for arg in argv:
+
             if isinstance(arg, int):
-                self._keyset.append(sasoptpy.util._extract_argument_as_list(arg))
+                self._keyset.append(
+                    sasoptpy.util.package_utils._extract_argument_as_list(arg))
             else:
-                self._keyset.append(sasoptpy.util._extract_argument_as_list(arg))
+                self._keyset.append(
+                    sasoptpy.util.package_utils._extract_argument_as_list(arg))
                 if not self._abstract and sasoptpy.util.is_set_abstract(arg):
                     self._abstract = True
                     for _, v in self._vardict.items():
@@ -188,7 +191,9 @@ class VariableGroup(Group):
     def _recursive_add_vars(self, *argv, name, vartype, lb, ub, init,
                             vardict, vkeys=(), shadow=False):
 
-        next_arg = sasoptpy.util._extract_argument_as_list(argv[0])
+        from sasoptpy.util.package_utils import _extract_argument_as_list
+
+        next_arg = _extract_argument_as_list(argv[0])
 
         for _, i in enumerate(next_arg):
             if isinstance(i, tuple):
@@ -304,7 +309,8 @@ class VariableGroup(Group):
         for i in self._keyset:
             ind_list = []
             for j in i:
-                ind_list.append(sasoptpy.util._to_optmodel_quoted_string(j))
+                ind_list.append(
+                    sasoptpy.util.package_utils._to_optmodel_quoted_string(j))
             s += '{{{}}}, '.format(','.join(ind_list))
         s = s[:-2]
         s += '} '

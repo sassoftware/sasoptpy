@@ -23,7 +23,6 @@ import warnings
 from sasoptpy._libs import np
 
 import sasoptpy
-import sasoptpy.util
 
 
 class Expression:
@@ -303,7 +302,7 @@ class Expression:
         else:
             return '{}{}'.format(
                 name,
-                sasoptpy.util._to_optmodel_loop(self._iterkey))
+                sasoptpy.util.package_utils._to_optmodel_loop(self._iterkey))
 
     def set_temporary(self):
         self._temp = True
@@ -353,7 +352,8 @@ class Expression:
             s += self._operator
             if self._iterkey:
                 if self._operator == 'sum':
-                    s += sasoptpy.util._to_optmodel_loop(self._iterkey) + ' '
+                    s += sasoptpy.util.package_utils._to_optmodel_loop(
+                        self._iterkey) + ' '
             s += '('
 
         itemcnt = 0
@@ -387,7 +387,8 @@ class Expression:
 
             # For a list of expressions, a recursive function is called
             if isinstance(ref, list):
-                strlist = sasoptpy.util._recursive_walk(ref, func='_expr')
+                strlist = sasoptpy.util.package_utils._recursive_walk(
+                    ref, func='_expr')
             elif sasoptpy.util.has_expr(ref):
                 strlist = [ref._expr()]
             else:
@@ -401,10 +402,13 @@ class Expression:
             refs = optext.join(strlist)
             if val == 1 or val == -1:
                 s += '{} '.format(refs)
-            elif op or any(special_op in refs for special_op in sasoptpy.util.get_operators()):
-                s += '{} * ({}) '.format(sasoptpy.util.get_in_digit_format(abs(val)), refs)
+            elif op or any(special_op in refs for special_op in
+                           sasoptpy.util.get_unsafe_operators()):
+                s += '{} * ({}) '.format(
+                    sasoptpy.util.get_in_digit_format(abs(val)), refs)
             else:
-                s += '{} * {} '.format(sasoptpy.util.get_in_digit_format(abs(val)), refs)
+                s += '{} * {} '.format(
+                    sasoptpy.util.get_in_digit_format(abs(val)), refs)
 
             itemcnt += 1
 
@@ -497,7 +501,7 @@ class Expression:
                 optext = ' * '
 
             if isinstance(ref, list):
-                strlist = sasoptpy.util._recursive_walk(
+                strlist = sasoptpy.util.package_utils._recursive_walk(
                     ref, func='__str__')
             else:
                 strlist = [ref.__str__()]

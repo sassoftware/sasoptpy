@@ -75,9 +75,9 @@ class Set():
             s += '<' + ', '.join(self._type) + '> '
         s += self._name
         if self._init is not None:
-            s += ' init ' + sasoptpy.util._to_sas_string(self._init) #str(self._init)
+            s += ' init ' + sasoptpy.util.package_utils._to_sas_string(self._init) #str(self._init)
         elif self._value is not None:
-            s += ' = ' + sasoptpy.util._to_sas_string(self._value)
+            s += ' = ' + sasoptpy.util.package_utils._to_sas_string(self._value)
         s += ';'
         return(s)
 

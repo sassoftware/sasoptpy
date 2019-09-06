@@ -203,7 +203,7 @@ class Variable(Expression):
             key = ', '.join(keylist)
             return ('{}[{}]'.format(self._parent._name, key))
         if self._shadow and self._iterkey:
-            keylist = sasoptpy.core.util._to_iterator_expression(self._iterkey)
+            keylist = sasoptpy.core.util.package_utils._to_iterator_expression(self._iterkey)
             key = ', '.join(keylist)
             return('{}[{}]'.format(self._name, key))
         return('{}'.format(self._name))

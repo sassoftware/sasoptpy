@@ -10,3 +10,4 @@ from sasoptpy.abstract.implicit_variable import ImplicitVar
 import sasoptpy.abstract.math
 from .shadow import ShadowVariable, ShadowConstraint
 from .range import AbstractRange
+from .condition import Condition

@@ -35,9 +35,11 @@ def test(cas_conn):
     YEARS = list(range(1, num_years+1))
     YEARS0 = [0] + list(YEARS)
     INDUSTRIES = industry_data.index.tolist()
-    [init_stocks, init_productive_capacity, demand] = so.read_frame(
-        industry_data)
-    # INPUTS = production_data.index.tolist()
+
+    init_stocks = industry_data['init_stocks']
+    init_productive_capacity = industry_data['init_productive_capacity']
+    demand = industry_data['demand']
+
     production_coeff = so.flatten_frame(production_data)
     productive_capacity_coeff = so.flatten_frame(productive_capacity_data)
 
@@ -55,10 +57,6 @@ def test(cas_conn):
 
     final_demand = so.get_solution_table(
         static_production, sort=True)['static_production']
-    # Alternative way
-    # final_demand = {}
-    # for i in INDUSTRIES:
-    #     final_demand[i] = static_production.get_value()
 
     production = m.add_variables(INDUSTRIES, range(0, num_years+2), lb=0,
                                  name='production')
