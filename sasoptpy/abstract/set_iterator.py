@@ -51,21 +51,18 @@ class SetIterator(sasoptpy.Expression):
     def __hash__(self):
         return hash('{}'.format(id(self)))
 
-    def _defn(self, cond=0):
-        s = '{} in {}'.format(self._name, sasoptpy.to_expression(self._set))
-        if cond and self.sym.get_conditions_len() > 0:
-            s += ':'
-            s += self.sym.get_conditions_str()
-        return(s)
-
     def _get_for_expr(self):
-        return 'for {} in {}'.format(self._expr(), self._set._name)
+        return '{} in {}'.format(self._expr(),
+                                 sasoptpy.to_expression(self._set))
 
     def _expr(self):
         return str(self)
 
     def __str__(self):
         return self._name
+
+    def _defn(self):
+        return self._get_for_expr()
 
     def __repr__(self):
         s = 'sasoptpy.SetIterator({}, name=\'{}\')'.format(self._set, self._name)
@@ -91,7 +88,7 @@ class SetIteratorGroup(OrderedDict):
         self[name] = object
 
     def _get_for_expr(self):
-        return 'for ({}) in {}'.format(self._expr(), self._set._name)
+        return '({}) in {}'.format(self._expr(), self._set._name)
 
     def _expr(self):
         return ', '.join(str(i) for i in self.values())

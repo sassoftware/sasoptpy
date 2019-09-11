@@ -98,14 +98,14 @@ class TestModel(unittest.TestCase):
         self.assertEqual(m.get_variables(), [x, y, z, w, u])
         self.assertEqual(m.get_variable_dict(), {'x': x, 'y': y, 'z': z,
                                                  'w': w, 'u': u})
-        self.assertEqual(m.get_variable('x'), x)
-        self.assertEqual(m.get_variable('t'), None)
+        self.assertIs(m.get_variable('x'), x)
+        self.assertIs(m.get_variable('t'), None)
 
     def test_dropping_variable(self):
         m = so.Model(name='test_drop_variable')
         x = m.add_variable(name='x')
-        self.assertEqual(m.get_variables(), [x])
-        self.assertEqual(m.get_variable_dict(), {'x': x})
+        self.assertIs(m.get_variables()[0], x)
+        self.assertIs(m.get_variable_dict()['x'], x)
         m.drop_variable(x)
         self.assertEqual(m.get_variables(), [])
         self.assertEqual(m.get_variable_dict(), {})
@@ -121,7 +121,7 @@ class TestModel(unittest.TestCase):
         m.include(w)
         vars = [('x', x), ('y', y), ('z', z), ('w', w)]
         self.assertEqual(m.get_grouped_variables(), OrderedDict(vars))
-        self.assertEqual(m.get_variable('x[0]'), x[0])
+        self.assertIs(m.get_variable('x[0]'), x[0])
 
     def test_dropping_vargroup(self):
         m = so.Model(name='test_drop_vg')
@@ -297,11 +297,11 @@ class TestModel(unittest.TestCase):
 
         # Regular objective
         obj1 = m.set_objective(2 * x, sense=so.MIN, name='obj1')
-        self.assertEqual(obj1, m.get_objective())
+        self.assertIs(obj1, m.get_objective())
 
         # Multi objective
         obj2 = m.set_objective(5 * x, sense=so.MIN, name='obj2')
-        self.assertEqual(obj2, m.get_objective())
+        self.assertIs(obj2, m.get_objective())
         obj3 = m.append_objective(10 * x, sense=so.MIN, name='obj3')
         self.assertEqual([obj2, obj3], m.get_all_objectives())
         self.assertEqual(

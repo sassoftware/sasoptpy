@@ -78,12 +78,12 @@ class TestConstraintGroup(unittest.TestCase):
         cg1 = so.ConstraintGroup((x[i] >= 3 for i in range(2)), name='c1')
         self.assertEqual(type(cg1[0]), so.Constraint)
 
+        so.reset()
         I = so.abstract.Set(name='I')
         y = so.VariableGroup(I, name='y')
         cg2 = so.ConstraintGroup((y[i] >= 3 for i in I), name='c2')
         for i in I:
-            self.assertEqual(cg2[i], "y[i_1] >=  3")
-            self.assertEqual(cg2[i], "y[i_1] >=  3")
+            self.assertEqual(cg2[i]._get_constraint_expr(), "y[o4] >= 3")
         self.assertEqual(cg2[0], None)
 
     def test_iter(self):

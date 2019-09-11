@@ -66,6 +66,6 @@ def under_condition(c):
         yield c
         return True
     original = sasoptpy.conditions
-    sasoptpy.conditions = sasoptpy.conditions + list(c)
+    sasoptpy.conditions = sasoptpy.conditions + [c]
     yield
     sasoptpy.conditions = original

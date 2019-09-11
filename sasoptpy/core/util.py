@@ -137,7 +137,7 @@ def expression_to_constraint(left, relation, right):
 
 def get_key_for_expr(key):
     if isinstance(key, sasoptpy.abstract.SetIterator):
-        return key._get_for_expr()
+        return 'for ' + key._get_for_expr()
     else:
         return 'for {} in {}'.format(key._name, key._set._name)
 

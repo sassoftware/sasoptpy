@@ -67,6 +67,7 @@ class TestUtil(unittest.TestCase):
         self.assertFalse(is_abstract(TestUtil.x))
 
     def test_itearor_expression(self):
+        so.reset()
         S1 = TestUtil.S1
         S2 = TestUtil.S2
         S3 = TestUtil.S3

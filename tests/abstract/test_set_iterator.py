@@ -53,10 +53,13 @@ class TestSetIterator(unittest.TestCase):
 
         self.assertEqual(i.get_name(), 'i')
         self.assertEqual(i.get_type(), so.NUM)
-        self.assertEqual(so.to_definition(i), 'i in S')
 
         for j in S:
-            assert_equal_wo_temps(self, so.to_definition(j), 'o1 in S')
+            assert_equal_wo_temps(self, j._get_for_expr(), 'o1 in S')
+            assert_equal_wo_temps(
+                self, repr(j),
+                'sasoptpy.SetIterator(S, name=\'o1\')'
+            )
 
     def test_set_iterator_as_exp(self):
         S = so.Set(name='S')
@@ -150,25 +153,19 @@ class TestSetIterator(unittest.TestCase):
             self, so.to_definition(c),
             'con c {o4 in S: o4 IN P} : o4 * x[o4] <= 5;\n')
 
-        return
-
-        # AND
-        c = so.ConstraintGroup((i * x[i] <= 5 for i in S
-                                if (i.sym > 1) & (i.sym < 5)),
-                               name='c')
-
-        assert_equal_wo_temps(
-            self, so.to_definition(c),
-            'con c {o4 in S: o4 > 1 AND o4 < 5} : o4 * x[o4] <= 5;\n')
-
-        # OR
-        c = so.ConstraintGroup((i * x[i] <= 5 for i in S
-                                if i.sym < 1 | i.sym >= 5),
-                               name='c')
+        # AND, OR, Multi Statement
+        c = so.ConstraintGroup(None, name='c')
+        for i in S:
+            e1 = 2 * i != 1
+            e2 = i ** 2 <= 3
+            e3 = 3 * i >= 9
+            with condition((e1) & (e2) | (e3)):
+                c[i] = i * x[i] <= 5
 
         assert_equal_wo_temps(
             self, so.to_definition(c),
-            'con c {o4 in S: o4 < 1 OR o4 >= 5} : o4 * x[o4] <= 5;\n')
+            'con c {o6 in S: ((2.0 * o6 != 1) and ((o6) ^ (2) <= 3)) or (3.0 * o6 >= 9)} : o6 * x[o6] <= 5;\n'
+        )
 
     def tearDown(self):
         pass

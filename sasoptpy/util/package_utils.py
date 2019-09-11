@@ -420,7 +420,7 @@ def get_iterators(keys):
     groups = {}
     for key in keys:
         if is_key_abstract(key):
-            iterators.append(key._defn())
+            iterators.append(key._get_for_expr())
         elif isinstance(key, tuple):
             for subkey in key:
                 if hasattr(subkey, '_group'):

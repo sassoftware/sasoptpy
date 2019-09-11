@@ -229,9 +229,20 @@ class Constraint(Expression):
         self._parent = parent
         self._key = key
 
+    def __and__(self, other):
+        r = sasoptpy.abstract.Condition(left=self, c_type='and', right=other)
+        return r
+
+    def __or__(self, other):
+        r = sasoptpy.abstract.Condition(left=self, c_type='or', right=other)
+        return r
+
     def __bool__(self):
-        print(self.get_name())
+        sasoptpy.conditions.append(self)
         return True
+
+    def __eq__(self, other):
+        return id(self) == id(other)
 
     def _cond_expr(self):
         return self._get_constraint_expr()

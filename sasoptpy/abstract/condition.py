@@ -30,8 +30,20 @@ class Condition:
         self._right = right
 
     def _expr(self):
-        left = sasoptpy.to_expression(self._left)
-        right = sasoptpy.to_expression(self._right)
+        if hasattr(self._left, '_cond_expr'):
+            left = self._left._cond_expr()
+        else:
+            left = sasoptpy.to_expression(self._left)
+
+        if hasattr(self._right, '_cond_expr'):
+            right = self._right._cond_expr()
+        else:
+            right = sasoptpy.to_expression(self._right)
+
+        if self._type in ['and', 'or']:
+            left = '({})'.format(left)
+            right = '({})'.format(right)
+
         return '{} {} {}'.format(left, self._type, right)
 
     def _cond_expr(self):
@@ -39,6 +51,18 @@ class Condition:
 
     def set_left(self, left):
         self._left = left
+
+    def __bool__(self):
+        sasoptpy.conditions.append(self)
+        return self
+
+    def __and__(self, other):
+        r = Condition(left=self, c_type='and', right=other)
+        return r
+
+    def __or__(self, other):
+        r = Condition(left=self, c_type='or', right=other)
+        return r
 
     def copy(self):
         return Condition(self._left, self._type, self._right)
