@@ -91,7 +91,11 @@ class Set():
             return False
 
     def __contains__(self, item):
-        return True
+        from .util import is_conditional_value
+        if is_conditional_value(item):
+            return item.__contains__(self)
+        else:
+            raise RuntimeError('Cannot verify if value is in abstract set')
 
     def __str__(self):
         s = self._name

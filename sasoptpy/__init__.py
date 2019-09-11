@@ -53,6 +53,7 @@ sasoptpy.config._load_default_config()
 
 sasoptpy.statement_dictionary = dict()
 sasoptpy.util.load_function_containers()
+sasoptpy.util.load_condition_container()
 from sasoptpy.actions import register_actions
 register_actions()
 #sasoptpy.core.util._load_function_containers()

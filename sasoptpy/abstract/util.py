@@ -18,3 +18,7 @@ def is_key_abstract(arg):
 
 def is_parameter(arg):
     return isinstance(arg, sasoptpy.abstract.Parameter)
+
+
+def is_conditional_value(arg):
+    return isinstance(arg, sasoptpy.abstract.Conditional)

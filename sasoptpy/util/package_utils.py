@@ -71,6 +71,20 @@ def load_package_globals():
         'num': sasoptpy.NUM
     }
 
+    # Relation dictionary
+    sasoptpy._relation_dict = {
+        'E': '=',
+        'EQ': '=',
+        'NE': '!=',
+        'LT': '<',
+        'LE': '<=',
+        'L': '<=',
+        'GT': '>',
+        'GE': '>=',
+        'G': '>=',
+        'IN': 'in'
+    }
+
 
 def get_creation_id():
     sasoptpy.itemid += 1
@@ -126,6 +140,10 @@ def load_function_containers():
     sasoptpy.statement_dictionary = read_statement_dictionary()
 
 
+def load_condition_container():
+    sasoptpy.conditions = []
+
+
 def load_default_mediators():
     sasoptpy.mediators['CAS'] = sasoptpy.interface.CASMediator
     sasoptpy.mediators['SAS'] = sasoptpy.interface.SASMediator
@@ -161,6 +179,10 @@ def round_digits(val):
     if digits and digits > 0:
         return round(val, digits)
     return val
+
+
+def get_direction_str(direction):
+    return sasoptpy._relation_dict.get(direction)
 
 
 def _extract_argument_as_list(inp):
@@ -302,7 +324,7 @@ def _wrap_expression_with_iterators(exp, operator, iterators):
     return wrapper
 
 
-def _to_optmodel_loop(keys):
+def _to_optmodel_loop(keys, parent=None):
     s = ''
     subindex = []
     for key in keys:
@@ -315,6 +337,8 @@ def _to_optmodel_loop(keys):
         s += '_' + '_'.join(subindex)
     iters = get_iterators(keys)
     conds = get_conditions(keys)
+    if parent is not None:
+        conds.extend(get_conditions(parent))
     if len(iters) > 0:
         s += ' {'
         s += ', '.join(iters)
@@ -413,10 +437,15 @@ def get_iterators(keys):
 def get_conditions(keys):
     conditions = []
     for key in keys:
-        if is_key_abstract(key):
-            if len(key._conditions) > 0:
-                conditions.append(key._to_conditions())
+        if sasoptpy.core.util.is_expression(key):
+            if key.sym.get_conditions_len() > 0:
+                conditions.append(key.sym.get_conditions_str())
     return conditions
+
+
+def to_condition_expression(exp):
+    if hasattr(exp, '_cond_expr'):
+        return exp._cond_expr()
 
 
 def get_mutable(exp):
@@ -675,3 +704,8 @@ def get_group_name(name):
 
 def has_expr(e):
     return hasattr(e, '_expr')
+
+
+def generator_iter(parent, argv):
+    with sasoptpy.inside_container(parent):
+        yield enumerate(argv)

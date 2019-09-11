@@ -1,3 +1,6 @@
+
+from contextlib import contextmanager
+
 import sasoptpy
 from sasoptpy.util import register_to_function_container
 
@@ -40,4 +43,4 @@ def set_objective(*args, name, sense):
 def print_item(*args, **kwargs):
     pass
 
-
+condition = sasoptpy.structure.under_condition

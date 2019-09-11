@@ -74,13 +74,101 @@ class TestSetIterator(unittest.TestCase):
 
     def test_set_iterator_condition(self):
 
+        from sasoptpy.actions import condition
+
         S = so.Set(name='S')
+        P = so.Set(name='P')
         x = so.VariableGroup(S, name='x')
-        #c = so.ConstraintGroup((i * x[i] <= 5 for i in S if value(i) > 1), name='c')
 
-        #print(so.to_definition(c))
-        #print(so.to_optmodel(ws))
+        # GT
+        c = so.ConstraintGroup(None, name='c')
+        for i in S:
+            with condition(2*i > 1):
+                c[i] = i * x[i] <= 5
 
+        assert_equal_wo_temps(
+            self, so.to_definition(c),
+            'con c {o4 in S: 2.0 * o4 > 1} : o4 * x[o4] <= 5;\n')
+
+        # GE
+        c = so.ConstraintGroup(None, name='c')
+        for i in S:
+            with condition(2 * i >= 1):
+                c[i] = i * x[i] <= 5
+
+        assert_equal_wo_temps(
+            self, so.to_definition(c),
+            'con c {o4 in S: 2.0 * o4 >= 1} : o4 * x[o4] <= 5;\n')
+
+        # LT
+        c = so.ConstraintGroup(None, name='c')
+        for i in S:
+            with condition(2 * i < 1):
+                c[i] = i * x[i] <= 5
+
+        assert_equal_wo_temps(
+            self, so.to_definition(c),
+            'con c {o4 in S: 2.0 * o4 < 1} : o4 * x[o4] <= 5;\n')
+
+        # LE
+        c = so.ConstraintGroup(None, name='c')
+        for i in S:
+            with condition(2 * i <= 1):
+                c[i] = i * x[i] <= 5
+
+        assert_equal_wo_temps(
+            self, so.to_definition(c),
+            'con c {o4 in S: 2.0 * o4 <= 1} : o4 * x[o4] <= 5;\n')
+
+        # EQ
+        c = so.ConstraintGroup(None, name='c')
+        for i in S:
+            with condition(2 * i == 1):
+                c[i] = i * x[i] <= 5
+
+        assert_equal_wo_temps(
+            self, so.to_definition(c),
+            'con c {o4 in S: 2.0 * o4 = 1} : o4 * x[o4] <= 5;\n')
+
+        # NE
+        c = so.ConstraintGroup(None, name='c')
+        for i in S:
+            with condition(2 * i != 1):
+                c[i] = i * x[i] <= 5
+
+        assert_equal_wo_temps(
+            self, so.to_definition(c),
+            'con c {o4 in S: 2.0 * o4 != 1} : o4 * x[o4] <= 5;\n')
+
+        # IN
+        c = so.ConstraintGroup(None, name='c')
+        for i in S:
+            with condition(i.sym in P):
+                c[i] = i * x[i] <= 5
+
+        assert_equal_wo_temps(
+            self, so.to_definition(c),
+            'con c {o4 in S: o4 IN P} : o4 * x[o4] <= 5;\n')
+
+        return
+
+        # AND
+        c = so.ConstraintGroup((i * x[i] <= 5 for i in S
+                                if (i.sym > 1) & (i.sym < 5)),
+                               name='c')
+
+        assert_equal_wo_temps(
+            self, so.to_definition(c),
+            'con c {o4 in S: o4 > 1 AND o4 < 5} : o4 * x[o4] <= 5;\n')
+
+        # OR
+        c = so.ConstraintGroup((i * x[i] <= 5 for i in S
+                                if i.sym < 1 | i.sym >= 5),
+                               name='c')
+
+        assert_equal_wo_temps(
+            self, so.to_definition(c),
+            'con c {o4 in S: o4 < 1 OR o4 >= 5} : o4 * x[o4] <= 5;\n')
 
     def tearDown(self):
         pass

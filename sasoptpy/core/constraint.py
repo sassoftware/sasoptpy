@@ -59,16 +59,15 @@ class Constraint(Expression):
     :func:`sasoptpy.Model.add_constraint`
     """
 
-    def __init__(self, exp, direction=None, name=None, crange=None):
+    def __init__(self, exp, direction=None, name=None, crange=None, condition=None):
         super().__init__(name=name)
         if name is not None:
             self._objorder = sasoptpy.util.get_creation_id()
 
         if exp._name is None:
-            self._linCoef = exp._linCoef
+            self._linCoef = exp.get_member_dict()
         else:
-            for m in exp._linCoef:
-                self._linCoef[m] = dict(exp._linCoef[m])
+            self._copy_coef(exp)
 
         if direction is None:
             self._direction = exp._direction
@@ -79,6 +78,11 @@ class Constraint(Expression):
             self._range = crange
         else:
             self._range = exp._range
+
+        self.add_conditions(condition)
+
+        if sasoptpy.conditions:
+            self.add_conditions(sasoptpy.conditions)
 
         self._key = None
         self._parent = None
@@ -216,35 +220,58 @@ class Constraint(Expression):
             v -= self._linCoef['CONST']['val']
             return v
 
+    def add_conditions(self, conditions):
+        if conditions is not None:
+            for i in conditions:
+                self.sym.add_condition(i)
+
     def _set_info(self, parent, key):
         self._parent = parent
         self._key = key
 
-    def _defn(self):
-        s = ''
+    def __bool__(self):
+        print(self.get_name())
+        return True
+
+    def _cond_expr(self):
+        return self._get_constraint_expr()
+
+    def _get_definition_tag(self):
         if self._parent is None:
-            s = 'con {} : '.format(self._name)
+            return 'con {} : '.format(self._name)
+        return ''
+
+    def get_range_expr(self):
         if self._range != 0:
-            s += '{} <= '.format(sasoptpy.util.get_in_digit_format(- self._linCoef['CONST']['val']))
-        s += super()._expr()
-        if self._direction == 'E' and self._range == 0:
-            s += ' = '
-        elif self._direction == 'L':
-            s += ' <= '
-        elif self._direction == 'G':
-            s += ' >= '
-        elif self._direction == 'E' and self._range != 0:
-            s += ' <= '
+            return '{} <= '.format(
+                sasoptpy.util.get_in_digit_format(
+                    -self.get_member_value('CONST')
+                )
+            )
+        return ''
+
+    def get_right_sign(self):
+        if self._range != 0 and self._direction == 'E':
+            return ' {} '.format(sasoptpy.util.get_direction_str('L'))
         else:
-            raise ValueError('Constraint has no direction')
-        s += '{}'.format(sasoptpy.util.get_in_digit_format(- self._linCoef['CONST']['val'] + self._range))
+            return ' {} '.format(
+            sasoptpy.util.get_direction_str(self._direction))
+
+    def _get_constraint_expr(self):
+        left_expr = self.get_range_expr()
+        expr = super()._expr()
+        right_sign = self.get_right_sign()
+        constant_side = '{}'.format(
+            sasoptpy.util.get_in_digit_format(
+                -self.get_member_value('CONST') + self._range))
+        return left_expr + expr + right_sign + constant_side
+
+    def _defn(self):
+        s = self._get_definition_tag()
+        s += self._get_constraint_expr()
         if self._parent is None:
             s += ';'
-            # Currently we switch to frame when blocks are set
-            # if self._block:
-            #     s += '\n'
-            #     s += self._name + '.block = ' + str(self._block) + ';'
-        return(s)
+        return s
 
     def __str__(self):
         """
@@ -257,6 +284,8 @@ class Constraint(Expression):
             s += ' <= '
         elif self._direction == 'G':
             s += ' >= '
+        elif self._direction == 'NE':
+            s += ' != '
         else:
             raise ValueError('Constraint has no direction')
         if self._range == 0:

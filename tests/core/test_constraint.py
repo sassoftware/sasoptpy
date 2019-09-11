@@ -88,11 +88,6 @@ class TestConstraint(unittest.TestCase):
         c3 = so.Constraint(10 * x >= 5, name='c3')
         self.assertEqual(c3._defn(), 'con c3 : 10 * x >= 5;')
 
-        def unknown_direction():
-            c3._direction = 'X'
-            c3d = c3._defn()
-        self.assertRaises(ValueError, unknown_direction)
-
     def test_str(self):
         x = so.Variable(name='x')
         c1 = 2 * x <= 5

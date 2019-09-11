@@ -86,8 +86,7 @@ class Expression:
             self.set_member(key='CONST', ref=None, val=0)
         else:
             if isinstance(exp, Expression):
-                for mylc in exp._linCoef:
-                    self.copy_member(mylc, exp)
+                self._copy_coef(exp)
             elif np.issubdtype(type(exp), np.number):
                 self.set_member(key='CONST', ref=None, val=exp)
             else:
@@ -98,7 +97,7 @@ class Expression:
         self._arguments = []
         self._iterkey = []
         self._abstract = False
-        self._conditions = []
+        self.sym = sasoptpy.abstract.Conditional(self)
         self._keep = False
 
     @classmethod
@@ -147,8 +146,12 @@ class Expression:
         r._operator = self._operator
         r._iterkey = self._iterkey
         r._abstract = self._abstract
-        r._conditionts = self._conditions
+        r.sym.copy_conditions(self.sym)
         return r
+
+    def _copy_coef(self, exp):
+        for mylc in exp.get_member_dict():
+            self.copy_member(mylc, exp)
 
     def _is_named_expression(self):
         return self._name is not None
@@ -602,8 +605,8 @@ class Expression:
                     r.copy_member(v, other)
                     r.mult_member_value(v, sign)
 
-            r._conditions += self._conditions
-            r._conditions += other._conditions
+            r.sym.copy_conditions(self.sym)
+            r.sym.copy_conditions(other.sym)
 
         elif np.issubdtype(type(other), np.number):
             r.add_to_member_value('CONST', sign*other)
@@ -643,8 +646,9 @@ class Expression:
                 right=other.get_member_dict(),
                 target=r.get_member_dict())
 
-            r._conditions += self._conditions
-            r._conditions += other._conditions
+            r.sym.copy_conditions(self.sym)
+            r.sym.copy_conditions(other.sym)
+
             return r
         elif np.issubdtype(type(other), np.number):
             if other == 0:
@@ -803,6 +807,12 @@ class Expression:
         r.set_member(key=key, ref=ref, val=val, op=op)
         return r
 
+    def __lt__(self, other):
+        return self._relational(other, 'LT')
+
+    def __gt__(self, other):
+        return self._relational(other, 'GT')
+
     def __le__(self, other):
         return self._relational(other, 'L')
 
@@ -811,6 +821,9 @@ class Expression:
 
     def __eq__(self, other):
         return self._relational(other, 'E')
+
+    def __ne__(self, other):
+        return self._relational(other, 'NE')
 
     def __neg__(self):
         return self.mult(-1)

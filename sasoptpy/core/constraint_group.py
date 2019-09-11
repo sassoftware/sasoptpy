@@ -56,10 +56,11 @@ class ConstraintGroup(Group):
 
     def __init__(self, argv, name):
         self._condict = OrderedDict()
-        self._conlist = []
         if type(argv) == list or type(argv) == GeneratorType:
-            self._recursive_add_cons(argv, name=name, condict=self._condict,
-                                     conlist=self._conlist)
+            self._recursive_add_cons(argv, name=name, condict=self._condict)
+        elif argv is None:
+            # Empty CG
+            self._initialized = False
         else:
             raise(TypeError, "Invalid iterator type for constraint group")
 
@@ -91,12 +92,12 @@ class ConstraintGroup(Group):
             """
             return self._name
 
-    def _recursive_add_cons(self, argv, name, condict, conlist, ckeys=()):
+    def _recursive_add_cons(self, argv, name, condict, ckeys=()):
         conctr = 0
 
         sasoptpy.core.util.check_transfer_mode(argv)
 
-        for idx, c in enumerate(argv):
+        for (idx, c) in enumerate(argv):
             if type(argv) == list:
                 new_keys = ckeys + (idx,)
             elif type(argv) == GeneratorType:
@@ -106,7 +107,6 @@ class ConstraintGroup(Group):
             con_name = '{}[{}]'.format(name, ','.join(key_list))
             new_con = sasoptpy.Constraint(exp=c, name=con_name, crange=c._range)
             condict[new_keys] = new_con
-            conlist.append(new_keys)
             conctr += 1
         self._set_con_info()
 
@@ -189,9 +189,13 @@ class ConstraintGroup(Group):
             key = sasoptpy.util.pack_to_tuple(key)
             return self._condict.get(key)
 
+    def __setitem__(self, key, value):
+        self._condict[key] = value
+        value._set_info(parent=self, key=key)
+
     def __iter__(self):
-        for i in self._conlist:
-            yield self._condict[i]
+        for i in self._condict.values():
+            yield i
 
     def _set_con_info(self):
         for i in self._condict:
@@ -202,9 +206,11 @@ class ConstraintGroup(Group):
 
     def _defn(self):
         s = ''
-        for key_ in self._conlist:
+        for key_ in self._condict:
+            current_constraint = self._condict[key_]
             s += 'con {}'.format(self._name)
-            keys = sasoptpy.util.package_utils._to_optmodel_loop(key_)
+            keys = sasoptpy.util.package_utils._to_optmodel_loop(
+                key_, current_constraint)
             s += keys
             s += ' : ' + self._condict[key_]._defn()
             s += ';\n'

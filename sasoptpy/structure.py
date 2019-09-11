@@ -53,7 +53,19 @@ def class_containable(func):
 
     return class_append
 
+
 def in_container():
     if sasoptpy.container is not None:
         return True
     return False
+
+
+@contextmanager
+def under_condition(c):
+    if type(c) == bool:
+        yield c
+        return True
+    original = sasoptpy.conditions
+    sasoptpy.conditions = sasoptpy.conditions + list(c)
+    yield
+    sasoptpy.conditions = original
