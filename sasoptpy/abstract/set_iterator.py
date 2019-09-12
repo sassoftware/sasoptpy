@@ -73,6 +73,7 @@ class SetIteratorGroup(OrderedDict):
 
     def __init__(self, initset, datatype=None, names=None):
         super()
+        self._name = sasoptpy.util.get_next_name()
         self._set = initset
         self._init_members(names, datatype)
 
@@ -82,20 +83,30 @@ class SetIteratorGroup(OrderedDict):
                 dt = datatype[i] if datatype is not None else None
                 it = SetIterator(None, name=name, datatype=dt)
                 self.append(it)
+        else:
+            for i in datatype:
+                it = SetIterator(None, datatype=i)
+                self.append(it)
+
+    def get_name(self):
+        return self._name
 
     def append(self, object):
         name = object.get_name()
         self[name] = object
 
     def _get_for_expr(self):
-        return '({}) in {}'.format(self._expr(), self._set._name)
+        #return '<{}> in {}'.format(self._expr(), self._set._name)
+        comb = '<' + ', '.join(str(i) for i in self.values()) + '>'
+        s = '{} in {}'.format(comb, sasoptpy.to_expression(self._set))
+        return s
 
     def _expr(self):
         return ', '.join(str(i) for i in self.values())
 
     def _defn(self):
-        comb = '<' + ', '.join(str(i) for i in self.values()) + '>'
-        s = '{} in {}'.format(comb, sasoptpy.to_expression(self._set))
+        return self._get_for_expr()
+
 
     def __iter__(self):
         for i in self.values():
@@ -104,10 +115,14 @@ class SetIteratorGroup(OrderedDict):
     def __repr__(self):
         return 'sasoptpy.SetIteratorGroup({}, datatype=[{}], names=[{}])'.format(
             self._set,
-            ','.join('\'' + i.get_type() + '\'' for i in self.values()),
+            ', '.join('\'' + i.get_type() + '\'' for i in self.values()),
             ', '.join('\'' + i.get_name() + '\'' for i in self.values())
         )
 
     def __str__(self):
         s = ', '.join(str(i) for i in self.values())
         return '(' + s + ')'
+
+    def __hash__(self):
+        hashstr = ','.join(str(id(i)) for i in self.values())
+        return hash(hashstr)

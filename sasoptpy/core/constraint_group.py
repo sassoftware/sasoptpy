@@ -190,8 +190,9 @@ class ConstraintGroup(Group):
             return self._condict.get(key)
 
     def __setitem__(self, key, value):
-        self._condict[key] = value
-        value._set_info(parent=self, key=key)
+        tupled_key = sasoptpy.util.pack_to_tuple(key)
+        self._condict[tupled_key] = value
+        value._set_info(parent=self, key=tupled_key)
 
     def __iter__(self):
         for i in self._condict.values():

@@ -331,6 +331,8 @@ def _to_optmodel_loop(keys, parent=None):
         if isinstance(key, tuple):
             for i in flatten_tuple(key):
                 subindex.append(str(i))
+        elif isinstance(key, sasoptpy.abstract.SetIteratorGroup):
+            subindex.append(key.get_name())
         elif not is_key_abstract(key):
             subindex.append(safe_string(str(key)))
     if subindex:
@@ -609,7 +611,7 @@ def _to_sas_string(obj):
     elif np.isinstance(type(obj), np.number):
         return str(obj)
     else:
-        print('WARNING: Unknown type to transform {}'.format(type(obj)))
+        raise TypeError('Cannot convert type {} to SAS string'.format(type(obj)))
         return '{}'.format(str(obj))
 
 

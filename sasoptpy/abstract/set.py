@@ -1,5 +1,5 @@
 
-from .set_iterator import SetIterator
+from .set_iterator import SetIterator, SetIteratorGroup
 import sasoptpy
 
 
@@ -45,8 +45,6 @@ class Set():
                 if init.step != 1:
                     newinit = ' by ' + init.step
                 init = newinit
-            #elif isinstance(init, list):
-            #    init = '[' + ' '.join([str(i) for i in init]) + ']'
             else:
                 pass
         self._init = init
@@ -59,7 +57,7 @@ class Set():
 
     def __iter__(self):
         if len(self._type) > 1:
-            s = SetIterator(self, datatype=self._type, multi_index=True)
+            s = SetIteratorGroup(self, datatype=self._type)
             self._iterators.append(s)
             return iter([s])
         else:
