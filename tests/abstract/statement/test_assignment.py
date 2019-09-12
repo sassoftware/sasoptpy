@@ -58,7 +58,6 @@ class TestAssignment(unittest.TestCase):
             x[3].set_bounds(ub=5)
             x[4].set_bounds(lb=1, ub=4)
 
-
         self.assertEqual(so.to_optmodel(w), cleandoc("""
             proc optmodel;
                 num p init 2;

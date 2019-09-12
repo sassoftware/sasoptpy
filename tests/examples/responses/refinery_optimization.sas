@@ -19,7 +19,6 @@ con flow_balance_premium_petrol : flow['premium_petrol', 'sink'] - flow['light_n
 con flow_balance_reformed_gasoline : flow['reformed_gasoline', 'regular_petrol'] + flow['reformed_gasoline', 'premium_petrol'] - 0.6 * flow['light_naphtha', 'reformed_gasoline'] - 0.52 * flow['medium_naphtha', 'reformed_gasoline'] - 0.45 * flow['heavy_naphtha', 'reformed_gasoline'] = 0.0;
 con flow_balance_regular_petrol : flow['regular_petrol', 'sink'] - flow['light_naphtha', 'regular_petrol'] - flow['medium_naphtha', 'regular_petrol'] - flow['heavy_naphtha', 'regular_petrol'] - flow['reformed_gasoline', 'regular_petrol'] - flow['cracked_gasoline', 'regular_petrol'] = 0.0;
 con flow_balance_residuum : flow['residuum', 'lube_oil'] + flow['residuum', 'jet_fuel'] + flow['residuum', 'fuel_oil'] - 0.13 * flow['crude1', 'residuum'] - 0.12 * flow['crude2', 'residuum'] = 0.0;
-
 var crudesDistilled {{'crude1','crude2'}} >= 0;
 crudesDistilled['crude1'].ub = 20000;
 crudesDistilled['crude2'].ub = 30000;
@@ -35,22 +34,18 @@ con distillation_crude2_heavy_naphtha : flow['crude2', 'heavy_naphtha'] - crudes
 con distillation_crude2_light_oil : flow['crude2', 'light_oil'] - crudesDistilled['crude2'] = 0;
 con distillation_crude2_heavy_oil : flow['crude2', 'heavy_oil'] - crudesDistilled['crude2'] = 0;
 con distillation_crude2_residuum : flow['crude2', 'residuum'] - crudesDistilled['crude2'] = 0;
-
 var oilCracked {{'light_oil_cracked','heavy_oil_cracked'}} >= 0;
 con cracking_light_oil_cracked_cracked_oil : flow['light_oil_cracked', 'cracked_oil'] - oilCracked['light_oil_cracked'] = 0;
 con cracking_light_oil_cracked_cracked_gasoline : flow['light_oil_cracked', 'cracked_gasoline'] - oilCracked['light_oil_cracked'] = 0;
 con cracking_heavy_oil_cracked_cracked_oil : flow['heavy_oil_cracked', 'cracked_oil'] - oilCracked['heavy_oil_cracked'] = 0;
 con cracking_heavy_oil_cracked_cracked_gasoline : flow['heavy_oil_cracked', 'cracked_gasoline'] - oilCracked['heavy_oil_cracked'] = 0;
-
 con blending_petrol_regular_petrol : 6.0 * flow['light_naphtha', 'regular_petrol'] - 4.0 * flow['medium_naphtha', 'regular_petrol'] - 14.0 * flow['heavy_naphtha', 'regular_petrol'] + 31.0 * flow['reformed_gasoline', 'regular_petrol'] + 21.0 * flow['cracked_gasoline', 'regular_petrol'] >= 0.0;
 con blending_petrol_premium_petrol : - 4.0 * flow['light_naphtha', 'premium_petrol'] - 14.0 * flow['medium_naphtha', 'premium_petrol'] - 24.0 * flow['heavy_naphtha', 'premium_petrol'] + 21.0 * flow['reformed_gasoline', 'premium_petrol'] + 11.0 * flow['cracked_gasoline', 'premium_petrol'] >= 0.0;
-
 con blending_jet_fuel : - 0.4 * flow['heavy_oil', 'jet_fuel'] + 0.5 * flow['cracked_oil', 'jet_fuel'] - 0.95 * flow['residuum', 'jet_fuel'] <= 0.0;
 con blending_fuel_oil_light_oil_fuel_oil : 8 * flow['light_oil', 'fuel_oil'] - 10 * flow['cracked_oil', 'fuel_oil'] - 10 * flow['heavy_oil', 'fuel_oil'] - 10 * flow['residuum', 'fuel_oil'] = 0;
 con blending_fuel_oil_heavy_oil_fuel_oil : 15 * flow['heavy_oil', 'fuel_oil'] - 3 * flow['cracked_oil', 'fuel_oil'] - 3 * flow['light_oil', 'fuel_oil'] - 3 * flow['residuum', 'fuel_oil'] = 0;
 con blending_fuel_oil_cracked_oil_fuel_oil : 14 * flow['cracked_oil', 'fuel_oil'] - 4 * flow['heavy_oil', 'fuel_oil'] - 4 * flow['light_oil', 'fuel_oil'] - 4 * flow['residuum', 'fuel_oil'] = 0;
 con blending_fuel_oil_residuum_fuel_oil : 17 * flow['residuum', 'fuel_oil'] - flow['cracked_oil', 'fuel_oil'] - flow['heavy_oil', 'fuel_oil'] - flow['light_oil', 'fuel_oil'] = 0;
-
 con crude_total_ub : crudesDistilled['crude1'] + crudesDistilled['crude2'] <= 45000;
 con naphtba_ub : flow['light_naphtha', 'reformed_gasoline'] + flow['medium_naphtha', 'reformed_gasoline'] + flow['heavy_naphtha', 'reformed_gasoline'] <= 10000;
 con cracked_oil_ub : flow['light_oil_cracked', 'cracked_oil'] + flow['heavy_oil_cracked', 'cracked_oil'] <= 8000;

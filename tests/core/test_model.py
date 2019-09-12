@@ -86,6 +86,10 @@ class TestModel(unittest.TestCase):
             _ = model1 == list()
         self.assertWarns(RuntimeWarning, invalid_comparison)
 
+    def test_get_name(self):
+        m = so.Model(name='m')
+        self.assertEqual(m.get_name(), 'm')
+
     def test_adding_variable(self):
         m = so.Model(name='test_add_variable')
 
@@ -232,6 +236,21 @@ class TestModel(unittest.TestCase):
                 print x;
                 quit;'''))
 
+    def test_add_abstract_statement(self):
+        m = so.Model(name='m')
+        x = m.add_variable(name='x')
+        m.set_objective(x ** 2, sense=so.MIN, name='obj')
+        s = so.abstract.LiteralStatement('expand;')
+        m.add_statement(s)
+        self.assertEqual(so.to_optmodel(m), inspect.cleandoc("""
+            proc optmodel;
+            var x;
+            min obj = (x) ^ (2);
+            expand;
+            solve;
+            quit;
+            """))
+
     def test_postsolve_statement(self):
         m = so.Model(name='test_postsolve_statement')
         x = m.add_variable(name='x')
@@ -286,7 +305,6 @@ class TestModel(unittest.TestCase):
             con c1 : x + y[0] >= 2;
             con c2_0 : x - y[0] <= 10;
             con c2_1 : x - y[1] <= 10;
-            
             min model_obj = 2 * x + y[0] + 3 * y[1];
             solve;
             quit;"""))
@@ -358,32 +376,81 @@ class TestModel(unittest.TestCase):
 
     def test_get_variable_value(self):
 
-        if TestModel.conn:
-            m = so.Model(name='test_get_var_value')
-            x = m.add_variable(name='x', lb=1.5, ub=10, vartype=so.INT)
-            m.set_objective(x, sense=so.MIN, name='obj1')
-            m.set_session(TestModel.conn)
-            m.solve()
-            self.assertEqual(m.get_variable_value(x), 2)
-
-            I = m.add_set(name='I', value=range(2))
-            y = m.add_variables(I, name='y', lb=0.5)
-            m.set_objective(x + y[0] + y[1], sense=so.MIN, name='obj1')
-            m.solve()
-            self.assertEqual(m.get_variable_value(y[0]), 0.5)
-            def get_variable_warning():
-                self.assertEqual(m.get_variable_value('z'), None)
-            self.assertWarns(UserWarning, get_variable_warning)
-
-            m2 = so.Model(name='test_get_var_value_copy')
-            m2.include(m)
-            z = so.Variable(name='z')
-            def raise_solution_error():
-                return m2.get_variable_value(z)
-            self.assertRaises(RuntimeError, raise_solution_error)
-
-        else:
+        if TestModel.conn is None:
             self.skipTest('Session is not available')
+
+        m = so.Model(name='test_get_var_value')
+        x = m.add_variable(name='x', lb=1.5, ub=10, vartype=so.INT)
+        m.set_objective(x, sense=so.MIN, name='obj1')
+        m.set_session(TestModel.conn)
+        m.solve(verbose=True)
+        self.assertEqual(m.get_variable_value(x), 2)
+
+        I = m.add_set(name='I', value=range(2))
+        y = m.add_variables(I, name='y', lb=0.5)
+        m.set_objective(x + y[0] + y[1], sense=so.MIN, name='obj1')
+        m.solve()
+        self.assertEqual(m.get_variable_value(y[0]), 0.5)
+        def get_variable_warning():
+            self.assertEqual(m.get_variable_value('z'), None)
+        self.assertWarns(UserWarning, get_variable_warning)
+
+        m2 = so.Model(name='test_get_var_value_copy')
+        m2.include(m)
+        z = so.Variable(name='z')
+        def raise_solution_error():
+            return m2.get_variable_value(z)
+        self.assertRaises(RuntimeError, raise_solution_error)
+
+        m.add_variable(name='var with invalid name')
+        def raise_syntax_error():
+            return m.solve()
+        self.assertRaises(SyntaxError, raise_syntax_error)
+
+    def test_get_variable_value_abstract(self):
+        if TestModel.conn is None:
+            self.skipTest('Session is not available')
+
+        import pandas as pd
+        so.reset()
+
+        m = so.Model(name='abstract_model')
+        df = pd.DataFrame([
+            ['a', 1],
+            ['b', 2]
+        ], columns=['tag', 'val'])
+        idx = so.Set(name='idx', settype=so.STR)
+        varlb = so.ParameterGroup(idx, name='varlb')
+        m.include(idx, varlb)
+
+        table = TestModel.conn.upload_frame(df, casout='server_data')
+        from sasoptpy.actions import read_data
+        r = read_data(
+            table=table,
+            index={'target': idx, 'key': 'tag'},
+            columns=[
+                {'target': varlb, 'column': 'val'}
+            ]
+        )
+        m.include(r)
+        y = so.VariableGroup(idx, name='y')
+        c = so.ConstraintGroup((y[i] >= varlb[i] for i in idx), name='c')
+        m.include(y, c)
+        self.assertEqual(m.to_optmodel(), inspect.cleandoc("""
+            proc optmodel;
+            min abstract_model_obj = 0;
+            set <str> idx;
+            num varlb {idx};
+            read data SERVER_DATA into idx=[tag] varlb=val;
+            var y {{idx}};
+            con c {o8 in idx} : y[o8] - varlb[o8] >= 0;
+            solve;
+            quit;
+            """))
+        m.set_session(TestModel.conn)
+        m.solve()
+        self.assertEqual(m.get_variable_value(y['a']), 1)
+
 
     def test_get_summaries(self):
         if not TestModel.conn:

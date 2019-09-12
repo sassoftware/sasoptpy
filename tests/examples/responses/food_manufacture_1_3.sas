@@ -35,14 +35,12 @@ con veg_ub_3 : use['veg1', 3] + use['veg2', 3] <= 200;
 con veg_ub_4 : use['veg1', 4] + use['veg2', 4] <= 200;
 con veg_ub_5 : use['veg1', 5] + use['veg2', 5] <= 200;
 con veg_ub_6 : use['veg1', 6] + use['veg2', 6] <= 200;
-
 con nonveg_ub_1 : use['oil1', 1] + use['oil2', 1] + use['oil3', 1] <= 250;
 con nonveg_ub_2 : use['oil1', 2] + use['oil2', 2] + use['oil3', 2] <= 250;
 con nonveg_ub_3 : use['oil1', 3] + use['oil2', 3] + use['oil3', 3] <= 250;
 con nonveg_ub_4 : use['oil1', 4] + use['oil2', 4] + use['oil3', 4] <= 250;
 con nonveg_ub_5 : use['oil1', 5] + use['oil2', 5] + use['oil3', 5] <= 250;
 con nonveg_ub_6 : use['oil1', 6] + use['oil2', 6] + use['oil3', 6] <= 250;
-
 con flow_balance_veg1_1 : store['veg1', 0] + buy['veg1', 1] - use['veg1', 1] - store['veg1', 1] = 0;
 con flow_balance_veg1_2 : store['veg1', 1] + buy['veg1', 2] - use['veg1', 2] - store['veg1', 2] = 0;
 con flow_balance_veg1_3 : store['veg1', 2] + buy['veg1', 3] - use['veg1', 3] - store['veg1', 3] = 0;
@@ -73,20 +71,17 @@ con flow_balance_oil3_3 : store['oil3', 2] + buy['oil3', 3] - use['oil3', 3] - s
 con flow_balance_oil3_4 : store['oil3', 3] + buy['oil3', 4] - use['oil3', 4] - store['oil3', 4] = 0;
 con flow_balance_oil3_5 : store['oil3', 4] + buy['oil3', 5] - use['oil3', 5] - store['oil3', 5] = 0;
 con flow_balance_oil3_6 : store['oil3', 5] + buy['oil3', 6] - use['oil3', 6] - store['oil3', 6] = 0;
-
 con hardness_ub_1 : 8.8 * use['veg1', 1] + 6.1 * use['veg2', 1] + 2.0 * use['oil1', 1] + 4.2 * use['oil2', 1] + 5.0 * use['oil3', 1] - 3 * (use['oil1', 1] + use['oil2', 1] + use['oil3', 1] + use['veg1', 1] + use['veg2', 1]) >= 0.0;
 con hardness_ub_2 : 8.8 * use['veg1', 2] + 6.1 * use['veg2', 2] + 2.0 * use['oil1', 2] + 4.2 * use['oil2', 2] + 5.0 * use['oil3', 2] - 3 * (use['oil1', 2] + use['oil2', 2] + use['oil3', 2] + use['veg1', 2] + use['veg2', 2]) >= 0.0;
 con hardness_ub_3 : 8.8 * use['veg1', 3] + 6.1 * use['veg2', 3] + 2.0 * use['oil1', 3] + 4.2 * use['oil2', 3] + 5.0 * use['oil3', 3] - 3 * (use['oil1', 3] + use['oil2', 3] + use['oil3', 3] + use['veg1', 3] + use['veg2', 3]) >= 0.0;
 con hardness_ub_4 : 8.8 * use['veg1', 4] + 6.1 * use['veg2', 4] + 2.0 * use['oil1', 4] + 4.2 * use['oil2', 4] + 5.0 * use['oil3', 4] - 3 * (use['oil1', 4] + use['oil2', 4] + use['oil3', 4] + use['veg1', 4] + use['veg2', 4]) >= 0.0;
 con hardness_ub_5 : 8.8 * use['veg1', 5] + 6.1 * use['veg2', 5] + 2.0 * use['oil1', 5] + 4.2 * use['oil2', 5] + 5.0 * use['oil3', 5] - 3 * (use['oil1', 5] + use['oil2', 5] + use['oil3', 5] + use['veg1', 5] + use['veg2', 5]) >= 0.0;
 con hardness_ub_6 : 8.8 * use['veg1', 6] + 6.1 * use['veg2', 6] + 2.0 * use['oil1', 6] + 4.2 * use['oil2', 6] + 5.0 * use['oil3', 6] - 3 * (use['oil1', 6] + use['oil2', 6] + use['oil3', 6] + use['veg1', 6] + use['veg2', 6]) >= 0.0;
-
 con hardness_lb_1 : 8.8 * use['veg1', 1] + 6.1 * use['veg2', 1] + 2.0 * use['oil1', 1] + 4.2 * use['oil2', 1] + 5.0 * use['oil3', 1] - 6 * (use['oil1', 1] + use['oil2', 1] + use['oil3', 1] + use['veg1', 1] + use['veg2', 1]) <= 0.0;
 con hardness_lb_2 : 8.8 * use['veg1', 2] + 6.1 * use['veg2', 2] + 2.0 * use['oil1', 2] + 4.2 * use['oil2', 2] + 5.0 * use['oil3', 2] - 6 * (use['oil1', 2] + use['oil2', 2] + use['oil3', 2] + use['veg1', 2] + use['veg2', 2]) <= 0.0;
 con hardness_lb_3 : 8.8 * use['veg1', 3] + 6.1 * use['veg2', 3] + 2.0 * use['oil1', 3] + 4.2 * use['oil2', 3] + 5.0 * use['oil3', 3] - 6 * (use['oil1', 3] + use['oil2', 3] + use['oil3', 3] + use['veg1', 3] + use['veg2', 3]) <= 0.0;
 con hardness_lb_4 : 8.8 * use['veg1', 4] + 6.1 * use['veg2', 4] + 2.0 * use['oil1', 4] + 4.2 * use['oil2', 4] + 5.0 * use['oil3', 4] - 6 * (use['oil1', 4] + use['oil2', 4] + use['oil3', 4] + use['veg1', 4] + use['veg2', 4]) <= 0.0;
 con hardness_lb_5 : 8.8 * use['veg1', 5] + 6.1 * use['veg2', 5] + 2.0 * use['oil1', 5] + 4.2 * use['oil2', 5] + 5.0 * use['oil3', 5] - 6 * (use['oil1', 5] + use['oil2', 5] + use['oil3', 5] + use['veg1', 5] + use['veg2', 5]) <= 0.0;
 con hardness_lb_6 : 8.8 * use['veg1', 6] + 6.1 * use['veg2', 6] + 2.0 * use['oil1', 6] + 4.2 * use['oil2', 6] + 5.0 * use['oil3', 6] - 6 * (use['oil1', 6] + use['oil2', 6] + use['oil3', 6] + use['veg1', 6] + use['veg2', 6]) <= 0.0;
-
 solve with lp / algorithm=NS;
 quit;

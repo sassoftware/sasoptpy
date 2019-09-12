@@ -43,13 +43,11 @@ con link_mine4_2 : extract['mine4', 2] - 3.0 * isWorked['mine4', 2] <= 0.0;
 con link_mine4_3 : extract['mine4', 3] - 3.0 * isWorked['mine4', 3] <= 0.0;
 con link_mine4_4 : extract['mine4', 4] - 3.0 * isWorked['mine4', 4] <= 0.0;
 con link_mine4_5 : extract['mine4', 5] - 3.0 * isWorked['mine4', 5] <= 0.0;
-
 con cardinality_1 : isWorked['mine1', 1] + isWorked['mine2', 1] + isWorked['mine3', 1] + isWorked['mine4', 1] <= 3;
 con cardinality_2 : isWorked['mine1', 2] + isWorked['mine2', 2] + isWorked['mine3', 2] + isWorked['mine4', 2] <= 3;
 con cardinality_3 : isWorked['mine1', 3] + isWorked['mine2', 3] + isWorked['mine3', 3] + isWorked['mine4', 3] <= 3;
 con cardinality_4 : isWorked['mine1', 4] + isWorked['mine2', 4] + isWorked['mine3', 4] + isWorked['mine4', 4] <= 3;
 con cardinality_5 : isWorked['mine1', 5] + isWorked['mine2', 5] + isWorked['mine3', 5] + isWorked['mine4', 5] <= 3;
-
 con worked_implies_open_mine1_1 : isWorked['mine1', 1] - isOpen['mine1', 1] <= 0;
 con worked_implies_open_mine1_2 : isWorked['mine1', 2] - isOpen['mine1', 2] <= 0;
 con worked_implies_open_mine1_3 : isWorked['mine1', 3] - isOpen['mine1', 3] <= 0;
@@ -70,7 +68,6 @@ con worked_implies_open_mine4_2 : isWorked['mine4', 2] - isOpen['mine4', 2] <= 0
 con worked_implies_open_mine4_3 : isWorked['mine4', 3] - isOpen['mine4', 3] <= 0;
 con worked_implies_open_mine4_4 : isWorked['mine4', 4] - isOpen['mine4', 4] <= 0;
 con worked_implies_open_mine4_5 : isWorked['mine4', 5] - isOpen['mine4', 5] <= 0;
-
 con continuity_mine1_2 : isOpen['mine1', 2] - isOpen['mine1', 1] <= 0;
 con continuity_mine1_3 : isOpen['mine1', 3] - isOpen['mine1', 2] <= 0;
 con continuity_mine1_4 : isOpen['mine1', 4] - isOpen['mine1', 3] <= 0;
@@ -87,12 +84,10 @@ con continuity_mine4_2 : isOpen['mine4', 2] - isOpen['mine4', 1] <= 0;
 con continuity_mine4_3 : isOpen['mine4', 3] - isOpen['mine4', 2] <= 0;
 con continuity_mine4_4 : isOpen['mine4', 4] - isOpen['mine4', 3] <= 0;
 con continuity_mine4_5 : isOpen['mine4', 5] - isOpen['mine4', 4] <= 0;
-
 con quality_con_1 : 0.1 * extract['mine1', 1] - 0.2 * extract['mine2', 1] + 0.6 * extract['mine3', 1] - 0.4 * extract['mine4', 1] = 0.0;
 con quality_con_2 : 0.2 * extract['mine1', 2] - 0.1 * extract['mine2', 2] + 0.7 * extract['mine3', 2] - 0.3 * extract['mine4', 2] = 0.0;
 con quality_con_3 : - 0.2 * extract['mine1', 3] - 0.5 * extract['mine2', 3] + 0.3 * extract['mine3', 3] - 0.7 * extract['mine4', 3] = 0.0;
 con quality_con_4 : 0.4 * extract['mine1', 4] + 0.1 * extract['mine2', 4] + 0.9 * extract['mine3', 4] - 0.1 * extract['mine4', 4] = 0.0;
 con quality_con_5 : - 0.3 * extract['mine2', 5] + 0.5 * extract['mine3', 5] - 0.5 * extract['mine4', 5] = 0.0;
-
 solve;
 quit;

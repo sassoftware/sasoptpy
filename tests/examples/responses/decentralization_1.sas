@@ -7,11 +7,9 @@ con assign_dept_B : assign['B', 'Bristol'] + assign['B', 'Brighton'] + assign['B
 con assign_dept_C : assign['C', 'Bristol'] + assign['C', 'Brighton'] + assign['C', 'London'] = 1;
 con assign_dept_D : assign['D', 'Bristol'] + assign['D', 'Brighton'] + assign['D', 'London'] = 1;
 con assign_dept_E : assign['E', 'Bristol'] + assign['E', 'Brighton'] + assign['E', 'London'] = 1;
-
 con cardinality_Bristol : assign['A', 'Bristol'] + assign['B', 'Bristol'] + assign['C', 'Bristol'] + assign['D', 'Bristol'] + assign['E', 'Bristol'] <= 3;
 con cardinality_Brighton : assign['A', 'Brighton'] + assign['B', 'Brighton'] + assign['C', 'Brighton'] + assign['D', 'Brighton'] + assign['E', 'Brighton'] <= 3;
 con cardinality_London : assign['A', 'London'] + assign['B', 'London'] + assign['C', 'London'] + assign['D', 'London'] + assign['E', 'London'] <= 3;
-
 con pd4_A_B_Bristol : assign['B', 'Bristol'] - product['A', 'Bristol', 'B', 'Bristol'] - product['A', 'Brighton', 'B', 'Bristol'] - product['A', 'London', 'B', 'Bristol'] = 0;
 con pd4_A_B_Brighton : assign['B', 'Brighton'] - product['A', 'Bristol', 'B', 'Brighton'] - product['A', 'Brighton', 'B', 'Brighton'] - product['A', 'London', 'B', 'Brighton'] = 0;
 con pd4_A_B_London : assign['B', 'London'] - product['A', 'Bristol', 'B', 'London'] - product['A', 'Brighton', 'B', 'London'] - product['A', 'London', 'B', 'London'] = 0;
@@ -42,7 +40,6 @@ con pd4_C_E_London : assign['E', 'London'] - product['C', 'Bristol', 'E', 'Londo
 con pd4_D_E_Bristol : assign['E', 'Bristol'] - product['D', 'Bristol', 'E', 'Bristol'] - product['D', 'Brighton', 'E', 'Bristol'] - product['D', 'London', 'E', 'Bristol'] = 0;
 con pd4_D_E_Brighton : assign['E', 'Brighton'] - product['D', 'Bristol', 'E', 'Brighton'] - product['D', 'Brighton', 'E', 'Brighton'] - product['D', 'London', 'E', 'Brighton'] = 0;
 con pd4_D_E_London : assign['E', 'London'] - product['D', 'Bristol', 'E', 'London'] - product['D', 'Brighton', 'E', 'London'] - product['D', 'London', 'E', 'London'] = 0;
-
 con pd5_A_Bristol_B : assign['A', 'Bristol'] - product['A', 'Bristol', 'B', 'Bristol'] - product['A', 'Bristol', 'B', 'Brighton'] - product['A', 'Bristol', 'B', 'London'] = 0;
 con pd5_A_Brighton_B : assign['A', 'Brighton'] - product['A', 'Brighton', 'B', 'Bristol'] - product['A', 'Brighton', 'B', 'Brighton'] - product['A', 'Brighton', 'B', 'London'] = 0;
 con pd5_A_London_B : assign['A', 'London'] - product['A', 'London', 'B', 'Bristol'] - product['A', 'London', 'B', 'Brighton'] - product['A', 'London', 'B', 'London'] = 0;
@@ -73,6 +70,5 @@ con pd5_C_London_E : assign['C', 'London'] - product['C', 'London', 'E', 'Bristo
 con pd5_D_Bristol_E : assign['D', 'Bristol'] - product['D', 'Bristol', 'E', 'Bristol'] - product['D', 'Bristol', 'E', 'Brighton'] - product['D', 'Bristol', 'E', 'London'] = 0;
 con pd5_D_Brighton_E : assign['D', 'Brighton'] - product['D', 'Brighton', 'E', 'Bristol'] - product['D', 'Brighton', 'E', 'Brighton'] - product['D', 'Brighton', 'E', 'London'] = 0;
 con pd5_D_London_E : assign['D', 'London'] - product['D', 'London', 'E', 'Bristol'] - product['D', 'London', 'E', 'Brighton'] - product['D', 'London', 'E', 'London'] = 0;
-
 solve;
 quit;

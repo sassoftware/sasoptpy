@@ -292,6 +292,11 @@ class CASMediator(Mediator):
         session = self.session
         response = caller.response
 
+        if response.status == 'Syntax Error':
+            raise SyntaxError('An invalid symbol is generated, check object names')
+        elif response.status == 'Semantic Error':
+            raise RuntimeError('A semantic error has occured, check statements and object types')
+
         solution = session.CASTable('solution').to_frame()
         dual_solution = session.CASTable('dual').to_frame()
 

@@ -84,7 +84,6 @@ class Variable(Expression):
         self._temp = False
         self._abstract = abstract
 
-
     def _initialize_self_coef(self):
         self.set_member(key=self._name, ref=self, val=1)
 
@@ -99,9 +98,9 @@ class Variable(Expression):
 
         Parameters
         ----------
-        lb : float
+        lb : float or :class:`Expression`
             Lower bound of the variable
-        ub : float
+        ub : float or :class:`Expression`
             Upper bound of the variable
 
         Examples

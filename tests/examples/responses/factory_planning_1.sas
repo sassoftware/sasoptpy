@@ -89,7 +89,6 @@ con machine_hours_planer_3 : 0.01 * make['prod3', 3] + 0.05 * make['prod5', 3] +
 con machine_hours_planer_4 : 0.01 * make['prod3', 4] + 0.05 * make['prod5', 4] + 0.05 * make['prod7', 4] <= 384.0;
 con machine_hours_planer_5 : 0.01 * make['prod3', 5] + 0.05 * make['prod5', 5] + 0.05 * make['prod7', 5] <= 384.0;
 con machine_hours_planer_6 : 0.01 * make['prod3', 6] + 0.05 * make['prod5', 6] + 0.05 * make['prod7', 6] <= 0.0;
-
 con flow_balance_prod1_1 : make['prod1', 1] - sell['prod1', 1] - store['prod1', 1] = 0;
 con flow_balance_prod1_2 : store['prod1', 1] + make['prod1', 2] - sell['prod1', 2] - store['prod1', 2] = 0;
 con flow_balance_prod1_3 : store['prod1', 2] + make['prod1', 3] - sell['prod1', 3] - store['prod1', 3] = 0;
@@ -132,6 +131,5 @@ con flow_balance_prod7_3 : store['prod7', 2] + make['prod7', 3] - sell['prod7', 
 con flow_balance_prod7_4 : store['prod7', 3] + make['prod7', 4] - sell['prod7', 4] - store['prod7', 4] = 0;
 con flow_balance_prod7_5 : store['prod7', 4] + make['prod7', 5] - sell['prod7', 5] - store['prod7', 5] = 0;
 con flow_balance_prod7_6 : store['prod7', 5] + make['prod7', 6] - sell['prod7', 6] - store['prod7', 6] = 0;
-
 solve;
 quit;

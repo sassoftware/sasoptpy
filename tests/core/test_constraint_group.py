@@ -97,7 +97,7 @@ class TestConstraintGroup(unittest.TestCase):
         cg = so.ConstraintGroup((x[i] >= 1 for i in range(3)), name='cg')
         self.assertEqual(
             cg._defn(),
-            "con cg_0 : x[0] >= 1;\ncon cg_1 : x[1] >= 1;\ncon cg_2 : x[2] >= 1;\n")
+            "con cg_0 : x[0] >= 1;\ncon cg_1 : x[1] >= 1;\ncon cg_2 : x[2] >= 1;")
 
     def test_str(self):
         x = so.VariableGroup(3, name='x')

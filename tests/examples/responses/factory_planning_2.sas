@@ -90,13 +90,11 @@ con machine_hours_con_planer_3 : 0.01 * make['prod3', 3] + 0.05 * make['prod5', 
 con machine_hours_con_planer_4 : 0.01 * make['prod3', 4] + 0.05 * make['prod5', 4] + 0.05 * make['prod7', 4] + 384 * numMachinesDown['planer', 4] <= 384.0;
 con machine_hours_con_planer_5 : 0.01 * make['prod3', 5] + 0.05 * make['prod5', 5] + 0.05 * make['prod7', 5] + 384 * numMachinesDown['planer', 5] <= 384.0;
 con machine_hours_con_planer_6 : 0.01 * make['prod3', 6] + 0.05 * make['prod5', 6] + 0.05 * make['prod7', 6] + 384 * numMachinesDown['planer', 6] <= 384.0;
-
 con maintenance_con_grinder : numMachinesDown['grinder', 1] + numMachinesDown['grinder', 2] + numMachinesDown['grinder', 3] + numMachinesDown['grinder', 4] + numMachinesDown['grinder', 5] + numMachinesDown['grinder', 6] = 2;
 con maintenance_con_vdrill : numMachinesDown['vdrill', 1] + numMachinesDown['vdrill', 2] + numMachinesDown['vdrill', 3] + numMachinesDown['vdrill', 4] + numMachinesDown['vdrill', 5] + numMachinesDown['vdrill', 6] = 2;
 con maintenance_con_hdrill : numMachinesDown['hdrill', 1] + numMachinesDown['hdrill', 2] + numMachinesDown['hdrill', 3] + numMachinesDown['hdrill', 4] + numMachinesDown['hdrill', 5] + numMachinesDown['hdrill', 6] = 3;
 con maintenance_con_borer : numMachinesDown['borer', 1] + numMachinesDown['borer', 2] + numMachinesDown['borer', 3] + numMachinesDown['borer', 4] + numMachinesDown['borer', 5] + numMachinesDown['borer', 6] = 1;
 con maintenance_con_planer : numMachinesDown['planer', 1] + numMachinesDown['planer', 2] + numMachinesDown['planer', 3] + numMachinesDown['planer', 4] + numMachinesDown['planer', 5] + numMachinesDown['planer', 6] = 1;
-
 con flow_balance_con_prod1_1 : make['prod1', 1] - sell['prod1', 1] - store['prod1', 1] = 0;
 con flow_balance_con_prod1_2 : store['prod1', 1] + make['prod1', 2] - sell['prod1', 2] - store['prod1', 2] = 0;
 con flow_balance_con_prod1_3 : store['prod1', 2] + make['prod1', 3] - sell['prod1', 3] - store['prod1', 3] = 0;
@@ -139,6 +137,5 @@ con flow_balance_con_prod7_3 : store['prod7', 2] + make['prod7', 3] - sell['prod
 con flow_balance_con_prod7_4 : store['prod7', 3] + make['prod7', 4] - sell['prod7', 4] - store['prod7', 4] = 0;
 con flow_balance_con_prod7_5 : store['prod7', 4] + make['prod7', 5] - sell['prod7', 5] - store['prod7', 5] = 0;
 con flow_balance_con_prod7_6 : store['prod7', 5] + make['prod7', 6] - sell['prod7', 6] - store['prod7', 6] = 0;
-
 solve;
 quit;

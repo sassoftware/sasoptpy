@@ -85,7 +85,7 @@ class TestSetIterator(unittest.TestCase):
 
         assert_equal_wo_temps(
             self, so.to_definition(c),
-            'con c {o4 in S: 2.0 * o4 > 1} : o4 * x[o4] <= 5;\n')
+            'con c {o4 in S: 2.0 * o4 > 1} : o4 * x[o4] <= 5;')
 
         # GE
         c = so.ConstraintGroup(None, name='c')
@@ -95,7 +95,7 @@ class TestSetIterator(unittest.TestCase):
 
         assert_equal_wo_temps(
             self, so.to_definition(c),
-            'con c {o4 in S: 2.0 * o4 >= 1} : o4 * x[o4] <= 5;\n')
+            'con c {o4 in S: 2.0 * o4 >= 1} : o4 * x[o4] <= 5;')
 
         # LT
         c = so.ConstraintGroup(None, name='c')
@@ -105,7 +105,7 @@ class TestSetIterator(unittest.TestCase):
 
         assert_equal_wo_temps(
             self, so.to_definition(c),
-            'con c {o4 in S: 2.0 * o4 < 1} : o4 * x[o4] <= 5;\n')
+            'con c {o4 in S: 2.0 * o4 < 1} : o4 * x[o4] <= 5;')
 
         # LE
         c = so.ConstraintGroup(None, name='c')
@@ -115,7 +115,7 @@ class TestSetIterator(unittest.TestCase):
 
         assert_equal_wo_temps(
             self, so.to_definition(c),
-            'con c {o4 in S: 2.0 * o4 <= 1} : o4 * x[o4] <= 5;\n')
+            'con c {o4 in S: 2.0 * o4 <= 1} : o4 * x[o4] <= 5;')
 
         # EQ
         c = so.ConstraintGroup(None, name='c')
@@ -125,7 +125,7 @@ class TestSetIterator(unittest.TestCase):
 
         assert_equal_wo_temps(
             self, so.to_definition(c),
-            'con c {o4 in S: 2.0 * o4 = 1} : o4 * x[o4] <= 5;\n')
+            'con c {o4 in S: 2.0 * o4 = 1} : o4 * x[o4] <= 5;')
 
         # NE
         c = so.ConstraintGroup(None, name='c')
@@ -135,7 +135,7 @@ class TestSetIterator(unittest.TestCase):
 
         assert_equal_wo_temps(
             self, so.to_definition(c),
-            'con c {o4 in S: 2.0 * o4 != 1} : o4 * x[o4] <= 5;\n')
+            'con c {o4 in S: 2.0 * o4 != 1} : o4 * x[o4] <= 5;')
 
         # IN
         c = so.ConstraintGroup(None, name='c')
@@ -145,7 +145,7 @@ class TestSetIterator(unittest.TestCase):
 
         assert_equal_wo_temps(
             self, so.to_definition(c),
-            'con c {o4 in S: o4 IN P} : o4 * x[o4] <= 5;\n')
+            'con c {o4 in S: o4 IN P} : o4 * x[o4] <= 5;')
 
         # AND, OR, Multi Statement
         c = so.ConstraintGroup(None, name='c')
@@ -158,7 +158,7 @@ class TestSetIterator(unittest.TestCase):
 
         assert_equal_wo_temps(
             self, so.to_definition(c),
-            'con c {o6 in S: ((2.0 * o6 != 1) and ((o6) ^ (2) <= 3)) or (3.0 * o6 >= 9)} : o6 * x[o6] <= 5;\n'
+            'con c {o6 in S: ((2.0 * o6 != 1) and ((o6) ^ (2) <= 3)) or (3.0 * o6 >= 9)} : o6 * x[o6] <= 5;'
         )
 
     def test_set_iterator_group(self):
@@ -176,14 +176,14 @@ class TestSetIterator(unittest.TestCase):
 
         assert_equal_wo_temps(
             self, so.to_definition(c),
-            'con c_o7 {<o8, o10> in S} : x[o8, o10] - 3.0 * o8 + 2.0 * o10 <= -5;\n')
+            'con c_o7 {<o8, o10> in S} : x[o8, o10] - 3.0 * o8 + 2.0 * o10 <= -5;')
         assert_equal_wo_temps(
             self, so.to_definition(d),
             cleandoc('''
                 con d_o7_0 {<o8, o10> in S} : x[o8, 0] - 4.0 * o10 <= 0;
                 con d_o7_1 {<o8, o10> in S} : x[o8, 1] - 4.0 * o10 <= 0;
                 con d_o7_2 {<o8, o10> in S} : x[o8, 2] - 4.0 * o10 <= 0;
-            ''') + '\n'
+            ''')
         )
 
     def test_set_iterator_in_iterate(self):

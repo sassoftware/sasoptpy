@@ -206,16 +206,17 @@ class ConstraintGroup(Group):
         return self._condict
 
     def _defn(self):
-        s = ''
+        groups = []
         for key_ in self._condict:
             current_constraint = self._condict[key_]
-            s += 'con {}'.format(self._name)
+            group_str = 'con {}'.format(self._name)
             keys = sasoptpy.util.package_utils._to_optmodel_loop(
                 key_, current_constraint)
-            s += keys
-            s += ' : ' + self._condict[key_]._defn()
-            s += ';\n'
-        return s
+            group_str += keys
+            group_str += ' : ' + self._condict[key_]._defn()
+            group_str += ';'
+            groups.append(group_str)
+        return '\n'.join(groups)
 
     def __str__(self):
         """

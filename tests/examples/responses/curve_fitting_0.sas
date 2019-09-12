@@ -9,7 +9,6 @@ impvar estimate {o8 in POINTS} = beta[0] + sum {k in 1..order} (beta[k] * (x[o8]
 var surplus {{POINTS}} >= 0;
 var slack {{POINTS}} >= 0;
 con abs_dev_con {o30 in POINTS} : y[o30] - estimate[o30] + surplus[o30] - slack[o30] = 0;
-
 min L1obj = sum {i in POINTS} (surplus[i] + slack[i]);
 solve;
 print x y estimate surplus slack;

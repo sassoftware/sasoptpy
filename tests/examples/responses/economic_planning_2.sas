@@ -35,14 +35,12 @@ con continuity_con_transport_2 : stock['transport', 2] + production['transport',
 con continuity_con_transport_3 : stock['transport', 3] + production['transport', 3] - 0.2 * production['coal', 4] - 0.2 * extra_capacity['coal', 5] - 0.1 * production['steel', 4] - 0.1 * extra_capacity['steel', 5] - 0.2 * production['transport', 4] - 0.2 * extra_capacity['transport', 5] - stock['transport', 4] = 0;
 con continuity_con_transport_4 : stock['transport', 4] + production['transport', 4] - 0.2 * production['coal', 5] - 0.2 * extra_capacity['coal', 6] - 0.1 * production['steel', 5] - 0.1 * extra_capacity['steel', 6] - 0.2 * production['transport', 5] - 0.2 * extra_capacity['transport', 6] - stock['transport', 5] = 0;
 con continuity_con_transport_5 : stock['transport', 5] + production['transport', 5] - 0.2 * production['coal', 6] - 0.2 * extra_capacity['coal', 7] - 0.1 * production['steel', 6] - 0.1 * extra_capacity['steel', 7] - 0.2 * production['transport', 6] - 0.2 * extra_capacity['transport', 7] - stock['transport', 6] = 0;
-
 con manpower_con_1 : 0.6 * production['coal', 1] + 0.4 * extra_capacity['coal', 2] + 0.3 * production['steel', 1] + 0.2 * extra_capacity['steel', 2] + 0.2 * production['transport', 1] + 0.1 * extra_capacity['transport', 2] <= 470.0;
 con manpower_con_2 : 0.6 * production['coal', 2] + 0.4 * extra_capacity['coal', 3] + 0.3 * production['steel', 2] + 0.2 * extra_capacity['steel', 3] + 0.2 * production['transport', 2] + 0.1 * extra_capacity['transport', 3] <= 470.0;
 con manpower_con_3 : 0.6 * production['coal', 3] + 0.4 * extra_capacity['coal', 4] + 0.3 * production['steel', 3] + 0.2 * extra_capacity['steel', 4] + 0.2 * production['transport', 3] + 0.1 * extra_capacity['transport', 4] <= 470.0;
 con manpower_con_4 : 0.6 * production['coal', 4] + 0.4 * extra_capacity['coal', 5] + 0.3 * production['steel', 4] + 0.2 * extra_capacity['steel', 5] + 0.2 * production['transport', 4] + 0.1 * extra_capacity['transport', 5] <= 470.0;
 con manpower_con_5 : 0.6 * production['coal', 5] + 0.4 * extra_capacity['coal', 6] + 0.3 * production['steel', 5] + 0.2 * extra_capacity['steel', 6] + 0.2 * production['transport', 5] + 0.1 * extra_capacity['transport', 6] <= 470.0;
 con manpower_con_6 : 0.6 * production['coal', 6] + 0.4 * extra_capacity['coal', 7] + 0.3 * production['steel', 6] + 0.2 * extra_capacity['steel', 7] + 0.2 * production['transport', 6] + 0.1 * extra_capacity['transport', 7] <= 470.0;
-
 con capacity_con_coal_1 : production['coal', 1] <= 300;
 con capacity_con_coal_2 : production['coal', 2] - extra_capacity['coal', 2] <= 300;
 con capacity_con_coal_3 : production['coal', 3] - extra_capacity['coal', 2] - extra_capacity['coal', 3] <= 300;
@@ -61,7 +59,6 @@ con capacity_con_transport_3 : production['transport', 3] - extra_capacity['tran
 con capacity_con_transport_4 : production['transport', 4] - extra_capacity['transport', 2] - extra_capacity['transport', 3] - extra_capacity['transport', 4] <= 280;
 con capacity_con_transport_5 : production['transport', 5] - extra_capacity['transport', 2] - extra_capacity['transport', 3] - extra_capacity['transport', 4] - extra_capacity['transport', 5] <= 280;
 con capacity_con_transport_6 : production['transport', 6] - extra_capacity['transport', 2] - extra_capacity['transport', 3] - extra_capacity['transport', 4] - extra_capacity['transport', 5] - extra_capacity['transport', 6] <= 280;
-
 max total_production = production['coal', 4] + production['coal', 5] + production['steel', 4] + production['steel', 5] + production['transport', 4] + production['transport', 5];
 solve;
 quit;

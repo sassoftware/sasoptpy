@@ -105,6 +105,9 @@ class Model:
     def get_name(self):
         return self._name
 
+    def add(self, object):
+        self.include(object)
+
     def add_variable(self, name, vartype=None,
                      lb=None, ub=None, init=None):
         """
@@ -434,26 +437,6 @@ class Model:
         iv = sasoptpy.abstract.ImplicitVar(argv=argv, name=name)
         self.include(iv)
         return iv
-
-    def insert_for_loop(self, func, over_set):
-        """
-        Schedules a `for` loop to be run on the server-side
-
-        Parameters
-        ----------
-        func : Function
-            Python function including operations within the 'for loop'
-        variable : Parameter or SetIterator
-            Variable value to be iterated over given set
-        over : Set
-            Set to be looped over
-        """
-
-        loop = sasoptpy.abstract.ForLoopStatement(func, over_set)
-        self.add_statement(loop)
-        with sasoptpy.structure.inside_container(loop):
-            func(loop.variable)
-        return loop
 
     def add_statement(self, statement, after_solve=None):
         """
@@ -983,11 +966,7 @@ class Model:
         if name in variables:
             return variables[name]
         else:
-            safe_name = sasoptpy.util.safe_variable_name(name)
-            if safe_name in variables:
-                return variables[safe_name]
-            else:
-                return self.get_variable_group(name)
+            return self.get_variable_group(name)
 
     def get_variable_group(self, name):
         for i in self._vargroups:
@@ -1112,9 +1091,6 @@ class Model:
             varname = var.get_name()
         else:
             varname = var
-
-        if sasoptpy.core.util.is_abstract(var):
-            varname = varname.replace(' ', '')
 
         if varname in self._variableDict:
             return self._variableDict[varname].get_value()

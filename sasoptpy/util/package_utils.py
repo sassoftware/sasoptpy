@@ -705,8 +705,8 @@ def get_session_type(sess):
             return None
 
 
-def safe_variable_name(name):
-    return name.replace(' ', '_').replace('\'', '')
+# def safe_variable_name(name):
+#     return name.replace(' ', '_').replace('\'', '')
 
 
 def get_group_name(name):

@@ -77,7 +77,7 @@ class TestUtil(unittest.TestCase):
                                name='it_exp')
         self.assertEqual(so.to_definition(c),
                          "con it_exp {{o{i} in S1}} : "
-                         "y[o{i}, 'a', 1] + p[o{i}] <= 5;\n".format(i=1))
+                         "y[o{i}, 'a', 1] + p[o{i}] <= 5;".format(i=1))
 
     def test_safe_iterator_expression(self):
         S1 = TestUtil.S1
@@ -98,7 +98,7 @@ class TestUtil(unittest.TestCase):
             con safe_it_exp_d_2 {o1 in S1} : y[o1, 'd', 2] <= 5;
             con safe_it_exp_d_3 {o1 in S1} : y[o1, 'd', 3] <= 5;
             """
-        ) + '\n')
+        ))
 
     def test_evaluate(self):
         x = TestUtil.x
