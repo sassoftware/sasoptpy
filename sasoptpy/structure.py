@@ -37,9 +37,13 @@ def containable(func):
                 statement_func = sasoptpy.statement_dictionary[wrapper]
             except KeyError:
                 raise NotImplementedError('Container support for {} is not implemented'.format(func.__name__))
-            s = statement_func(*args, **kwargs)
-            sasoptpy.container.append(s)
-            return s
+            statements = statement_func(*args, **kwargs)
+            if isinstance(statements, list):
+                for st in statements:
+                    sasoptpy.container.append(st)
+            else:
+                sasoptpy.container.append(statements)
+            return statements
         else:
             return func(*args, **kwargs)
     return wrapper
@@ -66,6 +70,8 @@ def under_condition(c):
         yield c
         return True
     original = sasoptpy.conditions
+    if original is None:
+        sasoptpy.conditions = []
     sasoptpy.conditions = sasoptpy.conditions + [c]
     yield
     sasoptpy.conditions = original

@@ -29,6 +29,10 @@ class Parameter(Expression):
     def set_init(self, value):
         self._init = value
 
+    @sasoptpy.containable
+    def set_value(self, value):
+        self._fix_value = value
+
     def _expr(self):
         if self._parent:
             return self._parent.get_element_name(self._key)

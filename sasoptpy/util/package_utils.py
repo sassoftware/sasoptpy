@@ -125,23 +125,32 @@ def load_function_containers():
         d = dict()
         d[sasoptpy.core.Model.set_objective] = \
             sasoptpy.abstract.statement.ObjectiveStatement.set_objective_of_model
+
         d[sasoptpy.core.Model.solve] = \
             sasoptpy.abstract.statement.SolveStatement.solve
+
         d[sasoptpy.core.Variable.set_bounds] = \
             sasoptpy.abstract.statement.Assignment.set_bounds
+
         d[sasoptpy.abstract.ParameterValue.set_value] = \
             sasoptpy.abstract.statement.Assignment.set_value
+
+        d[sasoptpy.abstract.Parameter.set_value] = \
+            sasoptpy.abstract.statement.Assignment.set_value
+
         d[sasoptpy.core.Model.drop_constraint] = \
             sasoptpy.abstract.statement.DropStatement.drop_constraint
+
         d[sasoptpy.core.util.read_data] = \
             sasoptpy.abstract.statement.ReadDataStatement.read_data
+
         return d
 
     sasoptpy.statement_dictionary = read_statement_dictionary()
 
 
 def load_condition_container():
-    sasoptpy.conditions = []
+    sasoptpy.conditions = None
 
 
 def load_default_mediators():

@@ -19,38 +19,27 @@ class Assignment(Statement):
                                sasoptpy.to_expression(self.expression))
         return s
 
-    def _expr(self):
-        s = ''
-        if self.keyword:
-            s += self.keyword + ' '
-        s += '{} = {}'.format(sasoptpy.to_expression(self.identifier),
-                               sasoptpy.to_expression(self.expression))
-        return s
-
-    def append(self, elem):
-        self.elements.append(elem)
+    def append(self, arg, **kwargs):
+        pass
 
     @classmethod
     def set_bounds(cls, var, **kwargs):
         statements = []
         lb = kwargs.get('lb')
         ub = kwargs.get('ub')
-        if lb and ub and lb == ub:
-            statements.append(Assignment(identifier=var, expression=lb, keyword='fix'))
+        if lb and ub and lb is ub:
+            statements.append(Assignment(identifier=var, expression=lb,
+                                         keyword='fix'))
         elif lb and ub:
-            statements.append(Assignment(identifier=var._lb, expression=lb))
-            statements.append(Assignment(identifier=var._ub, expression=ub))
+            lb_identifier = sasoptpy.Symbol
+            statements.append(Assignment(identifier=var.lb, expression=lb))
+            statements.append(Assignment(identifier=var.ub, expression=ub))
         elif lb:
-            statements.append(Assignment(identifier=var._lb, expression=lb))
+            statements.append(Assignment(identifier=var.lb, expression=lb))
         elif ub:
-            statements.append(Assignment(identifier=var._ub, expression=ub))
+            statements.append(Assignment(identifier=var.ub, expression=ub))
 
-        for st in statements:
-            if sasoptpy.container:
-                sasoptpy.container.append(st)
-            else:
-                model.add_statement(st)
-
+        return statements
 
     @classmethod
     def set_value(cls, obj, value):

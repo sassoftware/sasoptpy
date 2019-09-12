@@ -238,7 +238,8 @@ class Constraint(Expression):
         return r
 
     def __bool__(self):
-        sasoptpy.conditions.append(self)
+        if sasoptpy.conditions is not None:
+           sasoptpy.conditions.append(self)
         return True
 
     def __eq__(self, other):
