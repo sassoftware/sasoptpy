@@ -42,5 +42,5 @@ class Statement(ABC):
         pass
 
     @abstractmethod
-    def append(self, arg, **kwargs):
+    def append(self, *args, **kwargs):
         pass

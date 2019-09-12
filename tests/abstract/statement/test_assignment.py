@@ -72,3 +72,15 @@ class TestAssignment(unittest.TestCase):
                 x[4].ub = 4;
             quit;
             """))
+
+    def test_assignment_append(self):
+        x = so.Variable(name='x')
+        r = so.abstract.Assignment(x, 5)
+        self.assertEqual(so.to_definition(r), 'x = 5;')
+        y = so.Variable(name='y')
+        r.append(identifier=y)
+        self.assertEqual(so.to_definition(r), 'y = 5;')
+        r.append(expression=10)
+        self.assertEqual(so.to_definition(r), 'y = 10;')
+        r.append(keyword='fix')
+        self.assertEqual(so.to_definition(r), 'fix y = 10;')
