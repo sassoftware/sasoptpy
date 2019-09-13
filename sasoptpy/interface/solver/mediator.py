@@ -5,9 +5,9 @@ from abc import ABC, abstractmethod
 class Mediator(ABC):
 
     @abstractmethod
-    def solve(self):
+    def solve(self, **kwargs):
         pass
 
     @abstractmethod
-    def submit(self):
+    def submit(self, **kwargs):
         pass

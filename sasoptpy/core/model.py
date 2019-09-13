@@ -1518,9 +1518,6 @@ class Model:
         # Check if session is defined
         return sasoptpy.util.get_session_type(self._session)
 
-    def get_session(self):
-        return self._session
-
     @sasoptpy.containable
     def solve(self, **kwargs):
         """

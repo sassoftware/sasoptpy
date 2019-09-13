@@ -18,14 +18,15 @@ class CASMediator(Mediator):
 
     def solve(self, **kwargs):
         """
-        Solve action for single models
+        Solve action for :class:`Model` objects
         """
         self.session.loadactionset(actionset='optimization')
 
-        mps = kwargs.get('mps', kwargs.get('frame', False))
+        has_user_called_mps = kwargs.get('mps', kwargs.get('frame', False))
         options = kwargs.get('options', dict())
 
-        mps_indicator = self.is_mps_format_needed(mps, options)
+        mps_indicator = self.is_mps_format_needed(
+            has_user_called_mps, options)
 
         if mps_indicator:
             return self.solve_with_mps(**kwargs)
@@ -38,7 +39,6 @@ class CASMediator(Mediator):
         """
         self.session.loadactionset(actionset='optimization')
         return self.submit_optmodel_code(**kwargs)
-
 
     def is_mps_format_needed(self, mps_option, options):
 
@@ -263,7 +263,8 @@ class CASMediator(Mediator):
         verbose = kwargs.get('verbose', False)
         submit = kwargs.get('submit', True)
 
-        print('NOTE: Converting model {} to OPTMODEL.'.format(model._name))
+        print('NOTE: Converting model {} to OPTMODEL.'.format(
+            model.get_name()))
         options = kwargs.get('options', dict())
         primalin = kwargs.get('primalin', False)
         optmodel_string = model.to_optmodel(header=False, options=options,

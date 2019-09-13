@@ -173,6 +173,7 @@ class TestModel(unittest.TestCase):
 
         c1 = m.add_constraints((x[i] >= i for i in range(5)), name='c1')
         self.assertEqual(OrderedDict([('c1', c1)]), m.get_grouped_constraints())
+        self.assertEqual(c1, m.get_constraint_group('c1'))
 
         c2 = so.ConstraintGroup((i * x[i] <= 10 for i in range(5)), name='c2')
         m.include(c2)
@@ -450,6 +451,7 @@ class TestModel(unittest.TestCase):
         m.set_session(TestModel.conn)
         m.solve()
         self.assertEqual(m.get_variable_value(y['a']), 1)
+        self.assertEqual(m.get_statements(), [r])
 
 
     def test_get_summaries(self):
@@ -931,6 +933,21 @@ class TestModel(unittest.TestCase):
         x.set_bounds(ub=5)
         print(m.to_optmodel())
 
+    def test_model_add(self):
+        m = so.Model(name='test_add')
+        x = so.Variable(name='x')
+        self.assertEqual(m.get_variables(), [])
+        m.add(x)
+        self.assertEqual(m.get_variables(), [x])
+
+    def test_model_session(self):
+        m = so.Model(name='m')
+        s = m.get_session()
+        self.assertEqual(s, None)
+        if TestModel.conn:
+            m.set_session(TestModel.conn)
+            self.assertEqual(m.get_session(), TestModel.conn)
+            self.assertEqual(m.get_session_type(), 'CAS')
 
     def tearDown(self):
         so.reset()
