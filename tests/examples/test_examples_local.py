@@ -19,6 +19,7 @@
 import unittest
 import os
 import sasoptpy
+import saspy
 import sys
 import time
 
@@ -32,13 +33,20 @@ class TestExamplesLocal(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.conn = None
-        from saspy import SASsession
         try:
-            cls.conn = SASsession(cfgname=os.environ.get('SASPYCFG'))
+            cls.conn = None
+            if os.name == 'nt':
+                cls.conn = saspy.SASsession(cfgname='winlocal')
+            else:
+                cls.conn = SASsession(cfgfile='saspy_config.py')
+            print('Connected to SAS')
             cls.conn.upload_frame = TestExamplesLocal.sas_upload
-            cls.defstdout = sys.stdout
         except TypeError:
             raise unittest.SkipTest('Environment variable may not be defined')
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.conn.endsas()
 
     @classmethod
     def sas_upload(cls, df, casout):
