@@ -67,7 +67,6 @@ class TestExamplesLocal(unittest.TestCase):
     def run_test(self, test):
         t0 = time.time()
         val = test(TestExamplesLocal.conn)
-        sys.stdout = TestExamplesLocal.defstdout
         print(test.__globals__['__file__'], val, time.time()-t0)
         return val
 
