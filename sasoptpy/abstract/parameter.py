@@ -27,7 +27,6 @@ class Parameter(Expression):
         super().__init__(name=name)
         if name is None:
             name = sasoptpy.util.get_next_name()
-        self._name = name
         if ptype is None:
             ptype = sasoptpy.NUM
         self._type = ptype
@@ -54,13 +53,13 @@ class Parameter(Expression):
     def _expr(self):
         if self._parent:
             return self._parent.get_element_name(self._key)
-        return self._name
+        return self.get_name()
 
     def _defn(self):
         if self._parent:
             return None
         else:
-            s = '{} {}'.format(self._type, self._name)
+            s = '{} {}'.format(self._type, self.get_name())
             if self._init:
                 s += ' init {}'.format(self._init)
             elif self._fix_value:

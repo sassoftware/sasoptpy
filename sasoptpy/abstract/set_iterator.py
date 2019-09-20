@@ -56,7 +56,7 @@ class SetIterator(sasoptpy.Expression):
                                  sasoptpy.to_expression(self._set))
 
     def _expr(self):
-        return str(self)
+        return self.get_name()
 
     def __str__(self):
         return self._name
@@ -65,7 +65,7 @@ class SetIterator(sasoptpy.Expression):
         return self._get_for_expr()
 
     def __repr__(self):
-        s = 'sasoptpy.SetIterator({}, name=\'{}\')'.format(self._set, self._name)
+        s = 'sasoptpy.SetIterator({}, name=\'{}\')'.format(self._set, self.get_name())
         return s
 
 

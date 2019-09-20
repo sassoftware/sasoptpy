@@ -14,7 +14,7 @@ class Objective(Expression):
 
     def _defn(self):
         return self._sense.lower() + ' ' + \
-               self._name + ' = ' + self._expr() + ';'
+               self.get_name() + ' = ' + self._expr() + ';'
 
     def get_sense(self):
         return self._sense

@@ -55,6 +55,7 @@ class ConstraintGroup(Group):
     """
 
     def __init__(self, argv, name):
+        super().__init__(name=name)
         self._condict = OrderedDict()
         if type(argv) == list or type(argv) == GeneratorType:
             self._recursive_add_cons(argv, name=name, condict=self._condict)
@@ -64,7 +65,6 @@ class ConstraintGroup(Group):
         else:
             raise(TypeError, "Invalid iterator type for constraint group")
 
-        self._name = name
         self._objorder = sasoptpy.util.get_creation_id()
 
         self._shadows = dict()
@@ -179,7 +179,7 @@ class ConstraintGroup(Group):
             else:
                 k = list(self._condict)[0]
                 c = self._condict[k]
-                cname = self._name
+                cname = self.get_name()
                 cname = cname.replace(' ', '')
                 shadow = sasoptpy.Constraint(exp=c, direction=c._direction,
                                              name=cname, crange=c._range)
@@ -206,13 +206,12 @@ class ConstraintGroup(Group):
         return self._condict
 
     def _defn(self):
+        from sasoptpy.util.package_utils import _to_optmodel_loop
         groups = []
         for key_ in self._condict:
             current_constraint = self._condict[key_]
-            group_str = 'con {}'.format(self._name)
-            keys = sasoptpy.util.package_utils._to_optmodel_loop(
-                key_, current_constraint)
-            group_str += keys
+            con_name = self.get_name() + _to_optmodel_loop(key_, current_constraint)
+            group_str = 'con {}'.format(con_name)
             group_str += ' : ' + self._condict[key_]._defn()
             group_str += ';'
             groups.append(group_str)
@@ -222,7 +221,7 @@ class ConstraintGroup(Group):
         """
         Generates a representation string
         """
-        s = 'Constraint Group ({}) [\n'.format(self._name)
+        s = 'Constraint Group ({}) [\n'.format(self.get_name())
         for k in sorted(self._condict):
             v = self._condict[k]
             s += '  [{}: {}]\n'.format(sasoptpy.util.get_first_member(k), v)
@@ -236,5 +235,5 @@ class ConstraintGroup(Group):
         s = 'sasoptpy.ConstraintGroup(['
         s += ', '.join(str(self._condict[i]) for i in self._condict)
         s += '], '
-        s += 'name=\'{}\')'.format(self._name)
+        s += 'name=\'{}\')'.format(self.get_name())
         return s

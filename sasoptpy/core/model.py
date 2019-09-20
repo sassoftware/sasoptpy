@@ -525,7 +525,7 @@ class Model:
         """
         for i, v in enumerate(self._variables):
             if id(variable) == id(v):
-                del self._variableDict[variable._name]
+                del self._variableDict[variable.get_name()]
                 del self._variables[i]
                 return
 
@@ -557,9 +557,9 @@ class Model:
 
         """
         try:
-            del self._constraintDict[constraint._name]
+            del self._constraintDict[constraint.get_name()]
             for i, c in enumerate(self._constraints):
-                if c._name == constraint._name:
+                if c.get_name() == constraint.get_name():
                     del self._constraints[i]
         except KeyError:
             raise KeyError('Given constraint is not part of the model')
@@ -701,24 +701,24 @@ class Model:
         if sasoptpy.core.util.has_parent(var):
             return
         self._variables.append(var)
-        self._variableDict[var._name] = var
+        self._variableDict[var.get_name()] = var
 
     def _include_vargroup(self, vg):
         for i in vg:
            self._variables.append(i)
-           self._variableDict[i._name] = i
+           self._variableDict[i.get_name()] = i
         self._vargroups.append(vg)
 
     def _include_constraint(self, con):
         if sasoptpy.core.util.has_parent(con):
             return
         self._constraints.append(con)
-        self._constraintDict[con._name] = con
+        self._constraintDict[con.get_name()] = con
 
     def _include_congroup(self, cg):
         for i in cg:
             self._constraints.append(i)
-            self._constraintDict[i._name] = i
+            self._constraintDict[i.get_name()] = i
         self._congroups.append(cg)
 
     def _include_set(self, st):
@@ -966,7 +966,12 @@ class Model:
         if name in variables:
             return variables[name]
         else:
-            return self.get_variable_group(name)
+            # Search for safe names
+            for v in variables.values():
+                if v.get_name() == name:
+                    return v
+            else:
+                return self.get_variable_group(name)
 
     def get_variable_group(self, name):
         for i in self._vargroups:
@@ -1036,7 +1041,7 @@ class Model:
 
         """
         if isinstance(var, sasoptpy.core.Variable):
-            varname = var._name
+            varname = var.get_name()
         else:
             varname = var
         if varname in self._objective._linCoef:
@@ -1051,7 +1056,7 @@ class Model:
                 warnings.warn('Objective is not linear', RuntimeWarning)
 
     def set_variable_coef(self, var, coef):
-        varname = var._name
+        varname = var.get_name()
         if varname in self._objective._linCoef:
             self._objective._linCoef[varname]['val'] = coef
         else:
@@ -1386,7 +1391,7 @@ class Model:
 
         """
         for v in self._variables:
-            print('{}: {}'.format(v._name, v._value))
+            print('{}: {}'.format(v.get_name(), v._value))
 
     def to_frame(self, **kwargs):
         warnings.warn('Use to_mps for obtaining problem in MPS format',
@@ -1432,7 +1437,7 @@ class Model:
 
         """
         s = 'Model: [\n'
-        s += '  Name: {}\n'.format(self._name)
+        s += '  Name: {}\n'.format(self.get_name())
         if self._session is not None:
             s += '  Session: {}:{}\n'.format(self._session._hostname,
                                              self._session._port)
@@ -1466,18 +1471,18 @@ class Model:
             stype = self.get_session_type()
             if stype == 'SAS':
                 s = "sasoptpy.Model(name='{}', session=saspy.SASsession(cfgname='{}'))".format(
-                         self._name, self._session.sascfg.name)
+                         self.get_name(), self._session.sascfg.name)
             elif stype == 'CAS':
                 s = 'sasoptpy.Model(name=\'{}\', session={})'.format(
-                    self._name, self._session)
+                    self.get_name(), self._session)
             else:
                 raise TypeError('Invalid session type: {}'.format(type(self.get_session())))
         else:
-            s = 'sasoptpy.Model(name=\'{}\')'.format(self._name)
+            s = 'sasoptpy.Model(name=\'{}\')'.format(self.get_name())
         return s
 
     def _defn(self):
-        s = 'problem {} include'.format(self._name)
+        s = 'problem {} include'.format(self.get_name())
         s += ' ' + ' '.join([
             s.get_name() for s in self.get_grouped_variables().values()])
         s += ' ' + ' '.join([

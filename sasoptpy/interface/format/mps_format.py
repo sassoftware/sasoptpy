@@ -60,7 +60,7 @@ def to_mps(model, **kwargs):
     var_con = {}
     for c in model._constraints:
         for v in c._linCoef:
-            var_con.setdefault(v, []).append(c._name)
+            var_con.setdefault(v, []).append(c.get_name())
     # Check if objective has a constant field
     if constant and model._objective._linCoef['CONST']['val'] != 0:
         obj_constant = model.add_variable('obj_constant')
@@ -74,14 +74,14 @@ def to_mps(model, **kwargs):
                       ' constant term, an auxiliary variable is added.',
                       UserWarning)
 
-    append_row(['NAME', '', model._name, 0, '', 0])
+    append_row(['NAME', '', model.get_name(), 0, '', 0])
 
     append_row(['ROWS', '', '', '', '', ''])
-    if model._objective._name is not None:
-        append_row([model._objective._sense, model._objective._name,
+    if model._objective.get_name() is not None:
+        append_row([model._objective._sense, model._objective.get_name(),
                           '', '', '', ''])
     for c in model._constraints:
-        append_row([c._direction, c._name, '', '', '', ''])
+        append_row([c._direction, c.get_name(), '', '', '', ''])
 
     append_row(['COLUMNS', '', '', '', '', ''])
     curtype = sasoptpy.CONT
@@ -97,25 +97,25 @@ def to_mps(model, **kwargs):
             append_row(['', 'MARK0001', '\'MARKER\'', '',
                               '\'INTEND\'', ''])
             curtype = sasoptpy.CONT
-        if v._name in model._objective._linCoef:
-            cv = model._objective._linCoef[v._name]
-            current_row = ['', v._name, model._objective._name, cv['val']]
+        if v.get_name() in model._objective._linCoef:
+            cv = model._objective._linCoef[v.get_name()]
+            current_row = ['', v.get_name(), model._objective.get_name(), cv['val']]
             f5 = 1
-        elif v._name not in var_con:
-            current_row = ['', v._name, model._objective._name, 0.0]
+        elif v.get_name() not in var_con:
+            current_row = ['', v.get_name(), model._objective.get_name(), 0.0]
             f5 = 1
-            var_con[v._name] = []
-        for cn in var_con.get(v._name, []):
+            var_con[v.get_name()] = []
+        for cn in var_con.get(v.get_name(), []):
             if cn in model._constraintDict:
                 c = model._constraintDict[cn]
-                if v._name in c._linCoef:
+                if v.get_name() in c._linCoef:
                     if f5 == 0:
-                        current_row = ['', v._name, c._name,
-                                       c._linCoef[v._name]['val']]
+                        current_row = ['', v.get_name(), c.get_name(),
+                                       c._linCoef[v.get_name()]['val']]
                         f5 = 1
                     else:
-                        current_row.append(c._name)
-                        current_row.append(c._linCoef[v._name]['val'])
+                        current_row.append(c.get_name())
+                        current_row.append(c._linCoef[v.get_name()]['val'])
                         ID = append_row(current_row)
                         f5 = 0
         if f5 == 1:
@@ -136,10 +136,10 @@ def to_mps(model, **kwargs):
         rhs = - c._linCoef['CONST']['val']
         if rhs != 0:
             if f5 == 0:
-                current_row = ['', 'RHS', c._name, rhs]
+                current_row = ['', 'RHS', c.get_name(), rhs]
                 f5 = 1
             else:
-                current_row.append(c._name)
+                current_row.append(c.get_name())
                 current_row.append(rhs)
                 f5 = 0
                 append_row(current_row)
@@ -151,27 +151,27 @@ def to_mps(model, **kwargs):
     append_row(['RANGES', '', '', '', '', ''])
     for c in model._constraints:
         if c._range != 0:
-            append_row(['', 'rng', c._name, c._range, '', ''])
+            append_row(['', 'rng', c.get_name(), c._range, '', ''])
 
     append_row(['BOUNDS', '', '', '', '', ''])
     for v in model._variables:
         if v._lb == v._ub:
-            append_row(['FX', 'BND', v._name, v._ub, '', ''])
+            append_row(['FX', 'BND', v.get_name(), v._ub, '', ''])
         if v._lb is not None and v._type is not sasoptpy.BIN:
             if v._ub == inf and v._lb == -inf:
-                append_row(['FR', 'BND', v._name, '', '', ''])
+                append_row(['FR', 'BND', v.get_name(), '', '', ''])
             elif not v._ub == v._lb:
                 if v._type == sasoptpy.INT and \
                         v._lb == 0 and v._ub == inf:
-                    append_row(['PL', 'BND', v._name, '', '', ''])
+                    append_row(['PL', 'BND', v.get_name(), '', '', ''])
                 elif not (v._type == sasoptpy.CONT and v._lb == 0):
-                    append_row(['LO', 'BND', v._name, v._lb, '', ''])
+                    append_row(['LO', 'BND', v.get_name(), v._lb, '', ''])
         if v._ub != inf and v._ub is not None and not \
                 (v._type is sasoptpy.BIN and v._ub == 1) and \
                 v._lb != v._ub:
-            append_row(['UP', 'BND', v._name, v._ub, '', ''])
+            append_row(['UP', 'BND', v.get_name(), v._ub, '', ''])
         if v._type is sasoptpy.BIN:
-            append_row(['BV', 'BND', v._name, '1.0', '', ''])
+            append_row(['BV', 'BND', v.get_name(), '1.0', '', ''])
 
     append_row(['ENDATA', '', '', 0.0, '', 0.0])
     mpsdata = pd.DataFrame(data=datarows,

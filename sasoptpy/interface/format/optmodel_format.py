@@ -65,7 +65,7 @@ def to_optmodel_for_solve(model, **kwargs):
                     elif key == 'relaxint' and options[key] is True:
                         pre_opts.append('relaxint')
                     elif key == 'obj' or key == 'objectives':
-                        pre_opts.append('obj ({})'.format(' '.join(i._name for i in options[key])))
+                        pre_opts.append('obj ({})'.format(' '.join(i.get_name() for i in options[key])))
                     elif key == 'primalin' and options[key] is True:
                         pos_opts.append('primalin')
                         primalin_set = True

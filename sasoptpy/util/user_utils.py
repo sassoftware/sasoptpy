@@ -281,7 +281,7 @@ def get_solution_table(*argv, key=None, sort=False, rhs=False):
             inputcols.extend(a.columns.values.tolist())
         else:
             try:
-                inputcols.append(a._name)
+                inputcols.append(a.get_name())
             except AttributeError:
                 if isinstance(a, pd.DataFrame):
                     inputcols.append('DataFrame')

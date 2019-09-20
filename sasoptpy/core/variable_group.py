@@ -85,6 +85,10 @@ class VariableGroup(Group):
     @sasoptpy.class_containable
     def __init__(self, *argv, name, vartype=None, lb=None,
                  ub=None, init=None):
+        if len(argv) == 0:
+            raise ValueError('An iterable object or None should be given as '
+                             'the first parameter')
+        super().__init__(name=name)
         self._vardict = OrderedDict()
         self._shadows = OrderedDict()
         self._groups = OrderedDict()
@@ -97,7 +101,6 @@ class VariableGroup(Group):
             vartype = sasoptpy.CONT
 
         lb, ub = sasoptpy.core.util.get_default_bounds_if_none(vartype, lb, ub)
-        self._name = name
         self._init = init
         self._type = vartype
 
@@ -173,7 +176,7 @@ class VariableGroup(Group):
             dict_to_add = self._vardict
 
         if name is None:
-            name = sasoptpy.core.util.get_name_from_keys(self._name, key)
+            name = sasoptpy.core.util.get_name_from_keys(self.get_name(), key)
         new_var = variable_class(name=name, lb=lb, ub=ub, init=init,
                                  vartype=vartype)
         dict_to_add[key] = new_var
@@ -284,7 +287,7 @@ class VariableGroup(Group):
             if not list_of_variables:
                 warnings.warn('Requested variable group is empty:' +
                               ' {}[{}] ({})'.
-                              format(self._name, key, type(key)),
+                              format(self.get_name(), key, type(key)),
                               RuntimeWarning, stacklevel=2)
             return list_of_variables
 
@@ -304,7 +307,8 @@ class VariableGroup(Group):
         """
         Returns string to be used in OPTMODEL definition
         """
-        s = 'var {}'.format(self._name)
+        name = self.get_name()
+        s = 'var {}'.format(name)
         s += ' {'
         for i in self._keyset:
             ind_list = []
@@ -343,7 +347,7 @@ class VariableGroup(Group):
         return(s)
 
     def _expr(self):
-        return self.get_name()
+        return self.get_name(safe=True)
 
     def _member_defn(self):
         dependents = []
@@ -535,18 +539,18 @@ class VariableGroup(Group):
         if isinstance(vector, list) or isinstance(vector, np.ndarray):
             for i, key in enumerate(vector):
                 var = self._vardict[i, ]
-                r._linCoef[var._name] = {'ref': var, 'val': vector[i]}
+                r._linCoef[var.get_name()] = {'ref': var, 'val': vector[i]}
         elif isinstance(vector, pd.Series):
             for key in vector.index:
                 k = sasoptpy.util.pack_to_tuple(key)
                 var = self._vardict[k]
-                r._linCoef[var._name] = {'ref': var, 'val': vector[key]}
+                r._linCoef[var.get_name()] = {'ref': var, 'val': vector[key]}
         elif isinstance(vector, pd.DataFrame):
             vectorflat = sasoptpy.util.flatten_frame(vector)
             for key in vectorflat.index:
                 k = sasoptpy.util.pack_to_tuple(key)
                 var = self._vardict[k]
-                r._linCoef[var._name] = {'ref': var, 'val': vectorflat[key]}
+                r._linCoef[var.get_name()] = {'ref': var, 'val': vectorflat[key]}
         else:
             for i, key in enumerate(vector):
                 if isinstance(key, tuple):
@@ -555,9 +559,9 @@ class VariableGroup(Group):
                     k = (key,)
                 var = self._vardict[k]
                 try:
-                    r._linCoef[var._name] = {'ref': var, 'val': vector[i]}
+                    r._linCoef[var.get_name()] = {'ref': var, 'val': vector[i]}
                 except KeyError:
-                    r._linCoef[var._name] = {'ref': var, 'val': vector[key]}
+                    r._linCoef[var.get_name()] = {'ref': var, 'val': vector[key]}
 
         return r
 
@@ -649,7 +653,7 @@ class VariableGroup(Group):
         """
         Generates a representation string
         """
-        s = 'Variable Group ({}) [\n'.format(self._name)
+        s = 'Variable Group ({}) [\n'.format(self.get_name())
         for k in self._vardict:
             v = self._vardict[k]
             s += '  [{}: {}]\n'.format(sasoptpy.util.get_first_member(k), v)
@@ -668,5 +672,5 @@ class VariableGroup(Group):
                 if k[i] not in ls:
                     ls.append(k[i])
             s += '{}, '.format(ls)
-        s += 'name=\'{}\')'.format(self._name)
+        s += 'name=\'{}\')'.format(self.get_name())
         return s

@@ -320,15 +320,15 @@ def _wrap_expression_with_iterators(exp, operator, iterators):
         r = exp.copy()
     else:
         r = exp
-    if r._name is None:
-        r._name = get_next_name()
+    if r.get_name() is None:
+        r.set_name(get_next_name())
     if r._operator is None:
         r._operator = operator
     for i in iterators:
         if isinstance(i, sasoptpy.abstract.SetIterator):
             r._iterkey.append(i)
     wrapper = sasoptpy.core.Expression()
-    wrapper._linCoef[r._name] = {'ref': r, 'val': 1.0}
+    wrapper.set_member(key=r.get_name(), ref=r, val=1)
     wrapper._abstract = True
     return wrapper
 
@@ -439,8 +439,8 @@ def get_iterators(keys):
                     g.append(subkey)
     if groups:
         for kg in groups.values():
-            s = '<' + ','.join([i._name for i in kg]) + '> in ' +\
-                kg[0]._set._name
+            s = '<' + ','.join([i.get_name() for i in kg]) + '> in ' +\
+                kg[0]._set.get_name()
             iterators.append(s)
     return iterators
 
@@ -489,8 +489,8 @@ def wrap_expression(e, abstract=False):
     """
     wrapper = sasoptpy.Expression()
 
-    if hasattr(e, '_name') and e._name is not None:
-        name = e._name
+    if hasattr(e, 'get_name') and e.get_name() is not None:
+        name = e.get_name()
     else:
         name = get_next_name()
 

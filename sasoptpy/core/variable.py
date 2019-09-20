@@ -211,7 +211,7 @@ class Variable(Expression):
                        else str(i) for i in self._iterkey]
             key = ', '.join(keylist)
             return('{}[{}]'.format(self._name, key))
-        return('{}'.format(self._name))
+        return '{}'.format(self._name)
 
     def _expr(self):
         if self._parent is not None and self._key is not None:
@@ -222,7 +222,7 @@ class Variable(Expression):
             keylist = sasoptpy.core.util.package_utils._to_iterator_expression(self._iterkey)
             key = ', '.join(keylist)
             return('{}[{}]'.format(self._name, key))
-        return('{}'.format(self._name))
+        return '{}'.format(self._name)
 
     def _defn(self):
         s = 'var {}'.format(self._name)

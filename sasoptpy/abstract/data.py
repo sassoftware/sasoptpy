@@ -95,7 +95,7 @@ class ParameterValue(sasoptpy.Expression):
 
     def __repr__(self):
         st = 'sasoptpy.ParameterValue(name=\'{}\', key=[{}])'.format(
-            self._name, str(self._key))
+            self.get_name(), str(self._key))
         return st
 
     def __str__(self):
@@ -106,7 +106,7 @@ class ParameterValue(sasoptpy.Expression):
                            self._name +\
                            self._suffix
         return self._prefix +\
-            sasoptpy.util.package_utils._insert_brackets(self._name, self._key) +\
+            sasoptpy.util.package_utils._insert_brackets(self.get_name(), self._key) +\
             self._suffix
 
     def _expr(self):

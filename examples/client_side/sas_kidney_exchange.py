@@ -2,7 +2,7 @@ import sasoptpy as so
 import random
 
 
-def test(cas_conn):
+def test(cas_conn, **kwargs):
     # Data generation
     n = 80
     p = 0.02
@@ -53,7 +53,7 @@ def test(cas_conn):
                                         name="cardinality")
 
     # Solve
-    model.solve(options={'with': 'milp', 'maxtime': 300})
+    model.solve(options={'with': 'milp', 'maxtime': 300}, **kwargs)
 
     # Define decomposition blocks
     for i in NODES:
@@ -65,6 +65,6 @@ def test(cas_conn):
 
     model.solve(options={
         'with': 'milp', 'maxtime': 300, 'presolver': 'basic', 
-        'decomp': {'method': 'user'}})
+        'decomp': {'method': 'user'}}, **kwargs)
 
     return model.get_objective_value()

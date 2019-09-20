@@ -132,7 +132,7 @@ class Constraint(Expression):
         :func:`sasoptpy.Model.set_coef`
 
         """
-        varname = var._name
+        varname = var.get_name()
         if varname in self._linCoef:
             self._linCoef[varname]['val'] = value
         else:
@@ -267,7 +267,7 @@ class Constraint(Expression):
 
     def _get_definition_tag(self):
         if self._parent is None:
-            return 'con {} : '.format(self._name)
+            return 'con {} : '.format(self.get_name())
         return ''
 
     def get_range_expr(self):

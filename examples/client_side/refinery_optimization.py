@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 
-def test(cas_conn):
+def test(cas_conn, **kwargs):
 
     m = so.Model(name='refinery_optimization', session=cas_conn)
 
@@ -178,7 +178,7 @@ def test(cas_conn):
     m.add_constraint(flow.sum('premium_petrol', '*') >= premium_ratio *
                      flow.sum('regular_petrol', '*'), name='premium_ratio')
 
-    res = m.solve()
+    res = m.solve(**kwargs)
     if res is not None:
         print(so.get_solution_table(crudeDistilled))
         print(so.get_solution_table(oilCracked))

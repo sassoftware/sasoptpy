@@ -139,7 +139,7 @@ def get_key_for_expr(key):
     if isinstance(key, sasoptpy.abstract.SetIterator):
         return 'for ' + key._get_for_expr()
     else:
-        return 'for {} in {}'.format(key._name, key._set._name)
+        return 'for {} in {}'.format(key.get_name(), key._set.get_name())
 
 
 def multiply_coefficients(left, right, target):

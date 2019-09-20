@@ -96,7 +96,7 @@ class ImplicitVar:
         member_defn = []
         for i in self._dict.values():
             member_defn.append('impvar {} = {};'.format(
-                i.get_name_with_keys(name=self._name),
+                i.get_name_with_keys(name=self.get_name()),
                 to_expression(i)))
         s = '\n'.join(member_defn)
         return s

@@ -44,6 +44,10 @@ class TestVariableGroup(unittest.TestCase):
         self.assertEqual(repr(w),
                          "sasoptpy.VariableGroup(['a', 'b'], [1, 2], name='w')")
 
+        def pass_error():
+            z = so.VariableGroup(name='z')
+        self.assertRaises(ValueError, pass_error)
+
     def test_get_name(self):
         # Test regular name
         u = so.VariableGroup(4, name='myvargroup')

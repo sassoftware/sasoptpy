@@ -95,7 +95,7 @@ class CASMediator(Mediator):
         replace = kwargs.get('replace', True)
         drop = kwargs.get('drop', False)
 
-        print('NOTE: Converting model {} to DataFrame.'.format(model._name))
+        print('NOTE: Converting model {} to DataFrame.'.format(model.get_name()))
         # Pre-upload argument parse
 
         # Find problem type and initial values
@@ -120,7 +120,7 @@ class CASMediator(Mediator):
             if ptype == 2:
                 for v in model._variables:
                     if v._init is not None:
-                        var_names.append(v._name)
+                        var_names.append(v.get_name())
                         init_values.append(v._init)
                 if (len(init_values) > 0 and
                    options.get('primalin', 1) is not None):

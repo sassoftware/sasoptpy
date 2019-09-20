@@ -3,7 +3,7 @@ from .set_iterator import SetIterator, SetIteratorGroup
 import sasoptpy
 
 
-class Set():
+class Set:
     """
     Creates an index set to be represented inside PROC OPTMODEL
 
@@ -55,6 +55,9 @@ class Set():
         self._colname = sasoptpy.util.pack_to_list(name)
         self._iterators = []
 
+    def get_name(self):
+        return self._name
+
     def __iter__(self):
         if len(self._type) > 1:
             s = SetIteratorGroup(self, datatype=self._type)
@@ -71,7 +74,7 @@ class Set():
             s += ''
         else:
             s += '<' + ', '.join(self._type) + '> '
-        s += self._name
+        s += self.get_name()
         if self._init is not None:
             s += ' init ' + sasoptpy.util.package_utils._to_sas_string(self._init) #str(self._init)
         elif self._value is not None:
@@ -80,11 +83,11 @@ class Set():
         return(s)
 
     def __hash__(self):
-        return hash((self._name))
+        return hash(self.get_name())
 
     def __eq__(self, other):
         if isinstance(other, Set):
-            return (self._name) == (other._name)
+            return self.get_name() == other.get_name()
         else:
             return False
 
@@ -96,16 +99,16 @@ class Set():
             raise RuntimeError('Cannot verify if value is in abstract set')
 
     def __str__(self):
-        s = self._name
+        s = self.get_name()
         return(s)
 
     def __repr__(self):
         s = 'sasoptpy.abstract.Set(name={}, settype={})'.format(
-            self._name, self._type)
+            self.get_name(), self._type)
         return(s)
 
     def _expr(self):
-        return self._name
+        return self.get_name()
 
     def value(self):
         return self._value

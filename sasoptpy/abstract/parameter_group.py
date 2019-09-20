@@ -5,7 +5,7 @@ from .parameter import Parameter
 
 import sasoptpy
 
-class ParameterGroup():
+class ParameterGroup:
 
     @sasoptpy.class_containable
     def __init__(self, *index_key, name, init=None, value=None, ptype=None):
@@ -24,7 +24,7 @@ class ParameterGroup():
 
     def get_element_name(self, key):
         keyname = sasoptpy.util.package_utils._to_sas_string(key)
-        return '{}[{}]'.format(self._name, keyname)
+        return '{}[{}]'.format(self.get_name(), keyname)
 
     def __getitem__(self, key):
         if key in self._shadows:
@@ -36,7 +36,7 @@ class ParameterGroup():
             return pv
 
     def _defn(self):
-        s = '{} {}'.format(self._ptype, self._name)
+        s = '{} {}'.format(self._ptype, self.get_name())
         s += ' {{{}}}'.format(', '.join(sasoptpy.to_expression(k) for k in self._key))
         if self._init is not None:
             s += ' init {}'.format(self._init)
@@ -46,4 +46,4 @@ class ParameterGroup():
         return s
 
     def _expr(self):
-        return self._name
+        return self.get_name()

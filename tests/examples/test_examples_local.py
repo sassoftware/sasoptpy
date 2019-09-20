@@ -38,7 +38,8 @@ class TestExamplesLocal(unittest.TestCase):
             if os.name == 'nt':
                 cls.conn = saspy.SASsession(cfgname='winlocal')
             else:
-                cls.conn = SASsession(cfgfile='saspy_config.py')
+                cfg_file = os.path.join(current_dir, 'saspy_config.py')
+                cls.conn = saspy.SASsession(cfgfile=cfg_file)
             print('Connected to SAS')
             cls.conn.upload_frame = TestExamplesLocal.sas_upload
         except TypeError:
@@ -64,9 +65,9 @@ class TestExamplesLocal(unittest.TestCase):
     def tearDown(self):
         sasoptpy.reset()
 
-    def run_test(self, test):
+    def run_test(self, test, **kwargs):
         t0 = time.time()
-        val = test(TestExamplesLocal.conn)
+        val = test(TestExamplesLocal.conn, **kwargs)
         print(test.__globals__['__file__'], val, time.time()-t0)
         return val
 
@@ -97,7 +98,7 @@ class TestExamplesLocal(unittest.TestCase):
 
     def test_ro(self):
         from refinery_optimization import test
-        obj = self.run_test(test)
+        obj = self.run_test(test, limit_names=True)
         self.assertAlmostEqual(obj, 211365.134768933, self.digits)
 
     def test_mo(self):
@@ -122,7 +123,10 @@ class TestExamplesLocal(unittest.TestCase):
 
     def test_kidney_exchange(self):
         from sas_kidney_exchange import test
-        obj = self.run_test(test)
+        def long_line_error():
+            obj = self.run_test(test)
+        self.assertRaises(RuntimeError, long_line_error)
+        obj = self.run_test(test, wrap_lines=True)
         self.assertAlmostEqual(obj, 17.11135898487, self.digits)
 
     def test_optimal_wedding(self):

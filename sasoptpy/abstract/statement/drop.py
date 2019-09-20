@@ -15,7 +15,7 @@ class DropStatement(Statement):
     def _defn(self):
         s = ''
         for e in self.elements:
-            s += 'drop {};'.format(e._name)
+            s += 'drop {};'.format(e.get_name())
         return s
 
     @classmethod
