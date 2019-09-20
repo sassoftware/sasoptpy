@@ -58,11 +58,11 @@ class TestSASInterface(unittest.TestCase):
             so.quick_sum(x[i] for i in range(vs)), sense=so.MAX, name='obj')
 
         def raise_runtime():
-            m.solve(verbose=True)
+            m.solve()
 
         self.assertRaises(RuntimeError, raise_runtime)
 
-        m.solve(verbose=True, limit_names=True)
+        m.solve(limit_names=True)
         print(m.get_solution())
         self.assertEqual(x[0].get_value(), 2)
 
@@ -77,10 +77,9 @@ class TestSASInterface(unittest.TestCase):
             so.quick_sum(i * x[i] for i in range(vs)) <= 1, name='c')
         o = m.set_objective(x[0], sense=so.MAX, name='obj')
 
-        def raise_runtime():
+        try:
             m.solve()
+        except RuntimeError:
+            m.solve(wrap_lines=True)
 
-        self.assertRaises(RuntimeError, raise_runtime)
-
-        m.solve(verbose=True, wrap_lines=True)
         self.assertEqual(x[0].get_value(), 2)

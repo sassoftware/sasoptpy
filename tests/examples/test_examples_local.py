@@ -123,10 +123,10 @@ class TestExamplesLocal(unittest.TestCase):
 
     def test_kidney_exchange(self):
         from sas_kidney_exchange import test
-        def long_line_error():
+        try:
             obj = self.run_test(test)
-        self.assertRaises(RuntimeError, long_line_error)
-        obj = self.run_test(test, wrap_lines=True)
+        except RuntimeError:
+            obj = self.run_test(test, wrap_lines=True)
         self.assertAlmostEqual(obj, 17.11135898487, self.digits)
 
     def test_optimal_wedding(self):
