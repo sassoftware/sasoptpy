@@ -1,5 +1,7 @@
 # SAS MVA interface for sasoptpy
 
+import re
+
 import sasoptpy
 from sasoptpy._libs import np
 from sasoptpy.interface import Mediator
@@ -12,6 +14,7 @@ class SASMediator(Mediator):
     def __init__(self, caller, sas_session):
         self.caller = caller
         self.session = sas_session
+        self.conversion = dict()
 
     def solve(self, **kwargs):
         """
@@ -129,9 +132,9 @@ class SASMediator(Mediator):
                         """.format(name))
 
         for line in c['LOG'].split('\n'):
-            if line[0:4] == '    ' or line[0:4] == 'NOTE':
-                if '_____' not in line and '   524' not in line:
-                    print(line)
+            print(line)
+            # if line[0:4] == '    ' or line[0:4] == 'NOTE':
+            #     print(line)
 
         return self.parse_sas_mps_solution()
 
@@ -146,13 +149,51 @@ class SASMediator(Mediator):
             model.get_name()))
         options = kwargs.get('options', dict())
         primalin = kwargs.get('primalin', False)
+
         optmodel_string = model.to_optmodel(header=True, options=options,
                                            ods=False, primalin=primalin,
                                            parse=True)
+
+        self.conversion = dict()
+
+        # Check if any object has a long name
+        limit_names = kwargs.get('limit_names', False)
+        if limit_names:
+            matches = re.findall(r'[a-zA-Z\_\d]{32,}', optmodel_string)
+            if len(matches) > 0:
+                print('NOTE: Some object names are longer than 32 characters, '
+                      'they will be replaced when submitting')
+                unique_matches = list(set(matches))
+                for i in unique_matches:
+                    new_name = sasoptpy.util.get_next_name()
+                    self.conversion[new_name] = i
+                    optmodel_string = re.sub(
+                        r'\b' + i + r'\b', new_name, optmodel_string)
+
+        wrap_lines = kwargs.get('wrap_lines', False)
+        if wrap_lines:
+            max_length = kwargs.get('max_line_length', 3000)
+            long_line_regex = r".{" + str(max_length) + r",}\n?"
+            partition_regex = r"(?=.{" + str(max_length) + r",}\n?)(.{" +\
+                              str(round(max_length/3)) + r",}?)([\,\ ]+)(.+)"
+            subst = "\\1\\2\\n\\3"
+
+            hits = re.findall(long_line_regex, optmodel_string)
+            line_lengths = [len(i) for i in hits]
+            while len(hits) > 0:
+                optmodel_string = re.sub(partition_regex, subst, optmodel_string)
+                hits = re.findall(long_line_regex, optmodel_string)
+                new_line_lengths = [len(i) for i in hits]
+                if line_lengths == new_line_lengths:
+                    break
+                else:
+                    line_lengths = new_line_lengths
+
         if verbose:
             print(optmodel_string)
         if not submit:
             return optmodel_string
+
         print('NOTE: Submitting OPTMODEL code to SAS instance.')
 
         optmodel_string = 'ods output SolutionSummary=SOL_SUMMARY;\n' + \
@@ -165,8 +206,15 @@ class SASMediator(Mediator):
 
         # Print output
         for line in response['LOG'].split('\n'):
-            if line[0:4] == '    ' or line[0:4] == 'NOTE':
-                print(line)
+            print(line)
+            if 'WARNING 524' in line:
+                raise RuntimeError(
+                    r'Some object names are truncated, '
+                    r'try submitting with limit_names=True parameter')
+            elif 'The submitted line exceeds maximum line length' in line:
+                raise RuntimeError(
+                    r'Some lines exceed maximum line length, '
+                    r'try submitting with wrap_lines=True parameter')
 
         # Parse solution
         return self.parse_sas_solution()
@@ -183,14 +231,14 @@ class SASMediator(Mediator):
         solver = caller._solutionSummary.loc['Solver', 'Value']
 
         # Parse solution
-        solution_df = session.sd2df('solution')
+        solution_df = session.sd2df('WORK.solution')
         primalsoln = solution_df[['_VAR_', '_VALUE_', '_LBOUND_', '_UBOUND_']]
         primalsoln.columns = ['var', 'value', 'lb', 'ub']
         if solver == 'LP':
             primalsoln['rc'] = solution_df['_R_COST_']
         caller._primalSolution = primalsoln
 
-        dual_df = session.sd2df('dual')
+        dual_df = session.sd2df('WORK.dual')
         dualsoln = dual_df[['_ROW_', '_ACTIVITY_']]
         dualsoln.columns = ['con', 'value']
         if solver == 'LP':
@@ -208,11 +256,12 @@ class SASMediator(Mediator):
 
         caller = self.caller
         session = self.session
-        response = caller.response
 
         # Parse solution
-        caller._primalSolution = session.sd2df('solution')
-        caller._dualSolution = session.sd2df('dual')
+        caller._primalSolution = session.sd2df('WORK.SOLUTION')
+        self.convert_to_original(caller._primalSolution)
+        caller._dualSolution = session.sd2df('WORK.DUAL')
+        self.convert_to_original(caller._dualSolution)
 
         caller._problemSummary = self.parse_sas_table('PROB_SUMMARY')
         caller._solutionSummary = self.parse_sas_table('SOL_SUMMARY')
@@ -231,6 +280,19 @@ class SASMediator(Mediator):
         parsed_df.columns = ['Label', 'Value']
         parsed_df = parsed_df.set_index(['Label'])
         return parsed_df
+
+    def convert_to_original(self, table):
+        if len(self.conversion) == 0:
+            return
+
+        name_from = []
+        name_to = []
+        for i in self.conversion:
+            name_from.append(r'\b' + i + r'\b')
+            name_to.append(self.conversion[i])
+        table.replace(name_from, name_to, inplace=True, regex=True)
+
+
 
     def perform_postsolve_operations(self):
         caller = self.caller
@@ -263,208 +325,3 @@ class SASMediator(Mediator):
         if sasoptpy.core.util.is_model(caller):
             for v in caller.get_variables():
                 v.set_init(v.get_value())
-
-    # def submit(self, **kwargs):
-    #     if isinstance(self.session, SASsession) and isinstance(self.caller, sasoptpy.Model):
-    #         return self.solve(session=self.session, **kwargs)
-    #
-    def OLD_solve(self, session, options, submit, name,
-                     frame, drop, replace, primalin, verbose):
-        """
-        Solves the optimization problem on SAS Clients
-
-        Notes
-        -----
-
-        - This function should not be called directly. Instead, use :meth:`Model.solve`.
-
-        See also
-        --------
-        :func:`Model.solve`
-
-        """
-
-        if not name:
-            name = 'MPS'
-
-        try:
-            import saspy as sp
-        except ImportError:
-            print('ERROR: saspy cannot be imported.')
-            return False
-
-        if not isinstance(session, sp.SASsession):
-            print('ERROR: session= argument is not a valid SAS session.')
-            return False
-
-        # Will be enabled later when runOptmodel supports blocks
-        if 'decomp' in options:
-            frame = True
-
-        # Check if OPTMODEL mode is needed
-        if frame:
-            switch = False
-            # Check if model has sets or parameters
-            if self._sets or self._parameters:
-                print('INFO: Model {} has data on server,'.format(self._name),
-                      'switching to OPTMODEL mode.')
-                switch = True
-            # Check if model is nonlinear (or abstract)
-            elif not self._is_linear():
-                print('INFO: Model {} includes nonlinear or abstract ',
-                      'components, switching to OPTMODEL mode.')
-                switch = True
-            if switch:
-                frame = False
-
-        if frame:  # MPS
-
-            # Get the MPS data
-            df = self.to_frame(constant=True)
-
-            # Upload MPS table with new arguments
-            try:
-                session.df2sd(df, table=name, keep_outer_quotes=True)
-            except TypeError:
-                # If user is using an old version of saspy, apply the hack
-                print(df.to_string())
-                session.df2sd(df, table=name)
-                session.submit("""
-                data {};
-                    set {};
-                    field3=tranwrd(field3, "'MARKER'", "MARKER");
-                    field3=tranwrd(field3, "MARKER", "'MARKER'");
-                    field5=tranwrd(field5, "'INTORG'", "INTORG");
-                    field5=tranwrd(field5, "INTORG", "'INTORG'");
-                    field5=tranwrd(field5, "'INTEND'", "INTEND");
-                    field5=tranwrd(field5, "INTEND", "'INTEND'");
-                run;
-                """.format(name, name))
-
-            # Find problem type and initial values
-            ptype = 1  # LP
-            for v in self._variables:
-                if v._type != sasoptpy.CONT:
-                    ptype = 2
-                    break
-
-            if ptype == 1:
-                c = session.submit("""
-                ods output SolutionSummary=SOL_SUMMARY;
-                ods output ProblemSummary=PROB_SUMMARY;
-                proc optlp data = {}
-                   primalout  = primal_out
-                   dualout    = dual_out;
-                run;
-                """.format(name))
-            else:
-                c = session.submit("""
-                ods output SolutionSummary=SOL_SUMMARY;
-                ods output ProblemSummary=PROB_SUMMARY;
-                proc optmilp data = {}
-                   primalout  = primal_out
-                   dualout    = dual_out;
-                run;
-                """.format(name))
-
-            for line in c['LOG'].split('\n'):
-                if line[0:4] == '    ' or line[0:4] == 'NOTE':
-                    print(line)
-
-            self._primalSolution = session.sd2df('PRIMAL_OUT')
-            self._dualSolution = session.sd2df('DUAL_OUT')
-
-            # Get Problem Summary
-            self._problemSummary = session.sd2df('PROB_SUMMARY')
-            self._problemSummary.replace(np.nan, '', inplace=True)
-            self._problemSummary = self._problemSummary[['Label1',
-                                                         'cValue1']]
-            self._problemSummary.set_index(['Label1'], inplace=True)
-            self._problemSummary.columns = ['Value']
-            self._problemSummary.index.names = ['Label']
-
-            # Get Solution Summary
-            self._solutionSummary = session.sd2df('SOL_SUMMARY')
-            self._solutionSummary.replace(np.nan, '', inplace=True)
-            self._solutionSummary = self._solutionSummary[['Label1',
-                                                           'cValue1']]
-            self._solutionSummary.set_index(['Label1'], inplace=True)
-            self._solutionSummary.columns = ['Value']
-            self._solutionSummary.index.names = ['Label']
-
-            # Parse solutions
-            for _, row in self._primalSolution.iterrows():
-                self._variableDict[row['_VAR_']]._value = row['_VALUE_']
-
-            return self._primalSolution
-
-        else:  # OPTMODEL
-
-            # Find problem type and initial values
-            ptype = 1  # LP
-            for v in self._variables:
-                if v._type != sasoptpy.CONT:
-                    ptype = 2
-                    break
-
-            print('NOTE: Converting model {} to OPTMODEL.'.format(self._name))
-            optmodel_string = self.to_optmodel(header=True, options=options,
-                                               ods=True, primalin=primalin)
-            if verbose:
-                print(optmodel_string)
-            if not submit:
-                return optmodel_string
-            print('NOTE: Submitting OPTMODEL codes to SAS server.')
-            optmodel_string = 'ods output SolutionSummary=SOL_SUMMARY;\n' +\
-                              'ods output ProblemSummary=PROB_SUMMARY;\n' +\
-                              optmodel_string
-            c = session.submit(optmodel_string)
-
-            # Print output
-            for line in c['LOG'].split('\n'):
-                if line[0:4] == '    ' or line[0:4] == 'NOTE':
-                    print(line)
-
-            # Parse solution
-            self._primalSolution = session.sd2df('PRIMAL_OUT')
-            self._primalSolution = self._primalSolution[
-                    ['.VAR..NAME', '.VAR..LB', '.VAR..UB', '_VAR_',
-                     '.VAR..RC']]
-            self._primalSolution.columns = ['var', 'lb', 'ub', 'value', 'rc']
-            self._dualSolution = session.sd2df('DUAL_OUT')
-            self._dualSolution = self._dualSolution[
-                    ['.CON..NAME', '.CON..BODY', '.CON..DUAL']]
-            self._dualSolution.columns = ['con', 'value', 'dual']
-
-            # Get Problem Summary
-            self._problemSummary = session.sd2df('PROB_SUMMARY')
-            self._problemSummary.replace(np.nan, '', inplace=True)
-            self._problemSummary = self._problemSummary[['Label1', 'cValue1']]
-            self._problemSummary.set_index(['Label1'], inplace=True)
-            self._problemSummary.columns = ['Value']
-            self._problemSummary.index.names = ['Label']
-
-            # Get Solution Summary
-            self._solutionSummary = session.sd2df('SOL_SUMMARY')
-            self._solutionSummary.replace(np.nan, '', inplace=True)
-            self._solutionSummary = self._solutionSummary[['Label1',
-                                                           'cValue1']]
-            self._solutionSummary.set_index(['Label1'], inplace=True)
-            self._solutionSummary.columns = ['Value']
-            self._solutionSummary.index.names = ['Label']
-
-            # Parse solutions
-            for _, row in self._primalSolution.iterrows():
-                if row['var'] in self._variableDict:
-                    self._variableDict[row['var']]._value = row['value']
-
-            # Capturing dual values for LP problems
-            if ptype == 1:
-                for _, row in self._primalSolution.iterrows():
-                    if row['var'] in self._variableDict:
-                        self._variableDict[row['var']]._dual = row['rc']
-                for _, row in self._dualSolution.iterrows():
-                    if row['con'] in self._constraintDict:
-                        self._constraintDict[row['con']]._dual = row['dual']
-
-            return self._primalSolution
