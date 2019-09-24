@@ -252,3 +252,39 @@ def get_group_bound(bound):
 def read_data(table, index, columns):
     pass
 
+
+def is_valid_lb(lb, variable_type):
+    if lb is None:
+        return False
+    if lb == -inf or lb == -np.inf:
+        return False
+    if lb == 0 and variable_type == sasoptpy.BIN:
+        return False
+
+    if np.isinstance(type(lb), np.number):
+        return True
+    else:
+        return False
+
+
+def is_valid_ub(ub, variable_type):
+    if ub is None:
+        return False
+    if ub == inf or ub == np.inf:
+        return False
+    if ub == 1 and variable_type == sasoptpy.BIN:
+        return False
+
+    if np.isinstance(type(ub), np.number):
+        return True
+    else:
+        return True
+
+
+def is_valid_init(init, varible_type):
+    if init is None:
+        return False
+    if np.isinstance(type(init), np.number):
+        return True
+    return False
+

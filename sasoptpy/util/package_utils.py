@@ -91,29 +91,6 @@ def get_next_name():
     return 'o' + str(get_creation_id())
 
 
-def is_existing_object(obj):
-    if obj.get_name() is None:
-        return False
-    elif get_obj_by_name(obj.get_name()):
-        return True
-    else:
-        return False
-
-
-def need_name_assignment(obj, name):
-    if obj.get_name() is None:
-        return True
-    elif obj.get_name() == name:
-        return False
-    else:
-        return True
-
-
-def set_creation_order_if_empty(obj):
-    if hasattr(obj, '_objorder') and not obj._objorder:
-        obj._objorder = get_creation_id()
-
-
 def load_function_containers():
     sasoptpy.container = None
 
@@ -179,13 +156,6 @@ def get_in_digit_format(val):
     return val
 
 
-def round_digits(val):
-    digits = sasoptpy.config['print_digits']
-    if digits and digits > 0:
-        return round(val, digits)
-    return val
-
-
 def get_direction_str(direction):
     return sasoptpy._relation_dict.get(direction)
 
@@ -197,7 +167,7 @@ def _extract_argument_as_list(inp):
     elif isinstance(inp, range):
         thelist = list(inp)
     elif isinstance(inp, tuple):
-        thelist = inp[0]
+        thelist = list(inp)
     elif isinstance(inp, list):
         thelist = inp
     elif sasoptpy.abstract.is_abstract_set(inp):
@@ -222,7 +192,7 @@ def extract_list_value(tuplist, listname):
     if listname is None:
         v = None
     elif isinstance(listname, dict):
-        v = listname[tuple_unpack(tuplist)]
+        v = listname.get(get_first_member(tuplist), None)
     elif np.isinstance(type(listname), np.number):
         v = listname
     elif isinstance(listname, pd.DataFrame):
@@ -233,9 +203,8 @@ def extract_list_value(tuplist, listname):
     elif isinstance(listname, pd.Series):
         v = listname.loc[tuplist]
     else:
-        v = listname
-        for k in tuplist:
-            v = v[k]
+        raise ValueError('Parameter type {} is not valid for the operation'.\
+                         format(type(listname)))
     return v
 
 
@@ -306,11 +275,6 @@ def list_pack(obj):
     return pack_to_list(obj)
 
 
-def _list_item(obj):
-    warnings.warn('Use sasoptpy.util.pack_to_list', DeprecationWarning)
-    return pack_to_list(obj)
-
-
 def _wrap_expression_with_iterators(exp, operator, iterators):
     if isinstance(exp, sasoptpy.core.Variable):
         r = exp.copy()
@@ -356,7 +320,7 @@ def _to_optmodel_loop(keys, parent=None):
     return s
 
 
-def _recursive_walk(obj, func, attr=None, alt=None):
+def _recursive_walk(obj, func):
     """
     Calls a given method recursively for given objects
 
@@ -365,12 +329,6 @@ def _recursive_walk(obj, func, attr=None, alt=None):
     ----------
     func : string
         Name of the method / function be called
-    attr : string, optional
-        An attribute which triggers an alternative method to be called if\
-        exists
-    alt : string, optional
-        Name of the alternative method / function to be called if passed attr\
-        exists for given objects
 
     Notes
     -----
@@ -379,28 +337,13 @@ def _recursive_walk(obj, func, attr=None, alt=None):
     """
     result = []
     for i in list(obj):
-        if isinstance(i, list):
-            result.append(recursive_walk(i, func))
-        else:
-            if attr is None:
-                m_call = getattr(i, func)
-                result.append(m_call())
-            else:
-                m_attr = getattr(i, attr)
-                if m_attr:
-                    m_call = getattr(i, alt)
-                else:
-                    m_call = getattr(i, func)
-                result.append(m_call())
+        m_call = getattr(i, func)
+        result.append(m_call())
     return result
 
 
 def is_set_abstract(arg):
     return sasoptpy.abstract.is_abstract_set(arg)
-
-
-def is_abstract(arg):
-    return hasattr(arg, '_abstract') and arg._abstract
 
 
 def is_comparable(arg):
@@ -428,16 +371,6 @@ def get_iterators(keys):
     for key in keys:
         if is_key_abstract(key):
             iterators.append(key._get_for_expr())
-        elif isinstance(key, tuple):
-            for subkey in key:
-                if hasattr(subkey, '_group'):
-                    g = groups.setdefault(subkey._group, [])
-                    g.append(subkey)
-    if groups:
-        for kg in groups.values():
-            s = '<' + ','.join([i.get_name() for i in kg]) + '> in ' +\
-                kg[0]._set.get_name()
-            iterators.append(s)
     return iterators
 
 
@@ -537,14 +470,6 @@ def flatten_tuple(tp):
             yield elem
 
 
-def _to_optmodel_expr(item):
-    expr_func = getattr(item, "_expr", None)
-    if callable(expr_func):
-        return item._expr()
-    else:
-        return str(item)
-
-
 def _to_optmodel_quoted_string(item):
     if isinstance(item, int):
         return str(item)
@@ -554,46 +479,6 @@ def _to_optmodel_quoted_string(item):
         return '<' + ','.join(_to_optmodel_quoted_string(j) for j in item) + '>'
     else:
         return str(item)
-
-
-def _to_quoted_string(item):
-    warnings.warn('Use _to_optmodel_quoted_string', DeprecationWarning)
-    return _to_optmodel_quoted_string(item)
-
-
-def list_length(listobj):
-    """
-    Returns the length of an object if it is a list, tuple or dict
-
-    Parameters
-    ----------
-    listobj : list, tuple or dict
-        Object whose length will be returned
-
-    Returns
-    -------
-    ln : int
-        Length of the list, tuple or dict
-    """
-    if (isinstance(listobj, list) or isinstance(listobj, tuple) or
-            isinstance(listobj, dict)):
-        return len(listobj)
-    else:
-        return 1
-
-
-def _sort_tuple(i):
-    i = pack_to_tuple(i)
-    key = (len(i),)
-    for s in i:
-        if isinstance(s, str):
-            key += (0,)
-        elif np.isinstance(type(s), np.number):
-            key += (1,)
-        elif isinstance(s, tuple):
-            key += (2,)
-    key += i
-    return key
 
 
 def _to_sas_string(obj):
@@ -621,14 +506,11 @@ def _to_sas_string(obj):
 
 
 def _insert_brackets(prefix, keys):
-    if keys is None:
-        return prefix
-    else:
-        s = prefix + '['
-        k = pack_to_tuple(keys)
-        s += ', '.join(_to_iterator_expression(k))
-        s += ']'
-        return s
+    s = prefix + '['
+    k = pack_to_tuple(keys)
+    s += ', '.join(_to_iterator_expression(k))
+    s += ']'
+    return s
 
 
 def _to_iterator_expression(itlist):
@@ -641,11 +523,6 @@ def _to_iterator_expression(itlist):
         else:
             strlist.append(str(i))
     return strlist
-
-
-def _to_bracket(prefix, keys):
-    warnings.warn('Use sasoptpy.util.package_utils._insert_brackets', DeprecationWarning)
-    return _insert_brackets(prefix, keys)
 
 
 def get_python_symbol(symbol):
@@ -679,8 +556,6 @@ def _attribute_to_defn(d):
         return '{} = {};'.format(expr(d['ref']), d['value'])
     if d['key'] == 'lb' or d['key'] == 'ub':
         return '{}.{} = {};'.format(expr(d['ref']), d['key'], d['value'])
-    raise NotImplementedError(
-        'Attribute {} definition is not implemented'.format(d['key']))
 
 
 def addSpaces(s, space):
@@ -712,7 +587,3 @@ def get_group_name(name):
 def has_expr(e):
     return hasattr(e, '_expr')
 
-
-def generator_iter(parent, argv):
-    with sasoptpy.inside_container(parent):
-        yield enumerate(argv)

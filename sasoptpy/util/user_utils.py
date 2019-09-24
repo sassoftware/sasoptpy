@@ -29,8 +29,8 @@ from contextlib import contextmanager
 import sasoptpy
 from sasoptpy._libs import (pd, np)
 from .package_utils import (
-    wrap_expression, _wrap_expression_with_iterators, list_length,
-    get_first_member, pack_to_tuple, _sort_tuple)
+    wrap_expression, _wrap_expression_with_iterators,
+    get_first_member, pack_to_tuple)
 
 
 def concat(exp1, exp2):

@@ -328,17 +328,12 @@ class VariableGroup(Group):
                 s += 'binary '
             if self._type == INT:
                 s += 'integer '
-        if self._lb is not None and\
-           np.isinstance(type(self._lb), np.number) and\
-           self._lb != -inf and\
-           not(self._lb == 0 and self._type == BIN):
+
+        if sasoptpy.core.util.is_valid_lb(self._lb, self._type):
             s += '>= {} '.format(self._lb)
-        if self._ub is not None and\
-           np.isinstance(type(self._ub), np.number) and\
-           self._ub != inf and\
-           not(self._ub == 1 and self._type == BIN):
+        if sasoptpy.core.util.is_valid_ub(self._ub, self._type):
             s += '<= {} '.format(self._ub)
-        if self._init is not None:
+        if sasoptpy.core.util.is_valid_init(self._init, self._type):
             s += 'init {} '.format(self._init)
 
         s = s.rstrip()
@@ -391,6 +386,10 @@ class VariableGroup(Group):
                 if sasoptpy.util.is_comparable(group_value) and var_value != group_value:
                     different_attrs.append(
                         {'ref': var, 'key': key, 'value': var_value})
+                elif not sasoptpy.util.is_comparable(group_value):
+                    different_attrs.append(
+                        {'ref': var, 'key': key, 'value': var_value})
+
         return different_attrs
 
     def sum(self, *argv):
