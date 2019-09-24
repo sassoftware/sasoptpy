@@ -73,7 +73,7 @@ class ImplicitVar:
                     if argv.gi_code.co_nlocals == 1:
                         itlist = argv.gi_code.co_cellvars
                     else:
-                        itlist = argv.gi_code.co_varnames
+                        itlist = argv.gi_code.co_cellvars + argv.gi_code.co_varnames
                     localdict = argv.gi_frame.f_locals
                     for i in itlist:
                         if i != '.0':
@@ -121,6 +121,9 @@ class ImplicitVar:
 
     def get_name(self):
         return self._name
+
+    def get_dict(self):
+        return self._dict
 
     def get_keys(self):
         """

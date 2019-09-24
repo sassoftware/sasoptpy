@@ -247,5 +247,14 @@ class TestImplicitVariable(unittest.TestCase):
         for i in y:
             self.assertTrue(isinstance(y[i], so.Expression))
 
+    def test_impvar_expr(self):
+        x = so.VariableGroup(2, name='x')
+        y = so.ImplicitVar((1 - x[i] for i in range(1)), name='y')
+        self.assertEqual(so.to_definition(y),
+                         'impvar y_0 = - x[0] + 1;')
+        e = x[1] + 100 - y[0]
+        self.assertEqual(so.to_expression(e),
+                         'x[1] - (- x[0] + 1) + 100')
+
     def tearDown(self):
         pass

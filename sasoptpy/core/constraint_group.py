@@ -67,7 +67,7 @@ class ConstraintGroup(Group):
 
         self._objorder = sasoptpy.util.get_creation_id()
 
-        self._shadows = dict()
+        self._shadows = OrderedDict()
 
     def get_name(self):
             """
@@ -94,8 +94,6 @@ class ConstraintGroup(Group):
 
     def _recursive_add_cons(self, argv, name, condict, ckeys=()):
         conctr = 0
-
-        sasoptpy.core.util.check_transfer_mode(argv)
 
         for (idx, c) in enumerate(argv):
             if type(argv) == list:
@@ -204,6 +202,12 @@ class ConstraintGroup(Group):
 
     def get_members(self):
         return self._condict
+
+    def get_shadow_members(self):
+        return self._shadows
+
+    def get_all_keys(self):
+        return list(self._condict.keys()) + list(self._shadows.keys())
 
     def _defn(self):
         from sasoptpy.util.package_utils import _to_optmodel_loop

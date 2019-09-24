@@ -35,7 +35,7 @@ setup(
     author_email='Sertalp.Cay@sas.com',
     license='Apache v2.0',
     install_requires=[
-        'pandas >= 0.23.3',
+        'pandas >= 0.25.0',
         'swat >= 1.4.0',
         'saspy >= 3.1.0',
         'numpy >= 1.14.5'

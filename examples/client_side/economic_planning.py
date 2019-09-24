@@ -53,10 +53,10 @@ def test(cas_conn):
                       name='static_con')
 
     m.solve()
-    print(so.get_solution_table(static_production, sort=True))
+    print(so.get_value_table(static_production))
 
-    final_demand = so.get_solution_table(
-        static_production, sort=True)['static_production']
+    final_demand = so.get_value_table(
+        static_production)['static_production']
 
     production = m.add_variables(INDUSTRIES, range(0, num_years+2), lb=0,
                                  name='production')
@@ -64,11 +64,14 @@ def test(cas_conn):
                             name='stock')
     extra_capacity = m.add_variables(INDUSTRIES, range(2, num_years+3), lb=0,
                                      name='extra_capacity')
-    productive_capacity = {}
-    for i in INDUSTRIES:
-        for year in range(1, num_years+2):
-            productive_capacity[i, year] = init_productive_capacity[i] +\
-                so.quick_sum(extra_capacity[i, y] for y in range(2, year+1))
+
+    productive_capacity = so.ImplicitVar(
+        (init_productive_capacity[i] +
+         so.quick_sum(extra_capacity[i, y] for y in range(2, year+1))
+         for i in INDUSTRIES for year in range(1, num_years+2)),
+        name='productive_capacity'
+    )
+
     for i in INDUSTRIES:
         production[i, 0].set_bounds(ub=0)
         stock[i, 0].set_bounds(lb=init_stocks[i], ub=init_stocks[i])
@@ -114,16 +117,15 @@ def test(cas_conn):
             extra_capacity[i, year].set_bounds(ub=0)
 
     problem1 = so.Model(name='Problem1', session=cas_conn)
-    problem1.include(production, stock, extra_capacity,
-                     continuity_con, manpower_con, capacity_con)
+    problem1.include(
+        production, stock, extra_capacity, continuity_con, manpower_con,
+        capacity_con, productive_capacity)
     problem1.set_objective(total_productive_capacity, sense=so.MAX,
                            name='total_productive_capacity')
     problem1.solve()
-    productive_capacity_fr = so.dict_to_frame(productive_capacity,
-                                              cols=['productive_capacity'])
-    print(so.get_solution_table(production, stock, extra_capacity,
-                                productive_capacity_fr, sort=True))
-    print(so.get_solution_table(manpower_con.get_expressions(), sort=True))
+    print(so.get_value_table(production, stock, extra_capacity,
+                                productive_capacity).sort_index())
+    print(so.get_value_table(manpower_con.get_expressions()))
 
     # Problem 2
 
@@ -135,9 +137,9 @@ def test(cas_conn):
         for year in YEARS:
             continuity_con[i, year].set_rhs(0)
     problem2.solve()
-    print(so.get_solution_table(production, stock, extra_capacity,
-                                productive_capacity, sort=True))
-    print(so.get_solution_table(manpower_con.get_expressions(), sort=True))
+    print(so.get_value_table(production, stock, extra_capacity,
+                                productive_capacity).sort_index())
+    print(so.get_value_table(manpower_con.get_expressions()))
 
     # Problem 3
 
@@ -149,8 +151,8 @@ def test(cas_conn):
         for year in YEARS:
             continuity_con[i, year].set_rhs(demand[i])
     problem3.solve()
-    print(so.get_solution_table(production, stock, extra_capacity,
-                                productive_capacity, sort=True))
-    print(so.get_solution_table(manpower_con.get_expressions(), sort=True))
+    print(so.get_value_table(production, stock, extra_capacity,
+                                productive_capacity).sort_index())
+    print(so.get_value_table(manpower_con.get_expressions()))
 
     return problem3.get_objective_value()

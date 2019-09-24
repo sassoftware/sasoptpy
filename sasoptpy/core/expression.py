@@ -404,14 +404,19 @@ class Expression:
             # Merge all elements in strlist together
             refs = optext.join(strlist)
             if val == 1 or val == -1:
-                s += '{} '.format(refs)
-            elif op or any(special_op in refs for special_op in
-                           sasoptpy.util.get_unsafe_operators()):
-                s += '{} * ({}) '.format(
-                    sasoptpy.util.get_in_digit_format(abs(val)), refs)
+                if val == -1 and any(special_op in refs for special_op in
+                             sasoptpy.util.get_unsafe_operators()):
+                    s += '({}) '.format(refs)
+                else:
+                    s += '{} '.format(refs)
             else:
-                s += '{} * {} '.format(
-                    sasoptpy.util.get_in_digit_format(abs(val)), refs)
+                if op or any(special_op in refs for special_op in
+                               sasoptpy.util.get_unsafe_operators()):
+                    s += '{} * ({}) '.format(
+                        sasoptpy.util.get_in_digit_format(abs(val)), refs)
+                else:
+                    s += '{} * {} '.format(
+                        sasoptpy.util.get_in_digit_format(abs(val)), refs)
 
             itemcnt += 1
 

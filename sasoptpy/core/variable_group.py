@@ -359,6 +359,9 @@ class VariableGroup(Group):
     def get_members(self):
         return self._vardict
 
+    def get_shadow_members(self):
+        return self._shadows
+
     def get_attributes(self):
         attributes = OrderedDict()
         attributes['init'] = self._init

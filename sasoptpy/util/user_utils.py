@@ -80,221 +80,85 @@ def exp_range(start, stop, step=1):
     return s
 
 
-# TODO this function is too long, needs to be split
-def get_solution_table(*argv, key=None, sort=False, rhs=False):
+def get_solution_table(*argv, key=None, rhs=False):
+    return get_value_table(*argv, key=key, rhs=rhs)
+
+
+def get_value_table(*args, **kwargs):
     """
-    Returns the requested variable names as a DataFrame table
+    Returns values of the given arguments as a merged pandas DataFrame
 
     Parameters
     ----------
     key : list, optional
         Keys for objects
-    sort : bool, optional
-        Option for sorting the keys
     rhs : bool, optional
         Option for including constant values
 
     Returns
     -------
-    soltable : :class:`pandas.DataFrame`
-        DataFrame object that holds keys and values
+    table : :class:`pandas.DataFrame`
+        DataFrame object that holds object values
     """
-    soltable = []
-    listofkeys = []
-    keylengths = []
-    # Get dimension from first argv
-    if len(argv) == 0:
+
+    if len(args) == 0:
         return None
 
-    if key is None:
-        for i, _ in enumerate(argv):
-            if isinstance(argv[i], Iterable):
-                if isinstance(argv[i], sasoptpy.core.VariableGroup):
-                    currentkeylist = list(argv[i]._vardict.keys())
-                    for m in argv[i]._vardict:
-                        if argv[i]._vardict[m]._abstract:
-                            continue
-                        m = get_first_member(m)
-                        if m not in listofkeys:
-                            listofkeys.append(m)
-                    keylengths.append(list_length(
-                        currentkeylist[0]))
-                elif isinstance(argv[i], sasoptpy.core.ConstraintGroup):
-                    currentkeylist = list(argv[i]._condict.keys())
-                    for m in argv[i]._condict:
-                        m = get_first_member(m)
-                        if m not in listofkeys:
-                            listofkeys.append(m)
-                    keylengths.append(list_length(
-                        currentkeylist[0]))
-                elif (isinstance(argv[i], pd.Series) or
-                      (isinstance(argv[i], pd.DataFrame) and
-                      len(argv[i].columns) == 1)):
-                    # optinal method: converting to series, argv[i].iloc[0]
-                    currentkeylist = argv[i].index.values
-                    for m in currentkeylist:
-                        m = get_first_member(m)
-                        if m not in listofkeys:
-                            listofkeys.append(m)
-                    keylengths.append(list_length(
-                        currentkeylist[0]))
-                elif isinstance(argv[i], pd.DataFrame):
-                    index_list = argv[i].index.tolist()
-                    col_list = argv[i].columns.tolist()
-                    for m in index_list:
-                        for n in col_list:
-                            current_key = pack_to_tuple(m) + pack_to_tuple(n)
-                            if current_key not in listofkeys:
-                                listofkeys.append(current_key)
-                    keylengths.append(list_length(
-                        current_key))
-                elif isinstance(argv[i], dict):
-                    currentkeylist = list(argv[i].keys())
-                    for m in currentkeylist:
-                        m = get_first_member(m)
-                        if m not in listofkeys:
-                            listofkeys.append(m)
-                    keylengths.append(list_length(
-                        currentkeylist[0]))
-                elif isinstance(argv[i], sasoptpy.core.Expression):
-                    if ('',) not in listofkeys:
-                        listofkeys.append(('',))
-                        keylengths.append(1)
-                else:
-                    print('Unknown type: {} {}'.format(type(argv[i]), argv[i]))
-            else:
-                if ('',) not in listofkeys:
-                    listofkeys.append(('',))
-                    keylengths.append(1)
+    series = []
+    for arg in args:
+        s = get_values(arg, **kwargs)
+        series.append(s)
+    return pd.concat(series, axis=1, sort=False)
 
-        if sort:
-            try:
-                listofkeys = sorted(listofkeys,
-                                    key=_sort_tuple)
-            except TypeError:
-                listofkeys = listofkeys
 
-        maxk = max(keylengths)
+def get_values(arg, **kwargs):
+    """
+    Returns values of given set of arguments as a pandas Series
+    """
+    if isinstance(arg, pd.Series):
+        arg_values = arg.apply(
+            lambda row: row.get_value() if hasattr(row, 'get_value')
+            else str(row))
+        return arg_values
+    elif isinstance(arg, pd.DataFrame):
+        arg_values = arg.apply(
+            lambda col: col.apply(
+                lambda row: row.get_value() if hasattr(row, 'get_value')
+                else str(row)))
+        return arg_values
+    elif isinstance(arg, sasoptpy.VariableGroup):
+        keys = []
+        values = []
+        members = arg.get_members() if arg._abstract is False else arg.get_shadow_members()
+        for i in members:
+            if sasoptpy.abstract.is_abstract(get_first_member(i)):
+                continue
+            keys.append(get_first_member(i))
+            values.append(members[i].get_value())
+        return pd.Series(values, index=keys, name=arg.get_name())
+    elif isinstance(arg, sasoptpy.ConstraintGroup):
+        keys = []
+        values = []
+        members = arg.get_all_keys()
+        rhs = kwargs.get('rhs', False)
+        for i in members:
+            if sasoptpy.abstract.is_abstract(get_first_member(i)):
+                continue
+            keys.append(get_first_member(i))
+            values.append(arg[i].get_value(rhs=rhs))
+        return pd.Series(values, index=keys, name=arg.get_name())
+    elif isinstance(arg, sasoptpy.ImplicitVar):
+        keys = []
+        values = []
+        members = arg.get_dict()
+        for i in members:
+            keys.append(get_first_member(i))
+            values.append(members[i].get_value())
+        return pd.Series(values, index=keys, name=arg.get_name())
+    elif isinstance(arg, sasoptpy.Expression):
+        return pd.Series([arg.get_value()], index=['-'], name=arg.get_name())
     else:
-        maxk = max(len(i) if isinstance(i, tuple) else 1 for i in key)
-        listofkeys = key
-
-    for k in listofkeys:
-        if isinstance(k, tuple):
-            row = list(k)
-        else:
-            row = [k]
-        if list_length(k) < maxk:
-            row.extend(['-']*(maxk-list_length(k)))
-        for i, _ in enumerate(argv):
-            if type(argv[i]) == sasoptpy.core.VariableGroup:
-                tk = pack_to_tuple(k)
-                if tk not in argv[i]._vardict or argv[i][tk]._abstract:
-                    val = '-'
-                else:
-                    val = argv[i][tk].get_value()
-                row.append(val)
-            elif type(argv[i]) == sasoptpy.core.Variable:
-                val = argv[i].get_value() if k == ('',) else '-'
-                row.append(val)
-            elif type(argv[i]) == sasoptpy.core.Constraint:
-                val = argv[i].get_value(rhs=rhs) if k == ('',) else '-'
-                row.append(val)
-            elif type(argv[i]) == sasoptpy.core.ConstraintGroup:
-                tk = pack_to_tuple(k)
-                val = argv[i][tk].get_value()\
-                    if tk in argv[i]._condict else '-'
-                row.append(val)
-            elif type(argv[i]) == sasoptpy.core.Expression:
-                val = argv[i].get_value() if k == ('',) else '-'
-                row.append(val)
-            elif type(argv[i]) == pd.Series:
-                if k in argv[i].index.tolist():
-                    if type(argv[i][k]) == sasoptpy.core.Expression:
-                        val = argv[i][k].get_value()
-                    else:
-                        val = argv[i][k]
-                else:
-                    val = '-'
-                row.append(val)
-            elif (type(argv[i]) == pd.DataFrame and
-                  len(argv[i].columns) == 1):
-                for j in argv[i]:
-                    if k in argv[i].index.tolist():
-                        cellv = argv[i].loc[k, j]
-                        if type(cellv) == pd.Series:
-                            cellv = cellv.iloc[0]
-                        if type(cellv) == sasoptpy.core.Expression:
-                            row.append(cellv.get_value())
-                        else:
-                            row.append(argv[i].loc[k, j])
-                    elif pack_to_tuple(k) in argv[i].index.tolist():
-                        tk = pack_to_tuple(k)
-                        cellv = argv[i].loc[tk, j]
-                        if type(cellv) == pd.Series:
-                            cellv = cellv.iloc[0]
-                        if type(cellv) == sasoptpy.core.Expression:
-                            row.append(cellv.get_value())
-                        else:
-                            row.append(argv[i].loc[tk, j])
-                    else:
-                        row.append('-')
-            elif type(argv[i]) == pd.DataFrame:
-                arg_series = argv[i].stack()
-                arg_series.index = arg_series.index.to_series()
-                if k in arg_series.index.values.tolist():
-                    if type(arg_series[k]) == sasoptpy.core.Expression:
-                        val = arg_series[k].get_value()
-                    else:
-                        val = arg_series[k]
-                else:
-                    val = '-'
-                row.append(val)
-            elif type(argv[i]) == sasoptpy.abstract.ImplicitVar:
-                tk = pack_to_tuple(k)
-                if tk in argv[i]._dict:
-                    row.append(argv[i][tk].get_value())
-                else:
-                    row.append('-')
-            elif isinstance(argv[i], dict):
-                if k in argv[i]:
-                    tk = pack_to_tuple(k)
-                    if type(argv[i][tk]) == sasoptpy.core.Expression:
-                        row.append(argv[i][tk].get_value())
-                    elif np.issubdtype(type(argv[i][tk]), np.number):
-                        row.append(argv[i][tk])
-                    else:
-                        row.append('-')
-                else:
-                    row.append('-')
-            else:
-                try:
-                    row.append(str(argv[i][k]))
-                except TypeError:
-                    row.append('-')
-        soltable.append(row)
-    indexlen = len(soltable[0])-len(argv)
-    indexcols = [i+1 for i in range(indexlen)]
-    inputcols = []
-    for a in argv:
-        if isinstance(a, pd.DataFrame) and len(a.columns.tolist()) == 1:
-            inputcols.extend(a.columns.values.tolist())
-        else:
-            try:
-                inputcols.append(a.get_name())
-            except AttributeError:
-                if isinstance(a, pd.DataFrame):
-                    inputcols.append('DataFrame')
-                elif isinstance(a, dict):
-                    inputcols.append('dict')
-                else:
-                    inputcols.append('arg: {}'.format(a))
-    colnames = indexcols + inputcols
-    soltablep = pd.DataFrame(soltable, columns=colnames)
-    soltablep2 = soltablep.set_index(indexcols)
-    pd.display_dense()
-    pd.display_all()
-    return soltablep2
+        return pd.Series([arg], index=['-'], name=str(arg))
 
 
 def submit(caller, *args, **kwargs):
@@ -347,48 +211,23 @@ def expr_sum(argv):
     """
     clocals = argv.gi_frame.f_locals.copy()
 
-    if sasoptpy.transfer_allowed:
-        argv.gi_frame.f_globals.update(sasoptpy._transfer)
-
     exp = sasoptpy.core.Expression()
     exp.set_temporary()
     iterators = []
     for i in argv:
         exp = exp + i
         if sasoptpy.core.util.is_expression(i):
-            if i._abstract:
-                newlocals = argv.gi_frame.f_locals
-                for nl in newlocals.keys():
-                    if nl not in clocals and\
-                       type(newlocals[nl]) == sasoptpy.abstract.SetIterator:
-                        iterators.append((nl, newlocals[nl]))  # Tuple: nm ref
-                        try:
-                            newlocals[nl].set_name(nl)
-                        except:
-                            pass
+            #if i._abstract:
+            newlocals = argv.gi_frame.f_locals
+            for nl in newlocals.keys():
+                if nl not in clocals and\
+                   type(newlocals[nl]) == sasoptpy.abstract.SetIterator:
+                    iterators.append(newlocals[nl])
+                    newlocals[nl].set_name(nl)
     if iterators:
-        # First pass: make set iterators uniform
-        for i in iterators:
-            for j in iterators:
-                if isinstance(i, sasoptpy.abstract.SetIterator) and\
-                   isinstance(j, sasoptpy.abstract.SetIterator):
-                    if i[0] == j[0]:
-                        j[1]._name = i[1]._name
-        it_names = []
-        for i in iterators:
-            unique = True
-            for j in it_names:
-                if i[0] == j[0]:
-                    unique = False
-                    break
-            if unique:
-                it_names.append(i)
-        # Second pass: check for iterators
-        iterators = [p[1] for p in it_names]
-        # Reorder iterators
         iterators = sorted(iterators, key=lambda i: i._objorder)
         exp = _wrap_expression_with_iterators(exp, 'sum', iterators)
-    exp._temp = False
+    exp.set_permanent()
     return exp
 
 

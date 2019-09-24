@@ -115,7 +115,7 @@ class TestGenerators(unittest.TestCase):
         for i, solve in enumerate(self.records):
             string0 = get_generic_form(solve[0])
             string1 = get_generic_form(solve[1])
-            self.assertMultiLineEqual(string0, string1)
+            self.assertMultiLineEqual(string0, string1, string0)
             print('Solve', i, ': True')
 
     def set_expectation(self, problem, test):

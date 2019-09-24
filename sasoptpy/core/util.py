@@ -203,11 +203,6 @@ def get_name_from_keys(name, keys):
     return '{}['.format(name) + ','.join(format(k) for k in keys) + ']'
 
 
-def check_transfer_mode(argv):
-    if sasoptpy.transfer_allowed and hasattr(argv, 'gi_frame'):
-        argv.gi_frame.f_globals.update(sasoptpy._transfer)
-
-
 def get_generator_names(argv):
     keys = tuple()
     if argv.gi_code.co_nlocals == 1:

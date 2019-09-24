@@ -49,10 +49,6 @@ def load_package_globals():
 
     sasoptpy.N = sasoptpy.Symbol(name='_N_')
 
-    # Container for wrapped statements
-    sasoptpy._transfer = {}
-    sasoptpy.transfer_allowed = False
-
     # Transformation dictionary
     sasoptpy._transform = {
         'binary': sasoptpy.BIN,
