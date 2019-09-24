@@ -1,6 +1,8 @@
 
 # SAS Optimization Interface for Python
 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/sassoftware/sasoptpy/master)
+
 **sasoptpy** is a Python package providing a modeling interface to [SAS Viya](https://www.sas.com/en_us/software/viya.html) and SAS/OR Optimization solvers.
 It provides a quick way for users to deploy optimization models and solve them using CAS Actions.
 
@@ -24,9 +26,9 @@ model optimization problems inside SAS.
 ## Requirements
 
 To use **sasoptpy**, you need to have:
-* Python 3.5+
+* Python 3.6+
 * [numpy](https://pypi.python.org/pypi/numpy)
-* [saspy](https://github.com/sassoftware/saspy) (Optional)
+* [saspy](https://github.com/sassoftware/saspy)
 * [swat](https://github.com/sassoftware/python-swat)
 * [pandas](https://pypi.python.org/pypi/pandas)
 
