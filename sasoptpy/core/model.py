@@ -681,6 +681,7 @@ class Model:
             VariableGroup: self._include_vargroup,
             Constraint: self._include_constraint,
             ConstraintGroup: self._include_congroup,
+            Objective: self._set_objective,
             sasoptpy.Set: self._include_set,
             sasoptpy.Parameter: self._include_parameter,
             sasoptpy.ParameterGroup: self._include_parameter_group,
@@ -721,6 +722,9 @@ class Model:
             self._constraintDict[i.get_name()] = i
         self._congroups.append(cg)
 
+    def _set_objective(self, ob):
+        self._objective = ob
+
     def _include_set(self, st):
         self._sets.append(st)
 
@@ -751,6 +755,25 @@ class Model:
         for s in model._constraints:
             self._include_constraint(s)
         self._objective = model._objective
+
+    def drop(self, obj):
+        if isinstance(obj, sasoptpy.VariableGroup):
+            self.drop_variables(obj)
+        elif isinstance(obj, sasoptpy.Variable):
+            self.drop_variable(obj)
+        elif isinstance(obj, sasoptpy.ConstraintGroup):
+            self.drop_constraints(obj)
+        elif isinstance(obj, sasoptpy.Constraint):
+            self.drop_constraint(obj)
+        elif isinstance(obj, sasoptpy.Set):
+            if obj in self._sets:
+                self._sets.remove(obj)
+        elif isinstance(obj, sasoptpy.Parameter):
+            if obj in self._parameters:
+                self._parameters.remove(obj)
+        elif isinstance(obj, sasoptpy.abstract.Statement):
+            if obj in self._statements:
+                self._statements.remove(obj)
 
     @sasoptpy.containable
     def set_objective(self, expression, name, sense=None):

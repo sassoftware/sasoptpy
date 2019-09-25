@@ -34,11 +34,11 @@ def load_package_globals():
     sasoptpy.itemid = 0
 
     # Constant values
-    sasoptpy.MIN = 'MIN'
-    sasoptpy.MAX = 'MAX'
-    sasoptpy.CONT = 'CONT'
-    sasoptpy.INT = 'INT'
-    sasoptpy.BIN = 'BIN'
+    sasoptpy.MIN = sasoptpy.minimize = 'MIN'
+    sasoptpy.MAX = sasoptpy.maximize = 'MAX'
+    sasoptpy.CONT = sasoptpy.continuous = 'CONT'
+    sasoptpy.INT = sasoptpy.integer = 'INT'
+    sasoptpy.BIN = sasoptpy.binary = 'BIN'
     sasoptpy.STR = 'str'
     sasoptpy.NUM = 'num'
 

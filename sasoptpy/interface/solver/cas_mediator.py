@@ -4,6 +4,7 @@ import inspect
 
 import pandas as pd
 import numpy as np
+import warnings
 
 import sasoptpy
 from sasoptpy.interface import Mediator
@@ -11,8 +12,6 @@ from sasoptpy.interface import Mediator
 class CASMediator(Mediator):
 
     def __init__(self, caller, cas_session):
-        if cas_session is None:
-            raise RuntimeError('CAS Session is not available')
         self.caller = caller
         self.session = cas_session
 
@@ -47,9 +46,6 @@ class CASMediator(Mediator):
         session = self.session
         caller = self.caller
 
-        if not isinstance(caller, sasoptpy.Model):
-            return False
-
         model = caller
 
         # If runOptmodel action is not available on server
@@ -65,14 +61,17 @@ class CASMediator(Mediator):
             switch = False
             # Sets and parameter belong to abstract models
             if model.get_sets() or model.get_parameters():
-                print('INFO: Model {} has data on server,'.format(model.get_name()),
-                      'switching to OPTMODEL mode.')
+                warnings.warn(
+                    'INFO: Model {} has abstract elements, '.format(
+                        model.get_name()) +
+                    'switching to OPTMODEL mode.', UserWarning)
                 switch = True
             # MPS format cannot represent nonlinear problems
             elif not sasoptpy.is_linear(model):
-                print('INFO: Model {} includes nonlinear or abstract'.format(
-                    model.get_name()),
-                      'components, switching to OPTMODEL mode.')
+                warnings.warn(
+                    'INFO: Model {} includes nonlinear or abstract '.format(
+                        model.get_name()) +
+                    'components, switching to OPTMODEL mode.', UserWarning)
                 switch = True
 
             if switch and enforced and mps_option:
@@ -94,6 +93,7 @@ class CASMediator(Mediator):
         name = kwargs.get('name', None)
         replace = kwargs.get('replace', True)
         drop = kwargs.get('drop', False)
+        user_blocks = None
 
         print('NOTE: Converting model {} to DataFrame.'.format(model.get_name()))
         # Pre-upload argument parse
@@ -141,6 +141,11 @@ class CASMediator(Mediator):
         # Upload the problem
         mps_table = self.upload_model(name, replace=replace,
                                       constant=not has_arg, verbose=verbose)
+
+        if verbose:
+            print(mps_table.to_string())
+        if not submit:
+            return mps_table
 
         if ptype == 1:
             valid_opts = inspect.signature(session.solveLp).parameters
@@ -346,8 +351,9 @@ class CASMediator(Mediator):
         caller = self.caller
         if not sasoptpy.core.util.is_model(caller):
             return
-        objval = caller.response.objective
-        caller.set_objective_value(objval)
+        if hasattr(caller.response, 'objective'):
+            objval = caller.response.objective
+            caller.set_objective_value(objval)
 
     def set_variable_init_values(self):
         caller = self.caller
