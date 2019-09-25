@@ -126,3 +126,14 @@ class TestCASInterface(unittest.TestCase):
         self.assertEqual(str(m.response.solutionStatus), 'UNBOUNDED')
         self.assertEqual(m._objval, None)
 
+    def test_lp(self):
+        if TestCASInterface.conn is None:
+            self.skipTest('No session is available.')
+
+        m = so.Model(name='model_lp', session=TestCASInterface.conn)
+        x = m.add_variable(name='x', lb=1, ub=4)
+        y = m.add_variable(name='y', lb=4, ub=10)
+        m.add_constraint(x + y == 8, name='c1')
+        m.set_objective(x-y, sense=so.MIN, name='obj')
+        m.solve(mps=True, verbose=True)
+        self.assertEqual(x.get_value(), 1)
