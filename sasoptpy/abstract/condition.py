@@ -30,15 +30,11 @@ class Condition:
         self._right = right
 
     def _expr(self):
-        if hasattr(self._left, '_cond_expr'):
-            left = self._left._cond_expr()
-        else:
-            left = sasoptpy.to_expression(self._left)
+        left = self._left._cond_expr if hasattr(self._left, '_cond_expr') \
+            else sasoptpy.to_expression(self._left)
 
-        if hasattr(self._right, '_cond_expr'):
-            right = self._right._cond_expr()
-        else:
-            right = sasoptpy.to_expression(self._right)
+        right = self._right._cond_expr if hasattr(self._right, '_cond_expr') \
+            else sasoptpy.to_expression(self._right)
 
         if self._type in ['and', 'or', 'AND', 'OR']:
             left = '({})'.format(left)
@@ -133,12 +129,4 @@ class Conditional:
 
     def __ne__(self, key):
         c = self.add_custom_condition('NE', key)
-        return c
-
-    def __and__(self, key):
-        c = self.add_custom_condition('AND', key)
-        return c
-
-    def __or__(self, key):
-        c = self.add_custom_condition('OR', key)
         return c

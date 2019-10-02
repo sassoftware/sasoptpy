@@ -44,7 +44,8 @@ class TestCondition(unittest.TestCase):
             with condition(i != 2):
                 c[i] = x[i] <= 3
 
-        print(so.to_definition(c))
+        self.assertEqual(so.to_definition(c),
+                         'con c {s in {1,2,3}: s != 2} : x[s] <= 3;')
 
     def test_container_condition(self):
 
@@ -54,6 +55,7 @@ class TestCondition(unittest.TestCase):
         with so.Workspace(name='w') as w:
 
             x = so.VariableGroup(3, name='x')
+            self.assertEqual(x[0].sym.get_conditions_str(), '')
             # solve
             x[0].set_value(1)
             x[1].set_value(5)
@@ -113,3 +115,82 @@ class TestCondition(unittest.TestCase):
         assert_equal_wo_temps(
             self, so.to_definition(e),
             'con e {o9 in S: 2.0 * o9 <= 5 and ((o9 >= 4) or (o9 <= 2))} : x[o9] >= 0;')
+
+    def test_conditional_all_combinations(self):
+
+        from sasoptpy.actions import condition
+
+        S = so.Set(name='S')
+        x = so.VariableGroup(S, name='x')
+
+        # EQ
+        c = so.ConstraintGroup(None, name='c')
+        for i in S:
+            with condition(x[i].sym == 0):
+                c[i] = x[i] >= 1
+        assert_equal_wo_temps(self, so.to_definition(c), cleandoc('''
+            con c {o6 in S: x[o6].sol = 0} : x[o6] >= 1;'''))
+
+        # LE
+        c = so.ConstraintGroup(None, name='c')
+        for i in S:
+            with condition(x[i].sym <= 0.5):
+                c[i] = x[i] >= 1
+        assert_equal_wo_temps(self, so.to_definition(c), cleandoc('''
+            con c {o6 in S: x[o6].sol <= 0.5} : x[o6] >= 1;'''))
+
+        # LT
+        c = so.ConstraintGroup(None, name='c')
+        for i in S:
+            with condition(x[i].sym < 0.5):
+                c[i] = x[i] >= 1
+        assert_equal_wo_temps(self, so.to_definition(c), cleandoc('''
+            con c {o6 in S: x[o6].sol < 0.5} : x[o6] >= 1;'''))
+
+        # GE
+        c = so.ConstraintGroup(None, name='c')
+        for i in S:
+            with condition(x[i].sym >= 0.5):
+                c[i] = x[i] >= 1
+        assert_equal_wo_temps(self, so.to_definition(c), cleandoc('''
+            con c {o6 in S: x[o6].sol >= 0.5} : x[o6] >= 1;'''))
+
+        # GT
+        c = so.ConstraintGroup(None, name='c')
+        for i in S:
+            with condition(x[i].sym > 0.5):
+                c[i] = x[i] >= 1
+        assert_equal_wo_temps(self, so.to_definition(c), cleandoc('''
+            con c {o6 in S: x[o6].sol > 0.5} : x[o6] >= 1;'''))
+
+        # NE
+        c = so.ConstraintGroup(None, name='c')
+        for i in S:
+            with condition(x[i].sym != 1):
+                c[i] = x[i] >= 1
+        assert_equal_wo_temps(self, so.to_definition(c), cleandoc('''
+            con c {o6 in S: x[o6].sol NE 1} : x[o6] >= 1;'''))
+
+        # AND
+        c = so.ConstraintGroup(None, name='c')
+        for i in S:
+            with condition((x[i].sym != 1) & (x[i].sym <= 2)):
+                c[i] = x[i] >= 1
+        assert_equal_wo_temps(self, so.to_definition(c), cleandoc('''
+            con c {o6 in S: ((x[o6].sol NE 1) and (x[o6].sol <= 2))} : x[o6] >= 1;'''))
+
+        # OR
+        c = so.ConstraintGroup(None, name='c')
+        for i in S:
+            with condition((x[i].sym < 1) | (x[i].sym > 2)):
+                c[i] = x[i] >= 1
+        assert_equal_wo_temps(self, so.to_definition(c), cleandoc('''
+            con c {o6 in S: ((x[o6].sol < 1) or (x[o6].sol > 2))} : x[o6] >= 1;'''))
+
+        # OR
+        c = so.ConstraintGroup(None, name='c')
+        for i in S:
+            with condition((x[i].sym < 1) | (x[i].sym > 2)):
+                c[i] = x[i] >= 1
+        assert_equal_wo_temps(self, so.to_definition(c), cleandoc('''
+                    con c {o6 in S: ((x[o6].sol < 1) or (x[o6].sol > 2))} : x[o6] >= 1;'''))
