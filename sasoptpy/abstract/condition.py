@@ -30,10 +30,10 @@ class Condition:
         self._right = right
 
     def _expr(self):
-        left = self._left._cond_expr if hasattr(self._left, '_cond_expr') \
+        left = self._left._cond_expr() if hasattr(self._left, '_cond_expr') \
             else sasoptpy.to_expression(self._left)
 
-        right = self._right._cond_expr if hasattr(self._right, '_cond_expr') \
+        right = self._right._cond_expr() if hasattr(self._right, '_cond_expr') \
             else sasoptpy.to_expression(self._right)
 
         if self._type in ['and', 'or', 'AND', 'OR']:
