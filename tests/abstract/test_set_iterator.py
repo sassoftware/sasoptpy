@@ -145,7 +145,7 @@ class TestSetIterator(unittest.TestCase):
 
         assert_equal_wo_temps(
             self, so.to_definition(c),
-            'con c {o4 in S: o4 IN P} : o4 * x[o4] <= 5;')
+            'con c {o4 in S: <o4> IN P} : o4 * x[o4] <= 5;')
 
         # AND, OR, Multi Statement
         c = so.ConstraintGroup(None, name='c')
