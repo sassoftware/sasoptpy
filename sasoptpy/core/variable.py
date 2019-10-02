@@ -167,6 +167,7 @@ class Variable(Expression):
         """
         return self._value
 
+    @sasoptpy.containable
     def set_value(self, value):
         """
         Sets the value of a variable
@@ -243,3 +244,6 @@ class Variable(Expression):
             s += ' init {}'.format(self._init)
         s += ';'
         return(s)
+
+    def _cond_expr(self):
+        return self._expr() + '.sol'

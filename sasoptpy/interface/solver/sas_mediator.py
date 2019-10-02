@@ -232,14 +232,14 @@ class SASMediator(Mediator):
 
         # Parse solution
         solution_df = session.sd2df('WORK.solution')
-        primalsoln = solution_df[['_VAR_', '_VALUE_', '_LBOUND_', '_UBOUND_']]
+        primalsoln = solution_df[['_VAR_', '_VALUE_', '_LBOUND_', '_UBOUND_']].copy()
         primalsoln.columns = ['var', 'value', 'lb', 'ub']
         if solver == 'LP':
             primalsoln['rc'] = solution_df['_R_COST_']
         caller._primalSolution = primalsoln
 
         dual_df = session.sd2df('WORK.dual')
-        dualsoln = dual_df[['_ROW_', '_ACTIVITY_']]
+        dualsoln = dual_df[['_ROW_', '_ACTIVITY_']].copy()
         dualsoln.columns = ['con', 'value']
         if solver == 'LP':
             dualsoln['dual'] = dual_df['_VALUE_']

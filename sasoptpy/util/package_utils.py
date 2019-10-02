@@ -117,6 +117,9 @@ def load_function_containers():
         d[sasoptpy.core.util.read_data] = \
             sasoptpy.abstract.statement.ReadDataStatement.read_data
 
+        d[sasoptpy.core.Variable.set_value] = \
+            sasoptpy.abstract.statement.Assignment.set_value
+
         return d
 
     sasoptpy.statement_dictionary = read_statement_dictionary()

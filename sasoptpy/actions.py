@@ -12,6 +12,7 @@ def register_actions():
     register_to_function_container(set_value, sasoptpy.abstract.statement.Assignment.set_value)
     register_to_function_container(set_objective, sasoptpy.abstract.statement.ObjectiveStatement.set_objective)
     register_to_function_container(print_item, sasoptpy.abstract.statement.PrintStatement.print_item)
+    register_to_function_container(expand, sasoptpy.abstract.statement.LiteralStatement.expand)
 
 
 @sasoptpy.containable
@@ -42,5 +43,11 @@ def set_objective(*args, name, sense):
 @sasoptpy.containable
 def print_item(*args, **kwargs):
     pass
+
+
+@sasoptpy.containable
+def expand():
+    pass
+
 
 condition = sasoptpy.structure.under_condition

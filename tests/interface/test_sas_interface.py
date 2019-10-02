@@ -35,7 +35,8 @@ class TestSASInterface(unittest.TestCase):
             if os.name == 'nt':
                 cls.conn = saspy.SASsession(cfgname='winlocal')
             else:
-                cfg_file = os.path.join(current_dir, '../examples/saspy_config.py')
+                cfg_file = os.path.join(
+                    current_dir, '../examples/saspy_config.py')
                 cls.conn = saspy.SASsession(cfgfile=cfg_file)
             print('Connected to SAS')
         except TypeError:
@@ -66,6 +67,10 @@ class TestSASInterface(unittest.TestCase):
         print(m.get_solution())
         self.assertEqual(x[0].get_value(), 2)
 
+        m.set_objective(x[0], sense=so.MIN, name='obj2')
+        m.solve(limit_names=True, submit=False)
+        self.assertEqual(x[0].get_value(), 2)
+
     def test_long_lines(self):
         if TestSASInterface.conn is None:
             self.skipTest('SAS session is not available')
@@ -77,9 +82,19 @@ class TestSASInterface(unittest.TestCase):
             so.quick_sum(i * x[i] for i in range(vs)) <= 1, name='c')
         o = m.set_objective(x[0], sense=so.MAX, name='obj')
 
-        try:
-            m.solve()
-        except RuntimeError:
-            m.solve(wrap_lines=True)
+        m.solve(wrap_lines=True)
 
         self.assertEqual(x[0].get_value(), 2)
+
+    def test_mps_on_sas(self):
+        if TestSASInterface.conn is None:
+            self.skipTest('SAS session is not available')
+
+        m = so.Model(name='test_mps_on_sas', session=TestSASInterface.conn)
+        x = m.add_variables(10, name='x', lb=0)
+        m.add_constraints((x[i] >= i for i in range(10)), name='c')
+        m.set_objective(
+            so.expr_sum(x[i] for i in range(10)), sense=so.MIN, name='obj')
+
+        m.solve(mps=True, verbose=True)
+        self.assertEqual(x[2].get_value(), 2)

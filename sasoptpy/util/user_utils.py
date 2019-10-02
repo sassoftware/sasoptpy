@@ -39,6 +39,8 @@ def concat(exp1, exp2):
 
 @contextmanager
 def iterate(set, name):
+    if not sasoptpy.abstract.is_abstract_set(set):
+        set = sasoptpy.Set.from_object(set)
     if isinstance(name, list):
         yield sasoptpy.abstract.SetIteratorGroup(set, names=name)
     else:

@@ -54,6 +54,7 @@ class ConstraintGroup(Group):
 
     """
 
+    @sasoptpy.class_containable
     def __init__(self, argv, name):
         super().__init__(name=name)
         self._condict = OrderedDict()

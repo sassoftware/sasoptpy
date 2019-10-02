@@ -68,6 +68,8 @@ class SetIterator(sasoptpy.Expression):
         s = 'sasoptpy.SetIterator({}, name=\'{}\')'.format(self._set, self.get_name())
         return s
 
+    def _cond_expr(self):
+        return '<' + self._expr() + '>'
 
 class SetIteratorGroup(OrderedDict):
 

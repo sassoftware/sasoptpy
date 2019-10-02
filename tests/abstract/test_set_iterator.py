@@ -153,12 +153,13 @@ class TestSetIterator(unittest.TestCase):
             e1 = 2 * i != 1
             e2 = i ** 2 <= 3
             e3 = 3 * i >= 9
-            with condition((e1) & (e2) | (e3)):
+            e4 = i != 0
+            with condition(((e1) & (e2) | (e3)) & (e4)):
                 c[i] = i * x[i] <= 5
 
         assert_equal_wo_temps(
             self, so.to_definition(c),
-            'con c {o6 in S: ((2.0 * o6 != 1) and ((o6) ^ (2) <= 3)) or (3.0 * o6 >= 9)} : o6 * x[o6] <= 5;'
+            'con c {o6 in S: (((2.0 * o6 != 1) and ((o6) ^ (2) <= 3)) or (3.0 * o6 >= 9)) and (o6 != 0)} : o6 * x[o6] <= 5;'
         )
 
     def test_set_iterator_group(self):

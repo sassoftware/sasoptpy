@@ -40,7 +40,7 @@ class Condition:
         else:
             right = sasoptpy.to_expression(self._right)
 
-        if self._type in ['and', 'or']:
+        if self._type in ['and', 'or', 'AND', 'OR']:
             left = '({})'.format(left)
             right = '({})'.format(right)
 
@@ -51,10 +51,6 @@ class Condition:
 
     def set_left(self, left):
         self._left = left
-
-    def __bool__(self):
-        sasoptpy.conditions.append(self)
-        return self
 
     def __and__(self, other):
         r = Condition(left=self, c_type='and', right=other)
@@ -70,7 +66,7 @@ class Condition:
 
 class Conditional:
 
-    def __init__(self, parent):
+    def __init__(self, parent, format=None):
         self._parent = parent
         self._conditions = []
 
@@ -85,10 +81,8 @@ class Conditional:
 
     def add_custom_condition(self, operation, key):
         c = Condition(left=self._parent, c_type=operation, right=key)
-        if not sasoptpy.abstract.util.is_key_abstract(self._parent):
-            if sasoptpy.container is not None:
-                sasoptpy.container.sym.append(c)
         self._conditions.append(c)
+        return c
 
     def get_conditions_len(self):
         return len(self._conditions)
@@ -97,8 +91,12 @@ class Conditional:
         return self._conditions
 
     def get_conditions_str(self):
+        keyword_list = [' and ', ' or ']
         conds = [sasoptpy.util.to_condition_expression(c) for c in self._conditions]
         if len(conds) > 0:
+            for i, c in enumerate(conds):
+                if any(keyword in c for keyword in keyword_list):
+                    conds[i] = '(' + c + ')'
             return ' and '.join(conds)
         else:
             return ''
@@ -110,37 +108,37 @@ class Conditional:
             self._conditions.append(con_copy)
 
     def __contains__(self, key):
-        self.add_custom_condition('IN', key)
-        return True
+        c = self.add_custom_condition('IN', key)
+        return c
 
     def __eq__(self, key):
-        self.add_custom_condition('=', key)
-        return True
+        c = self.add_custom_condition('=', key)
+        return c
 
     def __le__(self, key):
-        self.add_custom_condition('<=', key)
-        return True
+        c = self.add_custom_condition('<=', key)
+        return c
 
     def __lt__(self, key):
-        self.add_custom_condition('<', key)
-        return True
+        c = self.add_custom_condition('<', key)
+        return c
 
     def __ge__(self, key):
-        self.add_custom_condition('>=', key)
-        return True
+        c = self.add_custom_condition('>=', key)
+        return c
 
     def __gt__(self, key):
-        self.add_custom_condition('>', key)
-        return True
+        c = self.add_custom_condition('>', key)
+        return c
 
     def __ne__(self, key):
-        self.add_custom_condition('NE', key)
-        return True
+        c = self.add_custom_condition('NE', key)
+        return c
 
     def __and__(self, key):
-        self.add_custom_condition('AND', key)
-        return True
+        c = self.add_custom_condition('AND', key)
+        return c
 
     def __or__(self, key):
-        self.add_custom_condition('OR', key)
-        return True
+        c = self.add_custom_condition('OR', key)
+        return c

@@ -19,3 +19,7 @@ class LiteralStatement(Statement):
     def _defn(self):
         defn = '\n'.join(self.elements)
         return defn
+
+    @classmethod
+    def expand(cls):
+        return LiteralStatement('expand;')

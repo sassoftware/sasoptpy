@@ -55,6 +55,10 @@ class Set:
         self._colname = sasoptpy.util.pack_to_list(name)
         self._iterators = []
 
+    @classmethod
+    def from_object(cls, obj):
+        return Set(name=None, value=obj)
+
     def get_name(self):
         return self._name
 
@@ -100,7 +104,7 @@ class Set:
 
     def __str__(self):
         s = self.get_name()
-        return(s)
+        return('{}'.format(s))
 
     def __repr__(self):
         s = 'sasoptpy.abstract.Set(name={}, settype={})'.format(
@@ -108,7 +112,10 @@ class Set:
         return(s)
 
     def _expr(self):
-        return self.get_name()
+        if self.get_name() is not None:
+            return self.get_name()
+        else:
+            return sasoptpy.to_expression(self._value)
 
     def value(self):
         return self._value
