@@ -342,7 +342,7 @@ class VariableGroup(Group):
         return(s)
 
     def _expr(self):
-        return self.get_name(safe=True)
+        return self.get_name()
 
     def _member_defn(self):
         dependents = []

@@ -5,6 +5,7 @@ import sasoptpy
 
 class LiteralStatement(Statement):
 
+    @sasoptpy.class_containable
     def __init__(self, literal=None):
         super().__init__()
         self.append(literal)
@@ -23,3 +24,7 @@ class LiteralStatement(Statement):
     @classmethod
     def expand(cls):
         return LiteralStatement('expand;')
+
+    @classmethod
+    def create(cls, command):
+        return LiteralStatement(command)

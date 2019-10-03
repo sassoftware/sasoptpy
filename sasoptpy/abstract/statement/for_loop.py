@@ -20,7 +20,7 @@ class ForLoopStatement(Statement):
     def __iter__(self):
         iterators = []
         for i in self._sets:
-            j = sasoptpy.abstract.data.SetIterator(i)
+            j = sasoptpy.abstract.SetIterator(i)
             iterators.append(j)
         self.iterators = iterators
         self.original = sasoptpy.container
