@@ -42,6 +42,12 @@ class TestSASInterface(unittest.TestCase):
         except TypeError:
             raise unittest.SkipTest('Environment variable may not be defined')
 
+    @classmethod
+    def tearDownClass(cls):
+        if cls.conn is not None:
+            cls.conn.endsas()
+            cls.conn = None
+
     def setUp(self):
         so.reset()
 
