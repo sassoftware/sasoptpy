@@ -56,15 +56,15 @@ class TestForLoop(unittest.TestCase):
 
             for i in for_loop(rn):
                 for j in for_loop(so.exp_range(i, n)):
-                    set_value(P[i, j], so.quick_sum(A[i, k] * A[j, k] for k in rn))
+                    set_value(P[i, j], so.expr_sum(A[i, k] * A[j, k] for k in rn))
 
             q = so.VariableGroup(rn, rn, name='q')
             set_value(q[1, 1], 1)
             set_objective(
-                so.quick_sum((
-                    so.quick_sum(q[k, i] * q[k, j] for k in so.exp_range(1, i)) +
-                    so.quick_sum(q[i, k] * q[k, j] for k in so.exp_range(i+1, j)) +
-                    so.quick_sum(q[i, k] * q[j, k] for k in so.exp_range(j+1, n)) -
+                so.expr_sum((
+                    so.expr_sum(q[k, i] * q[k, j] for k in so.exp_range(1, i)) +
+                    so.expr_sum(q[i, k] * q[k, j] for k in so.exp_range(i+1, j)) +
+                    so.expr_sum(q[i, k] * q[j, k] for k in so.exp_range(j+1, n)) -
                     P[i, j]
                 )**2 for i in rn for j in so.exp_range(i, n))
                 , name='r', sense=so.MIN)

@@ -42,7 +42,7 @@ from sasoptpy.core import (Variable, VariableGroup, Constraint, ConstraintGroup,
 from sasoptpy.core.util import read_data
 
 from sasoptpy.abstract import (Set, Parameter, ImplicitVar,
-                               OldStatement, ParameterGroup, SetIterator,
+                               ParameterGroup, SetIterator,
                                SetIteratorGroup, LiteralStatement)
 
 sasoptpy.util.load_package_globals()

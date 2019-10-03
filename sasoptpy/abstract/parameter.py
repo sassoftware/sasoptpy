@@ -69,3 +69,41 @@ class Parameter(Expression):
 
     def __str__(self):
         return self._name
+
+
+class ParameterValue(Expression):
+    """
+    Represents a single value of a parameter
+
+    Parameters
+    ----------
+    param : Parameter
+        Parameter that the value belongs to
+    key : tuple, optional
+        Key of the parameter value in the multi-index parameter
+    prefix : string
+        Prefix of the parameter
+    suffix : string
+        Suffix of the parameter, such as ``.lb`` and ``.ub``
+
+    Notes
+    -----
+
+    - Parameter values are mainly used in abstract expressions
+    """
+
+    def __init__(self, param, key=None):
+        super().__init__()
+        self._param = param
+        tkey = sasoptpy.util.pack_to_tuple(key)
+        self._key = tkey
+        self._abstract = True
+        self.set_member(key=str(self), ref=self, val=1)
+
+    def __str__(self):
+        return \
+            sasoptpy.util.package_utils._insert_brackets(
+                self._param.get_name(), self._key)
+
+    def _expr(self):
+        return str(self)

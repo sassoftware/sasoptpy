@@ -685,7 +685,6 @@ class Model:
             sasoptpy.Set: self._include_set,
             sasoptpy.Parameter: self._include_parameter,
             sasoptpy.ParameterGroup: self._include_parameter_group,
-            sasoptpy.OldStatement: self._include_statement,
             sasoptpy.abstract.LiteralStatement: self._include_statement,
             sasoptpy.ImplicitVar: self._include_expdict,
             sasoptpy.abstract.ReadDataStatement: self._include_statement,

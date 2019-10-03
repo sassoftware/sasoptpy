@@ -105,9 +105,6 @@ def load_function_containers():
         d[sasoptpy.core.Variable.set_bounds] = \
             sasoptpy.abstract.statement.Assignment.set_bounds
 
-        d[sasoptpy.abstract.ParameterValue.set_value] = \
-            sasoptpy.abstract.statement.Assignment.set_value
-
         d[sasoptpy.abstract.Parameter.set_value] = \
             sasoptpy.abstract.statement.Assignment.set_value
 
