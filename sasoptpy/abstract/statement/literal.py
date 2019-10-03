@@ -23,7 +23,7 @@ class LiteralStatement(Statement):
 
     @classmethod
     def expand(cls):
-        return LiteralStatement('expand;')
+        LiteralStatement('expand;')
 
     @classmethod
     def create(cls, command):

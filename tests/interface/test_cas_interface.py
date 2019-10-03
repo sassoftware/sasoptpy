@@ -74,7 +74,7 @@ class TestCASInterface(unittest.TestCase):
         self.assertRaises(RuntimeError, force_decomp)
 
         # No objective
-        m.solve(mps=True, verbose=True)
+        m.solve(mps=True, verbose=True, name='no_obj')
 
     def test_primalin(self):
         if TestCASInterface.conn is None:

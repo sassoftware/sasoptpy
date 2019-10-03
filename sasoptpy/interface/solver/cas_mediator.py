@@ -349,18 +349,16 @@ class CASMediator(Mediator):
 
     def set_model_objective_value(self):
         caller = self.caller
-        if not sasoptpy.core.util.is_model(caller):
-            return
-        if hasattr(caller.response, 'objective'):
-            objval = caller.response.objective
-            caller.set_objective_value(objval)
+        if sasoptpy.core.util.is_model(caller):
+            if hasattr(caller.response, 'objective'):
+                objval = caller.response.objective
+                caller.set_objective_value(objval)
 
     def set_variable_init_values(self):
         caller = self.caller
-        if not sasoptpy.core.util.is_model(caller):
-            return
-        for v in caller.get_variables():
-            v.set_init(v.get_value())
+        if sasoptpy.core.util.is_model(caller):
+            for v in caller.get_variables():
+                v.set_init(v.get_value())
 
     def upload_user_blocks(self):
         """
