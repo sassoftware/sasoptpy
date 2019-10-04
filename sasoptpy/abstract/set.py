@@ -39,14 +39,6 @@ class Set:
         self._name = name
         if name is not None:
             self._objorder = sasoptpy.util.get_creation_id()
-        if init:
-            if isinstance(init, range):
-                newinit = str(init.start) + '..' + str(init.stop)
-                if init.step != 1:
-                    newinit = ' by ' + init.step
-                init = newinit
-            else:
-                pass
         self._init = init
         self._value = value
         if settype is None:
@@ -89,16 +81,10 @@ class Set:
     def __hash__(self):
         return hash(self.get_name())
 
-    def __eq__(self, other):
-        if isinstance(other, Set):
-            return self.get_name() == other.get_name()
-        else:
-            return False
-
     def __contains__(self, item):
         from .util import is_conditional_value
         if is_conditional_value(item):
-            return item.__contains__(self)
+            return item.is_in(self)
         else:
             raise RuntimeError('Cannot verify if value is in abstract set')
 
@@ -107,8 +93,13 @@ class Set:
         return('{}'.format(s))
 
     def __repr__(self):
-        s = 'sasoptpy.abstract.Set(name={}, settype={})'.format(
+        s = 'sasoptpy.abstract.Set(name={}, settype={}'.format(
             self.get_name(), self._type)
+        if self._init:
+            s += ', init={}'.format(self._init)
+        if self._value:
+            s += ', value={}'.format(self._value)
+        s += ')'
         return(s)
 
     def _expr(self):
@@ -117,6 +108,4 @@ class Set:
         else:
             return sasoptpy.to_expression(self._value)
 
-    def value(self):
-        return self._value
 

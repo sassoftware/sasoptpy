@@ -103,8 +103,8 @@ class Conditional:
             con_copy.set_left(self._parent)
             self._conditions.append(con_copy)
 
-    def __contains__(self, key):
-        c = self.add_custom_condition('IN', key)
+    def is_in(self, set):
+        c = self.add_custom_condition('IN', set)
         return c
 
     def __eq__(self, key):
