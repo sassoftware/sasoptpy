@@ -215,6 +215,7 @@ def test(cas_conn):
     res = m.solve()
 
     if res is not None:
+        so.pd.display_all()
         print(so.get_solution_table(numCows))
         revenue_df = so.dict_to_frame(revenue, cols=['revenue'])
         cost_df = so.dict_to_frame(cost, cols=['cost'])

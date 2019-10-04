@@ -123,6 +123,7 @@ def test(cas_conn):
     problem1.set_objective(total_productive_capacity, sense=so.MAX,
                            name='total_productive_capacity')
     problem1.solve()
+    so.pd.display_dense()
     print(so.get_value_table(production, stock, extra_capacity,
                                 productive_capacity).sort_index())
     print(so.get_value_table(manpower_con.get_expressions()))
