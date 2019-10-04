@@ -767,7 +767,8 @@ class Model:
         elif isinstance(obj, sasoptpy.Set):
             if obj in self._sets:
                 self._sets.remove(obj)
-        elif isinstance(obj, sasoptpy.Parameter):
+        elif isinstance(obj, sasoptpy.Parameter) or\
+             isinstance(obj, sasoptpy.ParameterGroup):
             if obj in self._parameters:
                 self._parameters.remove(obj)
         elif isinstance(obj, sasoptpy.abstract.Statement):

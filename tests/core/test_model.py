@@ -113,6 +113,10 @@ class TestModel(unittest.TestCase):
         m.drop_variable(x)
         self.assertEqual(m.get_variables(), [])
         self.assertEqual(m.get_variable_dict(), {})
+        m.include(x)
+        self.assertIs(m.get_variable_dict()['x'], x)
+        m.drop(x)
+        self.assertEqual(m.get_variable_dict(), {})
 
     def test_adding_vargroup(self):
         m = so.Model(name='test_add_vg')
@@ -132,6 +136,10 @@ class TestModel(unittest.TestCase):
         x = m.add_variables(2, name='x')
         self.assertEqual(m.get_grouped_variables(), OrderedDict([('x', x)]))
         m.drop_variables(x)
+        self.assertEqual(m.get_grouped_variables(), OrderedDict())
+        m.include(x)
+        self.assertEqual(m.get_grouped_variables(), OrderedDict([('x', x)]))
+        m.drop(x)
         self.assertEqual(m.get_grouped_variables(), OrderedDict())
 
     def test_adding_constraint(self):
@@ -157,9 +165,12 @@ class TestModel(unittest.TestCase):
         m = so.Model(name='test_drop_constraint')
         x = m.add_variable(name='x')
         c1 = m.add_constraint(x <= 5, name='c1')
-
         self.assertEqual({'c1': c1}, m.get_constraints_dict())
         m.drop_constraint(c1)
+        self.assertEqual({}, m.get_constraints_dict())
+        m.include(c1)
+        self.assertEqual({'c1': c1}, m.get_constraints_dict())
+        m.drop(c1)
         self.assertEqual({}, m.get_constraints_dict())
 
         def invalid_constraint():
@@ -191,6 +202,10 @@ class TestModel(unittest.TestCase):
         self.assertEqual(m.get_grouped_constraints(), OrderedDict([('c1', c1)]))
         m.drop_constraints(c1)
         self.assertEqual(m.get_grouped_constraints(), OrderedDict())
+        m.include(c1)
+        self.assertEqual(m.get_grouped_constraints(), OrderedDict([('c1', c1)]))
+        m.drop(c1)
+        self.assertEqual(m.get_grouped_constraints(), OrderedDict())
 
     def test_add_set(self):
         m = so.Model(name='test_add_set')
@@ -204,6 +219,8 @@ class TestModel(unittest.TestCase):
         I = m.add_set(name='I')
         r = m.add_parameter(I, name='r', init=5)
         self.assertEqual([p, r], m.get_parameters())
+        m.drop(r)
+        self.assertEqual([p], m.get_parameters())
 
     def test_add_implicit_var(self):
         m = so.Model(name='test_add_impvar')
@@ -236,6 +253,16 @@ class TestModel(unittest.TestCase):
                 solve;
                 print x;
                 quit;'''))
+        m.drop(s)
+        self.assertEqual(
+            m.to_optmodel(solve=False),
+            inspect.cleandoc(
+                '''proc optmodel;
+                min empty_obj = 0;
+                var x {0,1};
+                solve;
+                quit;'''))
+
 
     def test_add_abstract_statement(self):
         m = so.Model(name='m')
