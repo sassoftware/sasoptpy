@@ -97,6 +97,11 @@ class ConstraintGroup(Group):
         conctr = 0
 
         for (idx, c) in enumerate(argv):
+
+            if not sasoptpy.core.util.is_constraint(c):
+                raise ValueError(
+                    'Cannot create constraint from {}'.format(type(c)))
+
             if type(argv) == list:
                 new_keys = ckeys + (idx,)
             elif type(argv) == GeneratorType:

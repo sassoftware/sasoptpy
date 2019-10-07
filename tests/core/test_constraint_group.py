@@ -23,6 +23,7 @@ Unit tests for core classes.
 import unittest
 import sasoptpy as so
 from sasoptpy._libs import pd
+from inspect import cleandoc
 
 
 class TestConstraintGroup(unittest.TestCase):
@@ -104,13 +105,22 @@ class TestConstraintGroup(unittest.TestCase):
         cg = so.ConstraintGroup((x[i] <= i-1 for i in range(3)), name='cg')
         cg_str = str(cg)
         self.assertEqual(
-            cg_str,
-            """Constraint Group (cg) [
-  [0: x[0] <=  -1]
-  [1: x[1] <=  0]
-  [2: x[2] <=  1]
-]"""
-        )
+            cg_str, cleandoc('''
+            Constraint Group (cg) [
+              [0: x[0] <=  -1]
+              [1: x[1] <=  0]
+              [2: x[2] <=  1]
+            ]'''))
+
+    def test_invalid_con(self):
+        def con_with_no_direction():
+            m = so.Model(name='test_cg_invalid_con', session=None)
+            x = m.add_variables(3, ub=4)
+            c = m.add_constraints(
+                (so.quick_sum((i + j) * x[i] for i in range(3)) for j in
+                 range(5)), name='c')
+
+        self.assertRaises(ValueError, con_with_no_direction)
 
     def tearDown(self):
         so.reset()
