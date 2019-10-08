@@ -286,6 +286,7 @@ class TestCASInterface(unittest.TestCase):
         m.set_objective(x, name='obj', sense=so.MIN)
 
         s = MockCASServer(response=MockCASResponse(status=['ERROR']))
+        m.set_session(s)
         def produce_error_status():
             m.solve(frame=True)
         self.assertRaises(RuntimeError, produce_error_status)
