@@ -323,12 +323,12 @@ class SASMediator(Mediator):
         if verbose:
             print(optmodel_code)
 
-        response = session.runOptmodel(
-            optmodel_code
-        )
-
-        caller.response = response
-        caller.parse_solve_responses()
-        caller.parse_print_responses()
-
-        return self.parse_cas_workspace_response()
+        # response = session.runOptmodel(
+        #     optmodel_code
+        # )
+        #
+        # caller.response = response
+        # caller.parse_solve_responses()
+        # caller.parse_print_responses()
+        #
+        # return self.parse_cas_workspace_response()
