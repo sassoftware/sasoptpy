@@ -62,6 +62,7 @@ class Variable(Expression):
 
     """
 
+    @sasoptpy.class_containable
     def __init__(self, name, vartype=None, lb=None, ub=None,
                  init=None, abstract=False, shadow=False, key=None):
         super().__init__(name=name)

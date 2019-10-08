@@ -289,6 +289,8 @@ class TestReadData(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(ws), cleandoc("""
             proc optmodel;
+                var x;
+                var y;
                 num c_xx;
                 num c_x;
                 num c_y;

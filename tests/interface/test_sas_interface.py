@@ -16,6 +16,7 @@
 #  limitations under the License.
 #
 
+from inspect import cleandoc
 import unittest
 import os
 import sasoptpy as so
@@ -104,3 +105,24 @@ class TestSASInterface(unittest.TestCase):
 
         m.solve(mps=True, verbose=True)
         self.assertEqual(x[2].get_value(), 2)
+
+    def test_workspace_on_sas(self):
+
+        if TestSASInterface.conn is None:
+            self.skipTest('SAS session is not available')
+
+        with so.Workspace('test_ws_sas', session=TestSASInterface.conn) as w:
+            x = so.Variable(name='x')
+            c = so.Constraint(x <= 5, name='c')
+            o = so.Objective(x, sense=so.MAX, name='obj')
+            so.actions.solve()
+        self.assertEqual(so.to_optmodel(w), cleandoc('''
+            proc optmodel;
+                var x;
+                con c : x <= 5;
+                max obj = x;
+                solve;
+            quit;'''))
+        w.submit()
+        #self.assertEqual(x.get_value(), 5)
+

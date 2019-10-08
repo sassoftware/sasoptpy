@@ -1,11 +1,10 @@
 # SAS MVA interface for sasoptpy
 
-import re
-
 import sasoptpy
 from sasoptpy._libs import np
 from sasoptpy.interface import Mediator
 from saspy import SASsession
+from sasoptpy.interface.util import wrap_long_lines, replace_long_names
 
 import warnings
 
@@ -30,7 +29,7 @@ class SASMediator(Mediator):
             return self.solve_with_optmodel(**kwargs)
 
     def submit(self, **kwargs):
-        pass
+        return self.submit_optmodel_code(**kwargs)
 
     def is_mps_format_needed(self, mps_option, user_options):
         enforced = False
@@ -114,8 +113,7 @@ class SASMediator(Mediator):
 
         if ptype == 1:
             c = session.submit("""
-                        ods output SolutionSummary=SOL_SUMMARY;
-                        ods output ProblemSummary=PROB_SUMMARY;
+                        ods output SolutionSummary=SOL_SUMMARY ProblemSummary=PROB_SUMMARY;
                         proc optlp data = {}
                            primalout  = solution
                            dualout    = dual;
@@ -123,8 +121,7 @@ class SASMediator(Mediator):
                         """.format(name))
         else:
             c = session.submit("""
-                        ods output SolutionSummary=SOL_SUMMARY;
-                        ods output ProblemSummary=PROB_SUMMARY;
+                        ods output SolutionSummary=SOL_SUMMARY ProblemSummary=PROB_SUMMARY;
                         proc optmilp data = {}
                            primalout  = solution
                            dualout    = dual;
@@ -159,35 +156,13 @@ class SASMediator(Mediator):
         # Check if any object has a long name
         limit_names = kwargs.get('limit_names', False)
         if limit_names:
-            matches = re.findall(r'[a-zA-Z\_\d]{32,}', optmodel_string)
-            if len(matches) > 0:
-                print('NOTE: Some object names are longer than 32 characters, '
-                      'they will be replaced when submitting')
-                unique_matches = list(set(matches))
-                for i in unique_matches:
-                    new_name = sasoptpy.util.get_next_name()
-                    self.conversion[new_name] = i
-                    optmodel_string = re.sub(
-                        r'\b' + i + r'\b', new_name, optmodel_string)
+            optmodel_string, conversion = replace_long_names(optmodel_string)
+            self.conversion.update(conversion)
 
         wrap_lines = kwargs.get('wrap_lines', False)
         if wrap_lines:
             max_length = kwargs.get('max_line_length', 3000)
-            long_line_regex = r".{" + str(max_length) + r",}\n?"
-            partition_regex = r"(?=.{" + str(max_length) + r",}\n?)(.{" +\
-                              str(round(max_length/3)) + r",}?)([\,\ ]+)(.+)"
-            subst = "\\1\\2\\n\\3"
-
-            hits = re.findall(long_line_regex, optmodel_string)
-            line_lengths = [len(i) for i in hits]
-            while len(hits) > 0:
-                optmodel_string = re.sub(partition_regex, subst, optmodel_string)
-                hits = re.findall(long_line_regex, optmodel_string)
-                new_line_lengths = [len(i) for i in hits]
-                if line_lengths == new_line_lengths:
-                    break
-                else:
-                    line_lengths = new_line_lengths
+            optmodel_string = wrap_long_lines(optmodel_string, max_length)
 
         if verbose:
             print(optmodel_string)
@@ -196,8 +171,7 @@ class SASMediator(Mediator):
 
         print('NOTE: Submitting OPTMODEL code to SAS instance.')
 
-        optmodel_string = 'ods output SolutionSummary=SOL_SUMMARY;\n' + \
-                          'ods output ProblemSummary=PROB_SUMMARY;\n' + \
+        optmodel_string = 'ods output SolutionSummary=SOL_SUMMARY ProblemSummary=PROB_SUMMARY;\n' + \
                           optmodel_string
 
         response = session.submit(optmodel_string)
@@ -325,3 +299,36 @@ class SASMediator(Mediator):
         if sasoptpy.core.util.is_model(caller):
             for v in caller.get_variables():
                 v.set_init(v.get_value())
+
+    def submit_optmodel_code(self, **kwargs):
+
+        caller = self.caller
+        session = self.session
+        optmodel_code = sasoptpy.util.to_optmodel(caller,
+                                                  header=False,
+                                                  parse=True,
+                                                  ods=True)
+        verbose = kwargs.get('verbose', None)
+
+        # Check if any object has a long name
+        limit_names = kwargs.get('limit_names', False)
+        if limit_names:
+            optmodel_code = replace_long_names(optmodel_code)
+
+        wrap_lines = kwargs.get('wrap_lines', False)
+        if wrap_lines:
+            max_length = kwargs.get('max_line_length', 3000)
+            optmodel_code = wrap_long_lines(optmodel_code, max_length)
+
+        if verbose:
+            print(optmodel_code)
+
+        response = session.runOptmodel(
+            optmodel_code
+        )
+
+        caller.response = response
+        caller.parse_solve_responses()
+        caller.parse_print_responses()
+
+        return self.parse_cas_workspace_response()

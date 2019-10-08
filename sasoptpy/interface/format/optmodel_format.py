@@ -109,6 +109,7 @@ def to_optmodel_for_session(workspace, **kwargs):
 
     header = kwargs.get('header', True)
     parse = kwargs.get('parse', False)
+    ods = kwargs.get('ods', False)
 
 
     s = ''
@@ -118,15 +119,17 @@ def to_optmodel_for_session(workspace, **kwargs):
 
     allcomp = workspace.get_elements()
 
-    memberdefs = ''
+    memberdefs = []
     for cm in allcomp:
         if (sasoptpy.core.util.is_regular_component(cm)):
-            memberdefs += cm._defn() + '\n'
+            component_defn = cm._defn()
             if hasattr(cm, '_member_defn'):
                 mdefn = cm._member_defn()
                 if mdefn != '':
-                    memberdefs += mdefn + '\n'
+                    component_defn += '\n' + mdefn
+            memberdefs.append(component_defn)
 
+    memberdefs = '\n'.join(memberdefs)
     s += sasoptpy.util.addSpaces(memberdefs, 4)
 
     if parse:
@@ -134,5 +137,5 @@ def to_optmodel_for_session(workspace, **kwargs):
         s += 'create data dual from [j] = {1.._NCON_} con=_CON_.name value=_CON_.body dual=_CON_.dual;\n'
 
     if header:
-        s += 'quit;'
+        s += '\nquit;'
     return s

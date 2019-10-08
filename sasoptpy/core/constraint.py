@@ -76,6 +76,7 @@ class Constraint(Expression):
     :func:`sasoptpy.Model.add_constraint`
     """
 
+    @sasoptpy.class_containable
     def __init__(self, exp, direction=None, name=None, crange=None, condition=None):
         super().__init__(name=name)
         if name is not None:
