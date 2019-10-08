@@ -1,3 +1,5 @@
+# Util functions
+from .util import *
 
 # Problem formats
 from .format.mps_format import to_mps

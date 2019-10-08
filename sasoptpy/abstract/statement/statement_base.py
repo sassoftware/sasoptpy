@@ -33,6 +33,7 @@ class Statement(ABC):
         self._objorder = sasoptpy.util.get_creation_id()
         # TODO Remove '_after' after arranging data/structrues py files
         self._after = False
+        self.response = None
 
     @abstractmethod
     def _defn(self):

@@ -40,6 +40,15 @@ class SolveStatement(Statement):
         s += ';'
         return s
 
+    def set_response(self, problem_summary, solution_summary):
+        self._problem_summary = problem_summary
+        self._solution_summary = solution_summary
+
+    def get_problem_summary(self):
+        return self._problem_summary
+
+    def get_solution_summary(self):
+        return self._solution_summary
 
     @classmethod
     def solve(cls, *args, **kwargs):

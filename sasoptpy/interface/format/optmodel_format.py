@@ -108,6 +108,9 @@ def to_optmodel_for_solve(model, **kwargs):
 def to_optmodel_for_session(workspace, **kwargs):
 
     header = kwargs.get('header', True)
+    parse = kwargs.get('parse', False)
+
+
     s = ''
 
     if header:
@@ -125,6 +128,10 @@ def to_optmodel_for_session(workspace, **kwargs):
                     memberdefs += mdefn + '\n'
 
     s += sasoptpy.util.addSpaces(memberdefs, 4)
+
+    if parse:
+        s += 'create data solution from [i]= {1.._NVAR_} var=_VAR_.name value=_VAR_ lb=_VAR_.lb ub=_VAR_.ub rc=_VAR_.rc;\n'
+        s += 'create data dual from [j] = {1.._NCON_} con=_CON_.name value=_CON_.body dual=_CON_.dual;\n'
 
     if header:
         s += 'quit;'

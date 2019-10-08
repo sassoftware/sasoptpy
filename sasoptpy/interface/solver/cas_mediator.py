@@ -204,24 +204,15 @@ class CASMediator(Mediator):
                 for _, row in model._dualSolution.iterrows():
                     model._constraintDict[row['con']]._dual = row['dual']
             elif ptype == 2:
-                try:
-                    model._primalSolution = model._primalSolution[
-                        ['_VAR_', '_LBOUND_', '_UBOUND_', '_VALUE_',
-                         '_SOL_']]
-                    model._primalSolution.columns = ['var', 'lb', 'ub',
-                                                    'value', 'solution']
-                    model._dualSolution = model._dualSolution[
-                        ['_ROW_', '_ACTIVITY_', '_SOL_']]
-                    model._dualSolution.columns = ['con', 'value',
-                                                  'solution']
-                except:
-                    model._primalSolution = model._primalSolution[
-                        ['_VAR_', '_LBOUND_', '_UBOUND_', '_VALUE_']]
-                    model._primalSolution.columns = ['var', 'lb', 'ub',
-                                                    'value']
-                    model._dualSolution = model._dualSolution[
-                        ['_ROW_', '_ACTIVITY_']]
-                    model._dualSolution.columns = ['con', 'value']
+                model._primalSolution = model._primalSolution[
+                    ['_VAR_', '_LBOUND_', '_UBOUND_', '_VALUE_',
+                     '_SOL_']]
+                model._primalSolution.columns = ['var', 'lb', 'ub',
+                                                'value', 'solution']
+                model._dualSolution = model._dualSolution[
+                    ['_ROW_', '_ACTIVITY_', '_SOL_']]
+                model._dualSolution.columns = ['con', 'value',
+                                              'solution']
 
         # Drop tables
         if drop:
@@ -254,12 +245,12 @@ class CASMediator(Mediator):
                     v._init = v._value
                 return model._primalSolution
             else:
-                print('NOTE: Response {}'.format(response.solutionStatus))
+                warnings.warn('Solution message is not OPTIMAL: {}'.format(response.solutionStatus), UserWarning)
                 model._objval = 0
                 return None
         else:
-            print('ERROR: {}'.format(response.get_tables('status')[0]))
-            return None
+            raise RuntimeError('Solve came back with message: {}'.format(
+                response.get_tables('status')[0]))
 
     def solve_with_optmodel(self, **kwargs):
 
@@ -309,8 +300,8 @@ class CASMediator(Mediator):
         caller._primalSolution = solution
         caller._dualSolution = dual_solution
 
-        caller._problemSummary = self.parse_optmodel_table('problemSummary')
-        caller._solutionSummary = self.parse_optmodel_table('solutionSummary')
+        caller._problemSummary = self.parse_cas_table('problemSummary')
+        caller._solutionSummary = self.parse_cas_table('solutionSummary')
 
         caller._status = response.solutionStatus
         caller._soltime = response.solutionTime
@@ -323,12 +314,10 @@ class CASMediator(Mediator):
 
         return solution
 
-    def parse_optmodel_table(self, table):
+    def parse_cas_table(self, table):
         session = self.session
-        parsed_df = session.CASTable(table).to_frame()[['Label1', 'cValue1']]
-        parsed_df.columns = ['Label', 'Value']
-        parsed_df = parsed_df.set_index(['Label'])
-        return parsed_df
+        table = session.CASTable(table).to_frame()
+        return sasoptpy.interface.parse_optmodel_table(table)
 
     def set_variable_values(self, solution):
         caller = self.caller
@@ -451,4 +440,42 @@ class CASMediator(Mediator):
             optmodel_code
         )
 
-        return response
+        caller.response = response
+        caller.parse_solve_responses()
+        caller.parse_print_responses()
+
+        return self.parse_cas_workspace_response()
+
+    def parse_cas_workspace_response(self):
+        caller = self.caller
+        session = self.session
+        response = caller.response
+
+        if response.status == 'Syntax Error':
+            raise SyntaxError('An invalid symbol is generated, check object names')
+        elif response.status == 'Semantic Error':
+            raise RuntimeError('A semantic error has occured, check statements and object types')
+
+        solution = session.CASTable('solution').to_frame()
+        dual_solution = session.CASTable('dual').to_frame()
+
+        caller._primalSolution = solution
+        caller._dualSolution = dual_solution
+
+        if hasattr(response, 'solutionStatus'):
+            caller._status = response.solutionStatus
+        if hasattr(response, 'solutionTime'):
+            caller._soltime = response.solutionTime
+
+        self.set_workspace_variable_values(solution)
+        #self.set_constraint_values(dual_solution)
+
+        # self.set_model_objective_value()
+        # self.set_variable_init_values()
+
+        return solution
+
+    def set_workspace_variable_values(self, solution):
+        caller = self.caller
+        for _, row in solution.iterrows():
+            caller.set_variable_value(row['var'], row['value'])

@@ -233,8 +233,8 @@ class TestReadData(unittest.TestCase):
             quit;
             """))
 
-        response = ws.submit(verbose=True)
-        self.assertEqual(response['Print1.PrintTable'].to_string(), cleandoc(
+        ws.submit(verbose=True)
+        self.assertEqual(ws.response['Print1.PrintTable'].to_string(), cleandoc(
             """
                COL1    p    q
             0   1.0  1.0  2.0

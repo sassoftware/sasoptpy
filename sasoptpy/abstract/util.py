@@ -23,3 +23,21 @@ def is_parameter(arg):
 
 def is_conditional_value(arg):
     return isinstance(arg, sasoptpy.abstract.Conditional)
+
+
+def is_solve_statement(i):
+    if type(i) == sasoptpy.abstract.SolveStatement:
+        return True
+    elif isinstance(i, sasoptpy.abstract.Statement):
+        if 'solve' in sasoptpy.to_definition(i)[:5]:
+            return True
+    return False
+
+
+def is_print_statement(i):
+    if type(i) == sasoptpy.abstract.PrintStatement:
+        return True
+    elif isinstance(i, sasoptpy.abstract.Statement):
+        if 'print' in sasoptpy.to_definition(i)[:5]:
+            return True
+    return False
