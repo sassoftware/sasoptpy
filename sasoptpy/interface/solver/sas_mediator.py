@@ -161,7 +161,7 @@ class SASMediator(Mediator):
 
         wrap_lines = kwargs.get('wrap_lines', False)
         if wrap_lines:
-            max_length = kwargs.get('max_line_length', 3000)
+            max_length = kwargs.get('max_line_length', 30000)
             optmodel_string = wrap_long_lines(optmodel_string, max_length)
 
         if verbose:

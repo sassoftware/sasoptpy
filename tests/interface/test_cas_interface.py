@@ -290,4 +290,3 @@ class TestCASInterface(unittest.TestCase):
         def produce_error_status():
             m.solve(frame=True)
         self.assertRaises(RuntimeError, produce_error_status)
-

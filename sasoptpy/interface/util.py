@@ -8,7 +8,7 @@ def parse_optmodel_table(table):
     parsed_df = parsed_df.set_index(['Label'])
     return parsed_df
 
-def wrap_long_lines(code, max_length=3000):
+def wrap_long_lines(code, max_length=30000):
     long_line_regex = r".{" + str(max_length) + r",}\n?"
     partition_regex = r"(?=.{" + str(max_length) + r",}\n?)(.{" + \
                       str(round(max_length / 3)) + r",}?)([\,\ ]+)(.+)"
