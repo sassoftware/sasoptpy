@@ -462,11 +462,6 @@ class CASMediator(Mediator):
         caller._primalSolution = solution
         caller._dualSolution = dual_solution
 
-        if hasattr(response, 'solutionStatus'):
-            caller._status = response.solutionStatus
-        if hasattr(response, 'solutionTime'):
-            caller._soltime = response.solutionTime
-
         self.set_workspace_variable_values(solution)
         #self.set_constraint_values(dual_solution)
 

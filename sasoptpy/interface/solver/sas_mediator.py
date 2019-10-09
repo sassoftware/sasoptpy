@@ -31,7 +31,7 @@ class SASMediator(Mediator):
     def submit(self, **kwargs):
         return self.submit_optmodel_code(**kwargs)
 
-    def is_mps_format_needed(self, mps_option, user_options):
+    def is_mps_format_needed(self, mps_option, options):
         enforced = False
         session = self.session
         caller = self.caller
@@ -41,7 +41,7 @@ class SASMediator(Mediator):
 
         model = caller
 
-        if 'decomp' in user_options:
+        if 'decomp' in options:
             mps_option = True
             enforced = True
 
@@ -307,7 +307,7 @@ class SASMediator(Mediator):
         caller = self.caller
         session = self.session
         optmodel_code = sasoptpy.util.to_optmodel(caller,
-                                                  header=False,
+                                                  header=True,
                                                   parse=True,
                                                   ods=True)
         verbose = kwargs.get('verbose', None)
@@ -328,33 +328,39 @@ class SASMediator(Mediator):
         response = session.submit(optmodel_code)
 
         caller.response = response
+
+        # Print output
+        for line in response['LOG'].split('\n'):
+            first_word = line[0:1]
+            if not first_word.isdigit():
+                print(line)
+
+        if session.SYSERR() != 0:
+            raise RuntimeError('SAS submission failed with following error: {}'.
+                               format(session.SYSERRORTEXT()))
+
         # caller.parse_solve_responses()
         # caller.parse_print_responses()
 
-        return 1
+        # list of tables: session.list_tables('WORK')
+        # soln: session.sd2df('WORK.SOLUTION')
+        # dual: session.sd2df('WORK.DUAL')
 
-        #return self.parse_sas_workspace_response()
+        # Error msg: session.SYSERRORTEXT()
+        # Error status: session.SYSERR()
 
-    def parse_cas_workspace_response(self):
+        return self.parse_sas_workspace_response()
+
+    def parse_sas_workspace_response(self):
         caller = self.caller
         session = self.session
         response = caller.response
 
-        if response.status == 'Syntax Error':
-            raise SyntaxError('An invalid symbol is generated, check object names')
-        elif response.status == 'Semantic Error':
-            raise RuntimeError('A semantic error has occured, check statements and object types')
-
-        solution = session.CASTable('solution').to_frame()
-        dual_solution = session.CASTable('dual').to_frame()
+        solution = session.sd2df('WORK.SOLUTION')
+        dual_solution = session.sd2df('WORK.DUAL')
 
         caller._primalSolution = solution
         caller._dualSolution = dual_solution
-
-        if hasattr(response, 'solutionStatus'):
-            caller._status = response.solutionStatus
-        if hasattr(response, 'solutionTime'):
-            caller._soltime = response.solutionTime
 
         self.set_workspace_variable_values(solution)
         #self.set_constraint_values(dual_solution)
@@ -363,3 +369,8 @@ class SASMediator(Mediator):
         # self.set_variable_init_values()
 
         return solution
+
+    def set_workspace_variable_values(self, solution):
+        caller = self.caller
+        for _, row in solution.iterrows():
+            caller.set_variable_value(row['var'], row['value'])

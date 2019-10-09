@@ -133,8 +133,9 @@ def to_optmodel_for_session(workspace, **kwargs):
     s += sasoptpy.util.addSpaces(memberdefs, 4)
 
     if parse:
-        s += 'create data solution from [i]= {1.._NVAR_} var=_VAR_.name value=_VAR_ lb=_VAR_.lb ub=_VAR_.ub rc=_VAR_.rc;\n'
-        s += 'create data dual from [j] = {1.._NCON_} con=_CON_.name value=_CON_.body dual=_CON_.dual;\n'
+        parse_str = '\ncreate data solution from [i]= {1.._NVAR_} var=_VAR_.name value=_VAR_ lb=_VAR_.lb ub=_VAR_.ub rc=_VAR_.rc;\n'
+        parse_str += 'create data dual from [j] = {1.._NCON_} con=_CON_.name value=_CON_.body dual=_CON_.dual;'
+        s += sasoptpy.util.addSpaces(parse_str, 4)
 
     if header:
         s += '\nquit;'

@@ -106,12 +106,13 @@ class TestSASInterface(unittest.TestCase):
         m.solve(mps=True, verbose=True)
         self.assertEqual(x[2].get_value(), 2)
 
-    def test_workspace_on_sas(self):
+    def test_workspace_post_value(self):
 
         if TestSASInterface.conn is None:
             self.skipTest('SAS session is not available')
 
-        with so.Workspace('test_ws_sas', session=TestSASInterface.conn) as w:
+        with so.Workspace('test_ws_var_value',
+                          session=TestSASInterface.conn) as w:
             x = so.Variable(name='x')
             c = so.Constraint(x <= 5, name='c')
             o = so.Objective(x, sense=so.MAX, name='obj')
@@ -124,5 +125,5 @@ class TestSASInterface(unittest.TestCase):
                 solve;
             quit;'''))
         w.submit()
-        #self.assertEqual(x.get_value(), 5)
+        self.assertEqual(x.get_value(), 5)
 
