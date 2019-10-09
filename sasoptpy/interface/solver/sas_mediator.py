@@ -180,7 +180,9 @@ class SASMediator(Mediator):
 
         # Print output
         for line in response['LOG'].split('\n'):
-            print(line)
+            first_word = line[0:1]
+            if not first_word.isdigit():
+                print(line)
             if 'WARNING 524' in line:
                 raise RuntimeError(
                     r'Some object names are truncated, '
@@ -323,12 +325,41 @@ class SASMediator(Mediator):
         if verbose:
             print(optmodel_code)
 
-        # response = session.runOptmodel(
-        #     optmodel_code
-        # )
-        #
-        # caller.response = response
+        response = session.submit(optmodel_code)
+
+        caller.response = response
         # caller.parse_solve_responses()
         # caller.parse_print_responses()
-        #
-        # return self.parse_cas_workspace_response()
+
+        return 1
+
+        #return self.parse_sas_workspace_response()
+
+    def parse_cas_workspace_response(self):
+        caller = self.caller
+        session = self.session
+        response = caller.response
+
+        if response.status == 'Syntax Error':
+            raise SyntaxError('An invalid symbol is generated, check object names')
+        elif response.status == 'Semantic Error':
+            raise RuntimeError('A semantic error has occured, check statements and object types')
+
+        solution = session.CASTable('solution').to_frame()
+        dual_solution = session.CASTable('dual').to_frame()
+
+        caller._primalSolution = solution
+        caller._dualSolution = dual_solution
+
+        if hasattr(response, 'solutionStatus'):
+            caller._status = response.solutionStatus
+        if hasattr(response, 'solutionTime'):
+            caller._soltime = response.solutionTime
+
+        self.set_workspace_variable_values(solution)
+        #self.set_constraint_values(dual_solution)
+
+        # self.set_model_objective_value()
+        # self.set_variable_init_values()
+
+        return solution
