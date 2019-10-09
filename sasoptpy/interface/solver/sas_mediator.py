@@ -128,8 +128,9 @@ class SASMediator(Mediator):
                         run;
                         """.format(name))
 
-        for line in c['LOG'].split('\n'):
-            if not c[0:1].isdigit():
+        logs = c['LOG']
+        for line in logs.split('\n'):
+            if not line[0:1].isdigit():
                 print(line)
 
         return self.parse_sas_mps_solution()
