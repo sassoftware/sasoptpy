@@ -37,11 +37,6 @@ class Workspace:
     def append(self, element):
         self._elements.append(element)
 
-    def add_variables(self, *args, **kwargs):
-        vg = sasoptpy.VariableGroup(*args, **kwargs)
-        self.append(vg)
-        return vg
-
     def set_session(self, session):
         self._session = session
 

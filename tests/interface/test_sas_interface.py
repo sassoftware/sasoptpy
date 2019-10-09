@@ -182,5 +182,5 @@ class TestSASInterface(unittest.TestCase):
         with so.Workspace('w', session=TestSASInterface.conn) as w:
             so.abstract.LiteralStatement('abc')
         def produce_error():
-            w.submit()
+            w.submit(verbose=True)
         self.assertRaises(RuntimeError, produce_error)
