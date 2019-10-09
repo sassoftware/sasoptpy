@@ -36,9 +36,6 @@ class SASMediator(Mediator):
         session = self.session
         caller = self.caller
 
-        if not isinstance(caller, sasoptpy.Model):
-            return False
-
         model = caller
 
         if 'decomp' in options:
@@ -293,9 +290,10 @@ class SASMediator(Mediator):
 
         # Objective value
         if sasoptpy.core.util.is_model(caller):
-            objval = caller._solutionSummary.loc['Objective Value'].Value
-            objval = float(objval)
-            caller.set_objective_value(objval)
+            if caller._solutionSummary.index.contains('Objective Value'):
+                objval = caller._solutionSummary.loc['Objective Value'].Value
+                objval = float(objval)
+                caller.set_objective_value(objval)
 
         # Variable init values
         if sasoptpy.core.util.is_model(caller):
@@ -315,11 +313,12 @@ class SASMediator(Mediator):
         # Check if any object has a long name
         limit_names = kwargs.get('limit_names', False)
         if limit_names:
-            optmodel_code = replace_long_names(optmodel_code)
+            optmodel_code, conversion = replace_long_names(optmodel_code)
+            self.conversion = conversion
 
         wrap_lines = kwargs.get('wrap_lines', False)
         if wrap_lines:
-            max_length = kwargs.get('max_line_length', 3000)
+            max_length = kwargs.get('max_line_length', 30000)
             optmodel_code = wrap_long_lines(optmodel_code, max_length)
 
         if verbose:
@@ -357,7 +356,9 @@ class SASMediator(Mediator):
         response = caller.response
 
         solution = session.sd2df('WORK.SOLUTION')
+        self.convert_to_original(solution)
         dual_solution = session.sd2df('WORK.DUAL')
+        self.convert_to_original(dual_solution)
 
         caller._primalSolution = solution
         caller._dualSolution = dual_solution

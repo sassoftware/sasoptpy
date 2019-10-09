@@ -82,7 +82,7 @@ class TestSASInterface(unittest.TestCase):
         if TestSASInterface.conn is None:
             self.skipTest('SAS session is not available')
 
-        vs = 1000
+        vs = 2000
         m = so.Model(name='test_long_line', session=TestSASInterface.conn)
         x = m.add_variables(vs, name='averylongvariablename', ub=2, lb=0)
         c = m.add_constraint(
@@ -127,3 +127,60 @@ class TestSASInterface(unittest.TestCase):
         w.submit()
         self.assertEqual(x.get_value(), 5)
 
+    def test_forced_optmodel(self):
+        if not TestSASInterface.conn:
+            self.skipTest('No session is available')
+
+        # Forced to OPTMODEL due abstract elements
+        m = so.Model(name='test_forced_optmodel', session=TestSASInterface.conn)
+        S = so.Set(name='S')
+        m.include(S)
+        x = m.add_variable(name='x', ub=1)
+        m.set_objective(2*x, sense=so.MAX, name='obj')
+        def warn_abstract():
+            response = m.solve(mps=True, submit=False)
+            self.assertIn('set S;', response)
+        self.assertWarns(UserWarning, warn_abstract)
+
+        # Uploaded MPS Table
+        m.drop(S)
+        response = m.solve(mps=True, submit=False)
+        print(str(response))
+
+        # Forced to OPTMODEL due nonlinearity
+        m.set_objective(x**2, sense=so.MAX, name='obj2')
+        def warn_nonlinear():
+            response = m.solve(mps=True, submit=False)
+            self.assertIn('var x', response)
+        self.assertWarns(UserWarning, warn_nonlinear)
+
+        # Forced to give error
+        def force_decomp():
+            m.solve(mps=True, options={'decomp': 'USER'})
+        self.assertRaises(RuntimeError, force_decomp)
+
+        # No objective
+        m.solve(mps=True, verbose=True, name='no_obj')
+
+    def test_postprocess_optmodel_string(self):
+
+        if TestSASInterface.conn is None:
+            self.skipTest('SAS session is not available')
+
+        with so.Workspace('w', session=TestSASInterface.conn) as w:
+            x = so.Variable(name='x')
+            o = so.Objective((x-1)**2, sense=so.MIN, name='obj')
+            so.actions.solve()
+        w.submit(limit_names=True, wrap_lines=True)
+        self.assertEqual(x.get_value(), 1)
+
+    def test_optmodel_error(self):
+
+        if TestSASInterface.conn is None:
+            self.skipTest('SAS session is not available')
+
+        with so.Workspace('w', session=TestSASInterface.conn) as w:
+            so.abstract.LiteralStatement('abc')
+        def produce_error():
+            w.submit()
+        self.assertRaises(RuntimeError, produce_error)

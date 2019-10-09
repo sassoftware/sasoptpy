@@ -272,6 +272,12 @@ class TestCASInterface(unittest.TestCase):
             m.solve()
         self.assertRaises(RuntimeError, produce_runtime_error)
 
+        with so.Workspace('w', session=mockSession) as w:
+            x = so.Variable(name='x')
+        def produce_runtime_error_for_ws():
+            r = w.submit()
+        self.assertRaises(RuntimeError, produce_runtime_error_for_ws)
+
     def test_errors_and_warnings(self):
 
         s = MockCASServer()
