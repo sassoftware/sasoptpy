@@ -129,9 +129,8 @@ class SASMediator(Mediator):
                         """.format(name))
 
         for line in c['LOG'].split('\n'):
-            print(line)
-            # if line[0:4] == '    ' or line[0:4] == 'NOTE':
-            #     print(line)
+            if not c[0:1].isdigit():
+                print(line)
 
         return self.parse_sas_mps_solution()
 
