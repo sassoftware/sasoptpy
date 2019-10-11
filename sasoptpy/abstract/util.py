@@ -41,3 +41,10 @@ def is_print_statement(i):
         if 'print' in sasoptpy.to_definition(i)[:5]:
             return True
     return False
+
+def get_key_from_name(name):
+    keys = name.split('[')[1].split(']')[0]
+    keys = keys.split(',')
+    keys = tuple(int(k) if k.isdigit() else k
+                 for k in keys)
+    return keys

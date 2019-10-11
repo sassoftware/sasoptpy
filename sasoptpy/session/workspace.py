@@ -24,7 +24,7 @@ class Workspace:
         return 'Workspace[ID={}]'.format(id(self))
 
     def __repr__(self):
-        return 'sasoptpy.Workspace({})'.format(name)
+        return 'sasoptpy.Workspace({})'.format(self.name)
 
     def __enter__(self):
         self.original = sasoptpy.container
@@ -96,21 +96,15 @@ class Workspace:
         if len(vg) >= 1:
             return vg[0]
 
+        if '[' in name:
+            group_name = sasoptpy.util.get_group_name(name)
+            group = self.get_variable(group_name)
+            if group:
+                return group.get_member_by_name(name)
+
         return None
 
     def set_variable_value(self, name, value):
-
         variable = self.get_variable(name)
         if variable is not None:
             variable.set_value(value)
-        else:
-            self._set_abstract_values(name, value)
-
-    def _set_abstract_values(self, name, value):
-        """
-        Searches for the missing/abstract variable names and set their values
-        """
-        original_name = sasoptpy.util.get_group_name(name)
-        group = self.get_variable(original_name)
-        if group:
-            group.set_member_value_by_name(name, value)

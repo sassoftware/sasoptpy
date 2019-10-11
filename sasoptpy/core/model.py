@@ -1618,7 +1618,8 @@ class Model:
         original_name = sasoptpy.util.get_group_name(name)
         group = self.get_variable_group(original_name)
         if group:
-            group.set_member_value_by_name(name, value)
+            v = group.get_member_by_name(name)
+            v.set_value(value)
 
     def clear_solution(self):
         self._objval = None

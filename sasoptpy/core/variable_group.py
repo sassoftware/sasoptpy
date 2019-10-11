@@ -641,15 +641,9 @@ class VariableGroup(Group):
     def set_member_value(self, key, value):
         pass
 
-    def set_member_value_by_name(self, name, value):
-        keys = name.split('[')[1].split(']')[0]
-        keys = keys.split(',')
-        keys = tuple(int(k) if k.isdigit() else k
-                     for k in keys)
-        if keys in self._vardict:
-            self[keys].set_value(value)
-        else:
-            self.add_member(keys).set_value(value)
+    def get_member_by_name(self, name):
+        keys = sasoptpy.abstract.util.get_key_from_name(name)
+        return self[keys]
 
     def __str__(self):
         """

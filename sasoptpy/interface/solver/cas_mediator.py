@@ -434,7 +434,7 @@ class CASMediator(Mediator):
         verbose = kwargs.get('verbose', None)
 
         if verbose:
-            print(optmodel_code)
+            print(sasoptpy.to_optmodel(caller))
 
         response = session.runOptmodel(
             optmodel_code
