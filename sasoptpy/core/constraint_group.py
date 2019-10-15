@@ -3,6 +3,7 @@ from collections import OrderedDict
 from types import GeneratorType
 
 import sasoptpy
+from sasoptpy._libs import pd
 from sasoptpy.core import Group
 
 
@@ -58,6 +59,7 @@ class ConstraintGroup(Group):
     def __init__(self, argv, name):
         super().__init__(name=name)
         self._condict = OrderedDict()
+        self._shadows = OrderedDict()
         if type(argv) == list or type(argv) == GeneratorType:
             self._recursive_add_cons(argv, name=name, condict=self._condict)
         elif argv is None:
@@ -68,30 +70,34 @@ class ConstraintGroup(Group):
 
         self._objorder = sasoptpy.util.get_creation_id()
 
-        self._shadows = OrderedDict()
-
     def get_name(self):
-            """
-            Returns the name of the constraint group
+        """
+        Returns the name of the constraint group
 
-            Returns
-            -------
-            name : string
-                Name of the constraint group
+        Returns
+        -------
+        name : string
+            Name of the constraint group
 
-            Examples
-            --------
+        Examples
+        --------
 
-            >>> m = so.Model(name='m')
-            >>> x = m.add_variable(name='x')
-            >>> indices = ['a', 'b', 'c']
-            >>> y = m.add_variables(indices, name='y')
-            >>> c1 = m.add_constraints((x + y[i] <= 4 for i in indices),
-                                       name='con1')
-            >>> print(c1.get_name())
-            con1
-            """
-            return self._name
+        >>> m = so.Model(name='m')
+        >>> x = m.add_variable(name='x')
+        >>> indices = ['a', 'b', 'c']
+        >>> y = m.add_variables(indices, name='y')
+        >>> c1 = m.add_constraints((x + y[i] <= 4 for i in indices),
+                                   name='con1')
+        >>> print(c1.get_name())
+        con1
+        """
+        return self._name
+
+    def _get_name_list(self):
+        def_names = []
+        for i in self._condict.values():
+            def_names.extend(i._get_name_list())
+        return def_names
 
     def _recursive_add_cons(self, argv, name, condict, ckeys=()):
         conctr = 0
@@ -110,9 +116,8 @@ class ConstraintGroup(Group):
             key_list = sasoptpy.core.util._to_safe_iterator_expression(new_keys)
             con_name = '{}[{}]'.format(name, ','.join(key_list))
             new_con = sasoptpy.Constraint(exp=c, name=con_name, crange=c._range)
-            condict[new_keys] = new_con
+            self[new_keys] = new_con
             conctr += 1
-        self._set_con_info()
 
     def get_expressions(self, rhs=False):
         """
@@ -175,36 +180,57 @@ class ConstraintGroup(Group):
         item : Constraint
             Reference to the constraint
         """
+        key = sasoptpy.util.pack_to_tuple(key)
+        if key in self._condict:
+            return self._condict[key]
+
         if sasoptpy.abstract.is_key_abstract(key):
-            tuple_key = sasoptpy.util.pack_to_tuple(key)
-            tuple_key = tuple(i for i in sasoptpy.util.flatten_tuple(tuple_key))
+            tuple_key = tuple(i for i in sasoptpy.util.flatten_tuple(key))
             if tuple_key in self._shadows:
                 return self._shadows[tuple_key]
             else:
-                k = list(self._condict)[0]
-                c = self._condict[k]
-                cname = self.get_name()
-                cname = cname.replace(' ', '')
-                shadow = sasoptpy.Constraint(exp=c, direction=c._direction,
-                                             name=cname, crange=c._range)
-                self._shadows[tuple_key] = shadow
-                return shadow
-        else:
-            key = sasoptpy.util.pack_to_tuple(key)
-            return self._condict.get(key)
+                return self._create_shadow(tuple_key)
+
+        return self._get_shadow_if_abstract(key)
+
+    def _get_shadow_if_abstract(self, keys):
+        for i, k in enumerate(keys):
+            group = self._groups[i].to_list()
+            if any([sasoptpy.util.is_key_abstract(j) for j in group]):
+                continue
+            else:
+                if k not in group:
+                    return None
+        # If it reached this part, it is a feasible request
+        return self._create_shadow(keys)
 
     def __setitem__(self, key, value):
         tupled_key = sasoptpy.util.pack_to_tuple(key)
         self._condict[tupled_key] = value
+        self._register_keys(tupled_key)
         value._set_info(parent=self, key=tupled_key)
+
+    def _create_shadow(self, key):
+        if len(self._condict) == 0:
+            return None
+        else:
+            k = list(self._condict)[0]
+            c = self._condict[k]
+            cname = self.get_name()
+            cname = cname.replace(' ', '')
+            shadow = sasoptpy.Constraint(exp=c, direction=c._direction,
+                                         name=cname, crange=c._range)
+            self._shadows[key] = shadow
+            shadow._set_info(parent=self, key=key, shadow=True)
+            return shadow
 
     def __iter__(self):
         for i in self._condict.values():
             yield i
-
-    def _set_con_info(self):
-        for i in self._condict:
-            self._condict[i]._set_info(parent=self, key=i)
+    #
+    # def _set_con_info(self):
+    #     for i in self._condict:
+    #         self._condict[i]._set_info(parent=self, key=i)
 
     def get_members(self):
         return self._condict

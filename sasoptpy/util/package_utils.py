@@ -49,6 +49,9 @@ def load_package_globals():
 
     sasoptpy.N = sasoptpy.Symbol(name='_N_')
 
+    sasoptpy.ABSTRACT = 'spyABS'
+    sasoptpy.CONCRETE = 'spyCON'
+
     # Transformation dictionary
     sasoptpy._transform = {
         'binary': sasoptpy.BIN,
@@ -109,7 +112,10 @@ def load_function_containers():
             sasoptpy.abstract.statement.Assignment.set_value
 
         d[sasoptpy.core.Model.drop_constraint] = \
-            sasoptpy.abstract.statement.DropStatement.drop_constraint
+            sasoptpy.abstract.statement.DropStatement.model_drop_constraint
+
+        d[sasoptpy.core.Model.drop_constraints] = \
+            sasoptpy.abstract.statement.DropStatement.model_drop_constraint
 
         d[sasoptpy.core.util.read_data] = \
             sasoptpy.abstract.statement.ReadDataStatement.read_data
@@ -293,8 +299,7 @@ def _wrap_expression_with_iterators(exp, operator, iterators):
     return wrapper
 
 
-def _to_optmodel_loop(keys, parent=None):
-    s = ''
+def get_subindices(keys):
     subindex = []
     for key in keys:
         if isinstance(key, tuple):
@@ -304,18 +309,55 @@ def _to_optmodel_loop(keys, parent=None):
             subindex.append(key.get_name())
         elif not is_key_abstract(key):
             subindex.append(safe_string(str(key)))
+    return subindex
+
+
+def get_subindices_optmodel_format(subindex):
     if subindex:
-        s += '_' + '_'.join(subindex)
+        return '_' + '_'.join([str(i) for i in subindex])
+    else:
+        return ''
+
+
+def _to_optmodel_loop(keys, parent=None):
+    s = ''
+    subindex = get_subindices(keys)
+    s += get_subindices_optmodel_format(subindex)
     iters = get_iterators(keys)
     conds = get_conditions(keys)
     if parent is not None:
         conds.extend(get_conditions(parent))
-    if len(iters) > 0:
-        s += ' {'
-        s += ', '.join(iters)
-        if len(conds) > 0:
-            s += ': '
-            s += ' and '.join(conds)
+    iter_str = get_iterators_optmodel_format(iters, conds)
+    if iter_str != '':
+        s += ' ' + iter_str
+    return s
+
+
+def get_iterators(keys):
+    """
+    Returns a list of definition strings for a given list of SetIterators
+    """
+    iterators = []
+    groups = {}
+    for key in keys:
+        if is_key_abstract(key):
+            iterators.append(key)
+    return iterators
+
+
+def get_iterators_optmodel_format(iters, conds=None):
+    if conds is None:
+        conds = []
+
+    valid_iterators = []
+    for i in iters:
+        if sasoptpy.abstract.is_key_abstract(i):
+            valid_iterators.append(i)
+    s = ''
+    if len(valid_iterators) > 0:
+        s = '{' + ', '.join([i._get_for_expr() for i in valid_iterators])
+        if conds:
+            s += ': ' + ' and '.join(conds)
         s += '}'
     return s
 
@@ -360,18 +402,6 @@ def is_model(arg):
 
 def is_workspace(arg):
     return isinstance(arg, sasoptpy.session.Workspace)
-
-
-def get_iterators(keys):
-    """
-    Returns a list of definition strings for a given list of SetIterators
-    """
-    iterators = []
-    groups = {}
-    for key in keys:
-        if is_key_abstract(key):
-            iterators.append(key._get_for_expr())
-    return iterators
 
 
 def get_conditions(keys):
@@ -506,10 +536,12 @@ def _to_sas_string(obj):
 
 
 def _insert_brackets(prefix, keys):
-    s = prefix + '['
-    k = pack_to_tuple(keys)
-    s += ', '.join(_to_iterator_expression(k))
-    s += ']'
+    s = prefix
+    if len(keys) > 0:
+        s += '['
+        k = pack_to_tuple(keys)
+        s += ', '.join(_to_iterator_expression(k))
+        s += ']'
     return s
 
 
@@ -520,6 +552,10 @@ def _to_iterator_expression(itlist):
             strlist.append(i._expr())
         elif isinstance(i, str):
             strlist.append("'{}'".format(i))
+        elif isinstance(i, sasoptpy.abstract.SetIterator):
+            strlist.append(i._expr())
+        elif isinstance(i, sasoptpy.abstract.SetIteratorGroup):
+            strlist.append(i.get_name())
         else:
             strlist.append(str(i))
     return strlist

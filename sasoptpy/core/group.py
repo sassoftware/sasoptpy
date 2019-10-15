@@ -1,14 +1,33 @@
-
 import sasoptpy
+from sasoptpy._libs import pd
 from abc import ABC, abstractmethod
+from collections import OrderedDict
+
 
 class Group(ABC):
 
     def __init__(self, name):
         self._name = name
+        self._groups = OrderedDict()
 
     def get_name(self):
         return self._name
+
+    def _register_keys(self, keys):
+        for j, k in enumerate(keys):
+            try:
+                self._groups[j] = self._groups[j].union(pd.Index([k]))
+            except KeyError:
+                self._groups[j] = pd.Index([k])
+
+    def get_group_types(self):
+        group_types = []
+        for i in self._groups.values():
+            if any([sasoptpy.abstract.is_key_abstract(j) for j in i]):
+                group_types.append(sasoptpy.ABSTRACT)
+            else:
+                group_types.append(sasoptpy.CONCRETE)
+        return group_types
 
     @abstractmethod
     def get_members(self):

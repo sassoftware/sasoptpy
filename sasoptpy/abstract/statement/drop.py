@@ -5,20 +5,30 @@ import sasoptpy
 
 class DropStatement(Statement):
 
-    def __init__(self, constraint):
+    @sasoptpy.class_containable
+    def __init__(self, *elements):
         super().__init__()
-        self.elements.append(constraint)
+        for i in elements:
+            self.elements.append(i)
 
     def append(self, element):
         self.elements.append(element)
 
     def _defn(self):
-        s = ''
-        for e in self.elements:
-            s += 'drop {};'.format(e.get_name())
+        s = 'drop '
+        cons = []
+        for c in self.elements:
+            cons.extend(c._get_name_list())
+        s += ' '.join(cons) + ';'
         return s
 
     @classmethod
-    def drop_constraint(cls, _, constraint):
-        st = DropStatement(constraint=constraint)
-        return st
+    def model_drop_constraint(cls, _, c):
+        if sasoptpy.core.util.is_droppable(c):
+            st = DropStatement(element=c)
+            return st
+
+    @classmethod
+    def drop_constraint(cls, *constraints):
+        if all([sasoptpy.core.util.is_droppable(c) for c in constraints]):
+            st = DropStatement(*constraints)

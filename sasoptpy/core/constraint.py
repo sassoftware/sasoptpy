@@ -106,6 +106,7 @@ class Constraint(Expression):
         self._parent = None
         self._block = None
         self._temp = False
+        self._shadow = False
 
     def update_var_coef(self, var, value):
         """
@@ -243,9 +244,10 @@ class Constraint(Expression):
             for i in conditions:
                 self.sym.add_condition(i)
 
-    def _set_info(self, parent, key):
+    def _set_info(self, parent, key, shadow=False):
         self._parent = parent
         self._key = key
+        self._shadow = shadow
 
     def __and__(self, other):
         r = sasoptpy.abstract.Condition(left=self, c_type='and', right=other)
@@ -295,6 +297,29 @@ class Constraint(Expression):
             sasoptpy.util.get_in_digit_format(
                 -self.get_member_value('CONST') + self._range))
         return left_expr + expr + right_sign + constant_side
+
+    def _get_name_list(self):
+        from sasoptpy.util.package_utils import \
+            get_subindices, get_subindices_optmodel_format, \
+            get_iterators, get_iterators_optmodel_format, _insert_brackets
+
+        if self._key:
+            group_types = self._parent.get_group_types()
+            abstract_keys = [i[1] for i in enumerate(self._key)
+                             if group_types[i[0]] == sasoptpy.ABSTRACT]
+            concrete_keys = [i[1] for i in enumerate(self._key)
+                             if group_types[i[0]] == sasoptpy.CONCRETE]
+
+            parent_name = self._parent.get_name()
+            iterators_exp = get_iterators_optmodel_format(abstract_keys)
+            subindex_exp = get_subindices_optmodel_format(concrete_keys)
+            con_name = _insert_brackets(parent_name + subindex_exp, tuple(abstract_keys))
+            if iterators_exp == '':
+                return [con_name]
+            else:
+                return [iterators_exp + ' ' + con_name]
+        else:
+            return [self._name]
 
     def _defn(self):
         s = self._get_definition_tag()

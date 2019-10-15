@@ -20,10 +20,16 @@
 Unit tests for core classes.
 """
 
+import os
+import sys
 import unittest
 import sasoptpy as so
 from sasoptpy._libs import pd
 from inspect import cleandoc
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.abspath(os.path.join(current_dir, '..')))
+from util import assert_equal_wo_temps
 
 
 class TestConstraintGroup(unittest.TestCase):
@@ -85,7 +91,12 @@ class TestConstraintGroup(unittest.TestCase):
         cg2 = so.ConstraintGroup((y[i] >= 3 for i in I), name='c2')
         for i in I:
             self.assertEqual(cg2[i]._get_constraint_expr(), "y[o4] >= 3")
-        self.assertEqual(cg2[0], None)
+        #self.assertEqual(cg2[0], None)
+        print(cg2[1])
+        m = so.Model(name='m')
+        m.include(cg2)
+        m.include(so.abstract.DropStatement(cg2))
+        print(so.to_optmodel(m))
 
     def test_iter(self):
         x = so.VariableGroup(3, name='x')
@@ -121,6 +132,25 @@ class TestConstraintGroup(unittest.TestCase):
                  range(5)), name='c')
 
         self.assertRaises(ValueError, con_with_no_direction)
+
+    def test_mixed_case(self):
+        m = so.Model(name='m')
+        S = so.Set(name='S', value=range(3))
+        x = so.VariableGroup(3, name='x')
+        y = so.VariableGroup(S, name='y')
+        c = so.ConstraintGroup((x[i] + y[j] >= 1 for i in range(3) for j in S), name='c')
+        m.include(S, x, y, c)
+        assert_equal_wo_temps(self, so.to_optmodel(m), cleandoc('''
+            proc optmodel;
+            min m_obj = 0;
+            set S = 0..3;
+            var x {{0,1,2}};
+            var y {{S}};
+            con c_0 {o11 in S} : x[0] + y[o11] >= 1;
+            con c_1 {o16 in S} : x[1] + y[o16] >= 1;
+            con c_2 {o21 in S} : x[2] + y[o21] >= 1;
+            solve;
+            quit;'''))
 
     def tearDown(self):
         so.reset()

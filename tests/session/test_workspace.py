@@ -67,6 +67,8 @@ class TestWorkspace(unittest.TestCase):
             z = so.VariableGroup(S, name='z')
             d = so.Variable(name='d')
             e = so.Variable(name='d')
+            t = so.VariableGroup(2, name='t')
+            u = so.VariableGroup(2, name='t')
 
         self.assertIn('Workspace[ID', str(w))
         self.assertEqual('sasoptpy.Workspace(w)', repr(w))
@@ -78,8 +80,12 @@ class TestWorkspace(unittest.TestCase):
         def warn_duplicate():
             w.get_variable('d')
         self.assertWarns(UserWarning, warn_duplicate)
+        def warn_duplicate_vg():
+            w.get_variable('t')
+        self.assertWarns(UserWarning, warn_duplicate_vg)
         w.set_variable_value('z[0]', 1)
         self.assertEqual(z[0].get_value(), 1)
+        self.assertEqual(w.get_variable('a'), None)
 
     def test_var_values(self):
         if TestWorkspace.conn is None:

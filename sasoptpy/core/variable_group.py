@@ -91,7 +91,6 @@ class VariableGroup(Group):
         super().__init__(name=name)
         self._vardict = OrderedDict()
         self._shadows = OrderedDict()
-        self._groups = OrderedDict()
         self._keyset = []
         self._abstract = False
         self._lb = None
@@ -226,13 +225,6 @@ class VariableGroup(Group):
                                          name=name, vartype=vartype,
                                          lb=lb, ub=ub, init=init,
                                          shadow=shadow)
-
-    def _register_keys(self, keys):
-        for j, k in enumerate(keys):
-            try:
-                self._groups[j] = self._groups[j].union(pd.Index([k]))
-            except KeyError:
-                self._groups[j] = pd.Index([k])
 
     def _set_var_info(self):
         for i in self._vardict:

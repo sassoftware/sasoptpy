@@ -18,6 +18,11 @@ def is_constraint(obj):
     return isinstance(obj, sasoptpy.core.Constraint)
 
 
+def is_droppable(obj):
+    return isinstance(obj, sasoptpy.core.Constraint) or \
+           isinstance(obj, sasoptpy.core.ConstraintGroup)
+
+
 def is_model(obj):
     return isinstance(obj, sasoptpy.core.Model)
 

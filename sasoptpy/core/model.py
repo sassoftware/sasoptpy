@@ -688,6 +688,7 @@ class Model:
             sasoptpy.abstract.LiteralStatement: self._include_statement,
             sasoptpy.ImplicitVar: self._include_expdict,
             sasoptpy.abstract.ReadDataStatement: self._include_statement,
+            sasoptpy.abstract.DropStatement: self._include_statement,
             list: self.include,
             Model: self._include_model
         }
