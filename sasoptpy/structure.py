@@ -52,12 +52,6 @@ def class_containable(func):
     return class_append
 
 
-def in_container():
-    if sasoptpy.container is not None:
-        return True
-    return False
-
-
 @contextmanager
 def under_condition(c):
     if type(c) == bool:

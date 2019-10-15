@@ -33,8 +33,7 @@ from sasoptpy.util import (
     get_solution_table, dict_to_frame, exp_range,
     to_expression, to_definition, to_optmodel, is_linear)
 
-from sasoptpy.structure import (inside_container, containable,
-                                class_containable)
+from sasoptpy.structure import (containable, class_containable)
 
 from sasoptpy.core.expression import Expression
 from sasoptpy.core import (Variable, VariableGroup, Constraint, ConstraintGroup,
