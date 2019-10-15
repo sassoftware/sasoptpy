@@ -22,21 +22,15 @@ from contextlib import contextmanager
 import sasoptpy
 
 
-@contextmanager
-def inside_container(c):
-    original = sasoptpy.container
-    sasoptpy.container = c
-    yield
-    sasoptpy.container = original
-
-
 def containable(func):
     def wrapper(*args, **kwargs):
         if sasoptpy.container:
             try:
                 statement_func = sasoptpy.statement_dictionary[wrapper]
             except KeyError:
-                raise NotImplementedError('Container support for {} is not implemented'.format(func.__name__))
+                raise NotImplementedError(
+                    'Container support for {} is not implemented'.format(
+                        func.__name__))
             statements = statement_func(*args, **kwargs)
             if isinstance(statements, list):
                 for st in statements:
