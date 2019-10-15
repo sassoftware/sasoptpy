@@ -90,7 +90,7 @@ class Workspace:
             lambda i: isinstance(i, sasoptpy.VariableGroup) and
                       i.get_name() == name, self.get_elements()))
         if len(vg) > 1:
-            warning.warn(
+            warnings.warn(
                 'More than one variable group has name {}'.format(name),
                 UserWarning)
         if len(vg) >= 1:

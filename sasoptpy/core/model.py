@@ -560,7 +560,11 @@ class Model:
             del self._constraintDict[constraint.get_name()]
             for i, c in enumerate(self._constraints):
                 if c.get_name() == constraint.get_name():
+                    constraint_to_be_deleted = self._constraints[i]
                     del self._constraints[i]
+                    self.add_statement(
+                        sasoptpy.abstract.DropStatement.model_drop_constraint(
+                            self, constraint_to_be_deleted))
         except KeyError:
             raise KeyError('Given constraint is not part of the model')
 

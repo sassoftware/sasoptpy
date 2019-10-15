@@ -27,6 +27,9 @@ import warnings
 import sasoptpy as so
 from inspect import cleandoc
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.abspath(os.path.join(current_dir, '../..')))
+from util import assert_equal_wo_temps
 
 class TestDrop(unittest.TestCase):
 
@@ -69,19 +72,19 @@ class TestDrop(unittest.TestCase):
             c1 = so.Constraint(x >= 5, name='c1')
             c2 = so.ConstraintGroup((x**i >= 1+i for i in range(3)), name='c2')
             c3 = so.ConstraintGroup((x >= i for i in range(2)), name='c3')
-            S = so.Set(name='S', value=range(1,4))
+            S = so.Set(name='S', value=range(1, 4))
             y = so.VariableGroup(S, name='y')
             d = so.ConstraintGroup((y[i] >= i+j for i in S for j in range(2)),
                                    name='d')
             solve()
             drop(c1, c2[1], c3)
             solve()
-            drop(d[2, 0])
+            drop(d[2,0])
             solve()
             drop(d)
             solve()
 
-        self.assertEqual(so.to_optmodel(w), cleandoc('''
+        assert_equal_wo_temps(self, so.to_optmodel(w), cleandoc('''
             proc optmodel;
                 var x;
                 min obj = (x) ^ (2);
@@ -102,4 +105,32 @@ class TestDrop(unittest.TestCase):
                 solve;
                 drop {o24 in S} d_0[o24] {o24 in S} d_1[o24];
                 solve;
+            quit;'''))
+
+    def test_drop_in_model(self):
+
+        from sasoptpy.util import iterate
+
+        m = so.Model(name='m')
+        x = m.add_variables(3, name='x')
+        c = m.add_constraints((x[i] <= i**2 for i in range(3)), name='c')
+        self.assertEqual(so.to_optmodel(m), cleandoc('''
+            proc optmodel;
+            min m_obj = 0;
+            var x {{0,1,2}};
+            con c_0 : x[0] <= 0;
+            con c_1 : x[1] <= 1;
+            con c_2 : x[2] <= 4;
+            solve;
+            quit;'''))
+        m.drop_constraint(c[0])
+        self.assertEqual(so.to_optmodel(m), cleandoc('''
+            proc optmodel;
+            min m_obj = 0;
+            var x {{0,1,2}};
+            con c_0 : x[0] <= 0;
+            con c_1 : x[1] <= 1;
+            con c_2 : x[2] <= 4;
+            drop c_0;
+            solve;
             quit;'''))

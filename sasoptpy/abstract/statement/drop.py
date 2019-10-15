@@ -12,7 +12,7 @@ class DropStatement(Statement):
             self.elements.append(i)
 
     def append(self, element):
-        self.elements.append(element)
+        pass
 
     def _defn(self):
         s = 'drop '
@@ -25,7 +25,7 @@ class DropStatement(Statement):
     @classmethod
     def model_drop_constraint(cls, _, c):
         if sasoptpy.core.util.is_droppable(c):
-            st = DropStatement(element=c)
+            st = DropStatement(c)
             return st
 
     @classmethod
