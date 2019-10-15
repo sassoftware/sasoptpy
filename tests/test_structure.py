@@ -39,4 +39,4 @@ class TestStructure(unittest.TestCase):
                 read_data(table='table', index='idx')
 
         self.assertRaises(NotImplementedError, throw_not_implemented)
-        so.statement_dictionary = c
+        so.util.package_utils.load_function_containers()

@@ -560,11 +560,14 @@ class Model:
             del self._constraintDict[constraint.get_name()]
             for i, c in enumerate(self._constraints):
                 if c.get_name() == constraint.get_name():
-                    constraint_to_be_deleted = self._constraints[i]
+                    deleted_constraint = self._constraints[i]
                     del self._constraints[i]
-                    self.add_statement(
-                        sasoptpy.abstract.DropStatement.model_drop_constraint(
-                            self, constraint_to_be_deleted))
+
+                    if deleted_constraint._parent is not None:
+                        if deleted_constraint._parent in self._congroups:
+                            self.add_statement(
+                                sasoptpy.abstract.DropStatement.model_drop_constraint(
+                                    self, deleted_constraint))
         except KeyError:
             raise KeyError('Given constraint is not part of the model')
 
@@ -627,10 +630,11 @@ class Model:
         :func:`Model.drop_variables`
 
         """
-        for c in constraints:
-            self.drop_constraint(c)
         if constraints in self._congroups:
             self._congroups.remove(constraints)
+        for c in constraints:
+            self.drop_constraint(c)
+
 
     def include(self, *argv):
         """
