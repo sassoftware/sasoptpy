@@ -24,7 +24,3 @@ class LiteralStatement(Statement):
     @classmethod
     def expand(cls):
         LiteralStatement('expand;')
-
-    @classmethod
-    def create(cls, command):
-        return LiteralStatement(command)

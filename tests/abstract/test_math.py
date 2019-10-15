@@ -34,6 +34,11 @@ class TestAbstractMath(unittest.TestCase):
     def setUp(self):
         so.reset()
 
+    def test_warn(self):
+        def regular_import():
+            import sasoptpy.math
+        self.assertWarns(DeprecationWarning, regular_import)
+
     def test_functions(self):
         x = so.Variable(name='x')
         x.set_value(2)
