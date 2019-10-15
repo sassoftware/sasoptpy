@@ -98,7 +98,3 @@ class TestConfig(unittest.TestCase):
 
     def tearDown(self):
         so.reset()
-
-
-if __name__ == '__main__':
-    unittest.main()
