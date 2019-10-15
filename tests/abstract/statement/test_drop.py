@@ -1,0 +1,105 @@
+#!/usr/bin/env python
+# encoding: utf-8
+#
+# Copyright SAS Institute
+#
+#  Licensed under the Apache License, Version 2.0 (the License);
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+#
+
+"""
+Unit test for drop statements.
+"""
+
+import os
+import sys
+import unittest
+import warnings
+import sasoptpy as so
+from inspect import cleandoc
+
+
+class TestDrop(unittest.TestCase):
+
+    def setUp(self):
+        so.reset()
+
+    def test_regular_drop(self):
+
+        import sasoptpy.abstract.math as sm
+        from sasoptpy.actions import solve, drop
+
+        with so.Workspace('w') as w:
+            x = so.Variable(name='x', lb=1)
+            y = so.Variable(name='y', lb=0)
+            c = so.Constraint(sm.sqrt(x) >= 5, name='c')
+            o = so.Objective(x + y, sense=so.MIN, name='obj')
+            s = solve()
+            drop(c)
+            o2 = so.Objective(x, sense=so.MIN, name='obj2')
+            s2 = solve()
+
+        self.assertEqual(so.to_optmodel(w), cleandoc('''
+            proc optmodel;
+                var x >= 1;
+                var y >= 0;
+                con c : sqrt(x) >= 5;
+                min obj = x + y;
+                solve;
+                drop c;
+                min obj2 = x;
+                solve;
+            quit;'''))
+
+    def test_multiple_and_mixed_drop(self):
+
+        from sasoptpy.actions import solve, drop
+        with so.Workspace('w') as w:
+            x = so.Variable(name='x')
+            o = so.Objective(x**2, sense=so.MIN, name='obj')
+            c1 = so.Constraint(x >= 5, name='c1')
+            c2 = so.ConstraintGroup((x**i >= 1+i for i in range(3)), name='c2')
+            c3 = so.ConstraintGroup((x >= i for i in range(2)), name='c3')
+            S = so.Set(name='S', value=range(1,4))
+            y = so.VariableGroup(S, name='y')
+            d = so.ConstraintGroup((y[i] >= i+j for i in S for j in range(2)),
+                                   name='d')
+            solve()
+            drop(c1, c2[1], c3)
+            solve()
+            drop(d[2, 0])
+            solve()
+            drop(d)
+            solve()
+
+        self.assertEqual(so.to_optmodel(w), cleandoc('''
+            proc optmodel;
+                var x;
+                min obj = (x) ^ (2);
+                con c1 : x >= 5;
+                con c2_0 : (x) ^ (0) >= 1;
+                con c2_1 : (x) ^ (1) >= 2;
+                con c2_2 : (x) ^ (2) >= 3;
+                con c3_0 : x >= 0;
+                con c3_1 : x >= 1;
+                set S = 1..4;
+                var y {{S}};
+                con d_0 {o24 in S} : y[o24] - o24 >= 0;
+                con d_1 {o24 in S} : y[o24] - o24 >= 1;
+                solve;
+                drop c1 c2_1 c3_0 c3_1;
+                solve;
+                drop d_0[2];
+                solve;
+                drop {o24 in S} d_0[o24] {o24 in S} d_1[o24];
+                solve;
+            quit;'''))
