@@ -114,3 +114,69 @@ class TestWorkspace(unittest.TestCase):
         self.assertEqual(x.get_value(), 4)
         self.assertEqual(y[1].get_value(), 7)
         self.assertEqual(z[0].get_value(), 2)
+
+    def test_ws_parsing(self):
+        if TestWorkspace.conn is None:
+            self.skipTest('CAS session is not available')
+
+        from sasoptpy.actions import solve, drop, print_item
+        from math import inf
+
+        with so.Workspace('test_ws_parsing', session=TestWorkspace.conn)\
+                as w:
+            x = so.Variable(name='x')
+            y = so.Variable(name='y', vartype=so.INT, lb=-inf)
+            o = so.Objective(x**2-4*x+4, sense=so.MIN, name='obj')
+            c1 = so.Constraint(x <= 1, name='c1')
+            c2 = so.Constraint(x == 3*y, name='c2')
+            s1 = solve(options={'with': 'lso'})
+            p1 = print_item(x)
+            drop(c1)
+            s2 = so.LiteralStatement('solve with lso;')
+            p2 = so.LiteralStatement('print y;')
+
+        self.assertEqual(so.to_optmodel(w), cleandoc('''
+            proc optmodel;
+                var x;
+                var y integer;
+                min obj = (x) ^ (2) - 4 * x + 4;
+                con c1 : x <= 1;
+                con c2 : x - 3 * y = 0;
+                solve with lso;
+                print x;
+                drop c1;
+                solve with lso;
+                print y;
+            quit;'''))
+
+        w.submit()
+        self.assertEqual(x.get_value(), 3)
+        self.assertEqual(s1.get_problem_summary().to_string(), cleandoc('''
+                                            Value
+            Label                                
+            Objective Sense          Minimization
+            Objective Function                obj
+            Objective Type              Quadratic
+                                                 
+            Number of Variables                 2
+            Bounded Above                       0
+            Bounded Below                       0
+            Bounded Below and Above             0
+            Free                                2
+            Fixed                               0
+            Binary                              0
+            Integer                             1
+                                                 
+            Number of Constraints               2
+            Linear LE (<=)                      1
+            Linear EQ (=)                       1
+            Linear GE (>=)                      0
+            Linear Range                        0
+                                                 
+            Constraint Coefficients             3'''))
+        self.assertEqual(p1.get_response().to_string(), cleandoc('''
+                 x
+            0  0.0'''))
+        self.assertEqual(p2.get_response().to_string(), cleandoc('''
+                 y
+            0  1.0'''))

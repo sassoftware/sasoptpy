@@ -21,6 +21,7 @@ Unit tests for core classes.
 """
 
 import unittest
+from inspect import cleandoc
 
 import sasoptpy as so
 
@@ -62,6 +63,24 @@ class TestObjective(unittest.TestCase):
         self.assertEqual(m.get_objective().get_sense(), so.MIN)
         m.get_objective().set_sense(so.MAX)
         self.assertEqual(m.get_objective().get_sense(), so.MAX)
+
+    def test_in_container(self):
+        from sasoptpy.actions import for_loop, solve
+
+        with so.Workspace('w') as w:
+            x = so.Variable(name='x', lb=0.5, vartype=so.INT, init=2)
+            o = so.Objective(x**2, name='obj', sense=so.MIN)
+            m = so.Model(name='model1')
+            m.include(x, o)
+            m.solve(options={'relaxint': True, 'with': 'milp'}, primalin=True)
+        self.assertEqual(so.to_optmodel(w), cleandoc('''
+            proc optmodel;
+                var x integer >= 0.5 init 2;
+                min obj = (x) ^ (2);
+                problem model1 include x obj;
+                use problem model1;
+                solve with milp relaxint / primalin;
+            quit;'''))
 
     @classmethod
     def tearDownClass(self):

@@ -35,6 +35,12 @@ class Statement(ABC):
         self._after = False
         self.response = None
 
+    def set_response(self, response):
+        self.response = response
+
+    def get_response(self):
+        return self.response
+
     @abstractmethod
     def _defn(self):
         pass

@@ -99,11 +99,9 @@ def load_function_containers():
 
     def read_statement_dictionary():
         d = dict()
-        d[sasoptpy.core.Model.set_objective] = \
-            sasoptpy.abstract.statement.ObjectiveStatement.set_objective_of_model
 
         d[sasoptpy.core.Model.solve] = \
-            sasoptpy.abstract.statement.SolveStatement.solve
+            sasoptpy.abstract.statement.SolveStatement.solve_model
 
         d[sasoptpy.core.Variable.set_bounds] = \
             sasoptpy.abstract.statement.Assignment.set_bounds

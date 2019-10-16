@@ -65,12 +65,13 @@ class Model:
     @sasoptpy.class_containable
     def __init__(self, name=None, session=None):
         self._name = name
+        self._objorder = sasoptpy.util.get_creation_id()
         self._session = session
         self._variables = []
         self._constraints = []
         self._vargroups = []
         self._congroups = []
-        self._objective = Objective(0, name=name+'_obj')
+        self._objective = Objective(0, name=name+'_obj', internal=True)
         self._multiobjs = []
         self._variableDict = {}
         self._constraintDict = {}
@@ -90,7 +91,6 @@ class Model:
         self._impvars = []
         self._statements = []
         self._postsolve_statements = []
-        self._objorder = sasoptpy.util.get_creation_id()
         self.response = None
 
         print('NOTE: Initialized model {}.'.format(name))
@@ -784,7 +784,6 @@ class Model:
             if obj in self._statements:
                 self._statements.remove(obj)
 
-    @sasoptpy.containable
     def set_objective(self, expression, name, sense=None):
         """
         Sets the objective function for the model
@@ -1514,11 +1513,16 @@ class Model:
         return s
 
     def _defn(self):
-        s = 'problem {} include'.format(self.get_name())
-        s += ' ' + ' '.join([
-            s.get_name() for s in self.get_grouped_variables().values()])
-        s += ' ' + ' '.join([
-            s.get_name() for s in self.get_grouped_constraints().values()])
+        s = 'problem {}'.format(self.get_name())
+        vars = [s.get_name() for s in self.get_grouped_variables().values()]
+        cons = [s.get_name() for s in self.get_grouped_constraints().values()]
+        obj = self.get_objective()
+        objs = []
+        if not obj.is_default():
+            objs.append(obj.get_name())
+        elements = ' '.join(vars + cons + objs)
+        if elements != '':
+            s += ' include ' + elements
         s += ';'
         return s
 

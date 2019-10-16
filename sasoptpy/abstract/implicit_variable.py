@@ -4,7 +4,7 @@ from types import GeneratorType
 
 import sasoptpy
 import sasoptpy.abstract
-from .util import (is_parameter, is_abstract)
+from .util import is_abstract
 from sasoptpy.core.util import (is_expression)
 from sasoptpy.util import to_expression, wrap_expression
 

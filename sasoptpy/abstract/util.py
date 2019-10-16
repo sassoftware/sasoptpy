@@ -17,10 +17,6 @@ def is_key_abstract(arg):
            isinstance(arg, sasoptpy.abstract.SetIteratorGroup)
 
 
-def is_parameter(arg):
-    return isinstance(arg, sasoptpy.abstract.Parameter)
-
-
 def is_conditional_value(arg):
     return isinstance(arg, sasoptpy.abstract.Conditional)
 

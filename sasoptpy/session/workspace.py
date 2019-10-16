@@ -64,6 +64,8 @@ class Workspace:
                     self.response[ss_key])
             if isinstance(solve, sasoptpy.abstract.SolveStatement):
                 solve.set_response(problem_summary=ps, solution_summary=ss)
+            elif isinstance(solve, sasoptpy.abstract.Statement):
+                solve.set_response(ss)
 
     def parse_print_responses(self):
         keys = self.response.keys()
@@ -73,7 +75,7 @@ class Workspace:
         for i, p in enumerate(print_statements):
             pp_key = 'Print{}.PrintTable'.format(i+1)
             if pp_key in keys:
-                if isinstance(p, sasoptpy.abstract.PrintStatement):
+                if isinstance(p, sasoptpy.abstract.Statement):
                     p.set_response(self.response[pp_key])
 
     def get_variable(self, name):

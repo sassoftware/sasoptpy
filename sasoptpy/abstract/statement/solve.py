@@ -7,10 +7,13 @@ class SolveStatement(Statement):
 
     def __init__(self, *args, **kwargs):
         super().__init__()
+        self.model = kwargs.get('model', None)
         self.options = kwargs.get('options', dict())
         self.primalin = kwargs.get('primalin', False)
         self._objorder = sasoptpy.util.get_creation_id()
         self._name = sasoptpy.util.get_next_name()
+        self._problem_summary = None
+        self._solution_summary = None
 
     def append(self, element):
         pass
@@ -19,6 +22,8 @@ class SolveStatement(Statement):
         options = self.options
         primalin = self.primalin
         s = ''
+        if self.model is not None:
+            s = 'use problem {};\n'.format(self.model.get_name())
         s += 'solve'
         if options.get('with', None):
             s += ' with ' + options['with']
@@ -53,4 +58,10 @@ class SolveStatement(Statement):
     @classmethod
     def solve(cls, *args, **kwargs):
         st = SolveStatement(*args, **kwargs)
+        return st
+
+    @classmethod
+    def solve_model(cls, model, **kwargs):
+        kwargs['model'] = model
+        st = SolveStatement(**kwargs)
         return st
