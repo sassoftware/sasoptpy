@@ -9,6 +9,8 @@ def register_actions():
     register_to_function_container(
         read_data, sasoptpy.abstract.statement.ReadDataStatement.read_data)
     register_to_function_container(
+        create_data, sasoptpy.abstract.statement.CreateDataStatement.create_data)
+    register_to_function_container(
         solve, sasoptpy.abstract.statement.SolveStatement.solve)
     register_to_function_container(
         for_loop, sasoptpy.abstract.statement.ForLoopStatement.for_loop)
@@ -27,6 +29,11 @@ def register_actions():
 @sasoptpy.containable
 def read_data(**kwargs):
     return sasoptpy.abstract.ReadDataStatement(**kwargs)
+
+
+@sasoptpy.containable
+def create_data(**kwargs):
+    pass
 
 
 @sasoptpy.containable

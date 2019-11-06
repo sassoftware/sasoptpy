@@ -35,6 +35,11 @@ class ParameterGroup:
             self._shadows[key] = pv
             return pv
 
+    def __setitem__(self, key, value):
+        k = self[key]
+        k.set_value(value)
+        sasoptpy.abstract.Assignment(self._shadows[key], value)
+
     def _defn(self):
         s = '{} {}'.format(self._ptype, self.get_name())
         s += ' {{{}}}'.format(', '.join(sasoptpy.to_expression(k) for k in self._key))

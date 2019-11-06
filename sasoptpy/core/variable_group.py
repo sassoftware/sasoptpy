@@ -283,6 +283,11 @@ class VariableGroup(Group):
                               RuntimeWarning, stacklevel=2)
             return list_of_variables
 
+    def __setitem__(self, key, value):
+        v = self[key]
+        v.set_value(value)
+        sasoptpy.abstract.Assignment(v, value)
+
     def __iter__(self):
         """
         Yields an iterable list of variables inside the variable group

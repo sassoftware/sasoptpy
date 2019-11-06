@@ -32,7 +32,10 @@ class ReadDataStatement(Statement):
                 self.append(col)
 
     def append(self, element, **kwargs):
-        self._columns.append(element)
+        if isinstance(element, dict):
+            self._columns.append(element)
+        else:
+            self._columns.append({'target': element})
 
     def get_table_expr(self):
         if hasattr(self._table, 'name'):
