@@ -290,7 +290,7 @@ class SASMediator(Mediator):
 
         # Objective value
         if sasoptpy.core.util.is_model(caller):
-            if caller._solutionSummary.index.contains('Objective Value'):
+            if 'Objective Value' in caller._solutionSummary.index:
                 objval = caller._solutionSummary.loc['Objective Value'].Value
                 objval = float(objval)
                 caller.set_objective_value(objval)

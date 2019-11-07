@@ -83,9 +83,8 @@ class CreateDataStatement(Statement):
             if sasoptpy.util.has_expr(expr):
                 expr_str += expr._expr()
             else:
-                expr_str += '{}'.format(column)
+                expr_str += '{}'.format(expr)
 
-        # If both equal, no need for second part
         if name_str == expr_str:
             connect_str = ''
             expr_str = ''
