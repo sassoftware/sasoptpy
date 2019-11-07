@@ -30,7 +30,7 @@ from sasoptpy.actions import create_data
 from sasoptpy.util import concat
 
 
-class TestAssignment(unittest.TestCase):
+class TestCreateData(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -214,3 +214,121 @@ class TestAssignment(unittest.TestCase):
                 x[1, 3] = 1;
                 create data example from [i j] = {{S,{1,3}}} x;
             quit;'''))
+
+    def test_index_with_iterate(self):
+        if TestCreateData.conn is None:
+            self.skipTest('Session is not available')
+
+
+        from sasoptpy.util import iterate, concat
+        with so.Workspace('w') as w:
+            alph = so.Set(name='alph', settype=so.string, value=['a', 'b', 'c'])
+            x = so.VariableGroup([1, 2, 3], alph, name='x', init=2)
+            with iterate(so.exp_range(1, 3), name='i') as i:
+                c = create_data(
+                    table='example',
+                    index={'key': [i], 'set': [i.get_set()]},
+                )
+
+        self.assertEqual(so.to_optmodel(w), cleandoc('''
+            proc optmodel;
+                set <str> alph = {'a','b','c'};
+                var x {{1,2,3}, {alph}} init 2;
+                create data example from [i] = {{1..3}} ;
+            quit;'''))
+
+        # Append column with index
+        session = TestCreateData.conn
+        with so.Workspace('w', session=session) as w:
+            alph = so.Set(name='alph', settype=so.string, value=['a', 'b', 'c'])
+            x = so.VariableGroup([1, 2, 3], alph, name='x', init=2)
+            with iterate(so.exp_range(1, 3), name='i') as i:
+                c = create_data(
+                    table='example',
+                    index={'key': [i], 'set': [i.get_set()]},
+                )
+                with iterate(alph, name='j') as j:
+                    c.append(
+                        {'name': concat('x', j),
+                         'expression': x[i, j],
+                         'index': j}
+                    )
+
+        self.assertEqual(so.to_optmodel(w), cleandoc('''
+            proc optmodel;
+                set <str> alph = {'a','b','c'};
+                var x {{1,2,3}, {alph}} init 2;
+                create data example from [i] = {{1..3}} {j in alph} < col('x' || j)=(x[i, j]) >;
+            quit;'''))
+
+        w.submit()
+        self.assertEqual(
+            session.CASTable('example').to_frame().to_string(), cleandoc('''
+                 i   xa   xb   xc
+            0  1.0  2.0  2.0  2.0
+            1  2.0  2.0  2.0  2.0
+            2  3.0  2.0  2.0  2.0'''))
+
+    def test_multiple_iterator(self):
+        from sasoptpy.util import concat, iterate
+        with so.Workspace('w') as w:
+            S = so.Set(name='S', value=[1, 2, 3])
+            T = so.Set(name='T', value=[1, 3, 5])
+            x = so.VariableGroup(S, T, name='x', init=1)
+            with iterate(S, name='i') as i, iterate(T, name='j') as j:
+                create_data(
+                    table='out',
+                    index={},
+                    columns=[
+                        {'name': concat('x', concat(i, j)), 'expression': x[i, j],
+                         'index': [i, j]}
+                    ]
+                )
+        self.assertEqual(so.to_optmodel(w), cleandoc('''
+            proc optmodel;
+                set S = {1,2,3};
+                set T = {1,3,5};
+                var x {{S}, {T}} init 1;
+                create data out from {i in S, j in T} < col('x' || i || j)=(x[i, j]) >;
+            quit;'''))
+
+    def test_full_example(self):
+        if TestCreateData.conn is None:
+            self.skipTest('Session is not available')
+        session = TestCreateData.conn
+        from sasoptpy.util import concat, iterate
+
+        with so.Workspace('w', session=session) as w:
+            m = so.Parameter(name='m', value=3)
+            n = so.Parameter(name='n', value=4)
+            with iterate(so.exp_range(1, m), 'i') as i, iterate(so.exp_range(1, n), 'j') as j:
+                a = so.ParameterGroup(i, j, name='a', value=i * j)
+                b = so.ParameterGroup(i, name='b', value=i**2)
+            subset = so.Set(name='subset', value=so.exp_range(2, m))
+            with iterate(subset, 'i') as i, iterate(so.exp_range(1, n), 'j') as j:
+                create_data(
+                    table='out',
+                    index={'key': [i], 'set': [i.get_set()]},
+                    columns=[
+                        {'name': concat('a', j), 'expression': a[i, j],
+                         'index': j},
+                        {'expression': b}
+                    ]
+                )
+
+        self.assertEqual(so.to_optmodel(w), cleandoc('''
+            proc optmodel;
+                num m = 3;
+                num n = 4;
+                num a {i in 1..m, j in 1..n} = i * j;
+                num b {i in 1..m} = (i) ** (2);
+                set subset = 2..m;
+                create data out from [i] = {{subset}} {j in 1..n} < col('a' || j)=(a[i, j]) > b;
+            quit;'''))
+
+        w.submit()
+        response = session.CASTable('out').to_frame()
+        self.assertEqual(response.to_string(), cleandoc('''
+                 i   a1   a2   a3    a4    b
+            0  2.0  2.0  4.0  6.0   8.0  4.0
+            1  3.0  3.0  6.0  9.0  12.0  9.0'''))

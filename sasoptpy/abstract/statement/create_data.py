@@ -48,7 +48,7 @@ class CreateDataStatement(Statement):
         key = self._index.get('key')
         index = self._index.get('set')
         if key:
-            joined_key = ' '.join(key)
+            joined_key = ' '.join([k.get_name() if hasattr(k, 'get_name') else str(k) for k in key])
             s += '[{}]'.format(joined_key)
         if key and index:
             s += ' = '
@@ -67,6 +67,8 @@ class CreateDataStatement(Statement):
         name = c.get('name')
         expr = c.get('expression', c.get('expr'))
         index = c.get('index')
+        if not isinstance(index, list):
+            index = [index]
         name_str = ''
         connect_str = ''
         expr_str = ''
@@ -93,8 +95,9 @@ class CreateDataStatement(Statement):
 
         s = name_str + connect_str + expr_str
 
-        #if index and sasoptpy.abstract.util.is_key_abstract(index):
-        #    s = '{{{}}} < {} >'.format(sasoptpy.to_definition(index), s)
+        if index and any(sasoptpy.abstract.util.is_key_abstract(i) for i in index):
+            index_str = ', '.join([sasoptpy.to_definition(i) for i in index])
+            s = '{{{}}} < {} >'.format(index_str, s)
 
         return s
 

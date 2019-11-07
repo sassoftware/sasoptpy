@@ -40,13 +40,30 @@ class ParameterGroup:
         k.set_value(value)
         sasoptpy.abstract.Assignment(self._shadows[key], value)
 
-    def _defn(self):
-        s = '{} {}'.format(self._ptype, self.get_name())
-        s += ' {{{}}}'.format(', '.join(sasoptpy.to_expression(k) for k in self._key))
+    def get_type_name_str(self):
+        return '{} {}'.format(self._ptype, self.get_name())
+
+    def get_iterator_str(self):
+        key_defs = []
+        for k in self._key:
+            if sasoptpy.abstract.is_key_abstract(k):
+                key_defs.append(k._defn())
+            else:
+                key_defs.append(sasoptpy.to_expression(k))
+        return ' {{{}}}'.format(', '.join(key_defs))
+
+    def get_value_init_str(self):
         if self._init is not None:
-            s += ' init {}'.format(self._init)
+            return ' init {}'.format(self._init)
         elif self._value is not None:
-            s += ' = {}'.format(self._value)
+            return ' = {}'.format(self._value)
+        return ''
+
+    def _defn(self):
+        type_name_str = self.get_type_name_str()
+        iterator_str = self.get_iterator_str()
+        value_init_str = self.get_value_init_str()
+        s = type_name_str + iterator_str + value_init_str
         s += ';'
         return s
 

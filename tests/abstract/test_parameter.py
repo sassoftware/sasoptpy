@@ -41,7 +41,6 @@ class TestParameter(unittest.TestCase):
         with so.Workspace('w') as w:
             p = so.Parameter(name='p', init=3)
             p.set_value(5)
-        print(so.to_optmodel(w))
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
         proc optmodel;

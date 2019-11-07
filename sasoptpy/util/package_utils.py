@@ -39,8 +39,8 @@ def load_package_globals():
     sasoptpy.CONT = sasoptpy.continuous = 'CONT'
     sasoptpy.INT = sasoptpy.integer = 'INT'
     sasoptpy.BIN = sasoptpy.binary = 'BIN'
-    sasoptpy.STR = 'str'
-    sasoptpy.NUM = 'num'
+    sasoptpy.STR = sasoptpy.string = 'str'
+    sasoptpy.NUM = sasoptpy.number = 'num'
 
     sasoptpy.LSO = 'lso'
     sasoptpy.MIP = 'mip'

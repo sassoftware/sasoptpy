@@ -45,6 +45,9 @@ class SetIterator(sasoptpy.Expression):
         self._type = datatype
         self.sym = Conditional(self)
 
+    def get_set(self):
+        return self._set
+
     def get_type(self):
         return self._type
 
