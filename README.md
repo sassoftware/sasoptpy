@@ -4,7 +4,7 @@
 **sasoptpy** is a Python package providing a modeling interface for [SAS Viya](https://www.sas.com/en_us/software/viya.html) and SAS/OR Optimization solvers.
 It provides a quick way for users to deploy optimization models and solve them using CAS Actions.
 
-**sasoptpy** can handle linear, mixed integer linear and nonlinear optimization problems.
+**sasoptpy** can handle linear, mixed integer linear, nonlinear and black-box optimization problems.
 Users can benefit from native Python structures like dictionaries, tuples, and list to define an optimization problem.
 **sasoptpy** uses [Pandas](http://pandas.pydata.org/) structures extensively.
 
