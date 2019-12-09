@@ -34,12 +34,19 @@ class Statement(ABC):
         # TODO Remove '_after' after arranging data/structrues py files
         self._after = False
         self.response = None
+        self._internal = False
 
     def set_response(self, response):
         self.response = response
 
     def get_response(self):
         return self.response
+
+    def set_internal(self, value):
+        self._internal = value
+
+    def is_internal(self):
+        return self._internal
 
     @abstractmethod
     def _defn(self):

@@ -89,7 +89,7 @@ class TestPackageUtils(unittest.TestCase):
                          [3, 4, 5, 1, 0, 2])
 
     def test_sas_string(self):
-        S = so.exp_range(1, 10, 2)
+        S = so.exp_range(1, 11, 2)
         self.assertEqual(so.util.package_utils._to_sas_string(S), '1..10 by 2')
 
         def invalid_type():

@@ -18,6 +18,7 @@
 
 import sasoptpy
 from sasoptpy.core import Expression
+from sasoptpy.util.package_utils import _to_python_string
 
 
 class Parameter(Expression):
@@ -61,9 +62,9 @@ class Parameter(Expression):
         else:
             s = '{} {}'.format(self._type, self.get_name())
             if self._init:
-                s += ' init {}'.format(self._init)
+                s += ' init {}'.format(_to_python_string(self._init))
             elif self._fix_value:
-                s += ' = {}'.format(self._fix_value)
+                s += ' = {}'.format(_to_python_string(self._fix_value))
             s += ';'
             return s
 

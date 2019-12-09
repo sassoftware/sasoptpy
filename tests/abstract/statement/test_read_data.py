@@ -162,7 +162,7 @@ class TestReadData(unittest.TestCase):
         from sasoptpy.util import iterate, concat
 
         with so.Workspace(name='test_read_data_idx_col') as ws:
-            dow = so.Set(name='DOW', value=so.exp_range(1, 5))
+            dow = so.Set(name='DOW', value=so.exp_range(1, 6))
             locs = so.Set(name='LOCS', settype=so.STR)
             demand = so.ParameterGroup(locs, dow, name='demand')
 
@@ -332,7 +332,7 @@ class TestReadData(unittest.TestCase):
 
         with so.Workspace('test_read_data_with_exp') as ws:
 
-            ss = so.Set(name='subscripts', value=so.exp_range(1,4), settype=so.NUM)
+            ss = so.Set(name='subscripts', value=so.exp_range(1, 5), settype=so.NUM)
             letter = so.ParameterGroup(ss, name='letter', ptype=so.STR)
             read_data(
                 table='abcd',
@@ -471,8 +471,8 @@ class TestReadData(unittest.TestCase):
         from sasoptpy.util import concat
 
         with so.Workspace('read_data_N_as_index') as ws:
-            tasks = so.Set(name='TASKS', value=so.exp_range(1, 24))
-            machines = so.Set(name='MACHINES', value=so.exp_range(1, 8))
+            tasks = so.Set(name='TASKS', value=so.exp_range(1, 25))
+            machines = so.Set(name='MACHINES', value=so.exp_range(1, 9))
             profit = so.ParameterGroup(machines, tasks, name='profit')
             j = so.SetIterator(tasks, name='j')
             read_data(

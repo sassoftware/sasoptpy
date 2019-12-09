@@ -72,7 +72,7 @@ class TestDrop(unittest.TestCase):
             c1 = so.Constraint(x >= 5, name='c1')
             c2 = so.ConstraintGroup((x**i >= 1+i for i in range(3)), name='c2')
             c3 = so.ConstraintGroup((x >= i for i in range(2)), name='c3')
-            S = so.Set(name='S', value=range(1, 4))
+            S = so.Set(name='S', value=range(1, 5))
             y = so.VariableGroup(S, name='y')
             d = so.ConstraintGroup((y[i] >= i+j for i in S for j in range(2)),
                                    name='d')

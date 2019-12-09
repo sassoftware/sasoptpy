@@ -92,6 +92,9 @@ class ImplicitVar:
                 self[''] = exp
                 self['']._objorder = self._objorder
 
+    def _expr(self):
+        return self.get_name()
+
     def _defn(self):
         member_defn = []
         for i in self._dict.values():

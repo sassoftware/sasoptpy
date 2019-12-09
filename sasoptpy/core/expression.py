@@ -805,7 +805,7 @@ class Expression:
 
     def concat(self, other):
         r = sasoptpy.Expression()
-        key = (self.get_name(), other.get_name(), '||')
+        key = (id(self), id(other), '||')
         ref = [self, other]
         val = 1
         op = '||'
@@ -844,7 +844,7 @@ class Auxiliary(Expression):
         self._base = base
         self._prefix = prefix
         self._suffix = suffix
-        self._operator = None
+        self._operator = operator
         self._value = value
 
     def get_prefix_str(self):
@@ -866,7 +866,7 @@ class Auxiliary(Expression):
         if self._operator is None:
             return s
         return '{}({})'.format(
-            sasoptpy.to_expression(self._operator), s
+            self._operator, s
         )
 
     def _expr(self):

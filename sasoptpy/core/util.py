@@ -112,7 +112,7 @@ def expression_to_constraint(left, relation, right):
         if left._operator is None:
             r = left.copy()
         else:
-            r = Expression(0)
+            r = sasoptpy.core.Expression(0)
             r += left
         if np.isinstance(type(right), np.number):
             r._linCoef['CONST']['val'] -= right

@@ -10,6 +10,7 @@ class ForLoopStatement(Statement):
 
     def __init__(self, *args):
         super().__init__()
+        self.keyword = 'for'
         self._sets = list(args)
 
     @classmethod
@@ -36,12 +37,13 @@ class ForLoopStatement(Statement):
         self.elements.append(element)
 
     def _defn(self):
-        s = 'for '
+        s = f'{self.keyword} '
         s += '{'
         loops = []
         for i, it in enumerate(self.iterators):
             loops.append('{} in {}'.format(
-                it._expr(), self._sets[i]._expr()
+                sasoptpy.util.package_utils._to_sas_string(it),
+                sasoptpy.util.package_utils._to_sas_string(self._sets[i])#._expr()
             ))
         s += ', '.join(loops)
         s += '} do;\n'

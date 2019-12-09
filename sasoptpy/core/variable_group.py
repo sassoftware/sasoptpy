@@ -3,6 +3,7 @@ from collections import OrderedDict
 from itertools import product
 from math import inf
 import warnings
+from multiprocessing import Pool
 
 import sasoptpy
 from sasoptpy._libs import (pd, np)
@@ -128,6 +129,23 @@ class VariableGroup(Group):
 
         self._set_var_info()
 
+    def _process_single_var(self, varkey):
+
+        # for varkey in allcombs:
+        current_keys = tuple(k for k in varkey)
+        is_shadow = any(sasoptpy.abstract.util.is_abstract(i) for i in varkey)
+        varname = sasoptpy.core.util.get_name_from_keys(self.get_name(),
+                                                        current_keys)
+        self._register_keys(current_keys)
+
+        varlb = sasoptpy.util.extract_list_value(current_keys, self._lb)
+        varub = sasoptpy.util.extract_list_value(current_keys, self._ub)
+        varin = sasoptpy.util.extract_list_value(current_keys, self._init)
+
+        self.add_member(key=current_keys, name=varname, vartype=self._type,
+                        lb=varlb, ub=varub, init=varin, shadow=is_shadow)
+
+
     def get_name(self):
         """
         Returns the name of the variable group
@@ -245,7 +263,7 @@ class VariableGroup(Group):
             Reference to a single Variable or a list of Variable objects
 
         """
-        if self._abstract or sasoptpy.util.is_key_abstract(key):
+        if self._abstract or sasoptpy.util.is_key_abstract(key) or sasoptpy.core.util.is_expression(key):
             tuple_key = sasoptpy.util.pack_to_tuple(key)
             tuple_key = tuple(i for i in sasoptpy.util.flatten_tuple(tuple_key))
             if tuple_key in self._vardict:

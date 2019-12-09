@@ -32,7 +32,7 @@ class TestSet(unittest.TestCase):
     def test_initialization(self):
         with so.Workspace('w') as w:
             S = so.Set(name='S')
-            T = so.Set(name='T', init=range(10))
+            T = so.Set(name='T', init=range(11))
             V = so.Set(name='V', value=[1, 2, 4])
             W = so.Set(name='W', settype=[so.STR, so.NUM])
 
@@ -48,7 +48,7 @@ class TestSet(unittest.TestCase):
                          'sasoptpy.abstract.Set(name=S, settype=[\'num\'])')
         self.assertEqual(
             repr(T),
-            'sasoptpy.abstract.Set(name=T, settype=[\'num\'], init=range(0, 10))')
+            'sasoptpy.abstract.Set(name=T, settype=[\'num\'], init=range(0, 11))')
         self.assertEqual(
             repr(V),
             'sasoptpy.abstract.Set(name=V, settype=[\'num\'], value=[1, 2, 4])'

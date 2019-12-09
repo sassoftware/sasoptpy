@@ -31,6 +31,8 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.abspath(os.path.join(current_dir, '../..')))
 from util import assert_equal_wo_temps
 
+from sasoptpy.actions import for_loop
+
 
 class TestForLoop(unittest.TestCase):
 
@@ -96,3 +98,103 @@ class TestForLoop(unittest.TestCase):
                     print q;
                 quit;
                 '''))
+
+    def test_basic(self):
+
+        from sasoptpy.actions import put_item
+
+        with so.Workspace('w') as w:
+            for i in for_loop(range(1, 3)):
+                for j in for_loop(['a', 'b']):
+                    put_item(i, j)
+
+        assert_equal_wo_temps(self, so.to_optmodel(w), cleandoc("""
+            proc optmodel;
+                for {o2 in 1..2} do;
+                    for {o5 in {'a','b'}} do;
+                        put o2 o5;
+                    end;
+                end;
+            quit;"""))
+
+    def test_with_assignment(self):
+        with so.Workspace('w') as w:
+            r = so.exp_range(1, 11)
+            x = so.VariableGroup(r, name='x')
+            for i in for_loop(r):
+                x[i] = 1
+
+        assert_equal_wo_temps(self, so.to_optmodel(w), cleandoc("""
+            proc optmodel;
+                var x {{1,2,3,4,5,6,7,8,9,10}};
+                for {o13 in 1..10} do;
+                    x[o13] = 1;
+                end;
+            quit;"""))
+
+    def test_with_predefined_set(self):
+        with so.Workspace('w') as w:
+            cn = so.Set(name='C', value=['a', 'b', 'c'])
+            for i in for_loop(cn):
+                so.actions.put_item(i)
+
+        assert_equal_wo_temps(self, so.to_optmodel(w), cleandoc("""
+            proc optmodel;
+                set C = {'a','b','c'};
+                for {o3 in C} do;
+                    put o3;
+                end;
+            quit;"""))
+
+    def test_with_create_data(self):
+        from sasoptpy.actions import create_data, read_data
+        from sasoptpy.util import concat, iterate
+        with so.Workspace('w') as w:
+            m = so.Set(name='m', value=range(1, 4))
+            rev = so.VariableGroup(range(1, 13), name='revenue')
+            read_data(
+                table='revdata',
+                index={'key': so.N},
+                columns=[
+                    {'column': 'rev', 'target': rev}
+                ]
+            )
+            month = so.SetIterator(None, name='month')
+            for q in for_loop(so.exp_range(1, 5)):
+                create_data(
+                    table=concat('qtr', q),
+                    index={'key': [month], 'set': m},
+                    columns=[
+                        {'expression': rev[month+(q-1)*3]}
+                    ]
+                )
+
+        assert_equal_wo_temps(self, so.to_optmodel(w), cleandoc("""
+            proc optmodel;
+                set m = 1..3;
+                var revenue {{1,2,3,4,5,6,7,8,9,10,11,12}};
+                read data revdata into [_N_] revenue=rev;
+                for {o18 in 1..4} do;
+                    create data ('qtr' || o18) from [month] = {m} revenue[month + 3.0 * o18 - 3];
+                end;
+            quit;"""))
+
+
+    def test_multiple_set_loop(self):
+
+        with so.Workspace('w') as w:
+            r = so.Set(name='R', value=range(1, 11))
+            c = so.Set(name='C', value=range(1, 6))
+            a = so.ParameterGroup(r, c, name='A', ptype=so.number)
+            for (i, j) in for_loop(r, c):
+                a[i, j] = 1
+
+        assert_equal_wo_temps(self, so.to_optmodel(w), cleandoc('''
+            proc optmodel;
+                set R = 1..10;
+                set C = 1..5;
+                num A {R, C};
+                for {o5 in R, o7 in C} do;
+                    A[o5, o7] = 1;
+                end;
+            quit;'''))

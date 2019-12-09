@@ -17,7 +17,7 @@ class Shadow(ABC):
 class ShadowVariable(Shadow, Variable):
 
     def __init__(self, name, **kwargs):
-        Variable.__init__(self, name=name)
+        Variable.__init__(self, name=name, internal=True)
         Shadow.__init__(self)
 
     def _initialize_self_coef(self):

@@ -53,9 +53,9 @@ class TestParameter(unittest.TestCase):
         from sasoptpy.actions import for_loop, condition
 
         with so.Workspace('w') as w:
-            p = so.ParameterGroup(so.exp_range(1, 5), name='p', init=3)
+            p = so.ParameterGroup(so.exp_range(1, 6), name='p', init=3)
             p[0].set_value(3)
-            S = so.Set(name='S', value=so.exp_range(1, 5))
+            S = so.Set(name='S', value=so.exp_range(1, 6))
             for i in for_loop(S):
                 p[i].set_value(1)
 

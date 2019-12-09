@@ -31,7 +31,7 @@ class TestVariableGroup(unittest.TestCase):
         pass
 
     def test_constructor(self):
-        idx = [1,2,3]
+        idx = [1, 2, 3]
         v = so.VariableGroup(idx, name='vg_1')
         self.assertEqual(repr(v),
                          "sasoptpy.VariableGroup([1, 2, 3], name='vg_1')")
@@ -40,9 +40,9 @@ class TestVariableGroup(unittest.TestCase):
         self.assertEqual(repr(u),
                          "sasoptpy.VariableGroup([0, 1, 2, 3, 4], name='u')")
 
-        w = so.VariableGroup([('a', 1), ('a', 2), ('b', 1), ('b', 2)], name='w')
-        self.assertEqual(repr(w),
-                         "sasoptpy.VariableGroup(['a', 'b'], [1, 2], name='w')")
+        # w = so.VariableGroup([('a', 1), ('a', 2), ('b', 1), ('b', 2)], name='w')
+        # self.assertEqual(repr(w),
+        #                  "sasoptpy.VariableGroup(['a', 'b'], [1, 2], name='w')")
 
         def pass_error():
             z = so.VariableGroup(name='z')

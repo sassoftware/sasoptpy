@@ -26,6 +26,8 @@ class CreateDataStatement(Statement):
         super().__init__()
         self._table = table
         self._index = index
+        if isinstance(index, list):
+            self._index = {'key': index}
         self._columns = list()
         if columns:
             for col in columns:
@@ -38,7 +40,9 @@ class CreateDataStatement(Statement):
             self._columns.append({'expression': element})
 
     def get_table_expr(self):
-        if hasattr(self._table, 'name'):
+        if hasattr(self._table, '_expr'):
+            return f'({self._table._expr()})'
+        elif hasattr(self._table, 'name'):
             return self._table.name
         else:
             return str(self._table)

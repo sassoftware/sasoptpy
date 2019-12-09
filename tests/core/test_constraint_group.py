@@ -135,7 +135,7 @@ class TestConstraintGroup(unittest.TestCase):
 
     def test_mixed_case(self):
         m = so.Model(name='m')
-        S = so.Set(name='S', value=range(3))
+        S = so.Set(name='S', value=range(4))
         x = so.VariableGroup(3, name='x')
         y = so.VariableGroup(S, name='y')
         c = so.ConstraintGroup((x[i] + y[j] >= 1 for i in range(3) for j in S), name='c')

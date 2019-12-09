@@ -1,3 +1,4 @@
+from .package_utils import load_package_globals
 from .package_utils import *
 from .user_utils import *
 import sasoptpy

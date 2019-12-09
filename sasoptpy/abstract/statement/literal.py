@@ -6,7 +6,7 @@ import sasoptpy
 class LiteralStatement(Statement):
 
     @sasoptpy.class_containable
-    def __init__(self, literal=None):
+    def __init__(self, literal=None, **kwargs):
         super().__init__()
         self.append(literal)
 
@@ -23,4 +23,27 @@ class LiteralStatement(Statement):
 
     @classmethod
     def expand(cls):
-        LiteralStatement('expand;')
+        es = LiteralStatement('expand;', internal=True)
+        return es
+
+    @classmethod
+    def union(cls, *args):
+        ss = [sasoptpy.util.package_utils._to_sas_string(i) for i in args]
+        ls = LiteralStatement(' union '.join(ss), internal=True)
+        ls.set_internal(True)
+        return ls
+
+    @classmethod
+    def diff(cls, *args):
+        ss = [sasoptpy.util.package_utils._to_sas_string(i) for i in args]
+        ls = LiteralStatement(' diff '.join(ss), internal=True)
+        ls.set_internal(True)
+        return ls
+
+    @classmethod
+    def substring(cls, main_string, first_pos, last_pos):
+        from sasoptpy.util.package_utils import _to_python_string
+        ss = sasoptpy.Auxiliary(base='{}, {}, {}'.format(
+            _to_python_string(main_string), first_pos, last_pos
+        ), operator='substr')
+        return ss

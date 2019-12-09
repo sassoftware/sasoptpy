@@ -67,3 +67,8 @@ class Assignment(Statement):
     def set_value(cls, obj, value):
         st = Assignment(identifier=obj, expression=value)
         return st
+
+    @classmethod
+    def fix_value(cls, obj, value):
+        st = Assignment(identifier=obj, expression=value, keyword='fix')
+        return st

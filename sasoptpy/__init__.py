@@ -17,8 +17,8 @@
 #
 
 """
-SAS Viya Optimization Modeling for Python (sasoptpy)
-****************************************************
+SAS Optimization Interface for Python (sasoptpy)
+************************************************
 
 This file includes static methods and imports.
 
@@ -31,7 +31,8 @@ from sasoptpy.util import (
     quick_sum, expr_sum, reset, reset, reset_globals,
     flatten_frame, get_value_table,
     get_solution_table, dict_to_frame, exp_range,
-    to_expression, to_definition, to_optmodel, is_linear)
+    to_expression, to_definition, to_optmodel, is_linear,
+    load_package_globals)
 
 from sasoptpy.structure import (containable, class_containable)
 
@@ -44,23 +45,25 @@ from sasoptpy.abstract import (Set, Parameter, ImplicitVar,
                                ParameterGroup, SetIterator,
                                SetIteratorGroup, LiteralStatement)
 
-sasoptpy.util.load_package_globals()
+load_package_globals()
 
 import sasoptpy.config
-from sasoptpy.config import Config
-sasoptpy.config._load_default_config()
+from sasoptpy.config import Config, _load_default_config
+_load_default_config()
 
-sasoptpy.statement_dictionary = dict()
-sasoptpy.util.load_function_containers()
-sasoptpy.util.load_condition_container()
+statement_dictionary = dict()
+container = None
+from sasoptpy.util import load_function_containers
+load_function_containers()
+conditions = None
 from sasoptpy.actions import register_actions
 register_actions()
-#sasoptpy.core.util._load_function_containers()
 
 
 import sasoptpy.interface
 sasoptpy.mediators = dict()
-sasoptpy.util.load_default_mediators()
+from sasoptpy.util import load_default_mediators
+load_default_mediators()
 
 
 from sasoptpy.session import Workspace

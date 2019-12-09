@@ -111,7 +111,7 @@ class TestCreateData(unittest.TestCase):
     def test_index(self):
         with so.Workspace('w') as w:
             m = so.ParameterGroup(
-                so.exp_range(1, 5), so.exp_range(1, 3), name='m', init=0)
+                so.exp_range(1, 6), so.exp_range(1, 4), name='m', init=0)
             m[1, 1] = 1
             m[4, 1] = 1
             S = so.Set(name='ISET', value=[i**2 for i in range(1, 3)])
@@ -132,7 +132,7 @@ class TestCreateData(unittest.TestCase):
 
     def test_regular_index(self):
         with so.Workspace('w') as w:
-            s = so.Set(name='S', value=so.exp_range(1, 5))
+            s = so.Set(name='S', value=so.exp_range(1, 6))
             x = so.VariableGroup(s, name='x')
             create_data(table='example', index={'key': ['i']}, columns=[x])
 
@@ -145,10 +145,10 @@ class TestCreateData(unittest.TestCase):
 
     def test_custom_index(self):
         with so.Workspace('w') as w:
-            s = so.Set(name='S', value=so.exp_range(1, 5))
+            s = so.Set(name='S', value=so.exp_range(1, 6))
             x = so.VariableGroup(s, name='x')
             x[1] = 1
-            create_data(table='example', index={'key': ['i'], 'set': so.exp_range(1, 3)}, columns=[x])
+            create_data(table='example', index={'key': ['i'], 'set': so.exp_range(1, 4)}, columns=[x])
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
             proc optmodel;
@@ -160,7 +160,7 @@ class TestCreateData(unittest.TestCase):
 
     def test_subset_index(self):
         with so.Workspace('w') as w:
-            s = so.Set(name='S', value=so.exp_range(1, 5))
+            s = so.Set(name='S', value=so.exp_range(1, 6))
             x = so.VariableGroup(s, name='x')
             x[1] = 1
             z = so.Set(name='Z', value=[1, 3, 5])
@@ -177,8 +177,8 @@ class TestCreateData(unittest.TestCase):
 
     def test_multi_index(self):
         with so.Workspace('w') as w:
-            s = so.Set(name='S', value=so.exp_range(1, 5))
-            t = so.Set(name='T', value=so.exp_range(1, 3))
+            s = so.Set(name='S', value=so.exp_range(1, 6))
+            t = so.Set(name='T', value=so.exp_range(1, 4))
             x = so.VariableGroup(s, t, name='x')
             x[1, 3] = 1
             create_data(
@@ -197,8 +197,8 @@ class TestCreateData(unittest.TestCase):
 
     def test_subset_in_call(self):
         with so.Workspace('w') as w:
-            s = so.Set(name='S', value=so.exp_range(1, 5))
-            t = so.Set(name='T', value=so.exp_range(1, 3))
+            s = so.Set(name='S', value=so.exp_range(1, 6))
+            t = so.Set(name='T', value=so.exp_range(1, 4))
             x = so.VariableGroup(s, t, name='x')
             x[1, 3] = 1
             create_data(
@@ -224,7 +224,7 @@ class TestCreateData(unittest.TestCase):
         with so.Workspace('w') as w:
             alph = so.Set(name='alph', settype=so.string, value=['a', 'b', 'c'])
             x = so.VariableGroup([1, 2, 3], alph, name='x', init=2)
-            with iterate(so.exp_range(1, 3), name='i') as i:
+            with iterate(so.exp_range(1, 4), name='i') as i:
                 c = create_data(
                     table='example',
                     index={'key': [i], 'set': [i.get_set()]},
@@ -242,7 +242,7 @@ class TestCreateData(unittest.TestCase):
         with so.Workspace('w', session=session) as w:
             alph = so.Set(name='alph', settype=so.string, value=['a', 'b', 'c'])
             x = so.VariableGroup([1, 2, 3], alph, name='x', init=2)
-            with iterate(so.exp_range(1, 3), name='i') as i:
+            with iterate(so.exp_range(1, 4), name='i') as i:
                 c = create_data(
                     table='example',
                     index={'key': [i], 'set': [i.get_set()]},

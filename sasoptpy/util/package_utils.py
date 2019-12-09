@@ -126,10 +126,6 @@ def load_function_containers():
     sasoptpy.statement_dictionary = read_statement_dictionary()
 
 
-def load_condition_container():
-    sasoptpy.conditions = None
-
-
 def load_default_mediators():
     sasoptpy.mediators['CAS'] = sasoptpy.interface.CASMediator
     sasoptpy.mediators['SAS'] = sasoptpy.interface.SASMediator
@@ -521,16 +517,30 @@ def _to_sas_string(obj):
     elif isinstance(obj, range):
         if obj.step == 1:
             return '{}..{}'.format(_to_sas_string(obj.start),
-                                   _to_sas_string(obj.stop))
+                                   _to_sas_string(obj.stop-1))
         else:
             return '{}..{} by {}'.format(_to_sas_string(obj.start),
-                                         _to_sas_string(obj.stop),
+                                         _to_sas_string(obj.stop-1),
                                          _to_sas_string(obj.step))
     elif np.isinstance(type(obj), np.number):
         return str(obj)
+    elif isinstance(obj, sasoptpy.abstract.Conditional):
+        parent = obj._parent
+        iters = get_iterators(parent)
+        conds = get_conditions(parent)
+        return get_iterators_optmodel_format(iters, conds)
     else:
         raise TypeError('Cannot convert type {} to SAS string'.format(type(obj)))
         return '{}'.format(str(obj))
+
+
+def _to_python_string(obj):
+    if hasattr(obj, '_expr'):
+        return obj._expr()
+    elif hasattr(obj, '_name'):
+        return obj._name
+    else:
+        return str(obj)
 
 
 def _insert_brackets(prefix, keys):

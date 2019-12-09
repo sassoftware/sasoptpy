@@ -34,9 +34,9 @@ def containable(func):
             statements = statement_func(*args, **kwargs)
             if isinstance(statements, list):
                 for st in statements:
-                    sasoptpy.container.append(st)
+                    append_to_container(st)
             else:
-                sasoptpy.container.append(statements)
+                append_to_container(statements)
             return statements
         else:
             return func(*args, **kwargs)
@@ -50,6 +50,11 @@ def class_containable(func):
             sasoptpy.container.append(args[0])
 
     return class_append
+
+
+def append_to_container(statement):
+    if (not hasattr(statement, 'is_internal') or (not statement.is_internal())):
+        sasoptpy.container.append(statement)
 
 
 @contextmanager

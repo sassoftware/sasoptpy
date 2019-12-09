@@ -64,7 +64,7 @@ class Variable(Expression):
 
     @sasoptpy.class_containable
     def __init__(self, name, vartype=None, lb=None, ub=None,
-                 init=None, abstract=False, shadow=False, key=None):
+                 init=None, abstract=False, shadow=False, key=None, **kwargs):
         super().__init__(name=name)
         if vartype is None:
             vartype = sasoptpy.CONT
