@@ -39,6 +39,7 @@ class TestSolve(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         so.reset()
+        cls.conn = None
         from swat import CAS, SWATError
         try:
             cls.conn = CAS(os.environ.get('CASHOST'),
