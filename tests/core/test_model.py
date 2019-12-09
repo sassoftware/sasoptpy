@@ -976,6 +976,19 @@ class TestModel(unittest.TestCase):
             self.assertEqual(m.get_session(), TestModel.conn)
             self.assertEqual(m.get_session_type(), 'CAS')
 
+    def test_names(self):
+        if TestModel.conn is None:
+            self.skipTest('Session is not available')
+
+        m = so.Model(name='test_var_names', session=TestModel.conn)
+        a = ['apple', 'apple juice']
+        x = m.add_variables(a, name='amount', lb=1)
+        m.set_objective(so.expr_sum(x[i] for i in a), name='obj', sense=so.minimize)
+
+        m.solve()
+        for i in a:
+            self.assertEqual(x[i].get_value(), 1.0)
+
     def tearDown(self):
         so.reset()
 

@@ -999,8 +999,11 @@ class Model:
 
         """
         variables = self.get_variable_dict()
+        safe_name = name.replace('\'', '')
         if name in variables:
             return variables[name]
+        elif safe_name in variables:
+            return variables[safe_name]
         else:
             # Search for safe names
             for v in variables.values():

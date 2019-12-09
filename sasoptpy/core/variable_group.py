@@ -299,6 +299,9 @@ class VariableGroup(Group):
                               ' {}[{}] ({})'.
                               format(self.get_name(), key, type(key)),
                               RuntimeWarning, stacklevel=2)
+
+            if len(list_of_variables) == 0:
+                return None
             return list_of_variables
 
     def __setitem__(self, key, value):
