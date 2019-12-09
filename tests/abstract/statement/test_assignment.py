@@ -65,7 +65,7 @@ class TestAssignment(unittest.TestCase):
                 x[0].lb = 3;
                 x[1].lb = p;
                 p = 4;
-                fix x[2] = p;
+                fix x[2]=p;
                 x[3].ub = 5;
                 x[4].lb = 1;
                 x[4].ub = 4;
@@ -83,3 +83,12 @@ class TestAssignment(unittest.TestCase):
         self.assertEqual(so.to_definition(r), 'y = 10;')
         r.append(keyword='fix')
         self.assertEqual(so.to_definition(r), 'fix y = 10;')
+
+    def test_fix_value(self):
+        from sasoptpy.actions import fix
+        with so.Workspace('w') as w:
+            e = so.Parameter(name='e', value=4)
+            x = so.VariableGroup(5, name='x')
+            fix(x[0], 0)
+            fix(x[1], e*2)
+        print(so.to_optmodel(w))

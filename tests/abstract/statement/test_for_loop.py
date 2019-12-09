@@ -17,7 +17,7 @@
 #
 
 """
-Unit tests for core classes.
+Unit tests for FOR loops.
 """
 
 import os

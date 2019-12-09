@@ -9,4 +9,5 @@ from .literal import LiteralStatement
 from .objective import ObjectiveStatement
 from .read_data import ReadDataStatement
 from .solve import SolveStatement
+from .fix_unfix import FixStatement, UnfixStatement
 from .print import PrintStatement

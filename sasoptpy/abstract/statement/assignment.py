@@ -50,8 +50,8 @@ class Assignment(Statement):
         lb = kwargs.get('lb')
         ub = kwargs.get('ub')
         if lb and ub and lb is ub:
-            statements.append(Assignment(identifier=var, expression=lb,
-                                         keyword='fix'))
+            from sasoptpy.abstract.statement import FixStatement
+            statements.append(FixStatement((var, lb)))
         elif lb and ub:
             lb_identifier = sasoptpy.Symbol
             statements.append(Assignment(identifier=var.lb, expression=lb))

@@ -17,7 +17,7 @@
 #
 
 """
-Unit tests for COFOR loops.
+Unit test for fix/unfix statements.
 """
 
 import os
@@ -30,40 +30,48 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.abspath(os.path.join(current_dir, '../..')))
 from util import assert_equal_wo_temps
 
-from sasoptpy.actions import for_loop, cofor_loop, fix, solve, put_item
+from sasoptpy.actions import fix, unfix
 
-
-class TestCoforLoop(unittest.TestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        pass
+class TestFix(unittest.TestCase):
 
     def setUp(self):
         so.reset()
 
-    def test_simple_example(self):
+    def test_regular_fix(self):
+
+        from sasoptpy.actions import solve
+
         with so.Workspace('w') as w:
-            x = so.VariableGroup(6, name='x', lb=0)
-            so.Objective(
-                so.expr_sum(x[i] for i in range(6)), name='z', sense=so.MIN)
-            a1 = so.Constraint(x[1] + x[2] + x[3] <= 4, name='a1')
-
-            for i in cofor_loop(so.exp_range(3, 6)):
-                fix(x[1], i)
-                solve()
-                put_item(i, x[1], so.Symbol('_solution_status_'), names=True)
-
-        print(so.to_optmodel(w))
+            x = so.Variable(name='x')
+            fix(x, 1)
+            solve()
+            unfix(x)
 
         assert_equal_wo_temps(self, so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                var x {{0,1,2,3,4,5}} >= 0;
-                min z = x[0] + x[1] + x[2] + x[3] + x[4] + x[5];
-                con a1 : x[1] + x[2] + x[3] <= 4;
-                cofor {o13 in 3..5} do;
-                    fix x[1]=o13;
+                var x;
+                fix x=1;
+                solve;
+                unfix x;
+            quit;'''))
+
+    def test_with_multiple_ops(self):
+
+        from sasoptpy.actions import solve, cofor_loop
+
+        with so.Workspace('w') as w:
+            x = so.VariableGroup(4, name='x')
+            for i in cofor_loop(range(4)):
+                fix((x[0], i), (x[1], 1))
+                solve()
+                unfix(x[0], (x[1], 2))
+
+        assert_equal_wo_temps(self, so.to_optmodel(w), cleandoc('''
+            proc optmodel;
+                var x {{0,1,2,3}};
+                cofor {o7 in 0..3} do;
+                    fix x[0]=o7 x[1]=1;
                     solve;
-                    put o13= x[1]= _solution_status_=;
+                    unfix x[0] x[1]=2;
                 end;
             quit;'''))

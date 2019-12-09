@@ -19,7 +19,9 @@ def register_actions():
     register_to_function_container(
         set_value, sasoptpy.abstract.statement.Assignment.set_value)
     register_to_function_container(
-        fix_value, sasoptpy.abstract.statement.Assignment.fix_value)
+        fix, sasoptpy.abstract.statement.FixStatement.fix)
+    register_to_function_container(
+        unfix, sasoptpy.abstract.statement.UnfixStatement.unfix)
     register_to_function_container(
         set_objective, sasoptpy.abstract.statement.ObjectiveStatement.set_objective)
     register_to_function_container(
@@ -69,7 +71,12 @@ def set_value(left, right):
 
 
 @sasoptpy.containable
-def fix_value(left, right):
+def fix(*args):
+    pass
+
+
+@sasoptpy.containable
+def unfix(*args):
     pass
 
 
