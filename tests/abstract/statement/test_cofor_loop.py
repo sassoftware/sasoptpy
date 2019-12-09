@@ -54,8 +54,6 @@ class TestCoforLoop(unittest.TestCase):
                 solve()
                 put_item(i, x[1], so.Symbol('_solution_status_'), names=True)
 
-        print(so.to_optmodel(w))
-
         assert_equal_wo_temps(self, so.to_optmodel(w), cleandoc('''
             proc optmodel;
                 var x {{0,1,2,3,4,5}} >= 0;

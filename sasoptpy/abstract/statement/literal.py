@@ -53,3 +53,9 @@ class LiteralStatement(Statement):
         us = LiteralStatement('unfix {};'.format(
             _to_python_string(item)
         ))
+
+    @classmethod
+    def use_problem(cls, problem):
+        ps = LiteralStatement('use problem {};'.format(
+            problem.get_name()
+        ))

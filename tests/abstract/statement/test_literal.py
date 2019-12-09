@@ -30,3 +30,27 @@ class TestLiteral(unittest.TestCase):
     def test_literal_expr(self):
         literal = so.LiteralStatement('expand;')
         self.assertEqual(so.to_expression(literal), 'expand;')
+
+    def test_use_problem(self):
+        from sasoptpy.actions import use_problem
+        with so.Workspace('w') as w:
+            m = so.Model(name='m')
+            m2 = so.Model(name='m2')
+            use_problem(m)
+            x = so.Variable(name='x')
+            use_problem(m2)
+            m.solve()
+            m2.solve()
+
+        self.assertEqual(so.to_optmodel(w), cleandoc('''
+            proc optmodel;
+                problem m;
+                problem m2;
+                use problem m;
+                var x;
+                use problem m2;
+                use problem m;
+                solve;
+                use problem m2;
+                solve;
+            quit;'''))

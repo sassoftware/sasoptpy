@@ -13,12 +13,16 @@ class Workspace:
         self.response = None
         self._primalSolution = None
         self._dualSolution = None
+        self.active_model = '_start_'
 
     def _load_workspace_defaults(self):
         self._elements = []
 
     def get_elements(self):
         return self._elements
+
+    def set_active_model(self, model):
+        self.active_model = model
 
     def __str__(self):
         return 'Workspace[ID={}]'.format(id(self))

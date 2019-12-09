@@ -38,6 +38,8 @@ def register_actions():
         diff, sasoptpy.abstract.statement.LiteralStatement.diff)
     register_to_function_container(
         substring, sasoptpy.abstract.statement.LiteralStatement.substring)
+    register_to_function_container(
+        use_problem, sasoptpy.abstract.statement.LiteralStatement.use_problem)
 
 
 @sasoptpy.containable
@@ -117,6 +119,11 @@ def diff(*args):
 
 @sasoptpy.containable
 def substring(main_string, first_pos, last_pos):
+    pass
+
+
+@sasoptpy.containable
+def use_problem(problem):
     pass
 
 

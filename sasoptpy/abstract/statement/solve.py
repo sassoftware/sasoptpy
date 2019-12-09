@@ -48,6 +48,10 @@ class SolveStatement(Statement):
     def set_response(self, problem_summary, solution_summary):
         self._problem_summary = problem_summary
         self._solution_summary = solution_summary
+        self.response = {
+            'Problem Summary': self._problem_summary,
+            'Solution Summary': self._solution_summary
+        }
 
     def get_problem_summary(self):
         return self._problem_summary

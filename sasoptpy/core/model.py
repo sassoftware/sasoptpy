@@ -635,7 +635,6 @@ class Model:
         for c in constraints:
             self.drop_constraint(c)
 
-
     def include(self, *argv):
         """
         Adds existing variables and constraints to a model
@@ -703,6 +702,12 @@ class Model:
 
         for c in argv:
             meth = include_methods.get(type(c))
+            if any(isinstance(c, i) for i in [Variable, VariableGroup, Constraint, ConstraintGroup, Objective]):
+                if sasoptpy.container is not None:
+                    if c._objorder > self._objorder:
+                        raise ReferenceError('Object {} should be defined before Model {} inside a Workspace'.format(
+                            c._expr(), self.get_name()
+                    ))
             if meth is not None:
                 meth(c)
 
