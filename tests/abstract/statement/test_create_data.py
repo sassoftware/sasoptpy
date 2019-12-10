@@ -46,6 +46,10 @@ class TestCreateData(unittest.TestCase):
         except TypeError:
             warnings.warn('CAS variables are not available', RuntimeWarning)
 
+    @classmethod
+    def tearDownClass(cls):
+        if cls.conn is not None:
+            cls.conn.close()
 
     def test_various_col_types(self):
         # Regular

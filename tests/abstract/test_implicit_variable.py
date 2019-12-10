@@ -37,6 +37,7 @@ class TestImplicitVariable(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         so.reset()
+        cls.conn = None
         from swat import CAS, SWATError
         try:
             cls.conn = CAS(os.environ.get('CASHOST'),
@@ -46,6 +47,11 @@ class TestImplicitVariable(unittest.TestCase):
             warnings.warn('CAS connection is not available', RuntimeWarning)
         except TypeError:
             warnings.warn('CAS variables are not available', RuntimeWarning)
+
+    @classmethod
+    def tearDownClass(cls):
+        if cls.conn is not None:
+            cls.conn.close()
 
     def setUp(self):
         pass

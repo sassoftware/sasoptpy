@@ -44,6 +44,11 @@ class TestWorkspace(unittest.TestCase):
         except TypeError:
             warnings.warn('CAS variables are not available', RuntimeWarning)
 
+    @classmethod
+    def tearDownClass(cls):
+        if cls.conn is not None:
+            cls.conn.close()
+
     def setUp(self):
         so.reset()
 

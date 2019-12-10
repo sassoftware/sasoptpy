@@ -38,6 +38,7 @@ class TestExamples(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        cls.conn = None
         from swat import CAS, SWATError
         try:
             cls.conn = CAS(os.environ.get('CASHOST'),
@@ -51,6 +52,10 @@ class TestExamples(unittest.TestCase):
         except TypeError:
             raise unittest.SkipTest('Environment variable may not be defined')
 
+    @classmethod
+    def tearDownClass(cls):
+        if cls.conn is not None:
+            cls.conn.close()
 
     def setUp(self):
         sasoptpy.config['max_digits'] = 12

@@ -45,6 +45,11 @@ class TestAssignment(unittest.TestCase):
         except TypeError:
             warnings.warn('CAS variables are not available', RuntimeWarning)
 
+    @classmethod
+    def tearDownClass(cls):
+        if cls.conn is not None:
+            cls.conn.close()
+
     def test_bound_assignment(self):
 
         with so.Workspace('test_regular_assignment') as w:

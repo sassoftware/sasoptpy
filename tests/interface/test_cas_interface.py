@@ -90,6 +90,11 @@ class TestCASInterface(unittest.TestCase):
         except TypeError:
             warnings.warn('CAS variables are not available', RuntimeWarning)
 
+    @classmethod
+    def tearDownClass(cls):
+        if cls.conn is not None:
+            cls.conn.close()
+
     def setUp(self):
         self.original_get_type = so.util.get_session_type
         self.original_package_get_type = so.util.package_utils.get_session_type

@@ -35,10 +35,6 @@ from sasoptpy.actions import for_loop, cofor_loop, fix, solve, put_item
 
 class TestCoforLoop(unittest.TestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        pass
-
     def setUp(self):
         so.reset()
 

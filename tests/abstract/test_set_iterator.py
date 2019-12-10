@@ -37,6 +37,7 @@ class TestSetIterator(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         so.reset()
+        cls.conn = None
         from swat import CAS, SWATError
         try:
             cls.conn = CAS(os.environ.get('CASHOST'),
@@ -46,6 +47,11 @@ class TestSetIterator(unittest.TestCase):
             warnings.warn('CAS connection is not available', RuntimeWarning)
         except TypeError:
             warnings.warn('CAS variables are not available', RuntimeWarning)
+
+    @classmethod
+    def tearDownClass(cls):
+        if cls.conn is not None:
+            cls.conn.close()
 
     def test_set_iterator_init(self):
         S = so.Set(name='S')

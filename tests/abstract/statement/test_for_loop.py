@@ -36,10 +36,6 @@ from sasoptpy.actions import for_loop
 
 class TestForLoop(unittest.TestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        pass
-
     def setUp(self):
         so.reset()
 
