@@ -9,7 +9,7 @@ What's New
 
 This page outlines changes from each release.
 
-v1.0.0 (TBD)
+v1.0.0-alpha (TBD)
 ============
 
 New Features

@@ -238,6 +238,26 @@ variables and expressions that share the same keys in a call.
 As seen, a Pandas Series and a Variable object that has the same index
 keys are printed in this example.
 
+Initializing a workspace
+------------------------
+
+If you would like to use extensive abstract modeling capabilities of `sasoptpy`,
+can create a workspace. Workspaces support features like server-side for loops,
+cofor loops (parallel), read and create data. You can initialize a :class:`sasoptpy.Workspace`
+as follows:
+
+.. ipython:: python
+
+   with so.Workspace(name='my_workspace', sesion=s) as w:
+      I = so.Set(name='I', value=range(1, 11))
+      x = so.VariableGroup(I, name='x', lb=0)
+      
+You can submit a workspace to CAS server and grab the response using:
+
+.. ipython:: python
+   w.submit()
+
+
 Next steps
 ----------
 

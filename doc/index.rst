@@ -9,6 +9,7 @@ sasoptpy: SAS Optimization Interface for Python
 
 **Date**: |today| **Version**: |version|
 
+**Repository**: https://github.com/sassoftware/sasoptpy
 
 *sasoptpy* is a Python package providing a modeling interface for 
 `SAS Viya <https://www.sas.com/en_us/software/viya.html>`_  and SAS/OR
@@ -17,8 +18,8 @@ It provides a quick way for users to deploy optimization models and
 solve them using
 `SAS Viya Optimization Action Set <http://go.documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.3&docsetId=casactmopt&docsetTarget=casactmopt_optimization_toc.htm&locale=en>`_.
 
-*sasoptpy* can handle linear optimization, mixed integer linear optimization,
-and nonlinear optimization problems. Users can benefit from native Python
+*sasoptpy* can handle linear, mixed-integer linear, nonlinear, and black-box
+optimization problems. Users can benefit from native Python
 structures like dictionaries, tuples, and lists to define an optimization
 problem. *sasoptpy* supports `Pandas <http://pandas.pydata.org/>`_
 objects extensively.
@@ -30,9 +31,9 @@ SAS Viya, and uses the
 installations.
 
 *sasoptpy* is an interface to SAS Optimization solvers. Check
-`SAS/OR <http://go.documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.3&docsetId=casmopt&docsetTarget=titlepage.htm&locale=en>`_
+`SAS/OR <https://go.documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.5&docsetId=casmopt&docsetTarget=titlepage.htm&locale=en>`_
 and 
-`PROC OPTMODEL <http://go.documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.3&docsetId=casmopt&docsetTarget=casmopt_optmodel_toc.htm&locale=en>`_ 
+`PROC OPTMODEL <http://go.documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.5&docsetId=casmopt&docsetTarget=casmopt_optmodel_toc.htm&locale=en>`_ 
 for more details about optimization tools provided by SAS and an interface to
 model optimization problems inside SAS.
 
@@ -46,10 +47,8 @@ See our SAS Global Forum paper: `Optimization Modeling with Python and SAS Viya 
    overview
    getting-started
    input-data
-   models
-   components
+   building-blocks
    workflow
    examples
    api/api
-   web-api
 
