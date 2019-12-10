@@ -28,6 +28,10 @@ Getting sasoptpy
    conda install -c sas-institute sasoptpy
 
 Any dependencies should be installed automatically.
+
+Depending on your installation, you may need to add `conda-forge` channel to `conda` using::
+
+    conda config --append channels conda-forge
    
 GitHub repository
 +++++++++++++++++

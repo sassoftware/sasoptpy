@@ -216,7 +216,7 @@ faster :func:`Expression.sum` and :func:`Expression.mult` operations.
 
 .. ipython:: python
 
-   new_profit = so.Expression(10 * sales - 2 * material, temp=True)
+   new_profit = so.Expression(10 * sales - 2 * material)
    print(repr(new_profit))
 
 The expression can be modified inside a function:
