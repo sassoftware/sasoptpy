@@ -84,6 +84,7 @@ class Model:
         self._solutionSummary = None
         self._primalSolution = None #pd.DataFrame()
         self._dualSolution = None #pd.DataFrame()
+        self._tunerResults = None
         self._milp_opts = {}
         self._lp_opts = {}
         self._sets = []
@@ -1372,6 +1373,9 @@ class Model:
         else:
             raise ValueError('Solution type should be \'primal\' or \'dual\'')
 
+    def get_tuner_results(self):
+        return self._tunerResults
+
     def set_session(self, session):
         """
         Sets the CAS session for model
@@ -1554,6 +1558,12 @@ class Model:
             return False
         return True
 
+    def _has_integer_vars(self):
+        for v in self._variables:
+            if v._type != sasoptpy.CONT:
+                return True
+        return False
+
     def get_session_type(self):
         """
         Tests if the model session is defined and still active
@@ -1630,6 +1640,10 @@ class Model:
         """
 
         return sasoptpy.util.submit_for_solve(self, **kwargs)
+
+
+    def tune_parameters(self, **kwargs):
+        return sasoptpy.util.submit_for_tune(self, **kwargs)
 
 
     def _set_abstract_values(self, name, value):

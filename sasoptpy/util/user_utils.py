@@ -185,6 +185,17 @@ def submit_for_solve(caller, *args, **kwargs):
     return mediator.solve(*args, **kwargs)
 
 
+def submit_for_tune(caller, **kwargs):
+    session = caller.get_session()
+    session_type = sasoptpy.util.package_utils.get_session_type(session)
+    if session_type != 'CAS':
+        raise TypeError('Tune action is only available on CAS (SAS Viya) servers.')
+
+    mediator_class= sasoptpy.mediators[session_type]
+    mediator = mediator_class(caller, session)
+    return mediator.tune(**kwargs)
+
+
 def quick_sum(argv):
     return sasoptpy.util.expr_sum(argv)
 
@@ -335,3 +346,7 @@ def flatten_frame(df, swap=False):
 
 def is_linear(item):
     return item._is_linear()
+
+
+def has_integer_variables(item):
+    return item._has_integer_vars()
