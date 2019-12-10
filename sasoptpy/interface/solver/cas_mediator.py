@@ -39,6 +39,15 @@ class CASMediator(Mediator):
         self.session.loadactionset(actionset='optimization')
         return self.submit_optmodel_code(**kwargs)
 
+    def tune(self, **kwargs):
+        self.session.loadactionset(actionset='optimization')
+
+        if not hasattr(self.session, 'optimization.tuner'):
+            raise RuntimeError('Current CAS session version do not have tuner capability.')
+
+        return self.tune_problem(**kwargs)
+
+
     def is_mps_format_needed(self, mps_option, options):
 
         enforced = False
@@ -474,3 +483,38 @@ class CASMediator(Mediator):
         caller = self.caller
         for _, row in solution.iterrows():
             caller.set_variable_value(row['var'], row['value'])
+
+
+    def tune_problem(self, **kwargs):
+        model = self.caller
+        session = self.session
+        name = model.get_name()
+
+        if not sasoptpy.is_linear(model):
+            raise TypeError('Model {} is not linear'.format(model.get_name()))
+        if not sasoptpy.has_integer_variables(model):
+            raise TypeError('Model {} do not have integer or binary variables'.format(model.get_name()))
+
+        self.upload_model(name=name)
+
+        if kwargs.get('tunerparameters') is None:
+            kwargs['tunerparameters'] = {'maxconfigs': 100}
+
+        response = session.optimization.tuner(
+            instances=[{'data': name}],
+            **kwargs
+        )
+
+        performance = response.PerformanceInformation
+        info = response.TunerInformation
+        summary = response.TunerSummary
+        results = response.TunerResults
+
+        model._tunerResults = {
+            'Performance Information': performance,
+            'Tuner Information': info,
+            'Tuner Summary': summary,
+            'Tuner Results': results
+        }
+
+        return results
