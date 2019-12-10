@@ -25,7 +25,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='sasoptpy',
-    version='1.0.0.dev1',
+    version='1.0.0-alpha',
     packages=['sasoptpy'],
     description='sasoptpy: SAS Optimization Interface for Python',
     long_description=long_description,
