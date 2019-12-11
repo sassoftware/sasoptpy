@@ -39,7 +39,6 @@ from sasoptpy.structure import (containable, class_containable)
 from sasoptpy.core.expression import Expression
 from sasoptpy.core import (Variable, VariableGroup, Constraint, ConstraintGroup,
                            Model, Objective, Auxiliary, Symbol)
-from sasoptpy.core.util import read_data
 
 from sasoptpy.abstract import (Set, Parameter, ImplicitVar,
                                ParameterGroup, SetIterator,

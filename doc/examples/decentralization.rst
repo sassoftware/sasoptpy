@@ -14,7 +14,7 @@ http://support.sas.com/documentation/onlinedoc/or/ex_code/143/mpex10.html
 Model
 -----
 
-.. literalinclude:: ../../examples/client_side.decentralization.py
+.. literalinclude:: ../../examples/client_side/decentralization.py
 
 Output
 ------

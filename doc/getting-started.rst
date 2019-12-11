@@ -248,13 +248,15 @@ as follows:
 
 .. ipython:: python
 
-   with so.Workspace(name='my_workspace', sesion=s) as w:
+   with so.Workspace(name='my_workspace', session=s) as w:
       I = so.Set(name='I', value=range(1, 11))
       x = so.VariableGroup(I, name='x', lb=0)
+   print(so.to_optmodel(w))
       
 You can submit a workspace to CAS server and grab the response using:
 
 .. ipython:: python
+
    w.submit()
 
 

@@ -175,8 +175,15 @@ and Abstract Data requires SAS Viya version
 .. ipython:: python
 
    df = pd.DataFrame(data, columns=['item', 'value', 'weight', 'limit'])
-   ITEMS, (value, weight, limit) = m2.read_table(df, key=['item'],
-      key_type='str', columns=['value', 'weight', 'limit'])
+   ITEMS = m.add_set(name='ITEMS')
+   value = m.add_parameter(ITEMS, name='value')
+   weight = m.add_parameter(ITEMS, name='weight')
+   limit = m.add_parameter(ITEMS, name='limit')
+   
+   from sasoptpy.actions import read_data
+   
+   m.include(read_data(table=table, index={'target': ITEMS, 'key': None},
+                            columns=[value, weight, limit]))
    get3 = m2.add_variables(ITEMS, name='get3')
    print(get3)
    
@@ -189,9 +196,12 @@ pass a string for the data sets that will be available later. See following:
 
 .. ipython:: python
 
+   from sasoptpy.actions import read_data
+
    m3 = so.Model(name='m3', session=session)
-   ITEMS, (limit) = m3.read_table('DF', key=['item'], key_type=['str'],
-      columns=['limit'])
+   ITEMS = m.add_set(name='ITEMS')
+   limit = m.add_parameter(ITEMS, name='limit')
+   m3.include(read_data(table='DF', index=['item'], columns=[limit]))
    print(type(ITEMS), ITEMS)
 
 Notice that the key set is created as a reference. We can later solve the

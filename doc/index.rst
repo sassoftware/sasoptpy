@@ -46,10 +46,9 @@ See our SAS Global Forum paper: `Optimization Modeling with Python and SAS Viya 
 
    overview
    getting-started
-   input-data
    building-blocks
+   input-data
    workflow
-
-.. examples
-.. api/api
+   examples
+   api/api
 

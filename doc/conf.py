@@ -245,7 +245,7 @@ autosummary_generate = glob.glob("api/*.rst") + glob.glob("*.rst")
 
 html_last_updated_fmt = '%b %d, %Y (Timestamp: {}-%Y%m%d%H%M%S)'.format(version)
 
-autodoc_default_flags = ['show-inheritance']
+autodoc_default_options = ['show-inheritance']
 
 def remove_autosums(app, what, name, obj, options, lines):
 

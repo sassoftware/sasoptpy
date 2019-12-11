@@ -115,9 +115,6 @@ def load_function_containers():
         d[sasoptpy.core.Model.drop_constraints] = \
             sasoptpy.abstract.statement.DropStatement.model_drop_constraint
 
-        d[sasoptpy.core.util.read_data] = \
-            sasoptpy.abstract.statement.ReadDataStatement.read_data
-
         d[sasoptpy.core.Variable.set_value] = \
             sasoptpy.abstract.statement.Assignment.set_value
 

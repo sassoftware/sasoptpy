@@ -29,7 +29,6 @@ Components
    Model.add_parameter
    Model.add_statement
    Model.set_objective
-   Model.set_coef
 
    Model.drop_constraint
    Model.drop_constraints
@@ -43,9 +42,6 @@ Components
    Model.get_objective
    Model.get_variable_coef
 
-   Model.read_data
-   Model.read_table
-
    Model.include
 
 Solver calls
@@ -55,15 +51,12 @@ Solver calls
    :toctree: generated/
 
    Model.solve
-   Model.solve_on_cas
-   Model.solve_on_mva
    Model.get_solution
    Model.get_variable_value
    Model.get_objective_value
    Model.get_solution_summary
    Model.get_problem_summary
    Model.print_solution
-   Model.upload_user_blocks
 
 Export
 ~~~~~~
@@ -80,7 +73,5 @@ Internal functions
 .. autosummary::
    :toctree: generated/
 
-   Model.upload_model
-   Model.test_session
    Model._is_linear
 

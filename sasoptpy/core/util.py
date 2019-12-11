@@ -254,10 +254,6 @@ def get_group_bound(bound):
         return bound
 
 
-def read_data(table, index, columns):
-    pass
-
-
 def is_valid_lb(lb, variable_type):
     if lb is None:
         return False
