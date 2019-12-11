@@ -29,17 +29,18 @@ Output
 .. ipython:: python
 
    from examples.client_side.multiobjective import test
-   sols = test(cas_conn, sols=True)
+   response = test(cas_conn, sols=True)
 
 .. ipython:: python
 
    import matplotlib.pyplot as plt
+   sols = response['solutions']
+   x = response['x']
+   f1 = response['f1']
+   f2 = response['f2']
    tr = sols.transpose()
    scvalues = tr.iloc[2:]
    scvalues = scvalues.astype({0: float, 1: float})
-   x = sasoptpy.get_obj_by_name('x')
-   f1 = sasoptpy.get_obj_by_name('f1')
-   f2 = sasoptpy.get_obj_by_name('f2')
    x[1].set_value(scvalues[0])
    x[2].set_value(scvalues[1])
    scvalues['f1'] = f1.get_value()

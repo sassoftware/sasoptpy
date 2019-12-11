@@ -16,6 +16,7 @@ def test(cas_conn, sols=False):
     print('f2', f2.get_value())
 
     if sols:
-        return cas_conn.CASTable('allsols').to_frame()
+        return dict(solutions=cas_conn.CASTable('allsols').to_frame(),
+                    x=x, f1=f1, f2=f2)
     else:
         return f1.get_value()
