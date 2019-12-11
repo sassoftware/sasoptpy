@@ -12,7 +12,7 @@ http://support.sas.com/documentation/onlinedoc/or/ex_code/143/mpex11.html
 Model
 -----
 
-.. literalinclude:: ../../examples/curve_fitting.py
+.. literalinclude:: ../../examples/server_side/curve_fitting.py
 
 Output
 ------
@@ -32,7 +32,7 @@ Output
 
 .. ipython:: python
 
-   from examples.curve_fitting import test
+   from examples.server_side.curve_fitting import test
    (s1, s2, s3, s4) = test(cas_conn, sols=True)
 
 

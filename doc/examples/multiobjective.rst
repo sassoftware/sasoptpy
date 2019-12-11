@@ -15,7 +15,7 @@ http://support.sas.com/documentation/onlinedoc/or/ex_code/143/lsoe10.html
 Model
 -----
 
-.. literalinclude:: ../../examples/multiobjective.py
+.. literalinclude:: ../../examples/client_side/multiobjective.py
 
 Output
 ------
@@ -28,7 +28,7 @@ Output
 
 .. ipython:: python
 
-   from examples.multiobjective import test
+   from examples.client_side.multiobjective import test
    sols = test(cas_conn, sols=True)
 
 .. ipython:: python

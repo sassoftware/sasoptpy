@@ -235,7 +235,7 @@ using the :func:`Expression.set_permanent` method or constructor:
 
 .. ipython:: python
 
-   new_profit = so.Expression(10 * sales - 2 * material, temp=True)
+   new_profit = so.Expression(10 * sales - 2 * material)
    new_profit.set_permanent()
    tmp = new_profit + 5
    print(repr(new_profit))

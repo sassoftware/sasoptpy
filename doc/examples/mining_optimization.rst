@@ -12,7 +12,7 @@ http://support.sas.com/documentation/onlinedoc/or/ex_code/143/mpex07.html
 Model
 -----
 
-.. literalinclude:: ../../examples/mining_optimization.py
+.. literalinclude:: ../../examples/client_side/mining_optimization.py
 
 Output
 ------
@@ -26,6 +26,6 @@ Output
 
 .. ipython:: python
 
-   from examples.mining_optimization import test
+   from examples.client_side.mining_optimization import test
    test(cas_conn)
 

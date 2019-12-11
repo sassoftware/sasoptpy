@@ -12,7 +12,7 @@ http://support.sas.com/documentation/onlinedoc/or/ex_code/143/mpex09.html
 Model
 -----
 
-.. literalinclude:: ../../examples/economic_planning.py
+.. literalinclude:: ../../examples/client_side/economic_planning.py
 
 Output
 ------
@@ -26,6 +26,6 @@ Output
 
 .. ipython:: python
 
-   from examples.economic_planning import test
+   from examples.client_side.economic_planning import test
    test(cas_conn)
 

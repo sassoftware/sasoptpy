@@ -14,7 +14,7 @@ http://support.sas.com/documentation/onlinedoc/or/ex_code/143/mpex10.html
 Model
 -----
 
-.. literalinclude:: ../../examples/decentralization.py
+.. literalinclude:: ../../examples/client_side.decentralization.py
 
 Output
 ------
@@ -28,6 +28,6 @@ Output
 
 .. ipython:: python
 
-   from examples.decentralization import test
+   from examples.client_side.decentralization import test
    test(cas_conn)
 
