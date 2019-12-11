@@ -492,23 +492,39 @@ class CASMediator(Mediator):
 
         if not sasoptpy.is_linear(model):
             raise TypeError('Model {} is not linear'.format(model.get_name()))
-        if not sasoptpy.has_integer_variables(model):
+        if not sasoptpy.util.has_integer_variables(model):
             raise TypeError('Model {} do not have integer or binary variables'.format(model.get_name()))
 
         self.upload_model(name=name)
 
-        if kwargs.get('tunerparameters') is None:
-            kwargs['tunerparameters'] = {'maxconfigs': 100}
+        if kwargs.get('tunerParameters') is None:
+            kwargs['tunerParameters'] = {'maxconfigs': 100}
 
         response = session.optimization.tuner(
             instances=[{'data': name}],
             **kwargs
         )
 
+        def replace_column_names(sasdf):
+            colnames = sasdf.columns
+            collabels = []
+            for i in colnames:
+                if sasdf.colinfo[i].label is not None:
+                    collabels.append(sasdf.colinfo[i].label)
+                else:
+                    collabels.append(i)
+            sasdf.columns = collabels
+            return sasdf
+
         performance = response.PerformanceInformation
         info = response.TunerInformation
         summary = response.TunerSummary
         results = response.TunerResults
+
+        performance = replace_column_names(performance)
+        info = replace_column_names(info)
+        summary = replace_column_names(summary)
+        results = replace_column_names(results)
 
         model._tunerResults = {
             'Performance Information': performance,

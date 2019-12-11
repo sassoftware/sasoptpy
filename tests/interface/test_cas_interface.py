@@ -301,3 +301,42 @@ class TestCASInterface(unittest.TestCase):
         def produce_error_status():
             m.solve(frame=True)
         self.assertRaises(RuntimeError, produce_error_status)
+
+    def test_tuner(self):
+
+        import pandas as pd
+
+        if TestCASInterface.conn is None:
+            self.skipTest('No session is available')
+
+        m = so.Model(name='knapsack_with_tuner', session=TestCASInterface.conn)
+        data = [
+            ['clock', 8, 4, 3],
+            ['mug', 10, 6, 5],
+            ['headphone', 15, 7, 2],
+            ['book', 20, 12, 10],
+            ['pen', 1, 1, 15]
+        ]
+        df = pd.DataFrame(data, columns=['item', 'value', 'weight',
+                                         'limit']).set_index(['item'])
+        ITEMS = df.index
+        value = df['value']
+        weight = df['weight']
+        limit = df['limit']
+        total_weight = 55
+        # Variables
+        get = m.add_variables(ITEMS, name='get', vartype=so.INT)
+        # Constraints
+        m.add_constraints((get[i] <= limit[i] for i in ITEMS), name='limit_con')
+        m.add_constraint(
+            so.quick_sum(weight[i] * get[i] for i in ITEMS) <= total_weight,
+            name='weight_con')
+        # Objective
+        total_value = so.quick_sum(value[i] * get[i] for i in ITEMS)
+        m.set_objective(total_value, name='total_value', sense=so.MAX)
+
+        results = m.tune_parameters(tunerParameters={'maxConfigs': 10})
+
+        self.assertEqual(len(results), 10)
+
+        self.assertTrue('Configuration' in results.iloc[0].index)
