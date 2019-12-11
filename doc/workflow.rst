@@ -67,13 +67,10 @@ Reading data
        ]
    
    df = pd.DataFrame(data, columns=['item', 'value', 'weight', 'limit'])
-   cas_table = session.upload_frame(df)
-   ITEMS = m.add_set(name='ITEMS', settype=so.STR)
-   value = m.add_parameter(ITEMS, name='value')
-   weight = m.add_parameter(ITEMS, name='weight')
-   limit = m.add_parameter(ITEMS, name='limit')
-   m.include(read_data(table=cas_table, index={'target': ITEMS, 'key': 'item'},
-                       columns=[value, weight, limit]))
+   ITEMS = df.index
+   value = df['value']
+   weight = df['weight']
+   limit = df['limit']
    total_weight = 55
 
 .. ipython:: python
@@ -109,7 +106,7 @@ Model
        name='weight_con');
    
    # Objective
-   total_value = so.quick_sum(value[i] * get[i] for i in ITEMS)
+   total_value = so.expr_sum(value[i] * get[i] for i in ITEMS)
    m.set_objective(total_value, name='total_value', sense=so.MAX);
    
    # Solve
@@ -173,6 +170,18 @@ Model
 
 .. ipython:: python
 
+   from sasoptpy.actions import read_data
+
+   m = so.Model(name='client_CAS', session=session)
+   cas_table = session.upload_frame(df, casout='data')
+   ITEMS = m.add_set(name='ITEMS', settype=so.STR)
+   value = m.add_parameter(ITEMS, name='value')
+   weight = m.add_parameter(ITEMS, name='weight')
+   limit = m.add_parameter(ITEMS, name='limit')
+   m.include(read_data(
+      table=cas_table, index={'target':ITEMS, 'key': 'item'},
+      columns=[value, weight, limit])
+
    # Variables
    get = m.add_variables(ITEMS, name='get', vartype=so.INT)
    
@@ -189,9 +198,6 @@ Model
    # Solve
    m.solve(verbose=True)
 
-There is no difference in terms of how client-side and server-side models are
-written. However, the generated OPTMODEL code is more compact for server-side
-models.
 
 Parsing results
 +++++++++++++++

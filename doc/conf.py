@@ -48,8 +48,8 @@ extensions = [
     'sphinx.ext.imgmath',
     'sphinxcontrib.fulltoc',
     'numpydoc',
-    'sphinxcontrib.httpdomain',
-    'sphinxcontrib.excel_table',
+    #'sphinxcontrib.httpdomain',
+    #'sphinxcontrib.excel_table',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -245,7 +245,7 @@ autosummary_generate = glob.glob("api/*.rst") + glob.glob("*.rst")
 
 html_last_updated_fmt = '%b %d, %Y (Timestamp: {}-%Y%m%d%H%M%S)'.format(version)
 
-autodoc_default_options = ['show-inheritance']
+autodoc_default_options = {'show-inheritance': None}
 
 def remove_autosums(app, what, name, obj, options, lines):
 
