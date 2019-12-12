@@ -22,6 +22,7 @@ New Features
 Changes
 +++++++
 
+- Experimental RESTful API is dropped
 - `get_obj_by_name` function is removed
 
 Bug Fixes
@@ -70,8 +71,7 @@ Notes
 +++++
 
 - A Jupyter notebook example of the Diet Problem is added
-- A new example is added to show usage of experiment RESTful API:
-  :ref:`Knapsack <examples/rest_knapsack>`
+- A new example is added to show usage of experiment RESTful API
 - Unit tests are added for development repository
 - CD/CI integration is added for the development repository on Gitlab
 - Generated models can be checked using the hash values inside tests.responses

@@ -1,7 +1,7 @@
 
 .. currentmodule:: sasoptpy
 
-.. _models:
+.. _workspaces:
 
 Workspaces
 ==========

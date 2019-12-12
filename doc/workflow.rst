@@ -97,7 +97,7 @@ Model
 .. ipython:: python
 
    # Variables
-   get = m.add_variables(ITEMS, name='get', vartype=so.INT)
+   get = m.add_variables(ITEMS, name='get', vartype=so.INT, lb=0)
    
    # Constraints
    m.add_constraints((get[i] <= limit[i] for i in ITEMS), name='limit_con');
@@ -180,10 +180,10 @@ Model
    limit = m.add_parameter(ITEMS, name='limit')
    m.include(read_data(
       table=cas_table, index={'target':ITEMS, 'key': 'item'},
-      columns=[value, weight, limit])
+      columns=[value, weight, limit]))
 
    # Variables
-   get = m.add_variables(ITEMS, name='get', vartype=so.INT)
+   get = m.add_variables(ITEMS, name='get', vartype=so.INT, lb=0)
    
    # Constraints
    m.add_constraints((get[i] <= limit[i] for i in ITEMS), name='limit_con');
