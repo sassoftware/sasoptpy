@@ -43,6 +43,7 @@ def load_package_globals():
     sasoptpy.NUM = sasoptpy.number = 'num'
 
     sasoptpy.LSO = 'lso'
+    sasoptpy.BLACKBOX = 'blackbox'
     sasoptpy.MIP = 'mip'
     sasoptpy.LP = 'lp'
     sasoptpy.QP = 'qp'
