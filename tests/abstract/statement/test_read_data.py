@@ -497,5 +497,33 @@ class TestReadData(unittest.TestCase):
             quit;
             """))
 
+    def test_with_model(self):
+
+        m = so.Model(name='m')
+        ITEMS = m.add_set(name='ITEMS')
+        value = m.add_parameter(ITEMS, name='value', init=0)
+        weight = m.add_parameter(ITEMS, name='weight')
+        limit = m.add_parameter(ITEMS, name='limit')
+        get = m.add_variables(ITEMS, name='get', vartype=so.INT, lb=0)
+        m.set_objective(so.expr_sum(get[i] for i in ITEMS), name='max_get', sense=so.MAX)
+
+        m.include(read_data(table='values', index={'target': ITEMS, 'key': None},
+                            columns=[value, weight, limit]))
+
+        self.assertEqual(
+            so.to_optmodel(m, options={'with': so.LSO, 'maxgen': 10}),
+            cleandoc('''
+            proc optmodel;
+            set ITEMS;
+            num value {{ITEMS}} init 0;
+            num weight {{ITEMS}};
+            num limit {{ITEMS}};
+            var get {{ITEMS}} integer >= 0;
+            max max_get = sum {i in ITEMS} (get[i]);
+            read data values into ITEMS value weight limit;
+            solve with lso / maxgen=10;
+            quit;'''))
+
+
     def tearDown(self):
         pass

@@ -850,7 +850,6 @@ class Model:
         self._multiobjs.append(obj)
         return obj
 
-
     def get_objective(self):
         """
         Returns the objective function as an :class:`Expression` object

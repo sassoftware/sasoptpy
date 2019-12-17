@@ -12,7 +12,7 @@ http://support.sas.com/documentation/onlinedoc/or/ex_code/143/mpex05.html
 Model
 -----
 
-.. literalinclude:: ../../examples/manpower_planning.py
+.. literalinclude:: ../../examples/client_side/manpower_planning.py
 
 Output
 ------
@@ -26,6 +26,6 @@ Output
 
 .. ipython:: python
 
-   from examples.manpower_planning import test
+   from examples.client_side.manpower_planning import test
    test(cas_conn)
 

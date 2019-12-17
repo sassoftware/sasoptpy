@@ -10,7 +10,7 @@ SAS Blog: https://blogs.sas.com/content/operations/2015/02/06/the-kidney-exchang
 Model
 -----
 
-.. literalinclude:: ../../examples/sas_kidney_exchange.py
+.. literalinclude:: ../../examples/client_side/sas_kidney_exchange.py
 
 Output
 ------
@@ -24,6 +24,6 @@ Output
 
 .. ipython:: python
 
-   from examples.sas_kidney_exchange import test
+   from examples.client_side.sas_kidney_exchange import test
    test(cas_conn)
 

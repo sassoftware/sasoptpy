@@ -844,6 +844,7 @@ class TestModel(unittest.TestCase):
             solve with lso relaxint obj (e1 e2) / primalin;
             ods output PrintTable=primal_out;
             ods output PrintTable=dual_out;
+            create data allsols from [s]=(1.._NVAR_) name=_VAR_[s].name {j in 1.._NSOL_} <col('sol_'||j)=_VAR_[s].sol[j]>;
             quit;
             """
         ))

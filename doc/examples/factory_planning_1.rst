@@ -12,7 +12,7 @@ https://support.sas.com/documentation/onlinedoc/or/ex_code/143/mpex03.html
 Model
 -----
 
-.. literalinclude:: ../../examples/factory_planning_1.py
+.. literalinclude:: ../../examples/client_side/factory_planning_1.py
 
 Output
 ------
@@ -26,6 +26,6 @@ Output
 
 .. ipython:: python
 
-   from examples.factory_planning_1 import test
+   from examples.client_side.factory_planning_1 import test
    test(cas_conn)
 

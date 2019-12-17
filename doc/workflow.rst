@@ -67,8 +67,10 @@ Reading data
        ]
    
    df = pd.DataFrame(data, columns=['item', 'value', 'weight', 'limit'])
-   ITEMS, (value, weight, limit) = m.read_table(
-       df, key=['item'], columns=['value', 'weight', 'limit'])
+   ITEMS = df.index
+   value = df['value']
+   weight = df['weight']
+   limit = df['limit']
    total_weight = 55
 
 .. ipython:: python
@@ -95,7 +97,7 @@ Model
 .. ipython:: python
 
    # Variables
-   get = m.add_variables(ITEMS, name='get', vartype=so.INT)
+   get = m.add_variables(ITEMS, name='get', vartype=so.INT, lb=0)
    
    # Constraints
    m.add_constraints((get[i] <= limit[i] for i in ITEMS), name='limit_con');
@@ -104,7 +106,7 @@ Model
        name='weight_con');
    
    # Objective
-   total_value = so.quick_sum(value[i] * get[i] for i in ITEMS)
+   total_value = so.expr_sum(value[i] * get[i] for i in ITEMS)
    m.set_objective(total_value, name='total_value', sense=so.MAX);
    
    # Solve
@@ -162,61 +164,26 @@ See the following representation of the server-side model workflow for SAS clien
 In the following subsections, the same example will be solved using server-side
 data.
 
-Uploading data (Optional)
-+++++++++++++++++++++++++
-
-It is possible to upload client-side data to server-side when working with
-relatively big models.
-
-*sasoptpy* supports using :class:`swat.cas.table.CASTable` objects.
-The :meth:`swat.cas.connection.CAS.upload_frame` method can be used to upload
-:class:`pandas.DataFrame` objects to the CAS Server. Another way is to use
-:func:`read_table` function with :code:`upload=True` option.
-
-.. ipython:: python
-   :suppress:
-
-   so.reset_globals()
-
-
-.. ipython:: python
-
-   session = CAS(hostname, port)
-   m = so.Model(name='server_CAS', session=session)
-
-   data = [
-       ['clock', 8, 4, 3],
-       ['mug', 10, 6, 5],
-       ['headphone', 15, 7, 2],
-       ['book', 20, 12, 10],
-       ['pen', 1, 1, 15]
-       ]
-   
-   df = pd.DataFrame(data, columns=['item', 'value', 'weight', 'limit'])
-   ITEMS, (value, weight, limit) = m.read_table(
-       df, key=['item'], key_type='str', columns=['value', 'weight', 'limit'],
-       upload=True, casout='df')
-   total_weight = m.add_parameter(init = 55, name='total_weight')
-   
-.. ipython:: python
-
-   print(type(ITEMS), ITEMS)
-
-.. ipython:: python
-
-   print(type(total_weight), total_weight)
-
-Since we use :code:`upload=True` option, the data is uploaded to the server and
-we get a CASTable object. Similarly, :code:`total_weight` is a parameter
-object here.
 
 Model
 +++++
 
 .. ipython:: python
 
+   from sasoptpy.actions import read_data
+
+   m = so.Model(name='client_CAS', session=session)
+   cas_table = session.upload_frame(df, casout='data')
+   ITEMS = m.add_set(name='ITEMS', settype=so.STR)
+   value = m.add_parameter(ITEMS, name='value')
+   weight = m.add_parameter(ITEMS, name='weight')
+   limit = m.add_parameter(ITEMS, name='limit')
+   m.include(read_data(
+      table=cas_table, index={'target':ITEMS, 'key': 'item'},
+      columns=[value, weight, limit]))
+
    # Variables
-   get = m.add_variables(ITEMS, name='get', vartype=so.INT)
+   get = m.add_variables(ITEMS, name='get', vartype=so.INT, lb=0)
    
    # Constraints
    m.add_constraints((get[i] <= limit[i] for i in ITEMS), name='limit_con');
@@ -231,9 +198,6 @@ Model
    # Solve
    m.solve(verbose=True)
 
-There is no difference in terms of how client-side and server-side models are
-written. However, the generated OPTMODEL code is more compact for server-side
-models.
 
 Parsing results
 +++++++++++++++

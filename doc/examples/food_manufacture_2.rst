@@ -12,7 +12,7 @@ http://support.sas.com/documentation/onlinedoc/or/ex_code/143/mpex02.html
 Model
 -----
 
-.. literalinclude:: ../../examples/food_manufacture_2.py
+.. literalinclude:: ../../examples/client_side/food_manufacture_2.py
 
 Output
 ------
@@ -26,6 +26,6 @@ Output
 
 .. ipython:: python
 
-   from examples.food_manufacture_2 import test
+   from examples.client_side.food_manufacture_2 import test
    test(cas_conn)
 

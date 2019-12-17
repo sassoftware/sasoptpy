@@ -22,6 +22,7 @@ def to_optmodel_for_solve(model, **kwargs):
     options = kwargs.get('options', dict())
     primalin = kwargs.get('primalin', False)
     parse_results = kwargs.get('parse', False)
+    multi_obj = False
 
     # Based on creation order
     s = ''
@@ -66,6 +67,7 @@ def to_optmodel_for_solve(model, **kwargs):
                         pre_opts.append('relaxint')
                     elif key == 'obj' or key == 'objectives':
                         pre_opts.append('obj ({})'.format(' '.join(i.get_name() for i in options[key])))
+                        multi_obj = True
                     elif key == 'primalin' and options[key] is True:
                         pos_opts.append('primalin')
                         primalin_set = True
@@ -95,6 +97,9 @@ def to_optmodel_for_solve(model, **kwargs):
 
     if parse_results:
         s += 'create data dual from [j] = {1.._NCON_} con=_CON_.name value=_CON_.body dual=_CON_.dual;\n'
+
+    if multi_obj:
+        s += 'create data allsols from [s]=(1.._NVAR_) name=_VAR_[s].name {j in 1.._NSOL_} <col(\'sol_\'||j)=_VAR_[s].sol[j]>;\n'
 
     # After-solve statements
     for i in model._postsolve_statements:

@@ -10,7 +10,7 @@ SAS Blog: https://blogs.sas.com/content/operations/2014/11/10/do-you-have-an-unc
 Model
 -----
 
-.. literalinclude:: ../../examples/sas_optimal_wedding.py
+.. literalinclude:: ../../examples/client_side/sas_optimal_wedding.py
 
 Output
 ------
@@ -24,6 +24,6 @@ Output
 
 .. ipython:: python
 
-   from examples.sas_optimal_wedding import test
+   from examples.client_side.sas_optimal_wedding import test
    test(cas_conn)
 

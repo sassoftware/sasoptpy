@@ -12,7 +12,7 @@ http://support.sas.com/documentation/onlinedoc/or/ex_code/143/mpex06.html
 Model
 -----
 
-.. literalinclude:: ../../examples/refinery_optimization.py
+.. literalinclude:: ../../examples/client_side/refinery_optimization.py
 
 Output
 ------
@@ -27,6 +27,6 @@ Output
 .. ipython:: python
    :okwarning:
 
-   from examples.refinery_optimization import test
+   from examples.client_side.refinery_optimization import test
    test(cas_conn)
 

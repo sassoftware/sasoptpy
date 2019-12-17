@@ -52,11 +52,3 @@ SAS (saspy) Examples
    :maxdepth: 1
 
    Decentralization <examples/decentralization_saspy.rst>
-
-RESTful API Examples
---------------------
-
-.. toctree::
-   :maxdepth: 1
-   
-   Knapsack <examples/knapsack.rst>
