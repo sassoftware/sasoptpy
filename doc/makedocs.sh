@@ -16,8 +16,8 @@ fi
 
 # Optional cleaning
 if [ "$clean_f" != "false" ]; then
-rm api/generated/*
-rm savefig/*
+rm -f api/generated/*
+rm -f savefig/*
 make clean
 fi
 
