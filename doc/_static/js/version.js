@@ -43,8 +43,9 @@ function chooseVersion(caller) {
    var index = caller.options.selectedIndex;
    var currentpath = window.location.pathname;
    var splitpath = currentpath.split('/');
-   if (splitpath[1] === 'version') {
-      splitpath = splitpath.slice(3);
+   if (splitpath.includes('version')) {
+      var pos = splitpath.indexOf('version')
+      splitpath = splitpath.slice(pos+1);
    } else {
       splitpath = splitpath.slice(1);
    }
