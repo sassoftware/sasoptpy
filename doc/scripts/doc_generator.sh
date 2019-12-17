@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 current_commit=$(git -C doc_repo rev-parse HEAD)
 comlist=$(git -C doc_repo log origin/gh-pages --pretty=format:'%H')
@@ -37,9 +38,9 @@ for i in $comlist; do
     echo $mkdir_cmd
     $mkdir_cmd
 
-    copy_cmd="rsync --info=progress2 --exclude 'version' -vazC doc_repo/ $folder/"
+    copy_cmd="rsync --exclude 'version' -vazC doc_repo/ $folder/"
     echo $copy_cmd
-    #$copy_cmd
+    $copy_cmd
     
 done
 
@@ -61,3 +62,4 @@ echo "Appending span element to every HTML file"
 
 python3 append_span.py
 
+echo "Completed..."
