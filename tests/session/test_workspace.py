@@ -134,10 +134,10 @@ class TestWorkspace(unittest.TestCase):
             o = so.Objective(x**2-4*x+4, sense=so.MIN, name='obj')
             c1 = so.Constraint(x <= 1, name='c1')
             c2 = so.Constraint(x == 3*y, name='c2')
-            s1 = solve(options={'with': 'lso'})
+            s1 = solve(options={'with': so.BLACKBOX})
             p1 = print_item(x)
             drop(c1)
-            s2 = so.LiteralStatement('solve with lso;')
+            s2 = so.LiteralStatement('solve with blackbox;')
             p2 = so.LiteralStatement('print y;')
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
@@ -147,10 +147,10 @@ class TestWorkspace(unittest.TestCase):
                 min obj = (x) ^ (2) - 4 * x + 4;
                 con c1 : x <= 1;
                 con c2 : x - 3 * y = 0;
-                solve with lso;
+                solve with blackbox;
                 print x;
                 drop c1;
-                solve with lso;
+                solve with blackbox;
                 print y;
             quit;'''))
 

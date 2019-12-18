@@ -830,7 +830,7 @@ class TestModel(unittest.TestCase):
         e1 = m.set_objective(x, sense=so.MIN, name='e1')
         e2 = m.append_objective(x**2, sense=so.MAX, name='e2')
         response = m.to_optmodel(options={
-            'with': 'lso',
+            'with': 'blackbox',
             'relaxint': True,
             'obj': (e1, e2),
             'primalin': True,
@@ -841,7 +841,7 @@ class TestModel(unittest.TestCase):
             var x init 5;
             min e1 = x;
             max e2 = (x) ^ (2);
-            solve with lso relaxint obj (e1 e2) / primalin;
+            solve with blackbox relaxint obj (e1 e2) / primalin;
             ods output PrintTable=primal_out;
             ods output PrintTable=dual_out;
             create data allsols from [s]=(1.._NVAR_) name=_VAR_[s].name {j in 1.._NSOL_} <col('sol_'||j)=_VAR_[s].sol[j]>;

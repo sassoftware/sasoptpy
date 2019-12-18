@@ -822,13 +822,13 @@ class Model:
 
         >>> f1 = m.set_objective(2 * x + y, sense=so.MIN, name='f1')
         >>> f2 = m.append_objective( (x - y) ** 2, sense=so.MIN, name='f2')
-        >>> print(m.to_optmodel(options={'with': 'lso', 'obj': (f1, f2)}))
+        >>> print(m.to_optmodel(options={'with': 'blackbox', 'obj': (f1, f2)}))
         proc optmodel;
         var x;
         var y;
         min f1 = 2 * x + y;
         min f2 = (x - y) ^ (2);
-        solve with lso obj (f1 f2);
+        solve with blackbox obj (f1 f2);
         print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
         print _con_.name _con_.body _con_.dual;
         quit;

@@ -70,7 +70,7 @@ class TestReadData(unittest.TestCase):
                 index={'target': ITEMS, 'key': None},
                 columns=[{'target': value}])
 
-            solve(options={'with': so.LSO, 'maxgen': 10})
+            solve(options={'with': so.BLACKBOX, 'maxgen': 10})
 
         optmodel_code = so.to_optmodel(ws)
         self.assertEqual(optmodel_code, cleandoc("""
@@ -79,7 +79,7 @@ class TestReadData(unittest.TestCase):
                 num value {ITEMS} init 0;
                 var get {{ITEMS}} integer >= 0;
                 read data values into ITEMS value;
-                solve with lso / maxgen=10;
+                solve with blackbox / maxgen=10;
             quit;
             """))
 
@@ -511,7 +511,7 @@ class TestReadData(unittest.TestCase):
                             columns=[value, weight, limit]))
 
         self.assertEqual(
-            so.to_optmodel(m, options={'with': so.LSO, 'maxgen': 10}),
+            so.to_optmodel(m, options={'with': so.BLACKBOX, 'maxgen': 10}),
             cleandoc('''
             proc optmodel;
             set ITEMS;
@@ -521,7 +521,7 @@ class TestReadData(unittest.TestCase):
             var get {{ITEMS}} integer >= 0;
             max max_get = sum {i in ITEMS} (get[i]);
             read data values into ITEMS value weight limit;
-            solve with lso / maxgen=10;
+            solve with blackbox / maxgen=10;
             quit;'''))
 
 
