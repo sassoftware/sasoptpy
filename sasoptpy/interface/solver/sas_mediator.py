@@ -275,18 +275,18 @@ class SASMediator(Mediator):
 
         # Variable values
         solver = caller.get_solution_summary().loc['Solver', 'Value']
-        for _, row in solution.iterrows():
-            caller.set_variable_value(row['var'], row['value'])
+        for row in solution.itertuples():
+            caller.set_variable_value(row.var, row.value)
             if solver == 'LP':
-                caller.set_dual_value(row['var'], row['rc'])
+                caller.set_dual_value(row.var, row.rc)
 
         # Constraint values (dual) only for LP
         solver = caller.get_solution_summary().loc['Solver', 'Value']
         if solver == 'LP':
-            for _, row in dual.iterrows():
-                con = caller.get_constraint(row['con'])
+            for row in dual.itertuples():
+                con = caller.get_constraint(row.con)
                 if con is not None:
-                    con.set_dual(row['dual'])
+                    con.set_dual(row.dual)
 
         # Objective value
         if sasoptpy.core.util.is_model(caller):
@@ -373,5 +373,5 @@ class SASMediator(Mediator):
 
     def set_workspace_variable_values(self, solution):
         caller = self.caller
-        for _, row in solution.iterrows():
-            caller.set_variable_value(row['var'], row['value'])
+        for row in solution.itertuples():
+            caller.set_variable_value(row.var, row.value)
