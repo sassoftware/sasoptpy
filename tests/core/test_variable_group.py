@@ -22,7 +22,7 @@ Unit tests for core classes.
 
 import unittest
 import sasoptpy as so
-from sasoptpy._libs import pd
+import pandas as pd
 
 
 class TestVariableGroup(unittest.TestCase):

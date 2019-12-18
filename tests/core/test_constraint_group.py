@@ -24,7 +24,6 @@ import os
 import sys
 import unittest
 import sasoptpy as so
-from sasoptpy._libs import pd
 from inspect import cleandoc
 
 current_dir = os.path.dirname(os.path.abspath(__file__))

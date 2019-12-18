@@ -65,14 +65,8 @@ def mock_solve(model, **kwargs):
     ----------
     model : :class:`Model` object
         Model to be used in unittest
-    args
-        Arguments
     kwargs
         Keyword arguments
-    ctr : integer
-        Counter for the multi-response tests
-    expected : list
-        List of hash values of the generated OPTMODEL strings
 
     Returns
     -------
