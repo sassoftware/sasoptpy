@@ -125,3 +125,13 @@ class TestSolve(unittest.TestCase):
                 use problem m;
                 solve;
             quit;'''))
+
+    def test_warning_without_abstract(self):
+
+        def solve_without_abstract():
+            m = so.Model(name='m1')
+            x = m.add_variable(name='x')
+            m.set_objective(2*x, name='o')
+            solve()
+
+        self.assertWarns(UserWarning, solve_without_abstract)

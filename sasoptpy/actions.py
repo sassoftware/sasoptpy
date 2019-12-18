@@ -47,85 +47,84 @@ def read_data(**kwargs):
     return sasoptpy.abstract.ReadDataStatement(**kwargs)
 
 
-@sasoptpy.containable
+@sasoptpy.containable(standalone=False)
 def create_data(**kwargs):
     pass
 
 
-@sasoptpy.containable
+@sasoptpy.containable(standalone=False)
 def solve(*args, **kwargs):
     pass
 
 
-@sasoptpy.containable
+@sasoptpy.containable(standalone=False)
 def for_loop(*args):
     pass
 
 
-@sasoptpy.containable
+@sasoptpy.containable(standalone=False)
 def cofor_loop(*args):
     pass
 
 
-@sasoptpy.containable
+@sasoptpy.containable(standalone=False)
 def set_value(left, right):
     pass
 
 
-@sasoptpy.containable
+@sasoptpy.containable(standalone=False)
 def fix(*args):
     pass
 
 
-@sasoptpy.containable
+@sasoptpy.containable(standalone=False)
 def unfix(*args):
     pass
 
 
-@sasoptpy.containable
+@sasoptpy.containable(standalone=False)
 def set_objective(*args, name, sense):
     pass
 
 
-@sasoptpy.containable
+@sasoptpy.containable(standalone=False)
 def print_item(*args, **kwargs):
     pass
 
 
-@sasoptpy.containable
+@sasoptpy.containable(standalone=False)
 def put_item(*args, **kwargs):
     pass
 
 
-@sasoptpy.containable
+@sasoptpy.containable(standalone=False)
 def expand():
     pass
 
 
-@sasoptpy.containable
+@sasoptpy.containable(standalone=False)
 def drop(*args):
     pass
 
 
-@sasoptpy.containable
+@sasoptpy.containable(standalone=False)
 def union(*args):
     pass
 
 
-@sasoptpy.containable
+@sasoptpy.containable(standalone=False)
 def diff(*args):
     pass
 
 
-@sasoptpy.containable
+@sasoptpy.containable(standalone=False)
 def substring(main_string, first_pos, last_pos):
     pass
 
 
-@sasoptpy.containable
+@sasoptpy.containable(standalone=False)
 def use_problem(problem):
     pass
-
 
 
 condition = sasoptpy.structure.under_condition

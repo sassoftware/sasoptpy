@@ -18,12 +18,23 @@
 
 
 from contextlib import contextmanager
+from functools import wraps, partial
+import warnings
 
 import sasoptpy
 
 
-def containable(func):
+def containable(func=None, standalone=True):
+    if func is None:
+        return partial(containable, standalone=standalone)
+
+    @wraps(func)
     def wrapper(*args, **kwargs):
+
+        if not standalone and not sasoptpy.container:
+            warnings.warn('This function is not intended to be used without any'
+                          'container', UserWarning)
+
         if sasoptpy.container:
             try:
                 statement_func = sasoptpy.statement_dictionary[wrapper]
