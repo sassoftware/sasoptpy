@@ -208,10 +208,10 @@ class CASMediator(Mediator):
                 model._dualSolution = model._dualSolution[
                     ['_ROW_', '_ACTIVITY_', '_VALUE_']]
                 model._dualSolution.columns = ['con', 'value', 'dual']
-                for _, row in model._primalSolution.iterrows():
-                    model._variableDict[row['var']]._dual = row['rc']
-                for _, row in model._dualSolution.iterrows():
-                    model._constraintDict[row['con']]._dual = row['dual']
+                for row in model._primalSolution.itertuples():
+                    model._variableDict[row.var]._dual = row.rc
+                for row in model._dualSolution.itertuples():
+                    model._constraintDict[row.con]._dual = row.dual
             elif ptype == 2:
                 model._primalSolution = model._primalSolution[
                     ['_VAR_', '_LBOUND_', '_UBOUND_', '_VALUE_',
@@ -331,19 +331,19 @@ class CASMediator(Mediator):
     def set_variable_values(self, solution):
         caller = self.caller
         solver = caller.get_solution_summary().loc['Solver', 'Value']
-        for _, row in solution.iterrows():
-            caller.set_variable_value(row['var'], row['value'])
+        for row in solution.itertuples():
+            caller.set_variable_value(row.var, row.value)
             if solver == 'LP':
-                caller.set_dual_value(row['var'], row['rc'])
+                caller.set_dual_value(row.var, row.rc)
 
     def set_constraint_values(self, solution):
         caller = self.caller
         solver = caller.get_solution_summary().loc['Solver', 'Value']
         if solver == 'LP':
-            for _, row in solution.iterrows():
-                con = caller.get_constraint(row['con'])
+            for row in solution.itertuples():
+                con = caller.get_constraint(row.con)
                 if con is not None:
-                    con.set_dual(row['dual'])
+                    con.set_dual(row.dual)
 
     def set_model_objective_value(self):
         caller = self.caller
@@ -481,8 +481,8 @@ class CASMediator(Mediator):
 
     def set_workspace_variable_values(self, solution):
         caller = self.caller
-        for _, row in solution.iterrows():
-            caller.set_variable_value(row['var'], row['value'])
+        for row in solution.itertuples():
+            caller.set_variable_value(row.var, row.value)
 
 
     def tune_problem(self, **kwargs):

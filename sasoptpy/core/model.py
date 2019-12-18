@@ -1143,9 +1143,9 @@ class Model:
 
     def _get_variable_solution(self, name):
         if self._primalSolution is not None:
-            for _, row in self._primalSolution.iterrows():
-                if (row['var'] == name):
-                    return row['value']
+            for row in self._primalSolution.itertuples():
+                if row.var == name:
+                    return row.value
         else:
             raise RuntimeError('No primal solution is available')
 
