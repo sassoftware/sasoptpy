@@ -74,7 +74,7 @@ author = 'Sertalp B. Cay (SAS Institute)'
 # built documents.
 #
 # The short X.Y version.
-version = '1.0.0'
+version = '1.0.0-alpha'
 # The full version, including alpha/beta/rc tags.
 release = '1.0.0-alpha'
 
@@ -120,7 +120,7 @@ html_theme = 'nature'
 # documentation.
 #
 html_theme_options = {
-    "sidebarwidth": "320"
+    "sidebarwidth": "270"
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,

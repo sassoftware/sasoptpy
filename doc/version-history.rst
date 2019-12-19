@@ -1,7 +1,7 @@
 
 .. currentmodule:: sasoptpy
 
-.. _versionhistory:
+.. _version-history:
 
 
 Version History

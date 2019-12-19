@@ -1,9 +1,12 @@
 
+.. _overview:
+
 Overview
 --------
 
 .. toctree::
 
+   intro
+   about
    whatsnew
-   install
    license

@@ -37,11 +37,11 @@ might be bigger than using a server-side model.
 
 See the following representation of the client-side model workflow for CAS (Viya) servers:
 
-.. image:: _static/images/clientside_cas.png
+.. image:: ../_static/images/clientside_cas.png
 
 See the following representation of the client-side model workflow for SAS clients:
 
-.. image:: _static/images/clientside_sas.png
+.. image:: ../_static/images/clientside_sas.png
 
 
 Steps of modeling a simple Knapsack problem are shown in the following subsections.
@@ -155,11 +155,11 @@ not possible.
 
 See the following representation of the server-side model workflow for CAS (Viya) servers:
 
-.. image:: _static/images/serverside_cas.png
+.. image:: ../_static/images/serverside_cas.png
 
 See the following representation of the server-side model workflow for SAS clients:
 
-.. image:: _static/images/serverside_sas.png
+.. image:: ../_static/images/serverside_sas.png
 
 In the following subsections, the same example will be solved using server-side
 data.

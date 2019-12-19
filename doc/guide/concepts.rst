@@ -1,6 +1,6 @@
 
-Building Blocks
----------------
+Concepts
+--------
 
 .. toctree::
 

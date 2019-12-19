@@ -1,10 +1,10 @@
 
 .. currentmodule:: sasoptpy
 
-.. _getting-started:
+.. _basics:
 
-Getting Started
-***************
+Basic Functionality
+*******************
 
 Solving an optimization problem via *sasoptpy*
 starts with having a running CAS Server or having a SAS 9.4 installation.
