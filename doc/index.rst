@@ -14,7 +14,6 @@ sasoptpy: SAS Optimization Interface for Python
 `Releases <https://github.com/sassoftware/sasoptpy/releases>`_ |
 `Community <https://communities.sas.com/t5/Mathematical-Optimization/bd-p/operations_research>`_
 
-
 *sasoptpy* is a Python package providing a modeling interface for 
 `SAS Viya <https://www.sas.com/en_us/software/viya.html>`_  and SAS/OR
 Optimization solvers. 

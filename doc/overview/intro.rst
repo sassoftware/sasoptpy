@@ -26,7 +26,7 @@ Optimization problems often consists of following steps [#]_ [#]_:
 * Solve the model
 * Interpret the solution
 
-Often, a process if often observed by the modeler to identify the problems.
+Often, a process is often observed by the modeler to identify the problems.
 Several examples are finding shortest path between two locations, maximizing a profit,
 and maximizing the accuracy of a handwriting recognition algorithm.
 
@@ -68,8 +68,82 @@ to certain **constraints**.
 Simple Problem
 --------------
 
+Let us consider a simple example. The following problem (Brewer's Dilemma) is a simplified Resource Allocation problem,
+presented by Robert G. Bland [#]_.
 
+In the problem, a brewer has limited corn, hops and barley malt inventory. The brewer wants to produce Ale and Beer that
+will maximize the total profit. Each of these products require a certain amount of these two ingredients as follows:
 
++-------------------+----------------------------------------+--------+
+| (per barrel)      |             Amount Required            |        |
++-------------------+------------+------------+--------------+--------+
+| Product           |    Corn    |    Hops    |  Barley Malt | Profit |
++===================+============+============+==============+========+
+| Ale               |   5 pounds |   4 ounces |    35 pounds |    $13 |
++-------------------+------------+------------+--------------+--------+
+| Beer              |  15 pounds |   4 ounces |    20 pounds |    $23 |
++-------------------+------------+------------+--------------+--------+
+| (Total Available) | 480 pounds | 160 ounces | 1,190 pounds |        |
++-------------------+------------+------------+--------------+--------+
+
+The **variable** in this problem is to decide how many barrels of ale and beer to produce. Let us call them `ale` and
+`beer`. It might be intuitive to prefer beer to ale due to its higher profit rate. However, doing so might deplete all
+the resources faster and may leave us with excess amount of hops and barley malt.
+
+Our **objective** in this problem is to maximize the total profit function, which is
+:math:`13 \cdot \text{ale} + 23 \cdot \text{beer}`.
+
+Each limitation on ingredients is a **constraint**. For corn, hops and barley malt, we are bounded with following:
+
+.. math::
+
+   5 \cdot \text{ale} + 15 \cdot \text{beer} &\leq 480 \\
+   4 \cdot \text{ale} + 4 \cdot \text{beer} &\leq 160 \\
+   35 \cdot \text{ale} + 20 \cdot \text{beer} &\leq 1,190 \\
+
+Combining all items, the optimization formulation is written as follows:
+
+.. math::
+
+    \begin{array}{rllcl}
+    \displaystyle \text{maximize:} & 13 \cdot \text{ale} &+ 23 \cdot \text{beer} \\
+    \textrm{subject to:}  \\
+    &5 \cdot \text{ale} &+ \; 15 \cdot \text{beer} &\leq& 480 \\
+    &4 \cdot \text{ale} &+ \; 4 \cdot \text{beer} &\leq& 160 \\
+    &35 \cdot \text{ale} &+ \; 20 \cdot \text{beer} &\leq& 1,190 \\
+    \end{array}
+
+This problem is small enough to be solved by hand, but let us consider some alternatives.
+
++---+------------------+--------+
+|   | Barrels produced |        |
++---+--------+---------+--------+
+| # |   Ale  |   Beer  | Profit |
++===+========+=========+========+
+| 1 |     34 |       0 |   $442 |
++---+--------+---------+--------+
+| 2 |      0 |      32 |   $736 |
++---+--------+---------+--------+
+| 3 |     15 |      25 |   $770 |
++---+--------+---------+--------+
+| 4 |     12 |      28 |   $800 |
++---+--------+---------+--------+
+
+Producing only ale or beer is inferior to producing a combination of two for obvious reasons. Finding the exact ratio
+that will maximize our profit might be tricky, as seen in solution #3 and #4. Indeed, solution #4 gives the optimal
+values that maximize the profit in this example.
+
+A few more problems that can be formulated as an optimization problem:
+
+* Scheduling project steps to minimize total completion, where tasks might depend on completion of an earlier task
+* Choosing distribution centers for retailers to minimize total cost while satisfying customer demands in certain time
+* Assigning soccer players to a squad to maximize total rating of the team under foreign player rules
+* Finding shortest route between two cities
+* Blending chemical products to minimize total cost while achieving a certain efficiency of detergents
+* Choosing a price that will maximize the total profit in a competitive market
+
+See the related section at SAS Optimization 8.5 Mathematical Optimization Procedures [#]_ for more information about
+optimization problems and examples.
 
 Types of Optimization
 ---------------------
@@ -85,11 +159,13 @@ Most popular optimization types are as follows:
   MIPs are very popular as many real-life problems can be represented as MIPs.
 * **Nonlinear optimization**: If a problem involves non-linear objectives or constraints (such as
   exponentials, polynomials, absolute values) they problem is called a nonlinear problem (NLP).
-  
 
+
+**References**
 
 .. [#] Hillier, Frederick S., and Gerald J. Lieberman. Introduction to operations research. McGraw-Hill Science, Engineering & Mathematics, 1995.
 .. [#] SAS Institute. SAS/OR 9.3 User's Guide: Mathematical Programming Examples. SAS institute, 2012.
-
+.. [#] Bland, Robert G. "The Allocation of Resources by Linear Programming." Scientific American 244 (1981): 126-144.
+.. [#] https://go.documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.5&docsetId=casmopt&docsetTarget=casmopt_intro_toc.htm&locale=en
 
 

@@ -45,12 +45,15 @@ extensions = [
     'sphinx.ext.autosummary',
     'IPython.sphinxext.ipython_console_highlighting',
     'IPython.sphinxext.ipython_directive',
-    'sphinx.ext.imgmath',
+    #'sphinx.ext.imgmath',
     'sphinxcontrib.fulltoc',
     'numpydoc',
+    'sphinx.ext.mathjax'
     #'sphinxcontrib.httpdomain',
     #'sphinxcontrib.excel_table',
 ]
+
+mathjax_path = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
