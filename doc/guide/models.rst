@@ -39,7 +39,7 @@ Adding existing components to a model
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A new model can use existing variables. The typical way to include a variable
-is to use the :func:`Model.include` method:
+is to use the :meth:`Model.include` method:
 
 .. ipython:: python
 
@@ -53,13 +53,13 @@ is to use the :func:`Model.include` method:
    print(new_model)
 
 Note that variables are added to :class:`Model` objects by reference.
-Therefore, after :func:`Model.solve` is called, values of variables will be
+Therefore, after :meth:`Model.solve` is called, values of variables will be
 replaced with optimal values.
 
 Accessing components
 ~~~~~~~~~~~~~~~~~~~~
 
-You can get a list of model variables using :func:`Model.get_variables()`
+You can get a list of model variables using :meth:`Model.get_variables()`
 method.
 
 .. ipython:: python
@@ -67,7 +67,7 @@ method.
    print(m.get_variables())
 
 Similarly, you can access a list of constraints using
-:func:`Model.get_constraints()` method.
+:meth:`Model.get_constraints()` method.
 
 .. ipython:: python
 
@@ -75,7 +75,7 @@ Similarly, you can access a list of constraints using
    print(m.get_constraints())
 
 To access a certain constraint using its name, you can use
-:func:`Model.get_constraint` method:
+:meth:`Model.get_constraint` method:
 
 .. ipython:: python
 
@@ -86,8 +86,8 @@ Dropping components
 ~~~~~~~~~~~~~~~~~~~
 
 A variable inside a model can simply be dropped using
-:func:`Model.drop_variable`. Similarly, a set of variables can be dropped
-using :func:`Model.drop_variables`.
+:meth:`Model.drop_variable`. Similarly, a set of variables can be dropped
+using :meth:`Model.drop_variables`.
 
 .. ipython:: python
 
@@ -99,9 +99,9 @@ using :func:`Model.drop_variables`.
    m.include(y)
    print(m)
 
-A constraint can be dropped using :func:`Model.drop_constraint` method.
+A constraint can be dropped using :meth:`Model.drop_constraint` method.
 Similarly, a set of constraints can be dropped using
-:func:`Model.drop_constraints`.
+:meth:`Model.drop_constraints`.
 
 .. ipython:: python
 
@@ -133,7 +133,7 @@ Note that all variables and constraints are included by reference.
 Solving a model
 ~~~~~~~~~~~~~~~
 
-A model is solved using the :func:`Model.solve` method. This method converts
+A model is solved using the :meth:`Model.solve` method. This method converts
 Python definitions into an MPS file and uploads to a CAS server for the optimization
 action. The type of the optimization problem (Linear Optimization or Mixed Integer
 Linear Optimization) is determined based on variable types.
@@ -184,7 +184,7 @@ Package Options
 +++++++++++++++
 
 Besides the ``options`` argument, there are 7 arguments that can be passed
-into :func:`Model.solve` method:
+into :meth:`Model.solve` method:
 
 - name: Name of the uploaded problem information
 - drop: Option for dropping the data from server after solve
@@ -196,7 +196,7 @@ into :func:`Model.solve` method:
 
 
 When ``primalin`` argument is ``True``, it grabs :class:`Variable` objects
-``_init`` field. This field can be modified with :func:`Variable.set_init`
+``_init`` field. This field can be modified with :meth:`Variable.set_init`
 method.
 
 
@@ -206,9 +206,9 @@ Getting solutions
 After the solve is completed, all variable and constraint values are parsed
 automatically.
 A summary of the problem can be accessed using the
-:func:`Model.get_problem_summary` method,
+:meth:`Model.get_problem_summary` method,
 and a summary of the solution can be accesed using the
-:func:`Model.get_solution_summary`
+:meth:`Model.get_solution_summary`
 method.
 
 To print values of any object, :func:`get_solution_table` can be used:
@@ -222,5 +222,5 @@ Tuning a model
 ~~~~~~~~~~~~~~
 
 Placeholder for tuner action...
-:meth:`sasoptpy.Model.tuner`
+:meth:`Model.tuner`
 
