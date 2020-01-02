@@ -24,6 +24,7 @@ After installation simply use
 .. ipython:: python
    :suppress:
 
+   import os
    hostname = os.getenv('CASHOST')
    port = os.getenv('CASPORT')
    userid = None

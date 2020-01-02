@@ -3,68 +3,8 @@
 
 .. _models:
 
-Sessions and Models
-===================
-
-Sessions
---------
-
-CAS Sessions
-~~~~~~~~~~~~
-
-A :class:`swat.cas.connection.CAS` session is needed to solve optimization 
-problems with *sasoptpy* using SAS Viya OR solvers.
-See SAS documentation to learn more about CAS sessions and SAS Viya.
-
-A sample CAS Session can be created using the following commands.
-
-.. ipython:: python
-   :suppress:
-   
-   import os
-   cas_host = os.getenv('CASHOST')
-   cas_port = os.getenv('CASPORT')
-   cas_username = os.getenv('CASUSERNAME')
-   cas_password = None
-   import sasoptpy
-   sasoptpy.reset_globals()
-
-.. ipython:: python
-   :suppress:
-
-   import sasoptpy as so
-   from swat import CAS
-   s = CAS(hostname=cas_host, username=cas_username, password=cas_password, port=cas_port)
-   m = so.Model(name='demo', session=s)
-   print(repr(m))
-
-
->>> import sasoptpy as so
->>> from swat import CAS
->>> s = CAS(hostname=cas_host, username=cas_username, password=cas_password, port=cas_port)
->>> m = so.Model(name='demo', session=s)
->>> print(repr(m))
-sasoptpy.Model(name='demo', session=CAS(hostname, port, username, protocol='cas', name='py-session-1', session=session-no))
-
-
-SAS Sessions
-~~~~~~~~~~~~
-
-A :class:`saspy.SASsession` session is needed to solve optimization 
-problems with *sasoptpy* using SAS/OR solvers on SAS 9.4 clients.
-
-A sample SAS session can be created using the following commands.
-
->>> import sasoptpy as so
->>> import saspy
->>> sas_session = saspy.SASsession(cfgname='winlocal')
->>> m = so.Model(name='demo', session=sas_session)
->>> print(repr(m))
-sasoptpy.Model(name='demo', session=saspy.SASsession(cfgname='winlocal'))
-
-
 Models
-------
+======
 
 Creating a model
 ~~~~~~~~~~~~~~~~
@@ -75,7 +15,7 @@ An empty model can be created using the :class:`Model` constructor:
 
    import sasoptpy as so
    m = so.Model(name='model1')
-   
+
 Adding new components to a model
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -94,7 +34,7 @@ Adding a constraint:
 
    c1 = m.add_constraint(x + 2 * y <= 10, name='c1')
    print(m)
-   
+
 Adding existing components to a model
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -127,7 +67,7 @@ method.
    print(m.get_variables())
 
 Similarly, you can access a list of constraints using
-:func:`Model.get_constraints()` method. 
+:func:`Model.get_constraints()` method.
 
 .. ipython:: python
 
@@ -145,7 +85,7 @@ To access a certain constraint using its name, you can use
 Dropping components
 ~~~~~~~~~~~~~~~~~~~
 
-A variable inside a model can simply be dropped using 
+A variable inside a model can simply be dropped using
 :func:`Model.drop_variable`. Similarly, a set of variables can be dropped
 using :func:`Model.drop_variables`.
 
@@ -155,7 +95,7 @@ using :func:`Model.drop_variables`.
    print(m)
 
 .. ipython:: python
-   
+
    m.include(y)
    print(m)
 
@@ -265,8 +205,8 @@ Getting solutions
 
 After the solve is completed, all variable and constraint values are parsed
 automatically.
-A summary of the problem can be accessed using the 
-:func:`Model.get_problem_summary` method, 
+A summary of the problem can be accessed using the
+:func:`Model.get_problem_summary` method,
 and a summary of the solution can be accesed using the
 :func:`Model.get_solution_summary`
 method.
@@ -283,8 +223,4 @@ Tuning a model
 
 Placeholder for tuner action...
 :meth:`sasoptpy.Model.tuner`
-
-
-
-
 

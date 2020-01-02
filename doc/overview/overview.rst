@@ -6,7 +6,6 @@ Overview
 
 .. toctree::
 
-   intro
    about
    whatsnew
    license

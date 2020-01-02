@@ -135,10 +135,10 @@ values that maximize the profit in this example.
 
 A few more problems that can be formulated as an optimization problem:
 
-* Scheduling project steps to minimize total completion, where tasks might depend on completion of an earlier task
-* Choosing distribution centers for retailers to minimize total cost while satisfying customer demands in certain time
+* Scheduling project steps to minimize total completion, where tasks might depend on completion of earlier tasks
+* Choosing distribution centers for retailers to minimize total cost while satisfying customer demands on time
 * Assigning soccer players to a squad to maximize total rating of the team under foreign player rules
-* Finding shortest route between two cities
+* Finding cheapest travel option and shortest route between two cities
 * Blending chemical products to minimize total cost while achieving a certain efficiency of detergents
 * Choosing a price that will maximize the total profit in a competitive market
 
@@ -158,10 +158,11 @@ Most popular optimization types are as follows:
   that problem is an Integer Problem (IP) or Mixed-Integer Problem (MIP) depending on variables.
   MIPs are very popular as many real-life problems can be represented as MIPs.
 * **Nonlinear optimization**: If a problem involves non-linear objectives or constraints (such as
-  exponentials, polynomials, absolute values) they problem is called a nonlinear problem (NLP).
+  exponential, polynomial, absolute values) they problem is called a nonlinear problem (NLP).
 
+.. only:: html
 
-**References**
+    **References**
 
 .. [#] Hillier, Frederick S., and Gerald J. Lieberman. Introduction to operations research. McGraw-Hill Science, Engineering & Mathematics, 1995.
 .. [#] SAS Institute. SAS/OR 9.3 User's Guide: Mathematical Programming Examples. SAS institute, 2012.

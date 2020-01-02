@@ -236,7 +236,7 @@ epub_exclude_files = ['search.html']
 intersphinx_mapping = {'https://docs.python.org/3/': None,
                        'https://pandas.pydata.org/pandas-docs/stable/': None,
                        'https://sassoftware.github.io/python-swat/': None,
-                       'https://sassoftware.github.io/saspy/': None
+                       'saspy': ('https://sassoftware.github.io/saspy/', None)
 }
 
 
