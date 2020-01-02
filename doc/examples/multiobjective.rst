@@ -21,10 +21,18 @@ Output
 ------
 
 .. ipython:: python
-   :suppress:
-   
+
+   import os
+   hostname = os.getenv('CASHOST')
+   port = os.getenv('CASPORT')
+   from swat import CAS
+   cas_conn = CAS(hostname, port)
    import sasoptpy
-   sasoptpy.reset_globals()
+
+.. ipython:: python
+   :suppress:
+
+   sasoptpy.reset()
 
 .. ipython:: python
 

@@ -26,8 +26,10 @@ make html
 # Make tex file
 make latex
 # Replace sensitive information
-grep -r -l 'CASUSERHDFS' _build/html | xargs -r -d'\n' sed -i 's/CASUSERHDFS\(([A-Za-z0-9]*)\)/CASUSERHDFS(casuser)/g'
-sed -i -- 's/CASUSERHDFS([A-Za-z0-9]*)/CASUSERHDFS(casuser)/g' _build/latex/sasoptpy.tex 
+grep -r -l 'CASUSERHDFS' _build/html | xargs -r -d'\n' sed -i 's/CASUSERHDFS\(([A-Za-z0-9@]*)\)/CASUSERHDFS(casuser)/g'
+grep -r -l 'CASUSER' _build/html | xargs -r -d'\n' sed -i 's/CASUSER\(([A-Za-z0-9@]*)\)/CASUSER(casuser)/g'
+sed -i -- 's/CASUSERHDFS([A-Za-z0-9@]*)/CASUSERHDFS(casuser)/g' _build/latex/sasoptpy.tex
+sed -i -- 's/CASUSER([A-Za-z0-9@]*)/CASUSER(casuser)/g' _build/latex/sasoptpy.tex
 # Generate pdf
 cd _build/latex
 make
