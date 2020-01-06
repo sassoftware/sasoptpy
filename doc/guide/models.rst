@@ -3,68 +3,8 @@
 
 .. _models:
 
-Sessions and Models
-===================
-
-Sessions
---------
-
-CAS Sessions
-~~~~~~~~~~~~
-
-A :class:`swat.cas.connection.CAS` session is needed to solve optimization 
-problems with *sasoptpy* using SAS Viya OR solvers.
-See SAS documentation to learn more about CAS sessions and SAS Viya.
-
-A sample CAS Session can be created using the following commands.
-
-.. ipython:: python
-   :suppress:
-   
-   import os
-   cas_host = os.getenv('CASHOST')
-   cas_port = os.getenv('CASPORT')
-   cas_username = os.getenv('CASUSERNAME')
-   cas_password = None
-   import sasoptpy
-   sasoptpy.reset_globals()
-
-.. ipython:: python
-   :suppress:
-
-   import sasoptpy as so
-   from swat import CAS
-   s = CAS(hostname=cas_host, username=cas_username, password=cas_password, port=cas_port)
-   m = so.Model(name='demo', session=s)
-   print(repr(m))
-
-
->>> import sasoptpy as so
->>> from swat import CAS
->>> s = CAS(hostname=cas_host, username=cas_username, password=cas_password, port=cas_port)
->>> m = so.Model(name='demo', session=s)
->>> print(repr(m))
-sasoptpy.Model(name='demo', session=CAS(hostname, port, username, protocol='cas', name='py-session-1', session=session-no))
-
-
-SAS Sessions
-~~~~~~~~~~~~
-
-A :class:`saspy.SASsession` session is needed to solve optimization 
-problems with *sasoptpy* using SAS/OR solvers on SAS 9.4 clients.
-
-A sample SAS session can be created using the following commands.
-
->>> import sasoptpy as so
->>> import saspy
->>> sas_session = saspy.SASsession(cfgname='winlocal')
->>> m = so.Model(name='demo', session=sas_session)
->>> print(repr(m))
-sasoptpy.Model(name='demo', session=saspy.SASsession(cfgname='winlocal'))
-
-
 Models
-------
+======
 
 Creating a model
 ~~~~~~~~~~~~~~~~
@@ -75,7 +15,7 @@ An empty model can be created using the :class:`Model` constructor:
 
    import sasoptpy as so
    m = so.Model(name='model1')
-   
+
 Adding new components to a model
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -94,12 +34,12 @@ Adding a constraint:
 
    c1 = m.add_constraint(x + 2 * y <= 10, name='c1')
    print(m)
-   
+
 Adding existing components to a model
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A new model can use existing variables. The typical way to include a variable
-is to use the :func:`Model.include` method:
+is to use the :meth:`Model.include` method:
 
 .. ipython:: python
 
@@ -113,13 +53,13 @@ is to use the :func:`Model.include` method:
    print(new_model)
 
 Note that variables are added to :class:`Model` objects by reference.
-Therefore, after :func:`Model.solve` is called, values of variables will be
+Therefore, after :meth:`Model.solve` is called, values of variables will be
 replaced with optimal values.
 
 Accessing components
 ~~~~~~~~~~~~~~~~~~~~
 
-You can get a list of model variables using :func:`Model.get_variables()`
+You can get a list of model variables using :meth:`Model.get_variables()`
 method.
 
 .. ipython:: python
@@ -127,7 +67,7 @@ method.
    print(m.get_variables())
 
 Similarly, you can access a list of constraints using
-:func:`Model.get_constraints()` method. 
+:meth:`Model.get_constraints()` method.
 
 .. ipython:: python
 
@@ -135,7 +75,7 @@ Similarly, you can access a list of constraints using
    print(m.get_constraints())
 
 To access a certain constraint using its name, you can use
-:func:`Model.get_constraint` method:
+:meth:`Model.get_constraint` method:
 
 .. ipython:: python
 
@@ -145,9 +85,9 @@ To access a certain constraint using its name, you can use
 Dropping components
 ~~~~~~~~~~~~~~~~~~~
 
-A variable inside a model can simply be dropped using 
-:func:`Model.drop_variable`. Similarly, a set of variables can be dropped
-using :func:`Model.drop_variables`.
+A variable inside a model can simply be dropped using
+:meth:`Model.drop_variable`. Similarly, a set of variables can be dropped
+using :meth:`Model.drop_variables`.
 
 .. ipython:: python
 
@@ -155,13 +95,13 @@ using :func:`Model.drop_variables`.
    print(m)
 
 .. ipython:: python
-   
+
    m.include(y)
    print(m)
 
-A constraint can be dropped using :func:`Model.drop_constraint` method.
+A constraint can be dropped using :meth:`Model.drop_constraint` method.
 Similarly, a set of constraints can be dropped using
-:func:`Model.drop_constraints`.
+:meth:`Model.drop_constraints`.
 
 .. ipython:: python
 
@@ -193,7 +133,7 @@ Note that all variables and constraints are included by reference.
 Solving a model
 ~~~~~~~~~~~~~~~
 
-A model is solved using the :func:`Model.solve` method. This method converts
+A model is solved using the :meth:`Model.solve` method. This method converts
 Python definitions into an MPS file and uploads to a CAS server for the optimization
 action. The type of the optimization problem (Linear Optimization or Mixed Integer
 Linear Optimization) is determined based on variable types.
@@ -244,7 +184,7 @@ Package Options
 +++++++++++++++
 
 Besides the ``options`` argument, there are 7 arguments that can be passed
-into :func:`Model.solve` method:
+into :meth:`Model.solve` method:
 
 - name: Name of the uploaded problem information
 - drop: Option for dropping the data from server after solve
@@ -256,7 +196,7 @@ into :func:`Model.solve` method:
 
 
 When ``primalin`` argument is ``True``, it grabs :class:`Variable` objects
-``_init`` field. This field can be modified with :func:`Variable.set_init`
+``_init`` field. This field can be modified with :meth:`Variable.set_init`
 method.
 
 
@@ -265,10 +205,10 @@ Getting solutions
 
 After the solve is completed, all variable and constraint values are parsed
 automatically.
-A summary of the problem can be accessed using the 
-:func:`Model.get_problem_summary` method, 
+A summary of the problem can be accessed using the
+:meth:`Model.get_problem_summary` method,
 and a summary of the solution can be accesed using the
-:func:`Model.get_solution_summary`
+:meth:`Model.get_solution_summary`
 method.
 
 To print values of any object, :func:`get_solution_table` can be used:
@@ -282,9 +222,5 @@ Tuning a model
 ~~~~~~~~~~~~~~
 
 Placeholder for tuner action...
-:meth:`sasoptpy.Model.tuner`
-
-
-
-
+:meth:`Model.tuner`
 

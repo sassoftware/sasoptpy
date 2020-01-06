@@ -45,12 +45,15 @@ extensions = [
     'sphinx.ext.autosummary',
     'IPython.sphinxext.ipython_console_highlighting',
     'IPython.sphinxext.ipython_directive',
-    'sphinx.ext.imgmath',
+    #'sphinx.ext.imgmath',
     'sphinxcontrib.fulltoc',
     'numpydoc',
+    'sphinx.ext.mathjax'
     #'sphinxcontrib.httpdomain',
     #'sphinxcontrib.excel_table',
 ]
+
+mathjax_path = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -65,8 +68,10 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
+import datetime
+year = datetime.datetime.now().year
 project = 'sasoptpy'
-copyright = '2017-2019, SAS Institute'
+copyright = f'2017-{year}, SAS Institute'
 author = 'Sertalp B. Cay (SAS Institute)'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -233,7 +238,7 @@ epub_exclude_files = ['search.html']
 intersphinx_mapping = {'https://docs.python.org/3/': None,
                        'https://pandas.pydata.org/pandas-docs/stable/': None,
                        'https://sassoftware.github.io/python-swat/': None,
-                       'https://sassoftware.github.io/saspy/': None
+                       'saspy': ('https://sassoftware.github.io/saspy/', None)
 }
 
 

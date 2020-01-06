@@ -6,13 +6,6 @@ Examples
 
 Examples are provided from `SAS/OR documentation <http://go.documentation.sas.com/?docsetId=ormpex&docsetTarget=titlepage.htm&docsetVersion=14.3&locale=en>`_.
 
-.. ipython:: python
-   :suppress:
-   
-   hostname = os.getenv('CASHOST')
-   port = os.getenv('CASPORT')
-   from swat import CAS
-   cas_conn = CAS(hostname, port)
 
 Viya Examples / Concrete
 ------------------------

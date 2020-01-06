@@ -4,7 +4,11 @@ User Guide
 
 .. toctree::
 
+   intro
    basics
-   concepts
+   sessions
+   models
+   components
+   workspaces
    input-data
    workflow
