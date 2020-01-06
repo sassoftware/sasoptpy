@@ -68,8 +68,10 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
+import datetime
+year = datetime.datetime.now().year
 project = 'sasoptpy'
-copyright = '2017-2019, SAS Institute'
+copyright = f'2017-{year}, SAS Institute'
 author = 'Sertalp B. Cay (SAS Institute)'
 
 # The version info for the project you're documenting, acts as replacement for
