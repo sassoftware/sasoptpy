@@ -132,5 +132,3 @@ Optimal objective value: 4.0
 - [SAS Viya](http://www.sas.com/en_us/software/viya.html)
 
 Copyright SAS Institute
-
-![](https://ga-beacon.appspot.com/UA-155356999-2/welcome-page?useReferrer&pixel)
