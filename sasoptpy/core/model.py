@@ -104,6 +104,9 @@ class Model:
         return super().__eq__(other)
 
     def get_name(self):
+        """
+        Returns model name
+        """
         return self._name
 
     def add(self, object):
@@ -642,11 +645,26 @@ class Model:
 
         Parameters
         ----------
-        argv : :class:`Model`, :class:`Variable`, :class:`Constraint`,\
-            :class:`VariableGroup`, :class:`ConstraintGroup`,\
-            :class:`Set`, :class:`Parameter`, :class:`Statement`,\
-            :class:`ImplicitVar`
+        argv :
             Objects to be included in the model
+
+        Notes
+        -----
+        * Valid argument types:
+
+          - :class:`Model`
+          - :class:`Variable`
+          - :class:`Constraint`
+          - :class:`VariableGroup`
+          - :class:`ConstraintGroup`
+          - :class:`Objective`
+          - :class:`Set`
+          - :class:`Parameter`
+          - :class:`ParameterGroup`
+          - :class:`Statement` and all subclasses
+          - :class:`ImplicitVar`
+        * Including a model causes all variables and constraints inside the
+          original model to be included.
 
         Examples
         --------
@@ -676,11 +694,6 @@ class Model:
 
         >>> new_model = so.Model(name='new_model')
         >>> new_model.include(m)
-
-        Notes
-        -----
-        * Including a model causes all variables and constraints inside the
-          original model to be included.
 
         """
 
@@ -798,10 +811,10 @@ class Model:
         ----------
         expression : Expression
             The objective function as an Expression
+        name : string
+            Name of the objective value
         sense : string, optional
             Objective value direction, 'MIN' or 'MAX'
-        name : string, optional
-            Name of the objective value
 
         Returns
         -------
@@ -836,8 +849,13 @@ class Model:
         Notes
         -----
         - Default objective sense is minimization (MIN)
-        - This method replaces the existing objective of the model. When working with multiple objectives, use the
-          `multiobj` parameter and use 'obj' option in :meth:`Model.solve` and :meth:`Model.to_optmodel` methods.
+        - This method replaces the existing objective of the model.
+          When working with multiple objectives, use
+          :meth:`Model.append_objective` method.
+
+        See also
+        --------
+        :meth:`Model.append_objective`
 
         """
 
@@ -846,6 +864,48 @@ class Model:
         return self._objective
 
     def append_objective(self, expression, name, sense=None):
+        """
+        Appends a new objective to the model
+
+        Parameters
+        ----------
+        expression : Expression
+            The objective function as an Expression
+        name : string
+            Name of the objective value
+        sense : string, optional
+            Objective value direction, 'MIN' or 'MAX'
+
+        Returns
+        -------
+        objective : Expression
+            Objective function as an :class:`Expression` object
+
+        Examples
+        --------
+
+        >>> f1 = m.set_objective(2 * x + y, sense=so.MIN, name='f1')
+        >>> f2 = m.append_objective( (x - y) ** 2, sense=so.MIN, name='f2')
+        >>> print(m.to_optmodel(options={'with': 'blackbox', 'obj': (f1, f2)}))
+        proc optmodel;
+        var x;
+        var y;
+        min f1 = 2 * x + y;
+        min f2 = (x - y) ^ (2);
+        solve with blackbox obj (f1 f2);
+        print _var_.name _var_.lb _var_.ub _var_ _var_.rc;
+        print _con_.name _con_.body _con_.dual;
+        quit;
+
+        Notes
+        -----
+        - Default objective sense is minimization (MIN)
+
+        See also
+        --------
+        :meth:`Model.set_objective`
+
+        """
         obj = Objective(expression, name=name, sense=sense)
         self._multiobjs.append(obj)
         return obj
@@ -870,6 +930,26 @@ class Model:
         return self._objective
 
     def get_all_objectives(self):
+        """
+        Returns a list of objectives in the model
+
+        Returns
+        -------
+        all_objectives : list
+           A list of :class:`Objective` objects
+
+        Examples
+        --------
+
+        >>> m = so.Model(name='test_set_get_objective')
+        >>> x = m.add_variable(name='x')
+        >>> obj1 = m.set_objective(2 * x, sense=so.MIN, name='obj1')
+        >>> obj2 = m.set_objective(5 * x, sense=so.MIN, name='obj2') # Overrides obj1
+        >>> obj3 = m.append_objective(10 * x, sense=so.MIN, name='obj3')
+        >>> assertEqual(m.get_all_objectives(), [obj2, obj3])
+        True
+
+        """
         all_objs = list(self._multiobjs)
         all_objs.append(self._objective)
         return sorted(all_objs, key=lambda i: i._objorder)
@@ -966,6 +1046,31 @@ class Model:
         return self._constraintDict
 
     def get_grouped_constraints(self):
+        """
+        Get an ordered dictionary of constraints, grouped based on creation
+
+        Returns
+        -------
+        grouped_cons : OrderedDict
+           Dictionary of constraints and constraint groups in the model
+
+        Examples
+        --------
+
+        >>> m1 = so.Model(name='test_copy_model_1')
+        >>> x = m1.add_variable(name='x')
+        >>> y = m1.add_variables(2, name='y')
+        >>> c1 = m1.add_constraint(x + y[0] >= 2, name='c1')
+        >>> c2 = m1.add_constraints((x - y[i] <= 10 for i in range(2)), name='c2')
+        >>> cons = OrderedDict([('c1', c1), ('c2', c2)])
+        >>> self.assertEqual(m1.get_grouped_constraints(), cons)
+        True
+
+        See also
+        --------
+        :meth:`Model.get_constraints`, :meth:`Model.get_grouped_variables`
+
+        """
         all_cons = [*self._congroups, *self._constraints]
         all_cons = sorted(all_cons, key=lambda i: i._objorder)
         grouped_cons = OrderedDict()
@@ -1044,6 +1149,29 @@ class Model:
         return self._variableDict
 
     def get_grouped_variables(self):
+        """
+        Get an ordered dictionary of variables, grouped based on creation
+
+        Returns
+        -------
+        grouped_vars : OrderedDict
+           Dictionary of variables and variable groups in the model
+
+        Examples
+        --------
+
+        >>> m1 = so.Model(name='test_copy_model_1')
+        >>> x = m1.add_variable(name='x')
+        >>> y = m1.add_variables(2, name='y')
+        >>> vars = OrderedDict([('x', x), ('y', y)])
+        >>> self.assertEqual(m1.get_grouped_variables(), vars)
+        True
+
+        See also
+        --------
+        :meth:`Model.get_variables`, :meth:`Model.get_grouped_constraints`
+
+        """
         all_vars = [*self._vargroups, *self._variables]
         all_vars = sorted(all_vars, key=lambda i: i._objorder)
         grouped_vars = OrderedDict()
@@ -1373,11 +1501,34 @@ class Model:
             raise ValueError('Solution type should be \'primal\' or \'dual\'')
 
     def get_tuner_results(self):
+        """
+        Returns the tuner responses for the model
+
+        Examples
+        --------
+
+        >>> m.tune_parameters(tunerParameters={'maxConfigs': 10})
+        >>> results = m.get_tuner_reults()
+
+        Returns
+        -------
+        tunerResults : dict
+           Returns tuner results as a dictionary. Its members are
+           - Performance Information
+           - Tuner Information
+           - Tuner Summary
+           - Tuner Results
+
+        See also
+        --------
+        :meth:`Model.tune_parameters`
+
+        """
         return self._tunerResults
 
     def set_session(self, session):
         """
-        Sets the CAS session for model
+        Sets the session of model (SAS Viya via swat or SAS 9.4 via saspy)
 
         Parameters
         ----------
@@ -1395,18 +1546,55 @@ class Model:
         self._session = session
 
     def get_session(self):
+        """
+        Returns the session of the model
+
+        Returns
+        -------
+        session : :class:`swat.cas.connection.CAS` or \
+:class:`saspy.SASsession`
+            Session of the model, or None
+        """
         return self._session
 
     def get_sets(self):
+        """
+        Returns a list of :class:`Set` objects in the model
+        """
         return self._sets
 
     def get_parameters(self):
+        """
+        Returns a list of :class:`Parameter` objects in the model
+        """
         return self._parameters
 
     def get_statements(self):
+        """
+        Returns a list of all abstract statements inside the model.
+        """
         return self._statements
 
     def get_implicit_variables(self):
+        """
+        Returns a list of implicit variables
+
+        Returns
+        -------
+        implicit_variables : list
+            List of implicit variables in the model
+
+        Examples
+        --------
+
+        >>> m = so.Model(name='test_add_impvar')
+        >>> x = m.add_variables(5, name='x')
+        >>> y = m.add_implicit_variable((i * x[i] + x[i] ** 2 for i in range(5)),
+                                    name='y')
+        >>> assertEqual([y], m.get_implicit_variables())
+        True
+
+        """
         return self._impvars
 
     def print_solution(self):
@@ -1640,10 +1828,123 @@ class Model:
 
         return sasoptpy.util.submit_for_solve(self, **kwargs)
 
-
     def tune_parameters(self, **kwargs):
-        return sasoptpy.util.submit_for_tune(self, **kwargs)
+        """
+        Uses model tuner to find ideal parameters for given model
 
+        Parameters
+        ----------
+        kwargs :
+           Keyword arguments as defined in the optimization.tuner action
+           Acceptable values are:
+
+           * `milpParameters <https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=cas-optimization-tuner.htm&docsetVersion=8.5&locale=en#PYTHON.cas-optimization-tuner-milpparameters>`_ : Parameters for the solveMilp action, such as
+             `maxTime`, `heuristics`, `feasTol`
+           * `tunerParameters <https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=cas-optimization-tuner.htm&docsetVersion=8.5&locale=en#PYTHON.cas-optimization-tuner-tunerparameters>`_ : Parameters for tuner itself, such as
+             `maxConfigs`, `printLevel`, `logFreq`
+           * `tuningParameters <https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=cas-optimization-tuner.htm&docsetVersion=8.5&locale=en#PYTHON.cas-optimization-tuner-tuningparameters>`_ : List of parameters to be tuned, such as
+             `cutStrategy`, `presolver`, `restarts`
+
+        Returns
+        -------
+        tunerResults : :class:`swat.dataframe.SASDataFrame`
+           Results of tuner as a table
+
+        Examples
+        --------
+
+        >>> m = so.Model(name='model1')
+        >>> ...
+        >>> results = m.tune_parameters(tunerParameters={'maxConfigs': 10})
+        NOTE: Initialized model knapsack_with_tuner.
+        NOTE: Added action set 'optimization'.
+        NOTE: Uploading the problem DataFrame to the server.
+        NOTE: Cloud Analytic Services made the uploaded file available as table KNAPSACK_WITH_TUNER in caslib CASUSER(casuser).
+        NOTE: The table KNAPSACK_WITH_TUNER has been created in caslib CASUSER(casuser) from binary data uploaded to Cloud Analytic Services.
+        NOTE: Start to tune the MILP
+                 SolveCalls  Configurations    BestTime        Time
+                          1               1        0.21        0.26
+                          2               2        0.19        0.50
+                          3               3        0.19        0.72
+                          4               4        0.19        0.95
+                          5               5        0.19        1.17
+                          6               6        0.19        1.56
+                          7               7        0.18        1.76
+                          8               8        0.17        1.96
+                          9               9        0.17        2.16
+                         10              10        0.17        2.35
+        NOTE: Configuration limit reached.
+        NOTE: The tuning time is 2.35 seconds.
+        >>> print(results)
+           Configuration conflictSearch  ... Sum of Run Times Percentage Successful
+        0            0.0      automatic  ...             0.20                 100.0
+        1            1.0           none  ...             0.17                 100.0
+        2            2.0           none  ...             0.17                 100.0
+        3            3.0       moderate  ...             0.17                 100.0
+        4            4.0           none  ...             0.18                 100.0
+        5            5.0           none  ...             0.18                 100.0
+        6            6.0     aggressive  ...             0.18                 100.0
+        7            7.0       moderate  ...             0.18                 100.0
+        8            8.0     aggressive  ...             0.19                 100.0
+        9            9.0      automatic  ...             0.36                 100.0
+
+
+        >>> results = m.tune_parameters(
+               milpParameters={'maxtime': 10},
+               tunerParameters={'maxConfigs': 20, 'logfreq': 5},
+               tuningParameters=[
+                  {'option': 'presolver', 'initial': 'none', 'values': ['basic', 'aggressive', 'none']},
+                  {'option': 'cutStrategy'},
+                  {'option': 'strongIter', 'initial': -1, 'values': [-1, 100, 1000]}
+               ])
+        NOTE: Added action set 'optimization'.
+        NOTE: Uploading the problem DataFrame to the server.
+        NOTE: Cloud Analytic Services made the uploaded file available as table KNAPSACK_WITH_TUNER in caslib CASUSER(casuser).
+        NOTE: The table KNAPSACK_WITH_TUNER has been created in caslib CASUSER(casuser) from binary data uploaded to Cloud Analytic Services.
+        NOTE: Start to tune the MILP
+                 SolveCalls  Configurations    BestTime        Time
+                          5               5        0.17        1.01
+                         10              10        0.17        2.00
+                         15              15        0.17        2.98
+                         20              20        0.17        3.95
+        NOTE: Configuration limit reached.
+        NOTE: The tuning time is 3.95 seconds.
+        >>> print(results)
+            Configuration conflictSearch  ... Sum of Run Times Percentage Successful
+        0             0.0      automatic  ...             0.17                 100.0
+        1             1.0           none  ...             0.16                 100.0
+        2             2.0           none  ...             0.16                 100.0
+        3             3.0           none  ...             0.16                 100.0
+        4             4.0           none  ...             0.16                 100.0
+        5             5.0           none  ...             0.17                 100.0
+        6             6.0           none  ...             0.17                 100.0
+        7             7.0           none  ...             0.17                 100.0
+        8             8.0           none  ...             0.17                 100.0
+        9             9.0           none  ...             0.17                 100.0
+        10           10.0           none  ...             0.17                 100.0
+        11           11.0     aggressive  ...             0.17                 100.0
+        12           12.0           none  ...             0.17                 100.0
+        13           13.0     aggressive  ...             0.17                 100.0
+        14           14.0      automatic  ...             0.17                 100.0
+        15           15.0           none  ...             0.17                 100.0
+        16           16.0           none  ...             0.17                 100.0
+        17           17.0       moderate  ...             0.17                 100.0
+        18           18.0       moderate  ...             0.17                 100.0
+        19           19.0           none  ...             0.17                 100.0
+
+        Notes
+        -----
+        - See SAS Optimization documentation for a full list of tunable
+          parameters:
+          https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=cas-optimization-tuner.htm&docsetVersion=8.5&locale=en#PYTHON.cas-optimization-tuner-tunerparameters
+        - See full documentation at:
+          https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=casactmopt_optimization_details35.htm&docsetVersion=8.5&locale=en
+
+        See also
+        --------
+        :meth:`Model.get_tuner_results` to get tuning details
+        """
+        return sasoptpy.util.submit_for_tune(self, **kwargs)
 
     def _set_abstract_values(self, name, value):
         """
@@ -1656,6 +1957,13 @@ class Model:
             v.set_value(value)
 
     def clear_solution(self):
+        """
+        Clears the cached solution of the model
+
+        Notes
+        -----
+        - This method only cleans model's own parameters, not its components'
+        """
         self._objval = None
         self.response = None
         self._soltime = 0

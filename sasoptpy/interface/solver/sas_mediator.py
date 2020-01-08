@@ -9,8 +9,26 @@ from sasoptpy.interface.util import wrap_long_lines, replace_long_names
 import warnings
 
 class SASMediator(Mediator):
+    """
+    Handles the connection between sasoptpy and SAS instance
+
+    Parameters
+    ----------
+    caller : :class:`Model` or :class:`Workspace`
+        Model or workspace that mediator belongs to
+    sas_session : :class:`saspy.SASsession`
+        SAS session object
+
+    Notes
+    -----
+
+    * SAS Mediator is used by :class:`Model` and :class:`Workspace` objects
+      internally.
+
+    """
 
     def __init__(self, caller, sas_session):
+
         self.caller = caller
         self.session = sas_session
         self.conversion = dict()
@@ -29,6 +47,9 @@ class SASMediator(Mediator):
             return self.solve_with_optmodel(**kwargs)
 
     def submit(self, **kwargs):
+        """
+        Submit action for custom input and :class:`Workspace` objects
+        """
         return self.submit_optmodel_code(**kwargs)
 
     def is_mps_format_needed(self, mps_option, options):
@@ -66,6 +87,20 @@ class SASMediator(Mediator):
         return mps_option
 
     def solve_with_mps(self, **kwargs):
+        """
+        Submits the problem in MPS (DataFrame) format, supported by old versions
+
+        Parameters
+        ----------
+        kwargs : dict
+            Keyword arguments for solver settings and options
+
+        Returns
+        -------
+        primal_solution : :class:`pandas.DataFrame`
+            Solution of the model or None
+
+        """
         session = self.session
         model = self.caller
 
@@ -133,6 +168,20 @@ class SASMediator(Mediator):
         return self.parse_sas_mps_solution()
 
     def solve_with_optmodel(self, **kwargs):
+        """
+        Submits the problem in OPTMODEL format
+
+        Parameters
+        ----------
+        kwargs : dict
+            Keyword arguments for solver settings and options
+
+        Returns
+        -------
+        primal_solution : :class:`pandas.DataFrame`
+            Solution of the model or None
+
+        """
 
         model = self.caller
         session = self.session
@@ -193,6 +242,9 @@ class SASMediator(Mediator):
         return self.parse_sas_solution()
 
     def parse_sas_mps_solution(self):
+        """
+        Parses MPS solution after `solve` and returns solution
+        """
 
         caller = self.caller
         session = self.session
@@ -226,7 +278,14 @@ class SASMediator(Mediator):
         return caller._primalSolution
 
     def parse_sas_solution(self):
+        """
+        Performs post-solve operations
 
+        Returns
+        -------
+        solution : :class:`pandas.DataFrame`
+         Solution of the problem
+        """
         caller = self.caller
         session = self.session
 
@@ -246,6 +305,9 @@ class SASMediator(Mediator):
         return caller._primalSolution
 
     def parse_sas_table(self, table_name):
+        """
+        Converts requested table name into :class:`pandas.DataFrame`
+        """
         session = self.session
 
         parsed_df = session.sd2df(table_name)[['Label1', 'cValue1']]
@@ -255,6 +317,10 @@ class SASMediator(Mediator):
         return parsed_df
 
     def convert_to_original(self, table):
+        """
+        Converts variable names to their original format if a placeholder gets
+        used
+        """
         if len(self.conversion) == 0:
             return
 
@@ -268,6 +334,9 @@ class SASMediator(Mediator):
 
 
     def perform_postsolve_operations(self):
+        """
+        Performs post-solve operations for proper output display
+        """
         caller = self.caller
         response = caller.response
         solution = caller._primalSolution
@@ -301,6 +370,14 @@ class SASMediator(Mediator):
                 v.set_init(v.get_value())
 
     def submit_optmodel_code(self, **kwargs):
+        """
+        Submits given :class:`Workspace` object in OPTMODEL format
+
+        Parameters
+        ----------
+        kwargs :
+            Solver settings and options
+        """
 
         caller = self.caller
         session = self.session
@@ -351,6 +428,9 @@ class SASMediator(Mediator):
         return self.parse_sas_workspace_response()
 
     def parse_sas_workspace_response(self):
+        """
+        Parses results of workspace submission
+        """
         caller = self.caller
         session = self.session
         response = caller.response
@@ -372,6 +452,9 @@ class SASMediator(Mediator):
         return solution
 
     def set_workspace_variable_values(self, solution):
+        """
+        Performs post-solve assignment of :class:`Workspace` variable values
+        """
         caller = self.caller
         for row in solution.itertuples():
             caller.set_variable_value(row.var, row.value)

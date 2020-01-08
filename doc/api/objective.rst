@@ -1,29 +1,23 @@
 
-Others
-======
+Variable
+========
 
 .. currentmodule:: sasoptpy
 
-Constructors
-~~~~~~~~~~~~
-
+Constructor
+~~~~~~~~~~~
 
 .. autosummary::
    :toctree: generated/
    :template: autosummary/class_without_autosummary.rst
 
-   ImplicitVar
-   Set
-   SetIterator
-   Parameter
-
+   Objective
 
 Methods
 ~~~~~~~
 
 .. autosummary::
    :toctree: generated/
-
-   Set.__iter__
-   Parameter.set_init
    
+   Objective.set_sense
+   Objective.get_sense

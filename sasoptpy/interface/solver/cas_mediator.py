@@ -10,6 +10,23 @@ import sasoptpy
 from sasoptpy.interface import Mediator
 
 class CASMediator(Mediator):
+    """
+    Handles the connection between sasoptpy and SAS Viya (CAS) server
+
+    Parameters
+    ----------
+    caller : :class:`Model` or :class:`Workspace`
+        Model or workspace that mediator belongs to
+    cas_session : :class:`swat.cas.connection.CAS`
+        CAS connection
+
+    Notes
+    -----
+
+    * CAS Mediator is used by :class:`Model` and :class:`Workspace` objects
+      internally.
+
+    """
 
     def __init__(self, caller, cas_session):
         self.caller = caller
@@ -34,12 +51,15 @@ class CASMediator(Mediator):
 
     def submit(self, **kwargs):
         """
-        Submit action for custom input and workspaces
+        Submit action for custom input and :class:`Workspace` objects
         """
         self.session.loadactionset(actionset='optimization')
         return self.submit_optmodel_code(**kwargs)
 
     def tune(self, **kwargs):
+        """
+        Checks if CAS session has optimizaiton.tuner capability and calls :func:`tune_problem`
+        """
         self.session.loadactionset(actionset='optimization')
 
         if not hasattr(self.session, 'optimization.tuner'):
@@ -92,6 +112,20 @@ class CASMediator(Mediator):
         return mps_option
 
     def solve_with_mps(self, **kwargs):
+        """
+        Submits the problem in MPS (DataFrame) format, supported by old versions
+
+        Parameters
+        ----------
+        kwargs : dict
+            Keyword arguments for solver settings and options
+
+        Returns
+        -------
+        primal_solution : :class:`swat.dataframe.SASDataFrame`
+            Solution of the model or None
+
+        """
 
         model = self.caller
         session = self.session
@@ -262,6 +296,20 @@ class CASMediator(Mediator):
                 response.get_tables('status')[0]))
 
     def solve_with_optmodel(self, **kwargs):
+        """
+        Submits the problem in OPTMODEL format
+
+        Parameters
+        ----------
+        kwargs : dict
+            Keyword arguments for solver settings and options
+
+        Returns
+        -------
+        primal_solution : :class:`swat.dataframe.SASDataFrame`
+            Solution of the model or None
+
+        """
 
         model = self.caller
         session = self.session
@@ -294,6 +342,14 @@ class CASMediator(Mediator):
         return self.parse_cas_solution()
 
     def parse_cas_solution(self):
+        """
+        Performs post-solve operations
+
+        Returns
+        -------
+        solution : :class:`swat.dataframe.SASDataFrame`
+            Solution of the problem
+        """
         caller = self.caller
         session = self.session
         response = caller.response
@@ -324,11 +380,23 @@ class CASMediator(Mediator):
         return solution
 
     def parse_cas_table(self, table):
+        """
+        Converts requested :class:`swat.cas.table.CASTable` objects to
+        :class:`swat.dataframe.SASDataFrame`
+        """
         session = self.session
         table = session.CASTable(table).to_frame()
         return sasoptpy.interface.parse_optmodel_table(table)
 
     def set_variable_values(self, solution):
+        """
+        Performs post-solve assignment of variable values
+
+        Parameters
+        ----------
+        solution : class:`swat.dataframe.SASDataFrame`
+            Primal solution of the problem
+        """
         caller = self.caller
         solver = caller.get_solution_summary().loc['Solver', 'Value']
         for row in solution.itertuples():
@@ -337,6 +405,14 @@ class CASMediator(Mediator):
                 caller.set_dual_value(row.var, row.rc)
 
     def set_constraint_values(self, solution):
+        """
+        Performs post-solve assignment of constraint values
+
+        Parameters
+        ----------
+        solution : class:`swat.dataframe.SASDataFrame`
+            Primal solution of the problem
+        """
         caller = self.caller
         solver = caller.get_solution_summary().loc['Solver', 'Value']
         if solver == 'LP':
@@ -346,6 +422,14 @@ class CASMediator(Mediator):
                     con.set_dual(row.dual)
 
     def set_model_objective_value(self):
+        """
+        Performs post-solve assignment of objective values
+
+        Parameters
+        ----------
+        solution : class:`swat.dataframe.SASDataFrame`
+            Primal solution of the problem
+        """
         caller = self.caller
         if sasoptpy.core.util.is_model(caller):
             if hasattr(caller.response, 'objective'):
@@ -353,6 +437,14 @@ class CASMediator(Mediator):
                 caller.set_objective_value(objval)
 
     def set_variable_init_values(self):
+        """
+        Performs post-solve assignment of variable initial values
+
+        Parameters
+        ----------
+        solution : class:`swat.dataframe.SASDataFrame`
+            Primal solution of the problem
+        """
         caller = self.caller
         if sasoptpy.core.util.is_model(caller):
             for v in caller.get_variables():
@@ -434,8 +526,16 @@ class CASMediator(Mediator):
             return self.session.upload_frame(
                 data=df, casout={'replace': replace})
 
-
     def submit_optmodel_code(self, **kwargs):
+        """
+        Converts caller into OPTMODEL code and submits using
+        optimization.runOptmodel action
+
+        Parameters
+        ----------
+        kwargs :
+            Solver settings and options
+        """
 
         caller = self.caller
         session = self.session
@@ -456,6 +556,9 @@ class CASMediator(Mediator):
         return self.parse_cas_workspace_response()
 
     def parse_cas_workspace_response(self):
+        """
+        Parses results of workspace submission
+        """
         caller = self.caller
         session = self.session
         response = caller.response
@@ -480,12 +583,17 @@ class CASMediator(Mediator):
         return solution
 
     def set_workspace_variable_values(self, solution):
+        """
+        Performs post-solve assignment of :class:`Workspace` variable values
+        """
         caller = self.caller
         for row in solution.itertuples():
             caller.set_variable_value(row.var, row.value)
 
-
     def tune_problem(self, **kwargs):
+        """
+        Calls optimization.tuner CAS action to find out ideal configuration
+        """
         model = self.caller
         session = self.session
         name = model.get_name()

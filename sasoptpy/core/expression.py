@@ -157,20 +157,64 @@ class Expression:
         return self._name is not None
 
     def get_member_dict(self):
+        """
+        Returns an ordered dictionary of elements
+        """
         return self._linCoef
 
     def get_member(self, key):
+        """
+        Returns the requested member using the key
+
+        Parameters
+        ----------
+        key : string
+            Identifier of the member, name for single objects
+
+        Returns
+        -------
+        member : dict
+            A dictionary of coefficient, operator, and reference of member
+        """
         return self._linCoef.get(key, None)
 
     def set_member(self, key, ref, val, op=None):
+        """
+        Adds a new member or changes an existing member
+
+        Parameters
+        ----------
+        key : string
+            Identifier of the member
+        ref : Object
+            A reference to the new member
+        val : float
+            Initial coefficient of the element
+        op : string, optional
+            Operator, if member consists of multiple children
+        """
         self._linCoef[key] = {'ref': ref, 'val': val}
         if op:
             self._linCoef[key]['op'] = op
 
     def delete_member(self, key):
+        """
+        Deletes the requested member from the core dictionary
+        """
         self._linCoef.pop(key, None)
 
     def copy_member(self, key, exp):
+        """
+        Copies member of another expression
+
+        Parameters
+        ----------
+        key : string
+            Identifier of the member
+        exp : :class:`Expression`
+            Other expression to be copied from
+
+        """
         self._linCoef[key] = dict(exp.get_member(key))
 
     def get_value(self):
@@ -217,26 +261,67 @@ class Expression:
         return v
 
     def get_member_value(self, key):
+        """
+        Returns coefficient of requested member
+
+        Parameters
+        ----------
+        key : string
+            Identifier of the member
+
+        Returns
+        -------
+        value : float
+            Coefficient value of the requested member
+        """
         member = self.get_member(key)
-        #if member.get('ref'):
-        #    return member['ref'].get_value() * member['val']
         return member['val']
 
     def set_member_value(self, key, value):
+        """
+        Changes the coefficient of the requested member
+
+        Parameters
+        ----------
+        key : string
+            Identifier of the member
+        value : float
+            New coefficient value of the member
+        """
         member = self.get_member(key)
         member['val'] = value
 
     def add_to_member_value(self, key, value):
+        """
+        Adds given value to the coefficient of the requested member
+
+        Parameters
+        ----------
+        key : string
+            Identifier of the member
+        value : float
+            Value to be added
+        """
         member = self.get_member(key)
         member['val'] += value
 
     def mult_member_value(self, key, value):
+        """
+        Multiplies coefficient of the requested member with given value
+
+        Parameters
+        ----------
+        key : string
+            Identifier of the member
+        value : float
+            Value to be multiplied with
+        """
         member = self.get_member(key)
         member['val'] *= value
 
     def get_dual(self):
         """
-        Returns the dual value
+        Returns the dual value if exists
 
         Returns
         -------
@@ -308,6 +393,9 @@ class Expression:
                 sasoptpy.util.package_utils._to_optmodel_loop(self._iterkey))
 
     def set_temporary(self):
+        """
+        Converts expression into temporary to enable in-place operations
+        """
         self._temp = True
 
     def set_permanent(self):
@@ -331,6 +419,18 @@ class Expression:
             self.set_name()
 
     def get_constant(self):
+        """
+        Returns the constant term in the expression
+
+        Examples
+        --------
+
+        >>> x = so.Variable(name='x')
+        >>> e = 2 * x + 5
+        >>> print(e.get_constant())
+        5
+
+        """
         return self.get_member('CONST')['val']
 
     def _expr(self):
@@ -464,7 +564,6 @@ class Expression:
         s += ')'
         return s
 
-
     def __str__(self):
         """
         Generates a representation string that is Python compatible
@@ -591,9 +690,8 @@ class Expression:
 
         Notes
         -----
-        * This method is mainly for internal use.
         * Adding an expression is equivalent to calling this method:
-          (x-y)+(3*x-2*y) and (x-y).add(3*x-2*y) are interchangeable.
+          (x-y)+(3*x-2*y) and (x-y).add(3*x-2*y) result the same.
         """
         if self._temp and type(self) is Expression:
             r = self
@@ -838,6 +936,26 @@ class Expression:
 
 
 class Auxiliary(Expression):
+    """
+    Represents an auxiliary expression, often as a symbolic attribute
+
+    Parameters
+    ----------
+    base : :class:`Expression`
+        Original owner of the auxiliary value
+    prefix : string, optional
+        Prefix of the expression
+    suffix : string, optional
+        Suffix of the expression
+    operator : string, optional
+        Wrapping operator
+    value : float, optional
+        Initial value of the symbolic object
+
+    Notes
+    -----
+    * Auxiliary objects are for internal use
+    """
 
     def __init__(self, base, prefix=None, suffix=None, operator=None, value=None):
         super().__init__()
@@ -881,6 +999,20 @@ class Auxiliary(Expression):
 
 
 class Symbol(Expression):
+    """
+    Represents a symbolic string, to be evaluated on server-side
+
+    Parameters
+    ----------
+    name : string
+        String to be symbolized
+
+    Notes
+    -----
+    * Symbol objects can be used for values that does not translate to a value
+      on client-side, but have meaning on execution. For example, `_N_` is a
+      SAS symbol, which can be used in OPTMODEL strings.
+    """
 
     def __init__(self, name):
         super().__init__(name=name)

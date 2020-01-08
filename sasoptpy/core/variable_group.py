@@ -370,12 +370,24 @@ class VariableGroup(Group):
         return defn
 
     def get_members(self):
+        """
+        Returns a dictionary of members
+        """
         return self._vardict
 
     def get_shadow_members(self):
         return self._shadows
 
     def get_attributes(self):
+        """
+        Returns an OrderedDict of main attributes
+
+        Returns
+        --------
+        attributes : dict
+            OrderedDict consists of `init`, `lb`, and `ub` attributes
+
+        """
         attributes = OrderedDict()
         attributes['init'] = self._init
         attributes['lb'] = self._lb
@@ -383,6 +395,13 @@ class VariableGroup(Group):
         return attributes
 
     def get_type(self):
+        """
+        Returns the type of variable, valid values are:
+
+        * sasoptpy.CONT
+        * sasoptpy.INT
+        * sasoptpy.BIN
+        """
         return self._type
 
     def get_different_attributes(self, var):

@@ -23,4 +23,4 @@ Methods
    Constraint.set_block
    Constraint.set_direction
    Constraint.set_rhs
-
+   Constraint.update_var_coef

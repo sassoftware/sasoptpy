@@ -218,9 +218,88 @@ To print values of any object, :func:`get_solution_table` can be used:
 All variables and constraints passed into this method are returned based on
 their indices. See :ref:`examples` for more details.
 
-Tuning a model
-~~~~~~~~~~~~~~
+Tuning MILP model parameters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Placeholder for tuner action...
-:meth:`Model.tuner`
+SAS Optimization solvers provide a variety of settings. However, it might be difficult to find ideal settings for a
+given model. In order to compare and obtain a good choice of parameters, users can use `optimization.tune` action
+for mixed-integer linear optimization problems.
 
+:meth:`Model.tune_parameters` method is a wrapper for tune action. Consider the following Knapsack problem example:
+
+.. ipython:: python
+   :suppress:
+
+   import os
+   hostname = os.getenv('CASHOST')
+   port = os.getenv('CASPORT')
+   from swat import CAS
+   cas_conn = CAS(hostname, port)
+   import sasoptpy as so
+   import pandas as pd
+
+.. ipython:: python
+
+   def get_model():
+      m = so.Model(name='knapsack_with_tuner', session=cas_conn)
+      data = [
+          ['clock', 8, 4, 3],
+          ['mug', 10, 6, 5],
+          ['headphone', 15, 7, 2],
+          ['book', 20, 12, 10],
+          ['pen', 1, 1, 15]
+      ]
+      df = pd.DataFrame(data, columns=['item', 'value', 'weight', 'limit']).set_index(['item'])
+      ITEMS = df.index
+      value = df['value']
+      weight = df['weight']
+      limit = df['limit']
+      total_weight = 55
+      get = m.add_variables(ITEMS, name='get', vartype=so.INT)
+      m.add_constraints((get[i] <= limit[i] for i in ITEMS), name='limit_con')
+      m.add_constraint(so.quick_sum(weight[i] * get[i] for i in ITEMS) <= total_weight, name='weight_con')
+      total_value = so.quick_sum(value[i] * get[i] for i in ITEMS)
+      m.set_objective(total_value, name='total_value', sense=so.MAX)
+      return m
+
+   m = get_model()
+
+For this problem, we can compare configurations as follows:
+
+.. ipython:: python
+
+   results = m.tune_parameters(tunerParameters={'maxConfigs': 10})
+
+.. ipython:: python
+
+   print(results)
+
+:meth:`Model.tune_parameters` accepts three main arguments
+
+* milpParameters
+* tunerParameters
+* tuningParameters
+
+See a full set of tuning parameters and acceptable values of these arguments at SAS Optimization documentation:
+
+https://go.documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.5&docsetId=casactmopt&docsetTarget=casactmopt_optimization_details37.htm&locale=en
+
+For the example problem, we can tune `presolver`, `cutStrategy` and `strongIter` settings, using initial values and
+candidate values, limit maximum number of configurations and maximum running time as follows:
+
+.. ipython:: python
+
+   results = m.tune_parameters(
+      milpParameters={'maxtime': 10},
+      tunerParameters={'maxConfigs': 20, 'logfreq': 5},
+      tuningParameters=[
+         {'option': 'presolver', 'initial': 'none', 'values': ['basic', 'aggressive', 'none']},
+         {'option': 'cutStrategy'},
+         {'option': 'strongIter', 'initial': -1, 'values': [-1, 100, 1000]}
+      ])
+
+.. ipython:: python
+
+   print(results)
+
+Full details can be obtained using :meth:`Model.get_tuner_results` method.

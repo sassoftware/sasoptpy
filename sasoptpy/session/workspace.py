@@ -5,6 +5,16 @@ import sasoptpy
 from sasoptpy.abstract.util import is_solve_statement, is_print_statement
 
 class Workspace:
+    """
+    Workspace represents an OPTMODEL block that allows multiple solves
+
+    Parameters
+    ----------
+    name : string
+        Name of the workspace
+    session : :class:`saspy.SASsession` or :class:`swat.cas.connection.CAS`, optional
+        Session to be submitted
+    """
 
     def __init__(self, name, session=None):
         self.name = name
@@ -19,9 +29,20 @@ class Workspace:
         self._elements = []
 
     def get_elements(self):
+        """
+        Returns a list of elements in the Workspace
+        """
         return self._elements
 
     def set_active_model(self, model):
+        """
+        Marks given model as active, to be used in solve statements
+
+        Parameters
+        ----------
+        model : :class:`Model`
+            Model to be activated
+        """
         self.active_model = model
 
     def __str__(self):
@@ -39,6 +60,14 @@ class Workspace:
         sasoptpy.container = self.original
 
     def append(self, element):
+        """
+        Appends a new element (operation or statement) to the Workspace
+
+        Parameters
+        ----------
+        element : :class:`sasoptpy.abstract.Statement`
+            Any statement that can be appended
+        """
         self._elements.append(element)
 
     def set_session(self, session):
@@ -48,9 +77,15 @@ class Workspace:
         return self._session
 
     def submit(self, **kwargs):
+        """
+        Submits the Workspace as an OPTMODEL block and returns solutions
+        """
         return sasoptpy.util.submit(self, **kwargs)
 
     def parse_solve_responses(self):
+        """
+        Grabs the solutions to all solve statements
+        """
         keys = self.response.keys()
         solve_statements = [i for i in self.get_elements() if
                             is_solve_statement(i)]
@@ -72,6 +107,9 @@ class Workspace:
                 solve.set_response(ss)
 
     def parse_print_responses(self):
+        """
+        Grabs responses to all print statements
+        """
         keys = self.response.keys()
         print_statements = [i for i in self.get_elements() if
                             is_print_statement(i)]
@@ -83,6 +121,14 @@ class Workspace:
                     p.set_response(self.response[pp_key])
 
     def get_variable(self, name):
+        """
+        Obtains the value of a given variable name
+
+        Parameters
+        ----------
+        name : string
+            Name of the variable
+        """
         vars = filter(
             lambda i: isinstance(i, sasoptpy.Variable), self.get_elements())
         variable = list(filter(lambda i: i.get_name() == name, vars))
@@ -111,6 +157,16 @@ class Workspace:
         return None
 
     def set_variable_value(self, name, value):
+        """
+        Sets variable value
+
+        Parameters
+        ----------
+        name : string
+            Name of the variable
+        value : float
+            New value of the variable
+        """
         variable = self.get_variable(name)
         if variable is not None:
             variable.set_value(value)

@@ -142,6 +142,15 @@ class Variable(Expression):
         self._init = init
 
     def get_attributes(self):
+        """
+        Returns an OrderedDict of main attributes
+
+        Returns
+        --------
+        attributes : dict
+            OrderedDict consists of `init`, `lb`, and `ub` attributes
+
+        """
         attributes = OrderedDict()
         attributes['init'] = self._init
         attributes['lb'] = self._lb
@@ -156,10 +165,16 @@ class Variable(Expression):
 
     @property
     def ub(self):
+        """
+        Upper bound of the variable
+        """
         return sasoptpy.Auxiliary(self, suffix='ub', value=self._ub)
 
     @property
     def lb(self):
+        """
+        Lower bound of the variable
+        """
         return sasoptpy.Auxiliary(self, suffix='lb', value=self._lb)
 
     def get_value(self):
@@ -179,6 +194,13 @@ class Variable(Expression):
         self._parent = parent
 
     def get_type(self):
+        """
+        Returns the type of variable, valid values are:
+
+        * sasoptpy.CONT
+        * sasoptpy.INT
+        * sasoptpy.BIN
+        """
         return self._type
 
     def __repr__(self):

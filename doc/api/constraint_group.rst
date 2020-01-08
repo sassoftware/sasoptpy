@@ -20,5 +20,7 @@ Methods
    :toctree: generated/
 
    ConstraintGroup.get_name
+   ConstraintGroup.get_all_keys
    ConstraintGroup.get_expressions
+   ConstraintGroup.get_members
 

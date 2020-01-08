@@ -4,6 +4,29 @@ from sasoptpy.core import Expression
 
 class Objective(Expression):
     """
+    Objective represents expressions with sense and used as target value in
+    optimization
+
+    Parameters
+    ----------
+    exp : :class:`Expression`
+        Objective as an expression
+    name : string
+        Unique name of the expression
+    sense : string, optional
+        Direction of the objective, sasoptpy.MIN (default) or sasoptpy.MAX
+
+    Examples
+    --------
+
+    >>> m = so.Model(name='test_objective')
+    >>> x = m.add_variable(name='x')
+    >>> obj = m.set_objective(2 * x - x ** 3, sense=so.MIN, name='new_obj')
+    >>> str(m.get_objective())
+    2 * x - (x) ** (3)
+    >>> type(obj)
+    sasoptpy.Objective
+
     """
 
     @sasoptpy.class_containable
@@ -22,7 +45,18 @@ class Objective(Expression):
         return self._default
 
     def get_sense(self):
+        """
+        Returns the objective sense (direction)
+        """
         return self._sense
 
     def set_sense(self, sense):
+        """
+        Sets the objective sense (direction)
+
+        Parameters
+        ----------
+        sense : string
+            sasoptpy.MIN or sasoptpy.MAX
+        """
         self._sense = sense

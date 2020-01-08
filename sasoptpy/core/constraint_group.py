@@ -233,12 +233,18 @@ class ConstraintGroup(Group):
     #         self._condict[i]._set_info(parent=self, key=i)
 
     def get_members(self):
+        """
+        Returns a dictionary of members
+        """
         return self._condict
 
     def get_shadow_members(self):
         return self._shadows
 
     def get_all_keys(self):
+        """
+        Returns a list of all keys (indices) in the group
+        """
         return list(self._condict.keys()) + list(self._shadows.keys())
 
     def _defn(self):
