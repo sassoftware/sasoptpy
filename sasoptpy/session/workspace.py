@@ -170,3 +170,15 @@ class Workspace:
         variable = self.get_variable(name)
         if variable is not None:
             variable.set_value(value)
+
+    def to_optmodel(self):
+        """
+        Returns equivalent OPTMODEL code of given workspace
+
+        Returns
+        -------
+        optmodel : string
+            Generated OPTMODEL code of the workspace object
+
+        """
+        return sasoptpy.to_optmodel(self)

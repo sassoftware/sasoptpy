@@ -15,14 +15,41 @@ Utility Functions
    flatten_frame
    get_solution_table
    quick_sum
-   actions.read_data
    reset
+
+Abstract Actions
+~~~~~~~~~~~~~~~~
+
+.. currentmodule:: sasoptpy.actions
+
+.. autosummary::
+   :toctree: generated/
+
+   read_data
+   create_data
+   solve
+   for_loop
+   cofor_loop
+   set_value
+   fix
+   unfix
+   set_objective
+   print_item
+   put_item
+   expand
+   drop
+   union
+   diff
+   substring
+   use_problem
 
 
 .. _math-functions:
 
 Math Functions
 ~~~~~~~~~~~~~~
+
+.. currentmodule:: sasoptpy
 
 .. autosummary::
    :toctree: generated/

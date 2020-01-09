@@ -27,3 +27,4 @@ Methods
    Workspace.parse_print_responses
    Workspace.get_variable
    Workspace.set_variable_value
+   Workspace.to_optmodel

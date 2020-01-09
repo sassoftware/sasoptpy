@@ -15,7 +15,7 @@ New Features
 
 - Added workspaces, see :class:`Workspace`
 - Added configurations
-- Added several actions to be performed in workspaces, highlights include:
+- Added :ref:`abstract-actions` that allow server-side operations. Highlights include:
 
   - :func:`actions.read_data` and :func:`actions.create_data`
   - :func:`actions.for_loop` and :func:`actions.cofor_loop`

@@ -43,8 +43,8 @@ def register_actions():
 
 
 @sasoptpy.containable
-def read_data(**kwargs):
-    return sasoptpy.abstract.ReadDataStatement(**kwargs)
+def read_data(table, index, columns):
+    return sasoptpy.abstract.ReadDataStatement(table, index, columns)
 
 
 @sasoptpy.containable(standalone=False)
