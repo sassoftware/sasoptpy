@@ -9,7 +9,7 @@ Installation
 Python version support and dependencies
 ---------------------------------------
 
-*sasoptpy* is developed and tested for Python version 3.5+.
+*sasoptpy* is developed and tested for Python version 3.6+.
 
 It depends on the following packages:
 

@@ -43,6 +43,7 @@ setup(
     setup_requires=[
         'numpy'
         ],
+    python_requires='>=3.6',
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: Apache Software License",

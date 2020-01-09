@@ -188,11 +188,17 @@ Print results:
 .. ipython:: python
 
    print(solve1.get_solution_summary())
+
+.. ipython:: python
+
    print(print1.get_response())
 
 .. ipython:: python
 
    print(solve2.get_solution_summary())
+
+.. ipython:: python
+
    print(print2.get_response())
 
 
@@ -205,7 +211,7 @@ List of abstract actions
 A full list of abstract actions are as follows:
 
 .. table:: List of abstract actions
-   :widths: 25 70 5
+   :widths: 25 60 15
 
    +-----------------------+---------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | Method                | Description                                                   | Reference                                                                                                                                                                          |

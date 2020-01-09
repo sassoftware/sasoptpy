@@ -32,6 +32,7 @@ Changes
 - Experimental RESTful API is dropped
 - `get_obj_by_name` function is removed
 - Following SAS Viya changes, `lso` solver is renamed as `blackbox`
+- By the use literal strings (see :pep:`498`), only Python 3.6+ versions are being supported
 
 Bug Fixes
 +++++++++
