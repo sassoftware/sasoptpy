@@ -93,8 +93,10 @@ class TestGenerators(unittest.TestCase):
     def setUpClass(cls):
         cls.server = MockCASServer()
         global real_solve
+        global real_submit
         global realstdout
         real_solve = so.Model.solve
+        real_submit = so.Workspace.submit
         globals()['so'].Model.solve = mock_solve
         globals()['so'].Workspace.submit = mock_solve
         realstdout = sys.stdout
@@ -244,7 +246,9 @@ class TestGenerators(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         global real_solve
+        global real_submit
         globals()['so'].Model.solve = real_solve
+        globals()['so'].Workspace.submit = real_submit
         # for i in codes:
         #     print(i)
         #     for j in codes[i]:
