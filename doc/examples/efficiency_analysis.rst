@@ -34,6 +34,6 @@ Output
 
 .. ipython:: python
 
-   from examples.client_side.efficiency_analysis import test
+   from examples.server_side.efficiency_analysis import test
    test(cas_conn)
 
