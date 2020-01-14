@@ -56,15 +56,18 @@ def containable(func=None, standalone=True):
 
 def class_containable(func):
     def class_append(*args, **kwargs):
+        is_internal = kwargs.pop('internal', None)
         func(*args, **kwargs)
-        if sasoptpy.container and not kwargs.get('internal'):
+        if sasoptpy.container and is_internal is None:
             sasoptpy.container.append(args[0])
 
     return class_append
 
 
 def append_to_container(statement):
-    if (not hasattr(statement, 'is_internal') or (not statement.is_internal())):
+    if hasattr(statement, 'is_internal') and statement.is_internal():
+        pass
+    else:
         sasoptpy.container.append(statement)
 
 
@@ -79,3 +82,27 @@ def under_condition(c):
     sasoptpy.conditions = sasoptpy.conditions + [c]
     yield
     sasoptpy.conditions = original
+
+
+def inline_condition(c):
+    if sasoptpy.container_conditions:
+        sasoptpy.container.sym.add_condition(c)
+        return True
+    return False
+
+
+@contextmanager
+def set_container(s, conditions=False):
+    original = sasoptpy.container
+    sasoptpy.container = s
+    cond_original = None
+    if conditions:
+        cond_original = sasoptpy.container_conditions
+        sasoptpy.container_conditions = True
+
+    yield
+
+    sasoptpy.container = original
+    if conditions:
+        sasoptpy.container_conditions = cond_original
+

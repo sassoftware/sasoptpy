@@ -50,12 +50,12 @@ class TestExamplesLocal(unittest.TestCase):
         cls.conn.endsas()
 
     @classmethod
-    def sas_upload(cls, df, casout):
+    def sas_upload(cls, data, casout):
         if isinstance(casout, str):
             name = casout
         else:
             name = casout.get('name')
-        TestExamplesLocal.conn.df2sd(df, table=name)
+        TestExamplesLocal.conn.df2sd(data, table=name)
         return name
 
     def setUp(self):
@@ -68,7 +68,10 @@ class TestExamplesLocal(unittest.TestCase):
     def run_instance(self, test, **kwargs):
         t0 = time.time()
         val = test(TestExamplesLocal.conn, **kwargs)
-        print(test.__globals__['__file__'], val, time.time()-t0)
+        if isinstance(val, tuple):
+            print(test.__globals__['__file__'], val[0], time.time() - t0)
+        else:
+            print(test.__globals__['__file__'], val, time.time()-t0)
         return val
 
     def test_fm1(self):
@@ -153,3 +156,9 @@ class TestExamplesLocal(unittest.TestCase):
         from least_squares import test
         obj = self.run_instance(test)
         self.assertAlmostEqual(obj, 7.186296783293, self.digits)
+
+    def test_efficiency_analysis(self):
+        from efficiency_analysis import test
+        obj, ed = self.run_instance(test, get_tables=True)
+        en = ed.set_index('garage_name').loc['Woking', 'efficiency_number']
+        self.assertAlmostEqual(en, 0.867320, self.digits)

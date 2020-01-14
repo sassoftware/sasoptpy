@@ -47,7 +47,7 @@ class TestObjective(unittest.TestCase):
         x = TestObjective.x
 
         obj = m.set_objective(2 * x - x ** 3, sense=so.MIN, name='new_obj')
-        self.assertEqual(str(m.get_objective()), "2 * x - (x) ** (3)")
+        self.assertEqual(str(m.get_objective()), "2 * x - ((x) ** (3))")
 
     def test_defn(self):
         x = TestObjective.x

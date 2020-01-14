@@ -98,7 +98,7 @@ class TestExpression(unittest.TestCase):
         setI = Set(name='setI')
         y = so.VariableGroup(setI, name='y')
         e = - so.quick_sum(y[i] * i for i in setI)
-        self.assertEqual(str(e), '- sum(y[i] * i for i in setI)')
+        self.assertEqual(str(e), '- (sum(y[i] * i for i in setI))')
 
         e = 2 * x ** y[0]
         self.assertEqual(str(e), '2 * ((x) ** (y[0]))')

@@ -2,7 +2,8 @@
 import warnings
 
 import sasoptpy
-from sasoptpy.abstract.util import is_solve_statement, is_print_statement
+from sasoptpy.abstract.util import (
+    is_solve_statement, is_print_statement, is_create_data_statement)
 
 class Workspace:
     """
@@ -119,6 +120,23 @@ class Workspace:
             if pp_key in keys:
                 if isinstance(p, sasoptpy.abstract.Statement):
                     p.set_response(self.response[pp_key])
+
+    def parse_create_data_responses(self, mediator):
+        """
+        Grabs responses to all print statements
+        """
+        keys = self.response.keys()
+        cd_statements = [i for i in self.get_elements() if
+                            is_create_data_statement(i)]
+        session = self._session
+
+        for i, c in enumerate(cd_statements):
+            table = c.get_table_expr()
+            try:
+                tabledf = mediator.parse_table(table)
+                c.set_response(tabledf)
+            except:
+                continue
 
     def get_variable(self, name):
         """

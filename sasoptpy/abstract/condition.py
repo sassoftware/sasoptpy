@@ -66,6 +66,10 @@ class Conditional:
         self._parent = parent
         self._conditions = []
 
+    def under_condition(self, condition):
+        self.add_condition(condition)
+        return True
+
     def add_condition(self, condition):
         if sasoptpy.core.util.is_constraint(condition):
             self.add_exp_condition(condition)

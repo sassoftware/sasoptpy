@@ -1,6 +1,8 @@
 
 from .set_iterator import SetIterator, SetIteratorGroup
+from .statement.statement_base import Statement
 import sasoptpy
+from types import GeneratorType
 
 
 class Set:
@@ -109,3 +111,39 @@ class Set:
             return sasoptpy.to_expression(self._value)
 
 
+class InlineSet(Statement):
+
+    def __init__(self, func):
+        super().__init__()
+        self.sym = sasoptpy.abstract.Conditional(self)
+        with sasoptpy.set_container(self, conditions=True):
+            res = func()
+            for m in res:
+                if isinstance(m, tuple):
+                    for j in m:
+                        self.append(j)
+                else:
+                    self.append(m)
+
+    def append(self, element):
+        self.elements.append(element)
+
+    def _defn(self):
+        pass
+
+    def _expr(self):
+        member_defs = ', '.join(sasoptpy.to_definition(i) for i in self.elements)
+        conditions = self.sym.get_conditions_str()
+        if conditions != '':
+            return f'{{{member_defs}: {conditions}}}'
+        else:
+            return f'{{{member_defs}}}'
+
+    def __repr__(self):
+        s = 'sasoptpy.InlineSet('
+        try:
+            s += self._expr()
+        except:
+            s += f'id={id(self)}'
+        s += '}'
+        return s

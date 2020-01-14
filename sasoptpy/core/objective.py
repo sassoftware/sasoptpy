@@ -35,7 +35,7 @@ class Objective(Expression):
         if sense is None:
             sense = sasoptpy.MIN
         self._sense = sense
-        self._default = kwargs.get('internal', False)
+        self._default = kwargs.get('default', False)
 
     def _defn(self):
         return self._sense.lower() + ' ' + \

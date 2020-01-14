@@ -81,6 +81,7 @@ class SetIteratorGroup(OrderedDict):
         self._name = sasoptpy.util.get_next_name()
         self._set = initset
         self._init_members(names, datatype)
+        self.sym = sasoptpy.abstract.Conditional(self)
 
     def _init_members(self, names, datatype):
         if names is not None:

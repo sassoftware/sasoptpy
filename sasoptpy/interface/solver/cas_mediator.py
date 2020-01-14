@@ -379,6 +379,11 @@ class CASMediator(Mediator):
 
         return solution
 
+    def parse_table(self, table):
+        session = self.session
+        table = session.CASTable(table).to_frame()
+        return table
+
     def parse_cas_table(self, table):
         """
         Converts requested :class:`swat.cas.table.CASTable` objects to
@@ -552,6 +557,7 @@ class CASMediator(Mediator):
         caller.response = response
         caller.parse_solve_responses()
         caller.parse_print_responses()
+        caller.parse_create_data_responses(self)
 
         return self.parse_cas_workspace_response()
 

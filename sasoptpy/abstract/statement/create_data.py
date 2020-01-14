@@ -47,6 +47,9 @@ class CreateDataStatement(Statement):
         else:
             return str(self._table)
 
+    def get_table_name(self):
+        return self._table
+
     def get_index_expr(self):
         s = ''
         key = self._index.get('key')

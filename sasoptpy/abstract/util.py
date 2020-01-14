@@ -38,6 +38,13 @@ def is_print_statement(i):
             return True
     return False
 
+
+def is_create_data_statement(i):
+    if type(i) == sasoptpy.abstract.CreateDataStatement:
+        return True
+    return False
+
+
 def get_key_from_name(name):
     keys = name.split('[')[1].split(']')[0]
     keys = keys.split(',')

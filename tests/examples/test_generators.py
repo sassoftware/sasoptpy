@@ -54,7 +54,10 @@ class MockCASServer:
         pass
 
     def upload_frame(self, *args, **kwargs):
-        pass
+        try:
+            return kwargs.get('casout').get('name').upper()
+        except IndexError:
+            pass
 
 
 def mock_solve(model, **kwargs):
@@ -93,6 +96,7 @@ class TestGenerators(unittest.TestCase):
         global realstdout
         real_solve = so.Model.solve
         globals()['so'].Model.solve = mock_solve
+        globals()['so'].Workspace.submit = mock_solve
         realstdout = sys.stdout
         unittest.util._MAX_LENGTH = 1e+6
 
@@ -228,6 +232,12 @@ class TestGenerators(unittest.TestCase):
     def test_least_squares(self):
         self.set_expectation('Least Squares', expected.least_squares)
         from least_squares import test
+        test(TestGenerators.server)
+        self.check_results()
+
+    def test_efficiency_analysis(self):
+        self.set_expectation('Efficiency Analysis', expected.efficiency_analysis)
+        from efficiency_analysis import test
         test(TestGenerators.server)
         self.check_results()
 

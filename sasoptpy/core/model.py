@@ -71,7 +71,8 @@ class Model:
         self._constraints = []
         self._vargroups = []
         self._congroups = []
-        self._objective = Objective(0, name=name+'_obj', internal=True)
+        self._objective = Objective(
+            0, name=name+'_obj', default=True, internal=True)
         self._multiobjs = []
         self._variableDict = {}
         self._constraintDict = {}

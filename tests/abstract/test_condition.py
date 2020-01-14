@@ -45,7 +45,7 @@ class TestCondition(unittest.TestCase):
                 c[i] = x[i] <= 3
 
         self.assertEqual(so.to_definition(c),
-                         'con c {s in {1,2,3}: s != 2} : x[s] <= 3;')
+                         'con c {s in {1,2,3}: s ne 2} : x[s] <= 3;')
 
     def test_container_condition(self):
 

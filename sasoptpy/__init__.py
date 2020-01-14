@@ -34,13 +34,13 @@ from sasoptpy.util import (
     to_expression, to_definition, to_optmodel, is_linear,
     load_package_globals)
 
-from sasoptpy.structure import (containable, class_containable)
+from sasoptpy.structure import (containable, class_containable, set_container)
 
 from sasoptpy.core.expression import Expression
 from sasoptpy.core import (Variable, VariableGroup, Constraint, ConstraintGroup,
                            Model, Objective, Auxiliary, Symbol)
 
-from sasoptpy.abstract import (Set, Parameter, ImplicitVar,
+from sasoptpy.abstract import (Set, InlineSet, Parameter, ImplicitVar,
                                ParameterGroup, SetIterator,
                                SetIteratorGroup, LiteralStatement)
 

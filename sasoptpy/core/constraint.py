@@ -289,6 +289,9 @@ class Constraint(Expression):
             return ' {} '.format(
             sasoptpy.util.get_direction_str(self._direction))
 
+    def _expr(self):
+        return self._get_constraint_expr()
+
     def _get_constraint_expr(self):
         left_expr = self.get_range_expr()
         expr = super()._expr()
@@ -340,9 +343,12 @@ class Constraint(Expression):
         elif self._direction == 'G':
             s += ' >= '
         elif self._direction == 'NE':
-            s += ' != '
+            s += ' ne '
         else:
-            raise ValueError('Constraint has no direction')
+            try:
+                s += ' ' + sasoptpy._relation_dict[self._direction] + ' '
+            except:
+                raise ValueError('Constraint has no direction')
         if self._range == 0:
             s += ' {}'.format(- self._linCoef['CONST']['val'])
         else:

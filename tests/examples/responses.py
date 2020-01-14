@@ -108,3 +108,7 @@ nl2 = [
 least_squares = [
     read_file('least_squares')
 ]
+
+efficiency_analysis = [
+    read_file('efficiency_analysis')
+]

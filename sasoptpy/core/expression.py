@@ -433,30 +433,16 @@ class Expression:
         """
         return self.get_member('CONST')['val']
 
-    def _expr(self):
-        """
-        Generates the OPTMODEL compatible string representation of the object.
-
-        Examples
-        --------
-
-        >>> x = so.Variable(name='x')
-        >>> y = so.Variable(name='y')
-        >>> f = x + y ** 2
-        >>> print(f)
-        x + (y) ** (2)
-        >>> print(f._expr())
-        x + (y) ^ (2)
-
-        """
+    def _expr_string(self, operator_type='sas'):
         # Add the operator first if exists
         s = ''
         if self._operator:
             s += self._operator
-            if self._iterkey:
-                if self._operator == 'sum':
-                    s += sasoptpy.util.package_utils._to_optmodel_loop(
-                        self._iterkey) + ' '
+            if operator_type == 'sas':
+                if self._iterkey:
+                    if self._operator == 'sum':
+                        s += sasoptpy.util.package_utils._to_optmodel_loop(
+                            self._iterkey) + ' '
             s += '('
 
         itemcnt = 0
@@ -484,16 +470,26 @@ class Expression:
 
             # Add operand if exists, default is product
             if op:
-                optext = ' {} '.format(op)
+                if operator_type == 'python':
+                    optext = ' {} '.format(sasoptpy.util.get_python_symbol(op))
+                else:
+                    optext = ' {} '.format(op)
             else:
                 optext = ' * '
 
             # For a list of expressions, a recursive function is called
             if isinstance(ref, list):
-                strlist = sasoptpy.util.package_utils._recursive_walk(
-                    ref, func='_expr')
+                if operator_type == 'python':
+                    strlist = sasoptpy.util.package_utils._recursive_walk(
+                        ref, func='__str__')
+                else:
+                    strlist = sasoptpy.util.package_utils._recursive_walk(
+                        ref, func='_expr')
             elif sasoptpy.util.has_expr(ref):
-                strlist = [ref._expr()]
+                if operator_type == 'python':
+                    strlist = [ref.__str__()]
+                else:
+                    strlist = [ref._expr()]
             else:
                 strlist = [str(val)]
 
@@ -505,13 +501,13 @@ class Expression:
             refs = optext.join(strlist)
             if val == 1 or val == -1:
                 if val == -1 and any(special_op in refs for special_op in
-                             sasoptpy.util.get_unsafe_operators()):
+                                     sasoptpy.util.get_unsafe_operators()):
                     s += '({}) '.format(refs)
                 else:
                     s += '{} '.format(refs)
             else:
                 if op or any(special_op in refs for special_op in
-                               sasoptpy.util.get_unsafe_operators()):
+                             sasoptpy.util.get_unsafe_operators()):
                     s += '{} * ({}) '.format(
                         sasoptpy.util.get_in_digit_format(abs(val)), refs)
                 else:
@@ -523,7 +519,7 @@ class Expression:
         # CONST is always at the end
         if itemcnt == 0 or (self.get_member_value('CONST') != 0 and
                             not sasoptpy.core.util.is_constraint(self)):
-            val = self._linCoef['CONST']['val']
+            val = self.get_member_value('CONST')
             csign = copysign(1, val)
             if csign < 0:
                 s += '- '
@@ -535,12 +531,44 @@ class Expression:
 
         # Close operator parentheses and add remaining elements
         if self._operator:
+            if operator_type == 'python':
+                if self._iterkey:
+                    forlist = []
+                    for i in self._iterkey:
+                        key_expr = sasoptpy.core.util.get_key_for_expr(i)
+                        if key_expr:
+                            forlist.append(key_expr)
+                    s += ' '.join(forlist)
             if self._arguments:
-                s += ', ' + ', '.join(i._expr() if hasattr(i, '_expr') else str(i) for i in self._arguments)
+                if operator_type == 'sas':
+                    s += ', ' + ', '.join(
+                        i._expr() if hasattr(i, '_expr') else str(i) for i in
+                        self._arguments)
+                else:
+                    s += ', ' + ', '.join(str(i) for i in self._arguments)
             s = s.rstrip()
             s += ')'
         s = s.rstrip()
         return s
+
+    def _expr(self):
+        """
+        Generates the OPTMODEL compatible string representation of the object.
+
+        Examples
+        --------
+
+        >>> x = so.Variable(name='x')
+        >>> y = so.Variable(name='y')
+        >>> f = x + y ** 2
+        >>> print(f)
+        x + (y) ** (2)
+        >>> print(f._expr())
+        x + (y) ^ (2)
+
+        """
+        return self._expr_string(operator_type='sas')
+
 
     def __repr__(self):
         """
@@ -576,82 +604,11 @@ class Expression:
         x + (y) ** (2)
 
         """
-        s = ''
+        try:
+            return self._expr_string(operator_type='python')
+        except:
+            return 'sasoptpy.Expression(id={})'.format(id(self))
 
-        itemcnt = 0
-        firstel = True
-        if self._operator:
-            s += str(self._operator) + '('
-        for idx, el in self.get_member_dict().items():
-            val = el['val']
-            ref = el['ref']
-            op = el.get('op')
-            csign = copysign(1, val)
-
-            # Skip elements with 0 coefficient or constant
-            if val == 0 or idx == 'CONST':
-                continue
-
-            # Append sign of the value unless it is positive and first
-            if firstel and csign == 1:
-                pass
-            elif csign == 1:
-                s += '+ '
-            elif csign == -1:
-                s += '- '
-            firstel = False
-
-            if op:
-                optext = ' {} '.format(
-                    sasoptpy.util.get_python_symbol(op))
-            else:
-                optext = ' * '
-
-            if isinstance(ref, list):
-                strlist = sasoptpy.util.package_utils._recursive_walk(
-                    ref, func='__str__')
-            else:
-                strlist = [ref.__str__()]
-            if optext != ' * ':
-                strlist = ['({})'.format(stritem)
-                           for stritem in strlist]
-
-            refs = optext.join(strlist)
-            if val == 1 or val == -1:
-                s += '{} '.format(refs)
-            elif op:
-                s += '{} * ({}) '.format(sasoptpy.util.get_in_digit_format(abs(val)), refs)
-            else:
-                s += '{} * {} '.format(sasoptpy.util.get_in_digit_format(abs(val)), refs)
-            itemcnt += 1
-
-        # CONST is always at the end
-        if itemcnt == 0 or (self.get_member_value('CONST') != 0 and
-                            not sasoptpy.core.util.is_constraint(self)):
-            val = self.get_member_value('CONST')
-            csign = copysign(1, val)
-            if csign < 0:
-                s += '- '
-            elif firstel:
-                pass
-            else:
-                s += '+ '
-            s += '{} '.format(sasoptpy.util.get_in_digit_format(abs(val)))
-
-        if self._operator:
-            if self._iterkey:
-                forlist = []
-                for i in self._iterkey:
-                    key_expr = sasoptpy.core.util.get_key_for_expr(i)
-                    if key_expr:
-                        forlist.append(key_expr)
-                s += ' '.join(forlist)
-            if self._arguments:
-                s += ', ' + ', '.join(str(i) for i in self._arguments)
-            s = s.rstrip()
-            s += ')'
-        s = s.rstrip()
-        return s
 
     def _add_coef_value(self, var, key, value):
         """
@@ -964,6 +921,7 @@ class Auxiliary(Expression):
         self._suffix = suffix
         self._operator = operator
         self._value = value
+        self.set_member(key=self.get_name(), ref=self, val=1)
 
     def get_prefix_str(self):
         if self._prefix is None:
@@ -986,6 +944,9 @@ class Auxiliary(Expression):
         return '{}({})'.format(
             self._operator, s
         )
+
+    def get_name(self):
+        return self._expr()
 
     def _expr(self):
         prefix_str = self.get_prefix_str()

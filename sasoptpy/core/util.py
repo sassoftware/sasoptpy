@@ -116,10 +116,13 @@ def expression_to_constraint(left, relation, right):
             r += left
         if np.isinstance(type(right), np.number):
             r._linCoef['CONST']['val'] -= right
+            right = 0
         elif is_expression(right):
             r -= right
+        elif right is None:
+            r.set_member_value('CONST', np.nan)
         generated_constraint = sasoptpy.core.Constraint(
-            exp=r, direction=relation, crange=0)
+            exp=r, direction=relation, crange=0, internal=True)
         return generated_constraint
     else:
         r = sasoptpy.core.Expression()

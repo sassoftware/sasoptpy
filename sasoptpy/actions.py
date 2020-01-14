@@ -17,6 +17,10 @@ def register_actions():
     register_to_function_container(
         cofor_loop, sasoptpy.abstract.statement.CoForLoopStatement.cofor_loop)
     register_to_function_container(
+        if_condition, sasoptpy.abstract.statement.IfElseStatement.if_condition)
+    register_to_function_container(
+        switch_conditions, sasoptpy.abstract.statement.if_else.SwitchStatement.switch_condition)
+    register_to_function_container(
         set_value, sasoptpy.abstract.statement.Assignment.set_value)
     register_to_function_container(
         fix, sasoptpy.abstract.statement.FixStatement.fix)
@@ -64,6 +68,16 @@ def for_loop(*args):
 
 @sasoptpy.containable(standalone=False)
 def cofor_loop(*args):
+    pass
+
+
+@sasoptpy.containable(standalone=False)
+def if_condition(logic_expression, if_statement, else_statement=None):
+    pass
+
+
+@sasoptpy.containable(standalone=False)
+def switch_conditions(**args):
     pass
 
 
@@ -128,3 +142,4 @@ def use_problem(problem):
 
 
 condition = sasoptpy.structure.under_condition
+inline_condition = sasoptpy.structure.inline_condition

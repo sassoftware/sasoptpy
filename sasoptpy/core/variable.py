@@ -77,13 +77,14 @@ class Variable(Expression):
         if self._init is not None:
             self._value = self._init
 
-        self._shadow = shadow
-        self._initialize_self_coef()
-
         self._key = key
         self._parent = None
         self._temp = False
         self._abstract = abstract
+
+        self._shadow = shadow
+        self.sol = sasoptpy.core.Auxiliary(self, suffix='sol')
+        self._initialize_self_coef()
 
     def _initialize_self_coef(self):
         self.set_member(key=self._name, ref=self, val=1)

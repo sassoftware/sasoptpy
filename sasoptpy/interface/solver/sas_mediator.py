@@ -304,6 +304,10 @@ class SASMediator(Mediator):
         self.perform_postsolve_operations()
         return caller._primalSolution
 
+    def parse_table(self, table):
+        session = self.session
+        return session.sd2df(table)
+
     def parse_sas_table(self, table_name):
         """
         Converts requested table name into :class:`pandas.DataFrame`
@@ -425,7 +429,10 @@ class SASMediator(Mediator):
         # Error msg: session.SYSERRORTEXT()
         # Error status: session.SYSERR()
 
+        caller.parse_create_data_responses(self)
         return self.parse_sas_workspace_response()
+
+
 
     def parse_sas_workspace_response(self):
         """

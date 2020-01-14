@@ -8,3 +8,4 @@ issubdtype = np.issubdtype
 ndarray = np.ndarray
 nan = np.nan
 inf = np.inf
+isnan = np.isnan

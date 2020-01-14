@@ -75,7 +75,7 @@ def load_package_globals():
     sasoptpy._relation_dict = {
         'E': '=',
         'EQ': '=',
-        'NE': '!=',
+        'NE': 'ne',
         'LT': '<',
         'LE': '<=',
         'L': '<=',
@@ -97,6 +97,7 @@ def get_next_name():
 
 def load_function_containers():
     sasoptpy.container = None
+    sasoptpy.container_conditions = False
 
     def read_statement_dictionary():
         d = dict()
@@ -148,6 +149,8 @@ def get_in_digit_format(val):
         Formatted string
 
     """
+    if np.isnan(val):
+        return '.'
     digits = sasoptpy.config['max_digits']
     if digits and digits > 0:
         return round(val, digits)
@@ -527,6 +530,8 @@ def _to_sas_string(obj):
         iters = get_iterators(parent)
         conds = get_conditions(parent)
         return get_iterators_optmodel_format(iters, conds)
+    elif obj is None:
+        return '.'
     else:
         raise TypeError('Cannot convert type {} to SAS string'.format(type(obj)))
         return '{}'.format(str(obj))

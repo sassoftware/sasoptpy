@@ -30,7 +30,14 @@ class ParameterGroup:
         if key in self._shadows:
             return self._shadows[key]
         else:
-            pv = Parameter(name=None)
+            try:
+                keys = ', '.join(i._expr()
+                                 if hasattr(i, '_expr') else str(i) for i in
+                                 key)
+            except TypeError:
+                keys = str(key)
+            temp_name = '{}[{}]'.format(self.get_name(), keys)
+            pv = Parameter(name=temp_name, internal=True)
             pv.set_parent(self, key=key)
             self._shadows[key] = pv
             return pv
