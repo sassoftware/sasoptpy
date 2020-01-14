@@ -28,6 +28,13 @@ Viya Examples / Concrete
    Multiobjective <multiobjective.rst>
    Least Squares <least_squares.rst>
 
+**Workspace Examples**
+
+.. toctree::
+   :maxdepth: 1
+
+   Efficiency Analysis <efficiency_analysis.rst>
+
 Viya Examples / Abstract
 ------------------------
 
