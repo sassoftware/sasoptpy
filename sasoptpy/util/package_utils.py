@@ -44,7 +44,7 @@ def load_package_globals():
 
     sasoptpy.LSO = 'lso'
     sasoptpy.BLACKBOX = 'blackbox'
-    sasoptpy.MIP = 'mip'
+    sasoptpy.MIP = 'milp'
     sasoptpy.LP = 'lp'
     sasoptpy.QP = 'qp'
 

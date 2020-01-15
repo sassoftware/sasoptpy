@@ -20,28 +20,26 @@ Utility Functions
 Abstract Actions
 ~~~~~~~~~~~~~~~~
 
-.. currentmodule:: sasoptpy.actions
-
 .. autosummary::
    :toctree: generated/
 
-   read_data
-   create_data
-   solve
-   for_loop
-   cofor_loop
-   set_value
-   fix
-   unfix
-   set_objective
-   print_item
-   put_item
-   expand
-   drop
-   union
-   diff
-   substring
-   use_problem
+   actions.read_data
+   actions.create_data
+   actions.solve
+   actions.for_loop
+   actions.cofor_loop
+   actions.set_value
+   actions.fix
+   actions.unfix
+   actions.set_objective
+   actions.print_item
+   actions.put_item
+   actions.expand
+   actions.drop
+   actions.union
+   actions.diff
+   actions.substring
+   actions.use_problem
 
 
 .. _math-functions:

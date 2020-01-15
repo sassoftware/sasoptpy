@@ -164,15 +164,15 @@ can be passed using ``options`` argument of the :meth:`Model.solve` method.
 The only special option for the :meth:`Model.solve` method is ``with``. If not
 passed, PROC OPTMODEL chooses a solver that depends on the problem type.
 Possible ``with`` options are listed in SAS/OR documentation:
-http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_optmodel_syntax11.htm&docsetVersion=14.3&locale=en#ormpug.optmodel.npxsolvestmt
+http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_optmodel_syntax11.htm&docsetVersion=15.1&locale=en#ormpug.optmodel.npxsolvestmt
 
 See specific solver options at following links:
 
-- See http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_lpsolver_syntax02.htm&docsetVersion=14.3&locale=en for a list of LP solver options.
-- See http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_milpsolver_syntax02.htm&docsetVersion=14.3&locale=en for a list of MILP solver options.
-- See http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_nlpsolver_syntax02.htm&docsetVersion=14.3&locale=en for a list of NLP solver options.
-- See http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_qpsolver_syntax02.htm&docsetVersion=14.3&locale=en for a list of QP solver options.
-- See http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_clpsolver_syntax01.htm&docsetVersion=14.3&locale=en for a list of CLP solver options.
+- See http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_lpsolver_syntax02.htm&docsetVersion=15.1&locale=en for a list of LP solver options.
+- See http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_milpsolver_syntax02.htm&docsetVersion=15.1&locale=en for a list of MILP solver options.
+- See http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_nlpsolver_syntax02.htm&docsetVersion=15.1&locale=en for a list of NLP solver options.
+- See http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_qpsolver_syntax02.htm&docsetVersion=15.1&locale=en for a list of QP solver options.
+- See http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_clpsolver_syntax01.htm&docsetVersion=15.1&locale=en for a list of CLP solver options.
 
 The ``options`` argument can also pass ``solveLp`` and ``solveMilp`` action
 options when ``frame=True`` is used when calling the :meth:`Model.solve` method.

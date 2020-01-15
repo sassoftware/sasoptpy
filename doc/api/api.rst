@@ -46,3 +46,10 @@ Functions
 
    functions
 
+Tests
+=====
+
+.. toctree::
+   :maxdepth: 2
+
+   tests

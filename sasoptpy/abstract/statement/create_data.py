@@ -122,6 +122,6 @@ class CreateDataStatement(Statement):
         return s
 
     @classmethod
-    def create_data(cls, **kwargs):
-        c = CreateDataStatement(**kwargs)
+    def create_data(cls, *args, **kwargs):
+        c = CreateDataStatement(*args, **kwargs)
         return c

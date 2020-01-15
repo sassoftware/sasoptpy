@@ -35,8 +35,6 @@ import matplotlib
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    #'matplotlib.sphinxext.only_directives',
-    #'matplotlib.sphinxext.plot_directive',
     'sphinx.ext.autodoc',
     'sphinx.ext.doctest',
     'sphinx.ext.intersphinx',
@@ -45,12 +43,10 @@ extensions = [
     'sphinx.ext.autosummary',
     'IPython.sphinxext.ipython_console_highlighting',
     'IPython.sphinxext.ipython_directive',
-    #'sphinx.ext.imgmath',
     'sphinxcontrib.fulltoc',
     'numpydoc',
-    'sphinx.ext.mathjax'
-    #'sphinxcontrib.httpdomain',
-    #'sphinxcontrib.excel_table',
+    'sphinx.ext.mathjax',
+    'sphinx.ext.viewcode'
 ]
 
 mathjax_path = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"
@@ -267,4 +263,6 @@ def setup(app):
     app.connect('autodoc-process-docstring', remove_autosums)
     app.add_stylesheet('css/sasoptpy.css') 
     app.add_javascript('js/url.js')
+
+add_module_names = False
 

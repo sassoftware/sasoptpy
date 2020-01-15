@@ -4,7 +4,7 @@
 Examples
 ********
 
-Examples are provided from `SAS/OR documentation <http://go.documentation.sas.com/?docsetId=ormpex&docsetTarget=titlepage.htm&docsetVersion=14.3&locale=en>`_.
+Examples are provided from `SAS/OR documentation <http://go.documentation.sas.com/?docsetId=ormpex&docsetTarget=titlepage.htm&docsetVersion=15.1&locale=en>`_.
 
 
 Viya Examples / Concrete

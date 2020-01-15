@@ -284,7 +284,8 @@ class TestCreateData(unittest.TestCase):
                     table='out',
                     index={},
                     columns=[
-                        {'name': concat('x', concat(i, j)), 'expression': x[i, j],
+                        {'name': concat('x', concat(i, j)),
+                         'expression': x[i, j],
                          'index': [i, j]}
                     ]
                 )
