@@ -31,7 +31,7 @@ Abstract Actions
    actions.for_loop
    actions.cofor_loop
    actions.if_condition
-   actions.swtich_conditions
+   actions.switch_conditions
    actions.set_value
    actions.fix
    actions.unfix

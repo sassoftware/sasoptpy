@@ -388,16 +388,7 @@ def solve(options=None, primalin=False):
         This dictionary can have several fields.
 
         - with : string
-            Name of the solver, possible values are
-
-            - `lp` : Linear programming
-            - `milp` : Mixed integer linear programming
-            - `nlp` : General nonlinear programming
-            - `qp` : Quadratic programming
-            - `blackbox` : Black-box optimization
-
-            SAS Optimization also has Constraint Programming (clp) and Network
-            Solver (network) but they are not currently supported.
+            Name of the solver, see possible values under Notes.
 
         See :ref:`solver-options` for a list of solver options. All fields in
         options (except `with`) is passed directly to the solver.
@@ -406,6 +397,19 @@ def solve(options=None, primalin=False):
         Switch for using existing variable values as an initial point in MILP
         solver
 
+    Notes
+    -----
+
+    Possible solver names for `with` parameter:
+
+    * `lp` : Linear programming
+    * `milp` : Mixed integer linear programming
+    * `nlp` : General nonlinear programming
+    * `qp` : Quadratic programming
+    * `blackbox` : Black-box optimization
+
+    SAS Optimization also has Constraint Programming (clp) and Network
+    Solver (network) but they are not currently supported.
 
     Returns
     -------
@@ -466,8 +470,7 @@ def for_loop(*args):
 
     Returns
     -------
-    set_iterator : :class:`sasoptpy.abstract.SetIterator` or
-                   :class:`sasoptpy.abstract.SetIteratorGroup`
+    set_iterator : :class:`sasoptpy.abstract.SetIterator`, :class:`sasoptpy.abstract.SetIteratorGroup`
         Set iterators to be used inside for-loop
 
     Examples
@@ -548,8 +551,7 @@ def cofor_loop(*args):
 
     Returns
     -------
-    set_iterator : :class:`sasoptpy.abstract.SetIterator` or
-                   :class:`sasoptpy.abstract.SetIteratorGroup`
+    set_iterator : :class:`sasoptpy.abstract.SetIterator`, :class:`sasoptpy.abstract.SetIteratorGroup`
         Set iterators to be used inside cofor-loop
 
     Examples

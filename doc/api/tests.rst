@@ -40,7 +40,7 @@ Abstract
    statement.test_assignment.TestAssignment
    statement.test_cofor_loop.TestCoforLoop
    statement.test_create_data.TestCreateData
-   statement.test_drop.TestDrop
+   statement.test_drop_restore.TestDropRestore
    statement.test_fix_unfix.TestFix
    statement.test_for_loop.TestForLoop
    statement.test_literal.TestLiteral
