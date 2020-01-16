@@ -261,11 +261,45 @@ You can submit a workspace to CAS server and grab the response using:
    w.submit()
 
 
-Next steps
-----------
+.. _configurations:
 
-You can browse :ref:`examples` to see various uses of aformentioned
-functionality. 
+Package configurations
+----------------------
 
-If you have a good understanding of the flow, then check :ref:`sasoptpy-api` to
-access API details.
+Some default options regarding problem representation can be changed by users as follows:
+
+.. ipython:: python
+
+   x = so.Variable(name='x')
+   c = so.Constraint(10 / 3 * x + 1e-20 * x ** 2 <= 30 + 1e-11, name='c')
+   print(so.to_definition(c))
+
+.. ipython:: python
+
+   so.config['max_digits'] = 2
+
+.. ipython:: python
+
+   print(so.to_definition(c))
+
+.. ipython:: python
+
+   so.config['max_digits'] = None
+
+.. ipython:: python
+
+   print(so.to_definition(c))
+
+And can be reset using:
+
+.. ipython:: python
+
+   del so.config['max_digits']
+
+Some of the configuration options are as follows:
+
+- verbosity (default 3)
+- max_digits (default 12)
+- print_digits (default 6)
+- default_sense (default so.minimization)
+- default_bounds

@@ -13,9 +13,9 @@ v1.0.0-alpha (TBD)
 New Features
 ++++++++++++
 
-- Added workspaces, see :class:`Workspace`
-- Added configurations
-- Added :ref:`abstract-actions` that allow server-side operations. Highlights include:
+- Added workspaces, see more info in :ref:`User Guide <workspaces>` and :ref:`example <efficiency-analysis>`
+- Added :ref:`configurations <configurations>`
+- Added :ref:`abstract actions <abstract-actions>` that allow server-side operations. Highlights include:
 
   - :func:`actions.read_data` and :func:`actions.create_data`
   - :func:`actions.for_loop` and :func:`actions.cofor_loop`
@@ -42,3 +42,4 @@ Bug Fixes
 - Fixed: Constraints without directions do not produce an error
 - Fixed: Documentation does not mention conda-forge library requirement
 - Fixed: Single-dimensional parameters are hard to access
+

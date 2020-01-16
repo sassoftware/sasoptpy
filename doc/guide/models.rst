@@ -166,13 +166,13 @@ passed, PROC OPTMODEL chooses a solver that depends on the problem type.
 Possible ``with`` options are listed in SAS/OR documentation:
 http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_optmodel_syntax11.htm&docsetVersion=15.1&locale=en#ormpug.optmodel.npxsolvestmt
 
-See specific solver options at following links:
+You can find specific solver options in SAS Optimization documentation:
 
-- See http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_lpsolver_syntax02.htm&docsetVersion=15.1&locale=en for a list of LP solver options.
-- See http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_milpsolver_syntax02.htm&docsetVersion=15.1&locale=en for a list of MILP solver options.
-- See http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_nlpsolver_syntax02.htm&docsetVersion=15.1&locale=en for a list of NLP solver options.
-- See http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_qpsolver_syntax02.htm&docsetVersion=15.1&locale=en for a list of QP solver options.
-- See http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_clpsolver_syntax01.htm&docsetVersion=15.1&locale=en for a list of CLP solver options.
+- `LP solver options <http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_lpsolver_syntax02.htm&docsetVersion=15.1&locale=en>`__
+- `MILP solver options <http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_milpsolver_syntax02.htm&docsetVersion=15.1&locale=en>`__
+- `NLP solver options <http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_nlpsolver_syntax02.htm&docsetVersion=15.1&locale=en>`__
+- `QP solver options <http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_qpsolver_syntax02.htm&docsetVersion=15.1&locale=en>`__
+- `BLACKBOX solver options <https://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_lsosolver_syntax02.htm&docsetVersion=15.1&locale=en>`__
 
 The ``options`` argument can also pass ``solveLp`` and ``solveMilp`` action
 options when ``frame=True`` is used when calling the :meth:`Model.solve` method.

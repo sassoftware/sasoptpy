@@ -20,10 +20,10 @@ Solvers
 
 It currently supports following model types:
 
-- Linear Problems (lp)
-- Integer Problems / Mixed Integer Problems (mip)
-- Quadratic Problems (qp)
-- Nonlinear / Black-box Problems (blackbox)
+- Linear Problems
+- Integer Problems / Mixed Integer Problems
+- Quadratic Problems
+- Nonlinear / Black-box Problems
 
 Data
 ~~~~
@@ -45,7 +45,6 @@ Road map
 
 sasoptpy has the broader goal of supporting all the functionality SAS Optimization and SAS/OR solvers have and
 provide high-level set of tools for working with models more easily.
-
 
 Versioning
 ----------
