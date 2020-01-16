@@ -18,7 +18,7 @@
 
 import sasoptpy
 from sasoptpy.core import Expression
-from sasoptpy.util.package_utils import _to_python_string
+from sasoptpy.util.package_utils import _to_python_string, _to_sas_string
 
 
 class Parameter(Expression):
@@ -29,7 +29,12 @@ class Parameter(Expression):
         if name is None:
             name = sasoptpy.util.get_next_name()
         if ptype is None:
-            ptype = sasoptpy.NUM
+            if value is not None and isinstance(value, str):
+                ptype = sasoptpy.STR
+            elif init is not None and isinstance(init, str):
+                ptype = sasoptpy.STR
+            else:
+                ptype = sasoptpy.NUM
         self._type = ptype
         self._fix_value = value
         self._init = init
@@ -62,9 +67,11 @@ class Parameter(Expression):
         else:
             s = '{} {}'.format(self._type, self.get_name())
             if self._init:
-                s += ' init {}'.format(_to_python_string(self._init))
+                #s += ' init {}'.format(_to_python_string(self._init))
+                s += ' init {}'.format(_to_sas_string(self._init))
             elif self._fix_value:
-                s += ' = {}'.format(_to_python_string(self._fix_value))
+                #s += ' = {}'.format(_to_python_string(self._fix_value))
+                s += ' = {}'.format(_to_sas_string(self._fix_value))
             s += ';'
             return s
 

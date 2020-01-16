@@ -24,6 +24,12 @@ import unittest
 import sasoptpy as so
 from inspect import cleandoc
 
+import os
+import sys
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.abspath(os.path.join(current_dir, '..')))
+from util import assert_equal_wo_temps
+
 class TestSet(unittest.TestCase):
 
     def setUp(self):
@@ -69,3 +75,27 @@ class TestSet(unittest.TestCase):
             if x in S:
                 print('x is in S')
         self.assertRaises(RuntimeError, incorrect_type)
+
+    def test_inline_set(self):
+        from sasoptpy.actions import inline_condition, for_loop
+        from sasoptpy.abstract.math import mod
+
+        with so.Workspace('w') as w:
+            p = so.Parameter(name='p')
+            S = so.Set(name='S', value=so.exp_range(1, 11))
+            iset = so.InlineSet(lambda: (x for x in S
+                                if inline_condition(mod(x, 3) == 0)))
+            for i in for_loop(iset):
+                p.set_value(i)
+
+        assert_equal_wo_temps(self, so.to_optmodel(w), cleandoc('''
+            proc optmodel;
+                num p;
+                set S = 1..10;
+                for {o8 in {o4 in S: mod(o4 , 3) = 0}} do;
+                    p = o8;
+                end;
+            quit;'''))
+
+        assert_equal_wo_temps(self, repr(iset),
+                              'sasoptpy.InlineSet({o4 in S: mod(o4 , 3) = 0}}')

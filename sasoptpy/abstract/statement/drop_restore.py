@@ -10,12 +10,13 @@ class DropStatement(Statement):
         super().__init__()
         for i in elements:
             self.elements.append(i)
+        self.keyword = 'drop'
 
     def append(self, element):
         pass
 
     def _defn(self):
-        s = 'drop '
+        s = f'{self.keyword} '
         cons = []
         for c in self.elements:
             cons.extend(c._get_name_list())
@@ -32,3 +33,14 @@ class DropStatement(Statement):
     def drop_constraint(cls, *constraints):
         if all([sasoptpy.core.util.is_droppable(c) for c in constraints]):
             st = DropStatement(*constraints)
+
+class RestoreStatement(DropStatement):
+
+    def __init__(self, *elements):
+        super().__init__(*elements)
+        self.keyword = 'restore'
+
+    @classmethod
+    def restore_constraint(cls, *constraints):
+        if all([sasoptpy.core.util.is_droppable(c) for c in constraints]):
+            st = RestoreStatement(*constraints)

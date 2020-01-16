@@ -17,6 +17,8 @@ Utility Functions
    quick_sum
    reset
 
+.. _abstract-action-list:
+
 Abstract Actions
 ~~~~~~~~~~~~~~~~
 
@@ -28,6 +30,8 @@ Abstract Actions
    actions.solve
    actions.for_loop
    actions.cofor_loop
+   actions.if_condition
+   actions.swtich_conditions
    actions.set_value
    actions.fix
    actions.unfix
@@ -36,6 +40,7 @@ Abstract Actions
    actions.put_item
    actions.expand
    actions.drop
+   actions.restore
    actions.union
    actions.diff
    actions.substring

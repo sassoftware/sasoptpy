@@ -37,10 +37,9 @@ class PrintStatement(Statement):
         return ps
 
     @classmethod
-    def put_item(cls, *args, **kwargs):
+    def put_item(cls, *args, names=False):
         ps = PrintStatement(*args)
         ps.set_print_type('put')
-        if kwargs.get('names', False):
+        if names:
             ps.allow_print_names()
         return ps
-

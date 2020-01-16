@@ -54,3 +54,51 @@ class TestLiteral(unittest.TestCase):
                 use problem m2;
                 solve;
             quit;'''))
+
+    def test_union(self):
+        from sasoptpy.actions import union, put_item
+        with so.Workspace('w') as w:
+            n = so.Parameter(name='n', value=11)
+            S = so.Set(name='S', value=so.exp_range(1, n))
+            T = so.Set(name='T', value=so.exp_range(n+1, 20))
+            U = so.Set(name='U', value=union(S, T))
+            put_item(U, names=True)
+
+        self.assertEqual(so.to_optmodel(w), cleandoc('''
+            proc optmodel;
+                num n = 11;
+                set S = 1..n;
+                set T = n+1..20;
+                set U = S union T;
+                put U=;
+            quit;'''))
+
+    def test_diff(self):
+        from sasoptpy.actions import diff, put_item
+        with so.Workspace('w') as w:
+            S = so.Set(name='S', value=so.exp_range(1, 20))
+            T = so.Set(name='T', value=so.exp_range(1, 15))
+            U = so.Set(name='U', value=diff(S, T))
+            put_item(U, names=True)
+
+        self.assertEqual(so.to_optmodel(w), cleandoc('''
+            proc optmodel;
+                set S = 1..19;
+                set T = 1..14;
+                set U = S diff T;
+                put U=;
+            quit;'''))
+
+    def test_substring(self):
+        from sasoptpy.actions import substring, put_item
+        with so.Workspace('w') as w:
+            p = so.Parameter(name='p', value='random_string', ptype=so.STR)
+            r = so.Parameter(name='r', value=substring(p, 1, 6), ptype=so.STR)
+            put_item(r)
+
+        self.assertEqual(so.to_optmodel(w), cleandoc('''
+            proc optmodel;
+                str p = 'random_string';
+                str r = substr(p, 1, 6);
+                put r;
+            quit;'''))

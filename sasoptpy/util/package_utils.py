@@ -430,6 +430,9 @@ def get_mutable(exp):
     if isinstance(exp, sasoptpy.Variable):
         r = sasoptpy.Expression(exp)
         r._abstract = exp._abstract
+    elif isinstance(exp, sasoptpy.SetIterator):
+        r = wrap_expression(exp)
+        return r
     elif isinstance(exp, sasoptpy.Expression):
         r = exp
     else:

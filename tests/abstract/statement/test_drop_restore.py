@@ -31,7 +31,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.abspath(os.path.join(current_dir, '../..')))
 from util import assert_equal_wo_temps
 
-class TestDrop(unittest.TestCase):
+class TestDropRestore(unittest.TestCase):
 
     def setUp(self):
         so.reset()
@@ -133,4 +133,28 @@ class TestDrop(unittest.TestCase):
             con c_2 : x[2] <= 4;
             drop c_0;
             solve;
+            quit;'''))
+
+    def test_simple_drop_restore(self):
+        from sasoptpy.actions import drop, restore, solve, set_objective
+        with so.Workspace('w') as w:
+            x = so.Variable(name='x', lb=-1)
+            set_objective(x**3, name='xcube', sense=so.minimize)
+            c = so.Constraint(x >= 1, name='xbound')
+            solve()
+            drop(c)
+            solve()
+            restore(c)
+            solve()
+
+        self.assertEqual(so.to_optmodel(w), cleandoc('''
+            proc optmodel;
+                var x >= -1;
+                MIN xcube = (x) ^ (3);
+                con xbound : x >= 1;
+                solve;
+                drop xbound;
+                solve;
+                restore xbound;
+                solve;
             quit;'''))

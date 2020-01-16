@@ -43,16 +43,16 @@ class LiteralStatement(Statement):
 
     @classmethod
     def substring(cls, main_string, first_pos, last_pos):
-        ss = sasoptpy.Auxiliary(base='{}, {}, {}'.format(
-            _to_python_string(main_string), first_pos, last_pos
-        ), operator='substr')
+        first_el = _to_sas_string(main_string)
+        pos = f'{first_pos}, {last_pos}'
+        ss = LiteralStatement(f'substr({first_el}, {pos})', internal=True)
+        ss.set_internal(True)
         return ss
-
-    @classmethod
-    def unfix(cls, item):
-        us = LiteralStatement('unfix {};'.format(
-            _to_python_string(item)
-        ))
+        #
+        # ss = sasoptpy.Auxiliary(base='{}, {}, {}'.format(
+        #     _to_sas_string(main_string), first_pos, last_pos
+        # ), operator='substr')
+        #return ss
 
     @classmethod
     def use_problem(cls, problem):

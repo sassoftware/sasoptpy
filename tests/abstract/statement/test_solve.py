@@ -126,6 +126,24 @@ class TestSolve(unittest.TestCase):
                 solve;
             quit;'''))
 
+    def test_with_options(self):
+        with so.Workspace('w') as w:
+            solve()
+            solve(options={'with': 'milp'})
+            solve(options={'with': 'milp'}, primalin=True)
+            solve(options={'with': 'milp', 'presolver': None, 'feastol': 1e-6,
+                           'logfreq': 2, 'maxsols': 3, 'scale': 'automatic',
+                           'restarts': None, 'cutmir': 'aggressive'})
+
+        self.assertEqual(so.to_optmodel(w), cleandoc('''
+            proc optmodel;
+                solve;
+                solve with milp;
+                solve with milp / primalin;
+                solve with milp / presolver=None feastol=1e-06 logfreq=2 maxsols=3 scale=automatic restarts=None cutmir=aggressive;
+            quit;'''))
+
+
     def test_warning_without_abstract(self):
 
         def solve_without_abstract():

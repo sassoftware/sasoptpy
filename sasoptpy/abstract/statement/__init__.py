@@ -2,7 +2,7 @@ from .statement_base import Statement
 from .assignment import Assignment
 from .cofor_loop import CoForLoopStatement
 from .create_data import CreateDataStatement
-from .drop import DropStatement
+from .drop_restore import DropStatement, RestoreStatement
 from .for_loop import ForLoopStatement
 from .if_else import IfElseStatement
 from .literal import LiteralStatement
