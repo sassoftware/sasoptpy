@@ -7,7 +7,7 @@ Reference
 
 http://go.documentation.sas.com/?docsetId=ormpex&docsetTarget=ormpex_ex3_toc.htm&docsetVersion=15.1&locale=en
 
-https://support.sas.com/documentation/onlinedoc/or/ex_code/143/mpex03.html
+https://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex03.html
 
 Model
 -----

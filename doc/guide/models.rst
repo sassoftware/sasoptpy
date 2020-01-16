@@ -168,17 +168,17 @@ http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_optmodel_sy
 
 You can find specific solver options in SAS Optimization documentation:
 
-- `LP solver options <http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_lpsolver_syntax02.htm&docsetVersion=15.1&locale=en>`__
-- `MILP solver options <http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_milpsolver_syntax02.htm&docsetVersion=15.1&locale=en>`__
-- `NLP solver options <http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_nlpsolver_syntax02.htm&docsetVersion=15.1&locale=en>`__
-- `QP solver options <http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_qpsolver_syntax02.htm&docsetVersion=15.1&locale=en>`__
+- `LP solver options <https://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_lpsolver_syntax02.htm&docsetVersion=15.1&locale=en>`__
+- `MILP solver options <https://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_milpsolver_syntax02.htm&docsetVersion=15.1&locale=en>`__
+- `NLP solver options <https://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_nlpsolver_syntax02.htm&docsetVersion=15.1&locale=en>`__
+- `QP solver options <https://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_qpsolver_syntax02.htm&docsetVersion=15.1&locale=en>`__
 - `BLACKBOX solver options <https://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_lsosolver_syntax02.htm&docsetVersion=15.1&locale=en>`__
 
 The ``options`` argument can also pass ``solveLp`` and ``solveMilp`` action
 options when ``frame=True`` is used when calling the :meth:`Model.solve` method.
 
-- See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvelp_syntax.htm&locale=en for a list of LP options.
-- See http://go.documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=8.11&docsetId=casactmopt&docsetTarget=casactmopt_solvemilp_syntax.htm&locale=en for a list of MILP options.
+- `solveLp options <https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=cas-optimization-solvelp.htm&docsetVersion=8.5&locale=en>`__
+- `solveMilp options <https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=cas-optimization-solvemilp.htm&docsetVersion=8.5&locale=en>`__
 
 Package Options
 +++++++++++++++
