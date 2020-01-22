@@ -72,7 +72,7 @@ class TestObjective(unittest.TestCase):
             o = so.Objective(x**2, name='obj', sense=so.MIN)
             m = so.Model(name='model1')
             m.include(x, o)
-            m.solve(options={'relaxint': True, 'with': 'milp'}, primalin=True)
+            m.solve(options={'with': 'milp', 'relaxint': True}, primalin=True)
         self.assertEqual(so.to_optmodel(w), cleandoc('''
             proc optmodel;
                 var x integer >= 0.5 init 2;

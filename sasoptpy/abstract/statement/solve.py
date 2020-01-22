@@ -19,29 +19,48 @@ class SolveStatement(Statement):
         pass
 
     def _defn(self):
-        options = self.options
-        primalin = self.primalin
+
+        solve_option_keys = (
+            'with', 'obj', 'objective', 'noobj', 'noobjective', 'relaxint',
+            'primalin')
         s = ''
         if self.model is not None:
             s = 'use problem {};\n'.format(self.model.get_name())
         s += 'solve'
-        if options.get('with', None):
-            s += ' with ' + options['with']
-        if options.get('relaxint', False):
-            s += ' relaxint'
-        if options or primalin:
-            primalin_set = False
-            optstring = ''
+        pre_opts = []
+        pos_opts = []
+
+        options = self.options
+        primalin = self.primalin
+
+        if primalin:
+            options['primalin'] = True
+
+        if options:
             for key, value in options.items():
-                if key not in ('with', 'relaxint', 'primalin'):
-                    optstring += ' {}={}'.format(key, value)
-                if key is 'primalin':
-                    optstring += ' primalin'
-                    primalin_set = True
-            if primalin and primalin_set is False and options.get('with') is 'milp':
-                optstring += ' primalin'
-            if optstring:
-                s += ' /' + optstring
+                if key in solve_option_keys:
+                    if key == 'with':
+                        pre_opts.append('with ' + options['with'])
+                    elif key == 'relaxint' and options[key] is True:
+                        pre_opts.append('relaxint')
+                    elif key == 'obj' or key == 'objectives':
+                        pre_opts.append('obj ({})'.format(
+                            ' '.join(i.get_name() for i in options[key])))
+                        multi_obj = True
+                    elif key == 'primalin' and options[key] is True:
+                        pos_opts.append('primalin')
+                else:
+                    if type(value) is dict:
+                        pos_opts.append('{}=('.format(key) + ','.join(
+                            '{}={}'.format(i, j)
+                            for i, j in value.items()) + ')')
+                    else:
+                        pos_opts.append('{}={}'.format(key, value))
+
+            if pre_opts:
+                s += ' ' + ' '.join(pre_opts)
+            if pos_opts:
+                s += ' / ' + ' '.join(pos_opts)
         s += ';'
         return s
 

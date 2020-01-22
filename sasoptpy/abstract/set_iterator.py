@@ -1,7 +1,7 @@
 
 from collections import OrderedDict
 import sasoptpy
-from .condition import Conditional
+from .condition import Conditional, Condition
 
 class SetIterator(sasoptpy.Expression):
     """
@@ -70,8 +70,27 @@ class SetIterator(sasoptpy.Expression):
         s = 'sasoptpy.SetIterator({}, name=\'{}\')'.format(self._set, self.get_name())
         return s
 
-    def _cond_expr(self):
-        return '<' + self._expr() + '>'
+    # def _cond_expr(self):
+    #     return '<' + self._expr() + '>'
+
+    def __lt__(self, other):
+        return Condition(self, '<', other)
+
+    def __gt__(self, other):
+        return Condition(self, '>', other)
+
+    def __le__(self, other):
+        return Condition(self, '<=', other)
+
+    def __ge__(self, other):
+        return Condition(self, '>=', other)
+
+    def __eq__(self, other):
+        return Condition(self, 'EQ', other)
+
+    def __ne__(self, other):
+        return Condition(self, 'NE', other)
+
 
 class SetIteratorGroup(OrderedDict, sasoptpy.Expression):
 
@@ -99,7 +118,7 @@ class SetIteratorGroup(OrderedDict, sasoptpy.Expression):
             return OrderedDict.__getitem__(self, key)
         except KeyError:
             if isinstance(key, int):
-                return list(self.items())[key]
+                return list(self.values())[key]
 
     def get_name(self):
         return self._name

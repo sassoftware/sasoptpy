@@ -50,6 +50,8 @@ class SwitchStatement(NestedConditions):
         for i in args:
             if sasoptpy.core.util.is_constraint(i):
                 condition = i
+            elif isinstance(i, sasoptpy.abstract.Condition):
+                condition = i
             elif callable(i):
                 key = self.get_next_key(condition)
                 c = Case(keyword=key, condition=condition)
@@ -64,6 +66,8 @@ class SwitchStatement(NestedConditions):
             return 'if'
         else:
             if sasoptpy.core.util.is_constraint(condition):
+                return 'else if'
+            elif isinstance(condition, sasoptpy.abstract.Condition):
                 return 'else if'
             else:
                 return 'else'

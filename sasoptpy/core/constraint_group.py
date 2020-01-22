@@ -259,6 +259,9 @@ class ConstraintGroup(Group):
             groups.append(group_str)
         return '\n'.join(groups)
 
+    def _expr(self):
+        return self.get_name()
+
     def __str__(self):
         """
         Generates a representation string
