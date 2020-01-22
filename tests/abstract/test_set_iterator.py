@@ -238,5 +238,15 @@ class TestSetIterator(unittest.TestCase):
             quit;
             '''))
 
+    def test_definition_multi(self):
+        regset = so.Set(name='regset')
+        multiset = so.Set(name='multiset', settype=[so.string, so.number])
+        mt = so.VariableGroup(5, name='mt')
+        e = so.expr_sum(mt[k] for k in regset)
+        self.assertEqual(so.to_expression(e), "sum {k in regset} (mt[k])")
+        e = so.expr_sum(mt[k] for k in multiset)
+        assert_equal_wo_temps(self, so.to_expression(e),
+                              "sum {<o1, o2> in multiset} (mt[o1, o2])")
+
     def tearDown(self):
         pass

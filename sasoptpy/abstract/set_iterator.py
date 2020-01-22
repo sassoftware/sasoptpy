@@ -3,7 +3,6 @@ from collections import OrderedDict
 import sasoptpy
 from .condition import Conditional
 
-
 class SetIterator(sasoptpy.Expression):
     """
     Creates an iterator object for a given Set
@@ -74,10 +73,11 @@ class SetIterator(sasoptpy.Expression):
     def _cond_expr(self):
         return '<' + self._expr() + '>'
 
-class SetIteratorGroup(OrderedDict):
+class SetIteratorGroup(OrderedDict, sasoptpy.Expression):
 
     def __init__(self, initset, datatype=None, names=None):
-        super()
+        super(SetIteratorGroup, self).__init__()
+        self._objorder = sasoptpy.util.get_creation_id()
         self._name = sasoptpy.util.get_next_name()
         self._set = initset
         self._init_members(names, datatype)
@@ -93,6 +93,13 @@ class SetIteratorGroup(OrderedDict):
             for i in datatype:
                 it = SetIterator(None, datatype=i)
                 self.append(it)
+
+    def __getitem__(self, key):
+        try:
+            return OrderedDict.__getitem__(self, key)
+        except KeyError:
+            if isinstance(key, int):
+                return list(self.items())[key]
 
     def get_name(self):
         return self._name

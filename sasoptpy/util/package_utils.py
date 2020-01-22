@@ -288,6 +288,8 @@ def _wrap_expression_with_iterators(exp, operator, iterators):
     for i in iterators:
         if isinstance(i, sasoptpy.abstract.SetIterator):
             r._iterkey.append(i)
+        if isinstance(i, sasoptpy.abstract.SetIteratorGroup):
+            r._iterkey.append(i)
     wrapper = sasoptpy.core.Expression()
     wrapper.set_member(key=r.get_name(), ref=r, val=1)
     wrapper._abstract = True
@@ -314,10 +316,11 @@ def get_subindices_optmodel_format(subindex):
         return ''
 
 
-def _to_optmodel_loop(keys, parent=None):
+def _to_optmodel_loop(keys, parent=None, subindex=True):
     s = ''
-    subindex = get_subindices(keys)
-    s += get_subindices_optmodel_format(subindex)
+    if subindex:
+        subindex = get_subindices(keys)
+        s += get_subindices_optmodel_format(subindex)
     iters = get_iterators(keys)
     conds = get_conditions(keys)
     if parent is not None:

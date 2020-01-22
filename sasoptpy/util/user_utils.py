@@ -234,7 +234,8 @@ def expr_sum(argv):
             newlocals = argv.gi_frame.f_locals
             for nl in newlocals.keys():
                 if nl not in clocals and\
-                   type(newlocals[nl]) == sasoptpy.abstract.SetIterator:
+                        (type(newlocals[nl]) == sasoptpy.abstract.SetIterator or
+                         type(newlocals[nl]) == sasoptpy.abstract.SetIteratorGroup):
                     iterators.append(newlocals[nl])
                     newlocals[nl].set_name(nl)
     if iterators:

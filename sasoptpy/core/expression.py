@@ -442,7 +442,7 @@ class Expression:
                 if self._iterkey:
                     if self._operator == 'sum':
                         s += sasoptpy.util.package_utils._to_optmodel_loop(
-                            self._iterkey) + ' '
+                            self._iterkey, subindex=False) + ' '
             s += '('
 
         itemcnt = 0
