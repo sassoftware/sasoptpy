@@ -299,7 +299,7 @@ candidate values, and limit the maximum number of configurations and maximum run
 
    print(results)
 
-Full details can be obtained using :meth:`Model.get_tuner_results` method.
+Full details can be obtained using the :meth:`Model.get_tuner_results` method.
 
 .. only:: html
 

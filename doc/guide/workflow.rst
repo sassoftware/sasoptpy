@@ -12,9 +12,9 @@
 Workflows
 =========
 
-*sasoptpy* can work both with client-side data and server-side data.
+*sasoptpy* can work with both client-side data and server-side data.
 Some limitations to the functionalities may apply in terms of which
-workflow is being used. In this part, overall flow of the package
+workflow is being used. In this section, the overall flow of the package
 is explained.
 
 Client-side models
@@ -23,17 +23,17 @@ Client-side models
 If the data is on the client-side (Python), then a concrete model is generated
 on the client-side and uploaded using one of the available CAS actions.
 
-Using client-side models brings several advantages, such as accessing
-variables, expressions, and constraints directly. You may do more intensive 
-operations like filter data, sort values, changing variable values,
+Using a client-side model brings several advantages, such as accessing
+variables, expressions, and constraints directly. You can do more intensive
+operations like filter data, sort values, change variable values,
 and print expressions more easily.
 
 There are two main disadvantages of working with client-side models.
-First, if your model is relatively big size, then the generated
-MPS DataFrame or OPTMODEL codes may allocate a large memory on your
+First, if your model is relatively large, the generated
+MPS DataFrame or OPTMODEL code may allocate a large memory on your
 machine.
 Second, the information that needs to be passed from client to server
-might be bigger than using a server-side model.
+might be larger than using a server-side model.
 
 See the following representation of the client-side model workflow for CAS (Viya) servers:
 
@@ -44,7 +44,7 @@ See the following representation of the client-side model workflow for SAS clien
 .. image:: ../_static/images/clientside_sas.png
 
 
-Steps of modeling a simple Knapsack problem are shown in the following subsections.
+Steps of modeling a simple knapsack problem are shown in the following subsections.
 
 Reading data
 ++++++++++++
@@ -82,8 +82,7 @@ Reading data
    print(type(total_weight), total_weight)
 
 
-Here, instead of using :meth:`Model.read_table` method, column values can be obtained
-one by one:
+Here, column values can be obtained one by one:
 
 >>> df = df.set_index('item')
 >>> ITEMS = df.index.tolist()
@@ -112,13 +111,13 @@ Model
    # Solve
    m.solve(verbose=True)
 
-Using :code:`verbose` option shows the generated OPTMODEL code.
-Here, we can see the coefficient values of the parameters inside the model.
+Using the :code:`verbose` option shows the generated OPTMODEL code.
+Here, you can see the coefficient values of the parameters inside the model.
 
 Parsing results
 +++++++++++++++
 
-After the solve, primal and dual solution tables are obtained. We can print
+After the solve, the primal and dual solution tables are obtained. You can print
 the solution tables using the :meth:`Model.get_solution` method.
 
 It is also possible to print the optimal solution using
@@ -142,10 +141,10 @@ Server-side models
 
 If the data is on the server-side (CAS or SAS), then an abstract model
 is generated on the client-side. This abstract model is later converted to
-PROC OPTMODEL code, which combines the data on the server.
+PROC OPTMODEL code, which reads the data on the server.
 
 The main advantage of the server-side models is faster upload times compared
-to client-side. This is especially very noticable when using large chunks of
+to client-side. This is especially noticable when using large numbers of
 variable and constraint groups.
 
 The only disadvantage of using server-side models is that variables often need 
@@ -217,9 +216,8 @@ solution is printed using the server response.
 Limitations
 -----------
 
-- Nonlinear models can only be solved using runOptmodel action, hence
-  requires SAS Viya version to be greater than or equal to 3.4.
-- User defined decomposition blocks are only available in MPS mode, hence
-  only works with client-side data.
+- Nonlinear models can be solved only using the runOptmodel action, and
+  requires the SAS Viya version to be 3.4 or later.
+- User defined decomposition blocks are available only in MPS mode, and therefore only works with client-side data.
 - Mixed usage (client-side and server-side data) may not work in some cases.
-  A quick fix would be transferring the data, in either direction.
+  A quick fix would be transferring the data in either direction.

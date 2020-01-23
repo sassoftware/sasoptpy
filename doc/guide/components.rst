@@ -19,7 +19,7 @@ Model components
    import sasoptpy
    sasoptpy.reset_globals()
 
-In this part, several model components are discussed with examples. 
+In this section, several model components are discussed with examples.
 See :ref:`examples` to learn more about how these components can be used to
 define optimization models.
 
@@ -68,9 +68,9 @@ nonlinear expressions, but there are some limitations.
 
 Currently, it is not possible to get or print values of nonlinear expressions.
 Moreover, if your model includes a nonlinear expression, you need to be using
-SAS Viya >= 3.4 or any SAS version for solving your problem.
+SAS Viya 3.4 or later or any SAS version for solving your problem.
 
-For using mathematical operations, you need to import `sasoptpy.math`
+To use mathematical operations, you need to import `sasoptpy.math`
 functions.
 
 Mathematical expressions
@@ -80,7 +80,7 @@ Mathematical expressions
 expressions to be used in optimization models.
 
 You need to import `sasoptpy.math` to your code to start using these functions.
-A list of available mathematical functions are listed at :ref:`math-functions`.
+Available mathematical functions are listed in :ref:`math-functions`.
 
 .. ipython:: python
 
@@ -148,7 +148,7 @@ the element to be added and the sign (1 or -1):
    
    print(repr(profit_after_tax))
 
-If the expression is a temporary one, then the addition is performed in place.
+If the expression is a temporary one, the addition is performed in place.
 
 
 **Multiplication**
@@ -185,7 +185,7 @@ For faster summations compared to Python's native :code:`sum` function,
 Renaming an expression
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Expressions can be renamed using :func:`Expression.set_name` method:
+Expressions can be renamed using the :func:`Expression.set_name` method:
 
 .. ipython:: python
 
@@ -201,7 +201,7 @@ Expressions can be renamed using :func:`Expression.set_name` method:
 Copying an expression
 ~~~~~~~~~~~~~~~~~~~~~
 
-An :class:`Expression` can be copied using :func:`Expression.copy`.
+An :class:`Expression` can be copied using :func:`Expression.copy`:
 
 .. ipython:: python
 
@@ -262,7 +262,7 @@ be obtained using the :func:`Model.get_objective` method.
 Getting the value
 ~~~~~~~~~~~~~~~~~
 
-After a solve, the objective value can be checked using the
+After a solve, the objective value can be retrieved using the
 :func:`Model.get_objective_value` method.
 
 >>> m.solve()
@@ -290,11 +290,9 @@ model:
 >>> y = so.Variable(name='y', lb=5)
 >>> m.add_variable(y)
 
-and
+Equivalently, you could do this in one step:
 
 >>> y = m.add_variable(name='y', lb=5) 
-
-are equivalent.
 
 **Creating a variable inside a model**
 
@@ -313,10 +311,7 @@ variables can be created using the ``vartype=so.INT`` and ``vartype=so.BIN``
 arguments, respectively.
 
 The default lower bound for variables is 0, and the upper bound is infinity.
-Name is a required argument. If the given name already exists in the 
-namespace, then a different generic name can be used for the variable.
-The :func:`reset_globals` function can be 
-used to reset sasoptpy namespace when needed.
+Name is a required argument.
 
 Changing bounds
 ~~~~~~~~~~~~~~~
@@ -346,7 +341,7 @@ Working with a set of variables
 
 A set of variables can be added using single or multiple indices.
 Valid index sets include list, dict, and :class:`pandas.Index` objects. 
-See :ref:`input-data` for more about allowed index types.
+See :ref:`input-data` for more information about allowed index types.
 
 **Creating a set of variables outside a model**
 
@@ -413,7 +408,7 @@ Working with a set of constraints
 
 A set of constraints can be added using single or multiple indices.
 Valid index sets include list, dict, and :class:`pandas.Index` objects. 
-See :ref:`input-data` for more about allowed index types.
+See :ref:`input-data` for more information about allowed index types.
 
 **Creating a set of constraints outside a model**
 

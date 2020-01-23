@@ -15,8 +15,8 @@ One of the most powerful features of SAS Optimization and PROC OPTMODEL is the a
 models in a single call. Using this ability, users can read a common data set once, or parallelize solve steps for
 similar subproblems.
 
-Newly introduced :class:`Workspace` provides this ability in a familiar syntax. Compared to :class:`Model` objects,
-a :class:`Workspace` can consists of several models and able to use server-side data and OPTMODEL statements in a
+The newly introduced :class:`Workspace` provides this ability in a familiar syntax. Compared to :class:`Model` objects,
+a :class:`Workspace` can consist of several models and is able to use server-side data and OPTMODEL statements in a
 more detailed way.
 
 Creating a workspace
@@ -28,12 +28,12 @@ A :class:`Workspace` should be called using the `with` keyword of Python as foll
 >>>    ...
 
 You can define several models in the same workspace, and solve problems multiple times. All the statements are sent
-to server after :meth:`Workspace.submit` is called.
+to the server after :meth:`Workspace.submit` is called.
 
 Adding components
 ~~~~~~~~~~~~~~~~~
 
-Unlike :class:`Model` objects, where components are added explicitly, objects defined inside a :class:`Workspace` is
+Unlike :class:`Model` objects, where components are added explicitly, objects defined inside a :class:`Workspace` are
 added automatically.
 
 For example, adding a new variable is performed as follows:
@@ -50,7 +50,7 @@ Contents of a workspace can be displayed using :meth:`Workspace.to_optmodel`:
    print(w.to_optmodel())
 
 
-See the following full example where a data is loaded into the server, and problem is solved using a Workspace:
+See the following full example where a data is loaded into the server, and a problem is solved using a Workspace:
 
 Create CAS session:
 
@@ -140,17 +140,18 @@ You can import abstract actions through `sasoptpy.actions` as follows:
 
 >>> from sasoptpy.actions import read_data, create_data
 
-Theses abstract actions are performed on the server side by generating an equivalent OPTMODEL code at execution.
+These abstract actions are performed on the server side by generating equivalent OPTMODEL code at execution.
 
 Grabbing results
 ----------------
 
-In order to solve a problem, you need to use :func:`actions.solve` function explicitly.
+In order to solve a problem, you need to use the :func:`actions.solve` function explicitly.
 Since :class:`Workspace` objects allow several models and solve statements to be included,
-each of these solve statements are grabbed
-separately. Solution after each solve can be returned using :func:`actions.print` function.
+each of these solve statements are retrieved
+separately. The solution after each solve can be returned using the :func:`actions.print` function or creating a
+table using the :func:`actions.create_data` function.
 
-See the following example where we change a parameter and solve the same problem twice:
+See the following example where a parameter is changed and the same problem solved twice:
 
 .. ipython:: python
 
@@ -206,4 +207,4 @@ Print results:
 List of abstract actions
 ------------------------
 
-A list of abstract actions is available in :ref:`API section <abstract-action-list>`.
+A list of abstract actions is available in the :ref:`API section <abstract-action-list>`.
