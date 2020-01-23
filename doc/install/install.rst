@@ -11,10 +11,10 @@ Python version support and dependencies
 
 *sasoptpy* is developed and tested for Python version 3.6+.
 
-It depends on the following packages:
+It requires the following packages:
 
 * numpy
-* saspy (Optional)
+* saspy
 * swat
 * pandas
 

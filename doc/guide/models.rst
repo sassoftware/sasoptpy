@@ -53,28 +53,28 @@ is to use the :meth:`Model.include` method:
    print(new_model)
 
 Note that variables are added to :class:`Model` objects by reference.
-Therefore, after :meth:`Model.solve` is called, values of variables will be
+Therefore, after :meth:`Model.solve` is called, the values of variables will be
 replaced with optimal values.
 
 Accessing components
 ~~~~~~~~~~~~~~~~~~~~
 
-You can get a list of model variables using :meth:`Model.get_variables()`
-method.
+You can get a list of model variables using the :meth:`Model.get_variables()`
+method:
 
 .. ipython:: python
 
    print(m.get_variables())
 
-Similarly, you can access a list of constraints using
-:meth:`Model.get_constraints()` method.
+Similarly, you can access a list of constraints using the
+:meth:`Model.get_constraints()` method:
 
 .. ipython:: python
 
    c2 = m.add_constraint(2 * x - y >= 1, name='c2')
    print(m.get_constraints())
 
-To access a certain constraint using its name, you can use
+To access a certain constraint using its name, you can use the
 :meth:`Model.get_constraint` method:
 
 .. ipython:: python
@@ -85,7 +85,7 @@ To access a certain constraint using its name, you can use
 Dropping components
 ~~~~~~~~~~~~~~~~~~~
 
-A variable inside a model can simply be dropped using
+A variable inside a model can be dropped using
 :meth:`Model.drop_variable`. Similarly, a set of variables can be dropped
 using :meth:`Model.drop_variables`.
 
@@ -99,8 +99,8 @@ using :meth:`Model.drop_variables`.
    m.include(y)
    print(m)
 
-A constraint can be dropped using :meth:`Model.drop_constraint` method.
-Similarly, a set of constraints can be dropped using
+A constraint can be dropped using the :meth:`Model.drop_constraint` method.
+Similarly, a set of constraints can be dropped using the
 :meth:`Model.drop_constraints`.
 
 .. ipython:: python
@@ -134,9 +134,8 @@ Solving a model
 ~~~~~~~~~~~~~~~
 
 A model is solved using the :meth:`Model.solve` method. This method converts
-Python definitions into an MPS file and uploads to a CAS server for the optimization
-action. The type of the optimization problem (Linear Optimization or Mixed Integer
-Linear Optimization) is determined based on variable types.
+Python definitions into an MPS file and uploads it to a CAS server for the optimization
+action. The type of the optimization problem is determined based on the variable types and expressions.
 
 >>> m.solve()
 NOTE: Initialized model model_1
@@ -156,17 +155,17 @@ Solver Options
 ++++++++++++++
 
 Both PROC OPTMODEL solve options and ``solveLp``, ``solveMilp`` action options
-can be passed using ``options`` argument of the :meth:`Model.solve` method.
+can be passed using the ``options`` argument of the :meth:`Model.solve` method.
 
 >>> m.solve(options={'with': 'milp', 'maxtime': 600})
 >>> m.solve(options={'with': 'lp', 'algorithm': 'ipm'})
 
 The only special option for the :meth:`Model.solve` method is ``with``. If not
 passed, PROC OPTMODEL chooses a solver that depends on the problem type.
-Possible ``with`` options are listed in SAS/OR documentation:
-http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_optmodel_syntax11.htm&docsetVersion=15.1&locale=en#ormpug.optmodel.npxsolvestmt
+Possible ``with`` options are listed in the `SAS/OR documentation <http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_optmodel_syntax11.htm&docsetVersion=15.1&locale=en#ormpug.optmodel.npxsolvestmt>`__.
 
-You can find specific solver options in SAS Optimization documentation:
+
+You can find specific solver options in the SAS Optimization documentation:
 
 - `LP solver options <https://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_lpsolver_syntax02.htm&docsetVersion=15.1&locale=en>`__
 - `MILP solver options <https://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_milpsolver_syntax02.htm&docsetVersion=15.1&locale=en>`__
@@ -183,11 +182,11 @@ options when ``frame=True`` is used when calling the :meth:`Model.solve` method.
 Package Options
 +++++++++++++++
 
-Besides the ``options`` argument, there are 7 arguments that can be passed
-into :meth:`Model.solve` method:
+Besides the ``options`` argument, you can pass following arguments
+into the :meth:`Model.solve` method:
 
 - name: Name of the uploaded problem information
-- drop: Option for dropping the data from server after solve
+- drop: Option for dropping the data from server after the solve
 - replace: Option for replacing an existing data with the same name
 - primalin: Option for using the current values of the variables as an initial solution
 - submit: Option for calling the CAS / SAS action
@@ -207,11 +206,11 @@ After the solve is completed, all variable and constraint values are parsed
 automatically.
 A summary of the problem can be accessed using the
 :meth:`Model.get_problem_summary` method,
-and a summary of the solution can be accesed using the
+and a summary of the solution can be accessed using the
 :meth:`Model.get_solution_summary`
 method.
 
-To print values of any object, :func:`get_solution_table` can be used:
+To print the values of any object, :func:`get_solution_table` can be used:
 
 >>> print(so.get_solution_table(x, y))
 
@@ -221,11 +220,11 @@ their indices. See :ref:`examples` for more details.
 Tuning MILP model parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-SAS Optimization solvers provide a variety of settings. However, it might be difficult to find ideal settings for a
-given model. In order to compare and obtain a good choice of parameters, users can use `optimization.tune` action
+SAS Optimization solvers provide a variety of settings. However, it might be difficult to find the best settings for a
+given model. In order to compare and obtain a good choice of parameters, you can use the `optimization.tune` action
 for mixed-integer linear optimization problems.
 
-:meth:`Model.tune_parameters` method is a wrapper for tune action. Consider the following Knapsack problem example:
+The :meth:`Model.tune_parameters` method is a wrapper for the tune action. Consider the following knapsack problem example:
 
 .. ipython:: python
    :suppress:
@@ -264,7 +263,7 @@ for mixed-integer linear optimization problems.
 
    m = get_model()
 
-For this problem, we can compare configurations as follows:
+For this problem, you can compare configurations as follows:
 
 .. ipython:: python
 
@@ -280,12 +279,10 @@ For this problem, we can compare configurations as follows:
 * tunerParameters
 * tuningParameters
 
-See a full set of tuning parameters and acceptable values of these arguments at SAS Optimization documentation:
+For a full set of tuning parameters and acceptable values of these arguments, see the SAS Optimization documentation [#]_.
 
-https://go.documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.5&docsetId=casactmopt&docsetTarget=casactmopt_optimization_details37.htm&locale=en
-
-For the example problem, we can tune `presolver`, `cutStrategy` and `strongIter` settings, using initial values and
-candidate values, limit maximum number of configurations and maximum running time as follows:
+For the example problem, we can tune the `presolver`, `cutStrategy`, and `strongIter` settings, using initial values and
+candidate values, and limit the maximum number of configurations and maximum running time as follows:
 
 .. ipython:: python
 
@@ -303,3 +300,9 @@ candidate values, limit maximum number of configurations and maximum running tim
    print(results)
 
 Full details can be obtained using :meth:`Model.get_tuner_results` method.
+
+.. only:: html
+
+    **References**
+
+.. [#] https://go.documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.5&docsetId=casactmopt&docsetTarget=casactmopt_optimization_details37.htm&locale=en

@@ -83,4 +83,3 @@ def _get_default_config():
 def _load_default_config():
     sasoptpy.config = Config()
     sasoptpy.default_config_keys = sasoptpy.config.keys
-

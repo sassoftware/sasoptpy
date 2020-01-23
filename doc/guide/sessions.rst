@@ -11,7 +11,7 @@ CAS Sessions
 
 A :class:`swat.cas.connection.CAS` session is needed to solve optimization 
 problems with *sasoptpy* using SAS Viya OR solvers.
-See SAS documentation to learn more about CAS sessions and SAS Viya.
+See the SAS documentation to learn more about CAS sessions and SAS Viya.
 
 A sample CAS Session can be created using the following commands.
 
@@ -43,6 +43,10 @@ A sample CAS Session can be created using the following commands.
 >>> print(repr(m))
 sasoptpy.Model(name='demo', session=CAS(hostname, port, username, protocol='cas', name='py-session-1', session=session-no))
 
+You can end the session and close the connection as follows:
+
+>>> s.terminate()
+
 
 SAS Sessions
 ~~~~~~~~~~~~
@@ -60,7 +64,7 @@ A sample SAS session can be created using the following commands.
 sasoptpy.Model(name='demo', session=saspy.SASsession(cfgname='winlocal'))
 
 
-It is possible to connect a SAS session using a configuration file
+It is possible to connect to a SAS session using a configuration file
 
 .. ipython:: python
    :suppress:
@@ -80,7 +84,7 @@ It is possible to connect a SAS session using a configuration file
 
    print(m.get_session().sasver)
 
-A SAS session can be terminated at the end as follows:
+A SAS session can be terminated as follows:
 
 .. ipython:: python
 

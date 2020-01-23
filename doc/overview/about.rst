@@ -3,12 +3,12 @@
 
 .. _about:
 
-About Package
-=============
+About sasoptpy
+==============
 
 **sasoptpy** is a Python package providing easy and integrated ways of working with SAS Optimization and SAS/OR
-optimization solvers. The main goal of the project is to enable developers to model optimization problems with ease by
-providing high-level building blocks. We aim to be one of the most user-friendly optimization modeling tool in Python.
+optimization solvers. It enables developers to model optimization problems with ease by
+providing high-level building blocks.
 
 Capabilities
 ------------
@@ -18,7 +18,7 @@ sasoptpy is very flexible in terms of optimization problem types it supports and
 Solvers
 ~~~~~~~
 
-It currently supports following model types:
+It currently supports the following model types:
 
 - Linear Problems
 - Integer Problems / Mixed Integer Problems
@@ -29,31 +29,31 @@ Data
 ~~~~
 
 It supports working with both client-side data and server-side data.
-When data is available on the client-side, it populates the model with integrated data and brings back solution to the
-user.
-When data is available on the server-side, it generates the code to be able to populate model on the server.
-Final solution can be grabbed after the solve by the user.
+When data is available on the client-side, it populates the model with integrated data and brings the solution back to
+the client.
+When data is available on the server-side, it generates the code to be able to populate the model on the server.
+The final solution can be retrieved by the user after the solve.
 
 Platforms
 ~~~~~~~~~
 
-sasoptpy can be used with SAS Viya 3.3+ and SAS 9.4, in all the operating systems these can be installed.
+sasoptpy can be used with SAS Viya 3.3 or later and SAS 9.4, in all the operating systems these can be installed.
 
 
 Road map
 --------
 
-sasoptpy has the broader goal of supporting all the functionality SAS Optimization and SAS/OR solvers have and
-provide high-level set of tools for working with models more easily.
+sasoptpy has the broader goal of supporting all the functionality of the SAS Optimization and SAS/OR solvers, and
+providing a high-level set of tools for easily working with models.
 
 Versioning
 ----------
 
 sasoptpy follows `Semantic Versioning <https://semver.org/>`_ as of version 1.0.0.
 
-- Any backwards incompatible changes increase major version (X.y.z).
-- Minor changes and improvements increase the minor version (x.Y.z).
-- Patches increase the patch version (x.y.Z).
+- Any backwards incompatible changes increase the major version number (X.y.z).
+- Minor changes and improvements increase the the minor version number (x.Y.z).
+- Patches increase the patch version number (x.y.Z).
 - Pre-releases are marked using *alpha* and *beta*, and release candidates are marked using *rc* identifiers.
 
 License
@@ -73,7 +73,7 @@ Have any questions?
 Contribution
 ------------
 
-Contributions are always welcome. Clone project to your working environment and submit pull requests as you see fit.
+Contributions are always welcome. Clone the project to your working environment and submit pull requests as you see fit.
 For more details, see the guidelines at the GitHub repository.
 
 Highlighted Works

@@ -13,7 +13,7 @@ v1.0.0-alpha (TBD)
 New Features
 ++++++++++++
 
-- Added workspaces, see more info in :ref:`User Guide <workspaces>` and :ref:`example <efficiency-analysis>`
+- Added workspaces; see more info in :ref:`User Guide <workspaces>` and :ref:`example <efficiency-analysis>`
 - Added :ref:`configurations <configurations>`
 - Added :ref:`abstract actions <abstract-actions>` that allow server-side operations. Highlights include:
 
@@ -27,18 +27,18 @@ New Features
 Changes
 +++++++
 
-- Refactored entire package, now sasoptpy has `core`, `abstract`, `interface`,
-  `session` and `util` directories
-- Experimental RESTful API is dropped
-- `get_obj_by_name` function is removed
-- Following SAS Viya changes, `lso` solver is renamed as `blackbox`
-- By the use literal strings (see :pep:`498`), only Python 3.6+ versions are being supported
+- Refactored the entire package. sasoptpy now has `core`, `abstract`, `interface`,
+  `session`, and `util` directories
+- Experimental RESTful API was dropped
+- `get_obj_by_name` function was removed
+- Following SAS Viya changes, `lso` solver was renamed to `blackbox`
+- Because of the use of literal strings (:pep:`498`), only Python 3.6 or later versions are supported
 
 Bug Fixes
 +++++++++
 
 - Fixed: Arithmetic operations with powers are generating incorrect results
-- Fixed: Variable groups with space in their index is not getting values
+- Fixed: Variable groups with space in their index are not getting values
 - Fixed: Constraints without directions do not produce an error
 - Fixed: Documentation does not mention conda-forge library requirement
 - Fixed: Single-dimensional parameters are hard to access
