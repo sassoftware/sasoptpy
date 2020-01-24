@@ -202,7 +202,7 @@ values representing lower and upper bounds.
 
 .. ipython:: python
 
-   m.add_constraint(production[i] == [10, 100], name='production_bounds')
+   m.add_constraint(production['Period1'] == [10, 100], name='production_bounds')
 
 Solving a problem
 -----------------
