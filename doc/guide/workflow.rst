@@ -4,6 +4,7 @@
 .. ipython:: python
    :suppress:
 
+   import os
    hostname = os.getenv('CASHOST')
    port = os.getenv('CASPORT')
 
@@ -193,7 +194,9 @@ Model
    # Objective
    total_value = so.quick_sum(value[i] * get[i] for i in ITEMS)
    m.set_objective(total_value, name='total_value', sense=so.MAX);
-   
+
+.. ipython:: python
+
    # Solve
    m.solve(verbose=True)
 
@@ -216,7 +219,7 @@ solution is printed using the server response.
 Limitations
 -----------
 
-- Nonlinear models can be solved only using the runOptmodel action, and
+- On Viya platform, nonlinear models can be solved only using the runOptmodel action, and
   requires the SAS Viya version to be 3.4 or later.
 - User defined decomposition blocks are available only in MPS mode, and therefore only works with client-side data.
 - Mixed usage (client-side and server-side data) may not work in some cases.

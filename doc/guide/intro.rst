@@ -155,7 +155,7 @@ The most common optimization types are as follows:
   by linear mathematical relations, and if all decision variables are continuous, the formulation is called a
   Linear Problem (LP). LPs are one of the easiest problems in terms of solution time and well-studied in literature.
 * **Mixed-integer optimization**: If a linear formulation involves binary (on/off type decisions) or integer variables,
-  that problem is an Integer Problem (IP) or Mixed-Integer Problem (MIP) depending on variables.
+  that problem is an Integer Problem (IP) or Mixed-Integer Problem (MILP) depending on variables.
   MIPs are very popular as many real-life problems can be represented as MIPs.
 * **Nonlinear optimization**: If a problem involves non-linear objectives or constraints (such as
   exponential, polynomial, absolute values) the problem is called a nonlinear problem (NLP).

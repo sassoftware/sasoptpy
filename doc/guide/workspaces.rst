@@ -50,7 +50,7 @@ Contents of a workspace can be displayed using :meth:`Workspace.to_optmodel`:
    print(w.to_optmodel())
 
 
-See the following full example where a data is loaded into the server, and a problem is solved using a Workspace:
+See the following full example where data is loaded into the server, and a problem is solved using a Workspace:
 
 Create CAS session:
 

@@ -305,4 +305,4 @@ Full details can be obtained using the :meth:`Model.get_tuner_results` method.
 
     **References**
 
-.. [#] https://go.documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.5&docsetId=casactmopt&docsetTarget=casactmopt_optimization_details37.htm&locale=en
+.. [#] https://go.documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.5&docsetId=casactmopt&docsetTarget=casactmopt_optimization_details37.htm

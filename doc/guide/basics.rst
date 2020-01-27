@@ -7,9 +7,9 @@ Basic Functionality
 *******************
 
 Solving an optimization problem via *sasoptpy*
-starts with having a running CAS Server or having a SAS 9.4 installation.
-It is possible to model a problem without a server
-but solving a problem requires access to SAS/OR solvers.
+starts with having a running CAS (SAS Viya) Server or having a SAS 9.4 installation.
+It is possible to model a problem without a connection
+but solving a problem requires access to SAS Optimization or SAS/OR solvers at runtime.
 
 Creating a session
 ------------------
@@ -243,22 +243,32 @@ Initializing a workspace
 ------------------------
 
 If you would like to use extensive abstract modeling capabilities of `sasoptpy`,
-you can create a workspace. Workspaces support features like server-side for loops,
-cofor loops (parallel), read data, and create data. You can initialize a :class:`sasoptpy.Workspace`
-as follows:
+you can create a workspace.
+Workspaces support features like server-side for loops,
+cofor loops (parallel), read data, and create data.
+You can initialize a :class:`sasoptpy.Workspace` using Python's
+`with` keyword.
+As an example, a workspace with a set and a variable group can be created as follows:
 
 .. ipython:: python
 
-   with so.Workspace(name='my_workspace', session=s) as w:
-      I = so.Set(name='I', value=range(1, 11))
-      x = so.VariableGroup(I, name='x', lb=0)
-   print(so.to_optmodel(w))
-      
+   def create_workspace():
+      with so.Workspace(name='my_workspace', session=s) as w:
+         I = so.Set(name='I', value=range(1, 11))
+         x = so.VariableGroup(I, name='x', lb=0)
+      return w
+
+.. ipython:: python
+
+   workspace = create_workspace()
+   print(so.to_optmodel(workspace))
+
+
 You can submit a workspace to a CAS server and retrieve the response using:
 
 .. ipython:: python
 
-   w.submit()
+   workspace.submit()
 
 
 .. _configurations:
