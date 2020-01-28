@@ -19,7 +19,7 @@ Creating a SAS Viya session
 
 *sasoptpy* uses the CAS connection provided by the
 swat package.
-After installation simply use
+After installation simply use:
 
 .. ipython:: python
    :suppress:
@@ -45,8 +45,7 @@ Creating a SAS 9.4 session
 
 To create a SAS 9.4 session, see
 `saspy Documentation <https://sassoftware.github.io/saspy/getting-started.html#start-a-sas-session>`_.
-After customizing the configurations for your setup, a session can be created
-as follows:
+After customizing the configurations for your setup, you can create a session as follows:
 
 .. code-block:: python
 
@@ -56,8 +55,7 @@ as follows:
 Initializing a model
 --------------------
 
-After creating an active CAS or SAS session, an empty model can be defined as
-follows:
+After creating an active CAS or SAS session, you can create an empty model as follows:
 
 .. ipython:: python
 
@@ -69,12 +67,9 @@ This command creates an empty model.
 Processing input data
 ---------------------
 
-The easisest way to work with *sasoptpy* is to
+The easiest way to work with *sasoptpy* is to
 define problem inputs as Pandas DataFrames.
-Objective and cost coefficients, and 
-lower and upper bounds can 
-be defined using the
-DataFrame and Series objects.
+You can define objective and cost coefficients, and lower and upper bounds by using the DataFrame and Series objects.
 See
 `Pandas Documentation <http://pandas.pydata.org/pandas-docs/stable/>`_
 to learn more.
@@ -90,8 +85,7 @@ to learn more.
    price_per_product = 10
    capacity_cost = 10
 
-The set ``PERIODS`` and the other fields ``demand`` and ``min_production`` can be
-extracted as follows:
+You can extract the set ``PERIODS`` and the other fields ``demand`` and ``min_production`` as follows:
 
 .. ipython:: python
 
@@ -115,20 +109,20 @@ You can add a single variable or a set of variables to :class:`Model` objects.
 
   >>> production_cap = so.Variable(name='production_cap', vartype=so.INT, lb=0)
   
-  and add it to an existing model using
+  and add it to an existing model by using
 
   >>> m.include(production_cap)
 
-* :meth:`Model.add_variables` method is used to add a set of variables.
+* The :meth:`Model.add_variables` method is used to add a set of variables.
   
   .. ipython:: python
   
      production = m.add_variables(PERIODS, vartype=so.INT, name='production',
 	                          lb=min_production)
   
-  When passed as a set of variables, individual variables can be obtained by
+  When passed as a set of variables, you can retrieve individual variables by
   using individual keys, such as ``production['Period1']``.
-  To create multi-dimensional variables, simply list all the keys as follows:
+  To create multidimensional variables, simply list all the keys as follows:
 
   >>> multivar = m.add_variables(KEYS1, KEYS2, KEYS3, name='multivar')
 
@@ -155,7 +149,7 @@ with a scalar.
 Setting an objective function
 -----------------------------
 
-Objective functions can be written in terms of expressions. 
+You can define objective functions in terms of expressions.
 In this problem, the objective is to maximize the profit, so the
 :func:`Model.set_objective` method is used as follows:
 
@@ -163,7 +157,7 @@ In this problem, the objective is to maximize the profit, so the
    
    m.set_objective(totalRevenue-totalCost, sense=so.MAX, name='totalProfit')
 
-Notice that you can define the same objective using:
+Notice that you can define the same objective by using:
 
 >>> m.set_objective(production.sum('*')*price_per_product - production_cap*capacity_cost, sense=so.MAX, name='totalProfit')
 
@@ -178,7 +172,7 @@ It is possible to define an expression and add it to a model by defining which
 direction the linear relation should have.
 
 There are two methods to add constraints. The first one
-is :meth:`Model.add_constraint` where a single constraint can be inserted into a
+is :meth:`Model.add_constraint` where a single constraint can be added to a
 model.
 
 The second one is :meth:`Model.add_constraints` where multiple constraints can
@@ -197,8 +191,8 @@ be added to a model.
 Here, the first term provides a Python generator, which then gets translated into
 constraints in the problem. The symbols ``<=``, ``>=``, and ``==`` are used for
 less than or equal to, greater than or equal to, and equal to constraints,
-respectively. Range constraints can be inserted using ``==`` and a list of 2
-values representing lower and upper bounds.
+respectively. You can define range constraints by using ``==`` symbol and a list of two
+values that represent lower and upper bounds.
 
 .. ipython:: python
 
@@ -217,7 +211,7 @@ and ``None`` otherwise.
 
 At the end of the solve operation, the solver returns 
 both Problem Summary and Solution Summary tables. These tables can
-later be accessed using ``m.get_problem_summary()`` and
+later be accessed by using ``m.get_problem_summary()`` and
 ``m.get_solution_summary()``.
 
 .. ipython:: python
@@ -228,7 +222,7 @@ later be accessed using ``m.get_problem_summary()`` and
 Printing solutions
 ------------------
 
-Solutions provided by the solver can be obtained using the
+You can retrieve the solutions by using the
 :func:`sasoptpy.get_solution_table` method. It is strongly suggested to group
 variables and expressions that share the same keys in a call.
 
@@ -246,9 +240,9 @@ If you would like to use extensive abstract modeling capabilities of `sasoptpy`,
 you can create a workspace.
 Workspaces support features like server-side for loops,
 cofor loops (parallel), read data, and create data.
-You can initialize a :class:`sasoptpy.Workspace` using Python's
+You can initialize a :class:`sasoptpy.Workspace` by using Python's
 `with` keyword.
-As an example, a workspace with a set and a variable group can be created as follows:
+As an example, you can create a workspace with a set and a variable group as follows:
 
 .. ipython:: python
 
@@ -264,7 +258,7 @@ As an example, a workspace with a set and a variable group can be created as fol
    print(so.to_optmodel(workspace))
 
 
-You can submit a workspace to a CAS server and retrieve the response using:
+You can submit a workspace to a CAS server and retrieve the response by using:
 
 .. ipython:: python
 

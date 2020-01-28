@@ -20,8 +20,7 @@ Model components
    sasoptpy.reset_globals()
 
 In this section, several model components are discussed with examples.
-See :ref:`examples` to learn more about how these components can be used to
-define optimization models.
+See :ref:`examples` to learn more about how you can use these components to define optimization models.
 
 .. ipython:: python
    :suppress:
@@ -40,7 +39,7 @@ expressions in *sasoptpy*.
 Creating expressions
 ~~~~~~~~~~~~~~~~~~~~
 
-An :class:`Expression` can be created as follows:
+You can create an :class:`Expression` object as follows:
 
 .. ipython:: python
    :suppress:
@@ -67,7 +66,7 @@ nonlinear expressions, but there are some limitations.
 
 
 Currently, it is not possible to get or print values of nonlinear expressions.
-Moreover, if your model includes a nonlinear expression, you need to be using
+Moreover, if your model includes a nonlinear expression, you need to use
 SAS Viya 3.4 or later or any SAS version for solving your problem.
 
 To use mathematical operations, you need to import `sasoptpy.math`
@@ -79,7 +78,7 @@ Mathematical expressions
 *sasoptpy* provides mathematical functions for generating mathematical
 expressions to be used in optimization models.
 
-You need to import `sasoptpy.math` to your code to start using these functions.
+You need to import `sasoptpy.math` to your code to start by using these functions.
 Available mathematical functions are listed in :ref:`math-functions`.
 
 .. ipython:: python
@@ -101,15 +100,15 @@ Operations
 
 **Getting the current value**
 
-After the solve is completed, the current value of an expression can be
-obtained using the :func:`Expression.get_value` method:
+After the solve is completed, you can obtain the current value of an expression by using the
+:func:`Expression.get_value` method:
 
 >>> print(profit.get_value())
 42.0
 
 **Getting the dual value**
 
-Dual values of :class:`Expression` objects can be obtained using
+You can retrieve the dual values of :class:`Expression` objects by using
 :func:`Variable.get_dual` and :func:`Constraint.get_dual` methods.
 
 >>> m.solve()
@@ -185,7 +184,7 @@ For faster summations compared to Python's native :code:`sum` function,
 Renaming an expression
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Expressions can be renamed using the :func:`Expression.set_name` method:
+You can rename expressions by using the :func:`Expression.set_name` method:
 
 .. ipython:: python
 
@@ -201,44 +200,12 @@ Expressions can be renamed using the :func:`Expression.set_name` method:
 Copying an expression
 ~~~~~~~~~~~~~~~~~~~~~
 
-An :class:`Expression` can be copied using :func:`Expression.copy`:
+You can copy an :class:`Expression` by using the :func:`Expression.copy` method:
 
 .. ipython:: python
 
    copy_profit = profit.copy(name='copy_profit')
    print(repr(copy_profit))
-
-Temporary expressions
-~~~~~~~~~~~~~~~~~~~~~
-
-An :class:`Expression` object can be defined as temporary, which enables 
-faster :func:`Expression.sum` and :func:`Expression.mult` operations.
-
-.. ipython:: python
-
-   new_profit = so.Expression(10 * sales - 2 * material)
-   print(repr(new_profit))
-
-The expression can be modified inside a function:
-
-.. ipython:: python
-
-   new_profit + 5
-
-.. ipython:: python
-
-   print(repr(new_profit))
-
-As you can see, the value of ``new_profit`` is changed due to an in-place addition.
-To prevent the change, such expressions can be converted to permanent expressions
-using the :func:`Expression.set_permanent` method or constructor:
-
-.. ipython:: python
-
-   new_profit = so.Expression(10 * sales - 2 * material)
-   new_profit.set_permanent()
-   tmp = new_profit + 5
-   print(repr(new_profit))
 
 
 Objective Functions
@@ -248,10 +215,10 @@ Objective Functions
 Setting and getting an objective function
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Any valid :class:`Expression` can be used as the objective function of a model.
-An existing expression can be used as an objective function using
+You can use any valid :class:`Expression` as the objective function of a model.
+You can also use an existing expression as an objective function by using
 the :func:`Model.set_objective` method. The objective function of a model can
-be obtained using the :func:`Model.get_objective` method.
+be obtained by using the :func:`Model.get_objective` method.
 
 >>> profit = so.Expression(5 * sales - 2 * material, name='profit')
 >>> m.set_objective(profit, so.MAX)
@@ -262,7 +229,7 @@ be obtained using the :func:`Model.get_objective` method.
 Getting the value
 ~~~~~~~~~~~~~~~~~
 
-After a solve, the objective value can be retrieved using the
+After a solve, you can retrieve the objective value by using the
 :func:`Model.get_objective_value` method.
 
 >>> m.solve()
@@ -276,7 +243,7 @@ Variables
 Creating variables
 ~~~~~~~~~~~~~~~~~~
 
-Variables can be created either separately or inside a model.
+You can create variables either standalone or inside a model.
 
 **Creating a variable outside a model**
 
@@ -305,9 +272,11 @@ Arguments
 ~~~~~~~~~
 
 There are three types of variables: continuous variables, integer variables,
-and binary variables. Continuous variables are the default type and can be
-created using the ``vartype=so.CONT`` argument. Integer variables and binary
-variables can be created using the ``vartype=so.INT`` and ``vartype=so.BIN``
+and binary variables.
+Continuous variables are the default type and
+you can specify it by using the ``vartype=so.CONT`` argument.
+You can create Integer variables and binary
+variables by using the ``vartype=so.INT`` and ``vartype=so.BIN``
 arguments, respectively.
 
 The default lower bound for variables is 0, and the upper bound is infinity.
@@ -328,9 +297,9 @@ sasoptpy.Variable(name='x', lb=5, ub=15, vartype='CONT')
 Setting initial values
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Initial values of variables can be passed to the solvers for certain problems.
+You can pass the initial values of variables to the solvers for certain problems.
 The :func:`Variable.set_init` method changes the initial value for variables.
-This value can be set at the creation of the variable as well.
+You can set this value at the creation of the variable as well.
 
 >>> x.set_init(5)
 >>> print(repr(x))
@@ -339,7 +308,7 @@ sasoptpy.Variable(name='x', ub=20, init=5,  vartype='CONT')
 Working with a set of variables
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-A set of variables can be added using single or multiple indices.
+You can create a set of variables by using single or multiple indices.
 Valid index sets include list, dict, and :class:`pandas.Index` objects. 
 See :ref:`input-data` for more information about allowed index types.
 
@@ -373,8 +342,7 @@ Constraints
 Creating constraints
 ~~~~~~~~~~~~~~~~~~~~
 
-Similar to :class:`Variable` objects, :class:`Constraint` objects can be
-created inside or outside optimization models.
+Similar to :class:`Variable` objects, you can create :class:`Constraint` objects inside or outside optimization models.
 
 **Creating a constraint outside a model**
 
@@ -392,7 +360,7 @@ sasoptpy.Constraint( -  5.0 * y  +  3.0 * x  <=  10, name='c1')
 Modifying variable coefficients
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The coefficient of a variable inside a constraint can be updated using the
+You can update the coefficient of a variable inside a constraint by using the
 :func:`Constraint.update_var_coef` method:
 
 >>> c1 = so.Constraint(exp=3 * x - 5 * y <= 10, name='c1')
@@ -406,7 +374,7 @@ sasoptpy.Constraint( -  5.0 * y  -  x  <=  10, name='c1')
 Working with a set of constraints
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-A set of constraints can be added using single or multiple indices.
+You can add a set of constraints by using single or multiple indices.
 Valid index sets include list, dict, and :class:`pandas.Index` objects. 
 See :ref:`input-data` for more information about allowed index types.
 
@@ -438,7 +406,7 @@ Constraint Group (cg2) [
 Range constraints
 ~~~~~~~~~~~~~~~~~
 
-A range for an expression can be given using a list of two value (lower and
+You can give a range for an expression by using a list of two value (lower and
 upper bound) with an `==` sign:
 
 >>> x = m.add_variable(name='x')

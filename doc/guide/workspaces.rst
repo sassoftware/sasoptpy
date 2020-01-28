@@ -12,8 +12,8 @@ Workspaces
    import sasoptpy as so
 
 One of the most powerful features of SAS Optimization and PROC OPTMODEL is the ability to combine several optimization
-models in a single call. Using this ability, users can read a common data set once, or parallelize solve steps for
-similar subproblems.
+models in a single call. You can read a common data set once, or parallelize solve steps for
+similar subproblems by using this ability.
 
 The newly introduced :class:`Workspace` provides this ability in a familiar syntax. Compared to :class:`Model` objects,
 a :class:`Workspace` can consist of several models and is able to use server-side data and OPTMODEL statements in a
@@ -22,7 +22,7 @@ more detailed way.
 Creating a workspace
 ~~~~~~~~~~~~~~~~~~~~
 
-A :class:`Workspace` should be called using the `with` keyword of Python as follows:
+A :class:`Workspace` should be called by using the `with` keyword of Python as follows:
 
 >>> with so.Workspace('my_workspace') as w:
 >>>    ...
@@ -43,14 +43,14 @@ For example, adding a new variable is performed as follows:
    with so.Workspace(name='my_workspace') as w:
       x = so.Variable(name='x', vartype=so.integer)
 
-Contents of a workspace can be displayed using :meth:`Workspace.to_optmodel`:
+You can display contents of a workspace by using the :meth:`Workspace.to_optmodel` method:
 
 .. ipython:: python
 
    print(w.to_optmodel())
 
 
-See the following full example where data is loaded into the server, and a problem is solved using a Workspace:
+See the following full example where data are loaded into the server, and a problem is solved by using a Workspace:
 
 Create CAS session:
 
@@ -146,10 +146,10 @@ Grabbing results
 ----------------
 
 In order to solve a problem, you need to use the :func:`actions.solve` function explicitly.
-Since :class:`Workspace` objects allow several models and solve statements to be included,
+Because :class:`Workspace` objects allow several models and solve statements to be included,
 each of these solve statements are retrieved
-separately. The solution after each solve can be returned using the :func:`actions.print` function or creating a
-table using the :func:`actions.create_data` function.
+separately. You can return the solution after each solve by using the :func:`actions.print` function or creating a
+table by using the :func:`actions.create_data` function.
 
 See the following example where a parameter is changed and the same problem solved twice:
 

@@ -100,7 +100,7 @@ Deprecated
 
 .. deprecated:: 1.0.0
 
-Following method(s) are deprecated and will be removed in future minor updates.
+The following method(s) are deprecated and will be removed in future minor updates.
 
 .. autosummary::
    :toctree: generated/

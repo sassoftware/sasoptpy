@@ -59,12 +59,14 @@ def read_data(table, index, columns):
         Table object or name to be read, case insensitive
     index : dict
         Index properties of the table
+
         Has two main members:
 
         - target : :class:`sasoptpy.abstract.Set`
             Target Set object to be read into
         - key : string, list or None
-            Column name that will be read from
+            Column name that will be read from.
+
             For multiple indices it should be a list of string or
             :class:`sasoptpy.abstract.SetIterator` objects
 
@@ -76,7 +78,8 @@ def read_data(table, index, columns):
         If index is simply the row number, use `'key': so.N` which is equivalent
         to special `_N_` character at SAS language.
     columns : list
-        A list of dictionaries, each holding column properties
+        A list of dictionaries, each holding column properties.
+
         Columns are printed in given order. Each column should be represented as
         a dictionary with following fields:
 

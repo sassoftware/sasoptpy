@@ -6,7 +6,7 @@
 About sasoptpy
 ==============
 
-**sasoptpy** is a Python package providing easy and integrated ways of working with SAS Optimization and SAS/OR
+**sasoptpy** is a Python package that provides easy and integrated ways of working with SAS Optimization and SAS/OR
 optimization solvers. It enables developers to model optimization problems with ease by
 providing high-level building blocks.
 
@@ -20,24 +20,24 @@ Solvers
 
 It currently supports the following model types:
 
-- Linear Problems
-- Integer Problems / Mixed Integer Problems
-- Quadratic Problems
-- Nonlinear / Black-box Problems
+- Linear problems
+- Integer linear problems / Mixed integer linear problems
+- Quadratic problems
+- Nonlinear / Black-box problems
 
 Data
 ~~~~
 
 It supports working with both client-side data and server-side data.
-When data is available on the client-side, it populates the model with integrated data and brings the solution back to
+When data are available on the client-side, it populates the model with integrated data and brings the solution back to
 the client.
-When data is available on the server-side, it generates the code to be able to populate the model on the server.
-The final solution can be retrieved by the user after the solve.
+When data are available on the server-side, it generates the code to be able to populate the model on the server.
+You can retrieve the final solution after the solve.
 
 Platforms
 ~~~~~~~~~
 
-sasoptpy can be used with SAS Viya 3.3 or later and SAS 9.4, in all the operating systems these can be installed.
+sasoptpy can be used with SAS Viya 3.3 or later and SAS 9.4, in all the supporting operating systems.
 
 
 Road map
@@ -54,7 +54,7 @@ sasoptpy follows `Semantic Versioning <https://semver.org/>`_ as of version 1.0.
 - Any backwards incompatible changes increase the major version number (X.y.z).
 - Minor changes and improvements increase the the minor version number (x.Y.z).
 - Patches increase the patch version number (x.y.Z).
-- Pre-releases are marked using *alpha* and *beta*, and release candidates are marked using *rc* identifiers.
+- Pre-releases are marked by using *alpha* and *beta*, and release candidates are marked using *rc* identifiers.
 
 License
 -------
@@ -66,7 +66,7 @@ Support
 
 Have any questions?
 
-* If you are having a package-related issue, feel free to report it on `GitHub <https://github.com/sassoftware/sasoptpy/issues>`_.
+* If you have a package-related issue, feel free to report it on `GitHub <https://github.com/sassoftware/sasoptpy/issues>`_.
 * If you have an optimization-related question, consider asking it on `SAS Communities <https://communities.sas.com/t5/Mathematical-Optimization/bd-p/operations_research>`_.
 * For further technical support, reach `SAS Technical Support <https://support.sas.com/en/technical-support.html>`_.
 

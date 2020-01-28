@@ -31,7 +31,7 @@ Changes
   `session`, and `util` directories
 - Experimental RESTful API was dropped
 - `get_obj_by_name` function was removed
-- Following SAS Viya changes, `lso` solver was renamed to `blackbox`
+- `lso` solver was renamed to `blackbox`
 - Because of the use of literal strings (:pep:`498`), only Python 3.6 or later versions are supported
 
 Bug Fixes

@@ -21,7 +21,7 @@ It requires the following packages:
 Getting sasoptpy
 ----------------
 
-*sasoptpy* can be installed using `pip` or `conda`::
+You can install *sasoptpy* by using `pip` or `conda`::
 
    pip install sasoptpy
 
@@ -29,7 +29,7 @@ Getting sasoptpy
 
 Any dependencies should be installed automatically.
 
-Depending on your installation, you may need to add `conda-forge` channel to `conda` using::
+Depending on your installation, you might need to add `conda-forge` channel to `conda` by using::
 
     conda config --append channels conda-forge
    

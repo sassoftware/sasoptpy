@@ -9,7 +9,7 @@ Models
 Creating a model
 ~~~~~~~~~~~~~~~~
 
-An empty model can be created using the :class:`Model` constructor:
+You can create an empty model by using the :class:`Model` constructor:
 
 .. ipython:: python
 
@@ -53,20 +53,20 @@ is to use the :meth:`Model.include` method:
    print(new_model)
 
 Note that variables are added to :class:`Model` objects by reference.
-Therefore, after :meth:`Model.solve` is called, the values of variables will be
+Therefore, after :meth:`Model.solve` is called, the values of variables are
 replaced with optimal values.
 
 Accessing components
 ~~~~~~~~~~~~~~~~~~~~
 
-You can get a list of model variables using the :meth:`Model.get_variables()`
+You can get a list of model variables by using the :meth:`Model.get_variables()`
 method:
 
 .. ipython:: python
 
    print(m.get_variables())
 
-Similarly, you can access a list of constraints using the
+Similarly, you can access a list of constraints by using the
 :meth:`Model.get_constraints()` method:
 
 .. ipython:: python
@@ -74,7 +74,7 @@ Similarly, you can access a list of constraints using the
    c2 = m.add_constraint(2 * x - y >= 1, name='c2')
    print(m.get_constraints())
 
-To access a certain constraint using its name, you can use the
+To access a certain constraint by using its name, you can use the
 :meth:`Model.get_constraint` method:
 
 .. ipython:: python
@@ -85,9 +85,9 @@ To access a certain constraint using its name, you can use the
 Dropping components
 ~~~~~~~~~~~~~~~~~~~
 
-A variable inside a model can be dropped using
-:meth:`Model.drop_variable`. Similarly, a set of variables can be dropped
-using :meth:`Model.drop_variables`.
+You can drop a variable inside a model by using
+:meth:`Model.drop_variable` method. Similarly, you can drop a set of variables
+by using the :meth:`Model.drop_variables` method.
 
 .. ipython:: python
 
@@ -99,9 +99,9 @@ using :meth:`Model.drop_variables`.
    m.include(y)
    print(m)
 
-A constraint can be dropped using the :meth:`Model.drop_constraint` method.
-Similarly, a set of constraints can be dropped using the
-:meth:`Model.drop_constraints`.
+You can drop a constraint by using the :meth:`Model.drop_constraint` method.
+Similarly, you can drop a set of constraints by using the
+:meth:`Model.drop_constraints` method.
 
 .. ipython:: python
 
@@ -118,8 +118,7 @@ Similarly, a set of constraints can be dropped using the
 Copying a model
 ~~~~~~~~~~~~~~~
 
-An exact copy of the existing model can be obtained by including the :class:`Model`
-object itself.
+You can copy an existing model by including the :class:`Model` object itself.
 
 .. ipython:: python
 
@@ -133,7 +132,7 @@ Note that all variables and constraints are included by reference.
 Solving a model
 ~~~~~~~~~~~~~~~
 
-A model is solved using the :meth:`Model.solve` method. This method converts
+A model is solved by using the :meth:`Model.solve` method. This method converts
 Python definitions into an MPS file and uploads it to a CAS server for the optimization
 action. The type of the optimization problem is determined based on the variable types and expressions.
 
@@ -154,8 +153,8 @@ Solve options
 Solver Options
 ++++++++++++++
 
-Both PROC OPTMODEL solve options and ``solveLp``, ``solveMilp`` action options
-can be passed using the ``options`` argument of the :meth:`Model.solve` method.
+You can pass both PROC OPTMODEL solve options and ``solveLp``, ``solveMilp`` action options
+by using the ``options`` argument of the :meth:`Model.solve` method.
 
 >>> m.solve(options={'with': 'milp', 'maxtime': 600})
 >>> m.solve(options={'with': 'lp', 'algorithm': 'ipm'})
@@ -195,8 +194,7 @@ into the :meth:`Model.solve` method:
 
 
 When ``primalin`` argument is ``True``, it grabs :class:`Variable` objects
-``_init`` field. This field can be modified with :meth:`Variable.set_init`
-method.
+``_init`` field. You can modify this field by using the :meth:`Variable.set_init` method.
 
 
 Getting solutions
@@ -204,13 +202,13 @@ Getting solutions
 
 After the solve is completed, all variable and constraint values are parsed
 automatically.
-A summary of the problem can be accessed using the
+You can access a summary of the problem by using the
 :meth:`Model.get_problem_summary` method,
-and a summary of the solution can be accessed using the
+and a summary of the solution by using the
 :meth:`Model.get_solution_summary`
 method.
 
-To print the values of any object, :func:`get_solution_table` can be used:
+To print the values of any object, you can use the :func:`get_solution_table` method:
 
 >>> print(so.get_solution_table(x, y))
 
@@ -281,7 +279,7 @@ For this problem, you can compare configurations as follows:
 
 For a full set of tuning parameters and acceptable values of these arguments, see the SAS Optimization documentation [#]_.
 
-For the example problem, we can tune the `presolver`, `cutStrategy`, and `strongIter` settings, using initial values and
+For the example problem, you can tune the `presolver`, `cutStrategy`, and `strongIter` settings, by using initial values and
 candidate values, and limit the maximum number of configurations and maximum running time as follows:
 
 .. ipython:: python
@@ -299,7 +297,7 @@ candidate values, and limit the maximum number of configurations and maximum run
 
    print(results)
 
-Full details can be obtained using the :meth:`Model.get_tuner_results` method.
+You can retrieve full details by using the :meth:`Model.get_tuner_results` method.
 
 .. only:: html
 
