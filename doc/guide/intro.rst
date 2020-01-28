@@ -111,7 +111,8 @@ Combining all items, the optimization formulation is written as follows:
     &5 \cdot \text{ale} &+ \; 15 \cdot \text{beer} &\leq& 480 \\
     &4 \cdot \text{ale} &+ \; 4 \cdot \text{beer} &\leq& 160 \\
     &35 \cdot \text{ale} &+ \; 20 \cdot \text{beer} &\leq& 1,190 \\
-    & \text{ale} \geq 0, \text{beer} \geq 0
+    & & \text{ale} & \geq & 0 \\
+    & & \text{beer} & \geq & 0
     \end{array}
 
 This problem is small enough to be solved by hand, but let us consider some alternatives.
