@@ -173,11 +173,20 @@ Model
    from sasoptpy.actions import read_data
 
    m = so.Model(name='client_CAS', session=session)
+
+
+.. ipython:: python
+
    cas_table = session.upload_frame(df, casout='data')
+
+
+.. ipython:: python
+
    ITEMS = m.add_set(name='ITEMS', settype=so.STR)
    value = m.add_parameter(ITEMS, name='value')
    weight = m.add_parameter(ITEMS, name='weight')
    limit = m.add_parameter(ITEMS, name='limit')
+
    m.include(read_data(
       table=cas_table, index={'target':ITEMS, 'key': 'item'},
       columns=[value, weight, limit]))
@@ -190,12 +199,13 @@ Model
    m.add_constraint(
        so.quick_sum(weight[i] * get[i] for i in ITEMS) <= total_weight,
        name='weight_con');
-   
+
+
+.. ipython:: python
+
    # Objective
    total_value = so.quick_sum(value[i] * get[i] for i in ITEMS)
    m.set_objective(total_value, name='total_value', sense=so.MAX);
-
-.. ipython:: python
 
    # Solve
    m.solve(verbose=True)
