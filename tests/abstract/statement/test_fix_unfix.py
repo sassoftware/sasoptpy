@@ -49,10 +49,10 @@ class TestFix(unittest.TestCase):
 
         assert_equal_wo_temps(self, so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                var x;
-                fix x=1;
-                solve;
-                unfix x;
+               var x;
+               fix x=1;
+               solve;
+               unfix x;
             quit;'''))
 
     def test_with_multiple_ops(self):
@@ -68,10 +68,10 @@ class TestFix(unittest.TestCase):
 
         assert_equal_wo_temps(self, so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                var x {{0,1,2,3}};
-                cofor {o7 in 0..3} do;
-                    fix x[0]=o7 x[1]=1;
-                    solve;
-                    unfix x[0] x[1]=2;
-                end;
+               var x {{0,1,2,3}};
+               cofor {TEMP1 in 0..3} do;
+                  fix x[0]=TEMP1 x[1]=1;
+                  solve;
+                  unfix x[0] x[1]=2;
+               end;
             quit;'''))

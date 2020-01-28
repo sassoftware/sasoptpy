@@ -74,14 +74,14 @@ class TestCondition(unittest.TestCase):
         assert_equal_wo_temps(self, so.to_optmodel(w), cleandoc(
             '''
             proc optmodel;
-                var x {{0,1,2}};
-                x[0] = 1;
-                x[1] = 5;
-                x[2] = 0;
-                con c {s in {0,1,2}: x[s].sol > 0} : x[s] >= 1;
-                MIN obj = x[0];
-                expand;
-                solve;
+               var x {{0,1,2}};
+               x[0] = 1;
+               x[1] = 5;
+               x[2] = 0;
+               con c {s in {0,1,2}: x[s].sol > 0} : x[s] >= 1;
+               MIN obj = x[0];
+               expand;
+               solve;
             quit;'''
         ))
 

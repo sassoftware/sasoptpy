@@ -67,10 +67,10 @@ class TestSolve(unittest.TestCase):
 
         assert_equal_wo_temps(self, so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                var x >= 1 <= 10;
-                max obj = 2 * x;
-                solve;
-                print x;
+               var x >= 1 <= 10;
+               max obj = 2 * x;
+               solve;
+               print x;
             quit;'''))
 
         if TestSolve.conn:
@@ -120,10 +120,10 @@ class TestSolve(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                var x;
-                problem m include x;
-                use problem m;
-                solve;
+               var x;
+               problem m include x;
+               use problem m;
+               solve;
             quit;'''))
 
     def test_with_options(self):
@@ -137,10 +137,10 @@ class TestSolve(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                solve;
-                solve with milp;
-                solve with milp / primalin;
-                solve with milp / presolver=None feastol=1e-06 logfreq=2 maxsols=3 scale=automatic restarts=None cutmir=aggressive;
+               solve;
+               solve with milp;
+               solve with milp / primalin;
+               solve with milp / presolver=None feastol=1e-06 logfreq=2 maxsols=3 scale=automatic restarts=None cutmir=aggressive;
             quit;'''))
 
 

@@ -59,9 +59,9 @@ class TestWorkspace(unittest.TestCase):
             x[3].set_init(5)
         self.assertEqual(so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                var x {{0,1,2,3}};
-                x[3] = 5;
-                x[2].lb = 1;
+               var x {{0,1,2,3}};
+               x[3] = 5;
+               x[2].lb = 1;
             quit;'''))
 
     def test_attributes(self):
@@ -109,12 +109,12 @@ class TestWorkspace(unittest.TestCase):
         w.submit(verbose=True)
         self.assertEqual(so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                set S = {1,2,3};
-                var x >= 1 <= 4;
-                var y {{S}} <= 7;
-                var z {{0,1}} <= 2;
-                max obj = x + y[1] + y[2] + y[3] + z[0];
-                solve;
+               set S = {1,2,3};
+               var x >= 1 <= 4;
+               var y {{S}} <= 7;
+               var z {{0,1}} <= 2;
+               max obj = x + y[1] + y[2] + y[3] + z[0];
+               solve;
             quit;'''))
         self.assertEqual(x.get_value(), 4)
         self.assertEqual(y[1].get_value(), 7)
@@ -142,16 +142,16 @@ class TestWorkspace(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                var x;
-                var y integer;
-                min obj = (x) ^ (2) - 4 * x + 4;
-                con c1 : x <= 1;
-                con c2 : x - 3 * y = 0;
-                solve with blackbox;
-                print x;
-                drop c1;
-                solve with blackbox;
-                print y;
+               var x;
+               var y integer;
+               min obj = (x) ^ (2) - 4 * x + 4;
+               con c1 : x <= 1;
+               con c2 : x - 3 * y = 0;
+               solve with blackbox;
+               print x;
+               drop c1;
+               solve with blackbox;
+               print y;
             quit;'''))
 
         w.submit()

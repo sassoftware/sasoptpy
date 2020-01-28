@@ -44,15 +44,15 @@ class TestLiteral(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                problem m;
-                problem m2;
-                use problem m;
-                var x;
-                use problem m2;
-                use problem m;
-                solve;
-                use problem m2;
-                solve;
+               problem m;
+               problem m2;
+               use problem m;
+               var x;
+               use problem m2;
+               use problem m;
+               solve;
+               use problem m2;
+               solve;
             quit;'''))
 
     def test_union(self):
@@ -66,11 +66,11 @@ class TestLiteral(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                num n = 11;
-                set S = 1..n;
-                set T = n+1..20;
-                set U = S union T;
-                put U=;
+               num n = 11;
+               set S = 1..n;
+               set T = n+1..20;
+               set U = S union T;
+               put U=;
             quit;'''))
 
     def test_diff(self):
@@ -83,10 +83,10 @@ class TestLiteral(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                set S = 1..19;
-                set T = 1..14;
-                set U = S diff T;
-                put U=;
+               set S = 1..19;
+               set T = 1..14;
+               set U = S diff T;
+               put U=;
             quit;'''))
 
     def test_substring(self):
@@ -98,7 +98,7 @@ class TestLiteral(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                str p = 'random_string';
-                str r = substr(p, 1, 6);
-                put r;
+               str p = 'random_string';
+               str r = substr(p, 1, 6);
+               put r;
             quit;'''))

@@ -119,10 +119,10 @@ class TestSASInterface(unittest.TestCase):
             so.actions.solve()
         self.assertEqual(so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                var x;
-                con c : x <= 5;
-                max obj = x;
-                solve;
+               var x;
+               con c : x <= 5;
+               max obj = x;
+               solve;
             quit;'''))
         w.submit()
         self.assertEqual(x.get_value(), 5)

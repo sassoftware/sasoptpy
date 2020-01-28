@@ -28,6 +28,7 @@ def to_optmodel_for_solve(model, **kwargs):
     s = ''
     if header:
         s = 'proc optmodel;\n'
+    body = ''
     allcomp = (
         model._sets +
         model._parameters +
@@ -43,15 +44,15 @@ def to_optmodel_for_solve(model, **kwargs):
     sorted_comp = sorted(allcomp, key=lambda i: i._objorder)
     for cm in sorted_comp:
         if (sasoptpy.core.util.is_regular_component(cm)):
-            s += cm._defn() + '\n'
+            body += cm._defn() + '\n'
             if hasattr(cm, '_member_defn'):
                 mdefn = cm._member_defn()
                 if mdefn != '':
-                    s += mdefn + '\n'
+                    body += mdefn + '\n'
 
     # Solve block
     if solve:
-        s += 'solve'
+        body += 'solve'
         pre_opts = []
         pos_opts = []
 
@@ -80,30 +81,32 @@ def to_optmodel_for_solve(model, **kwargs):
                         pos_opts.append('{}={}'.format(key, value))
 
             if pre_opts != '':
-                s += ' ' + ' '.join(pre_opts)
+                body += ' ' + ' '.join(pre_opts)
             if pos_opts != '':
-                s += ' / ' + ' '.join(pos_opts)
-        s += ';\n'
+                body += ' / ' + ' '.join(pos_opts)
+        body += ';\n'
 
     # Output ODS tables
     if ods:
-        s += 'ods output PrintTable=primal_out;\n'
+        body += 'ods output PrintTable=primal_out;\n'
 
     if parse_results:
-        s += 'create data solution from [i]= {1.._NVAR_} var=_VAR_.name value=_VAR_ lb=_VAR_.lb ub=_VAR_.ub rc=_VAR_.rc;\n'
+        body += 'create data solution from [i]= {1.._NVAR_} var=_VAR_.name value=_VAR_ lb=_VAR_.lb ub=_VAR_.ub rc=_VAR_.rc;\n'
 
     if ods:
-        s += 'ods output PrintTable=dual_out;\n'
+        body += 'ods output PrintTable=dual_out;\n'
 
     if parse_results:
-        s += 'create data dual from [j] = {1.._NCON_} con=_CON_.name value=_CON_.body dual=_CON_.dual;\n'
+        body += 'create data dual from [j] = {1.._NCON_} con=_CON_.name value=_CON_.body dual=_CON_.dual;\n'
 
     if multi_obj:
-        s += 'create data allsols from [s]=(1.._NVAR_) name=_VAR_[s].name {j in 1.._NSOL_} <col(\'sol_\'||j)=_VAR_[s].sol[j]>;\n'
+        body += 'create data allsols from [s]=(1.._NVAR_) name=_VAR_[s].name {j in 1.._NSOL_} <col(\'sol_\'||j)=_VAR_[s].sol[j]>;\n'
 
     # After-solve statements
     for i in model._postsolve_statements:
-        s += i._defn() + '\n'
+        body += i._defn() + '\n'
+
+    s += sasoptpy.util.addSpaces(body, 3)
 
     if header:
         s += 'quit;'
@@ -135,12 +138,12 @@ def to_optmodel_for_session(workspace, **kwargs):
             memberdefs.append(component_defn)
 
     memberdefs = '\n'.join(memberdefs)
-    s += sasoptpy.util.addSpaces(memberdefs, 4)
+    s += sasoptpy.util.addSpaces(memberdefs, 3)
 
     if parse:
         parse_str = '\ncreate data solution from [i]= {1.._NVAR_} var=_VAR_.name value=_VAR_ lb=_VAR_.lb ub=_VAR_.ub rc=_VAR_.rc;\n'
         parse_str += 'create data dual from [j] = {1.._NCON_} con=_CON_.name value=_CON_.body dual=_CON_.dual;'
-        s += sasoptpy.util.addSpaces(parse_str, 4)
+        s += sasoptpy.util.addSpaces(parse_str, 3)
 
     if header:
         s += '\nquit;'

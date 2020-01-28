@@ -241,32 +241,32 @@ class TestModel(unittest.TestCase):
         m.add_statement('solve;')
         self.assertEqual(
             m.to_optmodel(solve=False),
-            inspect.cleandoc(
-                '''proc optmodel;
-                min empty_obj = 0;
-                var x {0,1};
-                solve;
-                quit;'''))
+            inspect.cleandoc('''
+            proc optmodel;
+               min empty_obj = 0;
+               var x {0,1};
+               solve;
+            quit;'''))
         s = so.abstract.LiteralStatement('print x;')
         m.include(s)
         self.assertEqual(
             m.to_optmodel(solve=False),
-            inspect.cleandoc(
-                '''proc optmodel;
-                min empty_obj = 0;
-                var x {0,1};
-                solve;
-                print x;
-                quit;'''))
+            inspect.cleandoc('''
+            proc optmodel;
+               min empty_obj = 0;
+               var x {0,1};
+               solve;
+               print x;
+            quit;'''))
         m.drop(s)
         self.assertEqual(
             m.to_optmodel(solve=False),
-            inspect.cleandoc(
-                '''proc optmodel;
-                min empty_obj = 0;
-                var x {0,1};
-                solve;
-                quit;'''))
+            inspect.cleandoc('''
+            proc optmodel;
+               min empty_obj = 0;
+               var x {0,1};
+               solve;
+            quit;'''))
 
 
     def test_add_abstract_statement(self):
@@ -277,10 +277,10 @@ class TestModel(unittest.TestCase):
         m.add_statement(s)
         self.assertEqual(so.to_optmodel(m), inspect.cleandoc("""
             proc optmodel;
-            var x;
-            min obj = (x) ^ (2);
-            expand;
-            solve;
+               var x;
+               min obj = (x) ^ (2);
+               expand;
+               solve;
             quit;
             """))
 
@@ -288,34 +288,34 @@ class TestModel(unittest.TestCase):
         m = so.Model(name='test_postsolve_statement')
         x = m.add_variable(name='x')
         c1 = m.add_constraint(x <= 10, name='c1')
-        self.assertEqual(m.to_optmodel(), inspect.cleandoc(
-            """proc optmodel;
-            min test_postsolve_statement_obj = 0;
-            var x;
-            con c1 : x <= 10;
-            solve;
+        self.assertEqual(m.to_optmodel(), inspect.cleandoc("""
+            proc optmodel;
+               min test_postsolve_statement_obj = 0;
+               var x;
+               con c1 : x <= 10;
+               solve;
             quit;"""))
 
         m.add_postsolve_statement('print x;')
-        self.assertEqual(m.to_optmodel(), inspect.cleandoc(
-            """proc optmodel;
-            min test_postsolve_statement_obj = 0;
-            var x;
-            con c1 : x <= 10;
-            solve;
-            print x;
-            quit;"""))
+        self.assertEqual(m.to_optmodel(), inspect.cleandoc("""
+        proc optmodel;
+           min test_postsolve_statement_obj = 0;
+           var x;
+           con c1 : x <= 10;
+           solve;
+           print x;
+        quit;"""))
 
         m.add_postsolve_statement(so.abstract.LiteralStatement('expand;'))
-        self.assertEqual(m.to_optmodel(), inspect.cleandoc(
-            """proc optmodel;
-            min test_postsolve_statement_obj = 0;
-            var x;
-            con c1 : x <= 10;
-            solve;
-            print x;
-            expand;
-            quit;"""))
+        self.assertEqual(m.to_optmodel(), inspect.cleandoc("""
+        proc optmodel;
+           min test_postsolve_statement_obj = 0;
+           var x;
+           con c1 : x <= 10;
+           solve;
+           print x;
+           expand;
+        quit;"""))
 
     def test_include_model(self):
         m1 = so.Model(name='test_copy_model_1')
@@ -333,13 +333,13 @@ class TestModel(unittest.TestCase):
         self.assertEqual(m2.get_grouped_constraints(), cons)
         self.assertEqual(m2.to_optmodel(),inspect.cleandoc("""
             proc optmodel;
-            var x;
-            var y {{0,1}};
-            con c1 : x + y[0] >= 2;
-            con c2_0 : x - y[0] <= 10;
-            con c2_1 : x - y[1] <= 10;
-            min model_obj = 2 * x + y[0] + 3 * y[1];
-            solve;
+               var x;
+               var y {{0,1}};
+               con c1 : x + y[0] >= 2;
+               con c2_0 : x - y[0] <= 10;
+               con c2_1 : x - y[1] <= 10;
+               min model_obj = 2 * x + y[0] + 3 * y[1];
+               solve;
             quit;"""))
 
     def test_set_get_objective(self):
@@ -359,10 +359,10 @@ class TestModel(unittest.TestCase):
             m.to_optmodel(),
             inspect.cleandoc("""
             proc optmodel;
-            var x;
-            min obj2 = 5 * x;
-            min obj3 = 10 * x;
-            solve;
+               var x;
+               min obj2 = 5 * x;
+               min obj3 = 10 * x;
+               solve;
             quit;"""))
 
     def test_get_objective_value(self):
@@ -471,13 +471,13 @@ class TestModel(unittest.TestCase):
         m.include(y, c)
         self.assertEqual(m.to_optmodel(), inspect.cleandoc("""
             proc optmodel;
-            min abstract_model_obj = 0;
-            set <str> idx;
-            num varlb {idx};
-            read data SERVER_DATA into idx=[tag] varlb=val;
-            var y {{idx}};
-            con c {o8 in idx} : y[o8] - varlb[o8] >= 0;
-            solve;
+               min abstract_model_obj = 0;
+               set <str> idx;
+               num varlb {idx};
+               read data SERVER_DATA into idx=[tag] varlb=val;
+               var y {{idx}};
+               con c {o8 in idx} : y[o8] - varlb[o8] >= 0;
+               solve;
             quit;
             """))
         m.set_session(TestModel.conn)
@@ -821,8 +821,8 @@ class TestModel(unittest.TestCase):
         self.assertEqual(m.to_optmodel(), inspect.cleandoc(
             """
             proc optmodel;
-            min test_to_optmodel_obj = 0;
-            solve;
+               min test_to_optmodel_obj = 0;
+               solve;
             quit;
             """
         ))
@@ -838,13 +838,13 @@ class TestModel(unittest.TestCase):
         self.assertEqual(response, inspect.cleandoc(
             """
             proc optmodel;
-            var x init 5;
-            min e1 = x;
-            max e2 = (x) ^ (2);
-            solve with blackbox relaxint obj (e1 e2) / primalin;
-            ods output PrintTable=primal_out;
-            ods output PrintTable=dual_out;
-            create data allsols from [s]=(1.._NVAR_) name=_VAR_[s].name {j in 1.._NSOL_} <col('sol_'||j)=_VAR_[s].sol[j]>;
+               var x init 5;
+               min e1 = x;
+               max e2 = (x) ^ (2);
+               solve with blackbox relaxint obj (e1 e2) / primalin;
+               ods output PrintTable=primal_out;
+               ods output PrintTable=dual_out;
+               create data allsols from [s]=(1.._NVAR_) name=_VAR_[s].name {j in 1.._NSOL_} <col('sol_'||j)=_VAR_[s].sol[j]>;
             quit;
             """
         ))
@@ -856,10 +856,10 @@ class TestModel(unittest.TestCase):
         self.assertEqual(response, inspect.cleandoc(
             """
             proc optmodel;
-            var x init 5;
-            min e1 = x;
-            max e2 = (x) ^ (2);
-            solve with nlp / multistart=(loglevel=3,maxstarts=30);
+               var x init 5;
+               min e1 = x;
+               max e2 = (x) ^ (2);
+               solve with nlp / multistart=(loglevel=3,maxstarts=30);
             quit;
             """
         ))

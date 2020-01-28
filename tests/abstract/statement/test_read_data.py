@@ -75,11 +75,11 @@ class TestReadData(unittest.TestCase):
         optmodel_code = so.to_optmodel(ws)
         self.assertEqual(optmodel_code, cleandoc("""
             proc optmodel;
-                set ITEMS;
-                num value {ITEMS} init 0;
-                var get {{ITEMS}} integer >= 0;
-                read data values into ITEMS value;
-                solve with blackbox / maxgen=10;
+               set ITEMS;
+               num value {ITEMS} init 0;
+               var get {{ITEMS}} integer >= 0;
+               read data values into ITEMS value;
+               solve with blackbox / maxgen=10;
             quit;
             """))
 
@@ -96,9 +96,9 @@ class TestReadData(unittest.TestCase):
         optmodel_code = so.to_optmodel(ws)
         self.assertEqual(optmodel_code, cleandoc("""
             proc optmodel;
-                set ASSETS;
-                num return {ASSETS};
-                read data means into ASSETS=[_N_] return;
+               set ASSETS;
+               num return {ASSETS};
+               read data means into ASSETS=[_N_] return;
             quit;
             """))
 
@@ -123,9 +123,9 @@ class TestReadData(unittest.TestCase):
         optmodel_code = so.to_optmodel(ws)
         self.assertEqual(optmodel_code, cleandoc("""
             proc optmodel;
-                set ASSETS;
-                num cov {ASSETS, ASSETS} init 0;
-                read data covdata into [asset1 asset2] cov cov[asset2, asset1]=cov;
+               set ASSETS;
+               num cov {ASSETS, ASSETS} init 0;
+               read data covdata into [asset1 asset2] cov cov[asset2, asset1]=cov;
             quit;
             """))
 
@@ -154,11 +154,11 @@ class TestReadData(unittest.TestCase):
         optmodel_code = so.to_optmodel(ws)
         self.assertEqual(optmodel_code, cleandoc("""
             proc optmodel;
-                num n init 2;
-                set indx;
-                num p {indx};
-                num q {indx};
-                read data exdata into indx=[_N_] p=column1 q=col('column' || n);
+               num n init 2;
+               set indx;
+               num p {indx};
+               num q {indx};
+               read data exdata into indx=[_N_] p=column1 q=col('column' || n);
             quit;
             """))
 
@@ -186,10 +186,10 @@ class TestReadData(unittest.TestCase):
         optmodel_code = so.to_optmodel(ws)
         self.assertEqual(optmodel_code, cleandoc("""
             proc optmodel;
-                set DOW = 1..5;
-                set <str> LOCS;
-                num demand {LOCS, DOW};
-                read data dmnd into LOCS=[loc] {d in DOW} < demand[loc, d]=col('day' || d) >;
+               set DOW = 1..5;
+               set <str> LOCS;
+               num demand {LOCS, DOW};
+               read data dmnd into LOCS=[loc] {d in DOW} < demand[loc, d]=col('day' || d) >;
             quit;"""))
 
     def test_with_cas_data(self):
@@ -229,12 +229,12 @@ class TestReadData(unittest.TestCase):
         optmodel_code = so.to_optmodel(ws)
         self.assertEqual(optmodel_code, cleandoc("""
             proc optmodel;
-                num n init 2;
-                set indx;
-                num p {indx};
-                num q {indx};
-                read data EXDATA into indx=[_N_] p=column1 q=col('column' || n);
-                print p q;
+               num n init 2;
+               set indx;
+               num p {indx};
+               num q {indx};
+               read data EXDATA into indx=[_N_] p=column1 q=col('column' || n);
+               print p q;
             quit;
             """))
 
@@ -261,9 +261,9 @@ class TestReadData(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(ws), cleandoc("""
             proc optmodel;
-                set <str> NODES;
-                num nodesByPri {NODES};
-                read data temppri into [_N_] nodesByPri=id;
+               set <str> NODES;
+               num nodesByPri {NODES};
+               read data temppri into [_N_] nodesByPri=id;
             quit;
             """))
 
@@ -294,16 +294,16 @@ class TestReadData(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(ws), cleandoc("""
             proc optmodel;
-                var x;
-                var y;
-                num c_xx;
-                num c_x;
-                num c_y;
-                num c_xy;
-                num c_yy;
-                read data coeff into c_xx c_x c_y c_xy c_yy;
-                MIN z = c_xx * (x) ^ (2) + c_x * x + c_xy * x * y + c_yy * (y) ^ (2);
-                solve;
+               var x;
+               var y;
+               num c_xx;
+               num c_x;
+               num c_y;
+               num c_xy;
+               num c_yy;
+               read data coeff into c_xx c_x c_y c_xy c_yy;
+               MIN z = c_xx * (x) ^ (2) + c_x * x + c_xy * x * y + c_yy * (y) ^ (2);
+               solve;
             quit;
             """))
 
@@ -326,10 +326,10 @@ class TestReadData(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(ws), cleandoc("""
             proc optmodel;
-                set <str> plants;
-                var prod {{plants}} >= 0;
-                num cost;
-                read data pdat into plants=[p] prod[p].ub=maxprod cost;
+               set <str> plants;
+               var prod {{plants}} >= 0;
+               num cost;
+               read data pdat into plants=[p] prod[p].ub=maxprod cost;
             quit;
             """))
 
@@ -349,9 +349,9 @@ class TestReadData(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(ws), cleandoc("""
             proc optmodel;
-                set subscripts = 1..4;
-                str letter {subscripts};
-                read data abcd into [_N_] letter[- _N_ + 5];
+               set subscripts = 1..4;
+               str letter {subscripts};
+               read data abcd into [_N_] letter[- _N_ + 5];
             quit;
             """))
 
@@ -394,12 +394,12 @@ class TestReadData(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(ws), cleandoc("""
             proc optmodel;
-                set ACTORS;
-                str actor_name {ACTORS};
-                num daily_fee {ACTORS};
-                num most_scenes = 9;
-                num scene_list {ACTORS, 1..most_scenes};
-                read data scene into ACTORS=[_N_] actor_name=Actor daily_fee=DailyFee {j in 1..most_scenes} < scene_list[_N_, j]=col('S_Var' || j) >;
+               set ACTORS;
+               str actor_name {ACTORS};
+               num daily_fee {ACTORS};
+               num most_scenes = 9;
+               num scene_list {ACTORS, 1..most_scenes};
+               read data scene into ACTORS=[_N_] actor_name=Actor daily_fee=DailyFee {j in 1..most_scenes} < scene_list[_N_, j]=col('S_Var' || j) >;
             quit;
             """))
 
@@ -426,11 +426,11 @@ class TestReadData(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(ws), cleandoc("""
             proc optmodel;
-                set <str, str> ARCS;
-                num arcLower {ARCS};
-                num arcUpper {ARCS};
-                num arcCost {ARCS};
-                read data arcdata into ARCS=[_tail_ _head_] arcLower=_lo_ arcUpper=_capac_ arcCost=_cost_;
+               set <str, str> ARCS;
+               num arcLower {ARCS};
+               num arcUpper {ARCS};
+               num arcCost {ARCS};
+               read data arcdata into ARCS=[_tail_ _head_] arcLower=_lo_ arcUpper=_capac_ arcCost=_cost_;
             quit;
             """))
 
@@ -464,10 +464,10 @@ class TestReadData(unittest.TestCase):
         optmodel_code = so.to_optmodel(ws)
         self.assertEqual(optmodel_code, cleandoc("""
             proc optmodel;
-                set <str, num> DailyEmployeeSlots;
-                set WeekDays = {'mon','tue','wed','thu','fri'};
-                num PreferenceWeights {DailyEmployeeSlots, WeekDays};
-                read data preferences into DailyEmployeeSlots=[name slot] {day in WeekDays} < PreferenceWeights[name, slot, day]=col(day) >;
+               set <str, num> DailyEmployeeSlots;
+               set WeekDays = {'mon','tue','wed','thu','fri'};
+               num PreferenceWeights {DailyEmployeeSlots, WeekDays};
+               read data preferences into DailyEmployeeSlots=[name slot] {day in WeekDays} < PreferenceWeights[name, slot, day]=col(day) >;
             quit;
             """))
 
@@ -490,10 +490,10 @@ class TestReadData(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(ws), cleandoc("""
             proc optmodel;
-                set TASKS = 1..24;
-                set MACHINES = 1..8;
-                num profit {MACHINES, TASKS};
-                read data profit_data into [_N_] {j in TASKS} < profit[_N_, j]=col('p' || j) >;
+               set TASKS = 1..24;
+               set MACHINES = 1..8;
+               num profit {MACHINES, TASKS};
+               read data profit_data into [_N_] {j in TASKS} < profit[_N_, j]=col('p' || j) >;
             quit;
             """))
 
@@ -514,14 +514,14 @@ class TestReadData(unittest.TestCase):
             so.to_optmodel(m, options={'with': so.BLACKBOX, 'maxgen': 10}),
             cleandoc('''
             proc optmodel;
-            set ITEMS;
-            num value {{ITEMS}} init 0;
-            num weight {{ITEMS}};
-            num limit {{ITEMS}};
-            var get {{ITEMS}} integer >= 0;
-            max max_get = sum {i in ITEMS} (get[i]);
-            read data values into ITEMS value weight limit;
-            solve with blackbox / maxgen=10;
+               set ITEMS;
+               num value {{ITEMS}} init 0;
+               num weight {{ITEMS}};
+               num limit {{ITEMS}};
+               var get {{ITEMS}} integer >= 0;
+               max max_get = sum {i in ITEMS} (get[i]);
+               read data values into ITEMS value weight limit;
+               solve with blackbox / maxgen=10;
             quit;'''))
 
 

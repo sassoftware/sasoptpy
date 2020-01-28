@@ -46,16 +46,16 @@ class TestPackageUtils(unittest.TestCase):
                              init=init_values)
         self.assertEqual(so.to_optmodel(m), cleandoc('''
             proc optmodel;
-            min test_extract_list_vals_obj = 0;
-            var x {{'a','b','c'}};
-            x['a'].lb = 1;
-            x['a'].ub = 5;
-            x['b'] = 2;
-            x['b'].lb = 0;
-            x['b'].ub = 10;
-            x['c'] = 3;
-            x['c'].lb = 2;
-            solve;
+               min test_extract_list_vals_obj = 0;
+               var x {{'a','b','c'}};
+               x['a'].lb = 1;
+               x['a'].ub = 5;
+               x['b'] = 2;
+               x['b'].lb = 0;
+               x['b'].ub = 10;
+               x['c'] = 3;
+               x['c'].lb = 2;
+               solve;
             quit;
             '''))
 

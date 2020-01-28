@@ -101,7 +101,7 @@ class Case(Statement):
             eldef = sasoptpy.to_definition(i)
             if eldef is not None:
                 eldefs.append(eldef)
-        s += sasoptpy.util.addSpaces('\n'.join(eldefs), 4) + '\n'
+        s += sasoptpy.util.addSpaces('\n'.join(eldefs), 3) + '\n'
         s += 'end;'
         return s
 

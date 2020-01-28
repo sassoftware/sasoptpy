@@ -76,22 +76,22 @@ class TestForLoop(unittest.TestCase):
             cleandoc(
                 '''
                 proc optmodel;
-                    call streaminit(1);
-                    num n = 5;
-                    set RN = 1..n;
-                    num A {RN, RN} = 10-20*rand('UNIFORM');
-                    num P {RN, RN};
-                    for {o7 in RN} do;
-                        for {o10 in o7..n} do;
-                            P[o7, o10] = sum {k in RN} (A[o7, k] * A[o10, k]);
-                        end;
-                    end;
-                    var q {{RN}, {RN}};
-                    q[1, 1] = 1;
-                    MIN r = sum {i in RN, j in i..n} ((sum {k in 1..i} (q[k, i] * q[k, j]) + sum {k in i+1..j} (q[i, k] * q[k, j]) + sum {k in j+1..n} (q[i, k] * q[j, k]) - P[i, j]) ^ (2));
-                    solve;
-                    print P;
-                    print q;
+                   call streaminit(1);
+                   num n = 5;
+                   set RN = 1..n;
+                   num A {RN, RN} = 10-20*rand('UNIFORM');
+                   num P {RN, RN};
+                   for {TEMP1 in RN} do;
+                      for {TEMP2 in TEMP1..n} do;
+                         P[TEMP1, TEMP2] = sum {k in RN} (A[TEMP1, k] * A[TEMP2, k]);
+                      end;
+                   end;
+                   var q {{RN}, {RN}};
+                   q[1, 1] = 1;
+                   MIN r = sum {i in RN, j in i..n} ((sum {k in 1..i} (q[k, i] * q[k, j]) + sum {k in i+1..j} (q[i, k] * q[k, j]) + sum {k in j+1..n} (q[i, k] * q[j, k]) - P[i, j]) ^ (2));
+                   solve;
+                   print P;
+                   print q;
                 quit;
                 '''))
 
@@ -106,11 +106,11 @@ class TestForLoop(unittest.TestCase):
 
         assert_equal_wo_temps(self, so.to_optmodel(w), cleandoc("""
             proc optmodel;
-                for {o2 in 1..2} do;
-                    for {o5 in {'a','b'}} do;
-                        put o2 o5;
-                    end;
-                end;
+               for {TEMP1 in 1..2} do;
+                  for {TEMP2 in {'a','b'}} do;
+                     put TEMP1 TEMP2;
+                  end;
+               end;
             quit;"""))
 
     def test_with_assignment(self):
@@ -122,10 +122,10 @@ class TestForLoop(unittest.TestCase):
 
         assert_equal_wo_temps(self, so.to_optmodel(w), cleandoc("""
             proc optmodel;
-                var x {{1,2,3,4,5,6,7,8,9,10}};
-                for {o13 in 1..10} do;
-                    x[o13] = 1;
-                end;
+               var x {{1,2,3,4,5,6,7,8,9,10}};
+               for {TEMP1 in 1..10} do;
+                  x[TEMP1] = 1;
+               end;
             quit;"""))
 
     def test_with_predefined_set(self):
@@ -136,10 +136,10 @@ class TestForLoop(unittest.TestCase):
 
         assert_equal_wo_temps(self, so.to_optmodel(w), cleandoc("""
             proc optmodel;
-                set C = {'a','b','c'};
-                for {o3 in C} do;
-                    put o3;
-                end;
+               set C = {'a','b','c'};
+               for {TEMP1 in C} do;
+                  put TEMP1;
+               end;
             quit;"""))
 
     def test_with_create_data(self):
@@ -167,12 +167,12 @@ class TestForLoop(unittest.TestCase):
 
         assert_equal_wo_temps(self, so.to_optmodel(w), cleandoc("""
             proc optmodel;
-                set m = 1..3;
-                var revenue {{1,2,3,4,5,6,7,8,9,10,11,12}};
-                read data revdata into [_N_] revenue=rev;
-                for {o18 in 1..4} do;
-                    create data ('qtr' || o18) from [month] = {m} revenue[month + 3.0 * o18 - 3];
-                end;
+               set m = 1..3;
+               var revenue {{1,2,3,4,5,6,7,8,9,10,11,12}};
+               read data revdata into [_N_] revenue=rev;
+               for {TEMP1 in 1..4} do;
+                  create data ('qtr' || TEMP1) from [month] = {m} revenue[month + 3.0 * TEMP1 - 3];
+               end;
             quit;"""))
 
 
@@ -187,10 +187,10 @@ class TestForLoop(unittest.TestCase):
 
         assert_equal_wo_temps(self, so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                set R = 1..10;
-                set C = 1..5;
-                num A {R, C};
-                for {o5 in R, o7 in C} do;
-                    A[o5, o7] = 1;
-                end;
+               set R = 1..10;
+               set C = 1..5;
+               num A {R, C};
+               for {TEMP1 in R, TEMP2 in C} do;
+                  A[TEMP1, TEMP2] = 1;
+               end;
             quit;'''))

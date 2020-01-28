@@ -44,10 +44,10 @@ class TestSet(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                set S;
-                set T init 0..10;
-                set V = {1,2,4};
-                set <str, num> W;
+               set S;
+               set T init 0..10;
+               set V = {1,2,4};
+               set <str, num> W;
             quit;'''))
 
         self.assertEqual(repr(S),
@@ -90,11 +90,11 @@ class TestSet(unittest.TestCase):
 
         assert_equal_wo_temps(self, so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                num p;
-                set S = 1..10;
-                for {o8 in {o4 in S: mod(o4 , 3) = 0}} do;
-                    p = o8;
-                end;
+               num p;
+               set S = 1..10;
+               for {TEMP2 in {TEMP1 in S: mod(TEMP1 , 3) = 0}} do;
+                  p = TEMP2;
+               end;
             quit;'''))
 
         assert_equal_wo_temps(self, repr(iset),
