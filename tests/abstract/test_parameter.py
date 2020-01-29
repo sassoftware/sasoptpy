@@ -43,10 +43,10 @@ class TestParameter(unittest.TestCase):
             p.set_value(5)
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
-        proc optmodel;
-            num p init 3;
-            p = 5;
-        quit;'''))
+            proc optmodel;
+               num p init 3;
+               p = 5;
+            quit;'''))
 
     def test_parameter_group(self):
 
@@ -61,10 +61,10 @@ class TestParameter(unittest.TestCase):
 
         assert_equal_wo_temps(self, so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                num p {1..5} init 3;
-                p[0] = 3;
-                set S = 1..5;
-                for {o6 in S} do;
-                    p[o6] = 1;
-                end;
+               num p {1..5} init 3;
+               p[0] = 3;
+               set S = 1..5;
+               for {TEMP1 in S} do;
+                  p[TEMP1] = 1;
+               end;
             quit;'''))

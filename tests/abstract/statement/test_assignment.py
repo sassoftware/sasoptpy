@@ -65,15 +65,15 @@ class TestAssignment(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(w), cleandoc("""
             proc optmodel;
-                num p init 2;
-                var x {{0,1,2,3,4}} >= 1;
-                x[0].lb = 3;
-                x[1].lb = p;
-                p = 4;
-                fix x[2]=p;
-                x[3].ub = 5;
-                x[4].lb = 1;
-                x[4].ub = 4;
+               num p init 2;
+               var x {{0,1,2,3,4}} >= 1;
+               x[0].lb = 3;
+               x[1].lb = p;
+               p = 4;
+               fix x[2]=p;
+               x[3].ub = 5;
+               x[4].lb = 1;
+               x[4].ub = 4;
             quit;
             """))
 

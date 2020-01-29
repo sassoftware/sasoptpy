@@ -49,14 +49,14 @@ class TestIfElse(unittest.TestCase):
 
         assert_equal_wo_temps(self, so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                var x;
-                x = 0.5;
-                if x > 1e-06 then do;
-                    x = 1;
-                end;
-                else do;
-                    x = 0;
-                end;
+               var x;
+               x = 0.5;
+               if x > 1e-06 then do;
+                  x = 1;
+               end;
+               else do;
+                  x = 0;
+               end;
             quit;'''))
 
     def test_regular_switch(self):
@@ -77,21 +77,21 @@ class TestIfElse(unittest.TestCase):
 
         assert_equal_wo_temps(self, so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                var x;
-                num p;
-                x = 2.5;
-                if x < 1 then do;
-                    p = 1;
-                end;
-                else if x < 2 then do;
-                    p = 2;
-                end;
-                else if x < 3 then do;
-                    p = 3;
-                end;
-                else do;
-                    p = 0;
-                end;
+               var x;
+               num p;
+               x = 2.5;
+               if x < 1 then do;
+                  p = 1;
+               end;
+               else if x < 2 then do;
+                  p = 2;
+               end;
+               else if x < 3 then do;
+                  p = 3;
+               end;
+               else do;
+                  p = 0;
+               end;
             quit;'''))
 
     def test_combined_condition(self):
@@ -106,12 +106,12 @@ class TestIfElse(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                num p;
-                num r = 10;
-                if (r < 5) or (r > 10) then do;
-                    p = 10;
-                end;
-                else do;
-                    p = 20;
-                end;
+               num p;
+               num r = 10;
+               if (r < 5) or (r > 10) then do;
+                  p = 10;
+               end;
+               else do;
+                  p = 20;
+               end;
             quit;'''))

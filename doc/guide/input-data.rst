@@ -17,7 +17,7 @@ Indices
 
 Methods like :func:`Model.add_variables` can utilize native Python object
 types like list and range as variable and constraint indices.
-:class:`pandas.Index` can be used as index as well.
+You can use :class:`pandas.Index` objects as indices as well.
 
 List
 ~~~~
@@ -41,8 +41,8 @@ List
    print(repr(production['Summer']))
 
 Note that if a list is being used as the index set, associated fields like
-`lb`, `ub` should be accesible using the index keys. Accepted types are dict
-and pandas.Series.
+`lb`, `ub` should be accessible by using the index keys. Accepted types are dict
+and :class:`pandas.Series`.
 
 Range
 ~~~~~
@@ -111,7 +111,7 @@ Here are some options to load data into the optimization models.
 pandas DataFrame
 ~~~~~~~~~~~~~~~~
 
-:class:`pandas.DataFrame` is the preferred object types when passing data into
+:class:`pandas.DataFrame` is the preferred object type when passing data into
 *sasoptpy* models.
 
 .. ipython:: python
@@ -131,7 +131,7 @@ pandas DataFrame
 Dictionaries
 ~~~~~~~~~~~~
 
-Lists and dictionaries can be used in expressions and when creating variables.
+You can use lists and dictionaries in expressions and when creating variables.
 
 .. ipython:: python
 
@@ -144,10 +144,10 @@ Lists and dictionaries can be used in expressions and when creating variables.
 CASTable
 ~~~~~~~~
 
-When a data is available on the server-side, a reference to the object can be
-passed. Note that, using :class:`swat.cas.table.CASTable`
+When data are available on the server-side, you can pass a reference to the object.
+Note that, using :class:`swat.cas.table.CASTable`
 and Abstract Data requires SAS Viya version
-3.4.
+3.4 or later.
 
 .. ipython:: python
    :suppress:
@@ -192,7 +192,7 @@ Abstract Data
 ~~~~~~~~~~~~~
 
 If you would like to model your problem first and then load data, you can
-pass a string for the data sets that will be available later. See following:
+pass a string for the data sets that will be available later.
 
 .. ipython:: python
 
@@ -204,8 +204,8 @@ pass a string for the data sets that will be available later. See following:
    m3.include(read_data(table='DF', index=['item'], columns=[limit]))
    print(type(ITEMS), ITEMS)
 
-Notice that the key set is created as a reference. We can later solve the
-problem after having the data available with the same name, e.g. using the
+Note that the key set is created as a reference. You can later solve the
+problem after having the data available with the same name; for example, by using the
 `upload_frame` function.
 
 .. ipython:: python
@@ -216,8 +216,8 @@ problem after having the data available with the same name, e.g. using the
 Operations
 ----------
 
-Lists, :class:`pandas.Series`, and :class:`pandas.DataFrame` objects can be
-used for mathematical operations like :func:`VariableGroup.mult`.
+You can use lists, :class:`pandas.Series`, and :class:`pandas.DataFrame` objects for mathematical operations
+such as :func:`VariableGroup.mult`.
 
 .. ipython:: python
 

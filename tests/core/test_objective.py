@@ -75,11 +75,11 @@ class TestObjective(unittest.TestCase):
             m.solve(options={'with': 'milp', 'relaxint': True}, primalin=True)
         self.assertEqual(so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                var x integer >= 0.5 init 2;
-                min obj = (x) ^ (2);
-                problem model1 include x obj;
-                use problem model1;
-                solve with milp relaxint / primalin;
+               var x integer >= 0.5 init 2;
+               min obj = (x) ^ (2);
+               problem model1 include x obj;
+               use problem model1;
+               solve with milp relaxint / primalin;
             quit;'''))
 
     @classmethod

@@ -141,14 +141,14 @@ class TestConstraintGroup(unittest.TestCase):
         m.include(S, x, y, c)
         assert_equal_wo_temps(self, so.to_optmodel(m), cleandoc('''
             proc optmodel;
-            min m_obj = 0;
-            set S = 0..3;
-            var x {{0,1,2}};
-            var y {{S}};
-            con c_0 {o11 in S} : x[0] + y[o11] >= 1;
-            con c_1 {o16 in S} : x[1] + y[o16] >= 1;
-            con c_2 {o21 in S} : x[2] + y[o21] >= 1;
-            solve;
+               min m_obj = 0;
+               set S = 0..3;
+               var x {{0,1,2}};
+               var y {{S}};
+               con c_0 {TEMP1 in S} : x[0] + y[TEMP1] >= 1;
+               con c_1 {TEMP2 in S} : x[1] + y[TEMP2] >= 1;
+               con c_2 {TEMP3 in S} : x[2] + y[TEMP3] >= 1;
+               solve;
             quit;'''))
 
     def tearDown(self):

@@ -52,12 +52,12 @@ class TestCoforLoop(unittest.TestCase):
 
         assert_equal_wo_temps(self, so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                var x {{0,1,2,3,4,5}} >= 0;
-                min z = x[0] + x[1] + x[2] + x[3] + x[4] + x[5];
-                con a1 : x[1] + x[2] + x[3] <= 4;
-                cofor {o13 in 3..5} do;
-                    fix x[1]=o13;
-                    solve;
-                    put o13= x[1]= _solution_status_=;
-                end;
+               var x {{0,1,2,3,4,5}} >= 0;
+               min z = x[0] + x[1] + x[2] + x[3] + x[4] + x[5];
+               con a1 : x[1] + x[2] + x[3] <= 4;
+               cofor {TEMP1 in 3..5} do;
+                  fix x[1]=TEMP1;
+                  solve;
+                  put TEMP1= x[1]= _solution_status_=;
+               end;
             quit;'''))

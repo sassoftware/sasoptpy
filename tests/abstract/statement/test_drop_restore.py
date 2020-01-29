@@ -53,14 +53,14 @@ class TestDropRestore(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                var x >= 1;
-                var y >= 0;
-                con c : sqrt(x) >= 5;
-                min obj = x + y;
-                solve;
-                drop c;
-                min obj2 = x;
-                solve;
+               var x >= 1;
+               var y >= 0;
+               con c : sqrt(x) >= 5;
+               min obj = x + y;
+               solve;
+               drop c;
+               min obj2 = x;
+               solve;
             quit;'''))
 
     def test_multiple_and_mixed_drop(self):
@@ -86,25 +86,25 @@ class TestDropRestore(unittest.TestCase):
 
         assert_equal_wo_temps(self, so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                var x;
-                min obj = (x) ^ (2);
-                con c1 : x >= 5;
-                con c2_0 : (x) ^ (0) >= 1;
-                con c2_1 : (x) ^ (1) >= 2;
-                con c2_2 : (x) ^ (2) >= 3;
-                con c3_0 : x >= 0;
-                con c3_1 : x >= 1;
-                set S = 1..4;
-                var y {{S}};
-                con d_0 {o24 in S} : y[o24] - o24 >= 0;
-                con d_1 {o24 in S} : y[o24] - o24 >= 1;
-                solve;
-                drop c1 c2_1 c3_0 c3_1;
-                solve;
-                drop d_0[2];
-                solve;
-                drop {o24 in S} d_0[o24] {o24 in S} d_1[o24];
-                solve;
+               var x;
+               min obj = (x) ^ (2);
+               con c1 : x >= 5;
+               con c2_0 : (x) ^ (0) >= 1;
+               con c2_1 : (x) ^ (1) >= 2;
+               con c2_2 : (x) ^ (2) >= 3;
+               con c3_0 : x >= 0;
+               con c3_1 : x >= 1;
+               set S = 1..4;
+               var y {{S}};
+               con d_0 {TEMP1 in S} : y[TEMP1] - TEMP1 >= 0;
+               con d_1 {TEMP1 in S} : y[TEMP1] - TEMP1 >= 1;
+               solve;
+               drop c1 c2_1 c3_0 c3_1;
+               solve;
+               drop d_0[2];
+               solve;
+               drop {TEMP1 in S} d_0[TEMP1] {TEMP1 in S} d_1[TEMP1];
+               solve;
             quit;'''))
 
     def test_drop_in_model(self):
@@ -116,23 +116,23 @@ class TestDropRestore(unittest.TestCase):
         c = m.add_constraints((x[i] <= i**2 for i in range(3)), name='c')
         self.assertEqual(so.to_optmodel(m), cleandoc('''
             proc optmodel;
-            min m_obj = 0;
-            var x {{0,1,2}};
-            con c_0 : x[0] <= 0;
-            con c_1 : x[1] <= 1;
-            con c_2 : x[2] <= 4;
-            solve;
+               min m_obj = 0;
+               var x {{0,1,2}};
+               con c_0 : x[0] <= 0;
+               con c_1 : x[1] <= 1;
+               con c_2 : x[2] <= 4;
+               solve;
             quit;'''))
         m.drop_constraint(c[0])
         self.assertEqual(so.to_optmodel(m), cleandoc('''
             proc optmodel;
-            min m_obj = 0;
-            var x {{0,1,2}};
-            con c_0 : x[0] <= 0;
-            con c_1 : x[1] <= 1;
-            con c_2 : x[2] <= 4;
-            drop c_0;
-            solve;
+               min m_obj = 0;
+               var x {{0,1,2}};
+               con c_0 : x[0] <= 0;
+               con c_1 : x[1] <= 1;
+               con c_2 : x[2] <= 4;
+               drop c_0;
+               solve;
             quit;'''))
 
     def test_simple_drop_restore(self):
@@ -149,12 +149,12 @@ class TestDropRestore(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                var x >= -1;
-                MIN xcube = (x) ^ (3);
-                con xbound : x >= 1;
-                solve;
-                drop xbound;
-                solve;
-                restore xbound;
-                solve;
+               var x >= -1;
+               MIN xcube = (x) ^ (3);
+               con xbound : x >= 1;
+               solve;
+               drop xbound;
+               solve;
+               restore xbound;
+               solve;
             quit;'''))

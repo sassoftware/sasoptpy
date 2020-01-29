@@ -235,12 +235,12 @@ class TestCASInterface(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                var x {{0,1,2}};
-                con c_0 : x[0] <= 0;
-                con c_1 : x[1] <= 1;
-                con c_2 : x[2] <= 2;
-                max obj = x[1];
-                solve;
+               var x {{0,1,2}};
+               con c_0 : x[0] <= 0;
+               con c_1 : x[1] <= 1;
+               con c_2 : x[2] <= 2;
+               max obj = x[1];
+               solve;
             quit;'''))
         r = w.submit()
         self.assertIsNotNone(s.get_solution_summary())

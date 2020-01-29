@@ -30,7 +30,7 @@ Changes
 - Dictionaries inside components are replaced with ordered dictionaries
   to preserve deterministic behavior
 - Math operators are added into the keys of linear coefficient dictionaries
-- Some iterators are rewritten using `yield` keyword for performance
+- Some iterators are rewritten by using the `yield` keyword for performance
 - `key_name` and `col_names` parameters are added into :meth:`read_table`
 
 Bug Fixes
@@ -53,7 +53,7 @@ Notes
 - A new example is added to show usage of experiment RESTful API
 - Unit tests are added for development repository
 - CD/CI integration is added for the development repository on Gitlab
-- Generated models can be checked using the hash values inside tests.responses
+- Generated models can be checked by using the hash values inside tests.responses
 
 v0.2.0 (July 30, 2018)
 ======================
@@ -64,7 +64,7 @@ New Features
 - Support for the new `runOptmodel` CAS action is added
 - Nonlinear optimization model building support is added for both SAS 9.4 and
   SAS Viya solvers
-- Abstract model building support is added when using SAS Viya solvers
+- Abstract model building support is added when by using SAS Viya solvers
 - New object types, :class:`Set`, :class:`SetIterator`, :class:`Parameter`,
   :class:`ParameterValue`, :class:`ImplicitVar`, :class:`ExpressionDict`, and
   :class:`Statement` are added for abstract model building
@@ -75,8 +75,8 @@ New Features
 - Math function wrappers are added
 - :code:`_expr` and :code:`_defn` methods are added to all object types for
   producing OPTMODEL expression and definitions
-- Multiple solutions are now being returned when using `solveMilp` action and
-  can be grabbed using :meth:`Model.get_solution` method
+- Multiple solutions are now being returned when by using `solveMilp` action and
+  can be retrieved by using :meth:`Model.get_solution` method
 - :meth:`Model.get_variable_value` is added to get solution values of abstract
   variables
 
@@ -99,9 +99,9 @@ Changes
 - An optional argument :code:`frame` is added to :meth:`Model.solve` for
   forcing to use MPS mode and `solveLp`-`solveMilp` actions
 - Minor changes are applied to :code:`__str__` and :code:`__repr__` methods
-- Creation indices for objects are being kept using the return of the
+- Creation indices for objects are being kept by using the return of the
   :func:`register_name` function
-- Objective constant values are now being passed using new CAS action arguments
+- Objective constant values are now being passed by using new CAS action arguments
   when posssible
 - A linearity check is added for models
 - Test folder is added to the repository
@@ -127,7 +127,7 @@ New Features
 
 - As an experimental feature, *sasoptpy* supports *saspy* connections now
 - :meth:`Model.solve_local` method is added for solving optimization
-  problems using SAS 9.4 installations
+  problems by using SAS 9.4 installations
 - :meth:`Model.drop_variable`, :meth:`Model.drop_variables`,
   :meth:`Model.drop_constraint`, :meth:`Model.drop_constraints` methods are
   added

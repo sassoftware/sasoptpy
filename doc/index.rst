@@ -14,15 +14,15 @@ sasoptpy: SAS Optimization Interface for Python
 `Releases <https://github.com/sassoftware/sasoptpy/releases>`_ |
 `Community <https://communities.sas.com/t5/Mathematical-Optimization/bd-p/operations_research>`_
 
-*sasoptpy* is a Python package providing a modeling interface for 
+*sasoptpy* is a Python package that provides a modeling interface for
 `SAS Viya <https://www.sas.com/en_us/software/viya.html>`_  and SAS/OR
-Optimization solvers. 
+optimization solvers.
 It provides a quick way for users to deploy optimization models and
-solve them using
+solve them by using the
 `SAS Viya Optimization Action Set <http://go.documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.3&docsetId=casactmopt&docsetTarget=casactmopt_optimization_toc.htm&locale=en>`_.
 
-*sasoptpy* can handle linear, mixed-integer linear, nonlinear, and black-box
-optimization problems. Users can benefit from native Python
+*sasoptpy* can handle linear, mixed integer linear, nonlinear, and black-box
+optimization problems. You can use native Python
 structures like dictionaries, tuples, and lists to define an optimization
 problem. *sasoptpy* supports `Pandas <http://pandas.pydata.org/>`_
 objects extensively.
@@ -40,7 +40,7 @@ and
 for more details about optimization tools provided by SAS and an interface to
 model optimization problems inside SAS.
 
-See our SAS Global Forum paper: `Optimization Modeling with Python and SAS Viya <https://www.sas.com/content/dam/SAS/support/en/sas-global-forum-proceedings/2018/1814-2018.pdf>`_
+See the SAS Global Forum paper: `Optimization Modeling with Python and SAS Viya <https://www.sas.com/content/dam/SAS/support/en/sas-global-forum-proceedings/2018/1814-2018.pdf>`_
 
 .. toctree::
    :glob:

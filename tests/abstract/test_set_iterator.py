@@ -235,11 +235,11 @@ class TestSetIterator(unittest.TestCase):
 
         assert_equal_wo_temps(self, so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                set <num, num> S;
-                set W;
-                num p {S, W};
-                var x {{S}};
-                read data cas_table_1 into S=[pos1 pos2] {d in W} < p[pos1, pos2, d]=col(d) >;
+               set <num, num> S;
+               set W;
+               num p {S, W};
+               var x {{S}};
+               read data cas_table_1 into S=[pos1 pos2] {d in W} < p[pos1, pos2, d]=col(d) >;
             quit;
             '''))
 

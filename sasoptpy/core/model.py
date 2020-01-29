@@ -1254,7 +1254,7 @@ class Model:
 
         Notes
         -----
-        - It is possible to get a variable's value using
+        - It is possible to get a variable's value by using the
           :func:`Variable.get_value` method, if the variable is not abstract.
         - This method is a wrapper around :func:`Variable.get_value` and an
           overlook function for model components

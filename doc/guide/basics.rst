@@ -7,9 +7,9 @@ Basic Functionality
 *******************
 
 Solving an optimization problem via *sasoptpy*
-starts with having a running CAS Server or having a SAS 9.4 installation.
-It is possible to model a problem without a server
-but solving a problem requires access to SAS/OR solvers.
+starts with having a running CAS (SAS Viya) Server or having a SAS 9.4 installation.
+It is possible to model a problem without a connection
+but solving a problem requires access to SAS Optimization or SAS/OR solvers at runtime.
 
 Creating a session
 ------------------
@@ -19,7 +19,7 @@ Creating a SAS Viya session
 
 *sasoptpy* uses the CAS connection provided by the
 swat package.
-After installation simply use
+After installation simply use:
 
 .. ipython:: python
    :suppress:
@@ -45,8 +45,7 @@ Creating a SAS 9.4 session
 
 To create a SAS 9.4 session, see
 `saspy Documentation <https://sassoftware.github.io/saspy/getting-started.html#start-a-sas-session>`_.
-After customizing the configurations for your setup, a session can be created
-as follows:
+After customizing the configurations for your setup, you can create a session as follows:
 
 .. code-block:: python
 
@@ -56,8 +55,7 @@ as follows:
 Initializing a model
 --------------------
 
-After having an active CAS/SAS session, an empty model can be defined as
-follows:
+After creating an active CAS or SAS session, you can create an empty model as follows:
 
 .. ipython:: python
 
@@ -69,12 +67,9 @@ This command creates an empty model.
 Processing input data
 ---------------------
 
-The easisest way to work with *sasoptpy* is to
+The easiest way to work with *sasoptpy* is to
 define problem inputs as Pandas DataFrames.
-Objective and cost coefficients, and 
-lower and upper bounds can 
-be defined using the
-DataFrame and Series objects.
+You can define objective and cost coefficients, and lower and upper bounds by using the DataFrame and Series objects.
 See
 `Pandas Documentation <http://pandas.pydata.org/pandas-docs/stable/>`_
 to learn more.
@@ -90,8 +85,7 @@ to learn more.
    price_per_product = 10
    capacity_cost = 10
 
-Set ``PERIODS`` and other fields ``demand``, ``min_production`` can be
-extracted as follows
+You can extract the set ``PERIODS`` and the other fields ``demand`` and ``min_production`` as follows:
 
 .. ipython:: python
 
@@ -102,7 +96,7 @@ extracted as follows
 Adding variables
 ----------------
 
-You can add a single variables or a set of variables to :class:`Model` objects.
+You can add a single variable or a set of variables to :class:`Model` objects.
 
 * :meth:`Model.add_variable` method is used to add a single variable.
   
@@ -115,27 +109,27 @@ You can add a single variables or a set of variables to :class:`Model` objects.
 
   >>> production_cap = so.Variable(name='production_cap', vartype=so.INT, lb=0)
   
-  and add it to an existing model using
+  and add it to an existing model by using
 
   >>> m.include(production_cap)
 
-* :meth:`Model.add_variables` method is used to add a set of variables.
+* The :meth:`Model.add_variables` method is used to add a set of variables.
   
   .. ipython:: python
   
      production = m.add_variables(PERIODS, vartype=so.INT, name='production',
 	                          lb=min_production)
   
-  When passed as a set of variables, individual variables can be obtained by
+  When passed as a set of variables, you can retrieve individual variables by
   using individual keys, such as ``production['Period1']``.
-  To create multi-dimensional variables, simply list all the keys as
+  To create multidimensional variables, simply list all the keys as follows:
 
   >>> multivar = m.add_variables(KEYS1, KEYS2, KEYS3, name='multivar')
 
 Creating expressions
 --------------------
 
-:class:`Expression` objects keep mathematical expressions.
+:class:`Expression` objects hold mathematical expressions.
 Although these objects are mostly used under the hood when defining a model,
 it is possible to define a custom :class:`Expression` to use later.
 
@@ -144,10 +138,10 @@ it is possible to define a custom :class:`Expression` to use later.
    totalRevenue = production.sum('*')*price_per_product
    totalCost = production_cap * capacity_cost
 
-The first thing to notice is the use of the :meth:`VariableGroup.sum` method
+Note the use of the :meth:`VariableGroup.sum` method
 over a variable group. This method returns the sum of variables inside the
 group as an :class:`Expression` object. Its multiplication with a scalar
-``profit_per_product`` gives the final expression.
+``price_per_product`` gives the final expression.
 
 Similarly, ``totalCost`` is simply multiplication of a :class:`Variable` object
 with a scalar.
@@ -155,15 +149,15 @@ with a scalar.
 Setting an objective function
 -----------------------------
 
-Objective functions can be written in terms of expressions. 
-In this problem, the objective is to maximize the profit, so 
+You can define objective functions in terms of expressions.
+In this problem, the objective is to maximize the profit, so the
 :func:`Model.set_objective` method is used as follows:
 
 .. ipython:: python
    
    m.set_objective(totalRevenue-totalCost, sense=so.MAX, name='totalProfit')
 
-Notice that you can define the same objective using
+Notice that you can define the same objective by using:
 
 >>> m.set_objective(production.sum('*')*price_per_product - production_cap*capacity_cost, sense=so.MAX, name='totalProfit')
 
@@ -178,7 +172,7 @@ It is possible to define an expression and add it to a model by defining which
 direction the linear relation should have.
 
 There are two methods to add constraints. The first one
-is :meth:`Model.add_constraint` where a single constraint can be inserted into a
+is :meth:`Model.add_constraint` where a single constraint can be added to a
 model.
 
 The second one is :meth:`Model.add_constraints` where multiple constraints can
@@ -197,38 +191,38 @@ be added to a model.
 Here, the first term provides a Python generator, which then gets translated into
 constraints in the problem. The symbols ``<=``, ``>=``, and ``==`` are used for
 less than or equal to, greater than or equal to, and equal to constraints,
-respectively. Range constraints can be inserted using ``==`` and a list of 2
-values representing lower and upper bounds.
+respectively. You can define range constraints by using ``==`` symbol and a list of two
+values that represent lower and upper bounds.
+
+.. ipython:: python
+
+   m.add_constraint(production['Period1'] == [10, 100], name='production_bounds')
 
 Solving a problem
 -----------------
 
-Defined problems can be simply sent to CAS server or SAS sesion by calling the 
-:func:`Model.solve` method.
-
-See the solution output to the problem.
+After a problem is defined, you can send it to the CAS server or SAS session by calling the
+:func:`Model.solve` method. The :func:`Model.solve` method returns the primal solution when available,
+and ``None`` otherwise.
 
 .. ipython:: python
    
    m.solve()
 
 At the end of the solve operation, the solver returns 
-both Problem Summary and Solution Summary tables. These tables can be
-later accessed using ``m.get_problem_summary()`` and
-``m.get_solution_summary``.
+both Problem Summary and Solution Summary tables. These tables can
+later be accessed by using ``m.get_problem_summary()`` and
+``m.get_solution_summary()``.
 
 .. ipython:: python
 
    print(m.get_solution_summary())
 
 
-The :func:`Model.solve` method returns the primal solution when available,
-and ``None`` otherwise.
-
 Printing solutions
 ------------------
 
-Solutions provided by the solver can be obtained using
+You can retrieve the solutions by using the
 :func:`sasoptpy.get_solution_table` method. It is strongly suggested to group
 variables and expressions that share the same keys in a call.
 
@@ -236,29 +230,39 @@ variables and expressions that share the same keys in a call.
 
    print(so.get_solution_table(demand, production))
 
-As seen, a Pandas Series and a Variable object that has the same index
+As seen, a Pandas Series and a Variable object that have the same index
 keys are printed in this example.
 
 Initializing a workspace
 ------------------------
 
 If you would like to use extensive abstract modeling capabilities of `sasoptpy`,
-can create a workspace. Workspaces support features like server-side for loops,
-cofor loops (parallel), read and create data. You can initialize a :class:`sasoptpy.Workspace`
-as follows:
+you can create a workspace.
+Workspaces support features like server-side for loops,
+cofor loops (parallel), read data, and create data.
+You can initialize a :class:`sasoptpy.Workspace` by using Python's
+`with` keyword.
+As an example, you can create a workspace with a set and a variable group as follows:
 
 .. ipython:: python
 
-   with so.Workspace(name='my_workspace', session=s) as w:
-      I = so.Set(name='I', value=range(1, 11))
-      x = so.VariableGroup(I, name='x', lb=0)
-   print(so.to_optmodel(w))
-      
-You can submit a workspace to CAS server and grab the response using:
+   def create_workspace():
+      with so.Workspace(name='my_workspace', session=s) as w:
+         I = so.Set(name='I', value=range(1, 11))
+         x = so.VariableGroup(I, name='x', lb=0)
+      return w
 
 .. ipython:: python
 
-   w.submit()
+   workspace = create_workspace()
+   print(so.to_optmodel(workspace))
+
+
+You can submit a workspace to a CAS server and retrieve the response by using:
+
+.. ipython:: python
+
+   workspace.submit()
 
 
 .. _configurations:
@@ -266,7 +270,7 @@ You can submit a workspace to CAS server and grab the response using:
 Package configurations
 ----------------------
 
-Some default options regarding problem representation can be changed by users as follows:
+You can change the default options regarding problem representation as follows:
 
 .. ipython:: python
 
@@ -290,16 +294,23 @@ Some default options regarding problem representation can be changed by users as
 
    print(so.to_definition(c))
 
-And can be reset using:
+You can reset the options as follows:
 
 .. ipython:: python
 
    del so.config['max_digits']
 
-Some of the configuration options are as follows:
+You can also create a new configuration to be used globally:
+
+.. ipython:: python
+
+   so.config['myvalue'] = 2
+
+All default configuration options are as follows:
 
 - verbosity (default 3)
 - max_digits (default 12)
 - print_digits (default 6)
 - default_sense (default so.minimization)
 - default_bounds
+- valid_outcomes

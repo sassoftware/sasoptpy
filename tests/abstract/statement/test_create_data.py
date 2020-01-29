@@ -60,9 +60,9 @@ class TestCreateData(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
         proc optmodel;
-            num m = 7;
-            num n = 5;
-            create data example from m n;
+           num m = 7;
+           num n = 5;
+           create data example from m n;
         quit;'''))
 
         # Column name
@@ -75,9 +75,9 @@ class TestCreateData(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
         proc optmodel;
-            num m = 7;
-            num n = 5;
-            create data example from ratio=((m) / (n));
+           num m = 7;
+           num n = 5;
+           create data example from ratio=((m) / (n));
         quit;'''))
 
         # Custom column name
@@ -90,9 +90,9 @@ class TestCreateData(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
         proc optmodel;
-            num m = 7;
-            num n = 5;
-            create data example from col('s' || n)=(m + n);
+           num m = 7;
+           num n = 5;
+           create data example from col('s' || n)=(m + n);
         quit;'''))
 
         # Combined
@@ -107,9 +107,9 @@ class TestCreateData(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
         proc optmodel;
-            num m = 7;
-            num n = 5;
-            create data example from m n ratio=((m) / (n)) col('s' || n)=(m + n);
+           num m = 7;
+           num n = 5;
+           create data example from m n ratio=((m) / (n)) col('s' || n)=(m + n);
         quit;'''))
 
     def test_index(self):
@@ -127,11 +127,11 @@ class TestCreateData(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
         proc optmodel;
-            num m {1..5, 1..3} init 0;
-            m[1, 1] = 1;
-            m[4, 1] = 1;
-            set ISET = {1,4};
-            create data example from [i j] = {{ISET,{1,2}}} m;
+           num m {1..5, 1..3} init 0;
+           m[1, 1] = 1;
+           m[4, 1] = 1;
+           set ISET = {1,4};
+           create data example from [i j] = {{ISET,{1,2}}} m;
         quit;'''))
 
     def test_regular_index(self):
@@ -142,9 +142,9 @@ class TestCreateData(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                set S = 1..5;
-                var x {{S}};
-                create data example from [i] x;
+               set S = 1..5;
+               var x {{S}};
+               create data example from [i] x;
             quit;'''))
 
     def test_custom_index(self):
@@ -156,10 +156,10 @@ class TestCreateData(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                set S = 1..5;
-                var x {{S}};
-                x[1] = 1;
-                create data example from [i] = {1..3} x;
+               set S = 1..5;
+               var x {{S}};
+               x[1] = 1;
+               create data example from [i] = {1..3} x;
             quit;'''))
 
     def test_subset_index(self):
@@ -172,11 +172,11 @@ class TestCreateData(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                set S = 1..5;
-                var x {{S}};
-                x[1] = 1;
-                set Z = {1,3,5};
-                create data example from [i] = {Z} x;
+               set S = 1..5;
+               var x {{S}};
+               x[1] = 1;
+               set Z = {1,3,5};
+               create data example from [i] = {Z} x;
             quit;'''))
 
     def test_multi_index(self):
@@ -192,11 +192,11 @@ class TestCreateData(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                set S = 1..5;
-                set T = 1..3;
-                var x {{S}, {T}};
-                x[1, 3] = 1;
-                create data example from [i j] = {{S,T}} x;
+               set S = 1..5;
+               set T = 1..3;
+               var x {{S}, {T}};
+               x[1, 3] = 1;
+               create data example from [i j] = {{S,T}} x;
             quit;'''))
 
     def test_subset_in_call(self):
@@ -212,11 +212,11 @@ class TestCreateData(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                set S = 1..5;
-                set T = 1..3;
-                var x {{S}, {T}};
-                x[1, 3] = 1;
-                create data example from [i j] = {{S,{1,3}}} x;
+               set S = 1..5;
+               set T = 1..3;
+               var x {{S}, {T}};
+               x[1, 3] = 1;
+               create data example from [i j] = {{S,{1,3}}} x;
             quit;'''))
 
     def test_index_with_iterate(self):
@@ -236,9 +236,9 @@ class TestCreateData(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                set <str> alph = {'a','b','c'};
-                var x {{1,2,3}, {alph}} init 2;
-                create data example from [i] = {{1..3}} ;
+               set <str> alph = {'a','b','c'};
+               var x {{1,2,3}, {alph}} init 2;
+               create data example from [i] = {{1..3}} ;
             quit;'''))
 
         # Append column with index
@@ -260,9 +260,9 @@ class TestCreateData(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                set <str> alph = {'a','b','c'};
-                var x {{1,2,3}, {alph}} init 2;
-                create data example from [i] = {{1..3}} {j in alph} < col('x' || j)=(x[i, j]) >;
+               set <str> alph = {'a','b','c'};
+               var x {{1,2,3}, {alph}} init 2;
+               create data example from [i] = {{1..3}} {j in alph} < col('x' || j)=(x[i, j]) >;
             quit;'''))
 
         w.submit()
@@ -291,10 +291,10 @@ class TestCreateData(unittest.TestCase):
                 )
         self.assertEqual(so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                set S = {1,2,3};
-                set T = {1,3,5};
-                var x {{S}, {T}} init 1;
-                create data out from {i in S, j in T} < col('x' || i || j)=(x[i, j]) >;
+               set S = {1,2,3};
+               set T = {1,3,5};
+               var x {{S}, {T}} init 1;
+               create data out from {i in S, j in T} < col('x' || i || j)=(x[i, j]) >;
             quit;'''))
 
     def test_full_example(self):
@@ -323,12 +323,12 @@ class TestCreateData(unittest.TestCase):
 
         self.assertEqual(so.to_optmodel(w), cleandoc('''
             proc optmodel;
-                num m = 3;
-                num n = 4;
-                num a {i in 1..m, j in 1..n} = i * j;
-                num b {i in 1..m} = (i) ** (2);
-                set subset = 2..m;
-                create data out from [i] = {{subset}} {j in 1..n} < col('a' || j)=(a[i, j]) > b;
+               num m = 3;
+               num n = 4;
+               num a {i in 1..m, j in 1..n} = i * j;
+               num b {i in 1..m} = (i) ** (2);
+               set subset = 2..m;
+               create data out from [i] = {{subset}} {j in 1..n} < col('a' || j)=(a[i, j]) > b;
             quit;'''))
 
         w.submit()
