@@ -69,7 +69,7 @@ class Parameter(Expression):
             if self._init:
                 #s += ' init {}'.format(_to_python_string(self._init))
                 s += ' init {}'.format(_to_sas_string(self._init))
-            elif self._fix_value:
+            elif self._fix_value is not None:
                 #s += ' = {}'.format(_to_python_string(self._fix_value))
                 s += ' = {}'.format(_to_sas_string(self._fix_value))
             s += ';'
