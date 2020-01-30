@@ -62,6 +62,7 @@ class ConstraintGroup(Group):
         self._shadows = OrderedDict()
         if type(argv) == list or type(argv) == GeneratorType:
             self._recursive_add_cons(argv, name=name, condict=self._condict)
+            self.filter_unique_keys()
         elif argv is None:
             # Empty CG
             self._initialized = False
@@ -195,7 +196,7 @@ class ConstraintGroup(Group):
 
     def _get_shadow_if_abstract(self, keys):
         for i, k in enumerate(keys):
-            group = self._groups[i].to_list()
+            group = self._groups[i]
             if any([sasoptpy.util.is_key_abstract(j) for j in group]):
                 continue
             else:

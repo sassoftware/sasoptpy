@@ -100,7 +100,6 @@ class VariableGroup(Group):
         if vartype is None:
             vartype = sasoptpy.CONT
 
-        lb, ub = sasoptpy.core.util.get_default_bounds_if_none(vartype, lb, ub)
         self._init = init
         self._type = vartype
 
@@ -110,6 +109,9 @@ class VariableGroup(Group):
         self._recursive_add_vars(*argv, name=name,
                                  vartype=vartype, lb=lb, ub=ub, init=init,
                                  vardict=self._vardict)
+        self.filter_unique_keys()
+
+        lb, ub = sasoptpy.core.util.get_default_bounds_if_none(vartype, lb, ub)
 
         self.set_bounds(lb=lb, ub=ub, members=False)
         self._objorder = sasoptpy.util.get_creation_id()

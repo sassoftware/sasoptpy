@@ -16,9 +16,13 @@ class Group(ABC):
     def _register_keys(self, keys):
         for j, k in enumerate(keys):
             try:
-                self._groups[j] = self._groups[j].union(pd.Index([k]))
+                self._groups[j].append(k)
             except KeyError:
-                self._groups[j] = pd.Index([k])
+                self._groups[j] = [k]
+
+    def filter_unique_keys(self):
+        for i in self._groups:
+            self._groups[i] = list(OrderedDict.fromkeys(self._groups[i]))
 
     def get_group_types(self):
         group_types = []
