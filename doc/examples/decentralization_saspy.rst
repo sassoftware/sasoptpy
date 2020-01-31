@@ -21,6 +21,7 @@ Output
 
 .. ipython:: python
 
+   import os
    import saspy
    config_file = os.path.abspath('../tests/examples/saspy_config.py')
    sas_conn = saspy.SASsession(cfgfile=config_file)
