@@ -133,7 +133,8 @@ def get_values(arg, **kwargs):
         values = []
         members = arg.get_members() if arg._abstract is False else arg.get_shadow_members()
         for i in members:
-            if sasoptpy.abstract.is_abstract(get_first_member(i)):
+            if any([sasoptpy.abstract.is_abstract(j) for j in i]):
+            #if sasoptpy.abstract.is_abstract(get_first_member(i)):
                 continue
             keys.append(get_first_member(i))
             values.append(members[i].get_value())

@@ -112,7 +112,7 @@ class Conditional:
         return c
 
     def __eq__(self, key):
-        c = self.add_custom_condition('=', key)
+        c = self.add_custom_condition('EQ', key)
         return c
 
     def __le__(self, key):

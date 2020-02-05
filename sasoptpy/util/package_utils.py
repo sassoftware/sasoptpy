@@ -85,6 +85,12 @@ def load_package_globals():
         'IN': 'in'
     }
 
+    sasoptpy.abstract_classes = [
+        sasoptpy.Set, sasoptpy.SetIterator, sasoptpy.SetIteratorGroup,
+        sasoptpy.Parameter, sasoptpy.ParameterGroup, sasoptpy.ImplicitVar,
+        sasoptpy.abstract.ShadowVariable, sasoptpy.abstract.ShadowConstraint,
+        sasoptpy.abstract.Statement
+        ]
 
 def get_creation_id():
     sasoptpy.itemid += 1

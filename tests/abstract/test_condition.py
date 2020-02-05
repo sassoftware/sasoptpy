@@ -129,7 +129,7 @@ class TestCondition(unittest.TestCase):
             with condition(x[i].sym == 0):
                 c[i] = x[i] >= 1
         assert_equal_wo_temps(self, so.to_definition(c), cleandoc('''
-            con c {o6 in S: x[o6].sol = 0} : x[o6] >= 1;'''))
+            con c {o6 in S: x[o6].sol EQ 0} : x[o6] >= 1;'''))
 
         # LE
         c = so.ConstraintGroup(None, name='c')
