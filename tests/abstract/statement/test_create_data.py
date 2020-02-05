@@ -311,7 +311,7 @@ class TestCreateData(unittest.TestCase):
                 b = so.ParameterGroup(i, name='b', value=i**2)
             subset = so.Set(name='subset', value=so.exp_range(2, m))
             with iterate(subset, 'i') as i, iterate(so.exp_range(1, n), 'j') as j:
-                create_data(
+                cd = create_data(
                     table='out',
                     index={'key': [i], 'set': [i.get_set()]},
                     columns=[
@@ -334,6 +334,12 @@ class TestCreateData(unittest.TestCase):
         w.submit()
         response = session.CASTable('out').to_frame()
         self.assertEqual(response.to_string(), cleandoc('''
+                 i   a1   a2   a3    a4    b
+            0  2.0  2.0  4.0  6.0   8.0  4.0
+            1  3.0  3.0  6.0  9.0  12.0  9.0'''))
+
+        response2 = cd.get_response()
+        self.assertEqual(response2.to_string(), cleandoc('''
                  i   a1   a2   a3    a4    b
             0  2.0  2.0  4.0  6.0   8.0  4.0
             1  3.0  3.0  6.0  9.0  12.0  9.0'''))
