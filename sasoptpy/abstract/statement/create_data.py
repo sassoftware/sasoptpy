@@ -53,6 +53,8 @@ class CreateDataStatement(Statement):
     def get_index_expr(self):
         s = ''
         key = self._index.get('key')
+        if isinstance(key, str):
+            key = [key]
         index = self._index.get('set')
         if key:
             joined_key = ' '.join([k.get_name() if hasattr(k, 'get_name') else str(k) for k in key])
