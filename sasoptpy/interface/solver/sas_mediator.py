@@ -256,14 +256,14 @@ class SASMediator(Mediator):
         solver = caller._solutionSummary.loc['Solver', 'Value']
 
         # Parse solution
-        solution_df = session.sd2df('WORK.solution')
+        solution_df = session.sd2df('solution', libref='WORK')
         primalsoln = solution_df[['_VAR_', '_VALUE_', '_LBOUND_', '_UBOUND_']].copy()
         primalsoln.columns = ['var', 'value', 'lb', 'ub']
         if solver == 'LP':
             primalsoln['rc'] = solution_df['_R_COST_']
         caller._primalSolution = primalsoln
 
-        dual_df = session.sd2df('WORK.dual')
+        dual_df = session.sd2df('dual', libref='WORK')
         dualsoln = dual_df[['_ROW_', '_ACTIVITY_']].copy()
         dualsoln.columns = ['con', 'value']
         if solver == 'LP':
@@ -290,9 +290,9 @@ class SASMediator(Mediator):
         session = self.session
 
         # Parse solution
-        caller._primalSolution = session.sd2df('WORK.SOLUTION')
+        caller._primalSolution = session.sd2df('SOLUTION', libref='WORK')
         self.convert_to_original(caller._primalSolution)
-        caller._dualSolution = session.sd2df('WORK.DUAL')
+        caller._dualSolution = session.sd2df('DUAL', libref='WORK')
         self.convert_to_original(caller._dualSolution)
 
         caller._problemSummary = self.parse_sas_table('PROB_SUMMARY')
@@ -423,8 +423,8 @@ class SASMediator(Mediator):
         # caller.parse_print_responses()
 
         # list of tables: session.list_tables('WORK')
-        # soln: session.sd2df('WORK.SOLUTION')
-        # dual: session.sd2df('WORK.DUAL')
+        # soln: session.sd2df('SOLUTION', libref='WORK')
+        # dual: session.sd2df('DUAL', libref='WORK')
 
         # Error msg: session.SYSERRORTEXT()
         # Error status: session.SYSERR()
@@ -442,9 +442,9 @@ class SASMediator(Mediator):
         session = self.session
         response = caller.response
 
-        solution = session.sd2df('WORK.SOLUTION')
+        solution = session.sd2df('SOLUTION', libref='WORK')
         self.convert_to_original(solution)
-        dual_solution = session.sd2df('WORK.DUAL')
+        dual_solution = session.sd2df('DUAL', libref='WORK')
         self.convert_to_original(dual_solution)
 
         caller._primalSolution = solution
