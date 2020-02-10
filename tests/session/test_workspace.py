@@ -185,3 +185,30 @@ class TestWorkspace(unittest.TestCase):
         self.assertEqual(p2.get_response().to_string(), cleandoc('''
                  y
             0  1.0'''))
+
+
+    def test_multithread_workspace(self):
+
+        import time
+        from threading import Thread
+
+        def create_workspace(i):
+
+            with so.Workspace(f'w{i}') as w:
+                self.assertEqual(so.container, w)
+                print('Start workspace: {}'.format(w.name))
+                time.sleep(1)
+
+            print('Exit workspace: {}'.format(w.name))
+            return i
+
+        threads = []
+        for j in [1, 2, 3]:
+            t = Thread(target=create_workspace, args=(j,))
+            threads.append(t)
+            t.start()
+
+        for thread in threads:
+            thread.join()
+
+        print(threads)

@@ -28,6 +28,7 @@ from contextlib import contextmanager
 
 import sasoptpy
 from sasoptpy._libs import (pd, np)
+from threading import RLock
 
 
 def load_package_globals():
@@ -104,6 +105,7 @@ def get_next_name():
 def load_function_containers():
     sasoptpy.container = None
     sasoptpy.container_conditions = False
+    sasoptpy.lock = RLock()
 
     def read_statement_dictionary():
         d = dict()

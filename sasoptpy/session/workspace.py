@@ -53,12 +53,14 @@ class Workspace:
         return 'sasoptpy.Workspace({})'.format(self.name)
 
     def __enter__(self):
+        sasoptpy.lock.acquire()
         self.original = sasoptpy.container
         sasoptpy.container = self
         return self
 
     def __exit__(self, type, value, traceback):
         sasoptpy.container = self.original
+        sasoptpy.lock.release()
 
     def append(self, element):
         """
