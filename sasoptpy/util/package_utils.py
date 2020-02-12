@@ -285,10 +285,7 @@ def list_pack(obj):
 
 
 def _wrap_expression_with_iterators(exp, operator, iterators):
-    if isinstance(exp, sasoptpy.core.Variable):
-        r = exp.copy()
-    else:
-        r = exp
+    r = exp
     if r.get_name() is None:
         r.set_name(get_next_name())
     if r._operator is None:
@@ -548,16 +545,6 @@ def _to_sas_string(obj):
         return '.'
     else:
         raise TypeError('Cannot convert type {} to SAS string'.format(type(obj)))
-        return '{}'.format(str(obj))
-
-
-def _to_python_string(obj):
-    if hasattr(obj, '_expr'):
-        return obj._expr()
-    elif hasattr(obj, '_name'):
-        return obj._name
-    else:
-        return str(obj)
 
 
 def _insert_brackets(prefix, keys):
@@ -577,10 +564,6 @@ def _to_iterator_expression(itlist):
             strlist.append(i._expr())
         elif isinstance(i, str):
             strlist.append("'{}'".format(i))
-        elif isinstance(i, sasoptpy.abstract.SetIterator):
-            strlist.append(i._expr())
-        elif isinstance(i, sasoptpy.abstract.SetIteratorGroup):
-            strlist.append(i.get_name())
         else:
             strlist.append(str(i))
     return strlist

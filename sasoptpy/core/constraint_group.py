@@ -185,12 +185,8 @@ class ConstraintGroup(Group):
         if key in self._condict:
             return self._condict[key]
 
-        if sasoptpy.abstract.is_key_abstract(key):
-            tuple_key = tuple(i for i in sasoptpy.util.flatten_tuple(key))
-            if tuple_key in self._shadows:
-                return self._shadows[tuple_key]
-            else:
-                return self._create_shadow(tuple_key)
+        if key in self._shadows:
+            return self._shadows[key]
 
         return self._get_shadow_if_abstract(key)
 

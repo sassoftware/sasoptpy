@@ -71,7 +71,7 @@ class TestSASInterface(unittest.TestCase):
         self.assertRaises(RuntimeError, raise_runtime)
 
         m.solve(limit_names=True)
-        print(m.get_solution())
+        m.get_solution()
         self.assertEqual(x[0].get_value(), 2)
 
         m.set_objective(x[0], sense=so.MIN, name='obj2')
@@ -145,7 +145,6 @@ class TestSASInterface(unittest.TestCase):
         # Uploaded MPS Table
         m.drop(S)
         response = m.solve(mps=True, submit=False)
-        print(str(response))
 
         # Forced to OPTMODEL due nonlinearity
         m.set_objective(x**2, sense=so.MAX, name='obj2')

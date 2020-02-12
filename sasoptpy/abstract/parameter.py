@@ -18,7 +18,7 @@
 
 import sasoptpy
 from sasoptpy.core import Expression
-from sasoptpy.util.package_utils import _to_python_string, _to_sas_string
+from sasoptpy.util.package_utils import _to_sas_string
 
 
 class Parameter(Expression):

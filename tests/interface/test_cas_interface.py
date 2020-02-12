@@ -196,7 +196,6 @@ class TestCASInterface(unittest.TestCase):
         m.solve(mps=True, primalin=True, drop=True)
         def deleted_table():
             s = session.CASTable('PRIMALINTABLE').to_frame()
-            print(s, type(s))
         self.assertRaises(SWATError, deleted_table)
 
     def test_response(self):

@@ -59,6 +59,13 @@ class TestPackageUtils(unittest.TestCase):
             quit;
             '''))
 
+        def produce_error():
+            from collections import OrderedDict
+            ind = ['a', 'b', 'c']
+            y_lb = set([0, 1, 2])
+            y = m.add_variables(ind, name='y', lb=y_lb)
+        self.assertRaises(ValueError, produce_error)
+
     def test_deprecation(self):
         def call_tuple_unpack():
             so.util.tuple_unpack((1,2,))
@@ -77,6 +84,12 @@ class TestPackageUtils(unittest.TestCase):
         x = so.Variable(name='x')
         e = so.expr_sum(x for _ in range(3))
         self.assertEqual(so.to_expression(e), '3 * x')
+
+    def test_sum_wrap_abstract(self):
+        I = so.Set(name='I')
+        x = so.Variable(name='x')
+        e = so.expr_sum(x for i in I)
+        self.assertEqual(so.to_expression(e), 'sum {i in I} (x)')
 
     def test_comparable(self):
         self.assertTrue(so.util.is_comparable(4))

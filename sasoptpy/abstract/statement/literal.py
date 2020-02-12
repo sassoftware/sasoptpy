@@ -1,7 +1,7 @@
 from .statement_base import Statement
 
 import sasoptpy
-from sasoptpy.util.package_utils import _to_sas_string, _to_python_string
+from sasoptpy.util.package_utils import _to_sas_string
 
 
 class LiteralStatement(Statement):

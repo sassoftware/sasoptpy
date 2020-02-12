@@ -90,12 +90,9 @@ class TestConstraintGroup(unittest.TestCase):
         cg2 = so.ConstraintGroup((y[i] >= 3 for i in I), name='c2')
         for i in I:
             self.assertEqual(cg2[i]._get_constraint_expr(), "y[o4] >= 3")
-        #self.assertEqual(cg2[0], None)
-        print(cg2[1])
         m = so.Model(name='m')
         m.include(cg2)
         m.include(so.abstract.DropStatement(cg2))
-        print(so.to_optmodel(m))
 
     def test_iter(self):
         x = so.VariableGroup(3, name='x')
@@ -150,6 +147,21 @@ class TestConstraintGroup(unittest.TestCase):
                con c_2 {TEMP3 in S} : x[2] + y[TEMP3] >= 1;
                solve;
             quit;'''))
+
+    def test_members(self):
+        x = so.VariableGroup(3, name='x')
+        c = so.ConstraintGroup((x[i] <= i for i in range(3)), name='c')
+        it = so.Parameter(name='it', value=1)
+        e = c[it]
+        members = c.get_members()
+        self.assertEqual(list(members.keys()), [(0,), (1,), (2,)])
+        shadows = c.get_shadow_members()
+        self.assertEqual(list(shadows.keys()), [(it,)])
+        I = so.Set(name='setI', value=[1])
+        i = so.SetIterator(I, name='i')
+        f = c[i]
+        g = c[i]
+        self.assertEqual(id(f), id(g))
 
     def tearDown(self):
         so.reset()

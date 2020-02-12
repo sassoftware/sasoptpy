@@ -249,8 +249,5 @@ class TestGenerators(unittest.TestCase):
         global real_submit
         globals()['so'].Model.solve = real_solve
         globals()['so'].Workspace.submit = real_submit
-        # for i in codes:
-        #     print(i)
-        #     for j in codes[i]:
-        #         print(j)
+
 

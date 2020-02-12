@@ -96,4 +96,10 @@ class TestAssignment(unittest.TestCase):
             x = so.VariableGroup(5, name='x')
             fix(x[0], 0)
             fix(x[1], e*2)
-        print(so.to_optmodel(w))
+        self.assertEqual(so.to_optmodel(w), cleandoc('''
+            proc optmodel;
+               num e = 4;
+               var x {{0,1,2,3,4}};
+               fix x[0]=0;
+               fix x[1]=2 * e;
+            quit;'''))

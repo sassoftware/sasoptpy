@@ -24,6 +24,12 @@ import unittest
 import sasoptpy as so
 import pandas as pd
 
+import os
+import sys
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.abspath(os.path.join(current_dir, '..')))
+from util import assert_equal_wo_temps
+
 
 class TestVariableGroup(unittest.TestCase):
 
@@ -213,7 +219,7 @@ class TestVariableGroup(unittest.TestCase):
         def unknown_key():
             data_dict = {(1, 1): 3, (3, 3): 9}
             e = w.mult(data_dict)
-            print(e._expr())
+            e._expr()
         self.assertRaises(KeyError, unknown_key)
 
     def test_init(self):
@@ -249,6 +255,24 @@ class TestVariableGroup(unittest.TestCase):
         self.assertEqual(x._member_defn(), "x[0].lb = 5;")
         x[1].set_bounds(ub=10)
         self.assertEqual(x._member_defn(), "x[0].lb = 5;\nx[1].ub = 10;")
+
+    def test_shadow(self):
+        I = so.Set(name='I')
+        x = so.VariableGroup(I, name='x')
+        j = so.SetIterator(I, name='j')
+        self.assertEqual(so.to_expression(x[j]), 'x[j]')
+        y = so.VariableGroup(I, I, name='y')
+
+        from sasoptpy.util import iterate
+
+        with iterate([I, I], name='i') as i:
+            z = y[i]
+            self.assertEqual(so.to_expression(z), 'y[i]')
+
+        J = so.Set(name='J', settype=[so.string, so.string])
+        w = so.VariableGroup(J, name='w')
+        for j in J:
+            assert_equal_wo_temps(self, so.to_expression(w[j]), 'w[o1, o2]')
 
     def tearDown(self):
         so.reset()

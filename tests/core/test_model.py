@@ -26,6 +26,7 @@ import inspect
 import os
 import unittest
 import warnings
+from inspect import cleandoc
 
 import sasoptpy as so
 
@@ -962,9 +963,19 @@ class TestModel(unittest.TestCase):
     def test_ub_set(self):
         m = so.Model(name='test_model_var_ub')
         x = m.add_variable(name='x')
-        print(m.to_optmodel())
+        self.assertEqual(so.to_optmodel(m), cleandoc('''
+            proc optmodel;
+               min test_model_var_ub_obj = 0;
+               var x;
+               solve;
+            quit;'''))
         x.set_bounds(ub=5)
-        print(m.to_optmodel())
+        self.assertEqual(so.to_optmodel(m), cleandoc('''
+            proc optmodel;
+               min test_model_var_ub_obj = 0;
+               var x <= 5;
+               solve;
+            quit;'''))
 
     def test_model_add(self):
         m = so.Model(name='test_add')
