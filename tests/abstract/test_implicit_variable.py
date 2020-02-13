@@ -31,6 +31,9 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.abspath(os.path.join(current_dir, '..')))
 from util import assert_equal_wo_temps
 
+from tests.swat_config import create_cas_connection
+
+
 
 class TestImplicitVariable(unittest.TestCase):
 
@@ -40,9 +43,7 @@ class TestImplicitVariable(unittest.TestCase):
         cls.conn = None
         from swat import CAS, SWATError
         try:
-            cls.conn = CAS(os.environ.get('CASHOST'),
-                           int(os.environ.get('CASPORT')),
-                           authinfo=os.environ.get('AUTHINFO'))
+            cls.conn = create_cas_connection()
         except SWATError:
             warnings.warn('CAS connection is not available', RuntimeWarning)
         except TypeError:

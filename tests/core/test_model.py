@@ -29,6 +29,7 @@ import warnings
 from inspect import cleandoc
 
 import sasoptpy as so
+from tests.swat_config import create_cas_connection
 
 
 class MockSASconfig:
@@ -49,9 +50,7 @@ class TestModel(unittest.TestCase):
         cls.conn = None
         from swat import CAS, SWATError
         try:
-            cls.conn = CAS(os.environ.get('CASHOST'),
-                           int(os.environ.get('CASPORT')),
-                           authinfo=os.environ.get('AUTHINFO'))
+            cls.conn = create_cas_connection()
         except SWATError:
             warnings.warn('CAS connection is not available',
                           RuntimeWarning)

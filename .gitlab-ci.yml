@@ -1,11 +1,25 @@
+default:
+  before_script:
+    - apt-get update -qq
+    - 'which ssh-agent || ( apt-get install -qq -y openssh-client )'
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - scp $CASCOPY ~/
+
 py37:
   image: python:3.7
   script:
   - python setup.py install
-  - python -m unittest discover -s tests/ -p 'test*.py'
+  - pip install coverage
+  - cd tests
+  - ./test_coverage.sh
 
 py36:
   image: python:3.6
   script:
   - python setup.py install
-  - python -m unittest discover -s tests/ -p 'test*.py'
+  - pip install coverage
+  - cd tests
+  - ./test_coverage.sh
