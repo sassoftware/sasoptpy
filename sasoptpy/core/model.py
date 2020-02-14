@@ -1943,7 +1943,7 @@ class Model:
 
         See also
         --------
-        :meth:`Model.get_tuner_results` to get tuning details
+        :meth:`Model.get_tuner_results`
         """
         return sasoptpy.util.submit_for_tune(self, **kwargs)
 
