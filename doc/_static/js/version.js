@@ -1,10 +1,12 @@
 function applyVersion() {
    var currentpath = window.location.pathname;
    var splitpath = currentpath.split('/');
-   if (splitpath[1] === 'version') {
-      var dropdown = document.getElementById('version_switch').children[0]
-      dropdown.value = splitpath[2];
+   if (splitpath.includes('version')) {
+      var dropdown = document.getElementById('version_switch').children[0];
+      var pos = splitpath.indexOf('version') + 1;
+      dropdown.value = splitpath[pos];
    } else {
+      var dropdown = document.getElementById('version_switch').children[0];
       dropdown.value = 'latest';
    }
 }
@@ -13,9 +15,9 @@ window.onload = applyVersion;
 
 function goVersionHomepage(version) {
    if (version === 'latest') {
-      window.location.href = '/index.html';
+      window.location.href = window.location.origin + '/sasoptpy/index.html';
    } else {
-      window.location.href = '/version/' + version + '/index.html';
+      window.location.href = window.location.origin + '/sasoptpy/version/' + version + '/index.html';
    }
 }
 
@@ -43,25 +45,26 @@ function chooseVersion(caller) {
    var index = caller.options.selectedIndex;
    var currentpath = window.location.pathname;
    var splitpath = currentpath.split('/');
+   
    if (splitpath.includes('version')) {
-      var pos = splitpath.indexOf('version')
-      splitpath = splitpath.slice(pos+2);
+      var linkpath = splitpath.slice(splitpath.indexOf('version') + 2)
    } else {
-      splitpath = splitpath.slice(1);
+      var linkpath = splitpath.slice(splitpath.indexOf('sasoptpy') + 1)
    }
-   var full_name = splitpath.slice(1,).join('/');
+   var regularlink = linkpath.join('/');
    
    var value = caller.options[index].value;
    if (index === 0) {
-      var target_name = splitpath[0] + '/' + full_name;
+      var target_name =  regularlink;
    }
    else {
-      var target_name = splitpath[0] + '/version/' + value + '/' + full_name;
+      var target_name = 'version/' + value + '/' + regularlink;
    }
-   console.log(target_name);
-   var is_file_exists = fileExists(target_name);
+   var actualtarget = window.location.origin + '/sasoptpy/' + target_name
+   console.log(actualtarget);
+   var is_file_exists = fileExists(actualtarget);
    if (is_file_exists) {
-      window.location.href = target_name;
+      window.location.href = actualtarget;
    }
    else {
       goVersionHomepage(value);
