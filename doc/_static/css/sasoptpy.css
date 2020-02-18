@@ -41,3 +41,44 @@ div.body h1, div.body h2, div.body h3, div.body h4, div.body h5, div.body h6 {
 li.toctree-l4 {
     display: none;
 }
+
+@media (max-width: 800px) {
+   div.sphinxsidebar {
+      margin-left: 0px;
+      width: 100%;
+   }
+}
+
+@media (max-width: 800px) {
+    div.bodywrapper {
+        margin: 0px;
+    }
+}
+
+@media (max-width: 800px) {
+    div.body {
+        min-width: unset;
+        max-width: unset;
+    }
+}
+
+
+@media (max-width: 800px) {
+    div.related {
+        width: 100%;
+        margin: 0px;
+    }
+    
+    div.related li {
+       font-size: 0.9em;
+    }
+    
+    div.related li.right {
+       display: none;
+    }
+    
+    div.related ul {
+       display: flex;
+       flex-direction: column-reverse;
+    }
+}
