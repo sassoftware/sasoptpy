@@ -49,14 +49,14 @@ function chooseVersion(caller) {
    } else {
       splitpath = splitpath.slice(1);
    }
-   var full_name = splitpath.join('/');
+   var full_name = splitpath.slice(1,).join('/');
    
    var value = caller.options[index].value;
    if (index === 0) {
-      var target_name = '/' + full_name;
+      var target_name = splitpath[0] + '/' + full_name;
    }
    else {
-      var target_name = '/version/' + value + '/' + full_name;
+      var target_name = splitpath[0] + '/version/' + value + '/' + full_name;
    }
    console.log(target_name);
    var is_file_exists = fileExists(target_name);
