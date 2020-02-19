@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>sasoptpy.abstract.statement.solve &#8212; sasoptpy 1.0.0-alpha documentation</title>
+    <link rel="stylesheet" href="../../../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/sasoptpy.css" />
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
+    <script src="../../../../_static/js/url.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../../../../_static/js/version.js"></script>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for sasoptpy.abstract.statement.solve</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.statement_base</span> <span class="kn">import</span> <span class="n">Statement</span>
+
+<span class="kn">import</span> <span class="nn">sasoptpy</span>
+
+
+<div class="viewcode-block" id="SolveStatement"><a class="viewcode-back" href="../../../../api/generated/sasoptpy.abstract.statement.SolveStatement.html#sasoptpy.abstract.statement.SolveStatement">[docs]</a><span class="k">class</span> <span class="nc">SolveStatement</span><span class="p">(</span><span class="n">Statement</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SolveStatement.__init__"><a class="viewcode-back" href="../../../../api/generated/sasoptpy.abstract.statement.SolveStatement.html#sasoptpy.abstract.statement.SolveStatement.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;options&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">primalin</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;primalin&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_objorder</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">get_creation_id</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">get_next_name</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_problem_summary</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_solution_summary</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">_defn</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">solve_option_keys</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s1">&#39;with&#39;</span><span class="p">,</span> <span class="s1">&#39;obj&#39;</span><span class="p">,</span> <span class="s1">&#39;objective&#39;</span><span class="p">,</span> <span class="s1">&#39;noobj&#39;</span><span class="p">,</span> <span class="s1">&#39;noobjective&#39;</span><span class="p">,</span> <span class="s1">&#39;relaxint&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;primalin&#39;</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;use problem </span><span class="si">{}</span><span class="s1">;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_name</span><span class="p">())</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;solve&#39;</span>
+        <span class="n">pre_opts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">pos_opts</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">options</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span>
+        <span class="n">primalin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">primalin</span>
+
+        <span class="k">if</span> <span class="n">primalin</span><span class="p">:</span>
+            <span class="n">options</span><span class="p">[</span><span class="s1">&#39;primalin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">options</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">options</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">solve_option_keys</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;with&#39;</span><span class="p">:</span>
+                        <span class="n">pre_opts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;with &#39;</span> <span class="o">+</span> <span class="n">options</span><span class="p">[</span><span class="s1">&#39;with&#39;</span><span class="p">])</span>
+                    <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;relaxint&#39;</span> <span class="ow">and</span> <span class="n">options</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                        <span class="n">pre_opts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;relaxint&#39;</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;obj&#39;</span> <span class="ow">or</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;objectives&#39;</span><span class="p">:</span>
+                        <span class="n">pre_opts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;obj (</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">options</span><span class="p">[</span><span class="n">key</span><span class="p">])))</span>
+                        <span class="n">multi_obj</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;primalin&#39;</span> <span class="ow">and</span> <span class="n">options</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                        <span class="n">pos_opts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;primalin&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">:</span>
+                        <span class="n">pos_opts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">=(&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                            <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+                            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">())</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">pos_opts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">pre_opts</span><span class="p">:</span>
+                <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pre_opts</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">pos_opts</span><span class="p">:</span>
+                <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39; / &#39;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pos_opts</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;;&#39;</span>
+        <span class="k">return</span> <span class="n">s</span>
+
+    <span class="k">def</span> <span class="nf">set_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem_summary</span><span class="p">,</span> <span class="n">solution_summary</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_problem_summary</span> <span class="o">=</span> <span class="n">problem_summary</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_solution_summary</span> <span class="o">=</span> <span class="n">solution_summary</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;Problem Summary&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_summary</span><span class="p">,</span>
+            <span class="s1">&#39;Solution Summary&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solution_summary</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">get_problem_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problem_summary</span>
+
+    <span class="k">def</span> <span class="nf">get_solution_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solution_summary</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">st</span> <span class="o">=</span> <span class="n">SolveStatement</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">st</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">solve_model</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="n">st</span> <span class="o">=</span> <span class="n">SolveStatement</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">st</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="../../../../index.html">Table of Contents</a></h3>
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../overview/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../version-history.html">Version History</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2020, SAS Institute.
+      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219165041).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+    </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-155356999-1');
+</script>
+
+
+  </body>
+</html>

@@ -1,0 +1,6 @@
+sasoptpy.read\_table
+====================
+
+.. currentmodule:: sasoptpy
+
+.. autofunction:: read_table

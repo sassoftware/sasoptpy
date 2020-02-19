@@ -1,0 +1,6 @@
+sasoptpy\.Expression\.get\_value
+================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Expression.get_value

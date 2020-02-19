@@ -1,0 +1,6 @@
+sasoptpy\.get\_namespace
+========================
+
+.. currentmodule:: sasoptpy
+
+.. autofunction:: get_namespace

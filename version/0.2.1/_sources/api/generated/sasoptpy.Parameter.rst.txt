@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+sasoptpy.Parameter
+==================
+
+.. currentmodule:: sasoptpy
+
+.. autoclass:: Parameter

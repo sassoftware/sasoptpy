@@ -1,0 +1,6 @@
+sasoptpy.actions.cofor\_loop
+============================
+
+.. currentmodule:: sasoptpy.actions
+
+.. autofunction:: cofor_loop

@@ -1,0 +1,6 @@
+sasoptpy.interface.CASMediator.set\_variable\_values
+====================================================
+
+.. currentmodule:: sasoptpy.interface
+
+.. automethod:: CASMediator.set_variable_values

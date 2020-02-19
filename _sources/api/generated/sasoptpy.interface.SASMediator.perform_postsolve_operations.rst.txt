@@ -1,0 +1,6 @@
+sasoptpy.interface.SASMediator.perform\_postsolve\_operations
+=============================================================
+
+.. currentmodule:: sasoptpy.interface
+
+.. automethod:: SASMediator.perform_postsolve_operations

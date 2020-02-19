@@ -1,0 +1,6 @@
+sasoptpy.Expression.get\_constant
+=================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Expression.get_constant

@@ -1,0 +1,6 @@
+sasoptpy\.Variable\.set\_permanent
+==================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Variable.set_permanent

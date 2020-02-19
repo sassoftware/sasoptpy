@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+tests.interface.test_cas_interface.TestCASInterface
+===================================================
+
+.. currentmodule:: tests.interface.test_cas_interface
+
+.. autoclass:: TestCASInterface

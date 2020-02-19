@@ -1,0 +1,6 @@
+sasoptpy.Constraint.get\_dual
+=============================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Constraint.get_dual

@@ -1,0 +1,215 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>sasoptpy.ConstraintGroup &#8212; sasoptpy 0.1.1 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/url.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="sasoptpy.ConstraintGroup.get_expressions" href="sasoptpy.ConstraintGroup.get_expressions.html" />
+    <script src="../../../_static/js/version.js"></script>
+    <link rel="prev" title="sasoptpy.Constraint.update_var_coef" href="sasoptpy.Constraint.update_var_coef.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="sasoptpy.ConstraintGroup.get_expressions.html" title="sasoptpy.ConstraintGroup.get_expressions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="sasoptpy.Constraint.update_var_coef.html" title="sasoptpy.Constraint.update_var_coef"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../sasoptpy.html" accesskey="U">API Reference</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="sasoptpy-constraintgroup">
+<h1>sasoptpy.ConstraintGroup<a class="headerlink" href="#sasoptpy-constraintgroup" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="sasoptpy.ConstraintGroup">
+<em class="property">class </em><code class="descclassname">sasoptpy.</code><code class="descname">ConstraintGroup</code><span class="sig-paren">(</span><em>argv</em>, <em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sasoptpy/components.html#ConstraintGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.ConstraintGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a group of <a class="reference internal" href="sasoptpy.Constraint.html#sasoptpy.Constraint" title="sasoptpy.Constraint"><code class="xref py py-class docutils literal"><span class="pre">Constraint</span></code></a> objects</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>argv</strong> : GeneratorType object</p>
+<blockquote>
+<div><p>A Python generator that includes <a class="reference internal" href="sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal"><span class="pre">sasoptpy.Expression</span></code></a> objects</p>
+</div></blockquote>
+<p><strong>name</strong> : string, optional</p>
+<blockquote class="last">
+<div><p>Name (prefix) of the constraints</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="sasoptpy.Model.add_constraints.html#sasoptpy.Model.add_constraints" title="sasoptpy.Model.add_constraints"><code class="xref py py-func docutils literal"><span class="pre">sasoptpy.Model.add_constraints()</span></code></a>, <a class="reference internal" href="sasoptpy.Model.include.html#sasoptpy.Model.include" title="sasoptpy.Model.include"><code class="xref py py-func docutils literal"><span class="pre">sasoptpy.Model.include()</span></code></a></p>
+</div>
+<p class="rubric">Notes</p>
+<p>Use <a class="reference internal" href="sasoptpy.Model.add_constraints.html#sasoptpy.Model.add_constraints" title="sasoptpy.Model.add_constraints"><code class="xref py py-func docutils literal"><span class="pre">sasoptpy.Model.add_constraints()</span></code></a> when working with a single
+model.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">var_ind</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">u</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">VariableGroup</span><span class="p">(</span><span class="n">var_ind</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;u&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;t&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cg</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ConstraintGroup</span><span class="p">((</span><span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="mi">5</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">var_ind</span><span class="p">),</span>
+<span class="go">                            name=&#39;cg&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">cg</span><span class="p">)</span>
+<span class="go">Constraint Group (cg) [</span>
+<span class="go">  [a:  2.0 * t  +  u[&#39;a&#39;]  &lt;=  5]</span>
+<span class="go">  [b:  u[&#39;b&#39;]  +  2.0 * t  &lt;=  5]</span>
+<span class="go">  [c:  2.0 * t  +  u[&#39;c&#39;]  &lt;=  5]</span>
+<span class="go">  [d:  2.0 * t  +  u[&#39;d&#39;]  &lt;=  5]</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">VariableGroup</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cg2</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ConstraintGroup</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span>
+<span class="go">                              [1] for j in [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]), name=&#39;cg2&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">cg2</span><span class="p">)</span>
+<span class="go">Constraint Group (cg2) [</span>
+<span class="go">  [(1, &#39;a&#39;):  3.0 * z[0, &#39;a&#39;]  +  2.0 * z[1, &#39;a&#39;]  &gt;=  2]</span>
+<span class="go">  [(1, &#39;b&#39;):  2.0 * z[1, &#39;b&#39;]  +  3.0 * z[0, &#39;b&#39;]  &gt;=  2]</span>
+<span class="go">  [(1, &#39;c&#39;):  2.0 * z[1, &#39;c&#39;]  +  3.0 * z[0, &#39;c&#39;]  &gt;=  2]</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="sasoptpy.ConstraintGroup.get_expressions.html#sasoptpy.ConstraintGroup.get_expressions" title="sasoptpy.ConstraintGroup.get_expressions"><code class="xref py py-obj docutils literal"><span class="pre">get_expressions</span></code></a>([rhs])</td>
+<td>Returns constraints as a list of expressions</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="sasoptpy.ConstraintGroup.get_name.html#sasoptpy.ConstraintGroup.get_name" title="sasoptpy.ConstraintGroup.get_name"><code class="xref py py-obj docutils literal"><span class="pre">get_name</span></code></a>()</td>
+<td>Returns the name of the constraint group</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../whatsnew.html">What’s New</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../input-data.html">Handling Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../models.html">Sessions and Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">Model components</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../sasoptpy.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../sasoptpy.html#classes">Classes</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="sasoptpy.Model.html">sasoptpy.Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sasoptpy.Expression.html">sasoptpy.Expression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sasoptpy.Variable.html">sasoptpy.Variable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sasoptpy.VariableGroup.html">sasoptpy.VariableGroup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sasoptpy.Constraint.html">sasoptpy.Constraint</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">sasoptpy.ConstraintGroup</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="sasoptpy.ConstraintGroup.get_expressions.html">sasoptpy.ConstraintGroup.get_expressions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sasoptpy.ConstraintGroup.get_name.html">sasoptpy.ConstraintGroup.get_name</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../sasoptpy.html#functions">Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="sasoptpy.ConstraintGroup.get_expressions.html" title="sasoptpy.ConstraintGroup.get_expressions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="sasoptpy.Constraint.update_var_coef.html" title="sasoptpy.Constraint.update_var_coef"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../sasoptpy.html" >API Reference</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2018, SAS Institute.
+      Last updated on Feb 26, 2018 (Timestamp: 0.1.1-20180226160330).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
+    </div>
+  </body>
+</html>

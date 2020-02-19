@@ -1,0 +1,33 @@
+sasoptpy.abstract.statement.CreateDataStatement
+===============================================
+
+.. currentmodule:: sasoptpy.abstract.statement
+
+.. autoclass:: CreateDataStatement
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~CreateDataStatement.__init__
+      ~CreateDataStatement.append
+      ~CreateDataStatement.create_data
+      ~CreateDataStatement.get_column_str
+      ~CreateDataStatement.get_columns_expr
+      ~CreateDataStatement.get_index_expr
+      ~CreateDataStatement.get_response
+      ~CreateDataStatement.get_table_expr
+      ~CreateDataStatement.get_table_name
+      ~CreateDataStatement.is_internal
+      ~CreateDataStatement.set_internal
+      ~CreateDataStatement.set_response
+   
+   
+
+   
+   
+   

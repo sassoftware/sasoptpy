@@ -1,25 +1,27 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>sasoptpy.Model.drop_constraint &#8212; sasoptpy 0.2.1 documentation</title>
+    <meta charset="utf-8" />
+    <title>sasoptpy.Model.drop_constraint &#8212; sasoptpy 1.0.0-alpha documentation</title>
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/sasoptpy.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/js/url.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/js/url.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="sasoptpy.Model.drop_constraints" href="sasoptpy.Model.drop_constraints.html" />
-    <link rel="prev" title="sasoptpy.Model.set_coef" href="sasoptpy.Model.set_coef.html" /> 
+    <link rel="prev" title="sasoptpy.Model.get_grouped_constraints" href="sasoptpy.Model.get_grouped_constraints.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../../_static/js/version.js"></script>
+
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -28,18 +30,15 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../../http-routingtable.html" title="HTTP Routing Table"
-             >routing table</a> |</li>
-        <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="sasoptpy.Model.drop_constraints.html" title="sasoptpy.Model.drop_constraints"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="sasoptpy.Model.set_coef.html" title="sasoptpy.Model.set_coef"
+          <a href="sasoptpy.Model.get_grouped_constraints.html" title="sasoptpy.Model.get_grouped_constraints"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 0.2.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../model.html" accesskey="U">Model</a> &#187;</li> 
       </ul>
@@ -54,27 +53,26 @@
 <h1>sasoptpy.Model.drop_constraint<a class="headerlink" href="#sasoptpy-model-drop-constraint" title="Permalink to this headline">¶</a></h1>
 <dl class="method">
 <dt id="sasoptpy.Model.drop_constraint">
-<code class="descclassname">Model.</code><code class="descname">drop_constraint</code><span class="sig-paren">(</span><em>constraint</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/sasoptpy/model.html#Model.drop_constraint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.Model.drop_constraint" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">Model.</code><code class="sig-name descname">drop_constraint</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">constraint</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/sasoptpy/core/model.html#Model.drop_constraint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.Model.drop_constraint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Drops a constraint from the model</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>constraint</strong> <span class="classifier-delimiter">:</span> <span class="classifier">Constraint</span></dt>
-<dd><p class="first last">The constraint to be dropped from the model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>constraint</strong><span class="classifier">Constraint</span></dt><dd><p>The constraint to be dropped from the model</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <div class="admonition seealso">
-<p class="first admonition-title">See also</p>
-<p class="last"><a class="reference internal" href="sasoptpy.Model.drop_constraints.html#sasoptpy.Model.drop_constraints" title="sasoptpy.Model.drop_constraints"><code class="xref py py-func docutils literal notranslate"><span class="pre">Model.drop_constraints()</span></code></a>, <a class="reference internal" href="sasoptpy.Model.drop_variable.html#sasoptpy.Model.drop_variable" title="sasoptpy.Model.drop_variable"><code class="xref py py-func docutils literal notranslate"><span class="pre">Model.drop_variable()</span></code></a>, <a class="reference internal" href="sasoptpy.Model.drop_variables.html#sasoptpy.Model.drop_variables" title="sasoptpy.Model.drop_variables"><code class="xref py py-func docutils literal notranslate"><span class="pre">Model.drop_variables()</span></code></a></p>
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="sasoptpy.Model.drop_constraints.html#sasoptpy.Model.drop_constraints" title="sasoptpy.Model.drop_constraints"><code class="xref py py-func docutils literal notranslate"><span class="pre">Model.drop_constraints()</span></code></a></dt><dd></dd>
+<dt><a class="reference internal" href="sasoptpy.Model.drop_variable.html#sasoptpy.Model.drop_variable" title="sasoptpy.Model.drop_variable"><code class="xref py py-func docutils literal notranslate"><span class="pre">Model.drop_variable()</span></code></a></dt><dd></dd>
+<dt><a class="reference internal" href="sasoptpy.Model.drop_variables.html#sasoptpy.Model.drop_variables" title="sasoptpy.Model.drop_variables"><code class="xref py py-func docutils literal notranslate"><span class="pre">Model.drop_variables()</span></code></a></dt><dd></dd>
+</dl>
 </div>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c1</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="mi">15</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;c1&#39;</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c1</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="mi">15</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;c1&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">get_constraint</span><span class="p">(</span><span class="s1">&#39;c1&#39;</span><span class="p">))</span>
 <span class="go">2 * x  +  y  &lt;=  15</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">m</span><span class="o">.</span><span class="n">drop_constraint</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span>
@@ -92,74 +90,95 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
   <h3><a href="../../index.html">Table of Contents</a></h3>
   <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../getting-started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../input-data.html">Handling Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../models.html">Sessions and Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../components.html">Model components</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../workflow.html">Workflows</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/examples.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Reference</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="../model.html">Model</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="../model.html#constructor">Constructor</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="../model.html#components">Components</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.set_session.html">sasoptpy.Model.set_session</a></li>
-<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.add_constraint.html">sasoptpy.Model.add_constraint</a></li>
-<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.add_constraints.html">sasoptpy.Model.add_constraints</a></li>
-<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.add_variable.html">sasoptpy.Model.add_variable</a></li>
-<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.add_variables.html">sasoptpy.Model.add_variables</a></li>
-<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.add_implicit_variable.html">sasoptpy.Model.add_implicit_variable</a></li>
-<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.add_set.html">sasoptpy.Model.add_set</a></li>
-<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.add_parameter.html">sasoptpy.Model.add_parameter</a></li>
-<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.add_statement.html">sasoptpy.Model.add_statement</a></li>
-<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.set_objective.html">sasoptpy.Model.set_objective</a></li>
-<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.set_coef.html">sasoptpy.Model.set_coef</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">sasoptpy.Model.drop_constraint</a></li>
-<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.drop_constraints.html">sasoptpy.Model.drop_constraints</a></li>
-<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.drop_variable.html">sasoptpy.Model.drop_variable</a></li>
-<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.drop_variables.html">sasoptpy.Model.drop_variables</a></li>
-<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.get_constraint.html">sasoptpy.Model.get_constraint</a></li>
-<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.get_constraints.html">sasoptpy.Model.get_constraints</a></li>
-<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.get_variable.html">sasoptpy.Model.get_variable</a></li>
-<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.get_variables.html">sasoptpy.Model.get_variables</a></li>
-<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.get_objective.html">sasoptpy.Model.get_objective</a></li>
-<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.get_variable_coef.html">sasoptpy.Model.get_variable_coef</a></li>
-<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.read_data.html">sasoptpy.Model.read_data</a></li>
-<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.read_table.html">sasoptpy.Model.read_table</a></li>
-<li class="toctree-l4"><a class="reference internal" href="sasoptpy.Model.include.html">sasoptpy.Model.include</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#core">Core</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../model.html">Model</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../model.html#constructor">Constructor</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../model.html#components">Components</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.get_name.html">sasoptpy.Model.get_name</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.set_session.html">sasoptpy.Model.set_session</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.get_session.html">sasoptpy.Model.get_session</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.get_session_type.html">sasoptpy.Model.get_session_type</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.set_objective.html">sasoptpy.Model.set_objective</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.append_objective.html">sasoptpy.Model.append_objective</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.get_objective.html">sasoptpy.Model.get_objective</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.get_all_objectives.html">sasoptpy.Model.get_all_objectives</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.add_variable.html">sasoptpy.Model.add_variable</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.add_variables.html">sasoptpy.Model.add_variables</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.add_implicit_variable.html">sasoptpy.Model.add_implicit_variable</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.get_variable.html">sasoptpy.Model.get_variable</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.get_variables.html">sasoptpy.Model.get_variables</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.get_grouped_variables.html">sasoptpy.Model.get_grouped_variables</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.get_implicit_variables.html">sasoptpy.Model.get_implicit_variables</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.get_variable_coef.html">sasoptpy.Model.get_variable_coef</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.drop_variable.html">sasoptpy.Model.drop_variable</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.drop_variables.html">sasoptpy.Model.drop_variables</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.add_constraint.html">sasoptpy.Model.add_constraint</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.add_constraints.html">sasoptpy.Model.add_constraints</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.get_constraint.html">sasoptpy.Model.get_constraint</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.get_constraints.html">sasoptpy.Model.get_constraints</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.get_grouped_constraints.html">sasoptpy.Model.get_grouped_constraints</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">sasoptpy.Model.drop_constraint</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.drop_constraints.html">sasoptpy.Model.drop_constraints</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.add_set.html">sasoptpy.Model.add_set</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.add_parameter.html">sasoptpy.Model.add_parameter</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.add_statement.html">sasoptpy.Model.add_statement</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.get_sets.html">sasoptpy.Model.get_sets</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.get_parameters.html">sasoptpy.Model.get_parameters</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.get_statements.html">sasoptpy.Model.get_statements</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.include.html">sasoptpy.Model.include</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../model.html#solver-calls">Solver calls</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../model.html#export">Export</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../model.html#internal-functions">Internal functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../model.html#solver-calls">Solver calls</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../model.html#export">Export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../model.html#internal-functions">Internal functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../model.html#deprecated">Deprecated</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../expression.html">Expression</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../variable.html">Variable</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../variable_group.html">Variable Group</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../constraint.html">Constraint</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../constraint_group.html">Constraint Group</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../others.html">Others</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../functions.html">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../expression.html">Expression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../objective.html">Variable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../variable.html">Variable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../variable_group.html">Variable Group</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../constraint.html">Constraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../constraint_group.html">Constraint Group</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../workspace.html">Workspace</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../web-api.html">RESTful API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#abstract">Abstract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#interface">Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#tests">Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../version-history.html">Version History</a></li>
 </ul>
 
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -171,26 +190,35 @@
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../../http-routingtable.html" title="HTTP Routing Table"
-             >routing table</a> |</li>
-        <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="sasoptpy.Model.drop_constraints.html" title="sasoptpy.Model.drop_constraints"
              >next</a> |</li>
         <li class="right" >
-          <a href="sasoptpy.Model.set_coef.html" title="sasoptpy.Model.set_coef"
+          <a href="sasoptpy.Model.get_grouped_constraints.html" title="sasoptpy.Model.get_grouped_constraints"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 0.2.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../api.html" >API Reference</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="../model.html" >Model</a> &#187;</li> 
       </ul>
     </div>
+
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017-2019, SAS Institute.
-      Last updated on Feb 26, 2019 (Timestamp: 0.2.1-20190226133646).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
+        &#169; Copyright 2017-2020, SAS Institute.
+      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219165041).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
     </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-155356999-1');
+</script>
+
+
   </body>
 </html>

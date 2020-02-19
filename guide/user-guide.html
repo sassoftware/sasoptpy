@@ -1,0 +1,267 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>User Guide &#8212; sasoptpy 1.0.0-alpha documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/sasoptpy.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/js/url.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Introduction to Optimization" href="intro.html" />
+    <link rel="prev" title="Installation" href="../install/install.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../_static/js/version.js"></script>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="intro.html" title="Introduction to Optimization"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../install/install.html" title="Installation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="user-guide">
+<h1>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction to Optimization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#steps-of-optimization">Steps of Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#basic-elements">Basic Elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#simple-problem">Simple Problem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#id5">Types of Optimization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="basics.html">Basic Functionality</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="basics.html#creating-a-session">Creating a session</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="basics.html#creating-a-sas-viya-session">Creating a SAS Viya session</a></li>
+<li class="toctree-l3"><a class="reference internal" href="basics.html#creating-a-sas-9-4-session">Creating a SAS 9.4 session</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="basics.html#initializing-a-model">Initializing a model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basics.html#processing-input-data">Processing input data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basics.html#adding-variables">Adding variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basics.html#creating-expressions">Creating expressions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basics.html#setting-an-objective-function">Setting an objective function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basics.html#adding-constraints">Adding constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basics.html#solving-a-problem">Solving a problem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basics.html#printing-solutions">Printing solutions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basics.html#initializing-a-workspace">Initializing a workspace</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basics.html#package-configurations">Package configurations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sessions.html">Sessions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sessions.html#cas-sessions">CAS Sessions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sessions.html#sas-sessions">SAS Sessions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="models.html#creating-a-model">Creating a model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html#adding-new-components-to-a-model">Adding new components to a model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html#adding-existing-components-to-a-model">Adding existing components to a model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html#accessing-components">Accessing components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html#dropping-components">Dropping components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html#copying-a-model">Copying a model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html#solving-a-model">Solving a model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html#solve-options">Solve options</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="models.html#solver-options">Solver Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="models.html#package-options">Package Options</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="models.html#getting-solutions">Getting solutions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html#tuning-milp-model-parameters">Tuning MILP model parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="components.html">Model components</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="components.html#expressions">Expressions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="components.html#creating-expressions">Creating expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components.html#nonlinear-expressions">Nonlinear expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components.html#mathematical-expressions">Mathematical expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components.html#operations">Operations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components.html#renaming-an-expression">Renaming an expression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components.html#copying-an-expression">Copying an expression</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="components.html#objective-functions">Objective Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="components.html#setting-and-getting-an-objective-function">Setting and getting an objective function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components.html#getting-the-value">Getting the value</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="components.html#variables">Variables</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="components.html#creating-variables">Creating variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components.html#arguments">Arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components.html#changing-bounds">Changing bounds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components.html#setting-initial-values">Setting initial values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components.html#working-with-a-set-of-variables">Working with a set of variables</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="components.html#constraints">Constraints</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="components.html#creating-constraints">Creating constraints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components.html#modifying-variable-coefficients">Modifying variable coefficients</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components.html#working-with-a-set-of-constraints">Working with a set of constraints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components.html#range-constraints">Range constraints</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="workspaces.html">Workspaces</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="workspaces.html#creating-a-workspace">Creating a workspace</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workspaces.html#adding-components">Adding components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workspaces.html#abstract-actions">Abstract actions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="workspaces.html#adding-abstract-actions">Adding abstract actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="workspaces.html#grabbing-results">Grabbing results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="workspaces.html#list-of-abstract-actions">List of abstract actions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="input-data.html">Handling Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="input-data.html#indices">Indices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="input-data.html#list">List</a></li>
+<li class="toctree-l3"><a class="reference internal" href="input-data.html#range">Range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="input-data.html#pandas-index">pandas.Index</a></li>
+<li class="toctree-l3"><a class="reference internal" href="input-data.html#set">Set</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="input-data.html#data">Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="input-data.html#pandas-dataframe">pandas DataFrame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="input-data.html#dictionaries">Dictionaries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="input-data.html#castable">CASTable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="input-data.html#abstract-data">Abstract Data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="input-data.html#operations">Operations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="workflow.html">Workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="workflow.html#client-side-models">Client-side models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="workflow.html#reading-data">Reading data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="workflow.html#model">Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="workflow.html#parsing-results">Parsing results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="workflow.html#server-side-models">Server-side models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="workflow.html#id2">Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="workflow.html#id3">Parsing results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="workflow.html#limitations">Limitations</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="intro.html">Introduction to Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basics.html">Basic Functionality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sessions.html">Sessions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components.html">Model components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workspaces.html">Workspaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="input-data.html">Handling Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflow.html">Workflows</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../version-history.html">Version History</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="intro.html" title="Introduction to Optimization"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../install/install.html" title="Installation"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2020, SAS Institute.
+      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219165041).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+    </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-155356999-1');
+</script>
+
+
+  </body>
+</html>

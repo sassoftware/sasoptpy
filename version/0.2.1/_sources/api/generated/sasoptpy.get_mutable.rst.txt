@@ -1,0 +1,6 @@
+sasoptpy.get\_mutable
+=====================
+
+.. currentmodule:: sasoptpy
+
+.. autofunction:: get_mutable

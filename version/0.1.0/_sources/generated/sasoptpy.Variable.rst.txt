@@ -1,0 +1,31 @@
+
+.. currentmodule:: sasoptpy
+
+sasoptpy\.Variable
+==================
+
+.. currentmodule:: sasoptpy
+
+.. autoclass:: Variable
+
+   
+
+
+..
+   HACK -- the point here is that we don't want this to appear in the output, but the autosummary should still generate the pages.
+   .. autosummary::
+      :toctree:
+      
+      Variable.add
+      Variable.copy
+      Variable.get_name
+      Variable.get_value
+      Variable.mult
+      Variable.set_bounds
+      Variable.set_permanent
+
+
+
+
+   
+

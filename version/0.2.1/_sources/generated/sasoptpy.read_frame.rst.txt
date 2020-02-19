@@ -1,0 +1,6 @@
+sasoptpy.read\_frame
+====================
+
+.. currentmodule:: sasoptpy
+
+.. autofunction:: read_frame

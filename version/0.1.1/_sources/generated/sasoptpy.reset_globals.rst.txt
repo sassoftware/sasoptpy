@@ -1,0 +1,6 @@
+sasoptpy\.reset\_globals
+========================
+
+.. currentmodule:: sasoptpy
+
+.. autofunction:: reset_globals

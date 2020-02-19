@@ -1,0 +1,6 @@
+sasoptpy.actions.substring
+==========================
+
+.. currentmodule:: sasoptpy.actions
+
+.. autofunction:: substring

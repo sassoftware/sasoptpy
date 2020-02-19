@@ -1,0 +1,28 @@
+sasoptpy.abstract.statement.IfElseStatement
+===========================================
+
+.. currentmodule:: sasoptpy.abstract.statement
+
+.. autoclass:: IfElseStatement
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~IfElseStatement.__init__
+      ~IfElseStatement.append
+      ~IfElseStatement.get_response
+      ~IfElseStatement.if_condition
+      ~IfElseStatement.is_internal
+      ~IfElseStatement.set_internal
+      ~IfElseStatement.set_response
+   
+   
+
+   
+   
+   

@@ -1,0 +1,6 @@
+sasoptpy.Variable.add
+=====================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Variable.add

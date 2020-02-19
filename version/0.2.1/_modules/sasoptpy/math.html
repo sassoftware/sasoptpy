@@ -1,0 +1,289 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>sasoptpy.math &#8212; sasoptpy 0.2.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/sasoptpy.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/js/url.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <script src="../../../../_static/js/version.js"></script>
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 0.2.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for sasoptpy.math</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># encoding: utf-8</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright SAS Institute</span>
+<span class="c1">#</span>
+<span class="c1">#  Licensed under the Apache License, Version 2.0 (the License);</span>
+<span class="c1">#  you may not use this file except in compliance with the License.</span>
+<span class="c1">#  You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#      http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1">#  Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1">#  distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1">#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1">#  See the License for the specific language governing permissions and</span>
+<span class="c1">#  limitations under the License.</span>
+<span class="c1">#</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Math includes the definition of mathematical operations</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">sasoptpy.utils</span>
+
+
+<span class="n">func_equivalent</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;abs&#39;</span><span class="p">:</span> <span class="nb">abs</span><span class="p">,</span>
+    <span class="s1">&#39;log&#39;</span><span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">,</span>
+    <span class="s1">&#39;log2&#39;</span><span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">log2</span><span class="p">,</span>
+    <span class="s1">&#39;log10&#39;</span><span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">,</span>
+    <span class="s1">&#39;exp&#39;</span><span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">,</span>
+    <span class="s1">&#39;sqrt&#39;</span><span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">,</span>
+    <span class="s1">&#39;mod&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="s1">&#39;int&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="s1">&#39;sign&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">copysign</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span>
+    <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="nb">max</span><span class="p">,</span>
+    <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="nb">min</span><span class="p">,</span>
+    <span class="s1">&#39;sin&#39;</span><span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">,</span>
+    <span class="s1">&#39;cos&#39;</span><span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">,</span>
+    <span class="s1">&#39;tan&#39;</span><span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">tan</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="math_func"><a class="viewcode-back" href="../../api/generated/sasoptpy.math.math_func.html#sasoptpy.math.math_func">[docs]</a><span class="k">def</span> <span class="nf">math_func</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function wrapper for math functions</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    exp : Expression</span>
+<span class="sd">        Expression where the math func will be applied</span>
+<span class="sd">    op : string</span>
+<span class="sd">        String representation of the math function</span>
+<span class="sd">    args : float, optional</span>
+<span class="sd">        Additional arguments</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">exp</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_mutable</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
+        <span class="n">exp</span><span class="o">.</span><span class="n">_operator</span> <span class="o">=</span> <span class="n">op</span>
+        <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="n">exp</span><span class="o">.</span><span class="n">_arguments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">r</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+<span class="c1"># Basic functions</span>
+<div class="viewcode-block" id="abs"><a class="viewcode-back" href="../../api/generated/sasoptpy.math.abs.html#sasoptpy.math.abs">[docs]</a><span class="k">def</span> <span class="nf">abs</span><span class="p">(</span><span class="n">exp</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Absolute value function</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">math_func</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="s1">&#39;abs&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="log"><a class="viewcode-back" href="../../api/generated/sasoptpy.math.log.html#sasoptpy.math.log">[docs]</a><span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="n">exp</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Natural logarithm function</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">math_func</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="s1">&#39;log&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="log2"><a class="viewcode-back" href="../../api/generated/sasoptpy.math.log2.html#sasoptpy.math.log2">[docs]</a><span class="k">def</span> <span class="nf">log2</span><span class="p">(</span><span class="n">exp</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Logarithm function to the base 2</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">math_func</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="s1">&#39;log2&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="log10"><a class="viewcode-back" href="../../api/generated/sasoptpy.math.log10.html#sasoptpy.math.log10">[docs]</a><span class="k">def</span> <span class="nf">log10</span><span class="p">(</span><span class="n">exp</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Logarithm function to the base 10</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">math_func</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="s1">&#39;log10&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="exp"><a class="viewcode-back" href="../../api/generated/sasoptpy.math.exp.html#sasoptpy.math.exp">[docs]</a><span class="k">def</span> <span class="nf">exp</span><span class="p">(</span><span class="n">exp</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Exponential function</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">math_func</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="s1">&#39;exp&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="sqrt"><a class="viewcode-back" href="../../api/generated/sasoptpy.math.sqrt.html#sasoptpy.math.sqrt">[docs]</a><span class="k">def</span> <span class="nf">sqrt</span><span class="p">(</span><span class="n">exp</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Square root function</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">math_func</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="s1">&#39;sqrt&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="mod"><a class="viewcode-back" href="../../api/generated/sasoptpy.math.mod.html#sasoptpy.math.mod">[docs]</a><span class="k">def</span> <span class="nf">mod</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="n">divisor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Modulo function</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    exp : Expression</span>
+<span class="sd">        Dividend</span>
+<span class="sd">    divisor : Expression</span>
+<span class="sd">        Divisor</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">math_func</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="s1">&#39;mod&#39;</span><span class="p">,</span> <span class="n">divisor</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="int"><a class="viewcode-back" href="../../api/generated/sasoptpy.math.int.html#sasoptpy.math.int">[docs]</a><span class="k">def</span> <span class="nf">int</span><span class="p">(</span><span class="n">exp</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Integer value function</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">math_func</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="s1">&#39;int&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="sign"><a class="viewcode-back" href="../../api/generated/sasoptpy.math.sign.html#sasoptpy.math.sign">[docs]</a><span class="k">def</span> <span class="nf">sign</span><span class="p">(</span><span class="n">exp</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sign value function</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">math_func</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="s1">&#39;sign&#39;</span><span class="p">)</span></div>
+
+
+<span class="c1"># Descriptive functions</span>
+<div class="viewcode-block" id="max"><a class="viewcode-back" href="../../api/generated/sasoptpy.math.max.html#sasoptpy.math.max">[docs]</a><span class="k">def</span> <span class="nf">max</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Largest value function</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">math_func</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="min"><a class="viewcode-back" href="../../api/generated/sasoptpy.math.min.html#sasoptpy.math.min">[docs]</a><span class="k">def</span> <span class="nf">min</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Smallest value function</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">math_func</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+
+
+<span class="c1"># Trigonometric functions</span>
+<div class="viewcode-block" id="sin"><a class="viewcode-back" href="../../api/generated/sasoptpy.math.sin.html#sasoptpy.math.sin">[docs]</a><span class="k">def</span> <span class="nf">sin</span><span class="p">(</span><span class="n">exp</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sine function</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">math_func</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="s1">&#39;sin&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="cos"><a class="viewcode-back" href="../../api/generated/sasoptpy.math.cos.html#sasoptpy.math.cos">[docs]</a><span class="k">def</span> <span class="nf">cos</span><span class="p">(</span><span class="n">exp</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Cosine function</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">math_func</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="s1">&#39;cos&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="tan"><a class="viewcode-back" href="../../api/generated/sasoptpy.math.tan.html#sasoptpy.math.tan">[docs]</a><span class="k">def</span> <span class="nf">tan</span><span class="p">(</span><span class="n">exp</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tangent function</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">math_func</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="s1">&#39;tan&#39;</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../input-data.html">Handling Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../models.html">Sessions and Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../components.html">Model components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../workflow.html">Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../web-api.html">RESTful API</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 0.2.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2019, SAS Institute.
+      Last updated on Feb 26, 2019 (Timestamp: 0.2.1-20190226133646).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,18 @@
+
+.field-name {
+    vertical-align: middle;
+    background-color: rgb(238, 238, 238);
+}
+
+table.field-list {
+    border-collapse: separate;
+    border-spacing: 10px;
+}
+
+.http-example div[class^='highlight'] {
+    margin-top: -20px;
+}
+
+.row-even td {
+    background-color: #D9F3BA;
+}

@@ -1,0 +1,6 @@
+sasoptpy.ParameterValue.set\_init
+=================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: ParameterValue.set_init

@@ -1,0 +1,6 @@
+sasoptpy.actions.solve
+======================
+
+.. currentmodule:: sasoptpy.actions
+
+.. autofunction:: solve

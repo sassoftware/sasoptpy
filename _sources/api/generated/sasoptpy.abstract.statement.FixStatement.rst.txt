@@ -1,0 +1,28 @@
+sasoptpy.abstract.statement.FixStatement
+========================================
+
+.. currentmodule:: sasoptpy.abstract.statement
+
+.. autoclass:: FixStatement
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FixStatement.__init__
+      ~FixStatement.append
+      ~FixStatement.fix
+      ~FixStatement.get_response
+      ~FixStatement.is_internal
+      ~FixStatement.set_internal
+      ~FixStatement.set_response
+   
+   
+
+   
+   
+   

@@ -1,0 +1,6 @@
+sasoptpy.Expression.to\_expression
+==================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Expression.to_expression

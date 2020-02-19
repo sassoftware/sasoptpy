@@ -1,0 +1,29 @@
+sasoptpy.abstract.statement.CoForLoopStatement
+==============================================
+
+.. currentmodule:: sasoptpy.abstract.statement
+
+.. autoclass:: CoForLoopStatement
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~CoForLoopStatement.__init__
+      ~CoForLoopStatement.append
+      ~CoForLoopStatement.cofor_loop
+      ~CoForLoopStatement.for_loop
+      ~CoForLoopStatement.get_response
+      ~CoForLoopStatement.is_internal
+      ~CoForLoopStatement.set_internal
+      ~CoForLoopStatement.set_response
+   
+   
+
+   
+   
+   

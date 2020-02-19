@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+sasoptpy.SetIterator
+====================
+
+.. currentmodule:: sasoptpy
+
+.. autoclass:: SetIterator

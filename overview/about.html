@@ -1,0 +1,224 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>About sasoptpy &#8212; sasoptpy 1.0.0-alpha documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/sasoptpy.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/js/url.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="What’s New" href="whatsnew.html" />
+    <link rel="prev" title="Overview" href="overview.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../_static/js/version.js"></script>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="whatsnew.html" title="What’s New"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="overview.html" title="Overview"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="overview.html" accesskey="U">Overview</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="about-sasoptpy">
+<span id="about"></span><h1>About sasoptpy<a class="headerlink" href="#about-sasoptpy" title="Permalink to this headline">¶</a></h1>
+<p><strong>sasoptpy</strong> is a Python package that provides easy and integrated ways of working with SAS Optimization and SAS/OR
+optimization solvers. It enables developers to model optimization problems with ease by
+providing high-level building blocks.</p>
+<div class="section" id="capabilities">
+<h2>Capabilities<a class="headerlink" href="#capabilities" title="Permalink to this headline">¶</a></h2>
+<p>sasoptpy is very flexible in terms of optimization problem types it supports and workflow alternatives.</p>
+<div class="section" id="solvers">
+<h3>Solvers<a class="headerlink" href="#solvers" title="Permalink to this headline">¶</a></h3>
+<p>It currently supports the following model types:</p>
+<ul class="simple">
+<li><p>Linear problems</p></li>
+<li><p>Integer linear problems / Mixed integer linear problems</p></li>
+<li><p>Quadratic problems</p></li>
+<li><p>Nonlinear / Black-box problems</p></li>
+</ul>
+</div>
+<div class="section" id="data">
+<h3>Data<a class="headerlink" href="#data" title="Permalink to this headline">¶</a></h3>
+<p>It supports working with both client-side data and server-side data.
+When data are available on the client-side, it populates the model with integrated data and brings the solution back to
+the client.
+When data are available on the server-side, it generates the code to be able to populate the model on the server.
+You can retrieve the final solution after the solve.</p>
+</div>
+<div class="section" id="platforms">
+<h3>Platforms<a class="headerlink" href="#platforms" title="Permalink to this headline">¶</a></h3>
+<p>sasoptpy can be used with SAS Viya 3.3 or later and SAS 9.4, in all the supporting operating systems.</p>
+</div>
+</div>
+<div class="section" id="road-map">
+<h2>Road map<a class="headerlink" href="#road-map" title="Permalink to this headline">¶</a></h2>
+<p>sasoptpy has the broader goal of supporting all the functionality of the SAS Optimization and SAS/OR solvers, and
+providing a high-level set of tools for easily working with models.</p>
+</div>
+<div class="section" id="versioning">
+<h2>Versioning<a class="headerlink" href="#versioning" title="Permalink to this headline">¶</a></h2>
+<p>sasoptpy follows <a class="reference external" href="https://semver.org/">Semantic Versioning</a> as of version 1.0.0.</p>
+<ul class="simple">
+<li><p>Any backwards incompatible changes increase the major version number (X.y.z).</p></li>
+<li><p>Minor changes and improvements increase the the minor version number (x.Y.z).</p></li>
+<li><p>Patches increase the patch version number (x.y.Z).</p></li>
+<li><p>Pre-releases are marked by using <em>alpha</em> and <em>beta</em>, and release candidates are marked using <em>rc</em> identifiers.</p></li>
+</ul>
+</div>
+<div class="section" id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<p>sasoptpy is an open-source package and uses the standard <a class="reference internal" href="license.html#license"><span class="std std-ref">Apache 2.0 license</span></a>.</p>
+</div>
+<div class="section" id="support">
+<h2>Support<a class="headerlink" href="#support" title="Permalink to this headline">¶</a></h2>
+<p>Have any questions?</p>
+<ul class="simple">
+<li><p>If you have a package-related issue, feel free to report it on <a class="reference external" href="https://github.com/sassoftware/sasoptpy/issues">GitHub</a>.</p></li>
+<li><p>If you have an optimization-related question, consider asking it on <a class="reference external" href="https://communities.sas.com/t5/Mathematical-Optimization/bd-p/operations_research">SAS Communities</a>.</p></li>
+<li><p>For further technical support, reach <a class="reference external" href="https://support.sas.com/en/technical-support.html">SAS Technical Support</a>.</p></li>
+</ul>
+</div>
+<div class="section" id="contribution">
+<h2>Contribution<a class="headerlink" href="#contribution" title="Permalink to this headline">¶</a></h2>
+<p>Contributions are always welcome. Clone the project to your working environment and submit pull requests as you see fit.
+For more details, see the guidelines at the GitHub repository.</p>
+</div>
+<div class="section" id="highlighted-works">
+<h2>Highlighted Works<a class="headerlink" href="#highlighted-works" title="Permalink to this headline">¶</a></h2>
+<p>A list of highlighted projects and blog posts:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://blogs.sas.com/content/hiddeninsights/2019/12/03/fastest-cheapest-greenest-how-will-football-fans-choose-which-matches-to-attend/">Fastest, cheapest, greenest: How will football fans choose which matches to attend?</a></p></li>
+<li><p><a class="reference external" href="https://blogs.sas.com/content/hiddeninsights/2019/12/03/1-tournament-12-countries-a-logistical-maze/">1 tournament, 12 countries: A logistical maze?</a></p></li>
+<li><p><a class="reference external" href="https://blogs.sas.com/content/subconsciousmusings/2019/08/27/using-sas-optimization-with-python-and-containers/">Using SAS Optimization with Python and containers</a></p></li>
+<li><p><a class="reference external" href="https://blogs.sas.com/content/operations/2019/06/18/bringing-analytics-to-soccer-transfer-season/">Bringing Analytics to the Soccer Transfer Season</a></p></li>
+<li><p><a class="reference external" href="https://blogs.sas.com/content/operations/2018/06/13/visiting-all-30-major-league-baseball-stadiums-with-python-and-sas-viya/">Visiting all 30 Major League Baseball Stadiums - with Python and SAS Viya</a></p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="overview.html">Overview</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">About sasoptpy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#capabilities">Capabilities</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#solvers">Solvers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#data">Data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#platforms">Platforms</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#road-map">Road map</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#versioning">Versioning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#license">License</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#support">Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#contribution">Contribution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#highlighted-works">Highlighted Works</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="whatsnew.html">What’s New</a></li>
+<li class="toctree-l2"><a class="reference internal" href="license.html">License</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../version-history.html">Version History</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="whatsnew.html" title="What’s New"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="overview.html" title="Overview"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="overview.html" >Overview</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2020, SAS Institute.
+      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219165041).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+    </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-155356999-1');
+</script>
+
+
+  </body>
+</html>

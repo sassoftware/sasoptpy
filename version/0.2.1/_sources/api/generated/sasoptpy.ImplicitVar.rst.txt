@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+sasoptpy.ImplicitVar
+====================
+
+.. currentmodule:: sasoptpy
+
+.. autoclass:: ImplicitVar

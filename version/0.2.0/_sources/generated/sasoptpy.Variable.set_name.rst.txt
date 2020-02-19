@@ -1,0 +1,6 @@
+sasoptpy.Variable.set\_name
+===========================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Variable.set_name

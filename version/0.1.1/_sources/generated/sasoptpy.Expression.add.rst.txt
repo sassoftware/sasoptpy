@@ -1,0 +1,6 @@
+sasoptpy\.Expression\.add
+=========================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Expression.add

@@ -1,0 +1,6 @@
+sasoptpy\.Constraint\.mult
+==========================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Constraint.mult

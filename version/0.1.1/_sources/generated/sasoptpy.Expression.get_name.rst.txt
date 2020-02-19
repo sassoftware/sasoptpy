@@ -1,0 +1,6 @@
+sasoptpy\.Expression\.get\_name
+===============================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Expression.get_name

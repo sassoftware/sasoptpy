@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+sasoptpy.interface.SASMediator
+==============================
+
+.. currentmodule:: sasoptpy.interface
+
+.. autoclass:: SASMediator

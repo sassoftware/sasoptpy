@@ -1,0 +1,31 @@
+sasoptpy.abstract.statement.SolveStatement
+==========================================
+
+.. currentmodule:: sasoptpy.abstract.statement
+
+.. autoclass:: SolveStatement
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SolveStatement.__init__
+      ~SolveStatement.append
+      ~SolveStatement.get_problem_summary
+      ~SolveStatement.get_response
+      ~SolveStatement.get_solution_summary
+      ~SolveStatement.is_internal
+      ~SolveStatement.set_internal
+      ~SolveStatement.set_response
+      ~SolveStatement.solve
+      ~SolveStatement.solve_model
+   
+   
+
+   
+   
+   

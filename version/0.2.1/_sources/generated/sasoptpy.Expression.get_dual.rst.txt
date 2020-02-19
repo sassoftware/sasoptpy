@@ -1,0 +1,6 @@
+sasoptpy.Expression.get\_dual
+=============================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Expression.get_dual

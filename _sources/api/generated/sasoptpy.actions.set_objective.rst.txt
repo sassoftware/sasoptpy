@@ -1,0 +1,6 @@
+sasoptpy.actions.set\_objective
+===============================
+
+.. currentmodule:: sasoptpy.actions
+
+.. autofunction:: set_objective

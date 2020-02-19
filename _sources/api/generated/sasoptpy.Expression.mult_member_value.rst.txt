@@ -1,0 +1,6 @@
+sasoptpy.Expression.mult\_member\_value
+=======================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Expression.mult_member_value

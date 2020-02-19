@@ -1,0 +1,6 @@
+sasoptpy\.check\_name
+=====================
+
+.. currentmodule:: sasoptpy
+
+.. autofunction:: check_name

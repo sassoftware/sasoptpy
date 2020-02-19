@@ -1,0 +1,6 @@
+sasoptpy\.Model\.upload\_model
+==============================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.upload_model

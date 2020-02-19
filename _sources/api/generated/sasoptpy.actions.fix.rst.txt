@@ -1,0 +1,6 @@
+sasoptpy.actions.fix
+====================
+
+.. currentmodule:: sasoptpy.actions
+
+.. autofunction:: fix

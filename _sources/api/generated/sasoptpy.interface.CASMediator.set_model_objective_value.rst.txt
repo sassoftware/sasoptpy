@@ -1,0 +1,6 @@
+sasoptpy.interface.CASMediator.set\_model\_objective\_value
+===========================================================
+
+.. currentmodule:: sasoptpy.interface
+
+.. automethod:: CASMediator.set_model_objective_value

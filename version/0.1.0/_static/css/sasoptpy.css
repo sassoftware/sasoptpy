@@ -1,0 +1,11 @@
+
+.field-name {
+    vertical-align: middle;
+    background-color: rgb(238, 238, 238);
+}
+
+table.field-list {
+    border-collapse: separate;
+    border-spacing: 10px;
+}
+

@@ -1,0 +1,6 @@
+sasoptpy\.Model\.test\_session
+==============================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.test_session

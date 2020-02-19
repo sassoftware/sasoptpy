@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+sasoptpy.ExpressionDict
+=======================
+
+.. currentmodule:: sasoptpy
+
+.. autoclass:: ExpressionDict

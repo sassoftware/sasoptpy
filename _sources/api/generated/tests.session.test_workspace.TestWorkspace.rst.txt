@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+tests.session.test_workspace.TestWorkspace
+==========================================
+
+.. currentmodule:: tests.session.test_workspace
+
+.. autoclass:: TestWorkspace

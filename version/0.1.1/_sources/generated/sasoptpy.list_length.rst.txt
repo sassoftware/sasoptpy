@@ -1,0 +1,6 @@
+sasoptpy\.list\_length
+======================
+
+.. currentmodule:: sasoptpy
+
+.. autofunction:: list_length

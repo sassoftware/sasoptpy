@@ -1,0 +1,489 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Workspaces &#8212; sasoptpy 1.0.0-alpha documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/sasoptpy.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/js/url.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Handling Data" href="input-data.html" />
+    <link rel="prev" title="Model components" href="components.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../_static/js/version.js"></script>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="input-data.html" title="Handling Data"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="components.html" title="Model components"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="user-guide.html" accesskey="U">User Guide</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="workspaces">
+<span id="id1"></span><h1>Workspaces<a class="headerlink" href="#workspaces" title="Permalink to this headline">¶</a></h1>
+<p>One of the most powerful features of SAS Optimization and PROC OPTMODEL is the ability to combine several optimization
+models in a single call. You can read a common data set once, or parallelize solve steps for
+similar subproblems by using this ability.</p>
+<p>The newly introduced <a class="reference internal" href="../api/generated/sasoptpy.Workspace.html#sasoptpy.Workspace" title="sasoptpy.Workspace"><code class="xref py py-class docutils literal notranslate"><span class="pre">Workspace</span></code></a> provides this ability in a familiar syntax. Compared to <a class="reference internal" href="../api/generated/sasoptpy.Model.html#sasoptpy.Model" title="sasoptpy.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></a> objects,
+a <a class="reference internal" href="../api/generated/sasoptpy.Workspace.html#sasoptpy.Workspace" title="sasoptpy.Workspace"><code class="xref py py-class docutils literal notranslate"><span class="pre">Workspace</span></code></a> can consist of several models and is able to use server-side data and OPTMODEL statements in a
+more detailed way.</p>
+<div class="section" id="creating-a-workspace">
+<h2>Creating a workspace<a class="headerlink" href="#creating-a-workspace" title="Permalink to this headline">¶</a></h2>
+<p>A <a class="reference internal" href="../api/generated/sasoptpy.Workspace.html#sasoptpy.Workspace" title="sasoptpy.Workspace"><code class="xref py py-class docutils literal notranslate"><span class="pre">Workspace</span></code></a> should be called by using the <cite>with</cite> keyword of Python as follows:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">so</span><span class="o">.</span><span class="n">Workspace</span><span class="p">(</span><span class="s1">&#39;my_workspace&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="o">...</span>
+</pre></div>
+</div>
+<p>You can define several models in the same workspace, and solve problems multiple times. All the statements are sent
+to the server after <a class="reference internal" href="../api/generated/sasoptpy.Workspace.submit.html#sasoptpy.Workspace.submit" title="sasoptpy.Workspace.submit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Workspace.submit()</span></code></a> is called.</p>
+</div>
+<div class="section" id="adding-components">
+<h2>Adding components<a class="headerlink" href="#adding-components" title="Permalink to this headline">¶</a></h2>
+<p>Unlike <a class="reference internal" href="../api/generated/sasoptpy.Model.html#sasoptpy.Model" title="sasoptpy.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></a> objects, where components are added explicitly, objects defined inside a <a class="reference internal" href="../api/generated/sasoptpy.Workspace.html#sasoptpy.Workspace" title="sasoptpy.Workspace"><code class="xref py py-class docutils literal notranslate"><span class="pre">Workspace</span></code></a> are
+added automatically.</p>
+<p>For example, adding a new variable is performed as follows:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="k">with</span> <span class="n">so</span><span class="o">.</span><span class="n">Workspace</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;my_workspace&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
+<span class="gp">   ...: </span>   <span class="n">x</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">integer</span><span class="p">)</span>
+<span class="gp">   ...: </span>
+</pre></div>
+</div>
+<p>You can display contents of a workspace by using the <a class="reference internal" href="../api/generated/sasoptpy.Workspace.to_optmodel.html#sasoptpy.Workspace.to_optmodel" title="sasoptpy.Workspace.to_optmodel"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Workspace.to_optmodel()</span></code></a> method:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [2]: </span><span class="nb">print</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">())</span>
+<span class="go">proc optmodel;</span>
+<span class="go">   var x integer;</span>
+<span class="go">quit;</span>
+</pre></div>
+</div>
+<p>See the following full example where data are loaded into the server, and a problem is solved by using a Workspace:</p>
+<p>Create CAS session:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [3]: </span><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="gp">In [4]: </span><span class="n">hostname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;CASHOST&#39;</span><span class="p">)</span>
+
+<span class="gp">In [5]: </span><span class="n">port</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;CASPORT&#39;</span><span class="p">)</span>
+
+<span class="gp">In [6]: </span><span class="kn">from</span> <span class="nn">swat</span> <span class="kn">import</span> <span class="n">CAS</span>
+
+<span class="gp">In [7]: </span><span class="n">cas_conn</span> <span class="o">=</span> <span class="n">CAS</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+
+<span class="gp">In [8]: </span><span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
+
+<span class="gp">In [9]: </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</pre></div>
+</div>
+<p>Upload data:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [10]: </span><span class="k">def</span> <span class="nf">send_data</span><span class="p">():</span>
+<span class="gp">   ....: </span>   <span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">   ....: </span>      <span class="p">[</span><span class="s1">&#39;clock&#39;</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+<span class="gp">   ....: </span>      <span class="p">[</span><span class="s1">&#39;mug&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+<span class="gp">   ....: </span>      <span class="p">[</span><span class="s1">&#39;headphone&#39;</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+<span class="gp">   ....: </span>      <span class="p">[</span><span class="s1">&#39;book&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+<span class="gp">   ....: </span>      <span class="p">[</span><span class="s1">&#39;pen&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">]</span>
+<span class="gp">   ....: </span>   <span class="p">]</span>
+<span class="gp">   ....: </span>   <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;item&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">,</span> <span class="s1">&#39;limit&#39;</span><span class="p">])</span>
+<span class="gp">   ....: </span>   <span class="n">cas_conn</span><span class="o">.</span><span class="n">upload_frame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">casout</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;mydata&#39;</span><span class="p">,</span> <span class="s1">&#39;replace&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+<span class="gp">   ....: </span><span class="n">send_data</span><span class="p">()</span>
+<span class="gp">   ....: </span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table MYDATA in caslib CASUSER(casuser).</span>
+<span class="go">NOTE: The table MYDATA has been created in caslib CASUSER(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+</pre></div>
+</div>
+<p>Model workspace:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [11]: </span><span class="kn">from</span> <span class="nn">sasoptpy.actions</span> <span class="kn">import</span> <span class="n">read_data</span><span class="p">,</span> <span class="n">solve</span>
+
+<span class="gp">In [12]: </span><span class="k">def</span> <span class="nf">create_workspace</span><span class="p">():</span>
+<span class="gp">   ....: </span>   <span class="k">with</span> <span class="n">so</span><span class="o">.</span><span class="n">Workspace</span><span class="p">(</span><span class="s1">&#39;my_knapsack&#39;</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="n">cas_conn</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
+<span class="gp">   ....: </span>      <span class="n">items</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ITEMS&#39;</span><span class="p">,</span> <span class="n">settype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">string</span><span class="p">)</span>
+<span class="gp">   ....: </span>      <span class="n">value</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ParameterGroup</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+<span class="gp">   ....: </span>      <span class="n">weight</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ParameterGroup</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;weight&#39;</span><span class="p">)</span>
+<span class="gp">   ....: </span>      <span class="n">limit</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ParameterGroup</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;limit&#39;</span><span class="p">)</span>
+<span class="gp">   ....: </span>      <span class="n">total_weight</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_weight&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">55</span><span class="p">)</span>
+<span class="gp">   ....: </span>      <span class="n">read_data</span><span class="p">(</span>
+<span class="gp">   ....: </span>         <span class="n">table</span><span class="o">=</span><span class="s1">&#39;mydata&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">items</span><span class="p">,</span> <span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;item&#39;</span><span class="p">]},</span>
+<span class="gp">   ....: </span>         <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">value</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">limit</span><span class="p">]</span>
+<span class="gp">   ....: </span>      <span class="p">)</span>
+<span class="gp">   ....: </span>      <span class="n">get</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">VariableGroup</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">integer</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">   ....: </span>      <span class="n">limit_con</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ConstraintGroup</span><span class="p">((</span><span class="n">get</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">limit</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">items</span><span class="p">),</span>
+<span class="gp">   ....: </span>                                     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;limit_con&#39;</span><span class="p">)</span>
+<span class="gp">   ....: </span>      <span class="n">weight_con</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Constraint</span><span class="p">(</span>
+<span class="gp">   ....: </span>         <span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">weight</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">get</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">items</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">total_weight</span><span class="p">,</span>
+<span class="gp">   ....: </span>         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;weight_con&#39;</span><span class="p">)</span>
+<span class="gp">   ....: </span>      <span class="n">total_value</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Objective</span><span class="p">(</span>
+<span class="gp">   ....: </span>         <span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">get</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">items</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_value&#39;</span><span class="p">,</span>
+<span class="gp">   ....: </span>         <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">maximize</span><span class="p">)</span>
+<span class="gp">   ....: </span>      <span class="n">solve</span><span class="p">()</span>
+<span class="gp">   ....: </span>   <span class="k">return</span> <span class="n">w</span>
+<span class="gp">   ....: </span>
+
+<span class="gp">In [13]: </span><span class="n">my_workspace</span> <span class="o">=</span> <span class="n">create_workspace</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Print content:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [14]: </span><span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">(</span><span class="n">my_workspace</span><span class="p">))</span>
+<span class="go">proc optmodel;</span>
+<span class="go">   set &lt;str&gt; ITEMS;</span>
+<span class="go">   num value {ITEMS};</span>
+<span class="go">   num weight {ITEMS};</span>
+<span class="go">   num limit {ITEMS};</span>
+<span class="go">   num total_weight = 55;</span>
+<span class="go">   read data mydata into ITEMS=[item] value weight limit;</span>
+<span class="go">   var get {{ITEMS}} integer &gt;= 0;</span>
+<span class="go">   con limit_con {o72 in ITEMS} : get[o72] - limit[o72] &lt;= 0;</span>
+<span class="go">   con weight_con : total_weight - (sum {i in ITEMS} (weight[i] * get[i])) &gt;= 0;</span>
+<span class="go">   max total_value = sum {i in ITEMS} (value[i] * get[i]);</span>
+<span class="go">   solve;</span>
+<span class="go">quit;</span>
+</pre></div>
+</div>
+<p>Submit:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [15]: </span><span class="n">my_workspace</span><span class="o">.</span><span class="n">submit</span><span class="p">()</span>
+<span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
+<span class="go">NOTE: There were 5 rows read from table &#39;MYDATA&#39; in caslib &#39;CASUSER(casuser)&#39;.</span>
+<span class="go">NOTE: Problem generation will use 8 threads.</span>
+<span class="go">NOTE: The problem has 5 variables (0 free, 0 fixed).</span>
+<span class="go">NOTE: The problem has 0 binary and 5 integer variables.</span>
+<span class="go">NOTE: The problem has 6 linear constraints (5 LE, 0 EQ, 1 GE, 0 range).</span>
+<span class="go">NOTE: The problem has 10 linear constraint coefficients.</span>
+<span class="go">NOTE: The problem has 0 nonlinear constraints (0 LE, 0 EQ, 0 GE, 0 range).</span>
+<span class="go">NOTE: The OPTMODEL presolver is disabled for linear problems.</span>
+<span class="go">NOTE: The initial MILP heuristics are applied.</span>
+<span class="go">NOTE: The MILP presolver value AUTOMATIC is applied.</span>
+<span class="go">NOTE: The MILP presolver removed 0 variables and 5 constraints.</span>
+<span class="go">NOTE: The MILP presolver removed 5 constraint coefficients.</span>
+<span class="go">NOTE: The MILP presolver modified 0 constraint coefficients.</span>
+<span class="go">NOTE: The presolved problem has 5 variables, 1 constraints, and 5 constraint coefficients.</span>
+<span class="go">NOTE: The MILP solver is called.</span>
+<span class="go">NOTE: The parallel Branch and Cut algorithm is used.</span>
+<span class="go">NOTE: The Branch and Cut algorithm is using up to 8 threads.</span>
+<span class="go">             Node   Active   Sols    BestInteger      BestBound      Gap    Time</span>
+<span class="go">                0        1      4     99.0000000    199.0000000   50.25%       0</span>
+<span class="go">                0        1      4     99.0000000    102.3333333    3.26%       0</span>
+<span class="go">                0        0      4     99.0000000     99.0000000    0.00%       0</span>
+<span class="go">NOTE: Optimal.</span>
+<span class="go">NOTE: Objective = 99.</span>
+<span class="go">NOTE: The output table &#39;SOLUTION&#39; in caslib &#39;CASUSER(casuser)&#39; has 5 rows and 6 columns.</span>
+<span class="go">NOTE: The output table &#39;DUAL&#39; in caslib &#39;CASUSER(casuser)&#39; has 6 rows and 4 columns.</span>
+<span class="gh">Out[15]: </span><span class="go"></span>
+<span class="go">Selected Rows from Table SOLUTION</span>
+
+<span class="go">     i             var  value   lb             ub  rc</span>
+<span class="go">0  1.0       get[book]    2.0 -0.0  1.797693e+308 NaN</span>
+<span class="go">1  2.0      get[clock]    3.0 -0.0  1.797693e+308 NaN</span>
+<span class="go">2  3.0  get[headphone]    2.0 -0.0  1.797693e+308 NaN</span>
+<span class="go">3  4.0        get[mug]   -0.0 -0.0  1.797693e+308 NaN</span>
+<span class="go">4  5.0        get[pen]    5.0 -0.0  1.797693e+308 NaN</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="abstract-actions">
+<span id="id2"></span><h2>Abstract actions<a class="headerlink" href="#abstract-actions" title="Permalink to this headline">¶</a></h2>
+<p>As shown in the previous example, a <a class="reference internal" href="../api/generated/sasoptpy.Workspace.html#sasoptpy.Workspace" title="sasoptpy.Workspace"><code class="xref py py-class docutils literal notranslate"><span class="pre">Workspace</span></code></a> can have statements such as <a class="reference internal" href="../api/generated/sasoptpy.actions.read_data.html#sasoptpy.actions.read_data" title="sasoptpy.actions.read_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">actions.read_data()</span></code></a>
+and <a class="reference internal" href="../api/generated/sasoptpy.actions.solve.html#sasoptpy.actions.solve" title="sasoptpy.actions.solve"><code class="xref py py-func docutils literal notranslate"><span class="pre">actions.solve()</span></code></a>.</p>
+<p>These statements are called “Abstract Statements” and are fully supported inside <a class="reference internal" href="../api/generated/sasoptpy.Workspace.html#sasoptpy.Workspace" title="sasoptpy.Workspace"><code class="xref py py-class docutils literal notranslate"><span class="pre">Workspace</span></code></a> objects.</p>
+<div class="section" id="adding-abstract-actions">
+<h3>Adding abstract actions<a class="headerlink" href="#adding-abstract-actions" title="Permalink to this headline">¶</a></h3>
+<p>You can import abstract actions through <cite>sasoptpy.actions</cite> as follows:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sasoptpy.actions</span> <span class="kn">import</span> <span class="n">read_data</span><span class="p">,</span> <span class="n">create_data</span>
+</pre></div>
+</div>
+<p>These abstract actions are performed on the server side by generating equivalent OPTMODEL code at execution.</p>
+</div>
+<div class="section" id="grabbing-results">
+<h3>Grabbing results<a class="headerlink" href="#grabbing-results" title="Permalink to this headline">¶</a></h3>
+<p>In order to solve a problem, you need to use the <a class="reference internal" href="../api/generated/sasoptpy.actions.solve.html#sasoptpy.actions.solve" title="sasoptpy.actions.solve"><code class="xref py py-func docutils literal notranslate"><span class="pre">actions.solve()</span></code></a> function explicitly.
+Because <a class="reference internal" href="../api/generated/sasoptpy.Workspace.html#sasoptpy.Workspace" title="sasoptpy.Workspace"><code class="xref py py-class docutils literal notranslate"><span class="pre">Workspace</span></code></a> objects allow several models and solve statements to be included,
+each of these solve statements are retrieved
+separately. You can return the solution after each solve by using the <code class="xref py py-func docutils literal notranslate"><span class="pre">actions.print()</span></code> function or creating a
+table by using the <a class="reference internal" href="../api/generated/sasoptpy.actions.create_data.html#sasoptpy.actions.create_data" title="sasoptpy.actions.create_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">actions.create_data()</span></code></a> function.</p>
+<p>See the following example where a parameter is changed and the same problem solved twice:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [16]: </span><span class="kn">from</span> <span class="nn">sasoptpy.actions</span> <span class="kn">import</span> <span class="n">read_data</span><span class="p">,</span> <span class="n">solve</span><span class="p">,</span> <span class="n">print_item</span>
+
+<span class="gp">In [17]: </span><span class="k">def</span> <span class="nf">create_multi_solve_workspace</span><span class="p">():</span>
+<span class="gp">   ....: </span>    <span class="k">with</span> <span class="n">so</span><span class="o">.</span><span class="n">Workspace</span><span class="p">(</span><span class="s1">&#39;my_knapsack&#39;</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="n">cas_conn</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
+<span class="gp">   ....: </span>        <span class="n">items</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ITEMS&#39;</span><span class="p">,</span> <span class="n">settype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">string</span><span class="p">)</span>
+<span class="gp">   ....: </span>        <span class="n">value</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ParameterGroup</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+<span class="gp">   ....: </span>        <span class="n">weight</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ParameterGroup</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;weight&#39;</span><span class="p">)</span>
+<span class="gp">   ....: </span>        <span class="n">limit</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ParameterGroup</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;limit&#39;</span><span class="p">)</span>
+<span class="gp">   ....: </span>        <span class="n">total_weight</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_weight&#39;</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="mi">55</span><span class="p">)</span>
+<span class="gp">   ....: </span>        <span class="n">read_data</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="s1">&#39;mydata&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">items</span><span class="p">,</span> <span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;item&#39;</span><span class="p">]},</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">value</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">limit</span><span class="p">])</span>
+<span class="gp">   ....: </span>        <span class="n">get</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">VariableGroup</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">integer</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">   ....: </span>        <span class="n">limit_con</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ConstraintGroup</span><span class="p">((</span><span class="n">get</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">limit</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">items</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;limit_con&#39;</span><span class="p">)</span>
+<span class="gp">   ....: </span>        <span class="n">weight_con</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Constraint</span><span class="p">(</span>
+<span class="gp">   ....: </span>            <span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">weight</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">get</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">items</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">total_weight</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;weight_con&#39;</span><span class="p">)</span>
+<span class="gp">   ....: </span>        <span class="n">total_value</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Objective</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">get</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">items</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_value&#39;</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MAX</span><span class="p">)</span>
+<span class="gp">   ....: </span>        <span class="n">s1</span> <span class="o">=</span> <span class="n">solve</span><span class="p">()</span>
+<span class="gp">   ....: </span>        <span class="n">p1</span> <span class="o">=</span> <span class="n">print_item</span><span class="p">(</span><span class="n">get</span><span class="p">)</span>
+<span class="gp">   ....: </span>        <span class="n">total_weight</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="mi">40</span><span class="p">)</span>
+<span class="gp">   ....: </span>        <span class="n">s2</span> <span class="o">=</span> <span class="n">solve</span><span class="p">()</span>
+<span class="gp">   ....: </span>        <span class="n">p2</span> <span class="o">=</span> <span class="n">print_item</span><span class="p">(</span><span class="n">get</span><span class="p">)</span>
+<span class="gp">   ....: </span>    <span class="k">return</span> <span class="n">w</span><span class="p">,</span> <span class="n">s1</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">p2</span>
+<span class="gp">   ....: </span>
+
+<span class="gp">In [18]: </span><span class="p">(</span><span class="n">my_workspace</span><span class="p">,</span> <span class="n">solve1</span><span class="p">,</span> <span class="n">print1</span><span class="p">,</span> <span class="n">solve2</span><span class="p">,</span> <span class="n">print2</span><span class="p">)</span> <span class="o">=</span> <span class="n">create_multi_solve_workspace</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Submit:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [19]: </span><span class="n">my_workspace</span><span class="o">.</span><span class="n">submit</span><span class="p">()</span>
+<span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
+<span class="go">NOTE: There were 5 rows read from table &#39;MYDATA&#39; in caslib &#39;CASUSER(casuser)&#39;.</span>
+<span class="go">NOTE: Problem generation will use 8 threads.</span>
+<span class="go">NOTE: The problem has 5 variables (0 free, 0 fixed).</span>
+<span class="go">NOTE: The problem has 0 binary and 5 integer variables.</span>
+<span class="go">NOTE: The problem has 6 linear constraints (5 LE, 0 EQ, 1 GE, 0 range).</span>
+<span class="go">NOTE: The problem has 10 linear constraint coefficients.</span>
+<span class="go">NOTE: The problem has 0 nonlinear constraints (0 LE, 0 EQ, 0 GE, 0 range).</span>
+<span class="go">NOTE: The OPTMODEL presolver is disabled for linear problems.</span>
+<span class="go">NOTE: The initial MILP heuristics are applied.</span>
+<span class="go">NOTE: The MILP presolver value AUTOMATIC is applied.</span>
+<span class="go">NOTE: The MILP presolver removed 0 variables and 5 constraints.</span>
+<span class="go">NOTE: The MILP presolver removed 5 constraint coefficients.</span>
+<span class="go">NOTE: The MILP presolver modified 0 constraint coefficients.</span>
+<span class="go">NOTE: The presolved problem has 5 variables, 1 constraints, and 5 constraint coefficients.</span>
+<span class="go">NOTE: The MILP solver is called.</span>
+<span class="go">NOTE: The parallel Branch and Cut algorithm is used.</span>
+<span class="go">NOTE: The Branch and Cut algorithm is using up to 8 threads.</span>
+<span class="go">             Node   Active   Sols    BestInteger      BestBound      Gap    Time</span>
+<span class="go">                0        1      4     99.0000000    199.0000000   50.25%       0</span>
+<span class="go">                0        1      4     99.0000000    102.3333333    3.26%       0</span>
+<span class="go">                0        0      4     99.0000000     99.0000000    0.00%       0</span>
+<span class="go">NOTE: Optimal.</span>
+<span class="go">NOTE: Objective = 99.</span>
+<span class="go">NOTE: Problem generation will use 8 threads.</span>
+<span class="go">NOTE: The problem has 5 variables (0 free, 0 fixed).</span>
+<span class="go">NOTE: The problem has 0 binary and 5 integer variables.</span>
+<span class="go">NOTE: The problem has 6 linear constraints (5 LE, 0 EQ, 1 GE, 0 range).</span>
+<span class="go">NOTE: The problem has 10 linear constraint coefficients.</span>
+<span class="go">NOTE: The problem has 0 nonlinear constraints (0 LE, 0 EQ, 0 GE, 0 range).</span>
+<span class="go">NOTE: The OPTMODEL presolver is disabled for linear problems.</span>
+<span class="go">NOTE: The initial MILP heuristics are applied.</span>
+<span class="go">NOTE: The MILP presolver value AUTOMATIC is applied.</span>
+<span class="go">NOTE: The MILP presolver removed 0 variables and 5 constraints.</span>
+<span class="go">NOTE: The MILP presolver removed 5 constraint coefficients.</span>
+<span class="go">NOTE: The MILP presolver modified 0 constraint coefficients.</span>
+<span class="go">NOTE: The presolved problem has 5 variables, 1 constraints, and 5 constraint coefficients.</span>
+<span class="go">NOTE: The MILP solver is called.</span>
+<span class="go">NOTE: The parallel Branch and Cut algorithm is used.</span>
+<span class="go">NOTE: The Branch and Cut algorithm is using up to 8 threads.</span>
+<span class="go">             Node   Active   Sols    BestInteger      BestBound      Gap    Time</span>
+<span class="go">                0        1      4     76.0000000    179.0000000   57.54%       0</span>
+<span class="go">                0        1      4     76.0000000     77.3333333    1.72%       0</span>
+<span class="go">                0        0      4     76.0000000     76.0000000    0.00%       0</span>
+<span class="go">NOTE: Optimal.</span>
+<span class="go">NOTE: Objective = 76.</span>
+<span class="go">NOTE: The output table &#39;SOLUTION&#39; in caslib &#39;CASUSER(casuser)&#39; has 5 rows and 6 columns.</span>
+<span class="go">NOTE: The output table &#39;DUAL&#39; in caslib &#39;CASUSER(casuser)&#39; has 6 rows and 4 columns.</span>
+<span class="gh">Out[19]: </span><span class="go"></span>
+<span class="go">Selected Rows from Table SOLUTION</span>
+
+<span class="go">     i             var  value   lb             ub  rc</span>
+<span class="go">0  1.0       get[book]    1.0 -0.0  1.797693e+308 NaN</span>
+<span class="go">1  2.0      get[clock]    3.0 -0.0  1.797693e+308 NaN</span>
+<span class="go">2  3.0  get[headphone]    2.0 -0.0  1.797693e+308 NaN</span>
+<span class="go">3  4.0        get[mug]   -0.0 -0.0  1.797693e+308 NaN</span>
+<span class="go">4  5.0        get[pen]    2.0 -0.0  1.797693e+308 NaN</span>
+</pre></div>
+</div>
+<p>Print results:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [20]: </span><span class="nb">print</span><span class="p">(</span><span class="n">solve1</span><span class="o">.</span><span class="n">get_solution_summary</span><span class="p">())</span>
+<span class="go">Solution Summary</span>
+
+<span class="go">                                Value</span>
+<span class="go">Label                                </span>
+<span class="go">Solver                           MILP</span>
+<span class="go">Algorithm              Branch and Cut</span>
+<span class="go">Objective Function        total_value</span>
+<span class="go">Solution Status               Optimal</span>
+<span class="go">Objective Value                    99</span>
+<span class="go">                                     </span>
+<span class="go">Relative Gap                        0</span>
+<span class="go">Absolute Gap                        0</span>
+<span class="go">Primal Infeasibility                0</span>
+<span class="go">Bound Infeasibility                 0</span>
+<span class="go">Integer Infeasibility               0</span>
+<span class="go">                                     </span>
+<span class="go">Best Bound                         99</span>
+<span class="go">Nodes                               1</span>
+<span class="go">Solutions Found                     4</span>
+<span class="go">Iterations                          7</span>
+<span class="go">Presolve Time                    0.00</span>
+<span class="go">Solution Time                    0.18</span>
+</pre></div>
+</div>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [21]: </span><span class="nb">print</span><span class="p">(</span><span class="n">print1</span><span class="o">.</span><span class="n">get_response</span><span class="p">())</span>
+<span class="go">        COL1  get</span>
+<span class="go">0       book  2.0</span>
+<span class="go">1      clock  3.0</span>
+<span class="go">2  headphone  2.0</span>
+<span class="go">3        mug -0.0</span>
+<span class="go">4        pen  5.0</span>
+</pre></div>
+</div>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [22]: </span><span class="nb">print</span><span class="p">(</span><span class="n">solve2</span><span class="o">.</span><span class="n">get_solution_summary</span><span class="p">())</span>
+<span class="go">Solution Summary</span>
+
+<span class="go">                                Value</span>
+<span class="go">Label                                </span>
+<span class="go">Solver                           MILP</span>
+<span class="go">Algorithm              Branch and Cut</span>
+<span class="go">Objective Function        total_value</span>
+<span class="go">Solution Status               Optimal</span>
+<span class="go">Objective Value                    76</span>
+<span class="go">                                     </span>
+<span class="go">Relative Gap                        0</span>
+<span class="go">Absolute Gap                        0</span>
+<span class="go">Primal Infeasibility                0</span>
+<span class="go">Bound Infeasibility                 0</span>
+<span class="go">Integer Infeasibility               0</span>
+<span class="go">                                     </span>
+<span class="go">Best Bound                         76</span>
+<span class="go">Nodes                               1</span>
+<span class="go">Solutions Found                     4</span>
+<span class="go">Iterations                          3</span>
+<span class="go">Presolve Time                    0.00</span>
+<span class="go">Solution Time                    0.18</span>
+</pre></div>
+</div>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [23]: </span><span class="nb">print</span><span class="p">(</span><span class="n">print2</span><span class="o">.</span><span class="n">get_response</span><span class="p">())</span>
+<span class="go">        COL1  get</span>
+<span class="go">0       book  1.0</span>
+<span class="go">1      clock  3.0</span>
+<span class="go">2  headphone  2.0</span>
+<span class="go">3        mug -0.0</span>
+<span class="go">4        pen  2.0</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="list-of-abstract-actions">
+<h3>List of abstract actions<a class="headerlink" href="#list-of-abstract-actions" title="Permalink to this headline">¶</a></h3>
+<p>A list of abstract actions is available in the <a class="reference internal" href="../api/functions.html#abstract-action-list"><span class="std std-ref">API section</span></a>.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="user-guide.html">User Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="intro.html">Introduction to Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basics.html">Basic Functionality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sessions.html">Sessions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components.html">Model components</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Workspaces</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#creating-a-workspace">Creating a workspace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adding-components">Adding components</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#abstract-actions">Abstract actions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#adding-abstract-actions">Adding abstract actions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#grabbing-results">Grabbing results</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#list-of-abstract-actions">List of abstract actions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="input-data.html">Handling Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflow.html">Workflows</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../version-history.html">Version History</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="input-data.html" title="Handling Data"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="components.html" title="Model components"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="user-guide.html" >User Guide</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2020, SAS Institute.
+      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219165041).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+    </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-155356999-1');
+</script>
+
+
+  </body>
+</html>

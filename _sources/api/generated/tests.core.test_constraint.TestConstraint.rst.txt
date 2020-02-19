@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+tests.core.test_constraint.TestConstraint
+=========================================
+
+.. currentmodule:: tests.core.test_constraint
+
+.. autoclass:: TestConstraint

@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+tests.abstract.statement.test_fix_unfix.TestFix
+===============================================
+
+.. currentmodule:: tests.abstract.statement.test_fix_unfix
+
+.. autoclass:: TestFix

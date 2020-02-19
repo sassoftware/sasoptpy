@@ -1,0 +1,6 @@
+sasoptpy\.VariableGroup\.get\_name
+==================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: VariableGroup.get_name

@@ -1,0 +1,6 @@
+sasoptpy.actions.for\_loop
+==========================
+
+.. currentmodule:: sasoptpy.actions
+
+.. autofunction:: for_loop

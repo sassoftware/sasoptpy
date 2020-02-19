@@ -1,25 +1,27 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Nonlinear 1 &#8212; sasoptpy 0.2.1 documentation</title>
+    <meta charset="utf-8" />
+    <title>Nonlinear 1 &#8212; sasoptpy 1.0.0-alpha documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/sasoptpy.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/js/url.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/js/url.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Nonlinear 2" href="nonlinear_2.html" />
-    <link rel="prev" title="Curve Fitting" href="curve_fitting.html" /> 
+    <link rel="prev" title="Curve Fitting" href="curve_fitting.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../_static/js/version.js"></script>
+
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -27,9 +29,6 @@
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../http-routingtable.html" title="HTTP Routing Table"
-             >routing table</a> |</li>
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
@@ -39,8 +38,8 @@
         <li class="right" >
           <a href="curve_fitting.html" title="Curve Fitting"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.1 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="examples.html" accesskey="U">Examples</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -53,8 +52,8 @@
 <h1>Nonlinear 1<a class="headerlink" href="#nonlinear-1" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="reference">
 <h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="http://go.documentation.sas.com/?docsetId=ormpug&amp;docsetTarget=ormpug_nlpsolver_examples01.htm&amp;docsetVersion=14.3&amp;locale=en">http://go.documentation.sas.com/?docsetId=ormpug&amp;docsetTarget=ormpug_nlpsolver_examples01.htm&amp;docsetVersion=14.3&amp;locale=en</a></p>
-<p><a class="reference external" href="http://support.sas.com/documentation/onlinedoc/or/ex_code/143/nlpse01.html">http://support.sas.com/documentation/onlinedoc/or/ex_code/143/nlpse01.html</a></p>
+<p><a class="reference external" href="http://go.documentation.sas.com/?docsetId=ormpug&amp;docsetTarget=ormpug_nlpsolver_examples01.htm&amp;docsetVersion=15.1&amp;locale=en">http://go.documentation.sas.com/?docsetId=ormpug&amp;docsetTarget=ormpug_nlpsolver_examples01.htm&amp;docsetVersion=15.1&amp;locale=en</a></p>
+<p><a class="reference external" href="http://support.sas.com/documentation/onlinedoc/or/ex_code/151/nlpse01.html">http://support.sas.com/documentation/onlinedoc/or/ex_code/151/nlpse01.html</a></p>
 </div>
 <div class="section" id="model">
 <h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
@@ -67,13 +66,13 @@
     <span class="n">x</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
 
     <span class="n">f</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="mf">0.4</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">x</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span> <span class="o">**</span> <span class="mf">0.67</span> <span class="o">+</span> <span class="mf">0.4</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">/</span><span class="n">x</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span> <span class="o">**</span> <span class="mf">0.67</span> <span class="o">+</span> <span class="mi">10</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;f&#39;</span><span class="p">)</span>
-    <span class="n">m</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MIN</span><span class="p">)</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MIN</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;f1&#39;</span><span class="p">)</span>
 
     <span class="n">m</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mf">0.0588</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;c1&#39;</span><span class="p">)</span>
     <span class="n">m</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mf">0.0588</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;c2&#39;</span><span class="p">)</span>
     <span class="n">m</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">4</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">/</span><span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span><span class="o">/</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">**</span><span class="mf">0.71</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span> <span class="o">-</span> <span class="mf">0.0588</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span><span class="o">/</span><span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">**</span><span class="mf">1.3</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;c3&#39;</span><span class="p">)</span>
     <span class="n">m</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">4</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">/</span><span class="n">x</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span><span class="o">/</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">**</span><span class="mf">0.71</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span> <span class="o">-</span> <span class="mf">0.0588</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="o">/</span><span class="n">x</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">**</span><span class="mf">1.3</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;c4&#39;</span><span class="p">)</span>
-    <span class="n">m</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">f</span> <span class="o">==</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">])</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">f</span> <span class="o">==</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;frange&#39;</span><span class="p">)</span>
 
     <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_init</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
     <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_init</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
@@ -84,12 +83,12 @@
     <span class="n">x</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">set_init</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">x</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="o">.</span><span class="n">set_init</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
 
-    <span class="n">m</span><span class="o">.</span><span class="n">add_statement</span><span class="p">(</span><span class="s1">&#39;print x;&#39;</span><span class="p">,</span> <span class="n">after_solve</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">m</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;with&#39;</span><span class="p">:</span> <span class="s1">&#39;nlp&#39;</span><span class="p">,</span> <span class="s1">&#39;algorithm&#39;</span><span class="p">:</span> <span class="s1">&#39;activeset&#39;</span><span class="p">})</span>
+
     <span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">get_problem_summary</span><span class="p">())</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">get_solution_summary</span><span class="p">())</span>
-    <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">test_session</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;CAS&#39;</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Print3.PrintTable&#39;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">get_session_type</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;CAS&#39;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">get_solution</span><span class="p">()[[</span><span class="s1">&#39;var&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">]])</span>
 
     <span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="n">get_objective_value</span><span class="p">()</span>
 
@@ -98,34 +97,46 @@
 </div>
 <div class="section" id="output">
 <h2>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">examples.nonlinear_1</span> <span class="kn">import</span> <span class="n">test</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span> <span class="nn">os</span>
 
-<span class="gp">In [2]: </span><span class="n">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">)</span>
+<span class="gp">In [2]: </span><span class="n">hostname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;CASHOST&#39;</span><span class="p">)</span>
+
+<span class="gp">In [3]: </span><span class="n">port</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;CASPORT&#39;</span><span class="p">)</span>
+
+<span class="gp">In [4]: </span><span class="kn">from</span> <span class="nn">swat</span> <span class="kn">import</span> <span class="n">CAS</span>
+
+<span class="gp">In [5]: </span><span class="n">cas_conn</span> <span class="o">=</span> <span class="n">CAS</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+
+<span class="gp">In [6]: </span><span class="kn">import</span> <span class="nn">sasoptpy</span>
+</pre></div>
+</div>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [7]: </span><span class="kn">from</span> <span class="nn">examples.client_side.nonlinear_1</span> <span class="kn">import</span> <span class="n">test</span>
+
+<span class="gp">In [8]: </span><span class="n">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">)</span>
 <span class="go">NOTE: Initialized model nlpse01.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
 <span class="go">NOTE: Converting model nlpse01 to OPTMODEL.</span>
-<span class="go">var x {{1,2,3,4,5,6,7,8}} &gt;= 0.1 &lt;= 10;</span>
-<span class="go">x[1] = 6;</span>
-<span class="go">x[2] = 3;</span>
-<span class="go">x[3] = 0.4;</span>
-<span class="go">x[4] = 0.2;</span>
-<span class="go">x[5] = 6;</span>
-<span class="go">x[6] = 6;</span>
-<span class="go">x[7] = 1;</span>
-<span class="go">x[8] = 0.5;</span>
-<span class="go">min f = 0.4 * (((x[1]) / (x[7])) ^ (0.67)) + 0.4 * (((x[2]) / (x[8])) ^ (0.67)) - x[1] - x[2] + 10.0; </span>
-<span class="go">con c1 : - 0.0588 * x[5] * x[7] - 0.1 * x[1] &gt;= -1.0;</span>
-<span class="go">con c2 : - 0.0588 * x[6] * x[8] - 0.1 * x[1] - 0.1 * x[2] &gt;= -1.0;</span>
-<span class="go">con c3 : - (4 * x[3]) / (x[5]) - (2) / ((x[3]) ^ (0.71) * x[5]) - 0.0588 * ((x[7]) / ((x[3]) ^ (1.3))) &gt;= -1.0;</span>
-<span class="go">con c4 : - (4 * x[4]) / (x[6]) - (2) / ((x[4]) ^ (0.71) * x[6]) - 0.0588 * ((x[8]) / ((x[4]) ^ (1.3))) &gt;= -1.0;</span>
-<span class="go">con con_1 : -9.9 &lt;= 0.4 * (((x[1]) / (x[7])) ^ (0.67)) + 0.4 * (((x[2]) / (x[8])) ^ (0.67)) - x[1] - x[2] &lt;= -5.8;</span>
-<span class="go">solve with nlp / algorithm=activeset;</span>
-<span class="go">print _var_.name _var_.lb _var_.ub _var_ _var_.rc;</span>
-<span class="go">print _con_.name _con_.body _con_.dual;</span>
-<span class="go">print x;</span>
+<span class="go">   var x {{1,2,3,4,5,6,7,8}} &gt;= 0.1 &lt;= 10;</span>
+<span class="go">   x[1] = 6;</span>
+<span class="go">   x[2] = 3;</span>
+<span class="go">   x[3] = 0.4;</span>
+<span class="go">   x[4] = 0.2;</span>
+<span class="go">   x[5] = 6;</span>
+<span class="go">   x[6] = 6;</span>
+<span class="go">   x[7] = 1;</span>
+<span class="go">   x[8] = 0.5;</span>
+<span class="go">   min f1 = 0.4 * (((x[1]) / (x[7])) ^ (0.67)) + 0.4 * (((x[2]) / (x[8])) ^ (0.67)) - x[1] - x[2] + 10.0;</span>
+<span class="go">   con c1 : - 0.0588 * x[5] * x[7] - 0.1 * x[1] &gt;= -1.0;</span>
+<span class="go">   con c2 : - 0.0588 * x[6] * x[8] - 0.1 * x[1] - 0.1 * x[2] &gt;= -1.0;</span>
+<span class="go">   con c3 : - ((4 * x[3]) / (x[5])) - ((2) / ((x[3]) ^ (0.71) * x[5])) - 0.0588 * ((x[7]) / ((x[3]) ^ (1.3))) &gt;= -1.0;</span>
+<span class="go">   con c4 : - ((4 * x[4]) / (x[6])) - ((2) / ((x[4]) ^ (0.71) * x[6])) - 0.0588 * ((x[8]) / ((x[4]) ^ (1.3))) &gt;= -1.0;</span>
+<span class="go">   con frange : -9.9 &lt;= 0.4 * (((x[1]) / (x[7])) ^ (0.67)) + 0.4 * (((x[2]) / (x[8])) ^ (0.67)) - x[1] - x[2] &lt;= -5.8;</span>
+<span class="go">   solve with nlp / algorithm=activeset;</span>
+<span class="go">   create data solution from [i]= {1.._NVAR_} var=_VAR_.name value=_VAR_ lb=_VAR_.lb ub=_VAR_.ub rc=_VAR_.rc;</span>
+<span class="go">   create data dual from [j] = {1.._NCON_} con=_CON_.name value=_CON_.body dual=_CON_.dual;</span>
 
 <span class="go">NOTE: Submitting OPTMODEL code to CAS server.</span>
-<span class="go">NOTE: Problem generation will use 32 threads.</span>
+<span class="go">NOTE: Problem generation will use 8 threads.</span>
 <span class="go">NOTE: The problem has 8 variables (0 free, 0 fixed).</span>
 <span class="go">NOTE: The problem has 0 linear constraints (0 LE, 0 EQ, 0 GE, 0 range).</span>
 <span class="go">NOTE: The problem has 5 nonlinear constraints (0 LE, 0 EQ, 4 GE, 1 range).</span>
@@ -138,10 +149,10 @@
 <span class="go">              Iter             Value     Infeasibility             Error</span>
 <span class="go">                 0        3.65736570        0.41664483        0.24247905</span>
 <span class="go">                 1        3.65736570        0.41664483        0.24247905</span>
-<span class="go">                 2        3.40486061        0.10284726        0.10617988</span>
-<span class="go">                 3        3.51178229        0.07506389        0.10593173</span>
-<span class="go">                 4        4.23595983        0.03595983        0.33749510</span>
-<span class="go">                 5        4.16334906                 0        0.26471063</span>
+<span class="go">                 2        3.40486061        0.10284726        0.18904638</span>
+<span class="go">                 3        3.51178229        0.07506389        0.18860455</span>
+<span class="go">                 4        4.23595983        0.03595983        0.60088809</span>
+<span class="go">                 5        4.16334906                 0        0.47130008</span>
 <span class="go">                 6        4.03168584        0.00791810        0.13742971</span>
 <span class="go">                 7        3.88912660        0.11248991        0.06129662</span>
 <span class="go">                 8        3.89579714        0.09534670        0.05994916</span>
@@ -153,10 +164,10 @@
 <span class="go">                14        3.95058104        0.00122758        0.04772557</span>
 <span class="go">                15        3.95055959        0.00099113        0.04613473</span>
 <span class="go">                16        3.95141460        0.00000381        0.04497006</span>
-<span class="go">                17        3.95132211   0.0000005999371        0.04260039</span>
+<span class="go">                17        3.95132211   0.0000005999371        0.07584723</span>
 <span class="go">                18        3.95114031        0.00000941        0.04093117</span>
 <span class="go">                19        3.95027690        0.00011307        0.00020755</span>
-<span class="go">                20        3.95115797   0.0000007730235        0.00010507</span>
+<span class="go">                20        3.95115797   0.0000007730235        0.00018707</span>
 <span class="go">                21        3.95116558                 0        0.00001366</span>
 <span class="go">                22        3.95116364   0.0000000153799        0.00000814</span>
 <span class="go">                23        3.95116355   0.0000000228326        0.00000595</span>
@@ -167,17 +178,16 @@
 <span class="go">NOTE: Objective = 3.9511634887.</span>
 <span class="go">NOTE: Objective of the best feasible solution found = 3.9511579677.</span>
 <span class="go">NOTE: The best feasible solution found is returned.</span>
-<span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 12 rows and 4 columns.</span>
-<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 20 rows and 4 columns.</span>
-<span class="go">NOTE: The CAS table &#39;primal&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 8 rows and 6 columns.</span>
-<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 5 rows and 4 columns.</span>
-<span class="go">NOTE: Response BEST_FEASIBLE</span>
-<span class="go">Problem Summary</span>
+<span class="go">NOTE: The output table &#39;SOLUTION&#39; in caslib &#39;CASUSER(casuser)&#39; has 8 rows and 6 columns.</span>
+<span class="go">NOTE: The output table &#39;DUAL&#39; in caslib &#39;CASUSER(casuser)&#39; has 5 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSER(casuser)&#39; has 12 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSER(casuser)&#39; has 20 rows and 4 columns.</span>
+<span class="go">Selected Rows from Table PROBLEMSUMMARY</span>
 
 <span class="go">                                Value</span>
 <span class="go">Label                                </span>
 <span class="go">Objective Sense          Minimization</span>
-<span class="go">Objective Function                  f</span>
+<span class="go">Objective Function                 f1</span>
 <span class="go">Objective Type              Nonlinear</span>
 <span class="go">                                     </span>
 <span class="go">Number of Variables                 8</span>
@@ -196,13 +206,13 @@
 <span class="go">Nonlinear EQ (=)                    0</span>
 <span class="go">Nonlinear GE (&gt;=)                   4</span>
 <span class="go">Nonlinear Range                     1</span>
-<span class="go">Solution Summary</span>
+<span class="go">Selected Rows from Table SOLUTIONSUMMARY</span>
 
 <span class="go">                            Value</span>
 <span class="go">Label                            </span>
 <span class="go">Solver                        NLP</span>
 <span class="go">Algorithm              Active Set</span>
-<span class="go">Objective Function              f</span>
+<span class="go">Objective Function             f1</span>
 <span class="go">Solution Status     Best Feasible</span>
 <span class="go">Objective Value      3.9511579677</span>
 <span class="go">                                 </span>
@@ -211,17 +221,19 @@
 <span class="go">                                 </span>
 <span class="go">Iterations                     26</span>
 <span class="go">Presolve Time                0.00</span>
-<span class="go">Solution Time                0.02</span>
-<span class="go">   COL1         x</span>
-<span class="go">0   1.0  6.463315</span>
-<span class="go">1   2.0  2.234530</span>
-<span class="go">2   3.0  0.667455</span>
-<span class="go">3   4.0  0.595820</span>
-<span class="go">4   5.0  5.932980</span>
-<span class="go">5   6.0  5.527231</span>
-<span class="go">6   7.0  1.013787</span>
-<span class="go">7   8.0  0.400664</span>
-<span class="gh">Out[2]: </span><span class="go">3.951158</span>
+<span class="go">Solution Time                0.04</span>
+<span class="go">Selected Rows from Table SOLUTION</span>
+
+<span class="go">    var     value</span>
+<span class="go">0  x[1]  6.463315</span>
+<span class="go">1  x[2]  2.234530</span>
+<span class="go">2  x[3]  0.667455</span>
+<span class="go">3  x[4]  0.595820</span>
+<span class="go">4  x[5]  5.932980</span>
+<span class="go">5  x[6]  5.527231</span>
+<span class="go">6  x[7]  1.013787</span>
+<span class="go">7  x[8]  0.400664</span>
+<span class="gh">Out[8]: </span><span class="go">3.951157967716</span>
 </pre></div>
 </div>
 </div>
@@ -233,17 +245,24 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
   <h3><a href="../index.html">Table of Contents</a></h3>
   <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../input-data.html">Handling Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../models.html">Sessions and Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../components.html">Model components</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../workflow.html">Workflows</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../examples.html#viya-examples-concrete">Viya Examples / Concrete</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../examples.html#viya-examples-abstract">Viya Examples / Abstract</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/user-guide.html">User Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="examples.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="examples.html#viya-examples-concrete">Viya Examples / Concrete</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="examples.html#viya-examples-abstract">Viya Examples / Abstract</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="curve_fitting.html">Curve Fitting</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Nonlinear 1</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#reference">Reference</a></li>
@@ -254,26 +273,23 @@
 <li class="toctree-l3"><a class="reference internal" href="nonlinear_2.html">Nonlinear 2</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples.html#restful-api-examples">RESTful API Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api.html">API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../web-api.html">RESTful API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../version-history.html">Version History</a></li>
 </ul>
 
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -285,9 +301,6 @@
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../http-routingtable.html" title="HTTP Routing Table"
-             >routing table</a> |</li>
-        <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
@@ -296,14 +309,26 @@
         <li class="right" >
           <a href="curve_fitting.html" title="Curve Fitting"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.1 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="examples.html" >Examples</a> &#187;</li> 
       </ul>
     </div>
+
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017-2019, SAS Institute.
-      Last updated on Feb 26, 2019 (Timestamp: 0.2.1-20190226133646).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
+        &#169; Copyright 2017-2020, SAS Institute.
+      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219165041).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
     </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-155356999-1');
+</script>
+
+
   </body>
 </html>

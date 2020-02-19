@@ -1,0 +1,1993 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>RESTful API &#8212; sasoptpy 0.2.1 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/sasoptpy.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/js/url.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <script src="../../_static/js/version.js"></script>
+    <link rel="prev" title="sasoptpy.math.tan" href="api/generated/sasoptpy.math.tan.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="api/generated/sasoptpy.math.tan.html" title="sasoptpy.math.tan"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">sasoptpy 0.2.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="restful-api">
+<span id="web-api"></span><h1>RESTful API<a class="headerlink" href="#restful-api" title="Permalink to this headline">¶</a></h1>
+<p><em>sasoptpy</em> provides an experimental RESTful API as of v0.2.1.
+This API is intended to be used to connect development on other languages through a common interface.</p>
+<table border="1" class="colwidths-given longtable docutils" id="id1">
+<caption><span class="caption-text">List of RESTful API requests</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="11%" />
+<col width="7%" />
+<col width="33%" />
+<col width="7%" />
+<col width="41%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Group</th>
+<th class="head">Verb</th>
+<th class="head">URL</th>
+<th class="head">Auth</th>
+<th class="head">Action</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Overview</td>
+<td>GET</td>
+<td>/</td>
+<td>&#160;</td>
+<td>Returns the server status and version</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td>POST</td>
+<td>/</td>
+<td>✓</td>
+<td>Performs the requested action</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td>GET</td>
+<td>/workspaces</td>
+<td>&#160;</td>
+<td>Returns the list of workspaces</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td>POST</td>
+<td>/workspaces</td>
+<td>&#160;</td>
+<td>Creates a new workspace and returns auth token</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td>GET</td>
+<td>/workspaces/{workspace}</td>
+<td>✓</td>
+<td>Checks if workspace is reachable</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td>POST</td>
+<td>/workspaces/{workspace}</td>
+<td>&#160;</td>
+<td>Renews an auth token using initial password</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td>GET</td>
+<td>/sessions</td>
+<td>✓</td>
+<td>Returns a list of CAS sessions</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td>POST</td>
+<td>/sessions</td>
+<td>✓</td>
+<td>Creates a new CAS session</td>
+</tr>
+<tr class="row-even"><td>Models</td>
+<td>GET</td>
+<td>/models</td>
+<td>✓</td>
+<td>Returns a list of models</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td>POST</td>
+<td>/models</td>
+<td>✓</td>
+<td>Creates a new model</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td>GET</td>
+<td>/models/{model}</td>
+<td>✓</td>
+<td>Returns the requested model</td>
+</tr>
+<tr class="row-odd"><td>Variables</td>
+<td>GET</td>
+<td>/variables</td>
+<td>✓</td>
+<td>Returns a list of variables</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td>GET</td>
+<td>/models/{model}/variables</td>
+<td>✓</td>
+<td>Returns a list of variables inside the model</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td>POST</td>
+<td>/models/{model}/variables</td>
+<td>✓</td>
+<td>Creates a new variable inside the model</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td>GET</td>
+<td>/variable_groups</td>
+<td>✓</td>
+<td>Returns a list of variable groups</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td>GET</td>
+<td>/models/{model}/variable_groups</td>
+<td>✓</td>
+<td>Returns a list of variable groups inside the model</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td>POST</td>
+<td>/models/{model}/variable_groups</td>
+<td>✓</td>
+<td>Creates a set of variable groups inside the model</td>
+</tr>
+<tr class="row-odd"><td>Expressions</td>
+<td>GET</td>
+<td>/expressions</td>
+<td>✓</td>
+<td>Returns a list of expressions</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td>GET</td>
+<td>/models/{model}/objectives</td>
+<td>✓</td>
+<td>Returns the objective function of a model</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td>POST</td>
+<td>/models/{model}/objectives</td>
+<td>✓</td>
+<td>Sets the objective function of a model</td>
+</tr>
+<tr class="row-even"><td>Constraints</td>
+<td>GET</td>
+<td>/constraints</td>
+<td>✓</td>
+<td>Returns a list of constraints</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td>GET</td>
+<td>/models/{model}/constraints</td>
+<td>✓</td>
+<td>Returns a list of constraints inside the model</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td>POST</td>
+<td>/models/{model}/constraints</td>
+<td>✓</td>
+<td>Creates a constraint inside the model</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td>GET</td>
+<td>/constraint_groups</td>
+<td>✓</td>
+<td>Returns a list of constraint groups</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td>GET</td>
+<td>/models/{model}/constraint_groups</td>
+<td>✓</td>
+<td>Returns a list of constraint groups inside the model</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td>POST</td>
+<td>/models/{model}/constraint_groups</td>
+<td>✓</td>
+<td>Creates a set of constraint groups inside the model</td>
+</tr>
+<tr class="row-even"><td>Solve</td>
+<td>POST</td>
+<td>/models/{model}/solutions</td>
+<td>✓</td>
+<td>Solves a model and requests solutions</td>
+</tr>
+<tr class="row-odd"><td>Data</td>
+<td>POST</td>
+<td>/data</td>
+<td>✓</td>
+<td>Creates a data object in the Python server</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
+<p>You need to start <em>sasoptpy</em>’s web server using</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sasoptpy.api</span> <span class="kn">import</span> <span class="n">api</span>
+<span class="n">api</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>You can also start the web server in a separate thread using <cite>thread=True</cite> parameter.</p>
+<p>Status of the server can be checked using a request to the <cite>localhost</cite> address.</p>
+</div>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>A <cite>GET</cite> request to the server root returns the package name and current version of the package.</p>
+<dl class="get">
+<dt id="get--">
+<code class="descname">GET </code><code class="descname">/</code><a class="headerlink" href="#get--" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the server status</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Server is available</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">49</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;package&quot;</span><span class="p">:</span> <span class="s2">&quot;sasoptpy&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;0.2.1&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>You can perform actions on the server using a <cite>POST</cite> request to the root domain.
+In order to separate each user’s work, an authentication token is required to identify the workspace you are working at.
+The action you are requesting can only be performed at the workspace level.</p>
+<dl class="post">
+<dt id="post--">
+<code class="descname">POST </code><code class="descname">/</code><a class="headerlink" href="#post--" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs the requested action in a specific workspace</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> – Bearer token to authenticate</li>
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – <cite>application/json</cite></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>action</strong> (<em>string</em>) – Action verb (<code class="docutils literal notranslate"><span class="pre">clean</span></code>)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Action is performed succesfully</li>
+<li><a class="reference external" href="http://tools.ietf.org/html/rfc4918#section-11.2">422 Unprocessable Entity</a> – Authentication is failed</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer eyJhb...K1_Y</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">12</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/x-www-form-urlencoded</span>
+
+action=clean
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">74</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Cleaned the workspace contents&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;workspace&quot;</span><span class="p">:</span> <span class="s2">&quot;myworkspace&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>You can create a workspace to separate namespace when working on multiple projects at the same time.
+Each workspace requires a name and a password at initialization.
+It generates an OAuth2 token to authenticate your upcoming requests.
+You can see a list of workspaces as follows:</p>
+<dl class="get">
+<dt id="get--workspaces">
+<code class="descname">GET </code><code class="descname">/workspaces</code><a class="headerlink" href="#get--workspaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of workspaces</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Action is performed succesfully</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/workspaces</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">32</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;workspaces&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;myworkspace&quot;</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>A new workspace can be created with a <cite>POST</cite> request as follows.
+Note that, the <code class="docutils literal notranslate"><span class="pre">auth</span></code> token generated by this request is required for almost all requests you make.
+This token works as an identifier of the workspace as well, so you do not need to pass the workspace name every time.</p>
+<dl class="post">
+<dt id="post--workspaces">
+<code class="descname">POST </code><code class="descname">/workspaces</code><a class="headerlink" href="#post--workspaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new workspace and returns auth token</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>string</em>) – Workspace name</li>
+<li><strong>password</strong> (<em>string</em>) – Password for token generation and regeneration</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.2">201 Created</a> – A new workspace is created successfully</li>
+<li><a class="reference external" href="http://tools.ietf.org/html/rfc4918#section-11.2">422 Unprocessable Entity</a> – A workspace with the same name exists</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/workspaces</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">31</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/x-www-form-urlencoded</span>
+
+name=myworkspace&amp;password=12345
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">172</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;token&quot;</span><span class="p">:</span> <span class="s2">&quot;eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0NjUzODY3OSwiZXhwIjoxNTQ2NTM5Mjc5fQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.6eNPrOTeK0Nbd42Ch3rPXoYQ558Vj8qL0crTQz8K1_Y&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;duration&quot;</span><span class="p">:</span> <span class="mi">600</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>You can check status of an existing workspace using a <cite>GET</cite> request.
+This request can also be used to verify that token is valid.</p>
+<dl class="get">
+<dt id="get--workspaces-(str-workspace)">
+<code class="descname">GET </code><code class="descname">/workspaces/</code><span class="sig-paren">(</span><em class="property">str: </em><em>workspace</em><span class="sig-paren">)</span><a class="headerlink" href="#get--workspaces-(str-workspace)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if workspace is reachable</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> – Bearer token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>workspace</strong> – Name of the workspace</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Token is valid for the workspace</li>
+<li><a class="reference external" href="http://tools.ietf.org/html/rfc4918#section-11.2">422 Unprocessable Entity</a> – Token is not valid for the workspace</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/workspaces/myworkspace</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer eyJhb...K1_Y</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">47</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;Token is valid for the workspace&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>Every token is only valid for a limited time period (currently 10 minutes).
+You can renew the auth token by sending a <cite>POST</cite> request to target workspace with original password attached.</p>
+<dl class="post">
+<dt id="post--workspaces-(str-workspace)">
+<code class="descname">POST </code><code class="descname">/workspaces/</code><span class="sig-paren">(</span><em class="property">str: </em><em>workspace</em><span class="sig-paren">)</span><a class="headerlink" href="#post--workspaces-(str-workspace)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renews an auth token using initial password</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>workspace</strong> – Name of the workspace</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Form Parameters:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>password</strong> – Password of the workspace</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.2">201 Created</a> – A new auth token is generated</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.2">401 Unauthorized</a> – The password does not match the original password</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/workspaces/myworkspace</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">14</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/x-www-form-urlencoded</span>
+
+password=12345
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">201</span> <span class="ne">CREATED</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">172</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;token&quot;</span><span class="p">:</span> <span class="s2">&quot;eyJhbGciOiJIUzI1NiIsImlhdCI6MTU0NjU0MDQ4MCwiZXhwIjoxNTQ2NTQxMDgwfQ.eyJuYW1lIjoibXl3b3Jrc3BhY2UifQ.cEwUsq6ISz6_T9mAjRJumtJZM5jlOzcOPivRczu1KRE&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;duration&quot;</span><span class="p">:</span> <span class="mi">600</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>A CAS session is required to solve optimization models.
+You can see a list of CAS sessions in the workspace as follows:</p>
+<dl class="get">
+<dt id="get--sessions">
+<code class="descname">GET </code><code class="descname">/sessions</code><a class="headerlink" href="#get--sessions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of CAS sessions</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> – Bearer token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Valid request with response</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Authentication error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/sessions</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer eyJhb...K1_Y</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">24</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;sessions&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;mycas&quot;</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>You can create a CAS session using a <cite>POST</cite> request.
+An <code class="docutils literal notranslate"><span class="pre">authinfo</span></code> file on the Python server might be needed to make this connection.</p>
+<dl class="post">
+<dt id="post--sessions">
+<code class="descname">POST </code><code class="descname">/sessions</code><a class="headerlink" href="#post--sessions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new CAS session</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> – Bearer token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> – CAS session name</li>
+<li><strong>host</strong> – Hostname of the CAS server</li>
+<li><strong>port</strong> – Port number used for CAS connections</li>
+<li><strong>auth</strong> – Absolute path of authinfo file on the Python server</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.2">201 Created</a> – Created new CAS session</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Cannot create CAS session, see message for more details</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/sessions</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer eyJhb...K1_Y</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">70</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/x-www-form-urlencoded</span>
+
+name=mycas&amp;host=HOST&amp;port=PORT&amp;auth=U%3A%5C.authinfo
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">201</span> <span class="ne">CREATED</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">64</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;8d1767d2-48c8-a048-98c2-3046bb978e6b&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;mycas&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="models">
+<h2>Models<a class="headerlink" href="#models" title="Permalink to this headline">¶</a></h2>
+<p>After creating a workspace and a session, you can create multiple models.
+Models in the same workspace share the same namespace, hence you can use the same model components inside different models.</p>
+<p>You can get a list of available models in a workspace using a <cite>GET</cite> request.</p>
+<dl class="get">
+<dt id="get--models">
+<code class="descname">GET </code><code class="descname">/models</code><a class="headerlink" href="#get--models" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of optimization models</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> – Bearer token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Valid request with response</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Authentication error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/models</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer eyJhb...K1_Y</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">37</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;models&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;knapsack&quot;</span><span class="p">:</span> <span class="s2">&quot;knapsack&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>A new model can be created using a <cite>POST</cite> request.</p>
+<dl class="post">
+<dt id="post--models">
+<code class="descname">POST </code><code class="descname">/models</code><a class="headerlink" href="#post--models" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new optimization model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> – Bearer token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Form Parameters:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> – Model name</li>
+<li><strong>session</strong> – An existing session name</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.2">201 Created</a> – Created a new optimization model</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Authentication error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/models</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer eyJhb...K1_Y</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">27</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/x-www-form-urlencoded</span>
+
+name=knapsack&amp;session=mycas
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">201</span> <span class="ne">CREATED</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">69</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;knapsack&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;workspace&quot;</span><span class="p">:</span> <span class="s2">&quot;myworkspace&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;session&quot;</span><span class="p">:</span> <span class="s2">&quot;mycas&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>Information about an individual model can be requested using a <cite>GET</cite> request, where the model name is a parameter.</p>
+<dl class="get">
+<dt id="get--models-(str-model)">
+<code class="descname">GET </code><code class="descname">/models/</code><span class="sig-paren">(</span><em class="property">str: </em><em>model</em><span class="sig-paren">)</span><a class="headerlink" href="#get--models-(str-model)" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the requested model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> – Bearer token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>model</strong> – Name of the model</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Valid request with response</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Authentication error</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> – Model name is not in the workspace</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/models/knapsack</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer eyJhb...K1_Y</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">69</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;knapsack&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;workspace&quot;</span><span class="p">:</span> <span class="s2">&quot;myworkspace&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;session&quot;</span><span class="p">:</span> <span class="s2">&quot;mycas&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="variables">
+<h2>Variables<a class="headerlink" href="#variables" title="Permalink to this headline">¶</a></h2>
+<p>Variable objects can be created inside models or standalone.
+They later can be used in multiple models, if needed.
+Also, API supports adding multi-dimensional variables using variable groups.</p>
+<p>A list of variables in the workspace can be seen using a <cite>GET</cite> request.</p>
+<dl class="get">
+<dt id="get--variables">
+<code class="descname">GET </code><code class="descname">/variables</code><a class="headerlink" href="#get--variables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of variables in the workspace</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> – Bearer token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Valid request with response</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Authentication error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/variables</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer eyJhb...K1_Y</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">34</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;variables&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;myvar&quot;</span><span class="p">:</span> <span class="s2">&quot;myvar&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>A list of variables that belongs to a certain model can be requested as follows:</p>
+<dl class="get">
+<dt id="get--models-(str-model)-variables">
+<code class="descname">GET </code><code class="descname">/models/</code><span class="sig-paren">(</span><em class="property">str: </em><em>model</em><span class="sig-paren">)</span><code class="descname">/variables</code><a class="headerlink" href="#get--models-(str-model)-variables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of variables inside the model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> – Bearer token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>model</strong> – Name of the model</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Valid request with response</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Authentication error</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> – Model name is not found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/models/knapsack/variables</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer eyJhb...K1_Y</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">25</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;variables&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;myvar&quot;</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>A variable can be created inside a model using a <cite>POST</cite> request.
+A variable can be created outside the model scope in <em>sasoptpy</em>, but this feature is currently not supported by the RESTful API yet.</p>
+<dl class="post">
+<dt id="post--models-(str-model)-variables">
+<code class="descname">POST </code><code class="descname">/models/</code><span class="sig-paren">(</span><em class="property">str: </em><em>model</em><span class="sig-paren">)</span><code class="descname">/variables</code><a class="headerlink" href="#post--models-(str-model)-variables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new variable inside the model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> – Bearer token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>model</strong> – Name of the model</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Form Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> – Name of the variable</li>
+<li><strong>lb</strong> – Lower bound of the variable</li>
+<li><strong>ub</strong> – Upper bound of the variable</li>
+<li><strong>vartype</strong> – Type of the variable, <cite>binary</cite> <cite>integer</cite> or <cite>continuous</cite> (default)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.2">201 Created</a> – Variable is created</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Authentication error</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> – Model name is not found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/models/knapsack/variables</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer eyJhb...K1_Y</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">25</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/x-www-form-urlencoded</span>
+
+name=myvar&amp;vartype=binary
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">201</span> <span class="ne">CREATED</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">18</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;myvar&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>Variable groups are multi-dimensional variables inside models.
+Due to their nature, their construction slightly differs from variables.</p>
+<p>A list of variable groups in a workspace can be obtained using a <cite>GET</cite> query.</p>
+<dl class="get">
+<dt id="get--variable_groups">
+<code class="descname">GET </code><code class="descname">/variable_groups</code><a class="headerlink" href="#get--variable_groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of variable groups</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> – Bearer token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Valid request with response</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Authentication error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/variable_groups</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer eyJhb...K1_Y</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">37</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;variablegroups&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;pick&quot;</span><span class="p">:</span> <span class="s2">&quot;pick&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>A list of variable groups inside a model can be obtained as follows:</p>
+<dl class="get">
+<dt id="get--models-(str-model)-variable_groups">
+<code class="descname">GET </code><code class="descname">/models/</code><span class="sig-paren">(</span><em class="property">str: </em><em>model</em><span class="sig-paren">)</span><code class="descname">/variable_groups</code><a class="headerlink" href="#get--models-(str-model)-variable_groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of variable groups inside the model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> – Bearer token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>model</strong> – Name of the model</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Valid request with response</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Authentication error</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> – Model name is not found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/models/knapsack/variable_groups</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer eyJhb...K1_Y</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">29</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;variablegroups&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;pick&quot;</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>Creating variable groups requires an additional parameter, called <cite>index</cite>.
+This parameter should be a JSON array.
+Each array element can be one of the following:
+- An integer representing the size, e.g. <cite>4</cite>
+- A JSON list of strings to be used as index, e.g. <cite>[“pen”, “watch”, “cup”]</cite>
+- A symbolic data parameter starts with <cite>$</cite> sign, e.g. <cite>“$NumMachines”</cite></p>
+<dl class="post">
+<dt id="post--models-(str-model)-variable_groups">
+<code class="descname">POST </code><code class="descname">/models/</code><span class="sig-paren">(</span><em class="property">str: </em><em>model</em><span class="sig-paren">)</span><code class="descname">/variable_groups</code><a class="headerlink" href="#post--models-(str-model)-variable_groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a set of variable groups inside the model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> – Bearer token to authenticate</li>
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7230#section-3.3.2">Content-Length</a> – Length of the JSON object</li>
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – <cite>application/json</cite></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>model</strong> – Name of the model</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> – Name of the variable group</li>
+<li><strong>index</strong> – Set of indices of the variable group</li>
+<li><strong>lb</strong> – Lower bound of variables</li>
+<li><strong>ub</strong> – Upper bound of variables</li>
+<li><strong>vartype</strong> – Variable types</li>
+<li><strong>init</strong> – Initial value of variables</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.2">201 Created</a> – Variable group is created</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Authentication error</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> – Model name is not found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/models/knapsack/variable_groups</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer eyJhb...K1_Y</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">74</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;pick&quot;</span><span class="p">,</span> <span class="nt">&quot;index&quot;</span><span class="p">:</span> <span class="p">[[</span><span class="s2">&quot;pen&quot;</span><span class="p">,</span> <span class="s2">&quot;watch&quot;</span><span class="p">,</span> <span class="s2">&quot;cup&quot;</span><span class="p">]],</span> <span class="nt">&quot;vartype&quot;</span><span class="p">:</span> <span class="s2">&quot;integer&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">201</span> <span class="ne">CREATED</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">57</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Variable group is created&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;pick&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="expressions">
+<h2>Expressions<a class="headerlink" href="#expressions" title="Permalink to this headline">¶</a></h2>
+<p>Linear and nonlinear expressions can be added to models to be used inside constraints, objectives, and print statements.
+Currently, RESTful API only allows adding expressions to be used as objective values.</p>
+<dl class="get">
+<dt id="get--expressions">
+<code class="descname">GET </code><code class="descname">/expressions</code><a class="headerlink" href="#get--expressions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of expressions in the workspace</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> – Bearer token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Valid request with response</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Authentication error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/expressions</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer eyJhb...K1_Y</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">85</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;expressions&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;total_value&quot;</span><span class="p">:</span> <span class="s2">&quot;5 * pick[pen] + 20 * pick[watch] + 2 * pick[cup]&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>Objective of a model can be obtained using a <cite>GET</cite> request:</p>
+<dl class="get">
+<dt id="get--models-(str-model)-objectives">
+<code class="descname">GET </code><code class="descname">/models/</code><span class="sig-paren">(</span><em class="property">str: </em><em>model</em><span class="sig-paren">)</span><code class="descname">/objectives</code><a class="headerlink" href="#get--models-(str-model)-objectives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the objective function of a model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> – Bearer token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>model</strong> – Name of the model</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Valid request with response</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Authentication error</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> – Model name is not found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/models/knapsack/objectives</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer eyJhb...K1_Y</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">83</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;objective&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;total_value&quot;</span><span class="p">:</span> <span class="s2">&quot;5 * pick[pen] + 20 * pick[watch] + 2 * pick[cup]&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>An objective can be set using a <cite>POST</cite> request.
+Here, <cite>expression</cite> parameter should conform as a regular Python expression.</p>
+<dl class="post">
+<dt id="post--models-(str-model)-objectives">
+<code class="descname">POST </code><code class="descname">/models/</code><span class="sig-paren">(</span><em class="property">str: </em><em>model</em><span class="sig-paren">)</span><code class="descname">/objectives</code><a class="headerlink" href="#post--models-(str-model)-objectives" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the objective function of a model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> – Bearer token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>model</strong> – Name of the model</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Form Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>expression</strong> – Objective function as a valid Python expression in string form</li>
+<li><strong>sense</strong> – Sense of the objective, <cite>minimize</cite> or <cite>maximize</cite></li>
+<li><strong>name</strong> – Name of the objective function</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.2">201 Created</a> – Objective is set</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Authentication error</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> – Model name is not found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/models/knapsack/objectives</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer eyJhb...K1_Y</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">131</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/x-www-form-urlencoded</span>
+
+expression=5*pick[&quot;pen&quot;]+20*pick[&quot;watch&quot;]+2*pick[&quot;cup&quot;]&amp;sense=minimize&amp;name=total_value
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">201</span> <span class="ne">CREATED</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">90</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;total_value&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;expression&quot;</span><span class="p">:</span> <span class="s2">&quot;5 * pick[pen] + 20 * pick[watch] + 2 * pick[cup]&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="constraints">
+<h2>Constraints<a class="headerlink" href="#constraints" title="Permalink to this headline">¶</a></h2>
+<p>Constraint objects are similar to expressions in terms of construction.
+A list of constraints in the workspace can be requested as follows:</p>
+<dl class="get">
+<dt id="get--constraints">
+<code class="descname">GET </code><code class="descname">/constraints</code><a class="headerlink" href="#get--constraints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of constraints</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> – Bearer token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Valid request with response</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Authentication error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/constraints</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer eyJhb...K1_Y</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">89</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;constraints&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;total_weight&quot;</span><span class="p">:</span> <span class="s2">&quot;pick[pen] + 3 * pick[watch] + 10 * pick[cup] &lt;=  22&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>Constraints inside a model can be listed using a <cite>GET</cite> query.</p>
+<dl class="get">
+<dt id="get--models-(str-model)-constraints">
+<code class="descname">GET </code><code class="descname">/models/</code><span class="sig-paren">(</span><em class="property">str: </em><em>model</em><span class="sig-paren">)</span><code class="descname">/constraints</code><a class="headerlink" href="#get--models-(str-model)-constraints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of constraints inside the model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> – Bearer token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>model</strong> – Name of the model</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Valid request with response</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Authentication error</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> – Model name is not found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/models/knapsack/constraints</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer eyJhb...K1_Y</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">34</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;constraints&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;total_weight&quot;</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>A single constraint can be created as follows:</p>
+<dl class="post">
+<dt id="post--models-(str-model)-constraints">
+<code class="descname">POST </code><code class="descname">/models/</code><span class="sig-paren">(</span><em class="property">str: </em><em>model</em><span class="sig-paren">)</span><code class="descname">/constraints</code><a class="headerlink" href="#post--models-(str-model)-constraints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a constraint inside the model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> – Bearer token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>model</strong> – Name of the model</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Form Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> – Name of the constraint</li>
+<li><strong>expression</strong> – Constraint expression in valid Python format</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.2">201 Created</a> – Constraint is created</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Authentication error</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> – Model name is not found</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/models/knapsack/constraints</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer eyJhb...K1_Y</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">115</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/x-www-form-urlencoded</span>
+
+expression=1*pick[&quot;pen&quot;]+3*pick[&quot;watch&quot;]+10*pick[&quot;cup&quot;]&lt;=22&amp;name=total_weight
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">201</span> <span class="ne">CREATED</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">115</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;total_weight&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;knapsack&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;expression&quot;</span><span class="p">:</span> <span class="s2">&quot;pick[pen] + 3 * pick[watch] + 10 * pick[cup] &lt;=  22&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>Constraint groups are multi-dimensional constraints.
+On top of <cite>expression</cite> and <cite>name</cite> parameters, they also require <cite>index</cite> parameter at initialization.</p>
+<p>Constraint groups in the workspace can be requested as follows:</p>
+<dl class="get">
+<dt id="get--constraint_groups">
+<code class="descname">GET </code><code class="descname">/constraint_groups</code><a class="headerlink" href="#get--constraint_groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of constraint groups</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> – Bearer token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Valid request with response</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Authentication error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/constraint_groups</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer eyJhb...K1_Y</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">147</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;constraintgroups&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;bounds&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;bounds[&#39;pen&#39;]&quot;</span><span class="p">:</span> <span class="s2">&quot;pick[pen] &lt;=  5&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;bounds[&#39;watch&#39;]&quot;</span><span class="p">:</span> <span class="s2">&quot;pick[watch] &lt;=  5&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;bounds[&#39;cup&#39;]&quot;</span><span class="p">:</span> <span class="s2">&quot;pick[cup] &lt;=  5&quot;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>Constraint groups that appears inside a model can be requested as follows:</p>
+<dl class="get">
+<dt id="get--models-(str-model)-constraint_groups">
+<code class="descname">GET </code><code class="descname">/models/</code><span class="sig-paren">(</span><em class="property">str: </em><em>model</em><span class="sig-paren">)</span><code class="descname">/constraint_groups</code><a class="headerlink" href="#get--models-(str-model)-constraint_groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of constraint groups inside the model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> – Bearer token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>model</strong> – Name of the model</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Valid request with response</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Authentication error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/models/knapsack/constraint_groups</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer eyJhb...K1_Y</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">147</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;constraintgroups&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;bounds&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;bounds[&#39;pen&#39;]&quot;</span><span class="p">:</span> <span class="s2">&quot;pick[pen] &lt;=  5&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;bounds[&#39;watch&#39;]&quot;</span><span class="p">:</span> <span class="s2">&quot;pick[watch] &lt;=  5&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;bounds[&#39;cup&#39;]&quot;</span><span class="p">:</span> <span class="s2">&quot;pick[cup] &lt;=  5&quot;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>Constraint group generation is similar to generating variable groups or expressions.</p>
+<dl class="post">
+<dt id="post--models-(str-model)-constraint_groups">
+<code class="descname">POST </code><code class="descname">/models/</code><span class="sig-paren">(</span><em class="property">str: </em><em>model</em><span class="sig-paren">)</span><code class="descname">/constraint_groups</code><a class="headerlink" href="#post--models-(str-model)-constraint_groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a set of constraint groups inside the model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> – Bearer token to authenticate</li>
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – <cite>application/json</cite></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>model</strong> – Name of the model</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>expression</strong> – Expression in valid Python format</li>
+<li><strong>index</strong> – Index of the constraint group</li>
+<li><strong>name</strong> – Name of the constraint group</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.2">201 Created</a> – Constraint group is created</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Authentication error</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> – Model name is not in the workspace</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/models/knapsack/constraint_groups</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer eyJhb...K1_Y</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">89</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span><span class="nt">&quot;expression&quot;</span><span class="p">:</span> <span class="s2">&quot;pick[i]&lt;=5&quot;</span><span class="p">,</span> <span class="nt">&quot;index&quot;</span><span class="p">:</span> <span class="s2">&quot;for i in [&#39;pen&#39;,&#39;watch&#39;,&#39;cup&#39;]&quot;</span><span class="p">,</span> <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;bounds&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">201</span> <span class="ne">CREATED</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">40</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;bounds&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;knapsack&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="solve">
+<h2>Solve<a class="headerlink" href="#solve" title="Permalink to this headline">¶</a></h2>
+<p>A model can be submitted to be solved by SAS Optimization solvers as follows:</p>
+<dl class="post">
+<dt id="post--models-(str-model)-solutions">
+<code class="descname">POST </code><code class="descname">/models/</code><span class="sig-paren">(</span><em class="property">str: </em><em>model</em><span class="sig-paren">)</span><code class="descname">/solutions</code><a class="headerlink" href="#post--models-(str-model)-solutions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solves a model and requests solutions</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> – Bearer token to authenticate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>model</strong> – Name of the model</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Form Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>stream</strong> – <cite>True</cite> for real-time output or <cite>False</cite></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – Valid request with response</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Authentication error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/models/knapsack/solutions</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer eyJhb...K1_Y</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">12</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/x-www-form-urlencoded</span>
+
+stream=False
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">1888</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;knapsack&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;objective&quot;</span><span class="p">:</span> <span class="mi">125</span><span class="p">,</span>
+  <span class="nt">&quot;solutions&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;pick[pen]&quot;</span><span class="p">:</span> <span class="mf">5.0</span><span class="p">,</span>
+    <span class="nt">&quot;pick[watch]&quot;</span><span class="p">:</span> <span class="mf">5.0</span><span class="p">,</span>
+    <span class="nt">&quot;pick[cup]&quot;</span><span class="p">:</span> <span class="mf">0.0</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;stream&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="data">
+<h2>Data<a class="headerlink" href="#data" title="Permalink to this headline">¶</a></h2>
+<p>Data objects can be created on the server-side using valid Python expressions.
+This request creates a Python variable with the requested name.</p>
+<p>You can test if your request is valid beforehand using:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">e</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="post">
+<dt id="post--data">
+<code class="descname">POST </code><code class="descname">/data</code><a class="headerlink" href="#post--data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a data object in the server</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Request Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7235#section-4.2">Authorization</a> – Bearer token to authenticate</li>
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – <cite>application/json</cite></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">JSON Parameters:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> – Name of the object</li>
+<li><strong>value</strong> – Value in valid JSON format</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.2">201 Created</a> – Variable is created</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – Authentication error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/data</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer eyJhb...K1_Y</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">22</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/x-www-form-urlencoded</span>
+
+name=capacity&amp;value=20
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">201</span> <span class="ne">CREATED</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">47</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;capacity&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;len&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/data</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer eyJhb...K1_Y</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">45</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;value_data&quot;</span><span class="p">,</span> <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;[5, 20, 2]&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">201</span> <span class="ne">CREATED</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">49</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;value_data&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;list&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;len&quot;</span><span class="p">:</span> <span class="mi">3</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/data</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">localhost:5000</span>
+<span class="na">User-Agent</span><span class="o">:</span> <span class="l">python-requests/2.19.1</span>
+<span class="na">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+<span class="na">Accept</span><span class="o">:</span> <span class="l">*/*</span>
+<span class="na">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="na">Authorization</span><span class="o">:</span> <span class="l">Bearer eyJhb...K1_Y</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">75</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;weight_data&quot;</span><span class="p">,</span> <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;{\&quot;pen\&quot;: 1, \&quot;watch\&quot;: 3, \&quot;cup\&quot;: 10}&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">201</span> <span class="ne">CREATED</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Content-Length</span><span class="o">:</span> <span class="l">50</span>
+<span class="na">Server</span><span class="o">:</span> <span class="l">Werkzeug/0.14.1 Python/3.6.5</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;weight_data&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;dict&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;len&quot;</span><span class="p">:</span> <span class="mi">3</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input-data.html">Handling Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">Sessions and Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components.html">Model components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflow.html">Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">RESTful API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#models">Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#variables">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#expressions">Expressions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#constraints">Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#solve">Solve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data">Data</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="http-routingtable.html" title="HTTP Routing Table"
+             >routing table</a> |</li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="api/generated/sasoptpy.math.tan.html" title="sasoptpy.math.tan"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">sasoptpy 0.2.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2019, SAS Institute.
+      Last updated on Feb 26, 2019 (Timestamp: 0.2.1-20190226133646).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
+    </div>
+  </body>
+</html>

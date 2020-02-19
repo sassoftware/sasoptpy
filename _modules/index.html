@@ -1,23 +1,25 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Overview: module code &#8212; sasoptpy 0.2.1 documentation</title>
+    <meta charset="utf-8" />
+    <title>Overview: module code &#8212; sasoptpy 1.0.0-alpha documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/sasoptpy.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/js/url.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/js/url.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../_static/js/version.js"></script>
+
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -26,12 +28,9 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../http-routingtable.html" title="HTTP Routing Table"
-             >routing table</a> |</li>
-        <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -41,11 +40,63 @@
           <div class="body" role="main">
             
   <h1>All modules for which code is available</h1>
-<ul><li><a href="sasoptpy/components.html">sasoptpy.components</a></li>
-<li><a href="sasoptpy/data.html">sasoptpy.data</a></li>
-<li><a href="sasoptpy/math.html">sasoptpy.math</a></li>
-<li><a href="sasoptpy/model.html">sasoptpy.model</a></li>
-<li><a href="sasoptpy/utils.html">sasoptpy.utils</a></li>
+<ul><li><a href="sasoptpy/abstract/math.html">sasoptpy.abstract.math</a></li>
+<li><a href="sasoptpy/abstract/parameter.html">sasoptpy.abstract.parameter</a></li>
+<li><a href="sasoptpy/abstract/parameter_group.html">sasoptpy.abstract.parameter_group</a></li>
+<li><a href="sasoptpy/abstract/set.html">sasoptpy.abstract.set</a></li>
+<li><a href="sasoptpy/abstract/set_iterator.html">sasoptpy.abstract.set_iterator</a></li>
+<li><a href="sasoptpy/abstract/statement/assignment.html">sasoptpy.abstract.statement.assignment</a></li>
+<li><a href="sasoptpy/abstract/statement/cofor_loop.html">sasoptpy.abstract.statement.cofor_loop</a></li>
+<li><a href="sasoptpy/abstract/statement/create_data.html">sasoptpy.abstract.statement.create_data</a></li>
+<li><a href="sasoptpy/abstract/statement/drop_restore.html">sasoptpy.abstract.statement.drop_restore</a></li>
+<li><a href="sasoptpy/abstract/statement/fix_unfix.html">sasoptpy.abstract.statement.fix_unfix</a></li>
+<li><a href="sasoptpy/abstract/statement/for_loop.html">sasoptpy.abstract.statement.for_loop</a></li>
+<li><a href="sasoptpy/abstract/statement/if_else.html">sasoptpy.abstract.statement.if_else</a></li>
+<li><a href="sasoptpy/abstract/statement/literal.html">sasoptpy.abstract.statement.literal</a></li>
+<li><a href="sasoptpy/abstract/statement/objective.html">sasoptpy.abstract.statement.objective</a></li>
+<li><a href="sasoptpy/abstract/statement/print.html">sasoptpy.abstract.statement.print</a></li>
+<li><a href="sasoptpy/abstract/statement/read_data.html">sasoptpy.abstract.statement.read_data</a></li>
+<li><a href="sasoptpy/abstract/statement/solve.html">sasoptpy.abstract.statement.solve</a></li>
+<li><a href="sasoptpy/abstract/statement/statement_base.html">sasoptpy.abstract.statement.statement_base</a></li>
+<li><a href="sasoptpy/actions.html">sasoptpy.actions</a></li>
+<li><a href="sasoptpy/core/constraint.html">sasoptpy.core.constraint</a></li>
+<li><a href="sasoptpy/core/constraint_group.html">sasoptpy.core.constraint_group</a></li>
+<li><a href="sasoptpy/core/expression.html">sasoptpy.core.expression</a></li>
+<li><a href="sasoptpy/core/model.html">sasoptpy.core.model</a></li>
+<li><a href="sasoptpy/core/objective.html">sasoptpy.core.objective</a></li>
+<li><a href="sasoptpy/core/variable.html">sasoptpy.core.variable</a></li>
+<li><a href="sasoptpy/core/variable_group.html">sasoptpy.core.variable_group</a></li>
+<li><a href="sasoptpy/interface/solver/cas_mediator.html">sasoptpy.interface.solver.cas_mediator</a></li>
+<li><a href="sasoptpy/interface/solver/sas_mediator.html">sasoptpy.interface.solver.sas_mediator</a></li>
+<li><a href="sasoptpy/session/workspace.html">sasoptpy.session.workspace</a></li>
+<li><a href="sasoptpy/structure.html">sasoptpy.structure</a></li>
+<li><a href="sasoptpy/util/user_utils.html">sasoptpy.util.user_utils</a></li>
+<li><a href="tests/abstract/statement/test_assignment.html">tests.abstract.statement.test_assignment</a></li>
+<li><a href="tests/abstract/statement/test_cofor_loop.html">tests.abstract.statement.test_cofor_loop</a></li>
+<li><a href="tests/abstract/statement/test_create_data.html">tests.abstract.statement.test_create_data</a></li>
+<li><a href="tests/abstract/statement/test_drop_restore.html">tests.abstract.statement.test_drop_restore</a></li>
+<li><a href="tests/abstract/statement/test_fix_unfix.html">tests.abstract.statement.test_fix_unfix</a></li>
+<li><a href="tests/abstract/statement/test_for_loop.html">tests.abstract.statement.test_for_loop</a></li>
+<li><a href="tests/abstract/statement/test_literal.html">tests.abstract.statement.test_literal</a></li>
+<li><a href="tests/abstract/statement/test_read_data.html">tests.abstract.statement.test_read_data</a></li>
+<li><a href="tests/abstract/statement/test_solve.html">tests.abstract.statement.test_solve</a></li>
+<li><a href="tests/abstract/test_condition.html">tests.abstract.test_condition</a></li>
+<li><a href="tests/abstract/test_implicit_variable.html">tests.abstract.test_implicit_variable</a></li>
+<li><a href="tests/abstract/test_math.html">tests.abstract.test_math</a></li>
+<li><a href="tests/abstract/test_parameter.html">tests.abstract.test_parameter</a></li>
+<li><a href="tests/abstract/test_set.html">tests.abstract.test_set</a></li>
+<li><a href="tests/abstract/test_set_iterator.html">tests.abstract.test_set_iterator</a></li>
+<li><a href="tests/core/test_constraint.html">tests.core.test_constraint</a></li>
+<li><a href="tests/core/test_constraint_group.html">tests.core.test_constraint_group</a></li>
+<li><a href="tests/core/test_expression.html">tests.core.test_expression</a></li>
+<li><a href="tests/core/test_model.html">tests.core.test_model</a></li>
+<li><a href="tests/core/test_objective.html">tests.core.test_objective</a></li>
+<li><a href="tests/core/test_util.html">tests.core.test_util</a></li>
+<li><a href="tests/core/test_variable.html">tests.core.test_variable</a></li>
+<li><a href="tests/core/test_variable_group.html">tests.core.test_variable_group</a></li>
+<li><a href="tests/interface/test_cas_interface.html">tests.interface.test_cas_interface</a></li>
+<li><a href="tests/interface/test_sas_interface.html">tests.interface.test_sas_interface</a></li>
+<li><a href="tests/session/test_workspace.html">tests.session.test_workspace</a></li>
 </ul>
 
           </div>
@@ -53,31 +104,36 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
   <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
-<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../input-data.html">Handling Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../models.html">Sessions and Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../components.html">Model components</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../workflow.html">Workflows</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api.html">API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../web-api.html">RESTful API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../version-history.html">Version History</a></li>
 </ul>
 
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -89,18 +145,27 @@
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../http-routingtable.html" title="HTTP Routing Table"
-             >routing table</a> |</li>
-        <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li> 
       </ul>
     </div>
+
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017-2019, SAS Institute.
-      Last updated on Feb 26, 2019 (Timestamp: 0.2.1-20190226133646).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
+        &#169; Copyright 2017-2020, SAS Institute.
+      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219165041).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
     </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-155356999-1');
+</script>
+
+
   </body>
 </html>

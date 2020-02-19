@@ -1,0 +1,503 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Basic Functionality &#8212; sasoptpy 1.0.0-alpha documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/sasoptpy.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/js/url.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Sessions" href="sessions.html" />
+    <link rel="prev" title="Introduction to Optimization" href="intro.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../_static/js/version.js"></script>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="sessions.html" title="Sessions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="intro.html" title="Introduction to Optimization"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="user-guide.html" accesskey="U">User Guide</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="basic-functionality">
+<span id="basics"></span><h1>Basic Functionality<a class="headerlink" href="#basic-functionality" title="Permalink to this headline">¶</a></h1>
+<p>Solving an optimization problem via <em>sasoptpy</em>
+starts with having a running CAS (SAS Viya) Server or having a SAS 9.4 installation.
+It is possible to model a problem without a connection
+but solving a problem requires access to SAS Optimization or SAS/OR solvers at runtime.</p>
+<div class="section" id="creating-a-session">
+<h2>Creating a session<a class="headerlink" href="#creating-a-session" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="creating-a-sas-viya-session">
+<h3>Creating a SAS Viya session<a class="headerlink" href="#creating-a-sas-viya-session" title="Permalink to this headline">¶</a></h3>
+<p><em>sasoptpy</em> uses the CAS connection provided by the
+swat package.
+After installation simply use:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">swat</span> <span class="kn">import</span> <span class="n">CAS</span>
+
+<span class="gp">In [2]: </span><span class="n">s</span> <span class="o">=</span> <span class="n">CAS</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">userid</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The last two parameters are optional for some use
+cases.
+See <a class="reference external" href="https://sassoftware.github.io/python-swat/generated/swat.cas.connection.CAS.html#swat-cas-connection-cas">swat Documentation</a>
+for more details.</p>
+</div>
+<div class="section" id="creating-a-sas-9-4-session">
+<h3>Creating a SAS 9.4 session<a class="headerlink" href="#creating-a-sas-9-4-session" title="Permalink to this headline">¶</a></h3>
+<p>To create a SAS 9.4 session, see
+<a class="reference external" href="https://sassoftware.github.io/saspy/getting-started.html#start-a-sas-session">saspy Documentation</a>.
+After customizing the configurations for your setup, you can create a session as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">saspy</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">saspy</span><span class="o">.</span><span class="n">SASsession</span><span class="p">(</span><span class="n">cfgname</span><span class="o">=</span><span class="s1">&#39;winlocal&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="initializing-a-model">
+<h2>Initializing a model<a class="headerlink" href="#initializing-a-model" title="Permalink to this headline">¶</a></h2>
+<p>After creating an active CAS or SAS session, you can create an empty model as follows:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [3]: </span><span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
+
+<span class="gp">In [4]: </span><span class="n">m</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;my_first_model&#39;</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+<span class="go">NOTE: Initialized model my_first_model.</span>
+</pre></div>
+</div>
+<p>This command creates an empty model.</p>
+</div>
+<div class="section" id="processing-input-data">
+<h2>Processing input data<a class="headerlink" href="#processing-input-data" title="Permalink to this headline">¶</a></h2>
+<p>The easiest way to work with <em>sasoptpy</em> is to
+define problem inputs as Pandas DataFrames.
+You can define objective and cost coefficients, and lower and upper bounds by using the DataFrame and Series objects.
+See
+<a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/">Pandas Documentation</a>
+to learn more.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [5]: </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="gp">In [6]: </span><span class="n">prob_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+<span class="gp">   ...: </span>    <span class="p">[</span><span class="s1">&#39;Period1&#39;</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+<span class="gp">   ...: </span>    <span class="p">[</span><span class="s1">&#39;Period2&#39;</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+<span class="gp">   ...: </span>    <span class="p">[</span><span class="s1">&#39;Period3&#39;</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="gp">   ...: </span>    <span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;period&#39;</span><span class="p">,</span> <span class="s1">&#39;demand&#39;</span><span class="p">,</span> <span class="s1">&#39;min_prod&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;period&#39;</span><span class="p">])</span>
+<span class="gp">   ...: </span>
+
+<span class="gp">In [7]: </span><span class="n">price_per_product</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="gp">In [8]: </span><span class="n">capacity_cost</span> <span class="o">=</span> <span class="mi">10</span>
+</pre></div>
+</div>
+<p>You can extract the set <code class="docutils literal notranslate"><span class="pre">PERIODS</span></code> and the other fields <code class="docutils literal notranslate"><span class="pre">demand</span></code> and <code class="docutils literal notranslate"><span class="pre">min_production</span></code> as follows:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [9]: </span><span class="n">PERIODS</span> <span class="o">=</span> <span class="n">prob_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+<span class="gp">In [10]: </span><span class="n">demand</span> <span class="o">=</span> <span class="n">prob_data</span><span class="p">[</span><span class="s1">&#39;demand&#39;</span><span class="p">]</span>
+
+<span class="gp">In [11]: </span><span class="n">min_production</span> <span class="o">=</span> <span class="n">prob_data</span><span class="p">[</span><span class="s1">&#39;min_prod&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="adding-variables">
+<h2>Adding variables<a class="headerlink" href="#adding-variables" title="Permalink to this headline">¶</a></h2>
+<p>You can add a single variable or a set of variables to <a class="reference internal" href="../api/generated/sasoptpy.Model.html#sasoptpy.Model" title="sasoptpy.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></a> objects.</p>
+<ul>
+<li><p><a class="reference internal" href="../api/generated/sasoptpy.Model.add_variable.html#sasoptpy.Model.add_variable" title="sasoptpy.Model.add_variable"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.add_variable()</span></code></a> method is used to add a single variable.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [12]: </span><span class="n">production_cap</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">vartype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;production_cap&#39;</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>When working with multiple models, you can create a variable independent of
+the model, such as</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">production_cap</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;production_cap&#39;</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and add it to an existing model by using</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">m</span><span class="o">.</span><span class="n">include</span><span class="p">(</span><span class="n">production_cap</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>The <a class="reference internal" href="../api/generated/sasoptpy.Model.add_variables.html#sasoptpy.Model.add_variables" title="sasoptpy.Model.add_variables"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.add_variables()</span></code></a> method is used to add a set of variables.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [13]: </span><span class="n">production</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">PERIODS</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;production&#39;</span><span class="p">,</span>
+<span class="gp">   ....: </span>                             <span class="n">lb</span><span class="o">=</span><span class="n">min_production</span><span class="p">)</span>
+<span class="gp">   ....: </span>
+</pre></div>
+</div>
+<p>When passed as a set of variables, you can retrieve individual variables by
+using individual keys, such as <code class="docutils literal notranslate"><span class="pre">production['Period1']</span></code>.
+To create multidimensional variables, simply list all the keys as follows:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">multivar</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">KEYS1</span><span class="p">,</span> <span class="n">KEYS2</span><span class="p">,</span> <span class="n">KEYS3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;multivar&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="creating-expressions">
+<h2>Creating expressions<a class="headerlink" href="#creating-expressions" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="../api/generated/sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a> objects hold mathematical expressions.
+Although these objects are mostly used under the hood when defining a model,
+it is possible to define a custom <a class="reference internal" href="../api/generated/sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a> to use later.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [14]: </span><span class="n">totalRevenue</span> <span class="o">=</span> <span class="n">production</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">)</span><span class="o">*</span><span class="n">price_per_product</span>
+
+<span class="gp">In [15]: </span><span class="n">totalCost</span> <span class="o">=</span> <span class="n">production_cap</span> <span class="o">*</span> <span class="n">capacity_cost</span>
+</pre></div>
+</div>
+<p>Note the use of the <a class="reference internal" href="../api/generated/sasoptpy.VariableGroup.sum.html#sasoptpy.VariableGroup.sum" title="sasoptpy.VariableGroup.sum"><code class="xref py py-meth docutils literal notranslate"><span class="pre">VariableGroup.sum()</span></code></a> method
+over a variable group. This method returns the sum of variables inside the
+group as an <a class="reference internal" href="../api/generated/sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a> object. Its multiplication with a scalar
+<code class="docutils literal notranslate"><span class="pre">price_per_product</span></code> gives the final expression.</p>
+<p>Similarly, <code class="docutils literal notranslate"><span class="pre">totalCost</span></code> is simply multiplication of a <a class="reference internal" href="../api/generated/sasoptpy.Variable.html#sasoptpy.Variable" title="sasoptpy.Variable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Variable</span></code></a> object
+with a scalar.</p>
+</div>
+<div class="section" id="setting-an-objective-function">
+<h2>Setting an objective function<a class="headerlink" href="#setting-an-objective-function" title="Permalink to this headline">¶</a></h2>
+<p>You can define objective functions in terms of expressions.
+In this problem, the objective is to maximize the profit, so the
+<a class="reference internal" href="../api/generated/sasoptpy.Model.set_objective.html#sasoptpy.Model.set_objective" title="sasoptpy.Model.set_objective"><code class="xref py py-func docutils literal notranslate"><span class="pre">Model.set_objective()</span></code></a> method is used as follows:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [16]: </span><span class="n">m</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">totalRevenue</span><span class="o">-</span><span class="n">totalCost</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MAX</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;totalProfit&#39;</span><span class="p">)</span>
+<span class="gh">Out[16]: </span><span class="go">sasoptpy.Expression(exp = 10 * production[Period1] + 10 * production[Period2] + 10 * production[Period3] - 10 * production_cap, name=&#39;totalProfit&#39;)</span>
+</pre></div>
+</div>
+<p>Notice that you can define the same objective by using:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">m</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">production</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">)</span><span class="o">*</span><span class="n">price_per_product</span> <span class="o">-</span> <span class="n">production_cap</span><span class="o">*</span><span class="n">capacity_cost</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MAX</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;totalProfit&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The mandatory argument <code class="docutils literal notranslate"><span class="pre">sense</span></code> should be assigned the value of either <code class="docutils literal notranslate"><span class="pre">so.MIN</span></code> or <code class="docutils literal notranslate"><span class="pre">so.MAX</span></code> for
+minimization or maximization problems, respectively.</p>
+</div>
+<div class="section" id="adding-constraints">
+<h2>Adding constraints<a class="headerlink" href="#adding-constraints" title="Permalink to this headline">¶</a></h2>
+<p>In <em>sasoptpy</em>, constraints are simply expressions with a direction.
+It is possible to define an expression and add it to a model by defining which
+direction the linear relation should have.</p>
+<p>There are two methods to add constraints. The first one
+is <a class="reference internal" href="../api/generated/sasoptpy.Model.add_constraint.html#sasoptpy.Model.add_constraint" title="sasoptpy.Model.add_constraint"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.add_constraint()</span></code></a> where a single constraint can be added to a
+model.</p>
+<p>The second one is <a class="reference internal" href="../api/generated/sasoptpy.Model.add_constraints.html#sasoptpy.Model.add_constraints" title="sasoptpy.Model.add_constraints"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.add_constraints()</span></code></a> where multiple constraints can
+be added to a model.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [17]: </span><span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">production</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">production_cap</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">),</span>
+<span class="gp">   ....: </span>                  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;capacity&#39;</span><span class="p">)</span>
+<span class="gp">   ....: </span>
+<span class="gh">Out[17]: </span><span class="go">sasoptpy.ConstraintGroup([production[Period1] - production_cap &lt;=  0, production[Period2] - production_cap &lt;=  0, production[Period3] - production_cap &lt;=  0], name=&#39;capacity&#39;)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [18]: </span><span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">production</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">demand</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">),</span>
+<span class="gp">   ....: </span>                  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;demand&#39;</span><span class="p">)</span>
+<span class="gp">   ....: </span>
+<span class="gh">Out[18]: </span><span class="go">sasoptpy.ConstraintGroup([production[Period1] &lt;=  30, production[Period2] &lt;=  15, production[Period3] &lt;=  25], name=&#39;demand&#39;)</span>
+</pre></div>
+</div>
+<p>Here, the first term provides a Python generator, which then gets translated into
+constraints in the problem. The symbols <code class="docutils literal notranslate"><span class="pre">&lt;=</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code>, and <code class="docutils literal notranslate"><span class="pre">==</span></code> are used for
+less than or equal to, greater than or equal to, and equal to constraints,
+respectively. You can define range constraints by using <code class="docutils literal notranslate"><span class="pre">==</span></code> symbol and a list of two
+values that represent lower and upper bounds.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [19]: </span><span class="n">m</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">production</span><span class="p">[</span><span class="s1">&#39;Period1&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;production_bounds&#39;</span><span class="p">)</span>
+<span class="gh">Out[19]: </span><span class="go">sasoptpy.Constraint(production[Period1] ==  [10, 100], name=&#39;production_bounds&#39;)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="solving-a-problem">
+<h2>Solving a problem<a class="headerlink" href="#solving-a-problem" title="Permalink to this headline">¶</a></h2>
+<p>After a problem is defined, you can send it to the CAS server or SAS session by calling the
+<a class="reference internal" href="../api/generated/sasoptpy.Model.solve.html#sasoptpy.Model.solve" title="sasoptpy.Model.solve"><code class="xref py py-func docutils literal notranslate"><span class="pre">Model.solve()</span></code></a> method. The <a class="reference internal" href="../api/generated/sasoptpy.Model.solve.html#sasoptpy.Model.solve" title="sasoptpy.Model.solve"><code class="xref py py-func docutils literal notranslate"><span class="pre">Model.solve()</span></code></a> method returns the primal solution when available,
+and <code class="docutils literal notranslate"><span class="pre">None</span></code> otherwise.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [20]: </span><span class="n">m</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+<span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
+<span class="go">NOTE: Converting model my_first_model to OPTMODEL.</span>
+<span class="go">NOTE: Submitting OPTMODEL code to CAS server.</span>
+<span class="go">NOTE: Problem generation will use 8 threads.</span>
+<span class="go">NOTE: The problem has 4 variables (0 free, 0 fixed).</span>
+<span class="go">NOTE: The problem has 0 binary and 4 integer variables.</span>
+<span class="go">NOTE: The problem has 7 linear constraints (6 LE, 0 EQ, 0 GE, 1 range).</span>
+<span class="go">NOTE: The problem has 10 linear constraint coefficients.</span>
+<span class="go">NOTE: The problem has 0 nonlinear constraints (0 LE, 0 EQ, 0 GE, 0 range).</span>
+<span class="go">NOTE: The OPTMODEL presolver is disabled for linear problems.</span>
+<span class="go">NOTE: The initial MILP heuristics are applied.</span>
+<span class="go">NOTE: The MILP presolver value AUTOMATIC is applied.</span>
+<span class="go">NOTE: The MILP presolver removed all variables and constraints.</span>
+<span class="go">NOTE: Optimal.</span>
+<span class="go">NOTE: Objective = 400.</span>
+<span class="go">NOTE: The output table &#39;SOLUTION&#39; in caslib &#39;CASUSER(casuser)&#39; has 4 rows and 6 columns.</span>
+<span class="go">NOTE: The output table &#39;DUAL&#39; in caslib &#39;CASUSER(casuser)&#39; has 7 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSER(casuser)&#39; has 18 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSER(casuser)&#39; has 20 rows and 4 columns.</span>
+<span class="gh">Out[20]: </span><span class="go"></span>
+<span class="go">Selected Rows from Table SOLUTION</span>
+
+<span class="go">     i                  var  value   lb             ub  rc</span>
+<span class="go">0  1.0       production_cap   25.0 -0.0  1.797693e+308 NaN</span>
+<span class="go">1  2.0  production[Period1]   25.0  5.0  1.797693e+308 NaN</span>
+<span class="go">2  3.0  production[Period2]   15.0  5.0  1.797693e+308 NaN</span>
+<span class="go">3  4.0  production[Period3]   25.0 -0.0  1.797693e+308 NaN</span>
+</pre></div>
+</div>
+<p>At the end of the solve operation, the solver returns
+both Problem Summary and Solution Summary tables. These tables can
+later be accessed by using <code class="docutils literal notranslate"><span class="pre">m.get_problem_summary()</span></code> and
+<code class="docutils literal notranslate"><span class="pre">m.get_solution_summary()</span></code>.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [21]: </span><span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">get_solution_summary</span><span class="p">())</span>
+<span class="go">Selected Rows from Table SOLUTIONSUMMARY</span>
+
+<span class="go">                                Value</span>
+<span class="go">Label                                </span>
+<span class="go">Solver                           MILP</span>
+<span class="go">Algorithm              Branch and Cut</span>
+<span class="go">Objective Function        totalProfit</span>
+<span class="go">Solution Status               Optimal</span>
+<span class="go">Objective Value                   400</span>
+<span class="go">                                     </span>
+<span class="go">Relative Gap                        0</span>
+<span class="go">Absolute Gap                        0</span>
+<span class="go">Primal Infeasibility                0</span>
+<span class="go">Bound Infeasibility                 0</span>
+<span class="go">Integer Infeasibility               0</span>
+<span class="go">                                     </span>
+<span class="go">Best Bound                        400</span>
+<span class="go">Nodes                               0</span>
+<span class="go">Solutions Found                     3</span>
+<span class="go">Iterations                          0</span>
+<span class="go">Presolve Time                    0.01</span>
+<span class="go">Solution Time                    0.02</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="printing-solutions">
+<h2>Printing solutions<a class="headerlink" href="#printing-solutions" title="Permalink to this headline">¶</a></h2>
+<p>You can retrieve the solutions by using the
+<a class="reference internal" href="../api/generated/sasoptpy.get_solution_table.html#sasoptpy.get_solution_table" title="sasoptpy.get_solution_table"><code class="xref py py-func docutils literal notranslate"><span class="pre">sasoptpy.get_solution_table()</span></code></a> method. It is strongly suggested to group
+variables and expressions that share the same keys in a call.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [22]: </span><span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">demand</span><span class="p">,</span> <span class="n">production</span><span class="p">))</span>
+<span class="go">        demand  production</span>
+<span class="go">period                    </span>
+<span class="go">Period1     30        25.0</span>
+<span class="go">Period2     15        15.0</span>
+<span class="go">Period3     25        25.0</span>
+</pre></div>
+</div>
+<p>As seen, a Pandas Series and a Variable object that have the same index
+keys are printed in this example.</p>
+</div>
+<div class="section" id="initializing-a-workspace">
+<h2>Initializing a workspace<a class="headerlink" href="#initializing-a-workspace" title="Permalink to this headline">¶</a></h2>
+<p>If you would like to use extensive abstract modeling capabilities of <cite>sasoptpy</cite>,
+you can create a workspace.
+Workspaces support features like server-side for loops,
+cofor loops (parallel), read data, and create data.
+You can initialize a <a class="reference internal" href="../api/generated/sasoptpy.Workspace.html#sasoptpy.Workspace" title="sasoptpy.Workspace"><code class="xref py py-class docutils literal notranslate"><span class="pre">sasoptpy.Workspace</span></code></a> by using Python’s
+<cite>with</cite> keyword.
+As an example, you can create a workspace with a set and a variable group as follows:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [23]: </span><span class="k">def</span> <span class="nf">create_workspace</span><span class="p">():</span>
+<span class="gp">   ....: </span>   <span class="k">with</span> <span class="n">so</span><span class="o">.</span><span class="n">Workspace</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;my_workspace&#39;</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="n">s</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
+<span class="gp">   ....: </span>      <span class="n">I</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">))</span>
+<span class="gp">   ....: </span>      <span class="n">x</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">VariableGroup</span><span class="p">(</span><span class="n">I</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">   ....: </span>   <span class="k">return</span> <span class="n">w</span>
+<span class="gp">   ....: </span>
+</pre></div>
+</div>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [24]: </span><span class="n">workspace</span> <span class="o">=</span> <span class="n">create_workspace</span><span class="p">()</span>
+
+<span class="gp">In [25]: </span><span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">(</span><span class="n">workspace</span><span class="p">))</span>
+<span class="go">proc optmodel;</span>
+<span class="go">   set I = 1..10;</span>
+<span class="go">   var x {{I}} &gt;= 0;</span>
+<span class="go">quit;</span>
+</pre></div>
+</div>
+<p>You can submit a workspace to a CAS server and retrieve the response by using:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [26]: </span><span class="n">workspace</span><span class="o">.</span><span class="n">submit</span><span class="p">()</span>
+<span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
+<span class="go">NOTE: The output table &#39;SOLUTION&#39; in caslib &#39;CASUSER(casuser)&#39; has 10 rows and 6 columns.</span>
+<span class="go">NOTE: The output table &#39;DUAL&#39; in caslib &#39;CASUSER(casuser)&#39; has 0 rows and 4 columns.</span>
+<span class="gh">Out[26]: </span><span class="go"></span>
+<span class="go">Selected Rows from Table SOLUTION</span>
+
+<span class="go">      i    var  value   lb             ub  rc</span>
+<span class="go">0   1.0   x[1]    0.0  0.0  1.797693e+308 NaN</span>
+<span class="go">1   2.0   x[2]    0.0  0.0  1.797693e+308 NaN</span>
+<span class="go">2   3.0   x[3]    0.0  0.0  1.797693e+308 NaN</span>
+<span class="go">3   4.0   x[4]    0.0  0.0  1.797693e+308 NaN</span>
+<span class="go">4   5.0   x[5]    0.0  0.0  1.797693e+308 NaN</span>
+<span class="go">5   6.0   x[6]    0.0  0.0  1.797693e+308 NaN</span>
+<span class="go">6   7.0   x[7]    0.0  0.0  1.797693e+308 NaN</span>
+<span class="go">7   8.0   x[8]    0.0  0.0  1.797693e+308 NaN</span>
+<span class="go">8   9.0   x[9]    0.0  0.0  1.797693e+308 NaN</span>
+<span class="go">9  10.0  x[10]    0.0  0.0  1.797693e+308 NaN</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="package-configurations">
+<span id="configurations"></span><h2>Package configurations<a class="headerlink" href="#package-configurations" title="Permalink to this headline">¶</a></h2>
+<p>You can change the default options regarding problem representation as follows:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [27]: </span><span class="n">x</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+
+<span class="gp">In [28]: </span><span class="n">c</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Constraint</span><span class="p">(</span><span class="mi">10</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">1e-20</span> <span class="o">*</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">&lt;=</span> <span class="mi">30</span> <span class="o">+</span> <span class="mf">1e-11</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
+
+<span class="gp">In [29]: </span><span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_definition</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+<span class="go">con c : 3.333333333333 * x + 0.0 * ((x) ^ (2)) &lt;= 30.00000000001;</span>
+</pre></div>
+</div>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [30]: </span><span class="n">so</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;max_digits&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [31]: </span><span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_definition</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+<span class="go">con c : 3.33 * x + 0.0 * ((x) ^ (2)) &lt;= 30.0;</span>
+</pre></div>
+</div>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [32]: </span><span class="n">so</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;max_digits&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</pre></div>
+</div>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [33]: </span><span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_definition</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+<span class="go">con c : 3.3333333333333335 * x + 1e-20 * ((x) ^ (2)) &lt;= 30.00000000001;</span>
+</pre></div>
+</div>
+<p>You can reset the options as follows:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [34]: </span><span class="k">del</span> <span class="n">so</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;max_digits&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>You can also create a new configuration to be used globally:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [35]: </span><span class="n">so</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;myvalue&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<p>All default configuration options are as follows:</p>
+<ul class="simple">
+<li><p>verbosity (default 3)</p></li>
+<li><p>max_digits (default 12)</p></li>
+<li><p>print_digits (default 6)</p></li>
+<li><p>default_sense (default so.minimization)</p></li>
+<li><p>default_bounds</p></li>
+<li><p>valid_outcomes</p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="user-guide.html">User Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="intro.html">Introduction to Optimization</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Basic Functionality</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#creating-a-session">Creating a session</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#creating-a-sas-viya-session">Creating a SAS Viya session</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#creating-a-sas-9-4-session">Creating a SAS 9.4 session</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#initializing-a-model">Initializing a model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#processing-input-data">Processing input data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adding-variables">Adding variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creating-expressions">Creating expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setting-an-objective-function">Setting an objective function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adding-constraints">Adding constraints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#solving-a-problem">Solving a problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#printing-solutions">Printing solutions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#initializing-a-workspace">Initializing a workspace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#package-configurations">Package configurations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sessions.html">Sessions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components.html">Model components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workspaces.html">Workspaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="input-data.html">Handling Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflow.html">Workflows</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../version-history.html">Version History</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="sessions.html" title="Sessions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="intro.html" title="Introduction to Optimization"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="user-guide.html" >User Guide</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2020, SAS Institute.
+      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219165041).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+    </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-155356999-1');
+</script>
+
+
+  </body>
+</html>

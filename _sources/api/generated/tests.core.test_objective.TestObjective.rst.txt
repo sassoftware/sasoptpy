@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+tests.core.test_objective.TestObjective
+=======================================
+
+.. currentmodule:: tests.core.test_objective
+
+.. autoclass:: TestObjective

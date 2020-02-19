@@ -1,0 +1,889 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>sasoptpy.utils &#8212; sasoptpy 0.1.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/css/sasoptpy.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/js/url.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <script src="../../../../_static/js/version.js"></script>
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for sasoptpy.utils</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># encoding: utf-8</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright SAS Institute</span>
+<span class="c1">#</span>
+<span class="c1">#  Licensed under the Apache License, Version 2.0 (the License);</span>
+<span class="c1">#  you may not use this file except in compliance with the License.</span>
+<span class="c1">#  You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#      http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1">#  Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1">#  distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1">#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1">#  See the License for the specific language governing permissions and</span>
+<span class="c1">#  limitations under the License.</span>
+<span class="c1">#</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">Iterable</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">string</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">import</span> <span class="nn">sasoptpy.model</span>
+<span class="kn">import</span> <span class="nn">sasoptpy.components</span>
+
+
+<span class="c1"># Constant values</span>
+<span class="n">MIN</span> <span class="o">=</span> <span class="s1">&#39;MIN&#39;</span>
+<span class="n">MAX</span> <span class="o">=</span> <span class="s1">&#39;MAX&#39;</span>
+<span class="n">CONT</span> <span class="o">=</span> <span class="s1">&#39;CONT&#39;</span>
+<span class="n">INT</span> <span class="o">=</span> <span class="s1">&#39;INT&#39;</span>
+<span class="n">BIN</span> <span class="o">=</span> <span class="s1">&#39;BIN&#39;</span>
+
+<span class="c1"># Global dictionary</span>
+<span class="n">__namedict</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="c1"># Counters</span>
+<span class="n">__ctr</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;obj&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;var&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;con&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;expr&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">]}</span>
+
+
+<div class="viewcode-block" id="check_name"><a class="viewcode-back" href="../../generated/sasoptpy.check_name.html#sasoptpy.check_name">[docs]</a><span class="k">def</span> <span class="nf">check_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">ctype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Checks if a name is in valid and returns a random string if not</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Name to be checked if unique</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str : The given name if valid, a random string otherwise</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ctype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_lowercase</span><span class="p">)</span> <span class="k">for</span>
+                           <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ctype</span><span class="p">,</span> <span class="n">get_counter</span><span class="p">(</span><span class="n">ctype</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">__namedict</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ctype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_lowercase</span><span class="p">)</span> <span class="k">for</span>
+                               <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ctype</span><span class="p">,</span> <span class="n">get_counter</span><span class="p">(</span><span class="n">ctype</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+    <span class="k">while</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">__namedict</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ctype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_lowercase</span><span class="p">)</span> <span class="k">for</span>
+                           <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ctype</span><span class="p">,</span> <span class="n">get_counter</span><span class="p">(</span><span class="n">ctype</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">name</span></div>
+
+
+<span class="k">def</span> <span class="nf">_is_generated</span><span class="p">(</span><span class="n">expr</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">Variable</span><span class="p">):</span>
+        <span class="k">return</span>
+    <span class="n">caller</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">2</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">caller</span> <span class="o">==</span> <span class="s1">&#39;&lt;genexpr&gt;&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+
+<div class="viewcode-block" id="register_name"><a class="viewcode-back" href="../../generated/sasoptpy.register_name.html#sasoptpy.register_name">[docs]</a><span class="k">def</span> <span class="nf">register_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Adds the name of a component into the global reference list</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">__namedict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj</span></div>
+
+
+<div class="viewcode-block" id="quick_sum"><a class="viewcode-back" href="../../generated/sasoptpy.quick_sum.html#sasoptpy.quick_sum">[docs]</a><span class="k">def</span> <span class="nf">quick_sum</span><span class="p">(</span><span class="n">argv</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Quick summation function for :class:`Expression` objects</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :class:`Expression` object</span>
+<span class="sd">        Sum of given arguments</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; x = so.VariableGroup(10000, name=&#39;x&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; y = so.quick_sum(2*x[i] for i in range(10000))</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+
+<span class="sd">    This function is faster for expressions compared to Python&#39;s native sum()</span>
+<span class="sd">    function.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">exp</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="n">temp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">argv</span><span class="p">:</span>
+        <span class="n">exp</span> <span class="o">=</span> <span class="n">exp</span> <span class="o">+</span> <span class="n">i</span>
+    <span class="n">exp</span><span class="o">.</span><span class="n">_temp</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="n">exp</span></div>
+
+
+<div class="viewcode-block" id="get_obj_by_name"><a class="viewcode-back" href="../../generated/sasoptpy.get_obj_by_name.html#sasoptpy.get_obj_by_name">[docs]</a><span class="k">def</span> <span class="nf">get_obj_by_name</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Returns the reference to an object by using the unique name</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    object</span>
+<span class="sd">        Reference to the object that has the name</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+
+<span class="sd">    If there is a conflict in the namespace, you might not get the object</span>
+<span class="sd">    you request. Clear the namespace using</span>
+<span class="sd">    :func:`reset_globals` when needed.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`reset_globals`</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; m.add_variable(name=&#39;var_x&#39;, lb=0)</span>
+<span class="sd">    &gt;&gt;&gt; m.add_variables(2, name=&#39;var_y&#39;, vartype=so.INT)</span>
+<span class="sd">    &gt;&gt;&gt; x = so.get_obj_by_name(&#39;var_x&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; y = so.get_obj_by_name(&#39;var_y&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; print(x)</span>
+<span class="sd">    &gt;&gt;&gt; print(y)</span>
+<span class="sd">    &gt;&gt;&gt; m.add_constraint(x + y[0] &lt;= 3, name=&#39;con_1&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; c1 = so.get_obj_by_name(&#39;con_1&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; print(c1)</span>
+<span class="sd">    var_x</span>
+<span class="sd">    Variable Group var_y</span>
+<span class="sd">    [(0,): Variable [ var_y_0 | INT ]]</span>
+<span class="sd">    [(1,): Variable [ var_y_1 | INT ]]</span>
+<span class="sd">    var_x  +  var_y_0  &lt;=  3</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">__namedict</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">__namedict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="dict_to_frame"><a class="viewcode-back" href="../../generated/sasoptpy.dict_to_frame.html#sasoptpy.dict_to_frame">[docs]</a><span class="k">def</span> <span class="nf">dict_to_frame</span><span class="p">(</span><span class="n">dictobj</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Converts dictionaries to DataFrame objects for pretty printing</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dictobj : dict</span>
+<span class="sd">        Dictionary to be converted</span>
+<span class="sd">    cols : list, optional</span>
+<span class="sd">        Column names</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :class:`DataFrame` object</span>
+<span class="sd">        DataFrame representation of the dictionary</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; d = {&#39;coal&#39;: {&#39;period1&#39;: 1, &#39;period2&#39;: 5, &#39;period3&#39;: 7},</span>
+<span class="sd">    &gt;&gt;&gt;      &#39;steel&#39;: {&#39;period1&#39;: 8, &#39;period2&#39;: 4, &#39;period3&#39;: 3},</span>
+<span class="sd">    &gt;&gt;&gt;      &#39;copper&#39;: {&#39;period1&#39;: 5, &#39;period2&#39;: 7, &#39;period3&#39;: 9}}</span>
+<span class="sd">    &gt;&gt;&gt; df = so.dict_to_frame(d)</span>
+<span class="sd">    &gt;&gt;&gt; print(df)</span>
+<span class="sd">            period1  period2  period3</span>
+<span class="sd">    coal          1        5        7</span>
+<span class="sd">    copper        5        7        9</span>
+<span class="sd">    steel         8        4        3</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">frobj</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">dictobj</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s1">&#39;index&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">frobj</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">cols</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">frobj</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="n">frobj</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_tuples</span><span class="p">(</span><span class="n">frobj</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">frobj</span></div>
+
+
+<span class="k">def</span> <span class="nf">extract_argument_as_list</span><span class="p">(</span><span class="n">inp</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">thelist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">inp</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="nb">range</span><span class="p">):</span>
+        <span class="n">thelist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="n">thelist</span> <span class="o">=</span> <span class="n">inp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">thelist</span> <span class="o">=</span> <span class="n">inp</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">thelist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">thelist</span>
+
+
+<div class="viewcode-block" id="extract_list_value"><a class="viewcode-back" href="../../generated/sasoptpy.extract_list_value.html#sasoptpy.extract_list_value">[docs]</a><span class="k">def</span> <span class="nf">extract_list_value</span><span class="p">(</span><span class="n">tuplist</span><span class="p">,</span> <span class="n">listname</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Extracts values inside various object types</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tuplist : tuple</span>
+<span class="sd">        Key combination to be extracted</span>
+<span class="sd">    listname : dict or list or int or float or DataFrame or Series object</span>
+<span class="sd">        List where the value will be extracted</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    object</span>
+<span class="sd">        Corresponding value inside listname</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">listname</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">listname</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">listname</span><span class="p">[</span><span class="n">tuple_unpack</span><span class="p">(</span><span class="n">tuplist</span><span class="p">)]</span>
+    <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">listname</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">):</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">listname</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">listname</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">listname</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="p">):</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">listname</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">tuplist</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]][</span><span class="n">tuplist</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">listname</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">tuplist</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">listname</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">listname</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">tuplist</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">listname</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">tuplist</span><span class="p">:</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">v</span></div>
+
+
+<div class="viewcode-block" id="list_length"><a class="viewcode-back" href="../../generated/sasoptpy.list_length.html#sasoptpy.list_length">[docs]</a><span class="k">def</span> <span class="nf">list_length</span><span class="p">(</span><span class="n">listobj</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Returns the length of an object if it is a list, tuple or dict</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    listobj : Python object</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    int</span>
+<span class="sd">        Length of the list, tuple or dict, otherwise 1</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">listobj</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">listobj</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">or</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">listobj</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">listobj</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="get_counter"><a class="viewcode-back" href="../../generated/sasoptpy.get_counter.html#sasoptpy.get_counter">[docs]</a><span class="k">def</span> <span class="nf">get_counter</span><span class="p">(</span><span class="n">ctrtype</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Returns and increments the list counter for naming</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ctrtype : string</span>
+<span class="sd">        Type of the counter, &#39;obj&#39;, &#39;var&#39;, &#39;con&#39; or &#39;expr&#39;</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    int</span>
+<span class="sd">        Current value of the counter</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">ctr</span> <span class="o">=</span> <span class="n">__ctr</span><span class="p">[</span><span class="n">ctrtype</span><span class="p">]</span>
+    <span class="n">ctr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">ctr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">ctr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="tuple_unpack"><a class="viewcode-back" href="../../generated/sasoptpy.tuple_unpack.html#sasoptpy.tuple_unpack">[docs]</a><span class="k">def</span> <span class="nf">tuple_unpack</span><span class="p">(</span><span class="n">tp</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Grabs the first element in a tuple, if a tuple is given as argument</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tp : tuple</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    object</span>
+<span class="sd">        The first object inside the tuple.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tp</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tp</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">tp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">tp</span></div>
+
+
+<div class="viewcode-block" id="tuple_pack"><a class="viewcode-back" href="../../generated/sasoptpy.tuple_pack.html#sasoptpy.tuple_pack">[docs]</a><span class="k">def</span> <span class="nf">tuple_pack</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Converts a given object to a tuple object</span>
+
+<span class="sd">    If the object is a tuple, the function returns itself, otherwise creates</span>
+<span class="sd">    a single dimensional tuple.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    obj : Object</span>
+<span class="sd">        Object that is converted to tuple</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        Corresponding tuple to the object.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">obj</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">obj</span><span class="p">,)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">obj</span><span class="p">,)</span></div>
+
+
+<div class="viewcode-block" id="reset_globals"><a class="viewcode-back" href="../../generated/sasoptpy.reset_globals.html#sasoptpy.reset_globals">[docs]</a><span class="k">def</span> <span class="nf">reset_globals</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Deletes the references inside the global dictionary and restarts counters</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; import sasoptpy as so</span>
+<span class="sd">    &gt;&gt;&gt; m = so.Model(name=&#39;my_model&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; print(so.get_namespace())</span>
+<span class="sd">    Global namespace:</span>
+<span class="sd">        Model</span>
+<span class="sd">               0 my_model &lt;class &#39;sasoptpy.model.Model&#39;&gt;, sasoptpy.Model(name=&#39;my_model&#39;, session=None)</span>
+<span class="sd">        VariableGroup</span>
+<span class="sd">        ConstraintGroup</span>
+<span class="sd">        Expression</span>
+<span class="sd">        Variable</span>
+<span class="sd">        Constraint</span>
+<span class="sd">    &gt;&gt;&gt; so.reset_globals()</span>
+<span class="sd">    &gt;&gt;&gt; print(so.get_namespace())</span>
+<span class="sd">    Global namespace:</span>
+<span class="sd">        Model</span>
+<span class="sd">        VariableGroup</span>
+<span class="sd">        ConstraintGroup</span>
+<span class="sd">        Expression</span>
+<span class="sd">        Variable</span>
+<span class="sd">        Constraint</span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`get_namespace`</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">__namedict</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">__ctr</span><span class="p">:</span>
+        <span class="n">__ctr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="read_frame"><a class="viewcode-back" href="../../generated/sasoptpy.read_frame.html#sasoptpy.read_frame">[docs]</a><span class="k">def</span> <span class="nf">read_frame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Reads each column in :class:`pandas.DataFrame` into a list of :class:`pandas.Series` objects</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : :class:`pandas.DataFrame` object</span>
+<span class="sd">        DataFrame to be read</span>
+<span class="sd">    cols : list of strings, optional</span>
+<span class="sd">        Column names to be read. By default, it reads all columns</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list</span>
+<span class="sd">        List of :class:`pandas.Series` objects</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; price = pd.DataFrame([</span>
+<span class="sd">    &gt;&gt;&gt;     [1, 5, 7],</span>
+<span class="sd">    &gt;&gt;&gt;     [8, 4, 3],</span>
+<span class="sd">    &gt;&gt;&gt;     [5, 7, 9]], columns=[&#39;period1&#39;, &#39;period2&#39;, &#39;period3&#39;]).\\</span>
+<span class="sd">    &gt;&gt;&gt;     set_index([[&#39;coal&#39;, &#39;steel&#39;, &#39;copper&#39;]])</span>
+<span class="sd">    &gt;&gt;&gt; [period2, period3] = so.read_frame(price, [&#39;period2&#39;, &#39;period3&#39;])</span>
+<span class="sd">    &gt;&gt;&gt; print(period2)</span>
+<span class="sd">    coal      5</span>
+<span class="sd">    steel     4</span>
+<span class="sd">    copper    7</span>
+<span class="sd">    Name: period2, dtype: int64</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">series</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">cols</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">series</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: Column name </span><span class="si">{}</span><span class="s1"> does not exist.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">col</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">series</span></div>
+
+
+<div class="viewcode-block" id="flatten_frame"><a class="viewcode-back" href="../../generated/sasoptpy.flatten_frame.html#sasoptpy.flatten_frame">[docs]</a><span class="k">def</span> <span class="nf">flatten_frame</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Converts a :class:`pandas.DataFrame` object into a :class:`pandas.Series`</span>
+<span class="sd">    object where indices are tuples of row and column indices</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : :class:`pandas.DataFrame` object</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :class:`pandas.DataFrame` object</span>
+<span class="sd">        A new DataFrame where indices consist of index and columns names as</span>
+<span class="sd">        tuples</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; price = pd.DataFrame([</span>
+<span class="sd">    &gt;&gt;&gt;     [1, 5, 7],</span>
+<span class="sd">    &gt;&gt;&gt;     [8, 4, 3],</span>
+<span class="sd">    &gt;&gt;&gt;     [5, 7, 9]], columns=[\&#39;period1\&#39;, \&#39;period2\&#39;, \&#39;period3\&#39;]).\\</span>
+<span class="sd">    &gt;&gt;&gt;     set_index([[\&#39;coal\&#39;, \&#39;steel\&#39;, \&#39;copper\&#39;]])</span>
+<span class="sd">    &gt;&gt;&gt; print(\&#39;Price data: \\n{}\&#39;.format(price))</span>
+<span class="sd">    &gt;&gt;&gt; price_f = so.flatten_frame(price)</span>
+<span class="sd">    &gt;&gt;&gt; print(\&#39;Price data: \\n{}\&#39;.format(price_f))</span>
+<span class="sd">    Price data:</span>
+<span class="sd">            period1  period2  period3</span>
+<span class="sd">    coal          1        5        7</span>
+<span class="sd">    steel         8        4        3</span>
+<span class="sd">    copper        5        7        9</span>
+<span class="sd">    Price data:</span>
+<span class="sd">    (coal, period1)      1</span>
+<span class="sd">    (coal, period2)      5</span>
+<span class="sd">    (coal, period3)      7</span>
+<span class="sd">    (steel, period1)     8</span>
+<span class="sd">    (steel, period2)     4</span>
+<span class="sd">    (steel, period3)     3</span>
+<span class="sd">    (copper, period1)    5</span>
+<span class="sd">    (copper, period2)    7</span>
+<span class="sd">    (copper, period3)    9</span>
+<span class="sd">    dtype: int64</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">new_frame</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">stack</span><span class="p">()</span>
+    <span class="n">new_frame</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">new_frame</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_series</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">new_frame</span></div>
+
+
+<div class="viewcode-block" id="print_model_mps"><a class="viewcode-back" href="../../generated/sasoptpy.print_model_mps.html#sasoptpy.print_model_mps">[docs]</a><span class="k">def</span> <span class="nf">print_model_mps</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Prints the MPS representation of the model</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model : :class:`Model` object</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; m = so.Model(name=&#39;print_example&#39;, session=s)</span>
+<span class="sd">    &gt;&gt;&gt; x = m.add_variable(lb=1, name=&#39;x&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; y = m.add_variables(2, name=&#39;y&#39;, ub=3, vartype=so.INT)</span>
+<span class="sd">    &gt;&gt;&gt; m.add_constraint(x + y.sum(&#39;*&#39;) &lt;= 9, name=&#39;c1&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; m.add_constraints((x + y[i] &gt;= 2 for i in [0, 1]), name=&#39;c2&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; m.set_objective(x+3*y[0], sense=so.MAX, name=&#39;obj&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; so.print_model_mps(m)</span>
+<span class="sd">    NOTE: Initialized model print_example</span>
+<span class="sd">         Field1    Field2         Field3 Field4    Field5 Field6 _id_</span>
+<span class="sd">    0      NAME            print_example      0                0    1</span>
+<span class="sd">    1      ROWS                                                     2</span>
+<span class="sd">    2       MAX       obj                                           3</span>
+<span class="sd">    3         L        c1                                           4</span>
+<span class="sd">    4         G      c2_0                                           5</span>
+<span class="sd">    5         G      c2_1                                           6</span>
+<span class="sd">    6   COLUMNS                                                     7</span>
+<span class="sd">    7                   x            obj      1                     8</span>
+<span class="sd">    8                   x             c1      1                     9</span>
+<span class="sd">    9                   x           c2_0      1                    10</span>
+<span class="sd">    10                  x           c2_1      1                    11</span>
+<span class="sd">    11           MARK0000       &#39;MARKER&#39;         &#39;INTORG&#39;          12</span>
+<span class="sd">    12                y_0            obj      3                    13</span>
+<span class="sd">    13                y_0             c1      1                    14</span>
+<span class="sd">    14                y_0           c2_0      1                    15</span>
+<span class="sd">    15                y_1             c1      1                    16</span>
+<span class="sd">    16                y_1           c2_1      1                    17</span>
+<span class="sd">    17           MARK0001       &#39;MARKER&#39;         &#39;INTEND&#39;          18</span>
+<span class="sd">    18      RHS                                                    19</span>
+<span class="sd">    19                RHS             c1      9                    20</span>
+<span class="sd">    20                RHS           c2_0      2                    21</span>
+<span class="sd">    21                RHS           c2_1      2                    22</span>
+<span class="sd">    22   RANGES                                                    23</span>
+<span class="sd">    23   BOUNDS                                                    24</span>
+<span class="sd">    24       LO       BND              x      1                    25</span>
+<span class="sd">    25       UP       BND            y_0      3                    26</span>
+<span class="sd">    26       LO       BND            y_0      0                    27</span>
+<span class="sd">    27       UP       BND            y_1      3                    28</span>
+<span class="sd">    28       LO       BND            y_1      0                    29</span>
+<span class="sd">    29   ENDATA                               0                0   30</span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`sasoptpy.Model.to_frame`</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">with</span> <span class="n">pd</span><span class="o">.</span><span class="n">option_context</span><span class="p">(</span><span class="s1">&#39;display.max_rows&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">to_frame</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="get_namespace"><a class="viewcode-back" href="../../generated/sasoptpy.get_namespace.html#sasoptpy.get_namespace">[docs]</a><span class="k">def</span> <span class="nf">get_namespace</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Prints details of components registered to the global name dictionary</span>
+
+<span class="sd">    The list includes models, variables, constraints and expressions</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;Global namespace:&#39;</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">[</span><span class="n">sasoptpy</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">VariableGroup</span><span class="p">,</span>
+              <span class="n">sasoptpy</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">ConstraintGroup</span><span class="p">,</span>
+              <span class="n">sasoptpy</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">Expression</span><span class="p">,</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">Variable</span><span class="p">,</span>
+              <span class="n">sasoptpy</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">Constraint</span><span class="p">]:</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n\t</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">__namedict</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">__namedict</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="ow">is</span> <span class="n">c</span><span class="p">:</span>
+                <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n\t\t</span><span class="si">{:4d}</span><span class="s1"> {:</span><span class="si">{width}</span><span class="s1">} </span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">__namedict</span><span class="p">[</span><span class="n">k</span><span class="p">]),</span> <span class="nb">repr</span><span class="p">(</span><span class="n">__namedict</span><span class="p">[</span><span class="n">k</span><span class="p">]),</span>
+                    <span class="n">width</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">__namedict</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">s</span></div>
+
+
+<span class="k">def</span> <span class="nf">get_namedict</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">__namedict</span>
+
+
+<span class="k">def</span> <span class="nf">set_namedict</span><span class="p">(</span><span class="n">ss</span><span class="p">):</span>
+    <span class="n">__namedict</span> <span class="o">=</span> <span class="n">ss</span>
+
+
+<span class="k">def</span> <span class="nf">get_len</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+
+
+<span class="k">def</span> <span class="nf">_list_item</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+    <span class="n">it</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">it</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">i</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_sort_tuple</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">tuple_pack</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">i</span><span class="p">),)</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">key</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,)</span>
+        <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">):</span>
+            <span class="n">key</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="n">key</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,)</span>
+    <span class="n">key</span> <span class="o">+=</span> <span class="n">i</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="get_solution_table"><a class="viewcode-back" href="../../generated/sasoptpy.get_solution_table.html#sasoptpy.get_solution_table">[docs]</a><span class="k">def</span> <span class="nf">get_solution_table</span><span class="p">(</span><span class="o">*</span><span class="n">argv</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">rhs</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Returns the requested variable names as a DataFrame table</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sort : bool, optional</span>
+<span class="sd">        Sort option for the indices</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    :class:`pandas.DataFrame`</span>
+<span class="sd">        DataFrame object that holds keys and values</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">soltable</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">listofkeys</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">keylengths</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Get dimension from first argv</span>
+    <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">argv</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">Iterable</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">VariableGroup</span><span class="p">):</span>
+                <span class="n">currentkeylist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_vardict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_vardict</span><span class="p">:</span>
+                    <span class="n">m</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">tuple_unpack</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">m</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">listofkeys</span><span class="p">:</span>
+                        <span class="n">listofkeys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+                <span class="n">keylengths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">list_length</span><span class="p">(</span>
+                    <span class="n">currentkeylist</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">ConstraintGroup</span><span class="p">):</span>
+                <span class="n">currentkeylist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_condict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_condict</span><span class="p">:</span>
+                    <span class="n">m</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">tuple_unpack</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">m</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">listofkeys</span><span class="p">:</span>
+                        <span class="n">listofkeys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+                <span class="n">keylengths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">list_length</span><span class="p">(</span>
+                    <span class="n">currentkeylist</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="ow">or</span>
+                  <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="ow">and</span>
+                  <span class="nb">len</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)):</span>
+                <span class="c1"># optinal method: converting to series, argv[i].iloc[0]</span>
+                <span class="n">currentkeylist</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
+                <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">currentkeylist</span><span class="p">:</span>
+                    <span class="n">m</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">tuple_unpack</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">m</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">listofkeys</span><span class="p">:</span>
+                        <span class="n">listofkeys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+                <span class="n">keylengths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">list_length</span><span class="p">(</span>
+                    <span class="n">currentkeylist</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+                <span class="n">index_list</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                <span class="n">col_list</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">index_list</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">col_list</span><span class="p">:</span>
+                        <span class="n">current_key</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">tuple_pack</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+                        <span class="o">+</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">tuple_pack</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">current_key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">listofkeys</span><span class="p">:</span>
+                            <span class="n">listofkeys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_key</span><span class="p">)</span>
+                <span class="n">keylengths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">list_length</span><span class="p">(</span>
+                    <span class="n">current_key</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="n">currentkeylist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">currentkeylist</span><span class="p">:</span>
+                    <span class="n">m</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">tuple_unpack</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">m</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">listofkeys</span><span class="p">:</span>
+                        <span class="n">listofkeys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+                <span class="n">keylengths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">list_length</span><span class="p">(</span>
+                    <span class="n">currentkeylist</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">listofkeys</span><span class="p">:</span>
+                <span class="n">listofkeys</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;&#39;</span><span class="p">,))</span>
+                <span class="n">keylengths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="n">sort</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">listofkeys</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">listofkeys</span><span class="p">,</span>
+                                <span class="n">key</span><span class="o">=</span><span class="n">_sort_tuple</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="n">listofkeys</span> <span class="o">=</span> <span class="n">listofkeys</span>
+
+    <span class="n">maxk</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">keylengths</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">listofkeys</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">list_length</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">maxk</span><span class="p">:</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;-&#39;</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">maxk</span><span class="o">-</span><span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">list_length</span><span class="p">(</span><span class="n">k</span><span class="p">)))</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">argv</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">==</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">VariableGroup</span><span class="p">:</span>
+                <span class="n">tk</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">tuple_pack</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">tk</span><span class="p">]</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span>\
+                    <span class="k">if</span> <span class="n">tk</span> <span class="ow">in</span> <span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_vardict</span> <span class="k">else</span> <span class="s1">&#39;-&#39;</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">==</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">Variable</span><span class="p">:</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,)</span> <span class="k">else</span> <span class="s1">&#39;-&#39;</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">==</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">Constraint</span><span class="p">:</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">rhs</span><span class="o">=</span><span class="n">rhs</span><span class="p">)</span> <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,)</span> <span class="k">else</span> <span class="s1">&#39;-&#39;</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">==</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">ConstraintGroup</span><span class="p">:</span>
+                <span class="n">tk</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">tuple_pack</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">tk</span><span class="p">]</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span>\
+                    <span class="k">if</span> <span class="n">tk</span> <span class="ow">in</span> <span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_condict</span> <span class="k">else</span> <span class="s1">&#39;-&#39;</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">==</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">Expression</span><span class="p">:</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,)</span> <span class="k">else</span> <span class="s1">&#39;-&#39;</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">==</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">])</span> <span class="o">==</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">Expression</span><span class="p">:</span>
+                        <span class="n">val</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">val</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">val</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">==</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="ow">and</span>
+                  <span class="nb">len</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">():</span>
+                        <span class="n">cellv</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">cellv</span><span class="p">)</span> <span class="o">==</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+                            <span class="n">cellv</span> <span class="o">=</span> <span class="n">cellv</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">cellv</span><span class="p">)</span> <span class="o">==</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">Expression</span><span class="p">:</span>
+                            <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cellv</span><span class="o">.</span><span class="n">get_value</span><span class="p">())</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">j</span><span class="p">])</span>
+                    <span class="k">elif</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">tuple_pack</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="ow">in</span> <span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">():</span>
+                        <span class="n">tk</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">tuple_pack</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+                        <span class="n">cellv</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">tk</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">cellv</span><span class="p">)</span> <span class="o">==</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+                            <span class="n">cellv</span> <span class="o">=</span> <span class="n">cellv</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">cellv</span><span class="p">)</span> <span class="o">==</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">Expression</span><span class="p">:</span>
+                            <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cellv</span><span class="o">.</span><span class="n">get_value</span><span class="p">())</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">tk</span><span class="p">,</span> <span class="n">j</span><span class="p">])</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">==</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+                <span class="n">arg_series</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">stack</span><span class="p">()</span>
+                <span class="n">arg_series</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">arg_series</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_series</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">arg_series</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">arg_series</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="o">==</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">Expression</span><span class="p">:</span>
+                        <span class="n">val</span> <span class="o">=</span> <span class="n">arg_series</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">val</span> <span class="o">=</span> <span class="n">arg_series</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">val</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                    <span class="n">tk</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">tuple_pack</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">tk</span><span class="p">])</span> <span class="o">==</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">Expression</span><span class="p">:</span>
+                        <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">tk</span><span class="p">]</span><span class="o">.</span><span class="n">get_value</span><span class="p">())</span>
+                    <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">tk</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">):</span>
+                        <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">tk</span><span class="p">])</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]))</span>
+                <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                    <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+        <span class="n">soltable</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+    <span class="n">indexlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">soltable</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span>
+    <span class="n">indexcols</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">indexlen</span><span class="p">)]</span>
+    <span class="n">inputcols</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">argv</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">inputcols</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">inputcols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+                    <span class="n">inputcols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;DataFrame&#39;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="n">inputcols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;dict&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">inputcols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;arg: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+    <span class="n">colnames</span> <span class="o">=</span> <span class="n">indexcols</span> <span class="o">+</span> <span class="n">inputcols</span>
+    <span class="n">soltablep</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">soltable</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">colnames</span><span class="p">)</span>
+    <span class="n">soltablep2</span> <span class="o">=</span> <span class="n">soltablep</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">indexcols</span><span class="p">)</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.multi_sparse&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">soltablep2</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../whatsnew.html">What’s New</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../input-data.html">Handling Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../models.html">Sessions and Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../components.html">Model components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sasoptpy.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2018, SAS Institute.
+      Last updated on Feb 26, 2018 (Timestamp: 0.1.1-20180226160330).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
+    </div>
+  </body>
+</html>

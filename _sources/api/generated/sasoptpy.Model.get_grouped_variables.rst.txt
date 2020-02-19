@@ -1,0 +1,6 @@
+sasoptpy.Model.get\_grouped\_variables
+======================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.get_grouped_variables

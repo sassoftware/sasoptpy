@@ -1,25 +1,27 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Curve Fitting &#8212; sasoptpy 0.2.1 documentation</title>
+    <meta charset="utf-8" />
+    <title>Curve Fitting &#8212; sasoptpy 1.0.0-alpha documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/sasoptpy.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/js/url.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/js/url.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Nonlinear 1" href="nonlinear_1.html" />
-    <link rel="prev" title="Multiobjective" href="multiobjective.html" /> 
+    <link rel="prev" title="Efficiency Analysis" href="efficiency_analysis.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../_static/js/version.js"></script>
+
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -28,19 +30,16 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../http-routingtable.html" title="HTTP Routing Table"
-             >routing table</a> |</li>
-        <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="nonlinear_1.html" title="Nonlinear 1"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="multiobjective.html" title="Multiobjective"
+          <a href="efficiency_analysis.html" title="Efficiency Analysis"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.1 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="examples.html" accesskey="U">Examples</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -53,8 +52,8 @@
 <h1>Curve Fitting<a class="headerlink" href="#curve-fitting" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="reference">
 <h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex11_toc.htm&amp;docsetVersion=14.3&amp;locale=en">http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex11_toc.htm&amp;docsetVersion=14.3&amp;locale=en</a></p>
-<p><a class="reference external" href="http://support.sas.com/documentation/onlinedoc/or/ex_code/143/mpex11.html">http://support.sas.com/documentation/onlinedoc/or/ex_code/143/mpex11.html</a></p>
+<p><a class="reference external" href="http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex11_toc.htm&amp;docsetVersion=15.1&amp;locale=en">http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex11_toc.htm&amp;docsetVersion=15.1&amp;locale=en</a></p>
+<p><a class="reference external" href="http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex11.html">http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex11.html</a></p>
 </div>
 <div class="section" id="model">
 <h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
@@ -90,7 +89,18 @@
                                                     <span class="s1">&#39;replace&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
 
     <span class="c1"># Read observations</span>
-    <span class="n">POINTS</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">xy_table_ref</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="n">xy_data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">])</span>
+    <span class="kn">from</span> <span class="nn">sasoptpy.actions</span> <span class="kn">import</span> <span class="n">read_data</span>
+    <span class="n">POINTS</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;POINTS&#39;</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ParameterGroup</span><span class="p">(</span><span class="n">POINTS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ParameterGroup</span><span class="p">(</span><span class="n">POINTS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+    <span class="n">read_st</span> <span class="o">=</span> <span class="n">read_data</span><span class="p">(</span>
+        <span class="n">table</span><span class="o">=</span><span class="n">xy_data</span><span class="p">,</span>
+        <span class="n">index</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">POINTS</span><span class="p">,</span> <span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="n">so</span><span class="o">.</span><span class="n">N</span><span class="p">},</span>
+        <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">:</span> <span class="s1">&#39;x&#39;</span><span class="p">},</span>
+            <span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">:</span> <span class="s1">&#39;y&#39;</span><span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
 
     <span class="c1"># Parameters and variables</span>
     <span class="n">order</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;order&#39;</span><span class="p">)</span>
@@ -116,36 +126,40 @@
 
     <span class="n">order</span><span class="o">.</span><span class="n">set_init</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">L1</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;L1&#39;</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="n">cas_conn</span><span class="p">)</span>
-    <span class="n">L1</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">objective1</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MIN</span><span class="p">)</span>
-    <span class="n">L1</span><span class="o">.</span><span class="n">include</span><span class="p">(</span><span class="n">POINTS</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xy_table_ref</span><span class="p">)</span>
+    <span class="n">L1</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">objective1</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MIN</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;L1obj&#39;</span><span class="p">)</span>
+    <span class="n">L1</span><span class="o">.</span><span class="n">include</span><span class="p">(</span><span class="n">POINTS</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">read_st</span><span class="p">)</span>
     <span class="n">L1</span><span class="o">.</span><span class="n">include</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">estimate</span><span class="p">,</span> <span class="n">surplus</span><span class="p">,</span> <span class="n">slack</span><span class="p">,</span> <span class="n">abs_dev_con</span><span class="p">)</span>
-    <span class="n">L1</span><span class="o">.</span><span class="n">add_statement</span><span class="p">(</span><span class="s1">&#39;print x y estimate surplus slack;&#39;</span><span class="p">,</span> <span class="n">after_solve</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">L1</span><span class="o">.</span><span class="n">add_postsolve_statement</span><span class="p">(</span><span class="s1">&#39;print x y estimate surplus slack;&#39;</span><span class="p">)</span>
 
     <span class="n">L1</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">sol_data1</span> <span class="o">=</span> <span class="n">L1</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Print3.PrintTable&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">beta</span><span class="p">))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">sol_data1</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">sols</span><span class="p">:</span>
+        <span class="n">sol_data1</span> <span class="o">=</span> <span class="n">L1</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Print1.PrintTable&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">beta</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">sol_data1</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
 
     <span class="n">Linf</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Linf&#39;</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="n">cas_conn</span><span class="p">)</span>
     <span class="n">Linf</span><span class="o">.</span><span class="n">include</span><span class="p">(</span><span class="n">L1</span><span class="p">,</span> <span class="n">minmax</span><span class="p">,</span> <span class="n">minmax_con</span><span class="p">)</span>
-    <span class="n">Linf</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">objective2</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MIN</span><span class="p">)</span>
+    <span class="n">Linf</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">objective2</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MIN</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Linfobj&#39;</span><span class="p">)</span>
 
     <span class="n">Linf</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
-    <span class="n">sol_data2</span> <span class="o">=</span> <span class="n">Linf</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Print3.PrintTable&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">beta</span><span class="p">))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">sol_data2</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">sols</span><span class="p">:</span>
+        <span class="n">sol_data2</span> <span class="o">=</span> <span class="n">Linf</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Print1.PrintTable&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">beta</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">sol_data2</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
 
     <span class="n">order</span><span class="o">.</span><span class="n">set_init</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
     <span class="n">L1</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
-    <span class="n">sol_data3</span> <span class="o">=</span> <span class="n">L1</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Print3.PrintTable&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">beta</span><span class="p">))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">sol_data3</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">sols</span><span class="p">:</span>
+        <span class="n">sol_data3</span> <span class="o">=</span> <span class="n">L1</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Print1.PrintTable&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">beta</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">sol_data3</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
 
     <span class="n">Linf</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
-    <span class="n">sol_data4</span> <span class="o">=</span> <span class="n">Linf</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Print3.PrintTable&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">beta</span><span class="p">))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">sol_data4</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">sols</span><span class="p">:</span>
+        <span class="n">sol_data4</span> <span class="o">=</span> <span class="n">Linf</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Print1.PrintTable&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">beta</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">sol_data4</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
 
     <span class="k">if</span> <span class="n">sols</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">sol_data1</span><span class="p">,</span> <span class="n">sol_data2</span><span class="p">,</span> <span class="n">sol_data3</span><span class="p">,</span> <span class="n">sol_data4</span><span class="p">)</span>
@@ -156,34 +170,46 @@
 </div>
 <div class="section" id="output">
 <h2>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">examples.curve_fitting</span> <span class="kn">import</span> <span class="n">test</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span> <span class="nn">os</span>
 
-<span class="gp">In [2]: </span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">s3</span><span class="p">,</span> <span class="n">s4</span><span class="p">)</span> <span class="o">=</span> <span class="n">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">,</span> <span class="n">sols</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table XY_DATA in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table XY_DATA has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="gp">In [2]: </span><span class="n">hostname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;CASHOST&#39;</span><span class="p">)</span>
+
+<span class="gp">In [3]: </span><span class="n">port</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;CASPORT&#39;</span><span class="p">)</span>
+
+<span class="gp">In [4]: </span><span class="kn">from</span> <span class="nn">swat</span> <span class="kn">import</span> <span class="n">CAS</span>
+
+<span class="gp">In [5]: </span><span class="n">cas_conn</span> <span class="o">=</span> <span class="n">CAS</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+
+<span class="gp">In [6]: </span><span class="kn">import</span> <span class="nn">sasoptpy</span>
+</pre></div>
+</div>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [7]: </span><span class="kn">from</span> <span class="nn">examples.server_side.curve_fitting</span> <span class="kn">import</span> <span class="n">test</span>
+
+<span class="gp">In [8]: </span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">s3</span><span class="p">,</span> <span class="n">s4</span><span class="p">)</span> <span class="o">=</span> <span class="n">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">,</span> <span class="n">sols</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table XY_DATA in caslib CASUSER(casuser).</span>
+<span class="go">NOTE: The table XY_DATA has been created in caslib CASUSER(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Initialized model L1.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
 <span class="go">NOTE: Converting model L1 to OPTMODEL.</span>
-<span class="go">set set_XY_DATA_N;</span>
-<span class="go">num x {set_XY_DATA_N};</span>
-<span class="go">num y {set_XY_DATA_N};</span>
-<span class="go">read data XY_DATA into set_XY_DATA_N=[_N_] x y;</span>
-<span class="go">num order init 1;</span>
-<span class="go">var beta {{0..order}};</span>
-<span class="go">impvar estimate {i_1 in set_XY_DATA_N} = beta[0] + sum {i_2 in 1..order}(beta[i_2] * (x[i_1]) ^ (i_2));</span>
-<span class="go">var surplus {{set_XY_DATA_N}} &gt;= 0;</span>
-<span class="go">var slack {{set_XY_DATA_N}} &gt;= 0;</span>
-<span class="go">min objective1 = sum {i_3 in set_XY_DATA_N}(surplus[i_3] + slack[i_3]); </span>
-<span class="go">con abs_dev_con {i_4 in set_XY_DATA_N} : y[i_4] - estimate[i_4] + surplus[i_4] - slack[i_4] = 0;</span>
-
-<span class="go">solve;</span>
-<span class="go">print _var_.name _var_.lb _var_.ub _var_ _var_.rc;</span>
-<span class="go">print _con_.name _con_.body _con_.dual;</span>
-<span class="go">print x y estimate surplus slack;</span>
+<span class="go">   set POINTS;</span>
+<span class="go">   num x {POINTS};</span>
+<span class="go">   num y {POINTS};</span>
+<span class="go">   read data XY_DATA into POINTS=[_N_] x y;</span>
+<span class="go">   num order init 1;</span>
+<span class="go">   var beta {{0..order}};</span>
+<span class="go">   impvar estimate {o8 in POINTS} = beta[0] + sum {k in 1..order} (beta[k] * (x[o8]) ^ (k));</span>
+<span class="go">   var surplus {{POINTS}} &gt;= 0;</span>
+<span class="go">   var slack {{POINTS}} &gt;= 0;</span>
+<span class="go">   con abs_dev_con {o32 in POINTS} : y[o32] - estimate[o32] + surplus[o32] - slack[o32] = 0;</span>
+<span class="go">   min L1obj = sum {i in POINTS} (surplus[i] + slack[i]);</span>
+<span class="go">   solve;</span>
+<span class="go">   create data solution from [i]= {1.._NVAR_} var=_VAR_.name value=_VAR_ lb=_VAR_.lb ub=_VAR_.ub rc=_VAR_.rc;</span>
+<span class="go">   create data dual from [j] = {1.._NCON_} con=_CON_.name value=_CON_.body dual=_CON_.dual;</span>
+<span class="go">   print x y estimate surplus slack;</span>
 
 <span class="go">NOTE: Submitting OPTMODEL code to CAS server.</span>
-<span class="go">NOTE: There were 19 rows read from table &#39;XY_DATA&#39; in caslib &#39;CASUSERHDFS(casuser)&#39;.</span>
-<span class="go">NOTE: Problem generation will use 80 threads.</span>
+<span class="go">NOTE: There were 19 rows read from table &#39;XY_DATA&#39; in caslib &#39;CASUSER(casuser)&#39;.</span>
+<span class="go">NOTE: Problem generation will use 8 threads.</span>
 <span class="go">NOTE: The problem has 40 variables (2 free, 0 fixed).</span>
 <span class="go">NOTE: The problem uses 19 implicit variables.</span>
 <span class="go">NOTE: The problem has 19 linear constraints (0 LE, 19 EQ, 0 GE, 0 range).</span>
@@ -191,7 +217,7 @@
 <span class="go">NOTE: The problem has 0 nonlinear constraints (0 LE, 0 EQ, 0 GE, 0 range).</span>
 <span class="go">NOTE: The OPTMODEL presolver is disabled for linear problems.</span>
 <span class="go">NOTE: The LP presolver value AUTOMATIC is applied.</span>
-<span class="go">NOTE: The LP presolver time is 0.00 seconds.</span>
+<span class="go">NOTE: The LP presolver time is 0.01 seconds.</span>
 <span class="go">NOTE: The LP presolver removed 38 variables and 0 constraints.</span>
 <span class="go">NOTE: The LP presolver removed 38 constraint coefficients.</span>
 <span class="go">NOTE: The LP presolver formulated the dual of the problem.</span>
@@ -204,13 +230,12 @@
 <span class="go">          D 2          5    1.146625E+01         0</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 11.46625.</span>
-<span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
-<span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 13 rows and 4 columns.</span>
-<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 18 rows and 4 columns.</span>
-<span class="go">NOTE: The CAS table &#39;primal&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 40 rows and 6 columns.</span>
-<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 19 rows and 4 columns.</span>
+<span class="go">NOTE: The Dual Simplex solve time is 0.04 seconds.</span>
+<span class="go">NOTE: The output table &#39;SOLUTION&#39; in caslib &#39;CASUSER(casuser)&#39; has 40 rows and 6 columns.</span>
+<span class="go">NOTE: The output table &#39;DUAL&#39; in caslib &#39;CASUSER(casuser)&#39; has 19 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSER(casuser)&#39; has 13 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSER(casuser)&#39; has 18 rows and 4 columns.</span>
 <span class="go">      beta</span>
-<span class="go">1         </span>
 <span class="go">0  0.58125</span>
 <span class="go">1  0.63750</span>
 <span class="go">    COL1     x    y  estimate       surplus    slack</span>
@@ -237,8 +262,8 @@
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
 <span class="go">NOTE: Converting model Linf to OPTMODEL.</span>
 <span class="go">NOTE: Submitting OPTMODEL code to CAS server.</span>
-<span class="go">NOTE: There were 19 rows read from table &#39;XY_DATA&#39; in caslib &#39;CASUSERHDFS(casuser)&#39;.</span>
-<span class="go">NOTE: Problem generation will use 32 threads.</span>
+<span class="go">NOTE: There were 19 rows read from table &#39;XY_DATA&#39; in caslib &#39;CASUSER(casuser)&#39;.</span>
+<span class="go">NOTE: Problem generation will use 8 threads.</span>
 <span class="go">NOTE: The problem has 41 variables (3 free, 0 fixed).</span>
 <span class="go">NOTE: The problem uses 19 implicit variables.</span>
 <span class="go">NOTE: The problem has 38 linear constraints (0 LE, 19 EQ, 19 GE, 0 range).</span>
@@ -259,12 +284,11 @@
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 1.725.</span>
 <span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
-<span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 13 rows and 4 columns.</span>
-<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 18 rows and 4 columns.</span>
-<span class="go">NOTE: The CAS table &#39;primal&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 41 rows and 6 columns.</span>
-<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 38 rows and 4 columns.</span>
+<span class="go">NOTE: The output table &#39;SOLUTION&#39; in caslib &#39;CASUSER(casuser)&#39; has 41 rows and 6 columns.</span>
+<span class="go">NOTE: The output table &#39;DUAL&#39; in caslib &#39;CASUSER(casuser)&#39; has 38 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSER(casuser)&#39; has 13 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSER(casuser)&#39; has 18 rows and 4 columns.</span>
 <span class="go">    beta</span>
-<span class="go">1       </span>
 <span class="go">0 -0.400</span>
 <span class="go">1  0.625</span>
 <span class="go">    COL1     x    y  estimate  surplus   slack</span>
@@ -290,8 +314,8 @@
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
 <span class="go">NOTE: Converting model L1 to OPTMODEL.</span>
 <span class="go">NOTE: Submitting OPTMODEL code to CAS server.</span>
-<span class="go">NOTE: There were 19 rows read from table &#39;XY_DATA&#39; in caslib &#39;CASUSERHDFS(casuser)&#39;.</span>
-<span class="go">NOTE: Problem generation will use 32 threads.</span>
+<span class="go">NOTE: There were 19 rows read from table &#39;XY_DATA&#39; in caslib &#39;CASUSER(casuser)&#39;.</span>
+<span class="go">NOTE: Problem generation will use 8 threads.</span>
 <span class="go">NOTE: The problem has 41 variables (3 free, 0 fixed).</span>
 <span class="go">NOTE: The problem uses 19 implicit variables.</span>
 <span class="go">NOTE: The problem has 19 linear constraints (0 LE, 19 EQ, 0 GE, 0 range).</span>
@@ -313,12 +337,11 @@
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 10.458964706.</span>
 <span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
-<span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 13 rows and 4 columns.</span>
-<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 18 rows and 4 columns.</span>
-<span class="go">NOTE: The CAS table &#39;primal&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 41 rows and 6 columns.</span>
-<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 19 rows and 4 columns.</span>
+<span class="go">NOTE: The output table &#39;SOLUTION&#39; in caslib &#39;CASUSER(casuser)&#39; has 41 rows and 6 columns.</span>
+<span class="go">NOTE: The output table &#39;DUAL&#39; in caslib &#39;CASUSER(casuser)&#39; has 19 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSER(casuser)&#39; has 13 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSER(casuser)&#39; has 18 rows and 4 columns.</span>
 <span class="go">       beta</span>
-<span class="go">1          </span>
 <span class="go">0  0.982353</span>
 <span class="go">1  0.294510</span>
 <span class="go">2  0.033725</span>
@@ -345,8 +368,8 @@
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
 <span class="go">NOTE: Converting model Linf to OPTMODEL.</span>
 <span class="go">NOTE: Submitting OPTMODEL code to CAS server.</span>
-<span class="go">NOTE: There were 19 rows read from table &#39;XY_DATA&#39; in caslib &#39;CASUSERHDFS(casuser)&#39;.</span>
-<span class="go">NOTE: Problem generation will use 32 threads.</span>
+<span class="go">NOTE: There were 19 rows read from table &#39;XY_DATA&#39; in caslib &#39;CASUSER(casuser)&#39;.</span>
+<span class="go">NOTE: Problem generation will use 8 threads.</span>
 <span class="go">NOTE: The problem has 42 variables (4 free, 0 fixed).</span>
 <span class="go">NOTE: The problem uses 19 implicit variables.</span>
 <span class="go">NOTE: The problem has 38 linear constraints (0 LE, 19 EQ, 19 GE, 0 range).</span>
@@ -367,12 +390,11 @@
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 1.475.</span>
 <span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
-<span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 13 rows and 4 columns.</span>
-<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 18 rows and 4 columns.</span>
-<span class="go">NOTE: The CAS table &#39;primal&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 42 rows and 6 columns.</span>
-<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 38 rows and 4 columns.</span>
+<span class="go">NOTE: The output table &#39;SOLUTION&#39; in caslib &#39;CASUSER(casuser)&#39; has 42 rows and 6 columns.</span>
+<span class="go">NOTE: The output table &#39;DUAL&#39; in caslib &#39;CASUSER(casuser)&#39; has 38 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSER(casuser)&#39; has 13 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSER(casuser)&#39; has 18 rows and 4 columns.</span>
 <span class="go">    beta</span>
-<span class="go">1       </span>
 <span class="go">0  2.475</span>
 <span class="go">1 -0.625</span>
 <span class="go">2  0.125</span>
@@ -399,25 +421,25 @@
 </pre></div>
 </div>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="go"># Plots</span>
-<span class="gp">In [3]: </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="gp">In [9]: </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="gp">In [4]: </span><span class="n">p1</span> <span class="o">=</span> <span class="n">s1</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">)</span>
+<span class="gp">In [10]: </span><span class="n">p1</span> <span class="o">=</span> <span class="n">s1</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">)</span>
 
-<span class="gp">In [5]: </span><span class="n">s1</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">p1</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;estimate&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Line1&#39;</span><span class="p">);</span>
+<span class="gp">In [11]: </span><span class="n">s1</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">p1</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;estimate&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Line1&#39;</span><span class="p">);</span>
 
-<span class="gp">In [6]: </span><span class="n">s2</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">p1</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;estimate&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Line2&#39;</span><span class="p">);</span>
+<span class="gp">In [12]: </span><span class="n">s2</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">p1</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;estimate&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Line2&#39;</span><span class="p">);</span>
 
-<span class="gp">In [7]: </span><span class="n">p1</span>
-<span class="gh">Out[7]: </span><span class="go">&lt;matplotlib.axes._subplots.AxesSubplot at 0x7fc5b98afbe0&gt;</span>
+<span class="gp">In [13]: </span><span class="n">p1</span>
+<span class="gh">Out[13]: </span><span class="go">&lt;matplotlib.axes._subplots.AxesSubplot at 0x7fe2a804f3c8&gt;</span>
 
-<span class="gp">In [8]: </span><span class="n">p2</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">)</span>
+<span class="gp">In [14]: </span><span class="n">p2</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">)</span>
 
-<span class="gp">In [9]: </span><span class="n">s3</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">p2</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;estimate&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Curve1&#39;</span><span class="p">);</span>
+<span class="gp">In [15]: </span><span class="n">s3</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">p2</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;estimate&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Curve1&#39;</span><span class="p">);</span>
 
-<span class="gp">In [10]: </span><span class="n">s4</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">p2</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;estimate&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Curve2&#39;</span><span class="p">);</span>
+<span class="gp">In [16]: </span><span class="n">s4</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">p2</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;estimate&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Curve2&#39;</span><span class="p">);</span>
 
-<span class="gp">In [11]: </span><span class="n">p2</span>
-<span class="gh">Out[11]: </span><span class="go">&lt;matplotlib.axes._subplots.AxesSubplot at 0x7fc5a50f78d0&gt;</span>
+<span class="gp">In [17]: </span><span class="n">p2</span>
+<span class="gh">Out[17]: </span><span class="go">&lt;matplotlib.axes._subplots.AxesSubplot at 0x7fe2a8031470&gt;</span>
 </pre></div>
 </div>
 <img alt="../_images/cf_line.png" src="../_images/cf_line.png" />
@@ -431,17 +453,24 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
   <h3><a href="../index.html">Table of Contents</a></h3>
   <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../input-data.html">Handling Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../models.html">Sessions and Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../components.html">Model components</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../workflow.html">Workflows</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../examples.html#viya-examples-concrete">Viya Examples / Concrete</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../examples.html#viya-examples-abstract">Viya Examples / Abstract</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/user-guide.html">User Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="examples.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="examples.html#viya-examples-concrete">Viya Examples / Concrete</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="examples.html#viya-examples-abstract">Viya Examples / Abstract</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Curve Fitting</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#reference">Reference</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#model">Model</a></li>
@@ -452,26 +481,23 @@
 <li class="toctree-l3"><a class="reference internal" href="nonlinear_2.html">Nonlinear 2</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples.html#restful-api-examples">RESTful API Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api.html">API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../web-api.html">RESTful API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../version-history.html">Version History</a></li>
 </ul>
 
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -483,25 +509,34 @@
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../http-routingtable.html" title="HTTP Routing Table"
-             >routing table</a> |</li>
-        <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="nonlinear_1.html" title="Nonlinear 1"
              >next</a> |</li>
         <li class="right" >
-          <a href="multiobjective.html" title="Multiobjective"
+          <a href="efficiency_analysis.html" title="Efficiency Analysis"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.1 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="examples.html" >Examples</a> &#187;</li> 
       </ul>
     </div>
+
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017-2019, SAS Institute.
-      Last updated on Feb 26, 2019 (Timestamp: 0.2.1-20190226133646).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
+        &#169; Copyright 2017-2020, SAS Institute.
+      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219165041).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
     </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-155356999-1');
+</script>
+
+
   </body>
 </html>

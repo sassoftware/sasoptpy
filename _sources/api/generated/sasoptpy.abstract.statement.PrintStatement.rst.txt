@@ -1,0 +1,31 @@
+sasoptpy.abstract.statement.PrintStatement
+==========================================
+
+.. currentmodule:: sasoptpy.abstract.statement
+
+.. autoclass:: PrintStatement
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~PrintStatement.__init__
+      ~PrintStatement.allow_print_names
+      ~PrintStatement.append
+      ~PrintStatement.get_response
+      ~PrintStatement.is_internal
+      ~PrintStatement.print_item
+      ~PrintStatement.put_item
+      ~PrintStatement.set_internal
+      ~PrintStatement.set_print_type
+      ~PrintStatement.set_response
+   
+   
+
+   
+   
+   

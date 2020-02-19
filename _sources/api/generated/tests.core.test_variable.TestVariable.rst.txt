@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+tests.core.test_variable.TestVariable
+=====================================
+
+.. currentmodule:: tests.core.test_variable
+
+.. autoclass:: TestVariable

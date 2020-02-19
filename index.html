@@ -1,24 +1,26 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>sasoptpy: SAS Optimization Interface for Python &#8212; sasoptpy 0.2.1 documentation</title>
+    <meta charset="utf-8" />
+    <title>sasoptpy: SAS Optimization Interface for Python &#8212; sasoptpy 1.0.0-alpha documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/css/sasoptpy.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/js/url.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/js/url.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Overview" href="overview.html" /> 
+    <link rel="next" title="Overview" href="overview/overview.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="_static/js/version.js"></script>
+
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -27,15 +29,12 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="http-routingtable.html" title="HTTP Routing Table"
-             >routing table</a> |</li>
-        <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="overview.html" title="Overview"
+          <a href="overview/overview.html" title="Overview"
              accesskey="N">next</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">sasoptpy 0.2.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="#">sasoptpy 1.0.0-alpha documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -47,15 +46,19 @@
   <div class="section" id="sasoptpy-sas-optimization-interface-for-python">
 <h1>sasoptpy: SAS Optimization Interface for Python<a class="headerlink" href="#sasoptpy-sas-optimization-interface-for-python" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="sasoptpy.pdf">PDF Version</a></p>
-<span class="target" id="module-sasoptpy"></span><p><strong>Date</strong>: Feb 26, 2019 <strong>Version</strong>: 0.2.1</p>
-<p><em>sasoptpy</em> is a Python package providing a modeling interface for
+<span class="target" id="module-sasoptpy"></span><p><strong>Date</strong>: Feb 19, 2020 <strong>Version</strong>: 1.0.0-alpha</p>
+<p><strong>Links</strong>: <a class="reference external" href="https://github.com/sassoftware/sasoptpy">Repository</a> |
+<a class="reference external" href="https://github.com/sassoftware/sasoptpy/issues">Issues</a> |
+<a class="reference external" href="https://github.com/sassoftware/sasoptpy/releases">Releases</a> |
+<a class="reference external" href="https://communities.sas.com/t5/Mathematical-Optimization/bd-p/operations_research">Community</a></p>
+<p><em>sasoptpy</em> is a Python package that provides a modeling interface for
 <a class="reference external" href="https://www.sas.com/en_us/software/viya.html">SAS Viya</a>  and SAS/OR
-Optimization solvers.
+optimization solvers.
 It provides a quick way for users to deploy optimization models and
-solve them using
+solve them by using the
 <a class="reference external" href="http://go.documentation.sas.com/?cdcId=pgmsascdc&amp;cdcVersion=9.4_3.3&amp;docsetId=casactmopt&amp;docsetTarget=casactmopt_optimization_toc.htm&amp;locale=en">SAS Viya Optimization Action Set</a>.</p>
-<p><em>sasoptpy</em> can handle linear optimization, mixed integer linear optimization,
-and nonlinear optimization problems. Users can benefit from native Python
+<p><em>sasoptpy</em> can handle linear, mixed integer linear, nonlinear, and black-box
+optimization problems. You can use native Python
 structures like dictionaries, tuples, and lists to define an optimization
 problem. <em>sasoptpy</em> supports <a class="reference external" href="http://pandas.pydata.org/">Pandas</a>
 objects extensively.</p>
@@ -65,84 +68,56 @@ SAS Viya, and uses the
 <a class="reference external" href="https://sassoftware.github.io/saspy/">saspy package</a> to communicate with SAS 9.4
 installations.</p>
 <p><em>sasoptpy</em> is an interface to SAS Optimization solvers. Check
-<a class="reference external" href="http://go.documentation.sas.com/?cdcId=pgmsascdc&amp;cdcVersion=9.4_3.3&amp;docsetId=casmopt&amp;docsetTarget=titlepage.htm&amp;locale=en">SAS/OR</a>
+<a class="reference external" href="https://go.documentation.sas.com/?cdcId=pgmsascdc&amp;cdcVersion=9.4_3.5&amp;docsetId=casmopt&amp;docsetTarget=titlepage.htm&amp;locale=en">SAS/OR</a>
 and
-<a class="reference external" href="http://go.documentation.sas.com/?cdcId=pgmsascdc&amp;cdcVersion=9.4_3.3&amp;docsetId=casmopt&amp;docsetTarget=casmopt_optmodel_toc.htm&amp;locale=en">PROC OPTMODEL</a>
+<a class="reference external" href="http://go.documentation.sas.com/?cdcId=pgmsascdc&amp;cdcVersion=9.4_3.5&amp;docsetId=casmopt&amp;docsetTarget=casmopt_optmodel_toc.htm&amp;locale=en">PROC OPTMODEL</a>
 for more details about optimization tools provided by SAS and an interface to
 model optimization problems inside SAS.</p>
-<p>See our SAS Global Forum paper: <a class="reference external" href="https://www.sas.com/content/dam/SAS/support/en/sas-global-forum-proceedings/2018/1814-2018.pdf">Optimization Modeling with Python and SAS Viya</a></p>
+<p>See the SAS Global Forum paper: <a class="reference external" href="https://www.sas.com/content/dam/SAS/support/en/sas-global-forum-proceedings/2018/1814-2018.pdf">Optimization Modeling with Python and SAS Viya</a></p>
 <div class="toctree-wrapper compound" id="mastertoc">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="whatsnew.html">What’s New</a></li>
-<li class="toctree-l2"><a class="reference internal" href="install.html">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview/overview.html">Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="overview/about.html">About sasoptpy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview/whatsnew.html">What’s New</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview/license.html">License</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="getting-started.html#creating-a-session">Creating a session</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting-started.html#initializing-a-model">Initializing a model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting-started.html#processing-input-data">Processing input data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting-started.html#adding-variables">Adding variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting-started.html#creating-expressions">Creating expressions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting-started.html#setting-an-objective-function">Setting an objective function</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting-started.html#adding-constraints">Adding constraints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting-started.html#solving-a-problem">Solving a problem</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting-started.html#printing-solutions">Printing solutions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting-started.html#next-steps">Next steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install/install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install/install.html#python-version-support-and-dependencies">Python version support and dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install/install.html#getting-sasoptpy">Getting sasoptpy</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="input-data.html">Handling Data</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="input-data.html#indices">Indices</a></li>
-<li class="toctree-l2"><a class="reference internal" href="input-data.html#data">Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="input-data.html#operations">Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guide/user-guide.html">User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="guide/intro.html">Introduction to Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/basics.html">Basic Functionality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/sessions.html">Sessions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/models.html">Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/components.html">Model components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/workspaces.html">Workspaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/input-data.html">Handling Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/workflow.html">Workflows</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="models.html">Sessions and Models</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="models.html#sessions">Sessions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="models.html#id1">Models</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="components.html">Model components</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="components.html#expressions">Expressions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="components.html#objective-functions">Objective Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="components.html#variables">Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="components.html#constraints">Constraints</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="workflow.html">Workflows</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="workflow.html#client-side-models">Client-side models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="workflow.html#server-side-models">Server-side models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="workflow.html#limitations">Limitations</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#viya-examples-concrete">Viya Examples / Concrete</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#viya-examples-abstract">Viya Examples / Abstract</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#restful-api-examples">RESTful API Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/examples.html#viya-examples-concrete">Viya Examples / Concrete</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/examples.html#viya-examples-abstract">Viya Examples / Abstract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/api.html">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/model.html">Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/expression.html">Expression</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/variable.html">Variable</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/variable_group.html">Variable Group</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/constraint.html">Constraint</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/constraint_group.html">Constraint Group</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/others.html">Others</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/functions.html">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/api.html#core">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/api.html#abstract">Abstract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/api.html#interface">Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/api.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/api.html#tests">Tests</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="web-api.html">RESTful API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="web-api.html#setup">Setup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="web-api.html#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="web-api.html#models">Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="web-api.html#variables">Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="web-api.html#expressions">Expressions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="web-api.html#constraints">Constraints</a></li>
-<li class="toctree-l2"><a class="reference internal" href="web-api.html#solve">Solve</a></li>
-<li class="toctree-l2"><a class="reference internal" href="web-api.html#data">Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="version-history.html">Version History</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="version-history.html#v0-2-1-february-26-2019">v0.2.1 (February 26, 2019)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="version-history.html#v0-2-0-july-30-2018">v0.2.0 (July 30, 2018)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="version-history.html#v0-1-2-april-24-2018">v0.1.2 (April 24, 2018)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="version-history.html#v0-1-1-february-26-2018">v0.1.1 (February 26, 2018)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="version-history.html#v0-1-0-december-22-2017">v0.1.0 (December 22, 2017)</a></li>
 </ul>
 </li>
 </ul>
@@ -155,31 +130,36 @@ model optimization problems inside SAS.</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
   <h3><a href="#">Table of Contents</a></h3>
   <ul>
-<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="input-data.html">Handling Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="models.html">Sessions and Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="components.html">Model components</a></li>
-<li class="toctree-l1"><a class="reference internal" href="workflow.html">Workflows</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guide/user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/api.html">API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="web-api.html">RESTful API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="version-history.html">Version History</a></li>
 </ul>
 
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -191,21 +171,30 @@ model optimization problems inside SAS.</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="http-routingtable.html" title="HTTP Routing Table"
-             >routing table</a> |</li>
-        <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="overview.html" title="Overview"
+          <a href="overview/overview.html" title="Overview"
              >next</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">sasoptpy 0.2.1 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="#">sasoptpy 1.0.0-alpha documentation</a> &#187;</li> 
       </ul>
     </div>
+
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017-2019, SAS Institute.
-      Last updated on Feb 26, 2019 (Timestamp: 0.2.1-20190226133646).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
+        &#169; Copyright 2017-2020, SAS Institute.
+      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219165041).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
     </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-155356999-1');
+</script>
+
+
   </body>
 </html>

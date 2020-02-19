@@ -1,0 +1,217 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Installation &#8212; sasoptpy 0.1.0 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/sasoptpy.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/js/url.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Getting Started" href="getting-started.html" />
+    <script src="../../_static/js/version.js"></script>
+    <link rel="prev" title="What’s New" href="whatsnew.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="getting-started.html" title="Getting Started"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="whatsnew.html" title="What’s New"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">sasoptpy 0.1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="installation">
+<span id="install"></span><h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="python-version-support-and-dependencies">
+<h2>Python version support and dependencies<a class="headerlink" href="#python-version-support-and-dependencies" title="Permalink to this headline">¶</a></h2>
+<p><strong>sasoptpy</strong> is developed and tested for Python version 3.5+.</p>
+<p>It depends on the following packages:</p>
+<ul class="simple">
+<li>Pandas</li>
+<li>SAS-SWAT</li>
+<li>Numpy</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You need to download
+<a class="reference external" href="https://sassoftware.github.io/python-swat/">SAS-SWAT</a>
+from the online repository before using <strong>sasoptpy</strong>.</p>
+</div>
+</div>
+<div class="section" id="getting-sas-swat">
+<h2>Getting SAS-SWAT<a class="headerlink" href="#getting-sas-swat" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://sassoftware.github.io/python-swat/">SAS-SWAT</a> should be available
+to use solver actions.</p>
+<p>Releases are listed at
+<a class="reference external" href="https://github.com/sassoftware/python-swat/releases">https://github.com/sassoftware/python-swat/releases</a>.
+After downloading the platform-specific release file, it can be installed using
+pip:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="n">swat</span><span class="o">-</span><span class="n">X</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">X</span><span class="o">-</span><span class="n">platform</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="getting-sasoptpy">
+<h2>Getting sasoptpy<a class="headerlink" href="#getting-sasoptpy" title="Permalink to this headline">¶</a></h2>
+<p>Latest release of <strong>sasoptpy</strong> can be
+obtained from the online repository.
+Call:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">sassoftware</span><span class="o">/</span><span class="n">sasoptpy</span><span class="o">.</span><span class="n">git</span>
+</pre></div>
+</div>
+<p>Then inside the sasoptpy folder, call:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">.</span>
+</pre></div>
+</div>
+<p>Alternatively, you can use:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="step-by-step-installation">
+<h2>Step-by-step installation<a class="headerlink" href="#step-by-step-installation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first"><strong>Installing pandas and numpy</strong></p>
+<p>First, download and install numpy and pandas using pip:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>pip install numpy
+pip install pandas
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>Installing the SAS-SWAT package</strong></p>
+<p>First, check the
+<a class="reference external" href="https://github.com/sassoftware/python-swat/releases">SAS-SWAT release page</a>
+to find the latest release of the SAS-SWAT package for your environment.</p>
+<p>Then install it using</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>pip install python-swat-X.X.X.platform.tar.gz
+</pre></div>
+</div>
+<p>As an example, run</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>wget https://github.com/sassoftware/python-swat/releases/download/v1.2.1/python-swat-1.2.1-linux64.tar.gz
+pip install python-swat-1.2.1-linux64.tar.gz
+</pre></div>
+</div>
+<p>to install the version 1.2.1 of the SAS-SWAT package for 64-bit Linux
+environments.</p>
+</li>
+<li><p class="first"><strong>Installing sasoptpy</strong></p>
+<p>Finally you can install <em>sasoptpy</em> by downloading the latest archive file
+and install via pip.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>wget *url-to-sasoptpy.tar.gz*
+pip install sasoptpy.tar.gz
+</pre></div>
+</div>
+<p>Latest release file is available at
+<a class="reference external" href="https://github.com/sassoftware/sasoptpy/releases/latest">Github releases</a>
+page.</p>
+</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="whatsnew.html">What’s New</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#python-version-support-and-dependencies">Python version support and dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-sas-swat">Getting SAS-SWAT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-sasoptpy">Getting sasoptpy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-by-step-installation">Step-by-step installation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input-data.html">Handling Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">Sessions and Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components.html">Model components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sasoptpy.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="getting-started.html" title="Getting Started"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="whatsnew.html" title="What’s New"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">sasoptpy 0.1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, SAS.
+      Last updated on Dec 22, 2017 (Timestamp: 0.1.0-20171222145159).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
+    </div>
+  </body>
+</html>

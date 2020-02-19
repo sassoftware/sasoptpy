@@ -1,0 +1,6 @@
+sasoptpy.actions.create\_data
+=============================
+
+.. currentmodule:: sasoptpy.actions
+
+.. autofunction:: create_data

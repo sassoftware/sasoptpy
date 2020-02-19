@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+sasoptpy.interface.CASMediator
+==============================
+
+.. currentmodule:: sasoptpy.interface
+
+.. autoclass:: CASMediator

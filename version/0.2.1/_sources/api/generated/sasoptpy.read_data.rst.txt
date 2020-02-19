@@ -1,0 +1,6 @@
+sasoptpy.read\_data
+===================
+
+.. currentmodule:: sasoptpy
+
+.. autofunction:: read_data

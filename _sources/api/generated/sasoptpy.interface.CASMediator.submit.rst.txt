@@ -1,0 +1,6 @@
+sasoptpy.interface.CASMediator.submit
+=====================================
+
+.. currentmodule:: sasoptpy.interface
+
+.. automethod:: CASMediator.submit

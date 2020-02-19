@@ -1,0 +1,6 @@
+sasoptpy.interface.SASMediator.parse\_sas\_workspace\_response
+==============================================================
+
+.. currentmodule:: sasoptpy.interface
+
+.. automethod:: SASMediator.parse_sas_workspace_response

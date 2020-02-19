@@ -1,0 +1,6 @@
+sasoptpy.actions.drop
+=====================
+
+.. currentmodule:: sasoptpy.actions
+
+.. autofunction:: drop

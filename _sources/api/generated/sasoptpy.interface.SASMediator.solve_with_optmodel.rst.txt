@@ -1,0 +1,6 @@
+sasoptpy.interface.SASMediator.solve\_with\_optmodel
+====================================================
+
+.. currentmodule:: sasoptpy.interface
+
+.. automethod:: SASMediator.solve_with_optmodel

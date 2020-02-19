@@ -1,0 +1,6 @@
+sasoptpy.Constraint.copy
+========================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Constraint.copy

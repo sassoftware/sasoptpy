@@ -1,0 +1,483 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Refinery Optimization &#8212; sasoptpy 0.2.0 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/url.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Mining Optimization" href="mining_optimization.html" />
+    <script src="../../../_static/js/version.js"></script>
+    <link rel="prev" title="Manpower Planning" href="manpower_planning.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mining_optimization.html" title="Mining Optimization"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="manpower_planning.html" title="Manpower Planning"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="refinery-optimization">
+<h1>Refinery Optimization<a class="headerlink" href="#refinery-optimization" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="reference">
+<h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex6_toc.htm&amp;docsetVersion=14.3&amp;locale=en">http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex6_toc.htm&amp;docsetVersion=14.3&amp;locale=en</a></p>
+<p><a class="reference external" href="http://support.sas.com/documentation/onlinedoc/or/ex_code/143/mpex06.html">http://support.sas.com/documentation/onlinedoc/or/ex_code/143/mpex06.html</a></p>
+</div>
+<div class="section" id="model">
+<h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">):</span>
+
+    <span class="n">m</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;refinery_optimization&#39;</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="n">cas_conn</span><span class="p">)</span>
+
+    <span class="n">crude_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+        <span class="p">[</span><span class="s1">&#39;crude1&#39;</span><span class="p">,</span> <span class="mi">20000</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;crude2&#39;</span><span class="p">,</span> <span class="mi">30000</span><span class="p">]</span>
+        <span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;crude&#39;</span><span class="p">,</span> <span class="s1">&#39;crude_ub&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;crude&#39;</span><span class="p">])</span>
+
+    <span class="n">arc_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+        <span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="s1">&#39;crude1&#39;</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="s1">&#39;crude2&#39;</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;crude1&#39;</span><span class="p">,</span> <span class="s1">&#39;light_naphtha&#39;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;crude1&#39;</span><span class="p">,</span> <span class="s1">&#39;medium_naphtha&#39;</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;crude1&#39;</span><span class="p">,</span> <span class="s1">&#39;heavy_naphtha&#39;</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;crude1&#39;</span><span class="p">,</span> <span class="s1">&#39;light_oil&#39;</span><span class="p">,</span> <span class="mf">0.12</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;crude1&#39;</span><span class="p">,</span> <span class="s1">&#39;heavy_oil&#39;</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;crude1&#39;</span><span class="p">,</span> <span class="s1">&#39;residuum&#39;</span><span class="p">,</span> <span class="mf">0.13</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;crude2&#39;</span><span class="p">,</span> <span class="s1">&#39;light_naphtha&#39;</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;crude2&#39;</span><span class="p">,</span> <span class="s1">&#39;medium_naphtha&#39;</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;crude2&#39;</span><span class="p">,</span> <span class="s1">&#39;heavy_naphtha&#39;</span><span class="p">,</span> <span class="mf">0.18</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;crude2&#39;</span><span class="p">,</span> <span class="s1">&#39;light_oil&#39;</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;crude2&#39;</span><span class="p">,</span> <span class="s1">&#39;heavy_oil&#39;</span><span class="p">,</span> <span class="mf">0.19</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;crude2&#39;</span><span class="p">,</span> <span class="s1">&#39;residuum&#39;</span><span class="p">,</span> <span class="mf">0.12</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;light_naphtha&#39;</span><span class="p">,</span> <span class="s1">&#39;regular_petrol&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;light_naphtha&#39;</span><span class="p">,</span> <span class="s1">&#39;premium_petrol&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;medium_naphtha&#39;</span><span class="p">,</span> <span class="s1">&#39;regular_petrol&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;medium_naphtha&#39;</span><span class="p">,</span> <span class="s1">&#39;premium_petrol&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;heavy_naphtha&#39;</span><span class="p">,</span> <span class="s1">&#39;regular_petrol&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;heavy_naphtha&#39;</span><span class="p">,</span> <span class="s1">&#39;premium_petrol&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;light_naphtha&#39;</span><span class="p">,</span> <span class="s1">&#39;reformed_gasoline&#39;</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;medium_naphtha&#39;</span><span class="p">,</span> <span class="s1">&#39;reformed_gasoline&#39;</span><span class="p">,</span> <span class="mf">0.52</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;heavy_naphtha&#39;</span><span class="p">,</span> <span class="s1">&#39;reformed_gasoline&#39;</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;light_oil&#39;</span><span class="p">,</span> <span class="s1">&#39;jet_fuel&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;light_oil&#39;</span><span class="p">,</span> <span class="s1">&#39;fuel_oil&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;heavy_oil&#39;</span><span class="p">,</span> <span class="s1">&#39;jet_fuel&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;heavy_oil&#39;</span><span class="p">,</span> <span class="s1">&#39;fuel_oil&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;light_oil&#39;</span><span class="p">,</span> <span class="s1">&#39;light_oil_cracked&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;light_oil_cracked&#39;</span><span class="p">,</span> <span class="s1">&#39;cracked_oil&#39;</span><span class="p">,</span> <span class="mf">0.68</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;light_oil_cracked&#39;</span><span class="p">,</span> <span class="s1">&#39;cracked_gasoline&#39;</span><span class="p">,</span> <span class="mf">0.28</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;heavy_oil&#39;</span><span class="p">,</span> <span class="s1">&#39;heavy_oil_cracked&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;heavy_oil_cracked&#39;</span><span class="p">,</span> <span class="s1">&#39;cracked_oil&#39;</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;heavy_oil_cracked&#39;</span><span class="p">,</span> <span class="s1">&#39;cracked_gasoline&#39;</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;cracked_oil&#39;</span><span class="p">,</span> <span class="s1">&#39;jet_fuel&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;cracked_oil&#39;</span><span class="p">,</span> <span class="s1">&#39;fuel_oil&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;reformed_gasoline&#39;</span><span class="p">,</span> <span class="s1">&#39;regular_petrol&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;reformed_gasoline&#39;</span><span class="p">,</span> <span class="s1">&#39;premium_petrol&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;cracked_gasoline&#39;</span><span class="p">,</span> <span class="s1">&#39;regular_petrol&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;cracked_gasoline&#39;</span><span class="p">,</span> <span class="s1">&#39;premium_petrol&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;residuum&#39;</span><span class="p">,</span> <span class="s1">&#39;lube_oil&#39;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;residuum&#39;</span><span class="p">,</span> <span class="s1">&#39;jet_fuel&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;residuum&#39;</span><span class="p">,</span> <span class="s1">&#39;fuel_oil&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span>
+        <span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="s1">&#39;j&#39;</span><span class="p">,</span> <span class="s1">&#39;multiplier&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="s1">&#39;j&#39;</span><span class="p">])</span>
+
+    <span class="n">octane_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+        <span class="p">[</span><span class="s1">&#39;light_naphtha&#39;</span><span class="p">,</span> <span class="mi">90</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;medium_naphtha&#39;</span><span class="p">,</span> <span class="mi">80</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;heavy_naphtha&#39;</span><span class="p">,</span> <span class="mi">70</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;reformed_gasoline&#39;</span><span class="p">,</span> <span class="mi">115</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;cracked_gasoline&#39;</span><span class="p">,</span> <span class="mi">105</span><span class="p">],</span>
+        <span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="s1">&#39;octane&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;i&#39;</span><span class="p">])</span>
+
+    <span class="n">petrol_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+        <span class="p">[</span><span class="s1">&#39;regular_petrol&#39;</span><span class="p">,</span> <span class="mi">84</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;premium_petrol&#39;</span><span class="p">,</span> <span class="mi">94</span><span class="p">],</span>
+        <span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;petrol&#39;</span><span class="p">,</span> <span class="s1">&#39;octane_lb&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;petrol&#39;</span><span class="p">])</span>
+
+    <span class="n">vapour_pressure_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+        <span class="p">[</span><span class="s1">&#39;light_oil&#39;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;heavy_oil&#39;</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;cracked_oil&#39;</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;residuum&#39;</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">],</span>
+        <span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;oil&#39;</span><span class="p">,</span> <span class="s1">&#39;vapour_pressure&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;oil&#39;</span><span class="p">])</span>
+
+    <span class="n">fuel_oil_ratio_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+        <span class="p">[</span><span class="s1">&#39;light_oil&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;cracked_oil&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;heavy_oil&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;residuum&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;oil&#39;</span><span class="p">,</span> <span class="s1">&#39;coefficient&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;oil&#39;</span><span class="p">])</span>
+
+    <span class="n">final_product_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+        <span class="p">[</span><span class="s1">&#39;premium_petrol&#39;</span><span class="p">,</span> <span class="mi">700</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;regular_petrol&#39;</span><span class="p">,</span> <span class="mi">600</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;jet_fuel&#39;</span><span class="p">,</span> <span class="mi">400</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;fuel_oil&#39;</span><span class="p">,</span> <span class="mi">350</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;lube_oil&#39;</span><span class="p">,</span> <span class="mi">150</span><span class="p">],</span>
+        <span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;product&#39;</span><span class="p">,</span> <span class="s1">&#39;profit&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;product&#39;</span><span class="p">])</span>
+
+    <span class="n">vapour_pressure_ub</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">crude_total_ub</span> <span class="o">=</span> <span class="mi">45000</span>
+    <span class="n">naphtha_ub</span> <span class="o">=</span> <span class="mi">10000</span>
+    <span class="n">cracked_oil_ub</span> <span class="o">=</span> <span class="mi">8000</span>
+    <span class="n">lube_oil_lb</span> <span class="o">=</span> <span class="mi">500</span>
+    <span class="n">lube_oil_ub</span> <span class="o">=</span> <span class="mi">1000</span>
+    <span class="n">premium_ratio</span> <span class="o">=</span> <span class="mf">0.40</span>
+
+    <span class="n">ARCS</span> <span class="o">=</span> <span class="n">arc_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">arc_mult</span> <span class="o">=</span> <span class="n">arc_data</span><span class="p">[</span><span class="s1">&#39;multiplier&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">FINAL_PRODUCTS</span> <span class="o">=</span> <span class="n">final_product_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">final_product_data</span><span class="p">[</span><span class="s1">&#39;profit&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">final_product_data</span><span class="p">[</span><span class="s1">&#39;profit&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="mi">100</span>
+    <span class="n">profit</span> <span class="o">=</span> <span class="n">final_product_data</span><span class="p">[</span><span class="s1">&#39;profit&#39;</span><span class="p">]</span>
+
+    <span class="n">ARCS</span> <span class="o">=</span> <span class="n">ARCS</span> <span class="o">+</span> <span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;sink&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">FINAL_PRODUCTS</span><span class="p">]</span>
+    <span class="n">flow</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">ARCS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;flow&#39;</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">NODES</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">ARCS</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">j</span><span class="p">])</span>
+
+    <span class="n">m</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">profit</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">flow</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;sink&#39;</span><span class="p">]</span>
+                                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">FINAL_PRODUCTS</span>
+                                 <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;sink&#39;</span><span class="p">)</span> <span class="ow">in</span> <span class="n">ARCS</span><span class="p">),</span>
+                    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;totalProfit&#39;</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MAX</span><span class="p">)</span>
+
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">flow</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ARCS</span> <span class="k">if</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">n</span><span class="p">)</span> <span class="o">==</span>
+                      <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">arc_mult</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">*</span> <span class="n">flow</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
+                                   <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ARCS</span> <span class="k">if</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">n</span><span class="p">)</span>
+                      <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">NODES</span> <span class="k">if</span> <span class="n">n</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="s1">&#39;sink&#39;</span><span class="p">]),</span>
+                      <span class="n">name</span><span class="o">=</span><span class="s1">&#39;flow_balance&#39;</span><span class="p">)</span>
+
+    <span class="n">CRUDES</span> <span class="o">=</span> <span class="n">crude_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">crudeDistilled</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">CRUDES</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;crudesDistilled&#39;</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">crudeDistilled</span><span class="o">.</span><span class="n">set_bounds</span><span class="p">(</span><span class="n">ub</span><span class="o">=</span><span class="n">crude_data</span><span class="p">[</span><span class="s1">&#39;crude_ub&#39;</span><span class="p">])</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">flow</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="n">crudeDistilled</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                      <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="ow">in</span> <span class="n">ARCS</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">CRUDES</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;distillation&#39;</span><span class="p">)</span>
+
+    <span class="n">OILS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;light_oil&#39;</span><span class="p">,</span> <span class="s1">&#39;heavy_oil&#39;</span><span class="p">]</span>
+    <span class="n">CRACKED_OILS</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="s1">&#39;_cracked&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">OILS</span><span class="p">]</span>
+    <span class="n">oilCracked</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">CRACKED_OILS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;oilCracked&#39;</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">flow</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="n">oilCracked</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="ow">in</span> <span class="n">ARCS</span>
+                      <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">CRACKED_OILS</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;cracking&#39;</span><span class="p">)</span>
+
+    <span class="n">octane</span> <span class="o">=</span> <span class="n">octane_data</span><span class="p">[</span><span class="s1">&#39;octane&#39;</span><span class="p">]</span>
+    <span class="n">PETROLS</span> <span class="o">=</span> <span class="n">petrol_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">octane_lb</span> <span class="o">=</span> <span class="n">petrol_data</span><span class="p">[</span><span class="s1">&#39;octane_lb&#39;</span><span class="p">]</span>
+    <span class="n">vapour_pressure</span> <span class="o">=</span> <span class="n">vapour_pressure_data</span><span class="p">[</span><span class="s1">&#39;vapour_pressure&#39;</span><span class="p">]</span>
+
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">octane</span><span class="p">[</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> <span class="n">arc_mult</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">*</span> <span class="n">flow</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
+                                    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ARCS</span> <span class="k">if</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">p</span><span class="p">)</span>
+                       <span class="o">&gt;=</span> <span class="n">octane_lb</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">*</span>
+                      <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">arc_mult</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">*</span> <span class="n">flow</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
+                                   <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ARCS</span> <span class="k">if</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">p</span><span class="p">)</span>
+                      <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PETROLS</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;blending_petrol&#39;</span><span class="p">)</span>
+
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">vapour_pressure</span><span class="p">[</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> <span class="n">arc_mult</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">*</span> <span class="n">flow</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
+                                  <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ARCS</span> <span class="k">if</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;jet_fuel&#39;</span><span class="p">)</span> <span class="o">&lt;=</span>
+                     <span class="n">vapour_pressure_ub</span> <span class="o">*</span>
+                     <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">arc_mult</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">*</span> <span class="n">flow</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
+                                  <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ARCS</span> <span class="k">if</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;jet_fuel&#39;</span><span class="p">),</span>
+                     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;blending_jet_fuel&#39;</span><span class="p">)</span>
+
+    <span class="n">fuel_oil_coefficient</span> <span class="o">=</span> <span class="n">fuel_oil_ratio_data</span><span class="p">[</span><span class="s1">&#39;coefficient&#39;</span><span class="p">]</span>
+    <span class="n">sum_fuel_oil_coefficient</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">fuel_oil_coefficient</span><span class="p">)</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">sum_fuel_oil_coefficient</span> <span class="o">*</span> <span class="n">flow</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">==</span>
+                      <span class="n">fuel_oil_coefficient</span><span class="p">[</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> <span class="n">flow</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;fuel_oil&#39;</span><span class="p">])</span>
+                      <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ARCS</span> <span class="k">if</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;fuel_oil&#39;</span><span class="p">),</span>
+                      <span class="n">name</span><span class="o">=</span><span class="s1">&#39;blending_fuel_oil&#39;</span><span class="p">)</span>
+
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">crudeDistilled</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">crude_total_ub</span><span class="p">,</span>
+                     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;crude_total_ub&#39;</span><span class="p">)</span>
+
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">flow</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ARCS</span>
+                                  <span class="k">if</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;naphtha&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span>
+                                  <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;reformed_gasoline&#39;</span><span class="p">)</span>
+                     <span class="o">&lt;=</span> <span class="n">naphtha_ub</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;naphtba_ub&#39;</span><span class="p">)</span>
+
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">flow</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ARCS</span> <span class="k">if</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span>
+                                  <span class="s1">&#39;cracked_oil&#39;</span><span class="p">)</span> <span class="o">&lt;=</span>
+                     <span class="n">cracked_oil_ub</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;cracked_oil_ub&#39;</span><span class="p">)</span>
+
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">flow</span><span class="p">[</span><span class="s1">&#39;lube_oil&#39;</span><span class="p">,</span> <span class="s1">&#39;sink&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="n">lube_oil_lb</span><span class="p">,</span> <span class="n">lube_oil_ub</span><span class="p">],</span>
+                     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;lube_oil_range&#39;</span><span class="p">)</span>
+
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">flow</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">&#39;premium_petrol&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">premium_ratio</span> <span class="o">*</span>
+                     <span class="n">flow</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">&#39;regular_petrol&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;premium_ratio&#39;</span><span class="p">)</span>
+
+    <span class="n">res</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">crudeDistilled</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">oilCracked</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">flow</span><span class="p">))</span>
+
+        <span class="n">octane_sol</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PETROLS</span><span class="p">:</span>
+            <span class="n">octane_sol</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">octane</span><span class="p">[</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> <span class="n">arc_mult</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">*</span>
+                                           <span class="n">flow</span><span class="p">[</span><span class="n">a</span><span class="p">]</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ARCS</span>
+                                           <span class="k">if</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">p</span><span class="p">)</span> <span class="o">/</span>
+                              <span class="nb">sum</span><span class="p">(</span><span class="n">arc_mult</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">*</span> <span class="n">flow</span><span class="p">[</span><span class="n">a</span><span class="p">]</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span>
+                                  <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ARCS</span> <span class="k">if</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">p</span><span class="p">))</span>
+        <span class="n">octane_sol</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">octane_sol</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;octane_sol&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">PETROLS</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">octane_sol</span><span class="p">,</span> <span class="n">octane_lb</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">vapour_pressure</span><span class="p">))</span>
+        <span class="n">vapour_pressure_sol</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">vapour_pressure</span><span class="p">[</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">*</span>
+                                  <span class="n">arc_mult</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">*</span>
+                                  <span class="n">flow</span><span class="p">[</span><span class="n">a</span><span class="p">]</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ARCS</span>
+                                  <span class="k">if</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;jet_fuel&#39;</span><span class="p">)</span> <span class="o">/</span>\
+            <span class="nb">sum</span><span class="p">(</span><span class="n">arc_mult</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">*</span> <span class="n">flow</span><span class="p">[</span><span class="n">a</span><span class="p">]</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ARCS</span>
+                <span class="k">if</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;jet_fuel&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Vapour_pressure_sol: </span><span class="si">{:.4f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">vapour_pressure_sol</span><span class="p">))</span>
+
+        <span class="n">num_fuel_oil_ratio_sol</span> <span class="o">=</span> <span class="p">[</span><span class="n">arc_mult</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">*</span> <span class="n">flow</span><span class="p">[</span><span class="n">a</span><span class="p">]</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span> <span class="o">/</span>
+                                  <span class="nb">sum</span><span class="p">(</span><span class="n">arc_mult</span><span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="o">*</span>
+                                      <span class="n">flow</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span>
+                                      <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">ARCS</span> <span class="k">if</span> <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;fuel_oil&#39;</span><span class="p">)</span>
+                                  <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ARCS</span> <span class="k">if</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;fuel_oil&#39;</span><span class="p">]</span>
+        <span class="n">num_fuel_oil_ratio_sol</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">num_fuel_oil_ratio_sol</span><span class="p">,</span>
+                                           <span class="n">name</span><span class="o">=</span><span class="s1">&#39;num_fuel_oil_ratio_sol&#39;</span><span class="p">,</span>
+                                           <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ARCS</span>
+                                                  <span class="k">if</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;fuel_oil&#39;</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">fuel_oil_coefficient</span><span class="p">,</span>
+                                    <span class="n">num_fuel_oil_ratio_sol</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="n">get_objective_value</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="output">
+<h2>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">examples.refinery_optimization</span> <span class="kn">import</span> <span class="n">test</span>
+
+<span class="gp">In [2]: </span><span class="n">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">)</span>
+<span class="go">NOTE: Initialized model refinery_optimization.</span>
+<span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
+<span class="go">NOTE: Converting model refinery_optimization to OPTMODEL.</span>
+<span class="go">NOTE: Submitting OPTMODEL codes to CAS server.</span>
+<span class="go">NOTE: Problem generation will use 32 threads.</span>
+<span class="go">NOTE: The problem has 51 variables (0 free, 0 fixed).</span>
+<span class="go">NOTE: The problem has 46 linear constraints (4 LE, 38 EQ, 3 GE, 1 range).</span>
+<span class="go">NOTE: The problem has 158 linear constraint coefficients.</span>
+<span class="go">NOTE: The problem has 0 nonlinear constraints (0 LE, 0 EQ, 0 GE, 0 range).</span>
+<span class="go">NOTE: The OPTMODEL presolver is disabled for linear problems.</span>
+<span class="go">NOTE: The LP presolver value AUTOMATIC is applied.</span>
+<span class="go">NOTE: The LP presolver removed 28 variables and 30 constraints.</span>
+<span class="go">NOTE: The LP presolver removed 85 constraint coefficients.</span>
+<span class="go">NOTE: The presolved problem has 23 variables, 16 constraints, and 73 constraint coefficients.</span>
+<span class="go">NOTE: The LP solver is called.</span>
+<span class="go">NOTE: The Dual Simplex algorithm is used.</span>
+<span class="go">                              Objective</span>
+<span class="go">         Phase Iteration        Value         Time</span>
+<span class="go">          D 2          1    7.189280E+05         0</span>
+<span class="go">          P 2         21    2.113651E+05         0</span>
+<span class="go">NOTE: Optimal.</span>
+<span class="go">NOTE: Objective = 211365.13477.</span>
+<span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
+<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 18 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 46 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 13 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;primal&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 51 rows and 6 columns.</span>
+<span class="go">        crudesDistilled</span>
+<span class="go">1                      </span>
+<span class="go">crude1          15000.0</span>
+<span class="go">crude2          30000.0</span>
+<span class="go">                   oilCracked</span>
+<span class="go">1                            </span>
+<span class="go">heavy_oil_cracked      3800.0</span>
+<span class="go">light_oil_cracked      4200.0</span>
+<span class="go">                                             flow</span>
+<span class="go">1                 2                              </span>
+<span class="go">cracked_gasoline  premium_petrol         0.000000</span>
+<span class="go">cracked_gasoline  regular_petrol      1936.000000</span>
+<span class="go">cracked_oil       fuel_oil               0.000000</span>
+<span class="go">cracked_oil       jet_fuel            5706.000000</span>
+<span class="go">crude1            heavy_naphtha      15000.000000</span>
+<span class="go">crude1            heavy_oil          15000.000000</span>
+<span class="go">crude1            light_naphtha      15000.000000</span>
+<span class="go">crude1            light_oil          15000.000000</span>
+<span class="go">crude1            medium_naphtha     15000.000000</span>
+<span class="go">crude1            residuum           15000.000000</span>
+<span class="go">crude2            heavy_naphtha      30000.000000</span>
+<span class="go">crude2            heavy_oil          30000.000000</span>
+<span class="go">crude2            light_naphtha      30000.000000</span>
+<span class="go">crude2            light_oil          30000.000000</span>
+<span class="go">crude2            medium_naphtha     30000.000000</span>
+<span class="go">crude2            residuum           30000.000000</span>
+<span class="go">fuel_oil          sink                   0.000000</span>
+<span class="go">heavy_naphtha     premium_petrol      1677.804016</span>
+<span class="go">heavy_naphtha     reformed_gasoline   5406.861844</span>
+<span class="go">heavy_naphtha     regular_petrol      1315.334140</span>
+<span class="go">heavy_oil         fuel_oil               0.000000</span>
+<span class="go">heavy_oil         heavy_oil_cracked   3800.000000</span>
+<span class="go">heavy_oil         jet_fuel            4900.000000</span>
+<span class="go">heavy_oil_cracked cracked_gasoline    3800.000000</span>
+<span class="go">heavy_oil_cracked cracked_oil         3800.000000</span>
+<span class="go">jet_fuel          sink               15156.000000</span>
+<span class="go">light_naphtha     premium_petrol      2706.887007</span>
+<span class="go">light_naphtha     reformed_gasoline      0.000000</span>
+<span class="go">light_naphtha     regular_petrol      3293.112993</span>
+<span class="go">light_oil         fuel_oil               0.000000</span>
+<span class="go">light_oil         jet_fuel               0.000000</span>
+<span class="go">light_oil         light_oil_cracked   4200.000000</span>
+<span class="go">light_oil_cracked cracked_gasoline    4200.000000</span>
+<span class="go">light_oil_cracked cracked_oil         4200.000000</span>
+<span class="go">lube_oil          sink                 500.000000</span>
+<span class="go">medium_naphtha    premium_petrol         0.000000</span>
+<span class="go">medium_naphtha    reformed_gasoline      0.000000</span>
+<span class="go">medium_naphtha    regular_petrol     10500.000000</span>
+<span class="go">premium_petrol    sink                6817.778853</span>
+<span class="go">reformed_gasoline premium_petrol      2433.087830</span>
+<span class="go">reformed_gasoline regular_petrol         0.000000</span>
+<span class="go">regular_petrol    sink               17044.447133</span>
+<span class="go">residuum          fuel_oil               0.000000</span>
+<span class="go">residuum          jet_fuel            4550.000000</span>
+<span class="go">residuum          lube_oil            1000.000000</span>
+<span class="go">source            crude1             15000.000000</span>
+<span class="go">source            crude2             30000.000000</span>
+<span class="go">                octane_sol  octane_lb</span>
+<span class="go">1                                    </span>
+<span class="go">premium_petrol        94.0         94</span>
+<span class="go">regular_petrol        84.0         84</span>
+<span class="go">             vapour_pressure</span>
+<span class="go">1                           </span>
+<span class="go">cracked_oil             1.50</span>
+<span class="go">heavy_oil               0.60</span>
+<span class="go">light_oil               1.00</span>
+<span class="go">residuum                0.05</span>
+<span class="go">Vapour_pressure_sol: 0.7737</span>
+<span class="go">             coefficient  num_fuel_oil_ratio_sol</span>
+<span class="go">1                                               </span>
+<span class="go">cracked_oil            4                     NaN</span>
+<span class="go">heavy_oil              3                     NaN</span>
+<span class="go">light_oil             10                     NaN</span>
+<span class="go">residuum               1                     NaN</span>
+<span class="gh">Out[2]: </span><span class="go">211365.134769</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../input-data.html">Handling Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../models.html">Sessions and Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">Model components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../workflow.html">Workflows</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../examples.html#viya-examples-concrete">Viya Examples / Concrete</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="food_manufacture_1.html">Food Manufacture 1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="food_manufacture_2.html">Food Manufacture 2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="factory_planning_1.html">Factory Planning 1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="factory_planning_2.html">Factory Planning 2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manpower_planning.html">Manpower Planning</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Refinery Optimization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#reference">Reference</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#model">Model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#output">Output</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mining_optimization.html">Mining Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="farm_planning.html">Farm Planning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="economic_planning.html">Economic Planning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="decentralization.html">Decentralization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="optimal_wedding.html">SAS/OR Blog: Optimal Wedding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kidney_exchange.html">SAS/OR Blog: Kidney Exchange</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#viya-examples-abstract">Viya Examples / Abstract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api.html">API Reference</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mining_optimization.html" title="Mining Optimization"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="manpower_planning.html" title="Manpower Planning"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2018, SAS Institute.
+      Last updated on Jul 31, 2018 (Timestamp: 0.2.0-20180731093746).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+    </div>
+  </body>
+</html>

@@ -4,7 +4,7 @@
  *
  * Sphinx stylesheet -- nature theme.
  *
- * :copyright: Copyright 2007-2018 by the Sphinx team, see AUTHORS.
+ * :copyright: Copyright 2007-2020 by the Sphinx team, see AUTHORS.
  * :license: BSD, see LICENSE for details.
  *
  */
@@ -28,7 +28,7 @@ div.documentwrapper {
 }
 
 div.bodywrapper {
-    margin: 0 0 0 320px;
+    margin: 0 0 0 270px;
 }
 
 hr {

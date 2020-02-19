@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+sasoptpy.Objective
+==================
+
+.. currentmodule:: sasoptpy
+
+.. autoclass:: Objective

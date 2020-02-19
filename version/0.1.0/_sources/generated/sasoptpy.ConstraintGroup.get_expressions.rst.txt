@@ -1,0 +1,6 @@
+sasoptpy\.ConstraintGroup\.get\_expressions
+===========================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: ConstraintGroup.get_expressions

@@ -1,0 +1,6 @@
+sasoptpy.Model.set\_coef
+========================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.set_coef

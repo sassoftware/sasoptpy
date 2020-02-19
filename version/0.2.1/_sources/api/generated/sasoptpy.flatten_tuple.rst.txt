@@ -1,0 +1,6 @@
+sasoptpy.flatten\_tuple
+=======================
+
+.. currentmodule:: sasoptpy
+
+.. autofunction:: flatten_tuple

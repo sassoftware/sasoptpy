@@ -1,0 +1,6 @@
+sasoptpy\.VariableGroup\.sum
+============================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: VariableGroup.sum

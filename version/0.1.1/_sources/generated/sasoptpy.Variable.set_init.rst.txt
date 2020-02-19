@@ -1,0 +1,6 @@
+sasoptpy\.Variable\.set\_init
+=============================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Variable.set_init

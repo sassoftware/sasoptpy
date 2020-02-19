@@ -1,0 +1,6 @@
+sasoptpy\.Model\.include
+========================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.include

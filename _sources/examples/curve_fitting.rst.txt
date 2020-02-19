@@ -5,34 +5,36 @@ Curve Fitting
 Reference
 ---------
 
-http://go.documentation.sas.com/?docsetId=ormpex&docsetTarget=ormpex_ex11_toc.htm&docsetVersion=14.3&locale=en
+http://go.documentation.sas.com/?docsetId=ormpex&docsetTarget=ormpex_ex11_toc.htm&docsetVersion=15.1&locale=en
 
-http://support.sas.com/documentation/onlinedoc/or/ex_code/143/mpex11.html
+http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex11.html
 
 Model
 -----
 
-.. literalinclude:: ../../examples/curve_fitting.py
+.. literalinclude:: ../../examples/server_side/curve_fitting.py
 
 Output
 ------
 
-
 .. ipython:: python
-   :suppress:
-   
-   import sasoptpy
-   sasoptpy.reset_globals()
+
    import os
    hostname = os.getenv('CASHOST')
    port = os.getenv('CASPORT')
    from swat import CAS
    cas_conn = CAS(hostname, port)
+   import sasoptpy
+
+.. ipython:: python
+   :suppress:
+
+   sasoptpy.reset()
 
 
 .. ipython:: python
 
-   from examples.curve_fitting import test
+   from examples.server_side.curve_fitting import test
    (s1, s2, s3, s4) = test(cas_conn, sols=True)
 
 

@@ -1,0 +1,179 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>What’s New &#8212; sasoptpy 0.1.1 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/sasoptpy.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/js/url.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="install.html" />
+    <script src="../../_static/js/version.js"></script>
+    <link rel="prev" title="sasoptpy: SAS Viya Optimization Interface for Python" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="Installation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="sasoptpy: SAS Viya Optimization Interface for Python"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">sasoptpy 0.1.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="what-s-new">
+<span id="whatsnew"></span><h1>What’s New<a class="headerlink" href="#what-s-new" title="Permalink to this headline">¶</a></h1>
+<p>This page outlines changes from each release.</p>
+<div class="section" id="v0-1-1-february-26-2018">
+<h2>v0.1.1 (February 26, 2018)<a class="headerlink" href="#v0-1-1-february-26-2018" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="new-features">
+<h3>New Features<a class="headerlink" href="#new-features" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Initial value argument ‘init’ is added for <a class="reference internal" href="generated/sasoptpy.Variable.html#sasoptpy.Variable" title="sasoptpy.Variable"><code class="xref py py-class docutils literal"><span class="pre">Variable</span></code></a> objects</li>
+<li><a class="reference internal" href="generated/sasoptpy.Variable.set_init.html#sasoptpy.Variable.set_init" title="sasoptpy.Variable.set_init"><code class="xref py py-func docutils literal"><span class="pre">Variable.set_init()</span></code></a> method is added for variables</li>
+<li>Initial value option ‘primalin’ is added to <a class="reference internal" href="generated/sasoptpy.Model.solve.html#sasoptpy.Model.solve" title="sasoptpy.Model.solve"><code class="xref py py-func docutils literal"><span class="pre">Model.solve()</span></code></a> method</li>
+<li>Table name argument ‘name’, table drop option ‘drop’ and replace
+option ‘replace’ are added to <a class="reference internal" href="generated/sasoptpy.Model.solve.html#sasoptpy.Model.solve" title="sasoptpy.Model.solve"><code class="xref py py-func docutils literal"><span class="pre">Model.solve()</span></code></a> method</li>
+<li>Decomposition block implementation is rewritten, block numbers does
+not need to be consecutive and ordered <a class="reference internal" href="generated/sasoptpy.Model.upload_user_blocks.html#sasoptpy.Model.upload_user_blocks" title="sasoptpy.Model.upload_user_blocks"><code class="xref py py-func docutils literal"><span class="pre">Model.upload_user_blocks()</span></code></a></li>
+<li><a class="reference internal" href="generated/sasoptpy.VariableGroup.get_name.html#sasoptpy.VariableGroup.get_name" title="sasoptpy.VariableGroup.get_name"><code class="xref py py-func docutils literal"><span class="pre">VariableGroup.get_name()</span></code></a> and <a class="reference internal" href="generated/sasoptpy.ConstraintGroup.get_name.html#sasoptpy.ConstraintGroup.get_name" title="sasoptpy.ConstraintGroup.get_name"><code class="xref py py-func docutils literal"><span class="pre">ConstraintGroup.get_name()</span></code></a> methods
+are added</li>
+<li><a class="reference internal" href="generated/sasoptpy.Model.test_session.html#sasoptpy.Model.test_session" title="sasoptpy.Model.test_session"><code class="xref py py-func docutils literal"><span class="pre">Model.test_session()</span></code></a> method is added for checking if session is defined
+for models</li>
+<li><a class="reference internal" href="generated/sasoptpy.quick_sum.html#sasoptpy.quick_sum" title="sasoptpy.quick_sum"><code class="xref py py-func docutils literal"><span class="pre">quick_sum()</span></code></a> function is added for faster summation of
+<a class="reference internal" href="generated/sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal"><span class="pre">Expression</span></code></a> objects</li>
+</ul>
+</div>
+<div class="section" id="changes">
+<h3>Changes<a class="headerlink" href="#changes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>methods.py is renamed to utils.py</li>
+</ul>
+</div>
+<div class="section" id="bug-fixes">
+<h3>Bug Fixes<a class="headerlink" href="#bug-fixes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Fixed: Crash in VG and CG when a key not in the list is called</li>
+<li>Fixed: get_value  of pandas is depreceated</li>
+<li>Fixed: Variables can be set as temporary expressions</li>
+<li>Fixed: Ordering in <a class="reference internal" href="generated/sasoptpy.get_solution_table.html#sasoptpy.get_solution_table" title="sasoptpy.get_solution_table"><code class="xref py py-func docutils literal"><span class="pre">get_solution_table()</span></code></a> is incorrect for multiple entries</li>
+</ul>
+</div>
+</div>
+<div class="section" id="v0-1-0-december-22-2017">
+<h2>v0.1.0 (December 22, 2017)<a class="headerlink" href="#v0-1-0-december-22-2017" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Initial release</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">What’s New</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#v0-1-1-february-26-2018">v0.1.1 (February 26, 2018)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#new-features">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#changes">Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bug-fixes">Bug Fixes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#v0-1-0-december-22-2017">v0.1.0 (December 22, 2017)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input-data.html">Handling Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">Sessions and Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components.html">Model components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sasoptpy.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="Installation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="sasoptpy: SAS Viya Optimization Interface for Python"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">sasoptpy 0.1.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2018, SAS Institute.
+      Last updated on Feb 26, 2018 (Timestamp: 0.1.1-20180226160330).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
+    </div>
+  </body>
+</html>

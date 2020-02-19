@@ -1,0 +1,431 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Factory Planning 2 &#8212; sasoptpy 0.1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/url.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Manpower Planning" href="manpower_planning.html" />
+    <script src="../../../_static/js/version.js"></script>
+    <link rel="prev" title="Factory Planning 1" href="factory_planning_1.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="manpower_planning.html" title="Manpower Planning"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="factory_planning_1.html" title="Factory Planning 1"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="factory-planning-2">
+<h1>Factory Planning 2<a class="headerlink" href="#factory-planning-2" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="model">
+<h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">swat</span> <span class="k">import</span> <span class="n">CAS</span>
+<span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+
+<span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">):</span>
+
+    <span class="n">m</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;factory_planning_2&#39;</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="n">cas_conn</span><span class="p">)</span>
+
+    <span class="c1"># Input data</span>
+    <span class="n">product_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;prod</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">)]</span>
+    <span class="n">product_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[</span><span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">11</span><span class="p">],</span> <span class="p">[</span><span class="mi">9</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">]],</span>
+                                <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;profit&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="n">product_list</span><span class="p">])</span>
+    <span class="n">demand_data</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">[</span><span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span>  <span class="mi">800</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">600</span><span class="p">,</span>  <span class="mi">500</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>  <span class="mi">400</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">150</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">300</span><span class="p">,</span>  <span class="mi">600</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span>  <span class="mi">500</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">200</span><span class="p">,</span>  <span class="mi">300</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span>  <span class="mi">200</span><span class="p">,</span>   <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span>    <span class="mi">100</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span>   <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">500</span><span class="p">,</span>  <span class="mi">500</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">1100</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span>  <span class="mi">60</span><span class="p">]]</span>
+    <span class="n">demand_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">demand_data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">product_list</span><span class="p">)</span>\
+                    <span class="o">.</span><span class="n">set_index</span><span class="p">([[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">)]])</span>
+    <span class="n">machine_types_data</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">[</span><span class="s1">&#39;grinder&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;vdrill&#39;</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;hdrill&#39;</span><span class="p">,</span>  <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;borer&#39;</span><span class="p">,</span>   <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;planer&#39;</span><span class="p">,</span>  <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
+    <span class="n">machine_types_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">machine_types_data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+        <span class="s1">&#39;machine_type&#39;</span><span class="p">,</span> <span class="s1">&#39;num_machines&#39;</span><span class="p">,</span> <span class="s1">&#39;num_machines_needing_maintenance&#39;</span><span class="p">])</span>\
+        <span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;machine_type&#39;</span><span class="p">])</span>
+    <span class="n">machine_type_period_data</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">[</span><span class="s1">&#39;grinder&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;hdrill&#39;</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;borer&#39;</span><span class="p">,</span>   <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;vdrill&#39;</span><span class="p">,</span>  <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;grinder&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;vdrill&#39;</span><span class="p">,</span>  <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;planer&#39;</span><span class="p">,</span>  <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;hdrill&#39;</span><span class="p">,</span>  <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
+    <span class="n">machine_type_period_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">machine_type_period_data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+        <span class="s1">&#39;machine_type&#39;</span><span class="p">,</span> <span class="s1">&#39;period&#39;</span><span class="p">,</span> <span class="s1">&#39;num_down&#39;</span><span class="p">])</span>
+    <span class="n">machine_type_product_data</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">[</span><span class="s1">&#39;grinder&#39;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span>  <span class="mf">0.7</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>    <span class="mi">0</span><span class="p">,</span>    <span class="mf">0.3</span><span class="p">,</span>  <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;vdrill&#39;</span><span class="p">,</span>  <span class="mf">0.1</span><span class="p">,</span>  <span class="mf">0.2</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>    <span class="mf">0.3</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>    <span class="mf">0.6</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;hdrill&#39;</span><span class="p">,</span>  <span class="mf">0.2</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>    <span class="mf">0.8</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>    <span class="mi">0</span><span class="p">,</span>    <span class="mi">0</span><span class="p">,</span>   <span class="mf">0.6</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;borer&#39;</span><span class="p">,</span>   <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>    <span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>   <span class="mf">0.08</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;planer&#39;</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>    <span class="mi">0</span><span class="p">,</span>    <span class="mf">0.01</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>    <span class="mf">0.05</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>   <span class="mf">0.05</span><span class="p">]]</span>
+    <span class="n">machine_type_product_data</span> <span class="o">=</span> \
+        <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">machine_type_product_data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;machine_type&#39;</span><span class="p">]</span> <span class="o">+</span>
+                     <span class="n">product_list</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;machine_type&#39;</span><span class="p">])</span>
+    <span class="n">store_ub</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">storage_cost_per_unit</span> <span class="o">=</span> <span class="mf">0.5</span>
+    <span class="n">final_storage</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">num_hours_per_period</span> <span class="o">=</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="mi">8</span>
+
+    <span class="c1"># Problem definition</span>
+    <span class="n">PRODUCTS</span> <span class="o">=</span> <span class="n">product_list</span>
+    <span class="n">PERIODS</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+    <span class="n">MACHINE_TYPES</span> <span class="o">=</span> <span class="n">machine_types_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="n">num_machine_per_period</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span>
+        <span class="n">num_machine_per_period</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">machine_types_data</span><span class="p">[</span><span class="s1">&#39;num_machines&#39;</span><span class="p">]</span>
+
+    <span class="n">make</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">PRODUCTS</span><span class="p">,</span> <span class="n">PERIODS</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;make&#39;</span><span class="p">)</span>
+    <span class="n">sell</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">PRODUCTS</span><span class="p">,</span> <span class="n">PERIODS</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">demand_data</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span>
+                           <span class="n">name</span><span class="o">=</span><span class="s1">&#39;sell&#39;</span><span class="p">)</span>
+
+    <span class="n">store</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">PRODUCTS</span><span class="p">,</span> <span class="n">PERIODS</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">store_ub</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;store&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PRODUCTS</span><span class="p">:</span>
+        <span class="n">store</span><span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">set_bounds</span><span class="p">(</span><span class="n">lb</span><span class="o">=</span><span class="n">final_storage</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">final_storage</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">storageCost</span> <span class="o">=</span> <span class="n">storage_cost_per_unit</span> <span class="o">*</span> <span class="n">store</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">)</span>
+    <span class="n">revenue</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">product_data</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="s1">&#39;profit&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">sell</span><span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">]</span>
+                  <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PRODUCTS</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">)</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">revenue</span><span class="o">-</span><span class="n">storageCost</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MAX</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_profit&#39;</span><span class="p">)</span>
+
+    <span class="n">num_machines_needing_maintenance</span> <span class="o">=</span> \
+        <span class="n">machine_types_data</span><span class="p">[</span><span class="s1">&#39;num_machines_needing_maintenance&#39;</span><span class="p">]</span>
+    <span class="n">numMachinesDown</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">MACHINE_TYPES</span><span class="p">,</span> <span class="n">PERIODS</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span>
+                                      <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;numMachinesDown&#39;</span><span class="p">)</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="nb">sum</span><span class="p">(</span><span class="n">numMachinesDown</span><span class="p">[</span><span class="n">mc</span><span class="p">,</span> <span class="n">t</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">)</span> <span class="o">==</span>
+                      <span class="n">num_machines_needing_maintenance</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">mc</span><span class="p">]</span>
+                      <span class="k">for</span> <span class="n">mc</span> <span class="ow">in</span> <span class="n">MACHINE_TYPES</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;maintenance&#39;</span><span class="p">)</span>
+    <span class="n">production_time</span> <span class="o">=</span> <span class="n">machine_type_product_data</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span>
+        <span class="nb">sum</span><span class="p">(</span><span class="n">production_time</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">mc</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="o">*</span> <span class="n">make</span><span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PRODUCTS</span><span class="p">)</span> <span class="o">&lt;=</span>
+        <span class="n">num_hours_per_period</span> <span class="o">*</span>
+        <span class="p">(</span><span class="n">num_machine_per_period</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">mc</span><span class="p">,</span> <span class="n">t</span><span class="p">]</span> <span class="o">-</span> <span class="n">numMachinesDown</span><span class="p">[</span><span class="n">mc</span><span class="p">,</span> <span class="n">t</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">mc</span> <span class="ow">in</span> <span class="n">MACHINE_TYPES</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;machine_hours&#39;</span><span class="p">)</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">(((</span><span class="n">store</span><span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">t</span><span class="o">-</span><span class="mi">1</span> <span class="ow">in</span> <span class="n">PERIODS</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">make</span><span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">]</span> <span class="o">==</span>
+                      <span class="n">sell</span><span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">]</span> <span class="o">+</span> <span class="n">store</span><span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PRODUCTS</span>
+                      <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">),</span>
+                      <span class="n">name</span><span class="o">=</span><span class="s1">&#39;flow_balance&#39;</span><span class="p">)</span>
+
+    <span class="n">res</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">make</span><span class="p">,</span> <span class="n">sell</span><span class="p">,</span> <span class="n">store</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">numMachinesDown</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="n">get_objective_value</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="output">
+<h2>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-ipython"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">examples.factory_planning_2</span> <span class="kn">import</span> <span class="n">test</span>
+
+<span class="gp">In [2]: </span><span class="n">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">)</span>
+<span class="go">NOTE: Initialized model factory_planning_2</span>
+<span class="go">NOTE: Converting model factory_planning_2 to data frame</span>
+<span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
+<span class="go">NOTE: Uploading the problem data frame to the server.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMP8XX2NCHM in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMP8XX2NCHM has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: The problem factory_planning_2 has 156 variables (0 binary, 30 integer, 0 free, 6 fixed).</span>
+<span class="go">NOTE: The problem has 77 constraints (30 LE, 47 EQ, 0 GE, 0 range).</span>
+<span class="go">NOTE: The problem has 341 constraint coefficients.</span>
+<span class="go">NOTE: The initial MILP heuristics are applied.</span>
+<span class="go">NOTE: The MILP presolver value AUTOMATIC is applied.</span>
+<span class="go">NOTE: The MILP presolver removed 20 variables and 15 constraints.</span>
+<span class="go">NOTE: The MILP presolver removed 56 constraint coefficients.</span>
+<span class="go">NOTE: The MILP presolver modified 16 constraint coefficients.</span>
+<span class="go">NOTE: The presolved problem has 136 variables, 62 constraints, and 285 constraint coefficients.</span>
+<span class="go">NOTE: The MILP solver is called.</span>
+<span class="go">NOTE: The parallel Branch and Cut algorithm is used.</span>
+<span class="go">NOTE: The Branch and Cut algorithm is using up to 32 threads.</span>
+<span class="go">             Node   Active   Sols    BestInteger      BestBound      Gap    Time</span>
+<span class="go">                0        1      3  92502.5000000         116455   20.57%       0</span>
+<span class="go">                0        1      3  92502.5000000         116455   20.57%       0</span>
+<span class="go">                0        1      3  92502.5000000         116152   20.36%       0</span>
+<span class="go">                0        1      3  92502.5000000         115491   19.91%       0</span>
+<span class="go">                0        1      3  92502.5000000         114210   19.01%       0</span>
+<span class="go">                0        1      3  92502.5000000         112738   17.95%       0</span>
+<span class="go">                0        1      3  92502.5000000         111584   17.10%       0</span>
+<span class="go">                0        1      3  92502.5000000         110906   16.59%       0</span>
+<span class="go">                0        1      3  92502.5000000         110364   16.18%       0</span>
+<span class="go">                0        1      3  92502.5000000         110159   16.03%       0</span>
+<span class="go">                0        1      3  92502.5000000         109827   15.77%       0</span>
+<span class="go">                0        1      3  92502.5000000         109637   15.63%       0</span>
+<span class="go">                0        1      3  92502.5000000         109532   15.55%       0</span>
+<span class="go">                0        1      3  92502.5000000         109011   15.14%       0</span>
+<span class="go">                0        1      3  92502.5000000         108887   15.05%       0</span>
+<span class="go">                0        1      3  92502.5000000         108855   15.02%       0</span>
+<span class="go">                0        1      3  92502.5000000         108855   15.02%       0</span>
+<span class="go">                0        0      4         108855         108855    0.00%       0</span>
+<span class="go">NOTE: The MILP solver added 36 cuts with 122 cut coefficients at the root.</span>
+<span class="go">NOTE: Optimal.</span>
+<span class="go">NOTE: Objective = 108855.00743.</span>
+<span class="go">NOTE: Data length = 501 rows</span>
+<span class="go">NOTE: Conversion to MPS =   0.0071 secs</span>
+<span class="go">NOTE: Upload to CAS time =  0.2218 secs</span>
+<span class="go">NOTE: Solution parse time = 0.0912 secs</span>
+<span class="go">NOTE: Server solve time =   1.2741 secs</span>
+<span class="go">NOTE: Cloud Analytic Services dropped table TMP8XX2NCHM from caslib CASUSERHDFS(casuser).</span>
+<span class="go">Problem Summary</span>
+
+<span class="go">                                      Value</span>
+<span class="go">Label                                      </span>
+<span class="go">Problem Name             factory_planning_2</span>
+<span class="go">Objective Sense                Maximization</span>
+<span class="go">Objective Function             total_profit</span>
+<span class="go">RHS                                     RHS</span>
+<span class="go">                                           </span>
+<span class="go">Number of Variables                     156</span>
+<span class="go">Bounded Above                             0</span>
+<span class="go">Bounded Below                            72</span>
+<span class="go">Bounded Above and Below                  78</span>
+<span class="go">Free                                      0</span>
+<span class="go">Fixed                                     6</span>
+<span class="go">Binary                                    0</span>
+<span class="go">Integer                                  30</span>
+<span class="go">                                           </span>
+<span class="go">Number of Constraints                    77</span>
+<span class="go">LE (&lt;=)                                  30</span>
+<span class="go">EQ (=)                                   47</span>
+<span class="go">GE (&gt;=)                                   0</span>
+<span class="go">Range                                     0</span>
+<span class="go">                                           </span>
+<span class="go">Constraint Coefficients                 341</span>
+<span class="go">Solution Summary</span>
+
+<span class="go">                                Value</span>
+<span class="go">Label                                </span>
+<span class="go">Solver                           MILP</span>
+<span class="go">Algorithm              Branch and Cut</span>
+<span class="go">Objective Function       total_profit</span>
+<span class="go">Solution Status               Optimal</span>
+<span class="go">Objective Value          108855.00743</span>
+<span class="go">                                     </span>
+<span class="go">Relative Gap                        0</span>
+<span class="go">Absolute Gap                        0</span>
+<span class="go">Primal Infeasibility     1.894781E-14</span>
+<span class="go">Bound Infeasibility      7.105427E-14</span>
+<span class="go">Integer Infeasibility    3.3673194E-6</span>
+<span class="go">                                     </span>
+<span class="go">Best Bound               108855.00743</span>
+<span class="go">Nodes                               1</span>
+<span class="go">Iterations                        335</span>
+<span class="go">                                     </span>
+<span class="go">Presolve Time                    0.02</span>
+<span class="go">Solution Time                    1.15</span>
+<span class="go">                make         sell         store</span>
+<span class="go">1     2                                        </span>
+<span class="go">prod1 1   499.998624   499.998624  0.000000e+00</span>
+<span class="go">prod1 2   600.000000   600.000000  0.000000e+00</span>
+<span class="go">prod1 3   399.999725   300.000000  9.999972e+01</span>
+<span class="go">prod1 4     0.000551   100.000275  0.000000e+00</span>
+<span class="go">prod1 5     0.000000     0.000000  0.000000e+00</span>
+<span class="go">prod1 6   550.000000   500.000000  5.000000e+01</span>
+<span class="go">prod2 1  1000.000000  1000.000000  0.000000e+00</span>
+<span class="go">prod2 2   500.000000   500.000000  1.894781e-13</span>
+<span class="go">prod2 3   700.000000   600.000000  1.000000e+02</span>
+<span class="go">prod2 4     0.000551   100.000551  0.000000e+00</span>
+<span class="go">prod2 5   100.000000   100.000000  0.000000e+00</span>
+<span class="go">prod2 6   550.000000   500.000000  5.000000e+01</span>
+<span class="go">prod3 1   300.000000   300.000000  0.000000e+00</span>
+<span class="go">prod3 2   200.000000   200.000000  0.000000e+00</span>
+<span class="go">prod3 3    99.999725     0.000000  9.999972e+01</span>
+<span class="go">prod3 4     0.001101   100.000826  0.000000e+00</span>
+<span class="go">prod3 5   500.000000   500.000000  0.000000e+00</span>
+<span class="go">prod3 6   150.000000   100.000000  5.000000e+01</span>
+<span class="go">prod4 1   300.000000   300.000000  0.000000e+00</span>
+<span class="go">prod4 2     0.000000     0.000000  0.000000e+00</span>
+<span class="go">prod4 3    99.999764     0.000000  9.999976e+01</span>
+<span class="go">prod4 4     0.001583   100.001347  0.000000e+00</span>
+<span class="go">prod4 5   100.000000   100.000000  0.000000e+00</span>
+<span class="go">prod4 6   350.000000   300.000000  5.000000e+01</span>
+<span class="go">prod5 1   800.000000   800.000000  0.000000e+00</span>
+<span class="go">prod5 2   400.001376   400.000000  1.376250e-03</span>
+<span class="go">prod5 3   599.998073   500.000000  9.999945e+01</span>
+<span class="go">prod5 4     0.000826   100.000275  0.000000e+00</span>
+<span class="go">prod5 5  1000.000000  1000.000000  0.000000e+00</span>
+<span class="go">prod5 6  1150.000000  1100.000000  5.000000e+01</span>
+<span class="go">prod6 1   200.000000   200.000000  0.000000e+00</span>
+<span class="go">prod6 2   300.000000   300.000000  0.000000e+00</span>
+<span class="go">prod6 3   400.000000   400.000000  0.000000e+00</span>
+<span class="go">prod6 4     0.000000     0.000000  0.000000e+00</span>
+<span class="go">prod6 5   300.000000   300.000000  0.000000e+00</span>
+<span class="go">prod6 6   550.000000   500.000000  5.000000e+01</span>
+<span class="go">prod7 1   100.000000   100.000000  0.000000e+00</span>
+<span class="go">prod7 2   150.000000   150.000000  0.000000e+00</span>
+<span class="go">prod7 3   199.999725   100.000000  9.999972e+01</span>
+<span class="go">prod7 4     0.000275   100.000000  0.000000e+00</span>
+<span class="go">prod7 5     0.000000     0.000000  0.000000e+00</span>
+<span class="go">prod7 6   110.000000    60.000000  5.000000e+01</span>
+<span class="go">           numMachinesDown</span>
+<span class="go">1       2                 </span>
+<span class="go">borer   1     2.752500e-06</span>
+<span class="go">borer   2     2.105312e-16</span>
+<span class="go">borer   3     0.000000e+00</span>
+<span class="go">borer   4     9.999972e-01</span>
+<span class="go">borer   5     6.636757e-17</span>
+<span class="go">borer   6     0.000000e+00</span>
+<span class="go">grinder 1     0.000000e+00</span>
+<span class="go">grinder 2     0.000000e+00</span>
+<span class="go">grinder 3     0.000000e+00</span>
+<span class="go">grinder 4     2.000000e+00</span>
+<span class="go">grinder 5     0.000000e+00</span>
+<span class="go">grinder 6     0.000000e+00</span>
+<span class="go">hdrill  1     1.000000e+00</span>
+<span class="go">hdrill  2     0.000000e+00</span>
+<span class="go">hdrill  3     0.000000e+00</span>
+<span class="go">hdrill  4     0.000000e+00</span>
+<span class="go">hdrill  5     1.000000e+00</span>
+<span class="go">hdrill  6     1.000000e+00</span>
+<span class="go">planer  1     0.000000e+00</span>
+<span class="go">planer  2     0.000000e+00</span>
+<span class="go">planer  3     2.752500e-06</span>
+<span class="go">planer  4     9.999972e-01</span>
+<span class="go">planer  5     2.061510e-16</span>
+<span class="go">planer  6     0.000000e+00</span>
+<span class="go">vdrill  1     1.810855e-06</span>
+<span class="go">vdrill  2     1.556464e-06</span>
+<span class="go">vdrill  3     0.000000e+00</span>
+<span class="go">vdrill  4     1.999997e+00</span>
+<span class="go">vdrill  5     0.000000e+00</span>
+<span class="go">vdrill  6     0.000000e+00</span>
+<span class="gh">Out[2]: </span><span class="go">108855.00743242732</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../whatsnew.html">What’s New</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../input-data.html">Handling Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../models.html">Sessions and Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">Model components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sasoptpy.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="food_manufacture_1.html">Food Manufacture 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="food_manufacture_2.html">Food Manufacture 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="factory_planning_1.html">Factory Planning 1</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Factory Planning 2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#model">Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output">Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="manpower_planning.html">Manpower Planning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="refinery_optimization.html">Refinery Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mining_optimization.html">Mining Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="farm_planning.html">Farm Planning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="economic_planning.html">Economic Planning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optimal_wedding.html">SAS/OR Blog: Optimal Wedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kidney_exchange.html">SAS/OR Blog: Kidney Exchange</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="manpower_planning.html" title="Manpower Planning"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="factory_planning_1.html" title="Factory Planning 1"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, SAS.
+      Last updated on Dec 22, 2017 (Timestamp: 0.1.0-20171222145159).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+sasoptpy.abstract.Parameter
+===========================
+
+.. currentmodule:: sasoptpy.abstract
+
+.. autoclass:: Parameter

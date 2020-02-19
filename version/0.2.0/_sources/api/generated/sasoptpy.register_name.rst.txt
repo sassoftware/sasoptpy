@@ -1,0 +1,6 @@
+sasoptpy.register\_name
+=======================
+
+.. currentmodule:: sasoptpy
+
+.. autofunction:: register_name

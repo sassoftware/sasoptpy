@@ -1,0 +1,36 @@
+
+.. currentmodule:: sasoptpy
+
+sasoptpy.Constraint
+===================
+
+.. currentmodule:: sasoptpy
+
+.. autoclass:: Constraint
+
+   
+
+
+..
+   HACK -- the point here is that we don't want this to appear in the output, but the autosummary should still generate the pages.
+   .. autosummary::
+      :toctree:
+      
+      Constraint.add
+      Constraint.copy
+      Constraint.get_dual
+      Constraint.get_name
+      Constraint.get_value
+      Constraint.mult
+      Constraint.set_block
+      Constraint.set_direction
+      Constraint.set_name
+      Constraint.set_permanent
+      Constraint.set_rhs
+      Constraint.update_var_coef
+
+
+
+
+   
+

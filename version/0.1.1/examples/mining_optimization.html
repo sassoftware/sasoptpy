@@ -1,0 +1,343 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Mining Optimization &#8212; sasoptpy 0.1.1 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/css/sasoptpy.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/url.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Farm Planning" href="farm_planning.html" />
+    <script src="../../../_static/js/version.js"></script>
+    <link rel="prev" title="Refinery Optimization" href="refinery_optimization.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="farm_planning.html" title="Farm Planning"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="refinery_optimization.html" title="Refinery Optimization"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="mining-optimization">
+<h1>Mining Optimization<a class="headerlink" href="#mining-optimization" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="model">
+<h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+
+<span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">):</span>
+
+    <span class="n">m</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mining_optimization&#39;</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="n">cas_conn</span><span class="p">)</span>
+
+    <span class="n">mine_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+        <span class="p">[</span><span class="s1">&#39;mine1&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;mine2&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;mine3&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;mine4&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
+        <span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mine&#39;</span><span class="p">,</span> <span class="s1">&#39;cost&#39;</span><span class="p">,</span> <span class="s1">&#39;extract_ub&#39;</span><span class="p">,</span> <span class="s1">&#39;quality&#39;</span><span class="p">])</span><span class="o">.</span>\
+        <span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;mine&#39;</span><span class="p">])</span>
+
+    <span class="n">year_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+        <span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="s1">&#39;quality_required&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;year&#39;</span><span class="p">])</span>
+
+    <span class="n">max_num_worked_per_year</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">revenue_per_ton</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">discount_rate</span> <span class="o">=</span> <span class="mf">0.10</span>
+
+    <span class="n">MINES</span> <span class="o">=</span> <span class="n">mine_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">cost</span> <span class="o">=</span> <span class="n">mine_data</span><span class="p">[</span><span class="s1">&#39;cost&#39;</span><span class="p">]</span>
+    <span class="n">extract_ub</span> <span class="o">=</span> <span class="n">mine_data</span><span class="p">[</span><span class="s1">&#39;extract_ub&#39;</span><span class="p">]</span>
+    <span class="n">quality</span> <span class="o">=</span> <span class="n">mine_data</span><span class="p">[</span><span class="s1">&#39;quality&#39;</span><span class="p">]</span>
+    <span class="n">YEARS</span> <span class="o">=</span> <span class="n">year_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">quality_required</span> <span class="o">=</span> <span class="n">year_data</span><span class="p">[</span><span class="s1">&#39;quality_required&#39;</span><span class="p">]</span>
+
+    <span class="n">isOpen</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">MINES</span><span class="p">,</span> <span class="n">YEARS</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">BIN</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;isOpen&#39;</span><span class="p">)</span>
+    <span class="n">isWorked</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">MINES</span><span class="p">,</span> <span class="n">YEARS</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">BIN</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;isWorked&#39;</span><span class="p">)</span>
+    <span class="n">extract</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">MINES</span><span class="p">,</span> <span class="n">YEARS</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;extract&#39;</span><span class="p">)</span>
+    <span class="p">[</span><span class="n">extract</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_bounds</span><span class="p">(</span><span class="n">ub</span><span class="o">=</span><span class="n">extract_ub</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">MINES</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">YEARS</span><span class="p">]</span>
+
+    <span class="n">extractedPerYear</span> <span class="o">=</span> <span class="p">{</span><span class="n">j</span><span class="p">:</span> <span class="n">extract</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">YEARS</span><span class="p">}</span>
+    <span class="n">discount</span> <span class="o">=</span> <span class="p">{</span><span class="n">j</span><span class="p">:</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">discount_rate</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">YEARS</span><span class="p">}</span>
+
+    <span class="n">totalRevenue</span> <span class="o">=</span> <span class="n">revenue_per_ton</span> <span class="o">*</span>\
+        <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">discount</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">extractedPerYear</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">YEARS</span><span class="p">)</span>
+    <span class="n">totalCost</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">discount</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">cost</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">isOpen</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+                             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">MINES</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">YEARS</span><span class="p">)</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">totalRevenue</span><span class="o">-</span><span class="n">totalCost</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MAX</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;totalProfit&#39;</span><span class="p">)</span>
+
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">extract</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">extract</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">_ub</span> <span class="o">*</span> <span class="n">isWorked</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+                      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">MINES</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">YEARS</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;link&#39;</span><span class="p">)</span>
+
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">isWorked</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">max_num_worked_per_year</span>
+                      <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">YEARS</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;cardinality&#39;</span><span class="p">)</span>
+
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">isWorked</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">isOpen</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">MINES</span>
+                      <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">YEARS</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;worked_implies_open&#39;</span><span class="p">)</span>
+
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">isOpen</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">isOpen</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">MINES</span>
+                      <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">YEARS</span> <span class="k">if</span> <span class="n">j</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;continuity&#39;</span><span class="p">)</span>
+
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">quality</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">extract</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">MINES</span><span class="p">)</span>
+                      <span class="o">==</span> <span class="n">quality_required</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">extractedPerYear</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                      <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">YEARS</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;quality_con&#39;</span><span class="p">)</span>
+
+    <span class="n">res</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">isOpen</span><span class="p">,</span> <span class="n">isWorked</span><span class="p">,</span> <span class="n">extract</span><span class="p">))</span>
+        <span class="n">quality_sol</span> <span class="o">=</span> <span class="p">{</span><span class="n">j</span><span class="p">:</span> <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">quality</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">extract</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span>
+                                       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">MINES</span><span class="p">)</span>
+                       <span class="o">/</span> <span class="n">extractedPerYear</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">YEARS</span><span class="p">}</span>
+        <span class="n">qs</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">dict_to_frame</span><span class="p">(</span><span class="n">quality_sol</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;quality_sol&#39;</span><span class="p">])</span>
+        <span class="n">epy</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">dict_to_frame</span><span class="p">(</span><span class="n">extractedPerYear</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;extracted_per_year&#39;</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">epy</span><span class="p">,</span> <span class="n">qs</span><span class="p">,</span> <span class="n">quality_required</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="n">get_objective_value</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="output">
+<h2>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-ipython"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">examples.mining_optimization</span> <span class="kn">import</span> <span class="n">test</span>
+
+<span class="gp">In [2]: </span><span class="n">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">)</span>
+<span class="go">NOTE: Initialized model mining_optimization</span>
+<span class="go">NOTE: Converting model mining_optimization to DataFrame</span>
+<span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPWDD_285H in caslib CASUSERHDFS(casuser).</span>
+<span class="go">NOTE: The table TMPWDD_285H has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
+<span class="go">NOTE: The problem mining_optimization has 60 variables (40 binary, 0 integer, 0 free, 0 fixed).</span>
+<span class="go">NOTE: The problem has 66 constraints (61 LE, 5 EQ, 0 GE, 0 range).</span>
+<span class="go">NOTE: The problem has 151 constraint coefficients.</span>
+<span class="go">NOTE: The initial MILP heuristics are applied.</span>
+<span class="go">NOTE: The MILP presolver value AUTOMATIC is applied.</span>
+<span class="go">NOTE: The MILP presolver removed 8 variables and 8 constraints.</span>
+<span class="go">NOTE: The MILP presolver removed 16 constraint coefficients.</span>
+<span class="go">NOTE: The MILP presolver modified 11 constraint coefficients.</span>
+<span class="go">NOTE: The presolved problem has 52 variables, 58 constraints, and 135 constraint coefficients.</span>
+<span class="go">NOTE: The MILP solver is called.</span>
+<span class="go">NOTE: The parallel Branch and Cut algorithm is used.</span>
+<span class="go">NOTE: The Branch and Cut algorithm is using up to 32 threads.</span>
+<span class="go">             Node   Active   Sols    BestInteger      BestBound      Gap    Time</span>
+<span class="go">                0        1      5     95.6438817    364.3638322   73.75%       0</span>
+<span class="go">                0        1      5     95.6438817    157.7308887   39.36%       0</span>
+<span class="go">                0        1      5     95.6438817    153.3061673   37.61%       0</span>
+<span class="go">                0        1      5     95.6438817    149.6494350   36.09%       0</span>
+<span class="go">                0        1      5     95.6438817    148.9399006   35.78%       0</span>
+<span class="go">                0        1      5     95.6438817    146.9093764   34.90%       0</span>
+<span class="go">                0        1      6    146.8619786    146.8619786    0.00%       0</span>
+<span class="go">                0        0      6    146.8619786    146.8619786    0.00%       0</span>
+<span class="go">NOTE: The MILP solver added 8 cuts with 36 cut coefficients at the root.</span>
+<span class="go">NOTE: Optimal.</span>
+<span class="go">NOTE: Objective = 146.86197857.</span>
+<span class="go">NOTE: Cloud Analytic Services dropped table TMPWDD_285H from caslib CASUSERHDFS(casuser).</span>
+<span class="go">Problem Summary</span>
+
+<span class="go">                                       Value</span>
+<span class="go">Label                                       </span>
+<span class="go">Problem Name             mining_optimization</span>
+<span class="go">Objective Sense                 Maximization</span>
+<span class="go">Objective Function               totalProfit</span>
+<span class="go">RHS                                      RHS</span>
+<span class="go">                                            </span>
+<span class="go">Number of Variables                       60</span>
+<span class="go">Bounded Above                              0</span>
+<span class="go">Bounded Below                              0</span>
+<span class="go">Bounded Above and Below                   60</span>
+<span class="go">Free                                       0</span>
+<span class="go">Fixed                                      0</span>
+<span class="go">Binary                                    40</span>
+<span class="go">Integer                                    0</span>
+<span class="go">                                            </span>
+<span class="go">Number of Constraints                     66</span>
+<span class="go">LE (&lt;=)                                   61</span>
+<span class="go">EQ (=)                                     5</span>
+<span class="go">GE (&gt;=)                                    0</span>
+<span class="go">Range                                      0</span>
+<span class="go">                                            </span>
+<span class="go">Constraint Coefficients                  151</span>
+<span class="go">Solution Summary</span>
+
+<span class="go">                                Value</span>
+<span class="go">Label                                </span>
+<span class="go">Solver                           MILP</span>
+<span class="go">Algorithm              Branch and Cut</span>
+<span class="go">Objective Function        totalProfit</span>
+<span class="go">Solution Status               Optimal</span>
+<span class="go">Objective Value          146.86197857</span>
+<span class="go">                                     </span>
+<span class="go">Relative Gap                        0</span>
+<span class="go">Absolute Gap                        0</span>
+<span class="go">Primal Infeasibility     4.440892E-15</span>
+<span class="go">Bound Infeasibility      2.442491E-15</span>
+<span class="go">Integer Infeasibility    1.5384592E-6</span>
+<span class="go">                                     </span>
+<span class="go">Best Bound               146.86197857</span>
+<span class="go">Nodes                               1</span>
+<span class="go">Iterations                         76</span>
+<span class="go">                                     </span>
+<span class="go">Presolve Time                    0.02</span>
+<span class="go">Solution Time                    0.98</span>
+<span class="go">           isOpen  isWorked   extract</span>
+<span class="go">1     2                              </span>
+<span class="go">mine1 1  1.000000  1.000000  2.000000</span>
+<span class="go">mine1 2  1.000000  0.000000  0.000000</span>
+<span class="go">mine1 3  1.000000  1.000000  1.950000</span>
+<span class="go">mine1 4  1.000000  1.000000  0.125000</span>
+<span class="go">mine1 5  1.000000  1.000000  2.000000</span>
+<span class="go">mine2 1  1.000000  0.000000  0.000000</span>
+<span class="go">mine2 2  1.000000  1.000000  2.500000</span>
+<span class="go">mine2 3  1.000000  0.000000  0.000000</span>
+<span class="go">mine2 4  1.000000  1.000000  2.500000</span>
+<span class="go">mine2 5  0.999998  0.999998  2.166667</span>
+<span class="go">mine3 1  1.000000  1.000000  1.300000</span>
+<span class="go">mine3 2  1.000000  1.000000  1.300000</span>
+<span class="go">mine3 3  1.000000  1.000000  1.300000</span>
+<span class="go">mine3 4  1.000000  0.000000  0.000000</span>
+<span class="go">mine3 5  1.000000  1.000000  1.300000</span>
+<span class="go">mine4 1  1.000000  1.000000  2.450000</span>
+<span class="go">mine4 2  1.000000  1.000000  2.200000</span>
+<span class="go">mine4 3  1.000000  0.000000  0.000000</span>
+<span class="go">mine4 4  1.000000  1.000000  3.000000</span>
+<span class="go">mine4 5  0.000000  0.000000  0.000000</span>
+<span class="go">   extracted_per_year  quality_sol  quality_required</span>
+<span class="go">1                                                   </span>
+<span class="go">1            5.750000          0.9               0.9</span>
+<span class="go">2            6.000000          0.8               0.8</span>
+<span class="go">3            3.250000          1.2               1.2</span>
+<span class="go">4            5.625000          0.6               0.6</span>
+<span class="go">5            5.466667          1.0               1.0</span>
+<span class="gh">Out[2]: </span><span class="go">146.8619785673816</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../whatsnew.html">What’s New</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../input-data.html">Handling Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../models.html">Sessions and Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">Model components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sasoptpy.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="food_manufacture_1.html">Food Manufacture 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="food_manufacture_2.html">Food Manufacture 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="factory_planning_1.html">Factory Planning 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="factory_planning_2.html">Factory Planning 2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manpower_planning.html">Manpower Planning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="refinery_optimization.html">Refinery Optimization</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Mining Optimization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#model">Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output">Output</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="farm_planning.html">Farm Planning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="economic_planning.html">Economic Planning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optimal_wedding.html">SAS/OR Blog: Optimal Wedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kidney_exchange.html">SAS/OR Blog: Kidney Exchange</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="farm_planning.html" title="Farm Planning"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="refinery_optimization.html" title="Refinery Optimization"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.1.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2018, SAS Institute.
+      Last updated on Feb 26, 2018 (Timestamp: 0.1.1-20180226160330).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.4.
+    </div>
+  </body>
+</html>

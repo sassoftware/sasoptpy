@@ -1,0 +1,6 @@
+sasoptpy.Objective.get\_sense
+=============================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Objective.get_sense

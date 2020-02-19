@@ -1,25 +1,27 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Kidney Exchange &#8212; sasoptpy 0.2.1 documentation</title>
+    <meta charset="utf-8" />
+    <title>Kidney Exchange &#8212; sasoptpy 1.0.0-alpha documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/sasoptpy.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/js/url.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/js/url.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Multiobjective" href="multiobjective.html" />
-    <link rel="prev" title="Optimal Wedding" href="optimal_wedding.html" /> 
+    <link rel="prev" title="Optimal Wedding" href="optimal_wedding.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../_static/js/version.js"></script>
+
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -27,9 +29,6 @@
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../http-routingtable.html" title="HTTP Routing Table"
-             >routing table</a> |</li>
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
@@ -39,8 +38,8 @@
         <li class="right" >
           <a href="optimal_wedding.html" title="Optimal Wedding"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.1 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="examples.html" accesskey="U">Examples</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -61,7 +60,7 @@
 <span class="kn">import</span> <span class="nn">random</span>
 
 
-<span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="c1"># Data generation</span>
     <span class="n">n</span> <span class="o">=</span> <span class="mi">80</span>
     <span class="n">p</span> <span class="o">=</span> <span class="mf">0.02</span>
@@ -112,7 +111,7 @@
                                         <span class="n">name</span><span class="o">=</span><span class="s2">&quot;cardinality&quot;</span><span class="p">)</span>
 
     <span class="c1"># Solve</span>
-    <span class="n">model</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;with&#39;</span><span class="p">:</span> <span class="s1">&#39;milp&#39;</span><span class="p">,</span> <span class="s1">&#39;maxtime&#39;</span><span class="p">:</span> <span class="mi">300</span><span class="p">})</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;with&#39;</span><span class="p">:</span> <span class="s1">&#39;milp&#39;</span><span class="p">,</span> <span class="s1">&#39;maxtime&#39;</span><span class="p">:</span> <span class="mi">300</span><span class="p">},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="c1"># Define decomposition blocks</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">NODES</span><span class="p">:</span>
@@ -122,9 +121,9 @@
     <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">MATCHINGS</span><span class="p">:</span>
         <span class="n">Cardinality</span><span class="p">[</span><span class="n">m</span><span class="p">]</span><span class="o">.</span><span class="n">set_block</span><span class="p">(</span><span class="n">m</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="n">model</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="p">{</span>
         <span class="s1">&#39;with&#39;</span><span class="p">:</span> <span class="s1">&#39;milp&#39;</span><span class="p">,</span> <span class="s1">&#39;maxtime&#39;</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span> <span class="s1">&#39;presolver&#39;</span><span class="p">:</span> <span class="s1">&#39;basic&#39;</span><span class="p">,</span> 
-        <span class="s1">&#39;decomp&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;user&#39;</span><span class="p">}})</span>
+        <span class="s1">&#39;decomp&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;user&#39;</span><span class="p">}},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">get_objective_value</span><span class="p">()</span>
 </pre></div>
@@ -132,22 +131,35 @@
 </div>
 <div class="section" id="output">
 <h2>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">from</span> <span class="nn">examples.sas_kidney_exchange</span> <span class="kn">import</span> <span class="n">test</span>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span> <span class="nn">os</span>
 
-<span class="gp">In [2]: </span><span class="n">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">)</span>
+<span class="gp">In [2]: </span><span class="n">hostname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;CASHOST&#39;</span><span class="p">)</span>
+
+<span class="gp">In [3]: </span><span class="n">port</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;CASPORT&#39;</span><span class="p">)</span>
+
+<span class="gp">In [4]: </span><span class="kn">from</span> <span class="nn">swat</span> <span class="kn">import</span> <span class="n">CAS</span>
+
+<span class="gp">In [5]: </span><span class="n">cas_conn</span> <span class="o">=</span> <span class="n">CAS</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+
+<span class="gp">In [6]: </span><span class="kn">import</span> <span class="nn">sasoptpy</span>
+</pre></div>
+</div>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [7]: </span><span class="kn">from</span> <span class="nn">examples.client_side.sas_kidney_exchange</span> <span class="kn">import</span> <span class="n">test</span>
+
+<span class="gp">In [8]: </span><span class="n">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">)</span>
 <span class="go">NOTE: Initialized model kidney_exchange.</span>
 <span class="go">Setting objective...</span>
 <span class="go">Adding constraints...</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
 <span class="go">NOTE: Converting model kidney_exchange to OPTMODEL.</span>
 <span class="go">NOTE: Submitting OPTMODEL code to CAS server.</span>
-<span class="go">NOTE: Problem generation will use 80 threads.</span>
+<span class="go">NOTE: Problem generation will use 8 threads.</span>
 <span class="go">NOTE: The problem has 8133 variables (0 free, 0 fixed).</span>
 <span class="go">NOTE: The problem has 8133 binary and 0 integer variables.</span>
 <span class="go">NOTE: The problem has 5967 linear constraints (38 LE, 5929 EQ, 0 GE, 0 range).</span>
 <span class="go">NOTE: The problem has 24245 linear constraint coefficients.</span>
 <span class="go">NOTE: The problem has 0 nonlinear constraints (0 LE, 0 EQ, 0 GE, 0 range).</span>
-<span class="go">NOTE: The remaining solution time after problem generation and solver initialization is 299.61 seconds.</span>
+<span class="go">NOTE: The remaining solution time after problem generation and solver initialization is 299.83 seconds.</span>
 <span class="go">NOTE: The initial MILP heuristics are applied.</span>
 <span class="go">NOTE: The MILP presolver value AUTOMATIC is applied.</span>
 <span class="go">NOTE: The MILP presolver removed 6193 variables and 5357 constraints.</span>
@@ -156,41 +168,37 @@
 <span class="go">NOTE: The presolved problem has 1940 variables, 610 constraints, and 6767 constraint coefficients.</span>
 <span class="go">NOTE: The MILP solver is called.</span>
 <span class="go">NOTE: The parallel Branch and Cut algorithm is used.</span>
-<span class="go">NOTE: The Branch and Cut algorithm is using up to 80 threads.</span>
+<span class="go">NOTE: The Branch and Cut algorithm is using up to 8 threads.</span>
 <span class="go">             Node   Active   Sols    BestInteger      BestBound      Gap    Time</span>
-<span class="go">                0        1      4     12.0775275   2279.8770216   99.47%       1</span>
-<span class="go">                0        1      4     12.0775275     18.3085704   34.03%       1</span>
+<span class="go">                0        1      4     12.0775275   2279.8770216   99.47%       0</span>
+<span class="go">                0        1      4     12.0775275     18.3085704   34.03%       0</span>
 <span class="go">NOTE: The MILP solver&#39;s symmetry detection found 140 orbits. The largest orbit contains 37 variables.</span>
-<span class="go">                0        1      4     12.0775275     18.3085704   34.03%       2</span>
-<span class="go">                0        1      4     12.0775275     18.3085704   34.03%       2</span>
-<span class="go">                0        1      4     12.0775275     18.3085704   34.03%       3</span>
-<span class="go">                0        1      4     12.0775275     18.3085704   34.03%       3</span>
+<span class="go">                0        1      4     12.0775275     18.3085704   34.03%       1</span>
+<span class="go">                0        1      4     12.0775275     18.3085704   34.03%       1</span>
+<span class="go">                0        1      4     12.0775275     18.3085704   34.03%       1</span>
+<span class="go">                0        1      4     12.0775275     18.3085704   34.03%       1</span>
 <span class="go">NOTE: The MILP solver added 4 cuts with 196 cut coefficients at the root.</span>
-<span class="go">               11        8      5     17.1113590     18.1252274    5.59%       4</span>
-<span class="go">               23        4      6     17.1113590     18.0210902    5.05%       4</span>
-<span class="go">               27        3      6     17.1113590     18.0210902    5.05%       5</span>
-<span class="go">               29        3      7     17.1113590     17.9798537    4.83%       5</span>
-<span class="go">               67       11      8     17.1113590     17.7951852    3.84%       6</span>
-<span class="go">               73        9      9     17.1113590     17.7951852    3.84%       6</span>
-<span class="go">               74        8     10     17.1113590     17.7951852    3.84%       6</span>
-<span class="go">              176        0     10     17.1113590     17.1113590    0.00%       7</span>
+<span class="go">               11        8      5     17.1113590     18.1252274    5.59%       1</span>
+<span class="go">               28        6      6     17.1113590     18.0210902    5.05%       2</span>
+<span class="go">               30        5      7     17.1113590     18.0210902    5.05%       2</span>
+<span class="go">               40        6      8     17.1113590     18.0210902    5.05%       2</span>
+<span class="go">               66        0      8     17.1113590     17.1113590    0.00%       2</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 17.111358985.</span>
-<span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 18 rows and 4 columns.</span>
-<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 20 rows and 4 columns.</span>
-<span class="go">NOTE: The CAS table &#39;primal&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 8133 rows and 6 columns.</span>
-<span class="go">NOTE: The CAS table &#39;dual&#39; in caslib &#39;CASUSERHDFS(casuser)&#39; has 5967 rows and 4 columns.</span>
+<span class="go">NOTE: The output table &#39;SOLUTION&#39; in caslib &#39;CASUSER(casuser)&#39; has 8133 rows and 6 columns.</span>
+<span class="go">NOTE: The output table &#39;DUAL&#39; in caslib &#39;CASUSER(casuser)&#39; has 5967 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSER(casuser)&#39; has 18 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSER(casuser)&#39; has 20 rows and 4 columns.</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
 <span class="go">NOTE: Converting model kidney_exchange to DataFrame.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table BLOCKSTABLE in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table BLOCKSTABLE has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table BLOCKSTABLE in caslib CASUSER(casuser).</span>
+<span class="go">NOTE: The table BLOCKSTABLE has been created in caslib CASUSER(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPWRTEVWO4 in caslib CASUSERHDFS(casuser).</span>
-<span class="go">NOTE: The table TMPWRTEVWO4 has been created in caslib CASUSERHDFS(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPG9MOAALB in caslib CASUSER(casuser).</span>
+<span class="go">NOTE: The table TMPG9MOAALB has been created in caslib CASUSER(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: The problem kidney_exchange has 8133 variables (8133 binary, 0 integer, 0 free, 0 fixed).</span>
 <span class="go">NOTE: The problem has 5967 constraints (38 LE, 5929 EQ, 0 GE, 0 range).</span>
 <span class="go">NOTE: The problem has 24245 constraint coefficients.</span>
-<span class="go">NOTE: The remaining solution time after solver initialization is 299.39 seconds.</span>
 <span class="go">NOTE: The initial MILP heuristics are applied.</span>
 <span class="go">NOTE: The MILP presolver value BASIC is applied.</span>
 <span class="go">NOTE: The MILP presolver removed 2685 variables and 1925 constraints.</span>
@@ -207,30 +215,30 @@
 <span class="go">NOTE: The problem has a decomposable structure with 38 blocks. The largest block covers 2.598% of the constraints in the problem.</span>
 <span class="go">NOTE: The decomposition subproblems cover 5396 (99.05%) variables and 3990 (98.71%) constraints.</span>
 <span class="go">NOTE: The deterministic parallel mode is enabled.</span>
-<span class="go">NOTE: The Decomposition algorithm is using up to 32 threads.</span>
+<span class="go">NOTE: The Decomposition algorithm is using up to 8 threads.</span>
 <span class="go">         Iter         Best       Master         Best       LP       IP  CPU Real</span>
 <span class="go">                     Bound    Objective      Integer      Gap      Gap Time Time</span>
-<span class="go">            .     283.4155      10.5814      10.5814   96.27%   96.27%    2    2</span>
-<span class="go">            1     259.0121      10.5814      10.5814   95.91%   95.91%    3    4</span>
-<span class="go">            2     230.6758      10.5814      10.5814   95.41%   95.41%    4    5</span>
-<span class="go">            3     204.2627      10.5814      10.5814   94.82%   94.82%    5    6</span>
-<span class="go">            4     192.9770      14.7394      14.7394   92.36%   92.36%    6    9</span>
-<span class="go">            6     162.6582      15.6274      15.6274   90.39%   90.39%   10   13</span>
-<span class="go">            7     140.2584      15.6274      15.6274   88.86%   88.86%   11   15</span>
-<span class="go">            8     110.8604      15.6274      15.6274   85.90%   85.90%   13   17</span>
-<span class="go">            9     108.1582      15.8122      15.6274   85.38%   85.55%   14   18</span>
-<span class="go">           10     108.1582      15.8122      17.1114   85.38%   84.18%   14   19</span>
-<span class="go">           11      46.6890      17.1114      17.1114   63.35%   63.35%   15   20</span>
-<span class="go">           12      39.3063      17.1114      17.1114   56.47%   56.47%   17   22</span>
-<span class="go">           13      17.1114      17.1114      17.1114    0.00%    0.00%   18   24</span>
+<span class="go">            .     283.4155      10.5814      10.5814   96.27%   96.27%    1    1</span>
+<span class="go">            1     259.0121      10.5814      10.5814   95.91%   95.91%    1    1</span>
+<span class="go">            2     230.6758      10.5814      10.5814   95.41%   95.41%    1    1</span>
+<span class="go">            3     204.2627      10.5814      10.5814   94.82%   94.82%    1    2</span>
+<span class="go">            4     192.9770      14.7394      14.7394   92.36%   92.36%    2    2</span>
+<span class="go">            6     162.6582      15.6274      15.6274   90.39%   90.39%    5    6</span>
+<span class="go">            7     140.2584      15.6274      15.6274   88.86%   88.86%    6    6</span>
+<span class="go">            8     109.9454      15.6274      15.6274   85.79%   85.79%    6    7</span>
+<span class="go">            9      65.4530      16.1007      15.6274   75.40%   76.12%    6    7</span>
+<span class="go">           10      65.4530      16.1007      17.1114   75.40%   73.86%    6    8</span>
+<span class="go">           11      51.8662      17.1114      17.1114   67.01%   67.01%    7    8</span>
+<span class="go">           14      25.6849      17.1114      17.1114   33.38%   33.38%    7    9</span>
+<span class="go">           15      17.1114      17.1114      17.1114    0.00%    0.00%    8    9</span>
 <span class="go">            Node  Active   Sols         Best         Best      Gap    CPU   Real</span>
 <span class="go">                                     Integer        Bound            Time   Time</span>
-<span class="go">               0       1      9      17.1114      17.1114    0.00%     18     24</span>
-<span class="go">NOTE: The Decomposition algorithm used 32 threads.</span>
-<span class="go">NOTE: The Decomposition algorithm time is 24.75 seconds.</span>
-<span class="go">NOTE: Optimal within relative gap.</span>
+<span class="go">               0       1      9      17.1114      17.1114    0.00%      8      9</span>
+<span class="go">NOTE: The Decomposition algorithm used 8 threads.</span>
+<span class="go">NOTE: The Decomposition algorithm time is 9.93 seconds.</span>
+<span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 17.111358985.</span>
-<span class="gh">Out[2]: </span><span class="go">17.111359</span>
+<span class="gh">Out[8]: </span><span class="go">17.11135898487</span>
 </pre></div>
 </div>
 </div>
@@ -242,16 +250,23 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
   <h3><a href="../index.html">Table of Contents</a></h3>
   <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../input-data.html">Handling Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../models.html">Sessions and Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../components.html">Model components</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../workflow.html">Workflows</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="../examples.html#viya-examples-concrete">Viya Examples / Concrete</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/user-guide.html">User Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="examples.html">Examples</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="examples.html#viya-examples-concrete">Viya Examples / Concrete</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="food_manufacture_1.html">Food Manufacture 1</a></li>
 <li class="toctree-l3"><a class="reference internal" href="food_manufacture_2.html">Food Manufacture 2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="factory_planning_1.html">Factory Planning 1</a></li>
@@ -270,29 +285,28 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="multiobjective.html">Multiobjective</a></li>
+<li class="toctree-l3"><a class="reference internal" href="least_squares.html">Least Squares</a></li>
+<li class="toctree-l3"><a class="reference internal" href="efficiency_analysis.html">Efficiency Analysis</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../examples.html#viya-examples-abstract">Viya Examples / Abstract</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples.html#restful-api-examples">RESTful API Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#viya-examples-abstract">Viya Examples / Abstract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api.html">API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../web-api.html">RESTful API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../version-history.html">Version History</a></li>
 </ul>
 
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -304,9 +318,6 @@
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../http-routingtable.html" title="HTTP Routing Table"
-             >routing table</a> |</li>
-        <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
@@ -315,14 +326,26 @@
         <li class="right" >
           <a href="optimal_wedding.html" title="Optimal Wedding"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 0.2.1 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="examples.html" >Examples</a> &#187;</li> 
       </ul>
     </div>
+
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017-2019, SAS Institute.
-      Last updated on Feb 26, 2019 (Timestamp: 0.2.1-20190226133646).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.1.
+        &#169; Copyright 2017-2020, SAS Institute.
+      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219165041).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
     </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-155356999-1');
+</script>
+
+
   </body>
 </html>

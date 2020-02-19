@@ -1,0 +1,6 @@
+sasoptpy\.get\_counter
+======================
+
+.. currentmodule:: sasoptpy
+
+.. autofunction:: get_counter

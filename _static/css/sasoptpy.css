@@ -16,3 +16,69 @@ table.field-list {
 .row-even td {
     background-color: #D9F3BA;
 }
+
+div.related {
+    background-color: #024F87;
+}
+
+div.sphinxsidebar h3 {
+    background-color: #0c1829;
+    color: #fff;
+    text-shadow: none;
+}
+
+div.sphinxsidebar h3 a {
+    color: #fff;
+    text-shadow: none;
+}
+
+div.body h1, div.body h2, div.body h3, div.body h4, div.body h5, div.body h6 {
+    background-color: #dfe9f1;
+    color: #000;
+    text-shadow: none;
+}
+
+li.toctree-l4 {
+    display: none;
+}
+
+@media (max-width: 800px) {
+   div.sphinxsidebar {
+      margin-left: 0px;
+      width: 100%;
+   }
+}
+
+@media (max-width: 800px) {
+    div.bodywrapper {
+        margin: 0px;
+    }
+}
+
+@media (max-width: 800px) {
+    div.body {
+        min-width: unset;
+        max-width: unset;
+    }
+}
+
+
+@media (max-width: 800px) {
+    div.related {
+        width: 100%;
+        margin: 0px;
+    }
+    
+    div.related li {
+       font-size: 0.9em;
+    }
+    
+    div.related li.right {
+       display: none;
+    }
+    
+    div.related ul {
+       display: flex;
+       flex-direction: column-reverse;
+    }
+}

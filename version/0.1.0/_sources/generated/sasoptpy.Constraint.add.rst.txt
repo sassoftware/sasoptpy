@@ -1,0 +1,6 @@
+sasoptpy\.Constraint\.add
+=========================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Constraint.add

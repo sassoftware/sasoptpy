@@ -1,0 +1,6 @@
+sasoptpy.Expression.delete\_member
+==================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Expression.delete_member

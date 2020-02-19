@@ -1,0 +1,6 @@
+sasoptpy.Variable.get\_type
+===========================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Variable.get_type
