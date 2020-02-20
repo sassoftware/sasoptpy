@@ -82,3 +82,18 @@ li.toctree-l4 {
        flex-direction: column-reverse;
     }
 }
+
+@media (max-width: 800px) {
+div.body p {
+    overflow-wrap: break-word;
+}
+
+div.body h1, div.body h2, div.body h3, div.body h4, div.body h5, div.body h6 {
+    word-break: break-all;
+}
+
+dl.field-list {
+    display: block;
+}
+
+}
