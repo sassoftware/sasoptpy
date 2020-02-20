@@ -89,7 +89,7 @@ div.body p {
 }
 
 div.body h1, div.body h2, div.body h3, div.body h4, div.body h5, div.body h6 {
-    word-break: break-all;
+    word-break: break-word;
 }
 
 dl.field-list {
