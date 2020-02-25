@@ -34,5 +34,5 @@ push_to_pypi:
     - python setup.py sdist bdist_wheel
     - python -m pip install --upgrade twine
     - echo $PYPI_URL
-    - python -m twine upload -u __token__ -p $PYPI_TOKEN --repository-url $PYPI_URL dist/*
+    - python -m twine upload --skip-existing -u __token__ -p $PYPI_TOKEN --repository-url $PYPI_URL dist/*
   when: manual
