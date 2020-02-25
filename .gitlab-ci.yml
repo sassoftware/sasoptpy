@@ -23,3 +23,16 @@ py36:
   - pip install coverage
   - cd tests
   - ./test_coverage.sh
+
+push_to_pypi:
+  image: python:latest
+  stage: deploy
+  before_script:
+    - apt-get update -qq
+  script:
+    - python -m pip install --upgrade setuptools wheel
+    - python setup.py sdist bdist_wheel
+    - python -m pip install --upgrade twine
+    - echo $PYPI_URL
+    - python -m twine upload -u __token__ -p $PYPI_TOKEN --repository-url $PYPI_URL dist/*
+  when: manual
