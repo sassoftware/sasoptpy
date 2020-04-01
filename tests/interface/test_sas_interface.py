@@ -61,9 +61,9 @@ class TestSASInterface(unittest.TestCase):
         x = m.add_variables(
             vs, name='averylongvariablenamethatdoesnotwork', ub=2, lb=0)
         c = m.add_constraint(
-            so.quick_sum(i * x[i] for i in range(vs)) <= 1, name='c')
+            so.expr_sum(i * x[i] for i in range(vs)) <= 1, name='c')
         o = m.set_objective(
-            so.quick_sum(x[i] for i in range(vs)), sense=so.MAX, name='obj')
+            so.expr_sum(x[i] for i in range(vs)), sense=so.MAX, name='obj')
 
         def raise_runtime():
             m.solve()
@@ -86,7 +86,7 @@ class TestSASInterface(unittest.TestCase):
         m = so.Model(name='test_long_line', session=TestSASInterface.conn)
         x = m.add_variables(vs, name='averylongvariablename', ub=2, lb=0)
         c = m.add_constraint(
-            so.quick_sum(i * x[i] for i in range(vs)) <= 1, name='c')
+            so.expr_sum(i * x[i] for i in range(vs)) <= 1, name='c')
         o = m.set_objective(x[0], sense=so.MAX, name='obj')
 
         m.solve(wrap_lines=True)

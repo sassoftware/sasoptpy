@@ -42,8 +42,8 @@ def test(cas_conn):
     discount = {j: 1 / (1+discount_rate) ** (j-1) for j in YEARS}
 
     totalRevenue = revenue_per_ton *\
-        so.quick_sum(discount[j] * extractedPerYear[j] for j in YEARS)
-    totalCost = so.quick_sum(discount[j] * cost[i] * isOpen[i, j]
+        so.expr_sum(discount[j] * extractedPerYear[j] for j in YEARS)
+    totalCost = so.expr_sum(discount[j] * cost[i] * isOpen[i, j]
                              for i in MINES for j in YEARS)
     m.set_objective(totalRevenue-totalCost, sense=so.MAX, name='totalProfit')
 
@@ -59,14 +59,14 @@ def test(cas_conn):
     m.add_constraints((isOpen[i, j] <= isOpen[i, j-1] for i in MINES
                       for j in YEARS if j != 1), name='continuity')
 
-    m.add_constraints((so.quick_sum(quality[i] * extract[i, j] for i in MINES)
+    m.add_constraints((so.expr_sum(quality[i] * extract[i, j] for i in MINES)
                       == quality_required[j] * extractedPerYear[j]
                       for j in YEARS), name='quality_con')
 
     res = m.solve()
     if res is not None:
         print(so.get_solution_table(isOpen, isWorked, extract))
-        quality_sol = {j: so.quick_sum(quality[i] * extract[i, j].get_value()
+        quality_sol = {j: so.expr_sum(quality[i] * extract[i, j].get_value()
                                        for i in MINES)
                        / extractedPerYear[j].get_value() for j in YEARS}
         qs = so.dict_to_frame(quality_sol, ['quality_sol'])

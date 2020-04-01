@@ -47,7 +47,7 @@ def test(cas_conn):
                                         name='static_production')
     m.set_objective(0, sense=so.MIN, name='Zero')
     m.add_constraints((static_production[i] == demand[i] +
-                       so.quick_sum(
+                       so.expr_sum(
                            production_coeff[i, j] * static_production[j]
                            for j in INDUSTRIES) for i in INDUSTRIES),
                       name='static_con')
@@ -67,7 +67,7 @@ def test(cas_conn):
 
     productive_capacity = so.ImplicitVar(
         (init_productive_capacity[i] +
-         so.quick_sum(extra_capacity[i, y] for y in range(2, year+1))
+         so.expr_sum(extra_capacity[i, y] for y in range(2, year+1))
          for i in INDUSTRIES for year in range(1, num_years+2)),
         name='productive_capacity'
     )
@@ -78,9 +78,9 @@ def test(cas_conn):
 
     total_productive_capacity = sum(productive_capacity[i, num_years]
                                     for i in INDUSTRIES)
-    total_production = so.quick_sum(production[i, year] for i in INDUSTRIES
+    total_production = so.expr_sum(production[i, year] for i in INDUSTRIES
                                     for year in [4, 5])
-    total_manpower = so.quick_sum(production_coeff['manpower', i] *
+    total_manpower = so.expr_sum(production_coeff['manpower', i] *
                                   production[i, year+1] +
                                   productive_capacity_coeff['manpower', i] *
                                   extra_capacity[i, year+2]
@@ -89,14 +89,14 @@ def test(cas_conn):
     continuity_con = m.add_constraints((
         stock[i, year] + production[i, year] ==
         (demand[i] if year in YEARS else 0) +
-        so.quick_sum(production_coeff[i, j] * production[j, year+1] +
+        so.expr_sum(production_coeff[i, j] * production[j, year+1] +
                      productive_capacity_coeff[i, j] *
                      extra_capacity[j, year+2] for j in INDUSTRIES) +
         stock[i, year+1]
         for i in INDUSTRIES for year in YEARS0), name='continuity_con')
 
     manpower_con = m.add_constraints((
-        so.quick_sum(production_coeff['manpower', j] * production[j, year] +
+        so.expr_sum(production_coeff['manpower', j] * production[j, year] +
                      productive_capacity_coeff['manpower', j] *
                      extra_capacity[j, year+1]
                      for j in INDUSTRIES)

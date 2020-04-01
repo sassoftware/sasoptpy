@@ -198,6 +198,16 @@ def submit_for_tune(caller, **kwargs):
 
 
 def quick_sum(argv):
+    """
+    Summation function for :class:`Expression` objects
+
+    Notes
+    -----
+
+    This method will deprecate in future versions.
+    Use :func:`expr_sum` instead.
+
+    """
     return sasoptpy.util.expr_sum(argv)
 
 
@@ -214,7 +224,7 @@ def expr_sum(argv):
     --------
 
     >>> x = so.VariableGroup(10000, name='x')
-    >>> y = so.quick_sum(2*x[i] for i in range(10000))
+    >>> y = so.expr_sum(2*x[i] for i in range(10000))
 
     Notes
     -----

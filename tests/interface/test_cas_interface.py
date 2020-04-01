@@ -328,10 +328,10 @@ class TestCASInterface(unittest.TestCase):
         # Constraints
         m.add_constraints((get[i] <= limit[i] for i in ITEMS), name='limit_con')
         m.add_constraint(
-            so.quick_sum(weight[i] * get[i] for i in ITEMS) <= total_weight,
+            so.expr_sum(weight[i] * get[i] for i in ITEMS) <= total_weight,
             name='weight_con')
         # Objective
-        total_value = so.quick_sum(value[i] * get[i] for i in ITEMS)
+        total_value = so.expr_sum(value[i] * get[i] for i in ITEMS)
         m.set_objective(total_value, name='total_value', sense=so.MAX)
 
         results = m.tune_parameters(tunerParameters={'maxConfigs': 10})

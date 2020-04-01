@@ -3,7 +3,7 @@
 
 .. _components:
 
-Model components
+Model Components
 =================
 
 .. ipython:: python
@@ -17,7 +17,7 @@ Model components
    from swat import CAS
    s = CAS(cas_host, port=cas_port)
    import sasoptpy
-   sasoptpy.reset_globals()
+   sasoptpy.reset()
 
 In this section, several model components are discussed with examples.
 See :ref:`examples` to learn more about how you can use these components to define optimization models.
@@ -34,7 +34,7 @@ Expressions
 -----------
 
 :class:`Expression` objects represent linear and nonlinear mathematical
-expressions in *sasoptpy*.
+expressions in sasoptpy.
 
 Creating expressions
 ~~~~~~~~~~~~~~~~~~~~
@@ -67,7 +67,7 @@ nonlinear expressions, but there are some limitations.
 
 Currently, it is not possible to get or print values of nonlinear expressions.
 Moreover, if your model includes a nonlinear expression, you need to use
-SAS Viya 3.4 or later or any SAS version for solving your problem.
+SAS Viya 3.4 or later or any SAS/OR release for solving your problem.
 
 To use mathematical operations, you need to import `sasoptpy.math`
 functions.
@@ -75,10 +75,10 @@ functions.
 Mathematical expressions
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-*sasoptpy* provides mathematical functions for generating mathematical
+sasoptpy provides mathematical functions for generating mathematical
 expressions to be used in optimization models.
 
-You need to import `sasoptpy.math` to your code to start by using these functions.
+You need to import `sasoptpy.math` into your code to use these functions.
 Available mathematical functions are listed in :ref:`math-functions`.
 
 .. ipython:: python
@@ -119,8 +119,7 @@ You can retrieve the dual values of :class:`Expression` objects by using
 
 **Addition**
 
-There are two ways to add elements to an expression.
-The first and simpler way creates a new expression at the end:
+You can add, subtract, multiply and divide components using regular Python functionality:
 
 .. ipython:: python
    
@@ -131,38 +130,15 @@ The first and simpler way creates a new expression at the end:
    
    print(repr(profit_after_tax))
 
-
-The second way, :func:`Expression.add` method, takes two arguments:
-the element to be added and the sign (1 or -1):
-
-.. ipython:: python
-   
-   profit_after_tax = profit.add(tax, sign=-1)
-   
 .. ipython:: python
 
-   print(profit_after_tax)
-
-.. ipython:: python
-   
-   print(repr(profit_after_tax))
-
-If the expression is a temporary one, the addition is performed in place.
-
-
-**Multiplication**
-
-You can multiply expressions with scalar values:
-
-.. ipython:: python
-
-   investment = profit.mult(0.2)
-   print(investment)
+   share = 0.2 * profit
+   print(share)
 
 **Summation**
 
 For faster summations compared to Python's native :code:`sum` function,
-*sasoptpy* provides :func:`sasoptpy.quick_sum`.
+sasoptpy provides :func:`expr_sum` (formerly :func:`quick_sum`)
 
 .. ipython:: python
 
@@ -172,7 +148,7 @@ For faster summations compared to Python's native :code:`sum` function,
 .. ipython:: python
 
    t0 = time.time()
-   e = so.quick_sum(2 * x[i] for i in range(1000))
+   e = so.expr_sum(2 * x[i] for i in range(1000))
    print(time.time()-t0)
 
 .. ipython:: python
@@ -243,15 +219,15 @@ Variables
 Creating variables
 ~~~~~~~~~~~~~~~~~~
 
-You can create variables either standalone or inside a model.
+You can create variables either stand-alone or inside a model.
 
 **Creating a variable outside a model**
 
-The first way to create a variable uses the default constructor.
+The first way to create a variable uses the default constructor:
 
 >>> x = so.Variable(vartype=so.INT, ub=5, name='x')
 
-When created separately, a variable needs to be included (or added) inside the
+When a variable is created separately, it needs to be included (or added) inside the
 model:
 
 >>> y = so.Variable(name='y', lb=5)
@@ -273,9 +249,9 @@ Arguments
 
 There are three types of variables: continuous variables, integer variables,
 and binary variables.
-Continuous variables are the default type and
-you can specify it by using the ``vartype=so.CONT`` argument.
-You can create Integer variables and binary
+Continuous variables are the default type, which
+you can specify by using the ``vartype=so.CONT`` argument.
+You can create integer variables and binary
 variables by using the ``vartype=so.INT`` and ``vartype=so.BIN``
 arguments, respectively.
 
@@ -299,7 +275,7 @@ Setting initial values
 
 You can pass the initial values of variables to the solvers for certain problems.
 The :func:`Variable.set_init` method changes the initial value for variables.
-You can set this value at the creation of the variable as well.
+You can set also this value at the creation of the variable.
 
 >>> x.set_init(5)
 >>> print(repr(x))
@@ -308,7 +284,7 @@ sasoptpy.Variable(name='x', ub=20, init=5,  vartype='CONT')
 Working with a set of variables
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can create a set of variables by using single or multiple indices.
+You can create a set of variables by using a single index or by using multiple indices.
 Valid index sets include list, dict, and :class:`pandas.Index` objects. 
 See :ref:`input-data` for more information about allowed index types.
 
@@ -374,7 +350,7 @@ sasoptpy.Constraint( -  5.0 * y  -  x  <=  10, name='c1')
 Working with a set of constraints
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can add a set of constraints by using single or multiple indices.
+You can add a set of constraints by using a single index or by using multiple indices.
 Valid index sets include list, dict, and :class:`pandas.Index` objects. 
 See :ref:`input-data` for more information about allowed index types.
 
@@ -406,8 +382,8 @@ Constraint Group (cg2) [
 Range constraints
 ~~~~~~~~~~~~~~~~~
 
-You can give a range for an expression by using a list of two value (lower and
-upper bound) with an `==` sign:
+You can give a range for an expression by using a list of two values (lower and
+upper bound) after an `==` sign:
 
 >>> x = m.add_variable(name='x')
 >>> y = m.add_variable(name='y')

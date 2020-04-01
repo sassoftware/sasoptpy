@@ -7,17 +7,17 @@
 Handling Data
 =============
 
-*sasoptpy* can work with native Python types and *pandas* objects for all
+sasoptpy can work with native Python types and pandas objects for all
 data operations.
-Among *pandas* object types, *sasoptpy* works with :class:`pandas.DataFrame`
+Among pandas object types, sasoptpy works with :class:`pandas.DataFrame`
 and :class:`pandas.Series` objects to construct and manipulate model components.
 
 Indices
 -------
 
-Methods like :func:`Model.add_variables` can utilize native Python object
-types like list and range as variable and constraint indices.
-You can use :class:`pandas.Index` objects as indices as well.
+Methods like :func:`Model.add_variables` can use native Python object
+types such as list and range as variable and constraint indices.
+You can also use :class:`pandas.Index` objects as indices as well.
 
 List
 ~~~~
@@ -26,7 +26,7 @@ List
    :suppress:
 
    import sasoptpy as so
-   so.reset_globals()
+   so.reset()
 
 .. ipython:: python
    
@@ -40,8 +40,8 @@ List
 
    print(repr(production['Summer']))
 
-Note that if a list is being used as the index set, associated fields like
-`lb`, `ub` should be accessible by using the index keys. Accepted types are dict
+If a list is used as the index set, associated fields such as
+`lb`, and `ub` should be accessible by using the index keys. Accepted types are dict
 and :class:`pandas.Series`.
 
 Range
@@ -88,7 +88,7 @@ pandas.Index
 Set
 ~~~
 
-*sasoptpy* can work with data on the server and generate abstract
+sasoptpy can work with data on the server and generate abstract
 expressions. For this purpose, you can use :class:`Set` objects to represent
 PROC OPTMODEL sets.
 
@@ -99,20 +99,20 @@ PROC OPTMODEL sets.
    u = m2.add_variables(I, name='u')
    print(I, u)
 
-See :ref:`workflows` for more information on working with server-side models.
+See :ref:`workflows` for more information about working with server-side models.
 
 Data
 ----
 
-*sasoptpy* can work with both client-side and server-side data.
+sasoptpy can work with both client-side and server-side data.
 Here are some options to load data into the optimization models.
 
 
 pandas DataFrame
 ~~~~~~~~~~~~~~~~
 
-:class:`pandas.DataFrame` is the preferred object type when passing data into
-*sasoptpy* models.
+:class:`pandas.DataFrame` is the preferred object type for passing data into
+sasoptpy models.
 
 .. ipython:: python
 
@@ -131,7 +131,7 @@ pandas DataFrame
 Dictionaries
 ~~~~~~~~~~~~
 
-You can use lists and dictionaries in expressions and when creating variables.
+You can use lists and dictionaries in expressions and when you create variables.
 
 .. ipython:: python
 
@@ -145,9 +145,8 @@ CASTable
 ~~~~~~~~
 
 When data are available on the server-side, you can pass a reference to the object.
-Note that, using :class:`swat.cas.table.CASTable`
-and Abstract Data requires SAS Viya version
-3.4 or later.
+Using :class:`swat.cas.table.CASTable`
+and abstract data requires SAS Viya 3.4 or later.
 
 .. ipython:: python
    :suppress:
@@ -191,8 +190,8 @@ and Abstract Data requires SAS Viya version
 Abstract Data
 ~~~~~~~~~~~~~
 
-If you would like to model your problem first and then load data, you can
-pass a string for the data sets that will be available later.
+If you would like to model your problem first and load data later, you can
+pass a string for the data that will be available later.
 
 .. ipython:: python
 
@@ -204,9 +203,9 @@ pass a string for the data sets that will be available later.
    m3.include(read_data(table='DF', index=['item'], columns=[limit]))
    print(type(ITEMS), ITEMS)
 
-Note that the key set is created as a reference. You can later solve the
-problem after having the data available with the same name; for example, by using the
-`upload_frame` function.
+Note that the key set is created as a reference. You can solve the
+problem later after having the data available with the same name (for example, by using the
+:func:`swat.cas.connection.CAS.upload_frame` function)
 
 .. ipython:: python
 
