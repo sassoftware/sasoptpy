@@ -29,7 +29,7 @@ class Constraint(Expression):
 
     Parameters
     ----------
-    exp : Expression
+    exp : :class:`Expression`
         A logical expression that forms the constraint
     direction : string
         Direction of the logical expression, 'E' (=), 'L' (<=) or 'G' (>=)
@@ -114,7 +114,7 @@ class Constraint(Expression):
 
         Parameters
         ----------
-        var : Variable
+        var : :class:`Variable`
             Variable to be updated
         value : float
             Coefficient of the variable in the constraint

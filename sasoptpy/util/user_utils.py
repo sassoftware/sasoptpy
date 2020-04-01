@@ -53,11 +53,11 @@ def exp_range(start, stop, step=1):
 
     Parameters
     ----------
-    start : Expression
+    start : :class:`Expression`
         First value of the range
-    stop : Expression
+    stop : :class:`Expression`
         Last value of the range
-    step : Expression, optional
+    step : :class:`Expression`, optional
         Step size of the range
 
     Returns
@@ -217,7 +217,7 @@ def expr_sum(argv):
 
     Returns
     -------
-    exp : Expression
+    exp : :class:`Expression`
         Sum of given arguments
 
     Examples

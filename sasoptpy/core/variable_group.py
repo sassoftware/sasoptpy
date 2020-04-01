@@ -261,7 +261,7 @@ class VariableGroup(Group):
 
         Returns
         -------
-        ref : Variable or list
+        ref : :class:`Variable` or list
             Reference to a single Variable or a list of Variable objects
 
         """
@@ -442,7 +442,7 @@ class VariableGroup(Group):
 
         Returns
         -------
-        r : Expression
+        r : :class:`Expression`
             Expression that represents the sum of all variables in the group
 
         Examples
@@ -525,7 +525,7 @@ class VariableGroup(Group):
 
         Returns
         -------
-        r : Expression
+        r : :class:`Expression`
             An expression that is the product of the variable group with the
             given vector
 
