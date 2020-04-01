@@ -31,7 +31,7 @@ class Expression:
 
     Parameters
     ----------
-    exp : Expression, optional
+    exp : :class:`Expression`, optional
         An existing expression where arguments are being passed
     name : string, optional
         A local name for the expression
@@ -124,7 +124,7 @@ class Expression:
 
         Returns
         -------
-        r : Expression
+        r : :class:`Expression`
             Copy of the object
 
         Examples
@@ -617,7 +617,7 @@ class Expression:
 
         Parameters
         ----------
-        var : Variable
+        var : :class:`Variable`
             Variable object whose value will be changed
         key : string
             Name of the variable object
@@ -635,14 +635,14 @@ class Expression:
 
         Parameters
         ----------
-        other : float or Expression
+        other : float or :class:`Expression`
             Second expression or constant value to be added
         sign : int, optional
             Sign of the addition, 1 or -1
 
         Returns
         -------
-        r : Expression
+        r : :class:`Expression`
             Reference to the outcome of the operation
 
         Notes
@@ -682,12 +682,12 @@ class Expression:
 
         Parameters
         ----------
-        other : Expression or int
+        other : :class:`Expression` or int
             Second expression to be multiplied
 
         Returns
         -------
-        r : Expression
+        r : :class:`Expression`
             A new :class:`Expression` that represents the multiplication
 
         Notes
@@ -727,14 +727,14 @@ class Expression:
 
         Parameters
         ----------
-        other : Expression
+        other : :class:`Expression`
             Expression on the other side of the relation wrt self
         direction_ : string
             Direction of the logical relation, either 'E', 'L', or 'G'
 
         Returns
         -------
-        generated_constraint : Constraint
+        generated_constraint : :class:`Constraint`
             Constraint generated as a result of linear relation
 
         """

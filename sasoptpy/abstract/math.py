@@ -52,7 +52,7 @@ def math_func(exp, op, *args):
 
     Parameters
     ----------
-    exp : Expression
+    exp : :class:`Expression`
         Expression where the math func will be applied
     op : string
         String representation of the math function
@@ -116,9 +116,9 @@ def mod(exp, divisor):
 
     Parameters
     ----------
-    exp : Expression
+    exp : :class:`Expression`
         Dividend
-    divisor : Expression
+    divisor : :class:`Expression`
         Divisor
     """
     return math_func(exp, 'mod', divisor)

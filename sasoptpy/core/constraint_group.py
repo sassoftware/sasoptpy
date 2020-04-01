@@ -178,7 +178,7 @@ class ConstraintGroup(Group):
 
         Returns
         -------
-        item : Constraint
+        item : :class:`Constraint`
             Reference to the constraint
         """
         key = sasoptpy.util.pack_to_tuple(key)

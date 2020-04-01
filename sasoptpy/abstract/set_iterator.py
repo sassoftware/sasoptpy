@@ -9,7 +9,7 @@ class SetIterator(sasoptpy.Expression):
 
     Parameters
     ----------
-    initset : Set
+    initset : :class:`Set`
         Set to be iterated on
     name : string, optional
         Name of the iterator
