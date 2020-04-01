@@ -63,18 +63,18 @@ def test(cas_conn):
             if i < k]
     product = m.add_variables(IJKL, vartype=so.BIN, name='product')
 
-    totalBenefit = so.quick_sum(benefit[i, j] * assign[i, j]
+    totalBenefit = so.expr_sum(benefit[i, j] * assign[i, j]
                                 for i in DEPTS for j in CITIES)
 
-    totalCost = so.quick_sum(comm[i, k] * cost[j, l] * product[i, j, k, l]
+    totalCost = so.expr_sum(comm[i, k] * cost[j, l] * product[i, j, k, l]
                              for (i, j, k, l) in IJKL)
 
     m.set_objective(totalBenefit-totalCost, name='netBenefit', sense=so.MAX)
 
-    m.add_constraints((so.quick_sum(assign[dept, city] for city in CITIES)
+    m.add_constraints((so.expr_sum(assign[dept, city] for city in CITIES)
                       == 1 for dept in DEPTS), name='assign_dept')
 
-    m.add_constraints((so.quick_sum(assign[dept, city] for dept in DEPTS)
+    m.add_constraints((so.expr_sum(assign[dept, city] for dept in DEPTS)
                       <= max_num_depts for city in CITIES), name='cardinality')
 
     product_def1 = m.add_constraints((assign[i, j] + assign[k, l] - 1
@@ -98,13 +98,13 @@ def test(cas_conn):
     m.drop_constraints(product_def3)
 
     m.add_constraints((
-        so.quick_sum(product[i, j, k, l]
+        so.expr_sum(product[i, j, k, l]
                      for j in CITIES if (i, j, k, l) in IJKL) == assign[k, l]
         for i in DEPTS for k in DEPTS for l in CITIES if i < k),
         name='pd4')
 
     m.add_constraints((
-        so.quick_sum(product[i, j, k, l]
+        so.expr_sum(product[i, j, k, l]
                      for l in CITIES if (i, j, k, l) in IJKL) == assign[i, j]
         for k in DEPTS for i in DEPTS for j in CITIES if i < k),
         name='pd5')

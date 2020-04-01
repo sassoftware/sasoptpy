@@ -239,6 +239,18 @@ class Constraint(Expression):
             v -= self._linCoef['CONST']['val']
             return v
 
+    def get_dual(self):
+        """
+        Returns the dual value if exists
+
+        Returns
+        -------
+        dual : float
+            Dual value of the constraint
+
+        """
+        return self._dual
+
     def add_conditions(self, conditions):
         if conditions is not None:
             for i in conditions:

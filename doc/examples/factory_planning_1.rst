@@ -5,9 +5,9 @@ Factory Planning 1
 Reference
 ---------
 
-http://go.documentation.sas.com/?docsetId=ormpex&docsetTarget=ormpex_ex3_toc.htm&docsetVersion=15.1&locale=en
+SAS/OR example: http://go.documentation.sas.com/?docsetId=ormpex&docsetTarget=ormpex_ex3_toc.htm&docsetVersion=15.1&locale=en
 
-https://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex03.html
+SAS/OR code for example: https://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex03.html
 
 Model
 -----

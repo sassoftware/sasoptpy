@@ -43,7 +43,7 @@ def test(cas_conn, data=None):
     err = m.add_implicit_variable((
         y[i] - (a * x1[i] + b * x2[i] + c * x1[i]  * x2[i]) for i in data.index
     ), name='error')
-    m.set_objective(so.quick_sum(err[i]**2 for i in data.index),
+    m.set_objective(so.expr_sum(err[i]**2 for i in data.index),
                     sense=so.MIN,
                     name='total_error')
     m.solve(verbose=True, options={'with': 'nlp'})

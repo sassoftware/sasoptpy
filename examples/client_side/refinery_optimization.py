@@ -111,13 +111,13 @@ def test(cas_conn, **kwargs):
     flow = m.add_variables(ARCS, name='flow', lb=0)
     NODES = np.unique([i for j in ARCS for i in j])
 
-    m.set_objective(so.quick_sum(profit[i] * flow[i, 'sink']
+    m.set_objective(so.expr_sum(profit[i] * flow[i, 'sink']
                                  for i in FINAL_PRODUCTS
                                  if (i, 'sink') in ARCS),
                     name='totalProfit', sense=so.MAX)
 
-    m.add_constraints((so.quick_sum(flow[a] for a in ARCS if a[0] == n) ==
-                      so.quick_sum(arc_mult[a] * flow[a]
+    m.add_constraints((so.expr_sum(flow[a] for a in ARCS if a[0] == n) ==
+                      so.expr_sum(arc_mult[a] * flow[a]
                                    for a in ARCS if a[1] == n)
                       for n in NODES if n not in ['source', 'sink']),
                       name='flow_balance')
@@ -139,17 +139,17 @@ def test(cas_conn, **kwargs):
     octane_lb = petrol_data['octane_lb']
     vapour_pressure = vapour_pressure_data['vapour_pressure']
 
-    m.add_constraints((so.quick_sum(octane[a[0]] * arc_mult[a] * flow[a]
+    m.add_constraints((so.expr_sum(octane[a[0]] * arc_mult[a] * flow[a]
                                     for a in ARCS if a[1] == p)
                        >= octane_lb[p] *
-                      so.quick_sum(arc_mult[a] * flow[a]
+                      so.expr_sum(arc_mult[a] * flow[a]
                                    for a in ARCS if a[1] == p)
                       for p in PETROLS), name='blending_petrol')
 
-    m.add_constraint(so.quick_sum(vapour_pressure[a[0]] * arc_mult[a] * flow[a]
+    m.add_constraint(so.expr_sum(vapour_pressure[a[0]] * arc_mult[a] * flow[a]
                                   for a in ARCS if a[1] == 'jet_fuel') <=
                      vapour_pressure_ub *
-                     so.quick_sum(arc_mult[a] * flow[a]
+                     so.expr_sum(arc_mult[a] * flow[a]
                                   for a in ARCS if a[1] == 'jet_fuel'),
                      name='blending_jet_fuel')
 
@@ -163,12 +163,12 @@ def test(cas_conn, **kwargs):
     m.add_constraint(crudeDistilled.sum('*') <= crude_total_ub,
                      name='crude_total_ub')
 
-    m.add_constraint(so.quick_sum(flow[a] for a in ARCS
+    m.add_constraint(so.expr_sum(flow[a] for a in ARCS
                                   if a[0].find('naphtha') > -1 and
                                   a[1] == 'reformed_gasoline')
                      <= naphtha_ub, name='naphtba_ub')
 
-    m.add_constraint(so.quick_sum(flow[a] for a in ARCS if a[1] ==
+    m.add_constraint(so.expr_sum(flow[a] for a in ARCS if a[1] ==
                                   'cracked_oil') <=
                      cracked_oil_ub, name='cracked_oil_ub')
 
@@ -186,7 +186,7 @@ def test(cas_conn, **kwargs):
 
         octane_sol = []
         for p in PETROLS:
-            octane_sol.append(so.quick_sum(octane[a[0]] * arc_mult[a] *
+            octane_sol.append(so.expr_sum(octane[a[0]] * arc_mult[a] *
                                            flow[a].get_value() for a in ARCS
                                            if a[1] == p) /
                               sum(arc_mult[a] * flow[a].get_value()

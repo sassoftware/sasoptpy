@@ -19,7 +19,7 @@ You can create an empty model by using the :class:`Model` constructor:
 Adding new components to a model
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Adding a variable:
+Add a variable:
 
 .. ipython:: python
 
@@ -28,7 +28,7 @@ Adding a variable:
    y = m.add_variable(name='y', lb=1, ub=10)
    print(m)
 
-Adding a constraint:
+Add a constraint:
 
 .. ipython:: python
 
@@ -59,7 +59,7 @@ replaced with optimal values.
 Accessing components
 ~~~~~~~~~~~~~~~~~~~~
 
-You can get a list of model variables by using the :meth:`Model.get_variables()`
+You can access a list of model variables by using the :meth:`Model.get_variables()`
 method:
 
 .. ipython:: python
@@ -95,9 +95,9 @@ by using the :meth:`Model.drop_variables` method.
    print(m)
 
 .. ipython:: python
+   :suppress:
 
    m.include(y)
-   print(m)
 
 You can drop a constraint by using the :meth:`Model.drop_constraint` method.
 Similarly, you can drop a set of constraints by using the
@@ -128,13 +128,15 @@ You can copy an existing model by including the :class:`Model` object itself.
 
 Note that all variables and constraints are included by reference.
 
+.. _solving-model:
+
 
 Solving a model
 ~~~~~~~~~~~~~~~
 
 A model is solved by using the :meth:`Model.solve` method. This method converts
 Python definitions into an MPS file and uploads it to a CAS server for the optimization
-action. The type of the optimization problem is determined based on the variable types and expressions.
+action. The type of the optimization problem is determined according to the variable types and expressions.
 
 >>> m.solve()
 NOTE: Initialized model model_1
@@ -153,15 +155,15 @@ Solve options
 Solver Options
 ++++++++++++++
 
-You can pass both PROC OPTMODEL solve options and ``solveLp``, ``solveMilp`` action options
-by using the ``options`` argument of the :meth:`Model.solve` method.
+You can pass either solve options from the OPTMODEL procedure or solve parameter from the ``solveLp`` and ``solveMilp``
+actions by using the ``options`` parameter of the :meth:`Model.solve` method.
 
 >>> m.solve(options={'with': 'milp', 'maxtime': 600})
 >>> m.solve(options={'with': 'lp', 'algorithm': 'ipm'})
 
-The only special option for the :meth:`Model.solve` method is ``with``. If not
-passed, PROC OPTMODEL chooses a solver that depends on the problem type.
-Possible ``with`` options are listed in the `SAS/OR documentation <http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_optmodel_syntax11.htm&docsetVersion=15.1&locale=en#ormpug.optmodel.npxsolvestmt>`__.
+The parameter ``with`` is used to specificy the optimization solver in OPTMODEL procedure.
+If the ``with`` parameter is not passed, PROC OPTMODEL chooses a solver that depends on the problem type.
+Possible ``with`` values are listed in the `SAS/OR documentation <http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_optmodel_syntax11.htm&docsetVersion=15.1&locale=en#ormpug.optmodel.npxsolvestmt>`__.
 
 
 You can find specific solver options in the SAS Optimization documentation:
@@ -170,31 +172,28 @@ You can find specific solver options in the SAS Optimization documentation:
 - `MILP solver options <https://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_milpsolver_syntax02.htm&docsetVersion=15.1&locale=en>`__
 - `NLP solver options <https://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_nlpsolver_syntax02.htm&docsetVersion=15.1&locale=en>`__
 - `QP solver options <https://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_qpsolver_syntax02.htm&docsetVersion=15.1&locale=en>`__
-- `BLACKBOX solver options <https://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_lsosolver_syntax02.htm&docsetVersion=15.1&locale=en>`__
+- `Black-box solver options <https://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_lsosolver_syntax02.htm&docsetVersion=15.1&locale=en>`__ (formerly called LSO solver)
 
-The ``options`` argument can also pass ``solveLp`` and ``solveMilp`` action
-options when ``frame=True`` is used when calling the :meth:`Model.solve` method.
+The ``options`` parameter can also pass ``solveLp`` and ``solveMilp`` action
+parameter when ``frame=True`` is used when the :meth:`Model.solve` method is called.
 
 - `solveLp options <https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=cas-optimization-solvelp.htm&docsetVersion=8.5&locale=en>`__
 - `solveMilp options <https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=cas-optimization-solvemilp.htm&docsetVersion=8.5&locale=en>`__
 
-Package Options
+Call parameters
 +++++++++++++++
 
-Besides the ``options`` argument, you can pass following arguments
-into the :meth:`Model.solve` method:
+Besides the ``options`` parameter, you can pass following parameters into the :meth:`Model.solve` method:
 
 - name: Name of the uploaded problem information
-- drop: Option for dropping the data from server after the solve
-- replace: Option for replacing an existing data with the same name
-- primalin: Option for using the current values of the variables as an initial solution
-- submit: Option for calling the CAS / SAS action
-- frame: Option for using frame (MPS) method (if False, it uses OPTMODEL)
-- verbose: Option for printing the generated OPTMODEL code before solve
-
-
-When ``primalin`` argument is ``True``, it grabs :class:`Variable` objects
-``_init`` field. You can modify this field by using the :meth:`Variable.set_init` method.
+- drop: Drops the data from server after the solve
+- replace: Replaces an existing data with the same name
+- primalin: Uses the current values of the variables as an initial solution.
+            When the value of this parameter is ``True``, the solve method grabs :class:`Variable` objects'
+            ``_init`` fields. You can modify this field by using the :meth:`Variable.set_init` method.
+- submit: Calls the CAS action or SAS procedure
+- frame: Uses the frame (MPS) method. If the value of this parameter is ``False``, then the method uses OPTMODEL codes.
+- verbose: Prints the generated PROC OPTMODEL code or MPS DataFrame object before the solve
 
 
 Getting solutions
@@ -212,15 +211,16 @@ To print the values of any object, you can use the :func:`get_solution_table` me
 
 >>> print(so.get_solution_table(x, y))
 
-All variables and constraints passed into this method are returned based on
-their indices. See :ref:`examples` for more details.
+All variables and constraints that are passed into this method are returned on
+the basis of their indices. See :ref:`examples` for more details.
 
 Tuning MILP model parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-SAS Optimization solvers provide a variety of settings. However, it might be difficult to find the best settings for a
-given model. In order to compare and obtain a good choice of parameters, you can use the `optimization.tune` action
-for mixed-integer linear optimization problems.
+SAS Optimization solvers provide a variety of settings.
+However, it might be difficult to find the best settings for a
+particular model. In order to compare parameters and make a good choice, you can use the `optimization.tune` action
+for mixed integer linear optimization problems.
 
 The :meth:`Model.tune_parameters` method is a wrapper for the tune action. Consider the following knapsack problem example:
 
@@ -254,8 +254,8 @@ The :meth:`Model.tune_parameters` method is a wrapper for the tune action. Consi
       total_weight = 55
       get = m.add_variables(ITEMS, name='get', vartype=so.INT)
       m.add_constraints((get[i] <= limit[i] for i in ITEMS), name='limit_con')
-      m.add_constraint(so.quick_sum(weight[i] * get[i] for i in ITEMS) <= total_weight, name='weight_con')
-      total_value = so.quick_sum(value[i] * get[i] for i in ITEMS)
+      m.add_constraint(so.expr_sum(weight[i] * get[i] for i in ITEMS) <= total_weight, name='weight_con')
+      total_value = so.expr_sum(value[i] * get[i] for i in ITEMS)
       m.set_objective(total_value, name='total_value', sense=so.MAX)
       return m
 
@@ -277,7 +277,7 @@ For this problem, you can compare configurations as follows:
 * tunerParameters
 * tuningParameters
 
-For a full set of tuning parameters and acceptable values of these arguments, see the SAS Optimization documentation [#]_.
+For a full set of tuning parameters and acceptable values of these arguments, see the `SAS Optimization documentation <https://go.documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.5&docsetId=casactmopt&docsetTarget=casactmopt_optimization_details37.html>`__.
 
 For the example problem, you can tune the `presolver`, `cutStrategy`, and `strongIter` settings, by using initial values and
 candidate values, and limit the maximum number of configurations and maximum running time as follows:
@@ -298,9 +298,3 @@ candidate values, and limit the maximum number of configurations and maximum run
    print(results)
 
 You can retrieve full details by using the :meth:`Model.get_tuner_results` method.
-
-.. only:: html
-
-    **References**
-
-.. [#] https://go.documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.5&docsetId=casactmopt&docsetTarget=casactmopt_optimization_details37.htm

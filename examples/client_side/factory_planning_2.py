@@ -59,9 +59,9 @@ def test(cas_conn):
     for p in PRODUCTS:
         store[p, 6].set_bounds(lb=final_storage, ub=final_storage)
 
-    storageCost = so.quick_sum(
+    storageCost = so.expr_sum(
         storage_cost_per_unit * store[p, t] for p in PRODUCTS for t in PERIODS)
-    revenue = so.quick_sum(profit[p] * sell[p, t]
+    revenue = so.expr_sum(profit[p] * sell[p, t]
                            for p in PRODUCTS for t in PERIODS)
     m.set_objective(revenue-storageCost, sense=so.MAX, name='total_profit')
 
@@ -72,12 +72,12 @@ def test(cas_conn):
 
     production_time = machine_type_product_data
     m.add_constraints((
-        so.quick_sum(production_time.at[mc, p] * make[p, t] for p in PRODUCTS)
+        so.expr_sum(production_time.at[mc, p] * make[p, t] for p in PRODUCTS)
         <= num_hours_per_period *
         (num_machines[mc] - numMachinesDown[mc, t])
         for mc in MACHINE_TYPES for t in PERIODS), name='machine_hours_con')
 
-    m.add_constraints((so.quick_sum(numMachinesDown[mc, t] for t in PERIODS) ==
+    m.add_constraints((so.expr_sum(numMachinesDown[mc, t] for t in PERIODS) ==
                        num_machines_needing_maintenance[mc]
                        for mc in MACHINE_TYPES), name='maintenance_con')
 

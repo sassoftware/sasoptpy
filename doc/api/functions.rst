@@ -14,6 +14,7 @@ Utility Functions
    exp_range
    flatten_frame
    get_solution_table
+   expr_sum
    quick_sum
    reset
 

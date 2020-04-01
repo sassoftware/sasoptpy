@@ -125,7 +125,7 @@ v0.1.2 (April 24, 2018)
 New Features
 ++++++++++++
 
-- As an experimental feature, *sasoptpy* supports *saspy* connections now
+- As an experimental feature, sasoptpy supports *SASPy* connections now
 - :meth:`Model.solve_local` method is added for solving optimization
   problems by using SAS 9.4 installations
 - :meth:`Model.drop_variable`, :meth:`Model.drop_variables`,
@@ -187,7 +187,7 @@ New Features
   are added
 - :meth:`Model.test_session` method is added for checking if session is defined
   for models
-- :func:`quick_sum` function is added for faster summation of
+- :func:`expr_sum` function is added for faster summation of
   :class:`Expression` objects
 
 Changes

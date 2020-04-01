@@ -47,7 +47,7 @@ def test(cas_conn, sols=False):
     order = so.Parameter(name='order')
     beta = so.VariableGroup(so.exp_range(0, order), name='beta')
     estimate = so.ImplicitVar(
-        (beta[0] + so.quick_sum(beta[k] * x[i] ** k
+        (beta[0] + so.expr_sum(beta[k] * x[i] ** k
                                 for k in so.exp_range(1, order))
          for i in POINTS), name='estimate')
 
@@ -55,7 +55,7 @@ def test(cas_conn, sols=False):
     slack = so.VariableGroup(POINTS, name='slack', lb=0)
 
     objective1 = so.Expression(
-        so.quick_sum(surplus[i] + slack[i] for i in POINTS), name='objective1')
+        so.expr_sum(surplus[i] + slack[i] for i in POINTS), name='objective1')
     abs_dev_con = so.ConstraintGroup(
         (estimate[i] - surplus[i] + slack[i] == y[i] for i in POINTS),
         name='abs_dev_con')
