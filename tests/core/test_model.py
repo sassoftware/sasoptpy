@@ -44,6 +44,9 @@ class SASsession:
         self.sascfg = MockSASconfig(name=cfgname)
 
 class TestModel(unittest.TestCase):
+    """
+    Unit tests for :class:`sasoptpy.Model` objects
+    """
 
     @classmethod
     def setUpClass(cls):

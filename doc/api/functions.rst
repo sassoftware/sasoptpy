@@ -13,7 +13,7 @@ Utility Functions
    dict_to_frame
    exp_range
    flatten_frame
-   get_solution_table
+   get_value_table
    expr_sum
    quick_sum
    reset

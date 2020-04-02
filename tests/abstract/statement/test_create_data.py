@@ -33,6 +33,9 @@ from tests.swat_config import create_cas_connection
 
 
 class TestCreateData(unittest.TestCase):
+    """
+    Unit tests for CREATE DATA statements
+    """
 
     @classmethod
     def setUpClass(cls):

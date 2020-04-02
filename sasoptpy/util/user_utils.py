@@ -49,7 +49,7 @@ def iterate(set, name):
 
 def exp_range(start, stop, step=1):
     """
-    Creates a set within given range
+    Creates a set within specified range
 
     Parameters
     ----------

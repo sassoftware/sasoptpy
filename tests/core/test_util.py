@@ -34,6 +34,9 @@ def match_ratio(a, b):
 
 
 class TestUtil(unittest.TestCase):
+    """
+    Unit tests for core utility functions
+    """
 
     @classmethod
     def setUpClass(cls):

@@ -34,6 +34,9 @@ from sasoptpy.actions import for_loop, cofor_loop, fix, solve, put_item
 
 
 class TestCoforLoop(unittest.TestCase):
+    """
+    Unit tests for concurrent for (COFOR) statements
+    """
 
     def setUp(self):
         so.reset()

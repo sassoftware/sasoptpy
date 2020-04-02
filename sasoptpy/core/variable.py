@@ -32,18 +32,15 @@ class Variable(Expression):
     name : string
         Name of the variable
     vartype : string, optional
-        Type of the variable, default is continuous
+        Type of the variable
     lb : float, optional
-        Lower bound of the variable, default is -inf
+        Lower bound of the variable
     ub : float, optional
-        Upper bound of the variable, default is inf
+        Upper bound of the variable
     init : float, optional
         Initial value of the variable
     abstract : boolean, optional
-        Indicator of whether the variable is abstract or not
-    shadow : boolean, optional
-        Indicator of whether the variable is shadow or not\
-        Used for internal purposes
+        When set to `True`, indicates that the variable is abstract
 
     Examples
     --------
@@ -64,7 +61,7 @@ class Variable(Expression):
 
     @sasoptpy.class_containable
     def __init__(self, name, vartype=None, lb=None, ub=None,
-                 init=None, abstract=False, shadow=False, key=None, **kwargs):
+                 init=None, abstract=False, key=None, **kwargs):
         super().__init__(name=name)
         if vartype is None:
             vartype = sasoptpy.CONT
@@ -82,7 +79,7 @@ class Variable(Expression):
         self._temp = False
         self._abstract = abstract
 
-        self._shadow = shadow
+        self._shadow = False
         self.sol = sasoptpy.core.Auxiliary(self, suffix='sol')
         self._initialize_self_coef()
 
@@ -144,12 +141,12 @@ class Variable(Expression):
 
     def get_attributes(self):
         """
-        Returns an OrderedDict of main attributes
+        Returns an ordered dictionary of main attributes
 
         Returns
         --------
-        attributes : dict
-            OrderedDict consists of `init`, `lb`, and `ub` attributes
+        attributes : OrderedDict
+            Dictionary consists of `init`, `lb`, and `ub` attributes
 
         """
         attributes = OrderedDict()
@@ -180,7 +177,20 @@ class Variable(Expression):
 
     def get_value(self):
         """
-        Returns value of a variable
+        Returns the value of the variable
+
+        Returns
+        -------
+        value : float
+            Value of the variable
+
+        Examples
+        --------
+
+        >>> x.set_value(20)
+        >>> x.get_value()
+        20
+
         """
         return self._value
 
@@ -196,11 +206,14 @@ class Variable(Expression):
 
     def get_type(self):
         """
-        Returns the type of variable, valid values are:
+        Returns the type of variable
 
-        * sasoptpy.CONT
-        * sasoptpy.INT
-        * sasoptpy.BIN
+        Valid values are:
+
+        * `sasoptpy.CONT`
+        * `sasoptpy.INT`
+        * `sasoptpy.BIN`
+
         """
         return self._type
 
@@ -217,8 +230,6 @@ class Variable(Expression):
             st += 'init={}, '.format(self._init)
         if self._abstract:
             st += 'abstract=True, '
-        if self._shadow:
-            st += 'shadow=True, '
         st += ' vartype=\'{}\')'.format(self._type)
         return st
 

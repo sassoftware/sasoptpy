@@ -33,6 +33,9 @@ from util import assert_equal_wo_temps
 from sasoptpy.actions import if_condition, switch_conditions
 
 class TestIfElse(unittest.TestCase):
+    """
+    Unit tests for IF/ELSE and SWITCH statements
+    """
 
     def setUp(self):
         so.reset()

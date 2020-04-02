@@ -16,9 +16,6 @@
 #  limitations under the License.
 #
 
-"""
-Unit tests for core classes.
-"""
 
 import os
 import sys
@@ -32,6 +29,9 @@ from tests.swat_config import create_cas_connection
 
 
 class TestReadData(unittest.TestCase):
+    """
+    Unit tests for READ DATA statements
+    """
 
     @classmethod
     def setUpClass(cls):

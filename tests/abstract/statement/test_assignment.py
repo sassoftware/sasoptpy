@@ -32,6 +32,9 @@ from tests.swat_config import create_cas_connection
 
 
 class TestAssignment(unittest.TestCase):
+    """
+    Unit tests for assignment statements
+    """
 
     @classmethod
     def setUpClass(cls):

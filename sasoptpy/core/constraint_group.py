@@ -127,12 +127,13 @@ class ConstraintGroup(Group):
         Parameters
         ----------
         rhs : boolean, optional
-            Whether to pass the constant part (rhs) of the constraint or not
+            When set to `True`, passes the the constant part (rhs) of the
+            constraint
 
         Returns
         -------
         df : :class:`pandas.DataFrame`
-            Returns a DataFrame consisting of constraints as expressions
+            Returns a DataFrame that consists of constraints as expressions
 
         Examples
         --------

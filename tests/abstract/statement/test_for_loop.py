@@ -35,6 +35,9 @@ from sasoptpy.actions import for_loop
 
 
 class TestForLoop(unittest.TestCase):
+    """
+    Unit tests for FOR statements
+    """
 
     def setUp(self):
         so.reset()

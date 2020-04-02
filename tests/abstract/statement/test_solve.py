@@ -38,6 +38,9 @@ from tests.swat_config import create_cas_connection
 
 
 class TestSolve(unittest.TestCase):
+    """
+    Unit tests for SOLVE statements
+    """
 
     @classmethod
     def setUpClass(cls):

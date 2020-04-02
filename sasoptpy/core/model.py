@@ -271,7 +271,7 @@ class Model:
         Parameters
         ----------
         argv : Generator-type object
-            List of constraints as a Generator-type object
+            List of constraints as a generator-type Python object
         name : string, optional
             Name for the constraint group and individual constraint prefix
 
@@ -343,7 +343,11 @@ class Model:
         value : list, float, optional
             Exact value of the set
         settype : list, optional
-            Types of the set, a list consists of 'num' and 'str' values
+            Types of the set as a list
+
+            The list can have one more `num` (for float) and `str` (for string)
+            values. You can use `sasoptpy.NUM` and `sasoptpy.STR` for floats and
+            strings, respectively.
 
         Examples
         --------
@@ -361,6 +365,10 @@ class Model:
         >>> print(K._defn())
         set K = 1..N;
 
+        >>> m.add_set(name='W', settype=[so.STR, so.NUM])
+        >>> print(W._defn())
+        set <str, num> W;
+
         """
         new_set = sasoptpy.abstract.Set(name, init=init, value=value,
                                         settype=settype)
@@ -369,12 +377,12 @@ class Model:
 
     def add_parameter(self, *argv, name=None, init=None, value=None, p_type=None):
         """
-        Adds a parameter to the model
+        Adds a :class:`abstract.Parameter` object to the model
 
         Parameters
         ----------
         argv : :class:`Set`, optional
-            Key set of the parameter
+            Index or indices of the parameter
         name : string, optional
             Name of the parameter
         init : float or expression, optional
@@ -389,6 +397,18 @@ class Model:
         >>> a = m.add_parameter(I, name='a', init=5)
         >>> print(a._defn())
         num a {I} init 5 ;
+
+        >>> I = m.add_set(name='I')
+        >>> J = m.add_set(name='J')
+        >>> p = m.add_parameter(I, J, name='p')
+        >>> print(p._defn())
+        num p {{I,J}};
+
+        Returns
+        -------
+
+        p : :class:`abstract.Parameter` or :class:`abstract.ParameterGroup`
+            A single parameter or a parameter group
 
         """
         if len(argv) == 0:
@@ -448,6 +468,8 @@ class Model:
         ----------
         statement : :class:`Expression` or string
             Statement object
+        after_solve : boolean
+            Switch for appending the statement after the problem solution
 
         Examples
         --------
@@ -474,9 +496,8 @@ class Model:
         Notes
         -----
 
-        - If the statement string includes 'print', then it is automatically
-          placed after solve.
-        - The first parameter, `statement` could be a Statement object when internally used.
+        - If the statement string includes 'print', then the statement is
+          automatically placed after the solve even if `after_solve` is `False`.
 
         """
         if isinstance(statement, sasoptpy.abstract.Statement):
@@ -648,9 +669,13 @@ class Model:
 
         Notes
         -----
-        * Valid argument types:
+        * Valid object types for `argv` parameter:
 
           - :class:`Model`
+
+            Including a model causes all variables and constraints inside the
+            original model to be included.
+
           - :class:`Variable`
           - :class:`Constraint`
           - :class:`VariableGroup`
@@ -661,8 +686,7 @@ class Model:
           - :class:`ParameterGroup`
           - :class:`Statement` and all subclasses
           - :class:`ImplicitVar`
-        * Including a model causes all variables and constraints inside the
-          original model to be included.
+
 
         Examples
         --------
@@ -954,12 +978,12 @@ class Model:
 
     def get_objective_value(self):
         """
-        Returns the optimal objective value, if it exists
+        Returns the optimal objective value
 
         Returns
         -------
         objective_value : float
-            Objective value at current solution
+            Optimal objective value at current solution
 
         Examples
         --------
@@ -972,9 +996,9 @@ class Model:
         -----
 
         - This method should be used for getting the objective value after
-          solve. Using :code:`m.get_objective().get_value()` actually evaluates
-          the expression using optimal variable values. This may not be
-          available for nonlinear expressions.
+          solve.
+        - In order to get the current value of the objective after changing
+          variable values, you can use :code:`m.get_objective().get_value()`.
 
         """
         if self._objval:
@@ -997,7 +1021,7 @@ class Model:
         Returns
         -------
         constraint : :class:`Constraint`
-            Reference to the constraint
+            Requested :class:`Constraint object
 
         Examples
         --------
@@ -1045,7 +1069,7 @@ class Model:
 
     def get_grouped_constraints(self):
         """
-        Get an ordered dictionary of constraints, grouped based on creation
+        Returns an ordered dictionary of constraints
 
         Returns
         -------
@@ -1148,7 +1172,7 @@ class Model:
 
     def get_grouped_variables(self):
         """
-        Get an ordered dictionary of variables, grouped based on creation
+        Returns an ordered dictionary of variables
 
         Returns
         -------
@@ -1186,7 +1210,8 @@ class Model:
         Parameters
         ----------
         var : :class:`Variable` or string
-            Variable whose objective value is requested or its name
+            Variable whose objective value is requested. It can be either the
+            variable object itself, or the name of the variable.
 
         Returns
         -------
@@ -1242,7 +1267,7 @@ class Model:
 
     def get_variable_value(self, var):
         """
-        Returns the value of a variable.
+        Returns the value of a variable
 
         Parameters
         ----------
@@ -1252,9 +1277,10 @@ class Model:
         Notes
         -----
         - It is possible to get a variable's value by using the
-          :func:`Variable.get_value` method, if the variable is not abstract.
+          :func:`Variable.get_value` method, as long as the variable is not
+          abstract.
         - This method is a wrapper around :func:`Variable.get_value` and an
-          overlook function for model components
+          overlook function for model components.
         """
 
         if sasoptpy.core.util.is_variable(var):
@@ -1285,7 +1311,7 @@ class Model:
         Returns
         -------
         ps : :class:`swat.dataframe.SASDataFrame`
-            Problem summary obtained after :func:`Model.solve`
+            Problem summary table, that is obtained after :meth:`Model.solve`
 
         Examples
         --------
@@ -1341,7 +1367,7 @@ class Model:
         Returns
         -------
         ss : :class:`swat.dataframe.SASDataFrame`
-            Solution summary obtained after solve
+            Solution summary table, that is obtained after :meth:`Model.solve`
 
         Examples
         --------
@@ -1382,22 +1408,22 @@ class Model:
 
     def get_solution(self, vtype='Primal', solution=None, pivot=False):
         """
-        Returns the solution details associated with the primal or dual
-        solution
+        Returns the primal and dual problem solutions
 
         Parameters
         ----------
         vtype : string, optional
-            'Primal' or 'Dual'
+            `Primal` or `Dual`
         solution : integer, optional
-            Solution number to be returned (for MILP)
+            Solution number to be returned (for the MILP solver)
         pivot : boolean, optional
-            Switch for returning multiple solutions in columns as a pivot table
+            When set to `True`, returns multiple solutions in columns as a pivot
+            table
 
         Returns
         -------
         solution : :class:`pandas.DataFrame`
-            Primal or dual solution table returned from the CAS Action
+            Primal or dual solution table returned from the CAS action
 
         Examples
         --------
@@ -1472,9 +1498,10 @@ class Model:
         Notes
         -----
 
-        - If :meth:`Model.solve` method is used with :code:`frame=True` option,
-          MILP solver returns multiple solutions. You can obtain different
-          results using :code:`solution` parameter.
+        - If the :meth:`Model.solve` method is used with :code:`frame=True`
+          parameter, the MILP solver returns multiple solutions.
+          You can retreive different results by using the :code:`solution`
+          parameter.
 
         """
         if vtype == 'Primal' or vtype == 'primal':
@@ -1500,7 +1527,7 @@ class Model:
 
     def get_tuner_results(self):
         """
-        Returns the tuner responses for the model
+        Returns the tuning results
 
         Examples
         --------
@@ -1511,7 +1538,10 @@ class Model:
         Returns
         -------
         tunerResults : dict
-           Returns tuner results as a dictionary. Its members are
+           Returns tuner results as a dictionary.
+
+           Its members are
+
            - Performance Information
            - Tuner Information
            - Tuner Summary
@@ -1559,18 +1589,65 @@ class Model:
     def get_sets(self):
         """
         Returns a list of :class:`Set` objects in the model
+
+        Returns
+        -------
+        set_list : list
+            List of sets in the model
+
+        Examples
+        --------
+
+        >>> m.get_sets()
+        [sasoptpy.abstract.Set(name=W, settype=['str', 'num']), sasoptpy.abstract.Set(name=I, settype=['num']), sasoptpy.abstract.Set(name=J, settype=['num'])]
+
         """
         return self._sets
 
     def get_parameters(self):
         """
-        Returns a list of :class:`Parameter` objects in the model
+        Returns a list of :class:`abstract.Parameter` and
+        :class:`abstract.ParameterGroup` objects in the model
+
+        Returns
+        -------
+        param_list : list
+            List of parameters in the model
+
+        Examples
+        --------
+
+        >>> for i in m.get_parameters():
+        ...     print(i.get_name(), type(i))
+        p <class 'sasoptpy.abstract.parameter_group.ParameterGroup'>
+        r <class 'sasoptpy.abstract.parameter.Parameter'>
+
         """
         return self._parameters
 
     def get_statements(self):
         """
-        Returns a list of all abstract statements inside the model.
+        Returns a list of all statements inside the model
+
+        Returns
+        -------
+        st_list : list
+            List of all statement objects
+
+        Examples
+        --------
+
+        >>> m.add_statement(so.abstract.LiteralStatement("expand;"))
+        >>> m.get_statements()
+        [<sasoptpy.abstract.statement.literal.LiteralStatement object at 0x7fe0202fc358>]
+        >>> print(m.to_optmodel())
+        proc optmodel;
+        var x;
+        min obj1 = x * x;
+        expand;
+        solve;
+        quit;
+
         """
         return self._statements
 
@@ -1615,7 +1692,7 @@ class Model:
         Notes
         -----
 
-        - This function may not work for abstract variables and nonlinear
+        - This function might not work for abstract variables and nonlinear
           models.
 
         """
@@ -1628,9 +1705,43 @@ class Model:
         self.to_mps(**kwargs)
 
     def to_mps(self, **kwargs):
+        """
+        Returns the problem in MPS format
+
+        Examples
+        --------
+
+        >>> print(n.to_mps())
+            Field1 Field2 Field3  Field4 Field5  Field6  _id_
+        0     NAME             n     0.0            0.0     1
+        1     ROWS                   NaN            NaN     2
+        2      MIN  myobj            NaN            NaN     3
+        3  COLUMNS                   NaN            NaN     4
+        4               y  myobj     2.0            NaN     5
+        5      RHS                   NaN            NaN     6
+        6   RANGES                   NaN            NaN     7
+        7   BOUNDS                   NaN            NaN     8
+        8       FR    BND      y     NaN            NaN     9
+        9   ENDATA                   0.0            0.0    10
+
+        """
         return sasoptpy.interface.to_mps(self, **kwargs)
 
     def to_optmodel(self, **kwargs):
+        """
+        Returns the model in OPTMODEL format
+
+        Examples
+        --------
+
+        >>> print(n.to_optmodel())
+        proc optmodel;
+        var y init 2;
+        min myobj = 2 * y;
+        solve;
+        quit;
+
+        """
         return sasoptpy.interface.to_optmodel(self, **kwargs)
 
     def __str__(self):
@@ -1729,7 +1840,7 @@ class Model:
 
     def _is_linear(self):
         """
-        Checks if the model can be written as a linear model (in MPS format)
+        Checks whether the model can be written as a linear model (in MPS format)
 
         Returns
         -------
@@ -1771,21 +1882,21 @@ class Model:
         Parameters
         ----------
         options : dict, optional
-            A dictionary solver options
+            Solver options as a dictionary object
         submit : boolean, optional
-            Switch for calling the solver instantly
+            When set to `True`, calls the solver
         name : string, optional
-            Name of the table name
+            Name of the table
         frame : boolean, optional
-            Switch for uploading problem as a MPS DataFrame format
+            When set to `True`, uploads the problem as a DataFrame in MPS format
         drop : boolean, optional
-            Switch for dropping the MPS table after solve (only CAS)
+            When set to `True`, drops the MPS table after solve (only CAS)
         replace : boolean, optional
-            Switch for replacing an existing MPS table (only CAS and MPS)
+            When set to `True`, replaces an existing MPS table (only CAS and MPS)
         primalin : boolean, optional
-            Switch for using initial values (only MILP)
+            When set to `True`, uses initial values (only MILP)
         verbose : boolean, optional (experimental)
-            Switch for printing generated OPTMODEL code
+            When set to `True`, prints the generated OPTMODEL code
 
         Returns
         -------
@@ -1811,17 +1922,13 @@ class Model:
         Notes
         -----
 
-        * This method is essentially a wrapper for two other methods.
-        * Some of the options listed under ``options`` argument may not be
-          passed based on which CAS Action is being used.
+        * Some of the options listed under the ``options`` argument might not be
+          passed, depending on which CAS action is being used.
         * The ``option`` argument should be a dictionary, where keys are
           option names. For example, ``m.solve(options={'maxtime': 600})``
           limits the solution time to 600 seconds.
         * See :ref:`solver-options` for a list of solver options.
 
-        See also
-        --------
-        :meth:`Model.solve_on_cas`, :meth:`Model.solve_on_mva`
 
         """
 
@@ -1829,25 +1936,29 @@ class Model:
 
     def tune_parameters(self, **kwargs):
         """
-        Uses model tuner to find ideal parameters for given model
+        Tunes the model to find ideal solver parameters
 
         Parameters
         ----------
         kwargs :
-           Keyword arguments as defined in the optimization.tuner action
+           Keyword arguments as defined in the optimization.tuner action.
+
            Acceptable values are:
 
-           * `milpParameters <https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=cas-optimization-tuner.htm&docsetVersion=8.5&locale=en#PYTHON.cas-optimization-tuner-milpparameters>`_ : Parameters for the solveMilp action, such as
+           * `milpParameters <https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=cas-optimization-tuner.htm&docsetVersion=8.5&locale=en#PYTHON.cas-optimization-tuner-milpparameters>`_ :
+              Parameters for the solveMilp action, such as
              `maxTime`, `heuristics`, `feasTol`
-           * `tunerParameters <https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=cas-optimization-tuner.htm&docsetVersion=8.5&locale=en#PYTHON.cas-optimization-tuner-tunerparameters>`_ : Parameters for tuner itself, such as
+           * `tunerParameters <https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=cas-optimization-tuner.htm&docsetVersion=8.5&locale=en#PYTHON.cas-optimization-tuner-tunerparameters>`_ :
+              Parameters for the tuner itself, such as
              `maxConfigs`, `printLevel`, `logFreq`
-           * `tuningParameters <https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=cas-optimization-tuner.htm&docsetVersion=8.5&locale=en#PYTHON.cas-optimization-tuner-tuningparameters>`_ : List of parameters to be tuned, such as
+           * `tuningParameters <https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=cas-optimization-tuner.htm&docsetVersion=8.5&locale=en#PYTHON.cas-optimization-tuner-tuningparameters>`_ :
+              List of parameters to be tuned, such as
              `cutStrategy`, `presolver`, `restarts`
 
         Returns
         -------
         tunerResults : :class:`swat.dataframe.SASDataFrame`
-           Results of tuner as a table
+           Tuning results as a table
 
         Examples
         --------
@@ -1933,11 +2044,11 @@ class Model:
 
         Notes
         -----
-        - See SAS Optimization documentation for a full list of tunable
-          parameters:
-          https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=cas-optimization-tuner.htm&docsetVersion=8.5&locale=en#PYTHON.cas-optimization-tuner-tunerparameters
-        - See full documentation at:
-          https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=casactmopt_optimization_details35.htm&docsetVersion=8.5&locale=en
+        - See `SAS Optimization documentation
+          <https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=cas-optimization-tuner.htm&docsetVersion=8.5&locale=en#PYTHON.cas-optimization-tuner-tunerparameters>`_
+          for a full list of tunable parameters.
+        - See `Optimization Action Set documentation
+          <https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=casactmopt_optimization_details35.htm&docsetVersion=8.5&locale=en>`_.
 
         See also
         --------
@@ -1961,7 +2072,8 @@ class Model:
 
         Notes
         -----
-        - This method only cleans model's own parameters, not its components'
+        - This method cleans the optimal objective value and solution time
+          parameters of the model.
         """
         self._objval = None
         self.response = None

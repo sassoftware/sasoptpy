@@ -22,6 +22,36 @@ from sasoptpy.util.package_utils import _to_sas_string
 
 
 class Parameter(Expression):
+    """
+    Represents a problem input parameter
+
+    Parameters
+    ----------
+    name : string
+        Name of the parameter
+    ptype : string, optional
+        Type of the parameter. Possible values are `sasoptpy.STR` and
+        `sasoptpy.NUM`
+    value : float, optional
+        Value of the parameter
+    init : float, optional
+        Initial value of the parameter
+
+    Examples
+    --------
+
+    >>> with so.Workspace('w') as w:
+    ...     p = so.Parameter(name='p', init=3)
+    ...     p.set_value(5)
+    ...
+    <sasoptpy.abstract.statement.assignment.Assignment object at 0x7f7952e9bb38>
+    >>> print(so.to_optmodel(w))
+    proc optmodel;
+       num p init 3;
+       p = 5;
+    quit;
+
+    """
 
     @sasoptpy.class_containable
     def __init__(self, name, ptype=None, value=None, init=None, **kwargs):

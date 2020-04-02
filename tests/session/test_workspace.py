@@ -32,6 +32,9 @@ from tests.swat_config import create_cas_connection
 
 
 class TestWorkspace(unittest.TestCase):
+    """
+    Unit tests for the :class:`sasoptpy.Workspace` objects
+    """
 
     @classmethod
     def setUpClass(cls):

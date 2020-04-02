@@ -78,6 +78,9 @@ class MockCASServer:
 
 
 class TestCASInterface(unittest.TestCase):
+    """
+    Unit tests for the CAS interface
+    """
 
     @classmethod
     def setUpClass(cls):

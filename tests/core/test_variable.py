@@ -25,6 +25,9 @@ import sasoptpy as so
 
 
 class TestVariable(unittest.TestCase):
+    """
+    Unit tests for :class:`sasoptpy.Variable` objects
+    """
 
     def setUp(self):
         pass
@@ -38,7 +41,7 @@ class TestVariable(unittest.TestCase):
 
         I = so.Set(name='I')
         z = so.VariableGroup(I, name='z')
-        self.assertEqual(repr(z[0]), "sasoptpy.Variable(name='z', abstract=True, shadow=True,  vartype='CONT')")
+        self.assertEqual(repr(z[0]), "sasoptpy.Variable(name='z', abstract=True, vartype='CONT')")
 
     def test_string(self):
         x = so.VariableGroup([1,2,3], name='x')

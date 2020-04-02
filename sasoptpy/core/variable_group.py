@@ -382,12 +382,12 @@ class VariableGroup(Group):
 
     def get_attributes(self):
         """
-        Returns an OrderedDict of main attributes
+        Returns an ordered dictionary of main attributes
 
         Returns
         --------
-        attributes : dict
-            OrderedDict consists of `init`, `lb`, and `ub` attributes
+        attributes : OrderedDict
+            The dictionary consists of `init`, `lb`, and `ub` attributes
 
         """
         attributes = OrderedDict()
@@ -398,11 +398,21 @@ class VariableGroup(Group):
 
     def get_type(self):
         """
-        Returns the type of variable, valid values are:
+        Returns the type of variable
+
+        Possible values are:
 
         * sasoptpy.CONT
         * sasoptpy.INT
         * sasoptpy.BIN
+
+        Examples
+        --------
+
+        >>> z = so.VariableGroup(3, name='z', vartype=so.INT)
+        >>> z.get_type()
+        'INT'
+
         """
         return self._type
 
@@ -527,7 +537,7 @@ class VariableGroup(Group):
         -------
         r : :class:`Expression`
             An expression that is the product of the variable group with the
-            given vector
+            specified vector
 
         Examples
         --------
@@ -608,7 +618,7 @@ class VariableGroup(Group):
 
     def set_init(self, init):
         """
-        Sets / updates initial value for the given variable
+        Specifies or updates the initial values
 
         Parameters
         ----------
@@ -636,7 +646,7 @@ class VariableGroup(Group):
 
     def set_bounds(self, lb=None, ub=None, members=True):
         """
-        Sets / updates bounds for the given variable
+        Specifies or updates bounds for the variable group
 
         Parameters
         ----------

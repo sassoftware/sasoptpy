@@ -6,6 +6,45 @@ from .parameter import Parameter
 import sasoptpy
 
 class ParameterGroup:
+    """
+    Represents a group of input parameters
+
+    Parameters
+    ----------
+    index_key : iterable
+        Index key of the group members
+    name : string
+        Name of the parameter group
+    ptype : string, optional
+        Type of the parameters. Possible values are `sasoptpy.STR` and
+        `sasoptpy.NUM`
+    value : float, optional
+        Value of the parameter
+    init : float, optional
+        Initial value of the parameter
+
+    Examples
+    --------
+
+    >>> from sasoptpy.actions import for_loop
+    >>> with so.Workspace('w') as w:
+    ...    p = so.ParameterGroup(so.exp_range(1, 6), name='p', init=3)
+    ...    p[0].set_value(3)
+    ...    S = so.Set(name='S', value=so.exp_range(1, 6))
+    ...    for i in for_loop(S):
+    ...        p[i].set_value(1)
+    ...
+    >>> print(so.to_optmodel(w))
+    proc optmodel;
+       num p {1..5} init 3;
+       p[0] = 3;
+       set S = 1..5;
+       for {o13 in S} do;
+          p[o13] = 1;
+       end;
+    quit;
+
+    """
 
     @sasoptpy.class_containable
     def __init__(self, *index_key, name, init=None, value=None, ptype=None):

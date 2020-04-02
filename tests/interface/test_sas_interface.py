@@ -27,6 +27,9 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 class TestSASInterface(unittest.TestCase):
+    """
+    Unit tests for the SAS interface
+    """
 
     @classmethod
     def setUpClass(cls):

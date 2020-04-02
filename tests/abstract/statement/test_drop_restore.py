@@ -32,6 +32,9 @@ sys.path.append(os.path.abspath(os.path.join(current_dir, '../..')))
 from util import assert_equal_wo_temps
 
 class TestDropRestore(unittest.TestCase):
+    """
+    Unit tests for DROP and RESTORE statements
+    """
 
     def setUp(self):
         so.reset()

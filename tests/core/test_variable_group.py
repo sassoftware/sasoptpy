@@ -32,6 +32,9 @@ from util import assert_equal_wo_temps
 
 
 class TestVariableGroup(unittest.TestCase):
+    """
+    Unit tests for :class:`sasoptpy.VariableGroup` objects
+    """
 
     def setUp(self):
         pass

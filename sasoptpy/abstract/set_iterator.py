@@ -19,17 +19,16 @@ class SetIterator(sasoptpy.Expression):
     Notes
     -----
 
-    - SetIterator objects are automatically created when looping over a
-      :class:`Set`.
-    - This class is mainly intended for internal use.
-    - The ``group`` parameter consists of following keys
+    - :class:`abstract.SetIterator` objects are created automatically when
+      iterating over a :class:`abstract.Set` object
 
-      - **order** : int
-        Order of the parameter inside the group
-      - **outof** : int
-        Total number of indices inside the group
-      - **id** : int
-        ID number assigned to group by Python
+    Examples
+    --------
+
+    >>> S = so.Set(name='S')
+    >>> for i in S:
+    ...     print(i.get_name(), type(i))
+    o19 <class 'sasoptpy.abstract.set_iterator.SetIterator'>
 
     """
 
@@ -93,6 +92,31 @@ class SetIterator(sasoptpy.Expression):
 
 
 class SetIteratorGroup(OrderedDict, sasoptpy.Expression):
+    """
+    Creates a group of set iterator objects for multi-dimensional sets
+
+    Parameters
+    ----------
+    initset : :class:`Set`
+        Set to be iterated on
+    names : string, optional
+        Names of the iterators
+    datatype : string, optional
+        Types of the iterators
+
+    Examples
+    --------
+
+    >>> T = so.Set(name='T', settype=[so.STR, so.NUM])
+    >>> for j in T:
+    ...     print(j.get_name(), type(j))
+    ...     for k in j:
+    ...         print(k.get_name(), type(k))
+    o5 <class 'sasoptpy.abstract.set_iterator.SetIteratorGroup'>
+    o6 <class 'sasoptpy.abstract.set_iterator.SetIterator'>
+    o8 <class 'sasoptpy.abstract.set_iterator.SetIterator'>
+
+    """
 
     def __init__(self, initset, datatype=None, names=None):
         super(SetIteratorGroup, self).__init__()

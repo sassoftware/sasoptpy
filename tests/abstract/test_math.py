@@ -30,6 +30,9 @@ import math
 
 
 class TestAbstractMath(unittest.TestCase):
+    """
+    Unit tests for mathematical functions
+    """
 
     def setUp(self):
         so.reset()

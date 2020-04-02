@@ -25,6 +25,9 @@ import sasoptpy as so
 
 
 class TestExpression(unittest.TestCase):
+    """
+    Unit tests for :class:`sasoptpy.Expression` objects
+    """
 
     def setUp(self):
         pass

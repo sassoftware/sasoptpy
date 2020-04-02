@@ -56,7 +56,7 @@ def read_data(table, index, columns):
     Parameters
     ----------
     table : string or :class:`swat.cas.table.CASTable`
-        Table object or name to be read, case insensitive
+        Table object or name to be read, case-insensitive
     index : dict
         Index properties of the table
 
@@ -65,59 +65,59 @@ def read_data(table, index, columns):
         - target : :class:`sasoptpy.abstract.Set`
             Target Set object to be read into
         - key : string, list or None
-            Column name that will be read from.
+            Column name to be be read from.
 
-            For multiple indices it should be a list of string or
+            For multiple indices, key should be a list of string or
             :class:`sasoptpy.abstract.SetIterator` objects
 
-        For a given Set `YEAR` and column name `year_no`, the index dictionary
+        For a given set `YEAR` and column name `year_no`, the index dictionary
         should be written as:
 
         >>> {'target': YEAR, 'key': 'year_no'}
 
         If index is simply the row number, use `'key': so.N` which is equivalent
-        to special `_N_` character at SAS language.
+        to the special `_N_` character in the SAS language.
     columns : list
         A list of dictionaries, each holding column properties.
 
-        Columns are printed in given order. Each column should be represented as
-        a dictionary with following fields:
+        Columns are printed in the specified order. Each column should be
+        represented as a dictionary with following fields:
 
         - target : :class:`sasoptpy.abstract.ParameterGroup`
             Target parameter object to be read into
         - column : string
             Column name to be read from
         - index : :class:`sasoptpy.SetIterator`, optional
-            Sub-index for specific column, needed for complex operations
+            Subindex for specific column, needed for complex operations
 
         If the name of the :class:`sasoptpy.abstract.Parameter` object is same
-        as the column name, calling
+        as the column name, the following call is enough:
 
         >>> p = so.Parameter(name='price')
         >>> read_data(..., columns=[{'target': p}])
 
-        is enough. For reading a different column name, `column` field should be
-        given:
+        For reading a different column name, `column` field should be
+        specified:
 
         >>> {'target': p, 'column': 'price_usd'}
 
-        When working with Parameter Group objects, sometimes a secondary loop is
-        needed. This is achieved by using `index` field, along with
-        :meth:`sasoptpy.abstract.statement.ReadDataStatement.append` method.
+        When working with :class:`ParameterGroup` objects, sometimes a secondary
+        loop is needed. This is achieved by using the `index` field, along with
+        the :meth:`sasoptpy.abstract.statement.ReadDataStatement.append` method.
 
     Returns
     -------
     r : :class:`sasoptpy.abstract.statement.ReadDataStatement`
-        Read data statement object, that includes all properties
+        Read data statement object, which includes all properties
 
-        Additional columns can be added using
+        Additional columns can be added using the
         :meth:`sasoptpy.abstract.statement.ReadDataStatement.append`
         function.
 
     Examples
     --------
 
-    Reading a regular set
+    Reading a regular set:
 
     >>> with Workspace('test_workspace') as ws:
     >>>     ITEMS = Set(name='ITEMS')
@@ -135,7 +135,7 @@ def read_data(table, index, columns):
         read data values into ITEMS value;
     quit;
 
-    Reading with row index
+    Reading with row index:
 
     >>> with so.Workspace('test_read_data_n') as ws:
     >>>     ASSETS = so.Set(name='ASSETS')
@@ -152,7 +152,7 @@ def read_data(table, index, columns):
         read data means into ASSETS=[_N_] return;
     quit;
 
-    Reading with no index set and subindex
+    Reading with no index set and subindex:
 
     >>> with so.Workspace('test_read_data_no_index_expression') as ws:
     >>>     ASSETS = so.Set(name='ASSETS')
@@ -172,7 +172,7 @@ def read_data(table, index, columns):
         read data covdata into [asset1 asset2] cov cov[asset2, asset1]=cov;
     quit;
 
-    Reading a column with multiple indices
+    Reading a column with multiple indices:
 
     >>> with so.Workspace(name='test_read_data_idx_col') as ws:
     >>>     dow = so.Set(name='DOW', value=so.exp_range(1, 6))
@@ -208,7 +208,7 @@ def read_data(table, index, columns):
 @sasoptpy.containable(standalone=False)
 def create_data(table, index, columns):
     """
-    Creates data tables from variables, parameters and expressions
+    Creates data tables from variables, parameters, and expressions
 
     Parameters
     ----------
@@ -224,11 +224,11 @@ def create_data(table, index, columns):
             List of index keys. Keys can be string or
             :class:`sasoptpy.abstract.SetIterator` objects
         - set : list
-            List of sets, that is being assigned to keys
+            List of sets that is being assigned to keys
     columns : list
         List of columns. Columns can be :class:`sasoptpy.abstract.Parameter`,
         :class:`sasoptpy.abstract.ParameterGroup` objects or dictionaries. If
-        given as a dictionary, each can have following keys:
+        specified as a dictionary, each can have following keys:
 
         - name : string
             Name of the column in output table
@@ -237,14 +237,15 @@ def create_data(table, index, columns):
         - index : list or :class:`sasoptpy.abstract.SetIterator`
             Index for internal loops
 
-        The `index` field can be used when a subindex is needed. When given as
-        a list, members should be :class:`sasoptpy.abstract.SetIterator`
-        objects. See examples for more details.
+        The `index` field can be used when a subindex is needed. When
+        specified as a list, members should be
+        :class:`sasoptpy.abstract.SetIterator` objects.
+        See examples for more details.
 
     Examples
     --------
 
-    Regular column
+    Regular column:
 
     >>> with so.Workspace('w') as w:
     >>>     m = so.Parameter(name='m', value=7)
@@ -257,7 +258,7 @@ def create_data(table, index, columns):
         create data example from m n;
     quit;
 
-    Column with name
+    Column with name:
 
     >>> with so.Workspace('w') as w:
     >>>     m = so.Parameter(name='m', value=7)
@@ -272,7 +273,7 @@ def create_data(table, index, columns):
         create data example from ratio=((m) / (n));
     quit;
 
-    Column name with concat
+    Column name with concat:
 
     >>> from sasoptpy.util import concat
     >>> with so.Workspace('w') as w:
@@ -288,7 +289,7 @@ def create_data(table, index, columns):
         create data example from col('s' || n)=(m + n);
     quit;
 
-    Table with index
+    Table with index:
 
     >>> with so.Workspace('w') as w:
     >>>     m = so.ParameterGroup(
@@ -310,7 +311,7 @@ def create_data(table, index, columns):
         create data example from [i j] = {{ISET,{1,2}}} m;
     quit;
 
-    Index over Python range
+    Index over Python range:
 
     >>> with so.Workspace('w') as w:
     >>>     s = so.Set(name='S', value=so.exp_range(1, 6))
@@ -326,7 +327,7 @@ def create_data(table, index, columns):
         create data example from [i] = {1..3} x;
     quit;
 
-    Append column with index
+    Append column with index:
 
     >>> from sasoptpy.util import iterate, concat
     >>> with so.Workspace('w', session=session) as w:
@@ -348,7 +349,7 @@ def create_data(table, index, columns):
         create data example from [i] = {{1..3}} {j in alph} < col('x' || j)=(x[i, j]) >;
     quit;
 
-    Multiple column indices
+    Multiple column indices:
 
     >>> from sasoptpy.util import concat, iterate
     >>> with so.Workspace('w') as w:
@@ -397,8 +398,8 @@ def solve(options=None, primalin=False):
         options (except `with`) is passed directly to the solver.
 
     primalin : bool, optional
-        Switch for using existing variable values as an initial point in MILP
-        solver
+        When set to `True`, uses existing variable values as an initial point
+        in MILP solver
 
     Notes
     -----
@@ -411,20 +412,20 @@ def solve(options=None, primalin=False):
     * `qp` : Quadratic programming
     * `blackbox` : Black-box optimization
 
-    SAS Optimization also has Constraint Programming (clp) and Network
-    Solver (network) but they are not currently supported.
+    SAS Optimization also has a constraint programming solver (clp), and network
+    solver (network) but they are not currently supported by sasoptpy.
 
     Returns
     -------
     ss : :class:`sasoptpy.abstract.statement.SolveStatement`
         Solve statement object.
 
-        Contents of the response can be grabbed using `get_response` function.
+        Contents of the response can be retrieved using `get_response` function.
 
     Examples
     --------
 
-    Regular solve
+    Regular solve:
 
     >>> with so.Workspace('w') as w:
     >>>     x = so.Variable(name='x', lb=1, ub=10)
@@ -439,7 +440,7 @@ def solve(options=None, primalin=False):
         print x;
     quit;
 
-    Option alternatives
+    Option alternatives:
 
     >>> with so.Workspace('w') as w:
     >>>     # Problem declaration, etc..
@@ -464,12 +465,12 @@ def solve(options=None, primalin=False):
 @sasoptpy.containable(standalone=False)
 def for_loop(*args):
     """
-    Creates a for-loop container that is to be executed on server-side
+    Creates a for-loop container to be executed on the server
 
     Parameters
     ----------
     args : :class:`sasoptpy.abstract.Set` objects
-        Any number of Set objects can be given
+        Any number of :class:`sasoptpy.abstract.Set` objects can be given
 
     Returns
     -------
@@ -479,7 +480,7 @@ def for_loop(*args):
     Examples
     --------
 
-    Regular for loop
+    Regular for loop:
 
     >>> with so.Workspace('w') as w:
     >>>     r = so.exp_range(1, 11)
@@ -494,7 +495,7 @@ def for_loop(*args):
         end;
     quit;
 
-    Nested for loops
+    Nested for loops:
 
     >>> from sasoptpy.actions import put_item
     >>> with so.Workspace('w') as w:
@@ -510,7 +511,7 @@ def for_loop(*args):
         end;
     quit;
 
-    Multiple set for-loops
+    Multiple set for-loops:
 
     >>> with so.Workspace('w') as w:
     >>>     r = so.Set(name='R', value=range(1, 11))
@@ -545,12 +546,12 @@ def for_loop(*args):
 @sasoptpy.containable(standalone=False)
 def cofor_loop(*args):
     """
-    Creates a cofor-loop that is to be executed on server-side concurrently
+    Creates a cofor-loop to be executed on the server concurrently
 
     Parameters
     ----------
     args : :class:`sasoptpy.abstract.Set` objects
-        Any number of Set objects can be given
+        Any number of :class:`sasoptpy.abstract.Set` objects can be specified
 
     Returns
     -------
@@ -619,7 +620,7 @@ def if_condition(logic_expression, if_statement, else_statement=None):
     Examples
     --------
 
-    Regular condition
+    Regular condition:
 
     >>> with so.Workspace('w') as w:
     >>>     x = so.Variable(name='x')
@@ -641,7 +642,7 @@ def if_condition(logic_expression, if_statement, else_statement=None):
         end;
     quit;
 
-    Combined conditions
+    Combined conditions:
 
     >>> with so.Workspace('w') as w:
     >>>     p = so.Parameter(name='p')
@@ -670,15 +671,16 @@ def if_condition(logic_expression, if_statement, else_statement=None):
 @sasoptpy.containable(standalone=False)
 def switch_conditions(**args):
     """
-    Creates several if-else blocks using given arguments
+    Creates several if-else blocks by using the specified arguments
 
     Parameters
     ----------
     args :
         Several arguments can be passed to the function
 
-        If an argument is a Constraint or Condition (combined Constraints)
-        the following callable argument is used as a case
+        Each case should follow a condition.
+        You can use :class:`sasoptpy.Constraint` objects as conditions, and
+        Python functions for the cases.
 
     Examples
     --------
@@ -763,7 +765,7 @@ def set_value(left, right):
 @sasoptpy.containable(standalone=False)
 def fix(*args):
     """
-    Fixes values of variables to given values
+    Fixes values of variables to the specified values
 
     Parameters
     ----------
@@ -776,7 +778,7 @@ def fix(*args):
     Examples
     --------
 
-    Regular fix statement
+    Regular fix statement:
 
     >>> with so.Workspace('w') as w:
     >>>     x = so.Variable(name='x')
@@ -791,7 +793,7 @@ def fix(*args):
         unfix x;
     quit;
 
-    Multiple fix-unfix
+    Multiple fix-unfix:
 
     >>> with so.Workspace('w') as w:
     >>>     x = so.VariableGroup(4, name='x')
@@ -831,7 +833,7 @@ def unfix(*args):
     Examples
     --------
 
-    Regular unfix statement
+    Regular unfix statement:
 
     >>> with so.Workspace('w') as w:
     >>>     x = so.Variable(name='x')
@@ -846,7 +848,7 @@ def unfix(*args):
         unfix x;
     quit;
 
-    Multiple fix-unfix
+    Multiple fix-unfix:
 
     >>> with so.Workspace('w') as w:
     >>>     x = so.VariableGroup(4, name='x')
@@ -876,7 +878,7 @@ def unfix(*args):
 @sasoptpy.containable(standalone=False)
 def set_objective(expression, name, sense):
     """
-    Sets objective function
+    Specifies the objective function
 
     Parameters
     ----------
@@ -908,14 +910,14 @@ def set_objective(expression, name, sense):
 @sasoptpy.containable(standalone=False)
 def print_item(*args):
     """
-    Prints given argument list on server-side
+    Prints the specified argument list on server
 
     Parameters
     ----------
     args : :class:`sasoptpy.Variable`, :class:`sasoptpy.Expression`
         Arbitrary number of arguments to be printed
 
-        These values are printed on server-side, but can be grabbed after
+        These values are printed on the server, but can be retrieved after
         execution
 
     Returns
@@ -923,7 +925,7 @@ def print_item(*args):
     ps : :class:`sasoptpy.abstract.statement.PrintStatement`
         Print statement object.
 
-        Contents of the response can be grabbed using `get_response` function.
+        Contents of the response can be retrieved using `get_response` function.
 
     Examples
     --------
@@ -951,21 +953,21 @@ def print_item(*args):
 @sasoptpy.containable(standalone=False)
 def put_item(*args, names=None):
     """
-    Prints given item values to output log
+    Prints the specified item values to the output log
 
     Parameters
     ----------
     args : :class:`sasoptpy.Expression`, string
         Arbitrary elements to be put into log
 
-        Variables, variable groups, expressions can be printed to log
+        Variables, variable groups, and expressions can be printed to log
     names : bool, optional
-        Whether name of the arguments be printed in the log
+        When set to `True`, prints the name of the arguments in the log
 
     Examples
     --------
 
-    Regular operation
+    Regular operation:
 
     >>> with so.Workspace('w') as w:
     >>>     for i in for_loop(range(1, 3)):
@@ -980,7 +982,7 @@ def put_item(*args, names=None):
         end;
     quit;
 
-    Print with names
+    Print with names:
 
     >>> with so.Workspace('w') as w:
     >>>     x = so.VariableGroup(6, name='x', lb=0)
@@ -1046,7 +1048,7 @@ def expand():
 @sasoptpy.containable(standalone=False)
 def drop(*args):
     """
-    Drops given constraints or constraint groups from model
+    Drops the specified constraints or constraint groups from model
 
     Parameters
     ----------
@@ -1130,7 +1132,7 @@ def restore(*args):
 @sasoptpy.containable(standalone=False)
 def union(*args):
     """
-    Aggregates given sets and set expressions
+    Aggregates the specified sets and set expressions
 
     Parameters
     ----------
@@ -1196,7 +1198,7 @@ def diff(left, right):
 @sasoptpy.containable(standalone=False)
 def substring(main_string, first_pos, last_pos):
     """
-    Gets the substring of given positions
+    Gets the substring of the specified positions
 
     Parameters
     ----------

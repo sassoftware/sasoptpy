@@ -52,7 +52,7 @@ class Objective(Expression):
 
     def set_sense(self, sense):
         """
-        Sets the objective sense (direction)
+        Specifies the objective sense (direction)
 
         Parameters
         ----------

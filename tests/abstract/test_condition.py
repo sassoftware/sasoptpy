@@ -32,6 +32,9 @@ sys.path.append(os.path.abspath(os.path.join(current_dir, '..')))
 from util import assert_equal_wo_temps
 
 class TestCondition(unittest.TestCase):
+    """
+    Unit tests for abstract conditions to be executed on the server
+    """
 
     def test_regular_condition(self):
 

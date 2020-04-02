@@ -32,6 +32,9 @@ from util import assert_equal_wo_temps
 
 
 class TestConstraintGroup(unittest.TestCase):
+    """
+    Unit tests for :class:`sasoptpy.ConstraintGroup` objects
+    """
 
     def setUp(self):
         pass

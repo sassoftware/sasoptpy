@@ -31,8 +31,15 @@ class Constraint(Expression):
     ----------
     exp : :class:`Expression`
         A logical expression that forms the constraint
-    direction : string
-        Direction of the logical expression, 'E' (=), 'L' (<=) or 'G' (>=)
+    direction : string, optional
+        Direction of the logical expression
+
+        Possible values are
+
+        - `E` for equality (=) constraints
+        - `L` for less than or euqal to (<=) constraints
+        - `G` for greater than or equal to (>=) constraints
+
     name : string, optional
         Name of the constraint object
     crange : float, optional
@@ -53,16 +60,16 @@ class Constraint(Expression):
     Notes
     -----
 
-    * A constraint can be generated in multiple ways:
+    * A constraint can be generated in two different ways:
 
-      1. Using the :func:`sasoptpy.Model.add_constraint` method
+      - Using the :func:`sasoptpy.Model.add_constraint` method
 
          >>> m = so.Model(name='m')
          >>> c1 = m.add_constraint(3 * x - 5 * y <= 10, name='c1')
          >>> print(repr(c1))
          sasoptpy.Constraint( -  5.0 * y  +  3.0 * x  <=  10, name='c1')
 
-      2. Using the constructor
+      - Using the constructor
 
          >>> c1 = sasoptpy.Constraint(3 * x - 5 * y <= 10, name='c1')
          >>> print(repr(c1))
@@ -142,12 +149,12 @@ class Constraint(Expression):
 
     def set_rhs(self, value):
         """
-        Changes the RHS of a constraint
+        Changes the constant value (right-hand side) of a constraint
 
         Parameters
         ----------
         value : float
-            New RHS value for the constraint
+            New right-hand side value for the constraint
 
         Examples
         --------
@@ -171,8 +178,13 @@ class Constraint(Expression):
         Parameters
         ----------
         direction : string
-            Direction of the constraint, 'E', 'L', or 'G' for equal to,
-            less than or equal to, and greater than or equal to, respectively
+            Direction of the constraint
+
+            Possible values are
+
+            - `E` for equality (=) constraints
+            - `L` for less than or euqal to (<=) constraints
+            - `G` for greater than or equal to (>=) constraints
 
         Examples
         --------
@@ -218,8 +230,8 @@ class Constraint(Expression):
         Parameters
         ----------
         rhs : boolean, optional
-            Whether constant values (RHS) will be included in the value or not.
-            Default is false
+            When set to `True`, includes constant values to the value of the
+            constraint. Default is `False`.
 
         Examples
         --------

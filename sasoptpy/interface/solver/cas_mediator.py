@@ -11,11 +11,11 @@ from sasoptpy.interface import Mediator
 
 class CASMediator(Mediator):
     """
-    Handles the connection between sasoptpy and SAS Viya (CAS) server
+    Handles the connection between sasoptpy and the SAS Viya (CAS) server
 
     Parameters
     ----------
-    caller : :class:`Model` or :class:`Workspace`
+    caller : :class:`sasoptpy.Model` or :class:`sasoptpy.Workspace`
         Model or workspace that mediator belongs to
     cas_session : :class:`swat.cas.connection.CAS`
         CAS connection
@@ -23,7 +23,7 @@ class CASMediator(Mediator):
     Notes
     -----
 
-    * CAS Mediator is used by :class:`Model` and :class:`Workspace` objects
+    * CAS Mediator is used by :class:`sasoptpy.Model` and :class:`sasoptpy.Workspace` objects
       internally.
 
     """
@@ -51,14 +51,14 @@ class CASMediator(Mediator):
 
     def submit(self, **kwargs):
         """
-        Submit action for custom input and :class:`Workspace` objects
+        Submit action for custom input and :class:`sasoptpy.Workspace` objects
         """
         self.session.loadactionset(actionset='optimization')
         return self.submit_optmodel_code(**kwargs)
 
     def tune(self, **kwargs):
         """
-        Checks if CAS session has optimizaiton.tuner capability and calls :func:`tune_problem`
+        Wrapper for the MILP tuner
         """
         self.session.loadactionset(actionset='optimization')
 
@@ -590,7 +590,7 @@ class CASMediator(Mediator):
 
     def set_workspace_variable_values(self, solution):
         """
-        Performs post-solve assignment of :class:`Workspace` variable values
+        Performs post-solve assignment of :class:`sasoptpy.Workspace` variable values
         """
         caller = self.caller
         for row in solution.itertuples():
@@ -598,7 +598,7 @@ class CASMediator(Mediator):
 
     def tune_problem(self, **kwargs):
         """
-        Calls optimization.tuner CAS action to find out ideal configuration
+        Calls optimization.tuner CAS action to finds out the ideal configuration
         """
         model = self.caller
         session = self.session
