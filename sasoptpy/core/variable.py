@@ -221,16 +221,16 @@ class Variable(Expression):
         """
         Returns a string representation of the object.
         """
-        st = 'sasoptpy.Variable(name=\'{}\', '.format(self._name)
+        st = 'sasoptpy.Variable(name=\'{}\''.format(self._name)
         if self._lb != -inf:
-            st += 'lb={}, '.format(self._lb)
+            st += ', lb={}'.format(self._lb)
         if self._ub != inf:
-            st += 'ub={}, '.format(self._ub)
+            st += ', ub={}'.format(self._ub)
         if self._init is not None:
-            st += 'init={}, '.format(self._init)
+            st += ', init={}'.format(self._init)
         if self._abstract:
-            st += 'abstract=True, '
-        st += ' vartype=\'{}\')'.format(self._type)
+            st += ', abstract=True'
+        st += ', vartype=\'{}\')'.format(self._type)
         return st
 
     def __str__(self):

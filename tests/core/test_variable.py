@@ -34,10 +34,10 @@ class TestVariable(unittest.TestCase):
 
     def test_repr(self):
         x = so.Variable(name='x')
-        self.assertEqual(repr(x), "sasoptpy.Variable(name='x',  vartype='CONT')")
+        self.assertEqual(repr(x), "sasoptpy.Variable(name='x', vartype='CONT')")
 
         y = so.Variable(name='y', lb=1, ub=10, init=3)
-        self.assertEqual(repr(y), "sasoptpy.Variable(name='y', lb=1, ub=10, init=3,  vartype='CONT')")
+        self.assertEqual(repr(y), "sasoptpy.Variable(name='y', lb=1, ub=10, init=3, vartype='CONT')")
 
         I = so.Set(name='I')
         z = so.VariableGroup(I, name='z')
