@@ -27,7 +27,7 @@ import warnings
 from contextlib import contextmanager
 
 import sasoptpy
-from sasoptpy._libs import (pd, np)
+from sasoptpy.libs import (pd, np)
 from threading import RLock
 
 

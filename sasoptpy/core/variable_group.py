@@ -6,7 +6,7 @@ import warnings
 from multiprocessing import Pool
 
 import sasoptpy
-from sasoptpy._libs import (pd, np)
+from sasoptpy.libs import (pd, np)
 from sasoptpy.core import (Expression, Variable, Group)
 
 

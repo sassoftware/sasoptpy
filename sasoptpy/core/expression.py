@@ -20,7 +20,7 @@ from collections import OrderedDict
 from math import copysign
 import warnings
 
-from sasoptpy._libs import np
+from sasoptpy.libs import np
 
 import sasoptpy
 
