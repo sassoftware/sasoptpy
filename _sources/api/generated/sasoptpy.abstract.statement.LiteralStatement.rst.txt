@@ -1,32 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
 sasoptpy.abstract.statement.LiteralStatement
 ============================================
 
 .. currentmodule:: sasoptpy.abstract.statement
 
 .. autoclass:: LiteralStatement
-
-   
-   .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~LiteralStatement.__init__
-      ~LiteralStatement.append
-      ~LiteralStatement.diff
-      ~LiteralStatement.expand
-      ~LiteralStatement.get_response
-      ~LiteralStatement.is_internal
-      ~LiteralStatement.set_internal
-      ~LiteralStatement.set_response
-      ~LiteralStatement.substring
-      ~LiteralStatement.union
-      ~LiteralStatement.use_problem
-   
-   
-
-   
-   
-   

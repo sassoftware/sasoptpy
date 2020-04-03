@@ -1,34 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
 sasoptpy.abstract.statement.ReadDataStatement
 =============================================
 
 .. currentmodule:: sasoptpy.abstract.statement
 
 .. autoclass:: ReadDataStatement
-
-   
-   .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~ReadDataStatement.__init__
-      ~ReadDataStatement.append
-      ~ReadDataStatement.flatten_column
-      ~ReadDataStatement.get_column_str
-      ~ReadDataStatement.get_columns_expr
-      ~ReadDataStatement.get_index_expr
-      ~ReadDataStatement.get_response
-      ~ReadDataStatement.get_table_expr
-      ~ReadDataStatement.get_target_expr
-      ~ReadDataStatement.is_internal
-      ~ReadDataStatement.read_data
-      ~ReadDataStatement.set_internal
-      ~ReadDataStatement.set_response
-   
-   
-
-   
-   
-   

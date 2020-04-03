@@ -54,13 +54,14 @@
 <dl class="function">
 <dt id="sasoptpy.actions.switch_conditions">
 <code class="sig-name descname">switch_conditions</code><span class="sig-paren">(</span><em class="sig-param">**args</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/sasoptpy/actions.html#switch_conditions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.actions.switch_conditions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates several if-else blocks using given arguments</p>
+<dd><p>Creates several if-else blocks by using the specified arguments</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl>
 <dt><strong>args :</strong></dt><dd><p>Several arguments can be passed to the function</p>
-<p>If an argument is a Constraint or Condition (combined Constraints)
-the following callable argument is used as a case</p>
+<p>Each case should follow a condition.
+You can use <a class="reference internal" href="sasoptpy.Constraint.html#sasoptpy.Constraint" title="sasoptpy.Constraint"><code class="xref py py-class docutils literal notranslate"><span class="pre">sasoptpy.Constraint</span></code></a> objects as conditions, and
+Python functions for the cases.</p>
 </dd>
 </dl>
 </dd>
@@ -203,8 +204,8 @@ the following callable argument is used as a case</p>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

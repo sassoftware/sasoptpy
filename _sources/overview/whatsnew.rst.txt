@@ -7,14 +7,11 @@
 What's New
 **********
 
-v1.0.0-alpha (TBD)
-==================
-
 New Features
 ++++++++++++
 
-- Added workspaces; see more info in :ref:`User Guide <workspaces>` and :ref:`example <efficiency-analysis>`
-- Added :ref:`configurations <configurations>`
+- Added workspaces; for more information, see :ref:`Workspaces in User Guide <workspaces>` and :ref:`Efficiency Analysis example <efficiency-analysis>`
+- Added :ref:`package configurations <configurations>`
 - Added :ref:`abstract actions <abstract-actions>` that allow server-side operations. Highlights include:
 
   - :func:`actions.read_data` and :func:`actions.create_data`
@@ -27,11 +24,11 @@ New Features
 Changes
 +++++++
 
-- Refactored the entire package. sasoptpy now has `core`, `abstract`, `interface`,
+- Refactored the entire package; sasoptpy now has `core`, `abstract`, `interface`,
   `session`, and `util` directories
 - Experimental RESTful API was dropped
 - `get_obj_by_name` function was removed
-- `lso` solver was renamed to `blackbox`
+- `lso` solver was renamed `blackbox`
 - Because of the use of literal strings (:pep:`498`), only Python 3.6 or later versions are supported
 
 Bug Fixes

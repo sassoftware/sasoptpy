@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Optimal Wedding &#8212; sasoptpy 1.0.0-alpha documentation</title>
+    <title>Optimal Wedding Seating &#8212; sasoptpy 1.0.0-alpha documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/sasoptpy.css" />
@@ -48,11 +48,11 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="optimal-wedding">
-<h1>Optimal Wedding<a class="headerlink" href="#optimal-wedding" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="optimal-wedding-seating">
+<h1>Optimal Wedding Seating<a class="headerlink" href="#optimal-wedding-seating" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="reference">
 <h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
-<p>SAS Blog: <a class="reference external" href="https://blogs.sas.com/content/operations/2014/11/10/do-you-have-an-uncle-louie-optimal-wedding-seat-assignments/">https://blogs.sas.com/content/operations/2014/11/10/do-you-have-an-uncle-louie-optimal-wedding-seat-assignments/</a></p>
+<p>SAS blog: <a class="reference external" href="https://blogs.sas.com/content/operations/2014/11/10/do-you-have-an-uncle-louie-optimal-wedding-seat-assignments/">https://blogs.sas.com/content/operations/2014/11/10/do-you-have-an-uncle-louie-optimal-wedding-seat-assignments/</a></p>
 </div>
 <div class="section" id="model">
 <h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
@@ -130,8 +130,8 @@
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
 <span class="go">NOTE: Converting model wedding to DataFrame.</span>
 <span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPE9MH2HO6 in caslib CASUSER(casuser).</span>
-<span class="go">NOTE: The table TMPE9MH2HO6 has been created in caslib CASUSER(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPGQQD6YS9 in caslib CASUSER(casuser).</span>
+<span class="go">NOTE: The table TMPGQQD6YS9 has been created in caslib CASUSER(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: The problem wedding has 147 variables (140 binary, 0 integer, 0 free, 0 fixed).</span>
 <span class="go">NOTE: The problem has 1357 constraints (7 LE, 20 EQ, 1330 GE, 0 range).</span>
 <span class="go">NOTE: The problem has 4270 constraint coefficients.</span>
@@ -154,7 +154,7 @@
 <span class="go">            1       0.0000      13.0000      13.0000 1.30e+01 1.30e+01    0    0</span>
 <span class="go">            .       0.0000      13.0000      13.0000 1.30e+01 1.30e+01    1    2</span>
 <span class="go">           10       0.0000      13.0000      13.0000 1.30e+01 1.30e+01    1    2</span>
-<span class="go">           18       4.2500      13.0000      13.0000  205.88%  205.88%    5    6</span>
+<span class="go">           18       4.2500      13.0000      13.0000  205.88%  205.88%    5    7</span>
 <span class="go">           19       6.0000      13.0000      13.0000  116.67%  116.67%    6    7</span>
 <span class="go">            .       6.0000      13.0000      13.0000  116.67%  116.67%    6    7</span>
 <span class="go">           20       6.0000      13.0000      13.0000  116.67%  116.67%    6    7</span>
@@ -164,7 +164,7 @@
 <span class="go">                                     Integer        Bound            Time   Time</span>
 <span class="go">               0       1      3      13.0000      13.0000    0.00%      7      8</span>
 <span class="go">NOTE: The Decomposition algorithm used 8 threads.</span>
-<span class="go">NOTE: The Decomposition algorithm time is 8.61 seconds.</span>
+<span class="go">NOTE: The Decomposition algorithm time is 8.90 seconds.</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 13.</span>
 <span class="go">           x</span>
@@ -343,7 +343,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guide/user-guide.html">User Guide</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="examples.html">Examples</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="examples.html#viya-examples-concrete">Viya Examples / Concrete</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="examples.html#sas-viya-examples-concrete">SAS Viya Examples (Concrete)</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="food_manufacture_1.html">Food Manufacture 1</a></li>
 <li class="toctree-l3"><a class="reference internal" href="food_manufacture_2.html">Food Manufacture 2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="factory_planning_1.html">Factory Planning 1</a></li>
@@ -366,8 +366,8 @@
 <li class="toctree-l3"><a class="reference internal" href="efficiency_analysis.html">Efficiency Analysis</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#viya-examples-abstract">Viya Examples / Abstract</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-viya-examples-abstract">SAS Viya Examples (Abstract)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-9-4-examples">SAS 9.4 Examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api.html">API Reference</a></li>
@@ -410,8 +410,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

@@ -1,28 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
 sasoptpy.abstract.statement.UnfixStatement
 ==========================================
 
 .. currentmodule:: sasoptpy.abstract.statement
 
 .. autoclass:: UnfixStatement
-
-   
-   .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~UnfixStatement.__init__
-      ~UnfixStatement.append
-      ~UnfixStatement.get_response
-      ~UnfixStatement.is_internal
-      ~UnfixStatement.set_internal
-      ~UnfixStatement.set_response
-      ~UnfixStatement.unfix
-   
-   
-
-   
-   
-   

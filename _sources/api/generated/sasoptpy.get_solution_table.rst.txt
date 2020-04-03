@@ -1,6 +1,0 @@
-sasoptpy.get\_solution\_table
-=============================
-
-.. currentmodule:: sasoptpy
-
-.. autofunction:: get_solution_table

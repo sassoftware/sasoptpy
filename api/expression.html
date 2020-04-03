@@ -79,22 +79,22 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.set_name.html#sasoptpy.Expression.set_name" title="sasoptpy.Expression.set_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.set_name</span></code></a>(self[, name])</p></td>
-<td><p>Sets the name of the expression</p></td>
+<td><p>Specifies the name of the expression</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.set_permanent.html#sasoptpy.Expression.set_permanent" title="sasoptpy.Expression.set_permanent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.set_permanent</span></code></a>(self)</p></td>
 <td><p>Converts a temporary expression into a permanent one</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.set_temporary.html#sasoptpy.Expression.set_temporary" title="sasoptpy.Expression.set_temporary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.set_temporary</span></code></a>(self)</p></td>
-<td><p>Converts expression into temporary to enable in-place operations</p></td>
+<td><p>Converts expression into a temporary expression to enable in-place operations</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.get_name.html#sasoptpy.Expression.get_name" title="sasoptpy.Expression.get_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.get_name</span></code></a>(self)</p></td>
-<td><p>Returns the name of the expression</p></td>
+<td><p>Returns the name of the object</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.get_value.html#sasoptpy.Expression.get_value" title="sasoptpy.Expression.get_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.get_value</span></code></a>(self)</p></td>
 <td><p>Calculates and returns the value of the linear expression</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.get_dual.html#sasoptpy.Expression.get_dual" title="sasoptpy.Expression.get_dual"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.get_dual</span></code></a>(self)</p></td>
-<td><p>Returns the dual value if exists</p></td>
+<td><p>Returns the dual value</p></td>
 </tr>
 </tbody>
 </table>
@@ -114,10 +114,10 @@
 <td><p>Returns a copy of the <a class="reference internal" href="generated/sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a> object</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.mult.html#sasoptpy.Expression.mult" title="sasoptpy.Expression.mult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.mult</span></code></a>(self, other)</p></td>
-<td><p>Multiplies the <a class="reference internal" href="generated/sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a> with a scalar value</p></td>
+<td><p>Multiplies the <a class="reference internal" href="generated/sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a> by a scalar value</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.get_member.html#sasoptpy.Expression.get_member" title="sasoptpy.Expression.get_member"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.get_member</span></code></a>(self, key)</p></td>
-<td><p>Returns the requested member using the key</p></td>
+<td><p>Returns the requested member of the expression</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.get_member_dict.html#sasoptpy.Expression.get_member_dict" title="sasoptpy.Expression.get_member_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.get_member_dict</span></code></a>(self)</p></td>
 <td><p>Returns an ordered dictionary of elements</p></td>
@@ -135,13 +135,13 @@
 <td><p>Changes the coefficient of the requested member</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.add_to_member_value.html#sasoptpy.Expression.add_to_member_value" title="sasoptpy.Expression.add_to_member_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.add_to_member_value</span></code></a>(self, key, value)</p></td>
-<td><p>Adds given value to the coefficient of the requested member</p></td>
+<td><p>Adds <cite>value</cite> to the coefficient of the requested member</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.mult_member_value.html#sasoptpy.Expression.mult_member_value" title="sasoptpy.Expression.mult_member_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.mult_member_value</span></code></a>(self, key, value)</p></td>
-<td><p>Multiplies coefficient of the requested member with given value</p></td>
+<td><p>Multiplies the coefficient of the requested member by the specified <cite>value</cite></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.copy_member.html#sasoptpy.Expression.copy_member" title="sasoptpy.Expression.copy_member"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.copy_member</span></code></a>(self, key, exp)</p></td>
-<td><p>Copies member of another expression</p></td>
+<td><p>Copies the member of another expression</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.delete_member.html#sasoptpy.Expression.delete_member" title="sasoptpy.Expression.delete_member"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.delete_member</span></code></a>(self, key)</p></td>
 <td><p>Deletes the requested member from the core dictionary</p></td>
@@ -172,19 +172,19 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Expression._expr.html#sasoptpy.Expression._expr" title="sasoptpy.Expression._expr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression._expr</span></code></a>(self)</p></td>
-<td><p>Generates the OPTMODEL compatible string representation of the object.</p></td>
+<td><p>Generates the OPTMODEL-compatible string representation of the object</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Expression._is_linear.html#sasoptpy.Expression._is_linear" title="sasoptpy.Expression._is_linear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression._is_linear</span></code></a>(self)</p></td>
-<td><p>Checks if the expression is composed of linear components</p></td>
+<td><p>Checks whether the expression is composed of linear components</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Expression._relational.html#sasoptpy.Expression._relational" title="sasoptpy.Expression._relational"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression._relational</span></code></a>(self, other, direction_)</p></td>
 <td><p>Creates a logical relation between <a class="reference internal" href="generated/sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a> objects</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.__repr__.html#sasoptpy.Expression.__repr__" title="sasoptpy.Expression.__repr__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.__repr__</span></code></a>(self)</p></td>
-<td><p>Returns a string representation of the object.</p></td>
+<td><p>Returns a string representation of the object</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.__str__.html#sasoptpy.Expression.__str__" title="sasoptpy.Expression.__str__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.__str__</span></code></a>(self)</p></td>
-<td><p>Generates a representation string that is Python compatible</p></td>
+<td><p>Generates a representation string that is Python-compatible</p></td>
 </tr>
 </tbody>
 </table>
@@ -262,7 +262,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="objective.html">Variable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="objective.html">Objective</a></li>
 <li class="toctree-l3"><a class="reference internal" href="variable.html">Variable</a></li>
 <li class="toctree-l3"><a class="reference internal" href="variable_group.html">Variable Group</a></li>
 <li class="toctree-l3"><a class="reference internal" href="constraint.html">Constraint</a></li>
@@ -315,8 +315,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

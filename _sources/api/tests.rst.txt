@@ -43,6 +43,7 @@ Abstract
    statement.test_drop_restore.TestDropRestore
    statement.test_fix_unfix.TestFix
    statement.test_for_loop.TestForLoop
+   statement.test_if_else.TestIfElse
    statement.test_literal.TestLiteral
    statement.test_read_data.TestReadData
    statement.test_solve.TestSolve

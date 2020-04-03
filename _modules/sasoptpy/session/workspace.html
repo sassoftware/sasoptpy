@@ -74,13 +74,13 @@
 
 <div class="viewcode-block" id="Workspace.get_elements"><a class="viewcode-back" href="../../../api/generated/sasoptpy.Workspace.get_elements.html#sasoptpy.Workspace.get_elements">[docs]</a>    <span class="k">def</span> <span class="nf">get_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns a list of elements in the Workspace</span>
+<span class="sd">        Returns a list of elements in the workspace</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elements</span></div>
 
 <div class="viewcode-block" id="Workspace.set_active_model"><a class="viewcode-back" href="../../../api/generated/sasoptpy.Workspace.set_active_model.html#sasoptpy.Workspace.set_active_model">[docs]</a>    <span class="k">def</span> <span class="nf">set_active_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Marks given model as active, to be used in solve statements</span>
+<span class="sd">        Marks the specified model as active; to be used in solve statements</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -107,7 +107,7 @@
 
 <div class="viewcode-block" id="Workspace.append"><a class="viewcode-back" href="../../../api/generated/sasoptpy.Workspace.append.html#sasoptpy.Workspace.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Appends a new element (operation or statement) to the Workspace</span>
+<span class="sd">        Appends a new element (operation or statement) to the workspace</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -124,13 +124,13 @@
 
 <div class="viewcode-block" id="Workspace.submit"><a class="viewcode-back" href="../../../api/generated/sasoptpy.Workspace.submit.html#sasoptpy.Workspace.submit">[docs]</a>    <span class="k">def</span> <span class="nf">submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Submits the Workspace as an OPTMODEL block and returns solutions</span>
+<span class="sd">        Submits the workspace as an OPTMODEL block and returns solutions</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Workspace.parse_solve_responses"><a class="viewcode-back" href="../../../api/generated/sasoptpy.Workspace.parse_solve_responses.html#sasoptpy.Workspace.parse_solve_responses">[docs]</a>    <span class="k">def</span> <span class="nf">parse_solve_responses</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Grabs the solutions to all solve statements</span>
+<span class="sd">        Retrieves the solutions to all solve statements</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
         <span class="n">solve_statements</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_elements</span><span class="p">()</span> <span class="k">if</span>
@@ -154,7 +154,7 @@
 
 <div class="viewcode-block" id="Workspace.parse_print_responses"><a class="viewcode-back" href="../../../api/generated/sasoptpy.Workspace.parse_print_responses.html#sasoptpy.Workspace.parse_print_responses">[docs]</a>    <span class="k">def</span> <span class="nf">parse_print_responses</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Grabs responses to all print statements</span>
+<span class="sd">        Retrieves responses to all print statements</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
         <span class="n">print_statements</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_elements</span><span class="p">()</span> <span class="k">if</span>
@@ -185,7 +185,7 @@
 
 <div class="viewcode-block" id="Workspace.get_variable"><a class="viewcode-back" href="../../../api/generated/sasoptpy.Workspace.get_variable.html#sasoptpy.Workspace.get_variable">[docs]</a>    <span class="k">def</span> <span class="nf">get_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Obtains the value of a given variable name</span>
+<span class="sd">        Obtains the value of a specified variable name</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -221,7 +221,7 @@
 
 <div class="viewcode-block" id="Workspace.set_variable_value"><a class="viewcode-back" href="../../../api/generated/sasoptpy.Workspace.set_variable_value.html#sasoptpy.Workspace.set_variable_value">[docs]</a>    <span class="k">def</span> <span class="nf">set_variable_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Sets variable value</span>
+<span class="sd">        Specifies the value of a variable</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -236,7 +236,7 @@
 
 <div class="viewcode-block" id="Workspace.to_optmodel"><a class="viewcode-back" href="../../../api/generated/sasoptpy.Workspace.to_optmodel.html#sasoptpy.Workspace.to_optmodel">[docs]</a>    <span class="k">def</span> <span class="nf">to_optmodel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns equivalent OPTMODEL code of given workspace</span>
+<span class="sd">        Returns equivalent OPTMODEL code of the workspace</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -302,8 +302,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

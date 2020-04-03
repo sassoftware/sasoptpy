@@ -52,7 +52,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    initset : Set</span>
+<span class="sd">    initset : :class:`Set`</span>
 <span class="sd">        Set to be iterated on</span>
 <span class="sd">    name : string, optional</span>
 <span class="sd">        Name of the iterator</span>
@@ -62,17 +62,16 @@
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 
-<span class="sd">    - SetIterator objects are automatically created when looping over a</span>
-<span class="sd">      :class:`Set`.</span>
-<span class="sd">    - This class is mainly intended for internal use.</span>
-<span class="sd">    - The ``group`` parameter consists of following keys</span>
+<span class="sd">    - :class:`abstract.SetIterator` objects are created automatically when</span>
+<span class="sd">      iterating over a :class:`abstract.Set` object</span>
 
-<span class="sd">      - **order** : int</span>
-<span class="sd">        Order of the parameter inside the group</span>
-<span class="sd">      - **outof** : int</span>
-<span class="sd">        Total number of indices inside the group</span>
-<span class="sd">      - **id** : int</span>
-<span class="sd">        ID number assigned to group by Python</span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; S = so.Set(name=&#39;S&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; for i in S:</span>
+<span class="sd">    ...     print(i.get_name(), type(i))</span>
+<span class="sd">    o19 &lt;class &#39;sasoptpy.abstract.set_iterator.SetIterator&#39;&gt;</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -136,6 +135,31 @@
 
 
 <div class="viewcode-block" id="SetIteratorGroup"><a class="viewcode-back" href="../../../api/generated/sasoptpy.abstract.SetIteratorGroup.html#sasoptpy.abstract.SetIteratorGroup">[docs]</a><span class="k">class</span> <span class="nc">SetIteratorGroup</span><span class="p">(</span><span class="n">OrderedDict</span><span class="p">,</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">Expression</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a group of set iterator objects for multi-dimensional sets</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    initset : :class:`Set`</span>
+<span class="sd">        Set to be iterated on</span>
+<span class="sd">    names : string, optional</span>
+<span class="sd">        Names of the iterators</span>
+<span class="sd">    datatype : string, optional</span>
+<span class="sd">        Types of the iterators</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; T = so.Set(name=&#39;T&#39;, settype=[so.STR, so.NUM])</span>
+<span class="sd">    &gt;&gt;&gt; for j in T:</span>
+<span class="sd">    ...     print(j.get_name(), type(j))</span>
+<span class="sd">    ...     for k in j:</span>
+<span class="sd">    ...         print(k.get_name(), type(k))</span>
+<span class="sd">    o5 &lt;class &#39;sasoptpy.abstract.set_iterator.SetIteratorGroup&#39;&gt;</span>
+<span class="sd">    o6 &lt;class &#39;sasoptpy.abstract.set_iterator.SetIterator&#39;&gt;</span>
+<span class="sd">    o8 &lt;class &#39;sasoptpy.abstract.set_iterator.SetIterator&#39;&gt;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initset</span><span class="p">,</span> <span class="n">datatype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">SetIteratorGroup</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -258,8 +282,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

@@ -59,7 +59,7 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.interface.CASMediator.html#sasoptpy.interface.CASMediator" title="sasoptpy.interface.CASMediator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CASMediator</span></code></a>(caller, cas_session)</p></td>
-<td><p>Handles the connection between sasoptpy and SAS Viya (CAS) server</p></td>
+<td><p>Handles the connection between sasoptpy and the SAS Viya (CAS) server</p></td>
 </tr>
 </tbody>
 </table>
@@ -75,10 +75,10 @@
 <td><p>Solve action for <code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code> objects</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.interface.CASMediator.tune.html#sasoptpy.interface.CASMediator.tune" title="sasoptpy.interface.CASMediator.tune"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CASMediator.tune</span></code></a>(self, \*\*kwargs)</p></td>
-<td><p>Checks if CAS session has optimizaiton.tuner capability and calls <code class="xref py py-func docutils literal notranslate"><span class="pre">tune_problem()</span></code></p></td>
+<td><p>Wrapper for the MILP tuner</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.interface.CASMediator.tune_problem.html#sasoptpy.interface.CASMediator.tune_problem" title="sasoptpy.interface.CASMediator.tune_problem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CASMediator.tune_problem</span></code></a>(self, \*\*kwargs)</p></td>
-<td><p>Calls optimization.tuner CAS action to find out ideal configuration</p></td>
+<td><p>Calls optimization.tuner CAS action to finds out the ideal configuration</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.interface.CASMediator.solve_with_mps.html#sasoptpy.interface.CASMediator.solve_with_mps" title="sasoptpy.interface.CASMediator.solve_with_mps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CASMediator.solve_with_mps</span></code></a>(self, \*\*kwargs)</p></td>
 <td><p>Submits the problem in MPS (DataFrame) format, supported by old versions</p></td>
@@ -122,7 +122,7 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.interface.CASMediator.submit.html#sasoptpy.interface.CASMediator.submit" title="sasoptpy.interface.CASMediator.submit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CASMediator.submit</span></code></a>(self, \*\*kwargs)</p></td>
-<td><p>Submit action for custom input and <code class="xref py py-class docutils literal notranslate"><span class="pre">Workspace</span></code> objects</p></td>
+<td><p>Submit action for custom input and <a class="reference internal" href="generated/sasoptpy.Workspace.html#sasoptpy.Workspace" title="sasoptpy.Workspace"><code class="xref py py-class docutils literal notranslate"><span class="pre">sasoptpy.Workspace</span></code></a> objects</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.interface.CASMediator.submit_optmodel_code.html#sasoptpy.interface.CASMediator.submit_optmodel_code" title="sasoptpy.interface.CASMediator.submit_optmodel_code"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CASMediator.submit_optmodel_code</span></code></a>(self, …)</p></td>
 <td><p>Converts caller into OPTMODEL code and submits using optimization.runOptmodel action</p></td>
@@ -131,7 +131,7 @@
 <td><p>Parses results of workspace submission</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.interface.CASMediator.set_workspace_variable_values.html#sasoptpy.interface.CASMediator.set_workspace_variable_values" title="sasoptpy.interface.CASMediator.set_workspace_variable_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CASMediator.set_workspace_variable_values</span></code></a>(…)</p></td>
-<td><p>Performs post-solve assignment of <code class="xref py py-class docutils literal notranslate"><span class="pre">Workspace</span></code> variable values</p></td>
+<td><p>Performs post-solve assignment of <a class="reference internal" href="generated/sasoptpy.Workspace.html#sasoptpy.Workspace" title="sasoptpy.Workspace"><code class="xref py py-class docutils literal notranslate"><span class="pre">sasoptpy.Workspace</span></code></a> variable values</p></td>
 </tr>
 </tbody>
 </table>
@@ -174,7 +174,7 @@
 <td><p>Performs post-solve operations</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.interface.SASMediator.parse_sas_table.html#sasoptpy.interface.SASMediator.parse_sas_table" title="sasoptpy.interface.SASMediator.parse_sas_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SASMediator.parse_sas_table</span></code></a>(self, table_name)</p></td>
-<td><p>Converts requested table name into <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></p></td>
+<td><p>Converts requested table name into <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.interface.SASMediator.convert_to_original.html#sasoptpy.interface.SASMediator.convert_to_original" title="sasoptpy.interface.SASMediator.convert_to_original"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SASMediator.convert_to_original</span></code></a>(self, table)</p></td>
 <td><p>Converts variable names to their original format if a placeholder gets used</p></td>
@@ -194,16 +194,16 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.interface.SASMediator.submit.html#sasoptpy.interface.SASMediator.submit" title="sasoptpy.interface.SASMediator.submit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SASMediator.submit</span></code></a>(self, \*\*kwargs)</p></td>
-<td><p>Submit action for custom input and <code class="xref py py-class docutils literal notranslate"><span class="pre">Workspace</span></code> objects</p></td>
+<td><p>Submit action for custom input and <a class="reference internal" href="generated/sasoptpy.Workspace.html#sasoptpy.Workspace" title="sasoptpy.Workspace"><code class="xref py py-class docutils literal notranslate"><span class="pre">sasoptpy.Workspace</span></code></a> objects</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.interface.SASMediator.submit_optmodel_code.html#sasoptpy.interface.SASMediator.submit_optmodel_code" title="sasoptpy.interface.SASMediator.submit_optmodel_code"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SASMediator.submit_optmodel_code</span></code></a>(self, …)</p></td>
-<td><p>Submits given <code class="xref py py-class docutils literal notranslate"><span class="pre">Workspace</span></code> object in OPTMODEL format</p></td>
+<td><p>Submits given <a class="reference internal" href="generated/sasoptpy.Workspace.html#sasoptpy.Workspace" title="sasoptpy.Workspace"><code class="xref py py-class docutils literal notranslate"><span class="pre">sasoptpy.Workspace</span></code></a> object in OPTMODEL format</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.interface.SASMediator.parse_sas_workspace_response.html#sasoptpy.interface.SASMediator.parse_sas_workspace_response" title="sasoptpy.interface.SASMediator.parse_sas_workspace_response"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SASMediator.parse_sas_workspace_response</span></code></a>(self)</p></td>
 <td><p>Parses results of workspace submission</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.interface.SASMediator.set_workspace_variable_values.html#sasoptpy.interface.SASMediator.set_workspace_variable_values" title="sasoptpy.interface.SASMediator.set_workspace_variable_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SASMediator.set_workspace_variable_values</span></code></a>(…)</p></td>
-<td><p>Performs post-solve assignment of <code class="xref py py-class docutils literal notranslate"><span class="pre">Workspace</span></code> variable values</p></td>
+<td><p>Performs post-solve assignment of <a class="reference internal" href="generated/sasoptpy.Workspace.html#sasoptpy.Workspace" title="sasoptpy.Workspace"><code class="xref py py-class docutils literal notranslate"><span class="pre">sasoptpy.Workspace</span></code></a> variable values</p></td>
 </tr>
 </tbody>
 </table>
@@ -334,8 +334,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

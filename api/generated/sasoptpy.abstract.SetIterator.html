@@ -56,10 +56,10 @@
 <em class="property">class </em><code class="sig-name descname">SetIterator</code><span class="sig-paren">(</span><em class="sig-param">initset</em>, <em class="sig-param">name=None</em>, <em class="sig-param">datatype=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/sasoptpy/abstract/set_iterator.html#SetIterator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.abstract.SetIterator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sasoptpy.core.expression.Expression</span></code></p>
 <p>Creates an iterator object for a given Set</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>initset</strong><span class="classifier">Set</span></dt><dd><p>Set to be iterated on</p>
+<dd class="field-odd"><dl>
+<dt><strong>initset</strong><span class="classifier"><a class="reference internal" href="sasoptpy.abstract.Set.html#sasoptpy.abstract.Set" title="sasoptpy.abstract.Set"><code class="xref py py-class docutils literal notranslate"><span class="pre">Set</span></code></a></span></dt><dd><p>Set to be iterated on</p>
 </dd>
 <dt><strong>name</strong><span class="classifier">string, optional</span></dt><dd><p>Name of the iterator</p>
 </dd>
@@ -70,20 +70,16 @@
 </dl>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li><p>SetIterator objects are automatically created when looping over a
-<a class="reference internal" href="sasoptpy.abstract.Set.html#sasoptpy.abstract.Set" title="sasoptpy.abstract.Set"><code class="xref py py-class docutils literal notranslate"><span class="pre">Set</span></code></a>.</p></li>
-<li><p>This class is mainly intended for internal use.</p></li>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">group</span></code> parameter consists of following keys</p>
-<ul>
-<li><p><strong>order</strong> : int
-Order of the parameter inside the group</p></li>
-<li><p><strong>outof</strong> : int
-Total number of indices inside the group</p></li>
-<li><p><strong>id</strong> : int
-ID number assigned to group by Python</p></li>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">abstract.SetIterator</span></code> objects are created automatically when
+iterating over a <code class="xref py py-class docutils literal notranslate"><span class="pre">abstract.Set</span></code> object</p></li>
 </ul>
-</li>
-</ul>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">S</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;S&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">S</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">get_name</span><span class="p">(),</span> <span class="nb">type</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+<span class="go">o19 &lt;class &#39;sasoptpy.abstract.set_iterator.SetIterator&#39;&gt;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </div>
@@ -121,6 +117,7 @@ ID number assigned to group by Python</p></li>
 <li class="toctree-l5 current"><a class="current reference internal" href="#">sasoptpy.abstract.SetIterator</a></li>
 <li class="toctree-l5"><a class="reference internal" href="sasoptpy.abstract.SetIteratorGroup.html">sasoptpy.abstract.SetIteratorGroup</a></li>
 <li class="toctree-l5"><a class="reference internal" href="sasoptpy.abstract.Statement.html">sasoptpy.abstract.Statement</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.abstract.ImplicitVar.html">sasoptpy.abstract.ImplicitVar</a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../abstract.html#statements">Statements</a></li>
@@ -173,8 +170,8 @@ ID number assigned to group by Python</p></li>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

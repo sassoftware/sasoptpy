@@ -58,42 +58,35 @@
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>options</strong><span class="classifier">dict, optional</span></dt><dd><p>A dictionary solver options</p>
+<dt><strong>options</strong><span class="classifier">dict, optional</span></dt><dd><p>Solver options as a dictionary object</p>
 </dd>
-<dt><strong>submit</strong><span class="classifier">boolean, optional</span></dt><dd><p>Switch for calling the solver instantly</p>
+<dt><strong>submit</strong><span class="classifier">boolean, optional</span></dt><dd><p>When set to <cite>True</cite>, calls the solver</p>
 </dd>
-<dt><strong>name</strong><span class="classifier">string, optional</span></dt><dd><p>Name of the table name</p>
+<dt><strong>name</strong><span class="classifier">string, optional</span></dt><dd><p>Name of the table</p>
 </dd>
-<dt><strong>frame</strong><span class="classifier">boolean, optional</span></dt><dd><p>Switch for uploading problem as a MPS DataFrame format</p>
+<dt><strong>frame</strong><span class="classifier">boolean, optional</span></dt><dd><p>When set to <cite>True</cite>, uploads the problem as a DataFrame in MPS format</p>
 </dd>
-<dt><strong>drop</strong><span class="classifier">boolean, optional</span></dt><dd><p>Switch for dropping the MPS table after solve (only CAS)</p>
+<dt><strong>drop</strong><span class="classifier">boolean, optional</span></dt><dd><p>When set to <cite>True</cite>, drops the MPS table after solve (only CAS)</p>
 </dd>
-<dt><strong>replace</strong><span class="classifier">boolean, optional</span></dt><dd><p>Switch for replacing an existing MPS table (only CAS and MPS)</p>
+<dt><strong>replace</strong><span class="classifier">boolean, optional</span></dt><dd><p>When set to <cite>True</cite>, replaces an existing MPS table (only CAS and MPS)</p>
 </dd>
-<dt><strong>primalin</strong><span class="classifier">boolean, optional</span></dt><dd><p>Switch for using initial values (only MILP)</p>
+<dt><strong>primalin</strong><span class="classifier">boolean, optional</span></dt><dd><p>When set to <cite>True</cite>, uses initial values (only MILP)</p>
 </dd>
-<dt><strong>verbose</strong><span class="classifier">boolean, optional (experimental)</span></dt><dd><p>Switch for printing generated OPTMODEL code</p>
+<dt><strong>verbose</strong><span class="classifier">boolean, optional (experimental)</span></dt><dd><p>When set to <cite>True</cite>, prints the generated OPTMODEL code</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl>
-<dt><strong>solution</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></span></dt><dd><p>Solution of the optimization model</p>
+<dt><strong>solution</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></span></dt><dd><p>Solution of the optimization model</p>
 </dd>
 </dl>
 </dd>
 </dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<dl class="simple">
-<dt><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.solve_on_cas()</span></code>, <code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.solve_on_mva()</span></code></dt><dd></dd>
-</dl>
-</div>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li><p>This method is essentially a wrapper for two other methods.</p></li>
-<li><p>Some of the options listed under <code class="docutils literal notranslate"><span class="pre">options</span></code> argument may not be
-passed based on which CAS Action is being used.</p></li>
+<li><p>Some of the options listed under the <code class="docutils literal notranslate"><span class="pre">options</span></code> argument might not be
+passed, depending on which CAS action is being used.</p></li>
 <li><p>The <code class="docutils literal notranslate"><span class="pre">option</span></code> argument should be a dictionary, where keys are
 option names. For example, <code class="docutils literal notranslate"><span class="pre">m.solve(options={'maxtime':</span> <span class="pre">600})</span></code>
 limits the solution time to 600 seconds.</p></li>
@@ -166,7 +159,7 @@ limits the solution time to 600 seconds.</p></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../expression.html">Expression</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../objective.html">Variable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../objective.html">Objective</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../variable.html">Variable</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../variable_group.html">Variable Group</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../constraint.html">Constraint</a></li>
@@ -220,8 +213,8 @@ limits the solution time to 600 seconds.</p></li>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

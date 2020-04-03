@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>sasoptpy.get_solution_table &#8212; sasoptpy 1.0.0-alpha documentation</title>
+    <title>sasoptpy.expr_sum &#8212; sasoptpy 1.0.0-alpha documentation</title>
     <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/sasoptpy.css" />
@@ -18,7 +18,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="sasoptpy.quick_sum" href="sasoptpy.quick_sum.html" />
-    <link rel="prev" title="sasoptpy.flatten_frame" href="sasoptpy.flatten_frame.html" />
+    <link rel="prev" title="sasoptpy.get_value_table" href="sasoptpy.get_value_table.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="../../_static/js/version.js"></script>
 
@@ -36,7 +36,7 @@
           <a href="sasoptpy.quick_sum.html" title="sasoptpy.quick_sum"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="sasoptpy.flatten_frame.html" title="sasoptpy.flatten_frame"
+          <a href="sasoptpy.get_value_table.html" title="sasoptpy.get_value_table"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../api.html" >API Reference</a> &#187;</li>
@@ -49,12 +49,29 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="sasoptpy-get-solution-table">
-<h1>sasoptpy.get_solution_table<a class="headerlink" href="#sasoptpy-get-solution-table" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="sasoptpy-expr-sum">
+<h1>sasoptpy.expr_sum<a class="headerlink" href="#sasoptpy-expr-sum" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
-<dt id="sasoptpy.get_solution_table">
-<code class="sig-name descname">get_solution_table</code><span class="sig-paren">(</span><em class="sig-param">*argv</em>, <em class="sig-param">key=None</em>, <em class="sig-param">rhs=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/sasoptpy/util/user_utils.html#get_solution_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.get_solution_table" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="sasoptpy.expr_sum">
+<code class="sig-name descname">expr_sum</code><span class="sig-paren">(</span><em class="sig-param">argv</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/sasoptpy/util/user_utils.html#expr_sum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.expr_sum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Summation function for <a class="reference internal" href="sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a> objects</p>
+<dl class="field-list">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl>
+<dt><strong>exp</strong><span class="classifier"><a class="reference internal" href="sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a></span></dt><dd><p>Sum of given arguments</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This function is faster for expressions compared to Python’s native sum()
+function.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">VariableGroup</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
 
 </div>
 
@@ -90,7 +107,8 @@
 <li class="toctree-l5"><a class="reference internal" href="sasoptpy.dict_to_frame.html">sasoptpy.dict_to_frame</a></li>
 <li class="toctree-l5"><a class="reference internal" href="sasoptpy.exp_range.html">sasoptpy.exp_range</a></li>
 <li class="toctree-l5"><a class="reference internal" href="sasoptpy.flatten_frame.html">sasoptpy.flatten_frame</a></li>
-<li class="toctree-l5 current"><a class="current reference internal" href="#">sasoptpy.get_solution_table</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.get_value_table.html">sasoptpy.get_value_table</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">sasoptpy.expr_sum</a></li>
 <li class="toctree-l5"><a class="reference internal" href="sasoptpy.quick_sum.html">sasoptpy.quick_sum</a></li>
 <li class="toctree-l5"><a class="reference internal" href="sasoptpy.reset.html">sasoptpy.reset</a></li>
 </ul>
@@ -134,7 +152,7 @@
           <a href="sasoptpy.quick_sum.html" title="sasoptpy.quick_sum"
              >next</a> |</li>
         <li class="right" >
-          <a href="sasoptpy.flatten_frame.html" title="sasoptpy.flatten_frame"
+          <a href="sasoptpy.get_value_table.html" title="sasoptpy.get_value_table"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../api.html" >API Reference</a> &#187;</li>
@@ -144,8 +162,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

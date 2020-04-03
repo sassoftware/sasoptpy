@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>sasoptpy: SAS Optimization Interface for Python &#8212; sasoptpy 1.0.0-alpha documentation</title>
+    <title>SAS Optimization Interface for Python &#8212; sasoptpy 1.0.0-alpha documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/css/sasoptpy.css" />
@@ -43,36 +43,32 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="sasoptpy-sas-optimization-interface-for-python">
-<h1>sasoptpy: SAS Optimization Interface for Python<a class="headerlink" href="#sasoptpy-sas-optimization-interface-for-python" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="sas-optimization-interface-for-python">
+<h1>SAS Optimization Interface for Python<a class="headerlink" href="#sas-optimization-interface-for-python" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="sasoptpy.pdf">PDF Version</a></p>
-<span class="target" id="module-sasoptpy"></span><p><strong>Date</strong>: Feb 19, 2020 <strong>Version</strong>: 1.0.0-alpha</p>
+<span class="target" id="module-sasoptpy"></span><p><strong>Date</strong>: Apr 03, 2020 <strong>Version</strong>: 1.0.0-alpha</p>
 <p><strong>Links</strong>: <a class="reference external" href="https://github.com/sassoftware/sasoptpy">Repository</a> |
 <a class="reference external" href="https://github.com/sassoftware/sasoptpy/issues">Issues</a> |
 <a class="reference external" href="https://github.com/sassoftware/sasoptpy/releases">Releases</a> |
 <a class="reference external" href="https://communities.sas.com/t5/Mathematical-Optimization/bd-p/operations_research">Community</a></p>
-<p><em>sasoptpy</em> is a Python package that provides a modeling interface for
-<a class="reference external" href="https://www.sas.com/en_us/software/viya.html">SAS Viya</a>  and SAS/OR
+<p>sasoptpy is a Python package that provides a modeling interface for
+SAS Optimization  and SAS/OR
 optimization solvers.
 It provides a quick way for users to deploy optimization models and
-solve them by using the
-<a class="reference external" href="http://go.documentation.sas.com/?cdcId=pgmsascdc&amp;cdcVersion=9.4_3.3&amp;docsetId=casactmopt&amp;docsetTarget=casactmopt_optimization_toc.htm&amp;locale=en">SAS Viya Optimization Action Set</a>.</p>
-<p><em>sasoptpy</em> can handle linear, mixed integer linear, nonlinear, and black-box
+solve them using SAS Viya and SAS 9.4.</p>
+<p>sasoptpy can handle linear, mixed integer linear, nonlinear, and black-box
 optimization problems. You can use native Python
-structures like dictionaries, tuples, and lists to define an optimization
-problem. <em>sasoptpy</em> supports <a class="reference external" href="http://pandas.pydata.org/">Pandas</a>
-objects extensively.</p>
-<p>Under the hood, <em>sasoptpy</em> uses the
-<a class="reference external" href="https://sassoftware.github.io/python-swat/">swat package</a> to communicate with
+structures such as dictionaries, tuples, and lists to define an optimization
+problem. sasoptpy offers extensive support of <a class="reference external" href="http://pandas.pydata.org/">pandas</a>
+objects.</p>
+<p>Under the hood, sasoptpy uses the <a class="reference external" href="https://sassoftware.github.io/python-swat/">SAS Scripting Wrapper for Analytic Transfer
+(SWAT) package</a> to communicate with
 SAS Viya, and uses the
-<a class="reference external" href="https://sassoftware.github.io/saspy/">saspy package</a> to communicate with SAS 9.4
+<a class="reference external" href="https://sassoftware.github.io/saspy/">SASPy package</a> to communicate with SAS 9.4
 installations.</p>
-<p><em>sasoptpy</em> is an interface to SAS Optimization solvers. Check
-<a class="reference external" href="https://go.documentation.sas.com/?cdcId=pgmsascdc&amp;cdcVersion=9.4_3.5&amp;docsetId=casmopt&amp;docsetTarget=titlepage.htm&amp;locale=en">SAS/OR</a>
-and
-<a class="reference external" href="http://go.documentation.sas.com/?cdcId=pgmsascdc&amp;cdcVersion=9.4_3.5&amp;docsetId=casmopt&amp;docsetTarget=casmopt_optmodel_toc.htm&amp;locale=en">PROC OPTMODEL</a>
-for more details about optimization tools provided by SAS and an interface to
-model optimization problems inside SAS.</p>
+<p>sasoptpy is an interface to SAS Optimization solvers. See
+<a class="reference external" href="https://go.documentation.sas.com/?cdcId=pgmsascdc&amp;cdcVersion=9.4_3.5&amp;docsetId=casmopt&amp;docsetTarget=titlepage.htm&amp;locale=en">SAS Optimization: Mathematical Optimization Procedures</a>
+for more information about SAS optimization tools.</p>
 <p>See the SAS Global Forum paper: <a class="reference external" href="https://www.sas.com/content/dam/SAS/support/en/sas-global-forum-proceedings/2018/1814-2018.pdf">Optimization Modeling with Python and SAS Viya</a></p>
 <div class="toctree-wrapper compound" id="mastertoc">
 <ul>
@@ -83,25 +79,25 @@ model optimization problems inside SAS.</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="install/install.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="install/install.html#python-version-support-and-dependencies">Python version support and dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install/install.html#python-version-support-and-dependencies">Python Version Support and Dependencies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="install/install.html#getting-sasoptpy">Getting sasoptpy</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="guide/user-guide.html">User Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="guide/intro.html">Introduction to Optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="guide/basics.html">Basic Functionality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/basics.html">Quick Reference</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guide/sessions.html">Sessions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guide/models.html">Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="guide/components.html">Model components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide/components.html">Model Components</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guide/workspaces.html">Workspaces</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guide/input-data.html">Handling Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guide/workflow.html">Workflows</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples/examples.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples/examples.html#viya-examples-concrete">Viya Examples / Concrete</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/examples.html#viya-examples-abstract">Viya Examples / Abstract</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/examples.html#sas-viya-examples-concrete">SAS Viya Examples (Concrete)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/examples.html#sas-viya-examples-abstract">SAS Viya Examples (Abstract)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/examples.html#sas-9-4-examples">SAS 9.4 Examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/api.html">API Reference</a><ul>
@@ -182,8 +178,8 @@ model optimization problems inside SAS.</p>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

@@ -52,8 +52,8 @@
 <h1>Factory Planning 1<a class="headerlink" href="#factory-planning-1" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="reference">
 <h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex3_toc.htm&amp;docsetVersion=15.1&amp;locale=en">http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex3_toc.htm&amp;docsetVersion=15.1&amp;locale=en</a></p>
-<p><a class="reference external" href="https://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex03.html">https://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex03.html</a></p>
+<p>SAS/OR example: <a class="reference external" href="http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex3_toc.htm&amp;docsetVersion=15.1&amp;locale=en">http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex3_toc.htm&amp;docsetVersion=15.1&amp;locale=en</a></p>
+<p>SAS/OR code for example: <a class="reference external" href="https://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex03.html">https://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex03.html</a></p>
 </div>
 <div class="section" id="model">
 <h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
@@ -132,13 +132,13 @@
         <span class="n">store</span><span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">set_bounds</span><span class="p">(</span><span class="n">lb</span><span class="o">=</span><span class="n">final_storage</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">final_storage</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="n">storageCost</span> <span class="o">=</span> <span class="n">storage_cost_per_unit</span> <span class="o">*</span> <span class="n">store</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">)</span>
-    <span class="n">revenue</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">product_data</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="s1">&#39;profit&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">sell</span><span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">]</span>
+    <span class="n">revenue</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">product_data</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="s1">&#39;profit&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">sell</span><span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">]</span>
                            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PRODUCTS</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">)</span>
     <span class="n">m</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">revenue</span><span class="o">-</span><span class="n">storageCost</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MAX</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_profit&#39;</span><span class="p">)</span>
 
     <span class="n">production_time</span> <span class="o">=</span> <span class="n">machine_type_product_data</span>
     <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span>
-        <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">production_time</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">mc</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="o">*</span> <span class="n">make</span><span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PRODUCTS</span><span class="p">)</span>
+        <span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">production_time</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">mc</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="o">*</span> <span class="n">make</span><span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PRODUCTS</span><span class="p">)</span>
         <span class="o">&lt;=</span> <span class="n">num_hours_per_period</span> <span class="o">*</span> <span class="n">num_machine_per_period</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">mc</span><span class="p">,</span> <span class="n">t</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">mc</span> <span class="ow">in</span> <span class="n">MACHINE_TYPES</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;machine_hours&#39;</span><span class="p">)</span>
     <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">(((</span><span class="n">store</span><span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">t</span><span class="o">-</span><span class="mi">1</span> <span class="ow">in</span> <span class="n">PERIODS</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">make</span><span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">]</span> <span class="o">==</span>
@@ -271,7 +271,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guide/user-guide.html">User Guide</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="examples.html">Examples</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="examples.html#viya-examples-concrete">Viya Examples / Concrete</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="examples.html#sas-viya-examples-concrete">SAS Viya Examples (Concrete)</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="food_manufacture_1.html">Food Manufacture 1</a></li>
 <li class="toctree-l3"><a class="reference internal" href="food_manufacture_2.html">Food Manufacture 2</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Factory Planning 1</a><ul>
@@ -294,8 +294,8 @@
 <li class="toctree-l3"><a class="reference internal" href="efficiency_analysis.html">Efficiency Analysis</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#viya-examples-abstract">Viya Examples / Abstract</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-viya-examples-abstract">SAS Viya Examples (Abstract)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-9-4-examples">SAS 9.4 Examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api.html">API Reference</a></li>
@@ -338,8 +338,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

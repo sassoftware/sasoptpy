@@ -59,10 +59,10 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.abstract.Parameter.html#sasoptpy.abstract.Parameter" title="sasoptpy.abstract.Parameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Parameter</span></code></a>(**kwargs)</p></td>
-<td><p></p></td>
+<td><p>Represents a problem input parameter</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.abstract.ParameterGroup.html#sasoptpy.abstract.ParameterGroup" title="sasoptpy.abstract.ParameterGroup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ParameterGroup</span></code></a>(**kwargs)</p></td>
-<td><p></p></td>
+<td><p>Represents a group of input parameters</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.abstract.Set.html#sasoptpy.abstract.Set" title="sasoptpy.abstract.Set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Set</span></code></a>(**kwargs)</p></td>
 <td><p>Creates an index set to be represented inside PROC OPTMODEL</p></td>
@@ -71,16 +71,21 @@
 <td><p>Creates an iterator object for a given Set</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.abstract.SetIteratorGroup.html#sasoptpy.abstract.SetIteratorGroup" title="sasoptpy.abstract.SetIteratorGroup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetIteratorGroup</span></code></a>(initset[, datatype, names])</p></td>
-<td><p></p></td>
+<td><p>Creates a group of set iterator objects for multi-dimensional sets</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.abstract.Statement.html#sasoptpy.abstract.Statement" title="sasoptpy.abstract.Statement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Statement</span></code></a>()</p></td>
-<td><p></p></td>
+<td><p>Creates a statement to be executed at the server</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.abstract.ImplicitVar.html#sasoptpy.abstract.ImplicitVar" title="sasoptpy.abstract.ImplicitVar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ImplicitVar</span></code></a>(**kwargs)</p></td>
+<td><p>Creates an implicit variable</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="section" id="statements">
 <h2>Statements<a class="headerlink" href="#statements" title="Permalink to this headline">¶</a></h2>
+<p>The following list of classes define the underlying structure for the abstract functions.
+See <a class="reference internal" href="functions.html#abstract-action-list"><span class="std std-ref">Abstract Actions</span></a> to see how you can use abstract functions and statements.</p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -164,6 +169,7 @@
 <li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.abstract.SetIterator.html">sasoptpy.abstract.SetIterator</a></li>
 <li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.abstract.SetIteratorGroup.html">sasoptpy.abstract.SetIteratorGroup</a></li>
 <li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.abstract.Statement.html">sasoptpy.abstract.Statement</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.abstract.ImplicitVar.html">sasoptpy.abstract.ImplicitVar</a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="#statements">Statements</a><ul>
@@ -230,8 +236,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

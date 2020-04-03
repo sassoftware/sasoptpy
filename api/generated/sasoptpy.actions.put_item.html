@@ -54,20 +54,20 @@
 <dl class="function">
 <dt id="sasoptpy.actions.put_item">
 <code class="sig-name descname">put_item</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">names=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/sasoptpy/actions.html#put_item"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.actions.put_item" title="Permalink to this definition">¶</a></dt>
-<dd><p>Prints given item values to output log</p>
+<dd><p>Prints the specified item values to the output log</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl>
 <dt><strong>args</strong><span class="classifier"><a class="reference internal" href="sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">sasoptpy.Expression</span></code></a>, string</span></dt><dd><p>Arbitrary elements to be put into log</p>
-<p>Variables, variable groups, expressions can be printed to log</p>
+<p>Variables, variable groups, and expressions can be printed to log</p>
 </dd>
-<dt><strong>names</strong><span class="classifier">bool, optional</span></dt><dd><p>Whether name of the arguments be printed in the log</p>
+<dt><strong>names</strong><span class="classifier">bool, optional</span></dt><dd><p>When set to <cite>True</cite>, prints the name of the arguments in the log</p>
 </dd>
 </dl>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p>Regular operation</p>
+<p>Regular operation:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">so</span><span class="o">.</span><span class="n">Workspace</span><span class="p">(</span><span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">for_loop</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)):</span>
 <span class="gp">&gt;&gt;&gt; </span>        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">for_loop</span><span class="p">([</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">]):</span>
@@ -82,7 +82,7 @@
 <span class="go">quit;</span>
 </pre></div>
 </div>
-<p>Print with names</p>
+<p>Print with names:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">so</span><span class="o">.</span><span class="n">Workspace</span><span class="p">(</span><span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">x</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">VariableGroup</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">so</span><span class="o">.</span><span class="n">Objective</span><span class="p">(</span>
@@ -208,8 +208,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

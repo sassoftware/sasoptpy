@@ -70,15 +70,15 @@
 <p>See <a class="reference internal" href="../../guide/models.html#solver-options"><span class="std std-ref">Solver Options</span></a> for a list of solver options. All fields in
 options (except <cite>with</cite>) is passed directly to the solver.</p>
 </dd>
-<dt><strong>primalin</strong><span class="classifier">bool, optional</span></dt><dd><p>Switch for using existing variable values as an initial point in MILP
-solver</p>
+<dt><strong>primalin</strong><span class="classifier">bool, optional</span></dt><dd><p>When set to <cite>True</cite>, uses existing variable values as an initial point
+in MILP solver</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl>
 <dt><strong>ss</strong><span class="classifier"><a class="reference internal" href="sasoptpy.abstract.statement.SolveStatement.html#sasoptpy.abstract.statement.SolveStatement" title="sasoptpy.abstract.statement.SolveStatement"><code class="xref py py-class docutils literal notranslate"><span class="pre">sasoptpy.abstract.statement.SolveStatement</span></code></a></span></dt><dd><p>Solve statement object.</p>
-<p>Contents of the response can be grabbed using <cite>get_response</cite> function.</p>
+<p>Contents of the response can be retrieved using <cite>get_response</cite> function.</p>
 </dd>
 </dl>
 </dd>
@@ -92,10 +92,10 @@ solver</p>
 <li><p><cite>qp</cite> : Quadratic programming</p></li>
 <li><p><cite>blackbox</cite> : Black-box optimization</p></li>
 </ul>
-<p>SAS Optimization also has Constraint Programming (clp) and Network
-Solver (network) but they are not currently supported.</p>
+<p>SAS Optimization also has a constraint programming solver (clp), and network
+solver (network) but they are not currently supported by sasoptpy.</p>
 <p class="rubric">Examples</p>
-<p>Regular solve</p>
+<p>Regular solve:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">so</span><span class="o">.</span><span class="n">Workspace</span><span class="p">(</span><span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">x</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">o</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Objective</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">maximize</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;obj&#39;</span><span class="p">)</span>
@@ -110,7 +110,7 @@ Solver (network) but they are not currently supported.</p>
 <span class="go">quit;</span>
 </pre></div>
 </div>
-<p>Option alternatives</p>
+<p>Option alternatives:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">so</span><span class="o">.</span><span class="n">Workspace</span><span class="p">(</span><span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="c1"># Problem declaration, etc..</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">solve</span><span class="p">()</span>
@@ -232,8 +232,8 @@ Solver (network) but they are not currently supported.</p>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

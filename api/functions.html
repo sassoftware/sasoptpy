@@ -62,18 +62,21 @@
 <td><p>Converts dictionaries to DataFrame objects for pretty printing</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.exp_range.html#sasoptpy.exp_range" title="sasoptpy.exp_range"><code class="xref py py-obj docutils literal notranslate"><span class="pre">exp_range</span></code></a>(start, stop[, step])</p></td>
-<td><p>Creates a set within given range</p></td>
+<td><p>Creates a set within specified range</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.flatten_frame.html#sasoptpy.flatten_frame" title="sasoptpy.flatten_frame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flatten_frame</span></code></a>(df[, swap])</p></td>
-<td><p>Converts a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> object into <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v1.0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code></a></p></td>
+<td><p>Converts a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> object into <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v1.0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code></a></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.get_solution_table.html#sasoptpy.get_solution_table" title="sasoptpy.get_solution_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_solution_table</span></code></a>(\*argv[, key, rhs])</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.get_value_table.html#sasoptpy.get_value_table" title="sasoptpy.get_value_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_value_table</span></code></a>(\*args, \*\*kwargs)</p></td>
+<td><p>Returns values of the given arguments as a merged pandas DataFrame</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.quick_sum.html#sasoptpy.quick_sum" title="sasoptpy.quick_sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quick_sum</span></code></a>(argv)</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.expr_sum.html#sasoptpy.expr_sum" title="sasoptpy.expr_sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expr_sum</span></code></a>(argv)</p></td>
+<td><p>Summation function for <a class="reference internal" href="generated/sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a> objects</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.reset.html#sasoptpy.reset" title="sasoptpy.reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.quick_sum.html#sasoptpy.quick_sum" title="sasoptpy.quick_sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quick_sum</span></code></a>(argv)</p></td>
+<td><p>Summation function for <a class="reference internal" href="generated/sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a> objects</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.reset.html#sasoptpy.reset" title="sasoptpy.reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code></a>()</p></td>
 <td><p>Resets package configs and internal counters</p></td>
 </tr>
 </tbody>
@@ -91,58 +94,58 @@
 <td><p>Reads data tables inside Set and Parameter objects</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.actions.create_data.html#sasoptpy.actions.create_data" title="sasoptpy.actions.create_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.create_data</span></code></a>(table, index, columns)</p></td>
-<td><p>Creates data tables from variables, parameters and expressions</p></td>
+<td><p>Creates data tables from variables, parameters, and expressions</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.actions.solve.html#sasoptpy.actions.solve" title="sasoptpy.actions.solve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.solve</span></code></a>([options, primalin])</p></td>
 <td><p>Solves the active optimization problem and generates results</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.actions.for_loop.html#sasoptpy.actions.for_loop" title="sasoptpy.actions.for_loop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.for_loop</span></code></a>(\*args)</p></td>
-<td><p>Creates a for-loop container that is to be executed on server-side</p></td>
+<td><p>Creates a for-loop container to be executed on the server</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.actions.cofor_loop.html#sasoptpy.actions.cofor_loop" title="sasoptpy.actions.cofor_loop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.cofor_loop</span></code></a>(\*args)</p></td>
-<td><p>Creates a cofor-loop that is to be executed on server-side concurrently</p></td>
+<td><p>Creates a cofor-loop to be executed on the server concurrently</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.actions.if_condition.html#sasoptpy.actions.if_condition" title="sasoptpy.actions.if_condition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.if_condition</span></code></a>(logic_expression, …)</p></td>
 <td><p>Creates an if-else block</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.actions.switch_conditions.html#sasoptpy.actions.switch_conditions" title="sasoptpy.actions.switch_conditions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.switch_conditions</span></code></a>(\*\*args)</p></td>
-<td><p>Creates several if-else blocks using given arguments</p></td>
+<td><p>Creates several if-else blocks by using the specified arguments</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.actions.set_value.html#sasoptpy.actions.set_value" title="sasoptpy.actions.set_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.set_value</span></code></a>(left, right)</p></td>
 <td><p>Creates an assignment statement</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.actions.fix.html#sasoptpy.actions.fix" title="sasoptpy.actions.fix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.fix</span></code></a>(\*args)</p></td>
-<td><p>Fixes values of variables to given values</p></td>
+<td><p>Fixes values of variables to the specified values</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.actions.unfix.html#sasoptpy.actions.unfix" title="sasoptpy.actions.unfix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.unfix</span></code></a>(\*args)</p></td>
 <td><p>Unfixes values of variables</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.actions.set_objective.html#sasoptpy.actions.set_objective" title="sasoptpy.actions.set_objective"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.set_objective</span></code></a>(expression, name, sense)</p></td>
-<td><p>Sets objective function</p></td>
+<td><p>Specifies the objective function</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.actions.print_item.html#sasoptpy.actions.print_item" title="sasoptpy.actions.print_item"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.print_item</span></code></a>(\*args)</p></td>
-<td><p>Prints given argument list on server-side</p></td>
+<td><p>Prints the specified argument list on server</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.actions.put_item.html#sasoptpy.actions.put_item" title="sasoptpy.actions.put_item"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.put_item</span></code></a>(\*args[, names])</p></td>
-<td><p>Prints given item values to output log</p></td>
+<td><p>Prints the specified item values to the output log</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.actions.expand.html#sasoptpy.actions.expand" title="sasoptpy.actions.expand"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.expand</span></code></a>()</p></td>
 <td><p>Prints expanded problem to output</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.actions.drop.html#sasoptpy.actions.drop" title="sasoptpy.actions.drop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.drop</span></code></a>(\*args)</p></td>
-<td><p>Drops given constraints or constraint groups from model</p></td>
+<td><p>Drops the specified constraints or constraint groups from model</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.actions.restore.html#sasoptpy.actions.restore" title="sasoptpy.actions.restore"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.restore</span></code></a>(\*args)</p></td>
 <td><p>Restores dropped constraint and constraint groups</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.actions.union.html#sasoptpy.actions.union" title="sasoptpy.actions.union"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.union</span></code></a>(\*args)</p></td>
-<td><p>Aggregates given sets and set expressions</p></td>
+<td><p>Aggregates the specified sets and set expressions</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.actions.diff.html#sasoptpy.actions.diff" title="sasoptpy.actions.diff"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.diff</span></code></a>(left, right)</p></td>
 <td><p>Gets the difference between set and set expressions</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.actions.substring.html#sasoptpy.actions.substring" title="sasoptpy.actions.substring"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.substring</span></code></a>(main_string, first_pos, …)</p></td>
-<td><p>Gets the substring of given positions</p></td>
+<td><p>Gets the substring of the specified positions</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.actions.use_problem.html#sasoptpy.actions.use_problem" title="sasoptpy.actions.use_problem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.use_problem</span></code></a>(problem)</p></td>
 <td><p>Changes the currently active problem</p></td>
@@ -168,10 +171,10 @@
 <td><p>Natural logarithm function</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.math.log2.html#sasoptpy.math.log2" title="sasoptpy.math.log2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">math.log2</span></code></a>(exp)</p></td>
-<td><p>Logarithm function to the base 2</p></td>
+<td><p>Logarithm function in base 2</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.math.log10.html#sasoptpy.math.log10" title="sasoptpy.math.log10"><code class="xref py py-obj docutils literal notranslate"><span class="pre">math.log10</span></code></a>(exp)</p></td>
-<td><p>Logarithm function to the base 10</p></td>
+<td><p>Logarithm function in base 10</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.math.exp.html#sasoptpy.math.exp" title="sasoptpy.math.exp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">math.exp</span></code></a>(exp)</p></td>
 <td><p>Exponential function</p></td>
@@ -240,7 +243,8 @@
 <li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.dict_to_frame.html">sasoptpy.dict_to_frame</a></li>
 <li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.exp_range.html">sasoptpy.exp_range</a></li>
 <li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.flatten_frame.html">sasoptpy.flatten_frame</a></li>
-<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.get_solution_table.html">sasoptpy.get_solution_table</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.get_value_table.html">sasoptpy.get_value_table</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.expr_sum.html">sasoptpy.expr_sum</a></li>
 <li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.quick_sum.html">sasoptpy.quick_sum</a></li>
 <li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.reset.html">sasoptpy.reset</a></li>
 </ul>
@@ -332,8 +336,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

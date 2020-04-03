@@ -52,8 +52,8 @@
 <h1>Curve Fitting<a class="headerlink" href="#curve-fitting" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="reference">
 <h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex11_toc.htm&amp;docsetVersion=15.1&amp;locale=en">http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex11_toc.htm&amp;docsetVersion=15.1&amp;locale=en</a></p>
-<p><a class="reference external" href="http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex11.html">http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex11.html</a></p>
+<p>SAS/OR example: <a class="reference external" href="http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex11_toc.htm&amp;docsetVersion=15.1&amp;locale=en">http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex11_toc.htm&amp;docsetVersion=15.1&amp;locale=en</a></p>
+<p>SAS/OR code for example: <a class="reference external" href="http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex11.html">http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex11.html</a></p>
 </div>
 <div class="section" id="model">
 <h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
@@ -106,7 +106,7 @@
     <span class="n">order</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;order&#39;</span><span class="p">)</span>
     <span class="n">beta</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">VariableGroup</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">exp_range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">order</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;beta&#39;</span><span class="p">)</span>
     <span class="n">estimate</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ImplicitVar</span><span class="p">(</span>
-        <span class="p">(</span><span class="n">beta</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">beta</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">**</span> <span class="n">k</span>
+        <span class="p">(</span><span class="n">beta</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">beta</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">**</span> <span class="n">k</span>
                                 <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">so</span><span class="o">.</span><span class="n">exp_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">order</span><span class="p">))</span>
          <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">POINTS</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;estimate&#39;</span><span class="p">)</span>
 
@@ -114,7 +114,7 @@
     <span class="n">slack</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">VariableGroup</span><span class="p">(</span><span class="n">POINTS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;slack&#39;</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="n">objective1</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span>
-        <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">surplus</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">slack</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">POINTS</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;objective1&#39;</span><span class="p">)</span>
+        <span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">surplus</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">slack</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">POINTS</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;objective1&#39;</span><span class="p">)</span>
     <span class="n">abs_dev_con</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ConstraintGroup</span><span class="p">(</span>
         <span class="p">(</span><span class="n">estimate</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">surplus</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">slack</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">POINTS</span><span class="p">),</span>
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;abs_dev_con&#39;</span><span class="p">)</span>
@@ -230,7 +230,7 @@
 <span class="go">          D 2          5    1.146625E+01         0</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 11.46625.</span>
-<span class="go">NOTE: The Dual Simplex solve time is 0.04 seconds.</span>
+<span class="go">NOTE: The Dual Simplex solve time is 0.05 seconds.</span>
 <span class="go">NOTE: The output table &#39;SOLUTION&#39; in caslib &#39;CASUSER(casuser)&#39; has 40 rows and 6 columns.</span>
 <span class="go">NOTE: The output table &#39;DUAL&#39; in caslib &#39;CASUSER(casuser)&#39; has 19 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSER(casuser)&#39; has 13 rows and 4 columns.</span>
@@ -283,7 +283,7 @@
 <span class="go">          P 2         26    1.725000E+00         0</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 1.725.</span>
-<span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
+<span class="go">NOTE: The Dual Simplex solve time is 0.00 seconds.</span>
 <span class="go">NOTE: The output table &#39;SOLUTION&#39; in caslib &#39;CASUSER(casuser)&#39; has 41 rows and 6 columns.</span>
 <span class="go">NOTE: The output table &#39;DUAL&#39; in caslib &#39;CASUSER(casuser)&#39; has 38 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSER(casuser)&#39; has 13 rows and 4 columns.</span>
@@ -336,7 +336,7 @@
 <span class="go">          D 2          5    1.045896E+01         0</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 10.458964706.</span>
-<span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
+<span class="go">NOTE: The Dual Simplex solve time is 0.00 seconds.</span>
 <span class="go">NOTE: The output table &#39;SOLUTION&#39; in caslib &#39;CASUSER(casuser)&#39; has 41 rows and 6 columns.</span>
 <span class="go">NOTE: The output table &#39;DUAL&#39; in caslib &#39;CASUSER(casuser)&#39; has 19 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSER(casuser)&#39; has 13 rows and 4 columns.</span>
@@ -430,7 +430,7 @@
 <span class="gp">In [12]: </span><span class="n">s2</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">p1</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;estimate&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Line2&#39;</span><span class="p">);</span>
 
 <span class="gp">In [13]: </span><span class="n">p1</span>
-<span class="gh">Out[13]: </span><span class="go">&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f0fa0421588&gt;</span>
+<span class="gh">Out[13]: </span><span class="go">&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f56ce3cc080&gt;</span>
 
 <span class="gp">In [14]: </span><span class="n">p2</span> <span class="o">=</span> <span class="n">s3</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">)</span>
 
@@ -439,7 +439,7 @@
 <span class="gp">In [16]: </span><span class="n">s4</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">p2</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;estimate&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Curve2&#39;</span><span class="p">);</span>
 
 <span class="gp">In [17]: </span><span class="n">p2</span>
-<span class="gh">Out[17]: </span><span class="go">&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f0fa03b64a8&gt;</span>
+<span class="gh">Out[17]: </span><span class="go">&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f56ce0c9cc0&gt;</span>
 </pre></div>
 </div>
 <img alt="../_images/cf_line.png" src="../_images/cf_line.png" />
@@ -469,8 +469,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guide/user-guide.html">User Guide</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="examples.html">Examples</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="examples.html#viya-examples-concrete">Viya Examples / Concrete</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="examples.html#viya-examples-abstract">Viya Examples / Abstract</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-viya-examples-concrete">SAS Viya Examples (Concrete)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="examples.html#sas-viya-examples-abstract">SAS Viya Examples (Abstract)</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Curve Fitting</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#reference">Reference</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#model">Model</a></li>
@@ -481,7 +481,7 @@
 <li class="toctree-l3"><a class="reference internal" href="nonlinear_2.html">Nonlinear 2</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-9-4-examples">SAS 9.4 Examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api.html">API Reference</a></li>
@@ -524,8 +524,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

@@ -64,7 +64,10 @@
 </dd>
 <dt><strong>value</strong><span class="classifier">list, float, optional</span></dt><dd><p>Exact value of the set</p>
 </dd>
-<dt><strong>settype</strong><span class="classifier">list, optional</span></dt><dd><p>Types of the set, a list consists of ‘num’ and ‘str’ values</p>
+<dt><strong>settype</strong><span class="classifier">list, optional</span></dt><dd><p>Types of the set as a list</p>
+<p>The list can have one more <cite>num</cite> (for float) and <cite>str</cite> (for string)
+values. You can use <cite>sasoptpy.NUM</cite> and <cite>sasoptpy.STR</cite> for floats and
+strings, respectively.</p>
 </dd>
 </dl>
 </dd>
@@ -84,6 +87,11 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">K</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;K&#39;</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">exp_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">K</span><span class="o">.</span><span class="n">_defn</span><span class="p">())</span>
 <span class="go">set K = 1..N;</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">m</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;W&#39;</span><span class="p">,</span> <span class="n">settype</span><span class="o">=</span><span class="p">[</span><span class="n">so</span><span class="o">.</span><span class="n">STR</span><span class="p">,</span> <span class="n">so</span><span class="o">.</span><span class="n">NUM</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">W</span><span class="o">.</span><span class="n">_defn</span><span class="p">())</span>
+<span class="go">set &lt;str, num&gt; W;</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -158,7 +166,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../expression.html">Expression</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../objective.html">Variable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../objective.html">Objective</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../variable.html">Variable</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../variable_group.html">Variable Group</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../constraint.html">Constraint</a></li>
@@ -212,8 +220,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

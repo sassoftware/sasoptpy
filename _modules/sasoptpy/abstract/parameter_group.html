@@ -49,6 +49,45 @@
 <span class="kn">import</span> <span class="nn">sasoptpy</span>
 
 <div class="viewcode-block" id="ParameterGroup"><a class="viewcode-back" href="../../../api/generated/sasoptpy.abstract.ParameterGroup.html#sasoptpy.abstract.ParameterGroup">[docs]</a><span class="k">class</span> <span class="nc">ParameterGroup</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a group of input parameters</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    index_key : iterable</span>
+<span class="sd">        Index key of the group members</span>
+<span class="sd">    name : string</span>
+<span class="sd">        Name of the parameter group</span>
+<span class="sd">    ptype : string, optional</span>
+<span class="sd">        Type of the parameters. Possible values are `sasoptpy.STR` and</span>
+<span class="sd">        `sasoptpy.NUM`</span>
+<span class="sd">    value : float, optional</span>
+<span class="sd">        Value of the parameter</span>
+<span class="sd">    init : float, optional</span>
+<span class="sd">        Initial value of the parameter</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; from sasoptpy.actions import for_loop</span>
+<span class="sd">    &gt;&gt;&gt; with so.Workspace(&#39;w&#39;) as w:</span>
+<span class="sd">    ...    p = so.ParameterGroup(so.exp_range(1, 6), name=&#39;p&#39;, init=3)</span>
+<span class="sd">    ...    p[0].set_value(3)</span>
+<span class="sd">    ...    S = so.Set(name=&#39;S&#39;, value=so.exp_range(1, 6))</span>
+<span class="sd">    ...    for i in for_loop(S):</span>
+<span class="sd">    ...        p[i].set_value(1)</span>
+<span class="sd">    ...</span>
+<span class="sd">    &gt;&gt;&gt; print(so.to_optmodel(w))</span>
+<span class="sd">    proc optmodel;</span>
+<span class="sd">       num p {1..5} init 3;</span>
+<span class="sd">       p[0] = 3;</span>
+<span class="sd">       set S = 1..5;</span>
+<span class="sd">       for {o13 in S} do;</span>
+<span class="sd">          p[o13] = 1;</span>
+<span class="sd">       end;</span>
+<span class="sd">    quit;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nd">@sasoptpy</span><span class="o">.</span><span class="n">class_containable</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">index_key</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -176,8 +215,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

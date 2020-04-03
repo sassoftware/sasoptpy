@@ -1,28 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
 sasoptpy.abstract.statement.ForLoopStatement
 ============================================
 
 .. currentmodule:: sasoptpy.abstract.statement
 
 .. autoclass:: ForLoopStatement
-
-   
-   .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~ForLoopStatement.__init__
-      ~ForLoopStatement.append
-      ~ForLoopStatement.for_loop
-      ~ForLoopStatement.get_response
-      ~ForLoopStatement.is_internal
-      ~ForLoopStatement.set_internal
-      ~ForLoopStatement.set_response
-   
-   
-
-   
-   
-   

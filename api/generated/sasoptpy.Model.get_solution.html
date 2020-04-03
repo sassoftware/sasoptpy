@@ -54,31 +54,32 @@
 <dl class="method">
 <dt id="sasoptpy.Model.get_solution">
 <code class="sig-prename descclassname">Model.</code><code class="sig-name descname">get_solution</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">vtype='Primal'</em>, <em class="sig-param">solution=None</em>, <em class="sig-param">pivot=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/sasoptpy/core/model.html#Model.get_solution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.Model.get_solution" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the solution details associated with the primal or dual
-solution</p>
+<dd><p>Returns the primal and dual problem solutions</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>vtype</strong><span class="classifier">string, optional</span></dt><dd><p>‘Primal’ or ‘Dual’</p>
+<dt><strong>vtype</strong><span class="classifier">string, optional</span></dt><dd><p><cite>Primal</cite> or <cite>Dual</cite></p>
 </dd>
-<dt><strong>solution</strong><span class="classifier">integer, optional</span></dt><dd><p>Solution number to be returned (for MILP)</p>
+<dt><strong>solution</strong><span class="classifier">integer, optional</span></dt><dd><p>Solution number to be returned (for the MILP solver)</p>
 </dd>
-<dt><strong>pivot</strong><span class="classifier">boolean, optional</span></dt><dd><p>Switch for returning multiple solutions in columns as a pivot table</p>
+<dt><strong>pivot</strong><span class="classifier">boolean, optional</span></dt><dd><p>When set to <cite>True</cite>, returns multiple solutions in columns as a pivot
+table</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl>
-<dt><strong>solution</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></span></dt><dd><p>Primal or dual solution table returned from the CAS Action</p>
+<dt><strong>solution</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></span></dt><dd><p>Primal or dual solution table returned from the CAS action</p>
 </dd>
 </dl>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li><p>If <a class="reference internal" href="sasoptpy.Model.solve.html#sasoptpy.Model.solve" title="sasoptpy.Model.solve"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.solve()</span></code></a> method is used with <code class="code docutils literal notranslate"><span class="pre">frame=True</span></code> option,
-MILP solver returns multiple solutions. You can obtain different
-results using <code class="code docutils literal notranslate"><span class="pre">solution</span></code> parameter.</p></li>
+<li><p>If the <a class="reference internal" href="sasoptpy.Model.solve.html#sasoptpy.Model.solve" title="sasoptpy.Model.solve"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.solve()</span></code></a> method is used with <code class="code docutils literal notranslate"><span class="pre">frame=True</span></code>
+parameter, the MILP solver returns multiple solutions.
+You can retreive different results by using the <code class="code docutils literal notranslate"><span class="pre">solution</span></code>
+parameter.</p></li>
 </ul>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">m</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
@@ -203,7 +204,7 @@ results using <code class="code docutils literal notranslate"><span class="pre">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../expression.html">Expression</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../objective.html">Variable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../objective.html">Objective</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../variable.html">Variable</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../variable_group.html">Variable Group</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../constraint.html">Constraint</a></li>
@@ -257,8 +258,8 @@ results using <code class="code docutils literal notranslate"><span class="pre">
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

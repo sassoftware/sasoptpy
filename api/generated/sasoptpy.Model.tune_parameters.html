@@ -54,26 +54,38 @@
 <dl class="method">
 <dt id="sasoptpy.Model.tune_parameters">
 <code class="sig-prename descclassname">Model.</code><code class="sig-name descname">tune_parameters</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/sasoptpy/core/model.html#Model.tune_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.Model.tune_parameters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses model tuner to find ideal parameters for given model</p>
+<dd><p>Tunes the model to find ideal solver parameters</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>kwargs :</strong></dt><dd><p>Keyword arguments as defined in the optimization.tuner action
-Acceptable values are:</p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://go.documentation.sas.com/?docsetId=casactmopt&amp;docsetTarget=cas-optimization-tuner.htm&amp;docsetVersion=8.5&amp;locale=en#PYTHON.cas-optimization-tuner-milpparameters">milpParameters</a> : Parameters for the solveMilp action, such as
-<cite>maxTime</cite>, <cite>heuristics</cite>, <cite>feasTol</cite></p></li>
-<li><p><a class="reference external" href="https://go.documentation.sas.com/?docsetId=casactmopt&amp;docsetTarget=cas-optimization-tuner.htm&amp;docsetVersion=8.5&amp;locale=en#PYTHON.cas-optimization-tuner-tunerparameters">tunerParameters</a> : Parameters for tuner itself, such as
-<cite>maxConfigs</cite>, <cite>printLevel</cite>, <cite>logFreq</cite></p></li>
-<li><p><a class="reference external" href="https://go.documentation.sas.com/?docsetId=casactmopt&amp;docsetTarget=cas-optimization-tuner.htm&amp;docsetVersion=8.5&amp;locale=en#PYTHON.cas-optimization-tuner-tuningparameters">tuningParameters</a> : List of parameters to be tuned, such as
-<cite>cutStrategy</cite>, <cite>presolver</cite>, <cite>restarts</cite></p></li>
+<dd class="field-odd"><dl>
+<dt><strong>kwargs :</strong></dt><dd><p>Keyword arguments as defined in the optimization.tuner action.</p>
+<p>Acceptable values are:</p>
+<ul>
+<li><dl class="simple">
+<dt><a class="reference external" href="https://go.documentation.sas.com/?docsetId=casactmopt&amp;docsetTarget=cas-optimization-tuner.htm&amp;docsetVersion=8.5&amp;locale=en#PYTHON.cas-optimization-tuner-milpparameters">milpParameters</a> :</dt><dd><p>Parameters for the solveMilp action, such as</p>
+</dd>
+</dl>
+<p><cite>maxTime</cite>, <cite>heuristics</cite>, <cite>feasTol</cite></p>
+</li>
+<li><dl class="simple">
+<dt><a class="reference external" href="https://go.documentation.sas.com/?docsetId=casactmopt&amp;docsetTarget=cas-optimization-tuner.htm&amp;docsetVersion=8.5&amp;locale=en#PYTHON.cas-optimization-tuner-tunerparameters">tunerParameters</a> :</dt><dd><p>Parameters for the tuner itself, such as</p>
+</dd>
+</dl>
+<p><cite>maxConfigs</cite>, <cite>printLevel</cite>, <cite>logFreq</cite></p>
+</li>
+<li><dl class="simple">
+<dt><a class="reference external" href="https://go.documentation.sas.com/?docsetId=casactmopt&amp;docsetTarget=cas-optimization-tuner.htm&amp;docsetVersion=8.5&amp;locale=en#PYTHON.cas-optimization-tuner-tuningparameters">tuningParameters</a> :</dt><dd><p>List of parameters to be tuned, such as</p>
+</dd>
+</dl>
+<p><cite>cutStrategy</cite>, <cite>presolver</cite>, <cite>restarts</cite></p>
+</li>
 </ul>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl>
-<dt><strong>tunerResults</strong><span class="classifier"><a class="reference external" href="https://sassoftware.github.io/python-swat/generated/swat.dataframe.SASDataFrame.html#swat.dataframe.SASDataFrame" title="(in SWAT v1.6.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">swat.dataframe.SASDataFrame</span></code></a></span></dt><dd><p>Results of tuner as a table</p>
+<dt><strong>tunerResults</strong><span class="classifier"><a class="reference external" href="https://sassoftware.github.io/python-swat/generated/swat.dataframe.SASDataFrame.html#swat.dataframe.SASDataFrame" title="(in SWAT v1.6.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">swat.dataframe.SASDataFrame</span></code></a></span></dt><dd><p>Tuning results as a table</p>
 </dd>
 </dl>
 </dd>
@@ -86,11 +98,9 @@ Acceptable values are:</p>
 </div>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li><p>See SAS Optimization documentation for a full list of tunable
-parameters:
-<a class="reference external" href="https://go.documentation.sas.com/?docsetId=casactmopt&amp;docsetTarget=cas-optimization-tuner.htm&amp;docsetVersion=8.5&amp;locale=en#PYTHON.cas-optimization-tuner-tunerparameters">https://go.documentation.sas.com/?docsetId=casactmopt&amp;docsetTarget=cas-optimization-tuner.htm&amp;docsetVersion=8.5&amp;locale=en#PYTHON.cas-optimization-tuner-tunerparameters</a></p></li>
-<li><p>See full documentation at:
-<a class="reference external" href="https://go.documentation.sas.com/?docsetId=casactmopt&amp;docsetTarget=casactmopt_optimization_details35.htm&amp;docsetVersion=8.5&amp;locale=en">https://go.documentation.sas.com/?docsetId=casactmopt&amp;docsetTarget=casactmopt_optimization_details35.htm&amp;docsetVersion=8.5&amp;locale=en</a></p></li>
+<li><p>See <a class="reference external" href="https://go.documentation.sas.com/?docsetId=casactmopt&amp;docsetTarget=cas-optimization-tuner.htm&amp;docsetVersion=8.5&amp;locale=en#PYTHON.cas-optimization-tuner-tunerparameters">SAS Optimization documentation</a>
+for a full list of tunable parameters.</p></li>
+<li><p>See <a class="reference external" href="https://go.documentation.sas.com/?docsetId=casactmopt&amp;docsetTarget=casactmopt_optimization_details35.htm&amp;docsetVersion=8.5&amp;locale=en">Optimization Action Set documentation</a>.</p></li>
 </ul>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;model1&#39;</span><span class="p">)</span>
@@ -223,7 +233,7 @@ parameters:
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../expression.html">Expression</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../objective.html">Variable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../objective.html">Objective</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../variable.html">Variable</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../variable_group.html">Variable Group</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../constraint.html">Constraint</a></li>
@@ -277,8 +287,8 @@ parameters:
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

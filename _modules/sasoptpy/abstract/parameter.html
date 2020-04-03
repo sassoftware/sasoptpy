@@ -65,6 +65,36 @@
 
 
 <div class="viewcode-block" id="Parameter"><a class="viewcode-back" href="../../../api/generated/sasoptpy.abstract.Parameter.html#sasoptpy.abstract.Parameter">[docs]</a><span class="k">class</span> <span class="nc">Parameter</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a problem input parameter</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : string</span>
+<span class="sd">        Name of the parameter</span>
+<span class="sd">    ptype : string, optional</span>
+<span class="sd">        Type of the parameter. Possible values are `sasoptpy.STR` and</span>
+<span class="sd">        `sasoptpy.NUM`</span>
+<span class="sd">    value : float, optional</span>
+<span class="sd">        Value of the parameter</span>
+<span class="sd">    init : float, optional</span>
+<span class="sd">        Initial value of the parameter</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; with so.Workspace(&#39;w&#39;) as w:</span>
+<span class="sd">    ...     p = so.Parameter(name=&#39;p&#39;, init=3)</span>
+<span class="sd">    ...     p.set_value(5)</span>
+<span class="sd">    ...</span>
+<span class="sd">    &lt;sasoptpy.abstract.statement.assignment.Assignment object at 0x7f7952e9bb38&gt;</span>
+<span class="sd">    &gt;&gt;&gt; print(so.to_optmodel(w))</span>
+<span class="sd">    proc optmodel;</span>
+<span class="sd">       num p init 3;</span>
+<span class="sd">       p = 5;</span>
+<span class="sd">    quit;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nd">@sasoptpy</span><span class="o">.</span><span class="n">class_containable</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -215,8 +245,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

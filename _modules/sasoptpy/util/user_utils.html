@@ -92,15 +92,15 @@
 
 <div class="viewcode-block" id="exp_range"><a class="viewcode-back" href="../../../api/generated/sasoptpy.exp_range.html#sasoptpy.exp_range">[docs]</a><span class="k">def</span> <span class="nf">exp_range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Creates a set within given range</span>
+<span class="sd">    Creates a set within specified range</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    start : Expression</span>
+<span class="sd">    start : :class:`Expression`</span>
 <span class="sd">        First value of the range</span>
-<span class="sd">    stop : Expression</span>
+<span class="sd">    stop : :class:`Expression`</span>
 <span class="sd">        Last value of the range</span>
-<span class="sd">    step : Expression, optional</span>
+<span class="sd">    step : :class:`Expression`, optional</span>
 <span class="sd">        Step size of the range</span>
 
 <span class="sd">    Returns</span>
@@ -125,11 +125,11 @@
     <span class="k">return</span> <span class="n">s</span></div>
 
 
-<div class="viewcode-block" id="get_solution_table"><a class="viewcode-back" href="../../../api/generated/sasoptpy.get_solution_table.html#sasoptpy.get_solution_table">[docs]</a><span class="k">def</span> <span class="nf">get_solution_table</span><span class="p">(</span><span class="o">*</span><span class="n">argv</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rhs</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">get_value_table</span><span class="p">(</span><span class="o">*</span><span class="n">argv</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">rhs</span><span class="o">=</span><span class="n">rhs</span><span class="p">)</span></div>
+<span class="k">def</span> <span class="nf">get_solution_table</span><span class="p">(</span><span class="o">*</span><span class="n">argv</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rhs</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">get_value_table</span><span class="p">(</span><span class="o">*</span><span class="n">argv</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">rhs</span><span class="o">=</span><span class="n">rhs</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">get_value_table</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="get_value_table"><a class="viewcode-back" href="../../../api/generated/sasoptpy.get_value_table.html#sasoptpy.get_value_table">[docs]</a><span class="k">def</span> <span class="nf">get_value_table</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns values of the given arguments as a merged pandas DataFrame</span>
 
@@ -153,7 +153,7 @@
     <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">get_values</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">series</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 
 <span class="k">def</span> <span class="nf">get_values</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -241,23 +241,33 @@
 
 
 <div class="viewcode-block" id="quick_sum"><a class="viewcode-back" href="../../../api/generated/sasoptpy.quick_sum.html#sasoptpy.quick_sum">[docs]</a><span class="k">def</span> <span class="nf">quick_sum</span><span class="p">(</span><span class="n">argv</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Summation function for :class:`Expression` objects</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+
+<span class="sd">    This method will deprecate in future versions.</span>
+<span class="sd">    Use :func:`expr_sum` instead.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">expr_sum</span><span class="p">(</span><span class="n">argv</span><span class="p">):</span>
+<div class="viewcode-block" id="expr_sum"><a class="viewcode-back" href="../../../api/generated/sasoptpy.expr_sum.html#sasoptpy.expr_sum">[docs]</a><span class="k">def</span> <span class="nf">expr_sum</span><span class="p">(</span><span class="n">argv</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Summation function for :class:`Expression` objects</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    exp : Expression</span>
+<span class="sd">    exp : :class:`Expression`</span>
 <span class="sd">        Sum of given arguments</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 
 <span class="sd">    &gt;&gt;&gt; x = so.VariableGroup(10000, name=&#39;x&#39;)</span>
-<span class="sd">    &gt;&gt;&gt; y = so.quick_sum(2*x[i] for i in range(10000))</span>
+<span class="sd">    &gt;&gt;&gt; y = so.expr_sum(2*x[i] for i in range(10000))</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -286,7 +296,7 @@
         <span class="n">iterators</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">iterators</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">i</span><span class="o">.</span><span class="n">_objorder</span><span class="p">)</span>
         <span class="n">exp</span> <span class="o">=</span> <span class="n">_wrap_expression_with_iterators</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="n">iterators</span><span class="p">)</span>
     <span class="n">exp</span><span class="o">.</span><span class="n">set_permanent</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">exp</span>
+    <span class="k">return</span> <span class="n">exp</span></div>
 
 
 <div class="viewcode-block" id="reset"><a class="viewcode-back" href="../../../api/generated/sasoptpy.reset.html#sasoptpy.reset">[docs]</a><span class="k">def</span> <span class="nf">reset</span><span class="p">():</span>
@@ -452,8 +462,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

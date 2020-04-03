@@ -18,7 +18,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Multiobjective" href="multiobjective.html" />
-    <link rel="prev" title="Optimal Wedding" href="optimal_wedding.html" />
+    <link rel="prev" title="Optimal Wedding Seating" href="optimal_wedding.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="../_static/js/version.js"></script>
 
@@ -36,7 +36,7 @@
           <a href="multiobjective.html" title="Multiobjective"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="optimal_wedding.html" title="Optimal Wedding"
+          <a href="optimal_wedding.html" title="Optimal Wedding Seating"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="examples.html" accesskey="U">Examples</a> &#187;</li> 
@@ -52,7 +52,7 @@
 <h1>Kidney Exchange<a class="headerlink" href="#kidney-exchange" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="reference">
 <h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
-<p>SAS Blog: <a class="reference external" href="https://blogs.sas.com/content/operations/2015/02/06/the-kidney-exchange-problem/">https://blogs.sas.com/content/operations/2015/02/06/the-kidney-exchange-problem/</a></p>
+<p>SAS blog: <a class="reference external" href="https://blogs.sas.com/content/operations/2015/02/06/the-kidney-exchange-problem/">https://blogs.sas.com/content/operations/2015/02/06/the-kidney-exchange-problem/</a></p>
 </div>
 <div class="section" id="model">
 <h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
@@ -92,7 +92,7 @@
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Setting objective...&#39;</span><span class="p">)</span>
 
     <span class="c1"># Objective</span>
-    <span class="n">model</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">((</span><span class="n">ARCS</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">UseArc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">m</span><span class="p">]</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">((</span><span class="n">ARCS</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">UseArc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">m</span><span class="p">]</span>
                                       <span class="k">for</span> <span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="ow">in</span> <span class="n">ARCS</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">MATCHINGS</span><span class="p">)),</span>
                         <span class="n">name</span><span class="o">=</span><span class="s2">&quot;total_weight&quot;</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MAX</span><span class="p">)</span>
 
@@ -159,7 +159,7 @@
 <span class="go">NOTE: The problem has 5967 linear constraints (38 LE, 5929 EQ, 0 GE, 0 range).</span>
 <span class="go">NOTE: The problem has 24245 linear constraint coefficients.</span>
 <span class="go">NOTE: The problem has 0 nonlinear constraints (0 LE, 0 EQ, 0 GE, 0 range).</span>
-<span class="go">NOTE: The remaining solution time after problem generation and solver initialization is 299.84 seconds.</span>
+<span class="go">NOTE: The remaining solution time after problem generation and solver initialization is 299.85 seconds.</span>
 <span class="go">NOTE: The initial MILP heuristics are applied.</span>
 <span class="go">NOTE: The MILP presolver value AUTOMATIC is applied.</span>
 <span class="go">NOTE: The MILP presolver removed 6193 variables and 5357 constraints.</span>
@@ -194,8 +194,8 @@
 <span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table BLOCKSTABLE in caslib CASUSER(casuser).</span>
 <span class="go">NOTE: The table BLOCKSTABLE has been created in caslib CASUSER(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPPJD01VMZ in caslib CASUSER(casuser).</span>
-<span class="go">NOTE: The table TMPPJD01VMZ has been created in caslib CASUSER(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPZ9818LU8 in caslib CASUSER(casuser).</span>
+<span class="go">NOTE: The table TMPZ9818LU8 has been created in caslib CASUSER(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: The problem kidney_exchange has 8133 variables (8133 binary, 0 integer, 0 free, 0 fixed).</span>
 <span class="go">NOTE: The problem has 5967 constraints (38 LE, 5929 EQ, 0 GE, 0 range).</span>
 <span class="go">NOTE: The problem has 24245 constraint coefficients.</span>
@@ -223,19 +223,19 @@
 <span class="go">            2     230.6758      10.5814      10.5814   95.41%   95.41%    1    1</span>
 <span class="go">            3     204.2627      10.5814      10.5814   94.82%   94.82%    1    2</span>
 <span class="go">            4     192.9770      14.7394      14.7394   92.36%   92.36%    2    2</span>
-<span class="go">            6     162.6582      15.6274      15.6274   90.39%   90.39%    6    6</span>
-<span class="go">            7     140.2584      15.6274      15.6274   88.86%   88.86%    6    6</span>
-<span class="go">            8     109.9454      15.6274      15.6274   85.79%   85.79%    6    7</span>
-<span class="go">            9      65.4530      16.1007      15.6274   75.40%   76.12%    6    7</span>
-<span class="go">           10      65.4530      16.1007      17.1114   75.40%   73.86%    7    7</span>
+<span class="go">            6     162.6582      15.6274      15.6274   90.39%   90.39%    6    7</span>
+<span class="go">            7     140.2584      15.6274      15.6274   88.86%   88.86%    6    7</span>
+<span class="go">            8     109.9454      15.6274      15.6274   85.79%   85.79%    7    7</span>
+<span class="go">            9      65.4530      16.1007      15.6274   75.40%   76.12%    7    8</span>
+<span class="go">           10      65.4530      16.1007      17.1114   75.40%   73.86%    7    8</span>
 <span class="go">           11      51.8662      17.1114      17.1114   67.01%   67.01%    7    8</span>
-<span class="go">           14      25.6849      17.1114      17.1114   33.38%   33.38%    7    9</span>
-<span class="go">           15      17.1114      17.1114      17.1114    0.00%    0.00%    8    9</span>
+<span class="go">           14      25.6849      17.1114      17.1114   33.38%   33.38%    8    9</span>
+<span class="go">           15      17.1114      17.1114      17.1114    0.00%    0.00%    8   10</span>
 <span class="go">            Node  Active   Sols         Best         Best      Gap    CPU   Real</span>
 <span class="go">                                     Integer        Bound            Time   Time</span>
-<span class="go">               0       1      9      17.1114      17.1114    0.00%      8      9</span>
+<span class="go">               0       1      9      17.1114      17.1114    0.00%      8     10</span>
 <span class="go">NOTE: The Decomposition algorithm used 8 threads.</span>
-<span class="go">NOTE: The Decomposition algorithm time is 9.61 seconds.</span>
+<span class="go">NOTE: The Decomposition algorithm time is 10.43 seconds.</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 17.111358985.</span>
 <span class="gh">Out[8]: </span><span class="go">17.11135898487</span>
@@ -266,7 +266,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guide/user-guide.html">User Guide</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="examples.html">Examples</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="examples.html#viya-examples-concrete">Viya Examples / Concrete</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="examples.html#sas-viya-examples-concrete">SAS Viya Examples (Concrete)</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="food_manufacture_1.html">Food Manufacture 1</a></li>
 <li class="toctree-l3"><a class="reference internal" href="food_manufacture_2.html">Food Manufacture 2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="factory_planning_1.html">Factory Planning 1</a></li>
@@ -289,8 +289,8 @@
 <li class="toctree-l3"><a class="reference internal" href="efficiency_analysis.html">Efficiency Analysis</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#viya-examples-abstract">Viya Examples / Abstract</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-viya-examples-abstract">SAS Viya Examples (Abstract)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-9-4-examples">SAS 9.4 Examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api.html">API Reference</a></li>
@@ -324,7 +324,7 @@
           <a href="multiobjective.html" title="Multiobjective"
              >next</a> |</li>
         <li class="right" >
-          <a href="optimal_wedding.html" title="Optimal Wedding"
+          <a href="optimal_wedding.html" title="Optimal Wedding Seating"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="examples.html" >Examples</a> &#187;</li> 
@@ -333,8 +333,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

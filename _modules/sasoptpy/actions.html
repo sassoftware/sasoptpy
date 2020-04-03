@@ -99,7 +99,7 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    table : string or :class:`swat.cas.table.CASTable`</span>
-<span class="sd">        Table object or name to be read, case insensitive</span>
+<span class="sd">        Table object or name to be read, case-insensitive</span>
 <span class="sd">    index : dict</span>
 <span class="sd">        Index properties of the table</span>
 
@@ -108,59 +108,59 @@
 <span class="sd">        - target : :class:`sasoptpy.abstract.Set`</span>
 <span class="sd">            Target Set object to be read into</span>
 <span class="sd">        - key : string, list or None</span>
-<span class="sd">            Column name that will be read from.</span>
+<span class="sd">            Column name to be be read from.</span>
 
-<span class="sd">            For multiple indices it should be a list of string or</span>
+<span class="sd">            For multiple indices, key should be a list of string or</span>
 <span class="sd">            :class:`sasoptpy.abstract.SetIterator` objects</span>
 
-<span class="sd">        For a given Set `YEAR` and column name `year_no`, the index dictionary</span>
+<span class="sd">        For a given set `YEAR` and column name `year_no`, the index dictionary</span>
 <span class="sd">        should be written as:</span>
 
 <span class="sd">        &gt;&gt;&gt; {&#39;target&#39;: YEAR, &#39;key&#39;: &#39;year_no&#39;}</span>
 
 <span class="sd">        If index is simply the row number, use `&#39;key&#39;: so.N` which is equivalent</span>
-<span class="sd">        to special `_N_` character at SAS language.</span>
+<span class="sd">        to the special `_N_` character in the SAS language.</span>
 <span class="sd">    columns : list</span>
 <span class="sd">        A list of dictionaries, each holding column properties.</span>
 
-<span class="sd">        Columns are printed in given order. Each column should be represented as</span>
-<span class="sd">        a dictionary with following fields:</span>
+<span class="sd">        Columns are printed in the specified order. Each column should be</span>
+<span class="sd">        represented as a dictionary with following fields:</span>
 
 <span class="sd">        - target : :class:`sasoptpy.abstract.ParameterGroup`</span>
 <span class="sd">            Target parameter object to be read into</span>
 <span class="sd">        - column : string</span>
 <span class="sd">            Column name to be read from</span>
 <span class="sd">        - index : :class:`sasoptpy.SetIterator`, optional</span>
-<span class="sd">            Sub-index for specific column, needed for complex operations</span>
+<span class="sd">            Subindex for specific column, needed for complex operations</span>
 
 <span class="sd">        If the name of the :class:`sasoptpy.abstract.Parameter` object is same</span>
-<span class="sd">        as the column name, calling</span>
+<span class="sd">        as the column name, the following call is enough:</span>
 
 <span class="sd">        &gt;&gt;&gt; p = so.Parameter(name=&#39;price&#39;)</span>
 <span class="sd">        &gt;&gt;&gt; read_data(..., columns=[{&#39;target&#39;: p}])</span>
 
-<span class="sd">        is enough. For reading a different column name, `column` field should be</span>
-<span class="sd">        given:</span>
+<span class="sd">        For reading a different column name, `column` field should be</span>
+<span class="sd">        specified:</span>
 
 <span class="sd">        &gt;&gt;&gt; {&#39;target&#39;: p, &#39;column&#39;: &#39;price_usd&#39;}</span>
 
-<span class="sd">        When working with Parameter Group objects, sometimes a secondary loop is</span>
-<span class="sd">        needed. This is achieved by using `index` field, along with</span>
-<span class="sd">        :meth:`sasoptpy.abstract.statement.ReadDataStatement.append` method.</span>
+<span class="sd">        When working with :class:`ParameterGroup` objects, sometimes a secondary</span>
+<span class="sd">        loop is needed. This is achieved by using the `index` field, along with</span>
+<span class="sd">        the :meth:`sasoptpy.abstract.statement.ReadDataStatement.append` method.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    r : :class:`sasoptpy.abstract.statement.ReadDataStatement`</span>
-<span class="sd">        Read data statement object, that includes all properties</span>
+<span class="sd">        Read data statement object, which includes all properties</span>
 
-<span class="sd">        Additional columns can be added using</span>
+<span class="sd">        Additional columns can be added using the</span>
 <span class="sd">        :meth:`sasoptpy.abstract.statement.ReadDataStatement.append`</span>
 <span class="sd">        function.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 
-<span class="sd">    Reading a regular set</span>
+<span class="sd">    Reading a regular set:</span>
 
 <span class="sd">    &gt;&gt;&gt; with Workspace(&#39;test_workspace&#39;) as ws:</span>
 <span class="sd">    &gt;&gt;&gt;     ITEMS = Set(name=&#39;ITEMS&#39;)</span>
@@ -178,7 +178,7 @@
 <span class="sd">        read data values into ITEMS value;</span>
 <span class="sd">    quit;</span>
 
-<span class="sd">    Reading with row index</span>
+<span class="sd">    Reading with row index:</span>
 
 <span class="sd">    &gt;&gt;&gt; with so.Workspace(&#39;test_read_data_n&#39;) as ws:</span>
 <span class="sd">    &gt;&gt;&gt;     ASSETS = so.Set(name=&#39;ASSETS&#39;)</span>
@@ -195,7 +195,7 @@
 <span class="sd">        read data means into ASSETS=[_N_] return;</span>
 <span class="sd">    quit;</span>
 
-<span class="sd">    Reading with no index set and subindex</span>
+<span class="sd">    Reading with no index set and subindex:</span>
 
 <span class="sd">    &gt;&gt;&gt; with so.Workspace(&#39;test_read_data_no_index_expression&#39;) as ws:</span>
 <span class="sd">    &gt;&gt;&gt;     ASSETS = so.Set(name=&#39;ASSETS&#39;)</span>
@@ -215,7 +215,7 @@
 <span class="sd">        read data covdata into [asset1 asset2] cov cov[asset2, asset1]=cov;</span>
 <span class="sd">    quit;</span>
 
-<span class="sd">    Reading a column with multiple indices</span>
+<span class="sd">    Reading a column with multiple indices:</span>
 
 <span class="sd">    &gt;&gt;&gt; with so.Workspace(name=&#39;test_read_data_idx_col&#39;) as ws:</span>
 <span class="sd">    &gt;&gt;&gt;     dow = so.Set(name=&#39;DOW&#39;, value=so.exp_range(1, 6))</span>
@@ -251,7 +251,7 @@
 <div class="viewcode-block" id="create_data"><a class="viewcode-back" href="../../api/generated/sasoptpy.actions.create_data.html#sasoptpy.actions.create_data">[docs]</a><span class="nd">@sasoptpy</span><span class="o">.</span><span class="n">containable</span><span class="p">(</span><span class="n">standalone</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">create_data</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Creates data tables from variables, parameters and expressions</span>
+<span class="sd">    Creates data tables from variables, parameters, and expressions</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -267,11 +267,11 @@
 <span class="sd">            List of index keys. Keys can be string or</span>
 <span class="sd">            :class:`sasoptpy.abstract.SetIterator` objects</span>
 <span class="sd">        - set : list</span>
-<span class="sd">            List of sets, that is being assigned to keys</span>
+<span class="sd">            List of sets that is being assigned to keys</span>
 <span class="sd">    columns : list</span>
 <span class="sd">        List of columns. Columns can be :class:`sasoptpy.abstract.Parameter`,</span>
 <span class="sd">        :class:`sasoptpy.abstract.ParameterGroup` objects or dictionaries. If</span>
-<span class="sd">        given as a dictionary, each can have following keys:</span>
+<span class="sd">        specified as a dictionary, each can have following keys:</span>
 
 <span class="sd">        - name : string</span>
 <span class="sd">            Name of the column in output table</span>
@@ -280,14 +280,15 @@
 <span class="sd">        - index : list or :class:`sasoptpy.abstract.SetIterator`</span>
 <span class="sd">            Index for internal loops</span>
 
-<span class="sd">        The `index` field can be used when a subindex is needed. When given as</span>
-<span class="sd">        a list, members should be :class:`sasoptpy.abstract.SetIterator`</span>
-<span class="sd">        objects. See examples for more details.</span>
+<span class="sd">        The `index` field can be used when a subindex is needed. When</span>
+<span class="sd">        specified as a list, members should be</span>
+<span class="sd">        :class:`sasoptpy.abstract.SetIterator` objects.</span>
+<span class="sd">        See examples for more details.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 
-<span class="sd">    Regular column</span>
+<span class="sd">    Regular column:</span>
 
 <span class="sd">    &gt;&gt;&gt; with so.Workspace(&#39;w&#39;) as w:</span>
 <span class="sd">    &gt;&gt;&gt;     m = so.Parameter(name=&#39;m&#39;, value=7)</span>
@@ -300,7 +301,7 @@
 <span class="sd">        create data example from m n;</span>
 <span class="sd">    quit;</span>
 
-<span class="sd">    Column with name</span>
+<span class="sd">    Column with name:</span>
 
 <span class="sd">    &gt;&gt;&gt; with so.Workspace(&#39;w&#39;) as w:</span>
 <span class="sd">    &gt;&gt;&gt;     m = so.Parameter(name=&#39;m&#39;, value=7)</span>
@@ -315,7 +316,7 @@
 <span class="sd">        create data example from ratio=((m) / (n));</span>
 <span class="sd">    quit;</span>
 
-<span class="sd">    Column name with concat</span>
+<span class="sd">    Column name with concat:</span>
 
 <span class="sd">    &gt;&gt;&gt; from sasoptpy.util import concat</span>
 <span class="sd">    &gt;&gt;&gt; with so.Workspace(&#39;w&#39;) as w:</span>
@@ -331,7 +332,7 @@
 <span class="sd">        create data example from col(&#39;s&#39; || n)=(m + n);</span>
 <span class="sd">    quit;</span>
 
-<span class="sd">    Table with index</span>
+<span class="sd">    Table with index:</span>
 
 <span class="sd">    &gt;&gt;&gt; with so.Workspace(&#39;w&#39;) as w:</span>
 <span class="sd">    &gt;&gt;&gt;     m = so.ParameterGroup(</span>
@@ -353,7 +354,7 @@
 <span class="sd">        create data example from [i j] = {{ISET,{1,2}}} m;</span>
 <span class="sd">    quit;</span>
 
-<span class="sd">    Index over Python range</span>
+<span class="sd">    Index over Python range:</span>
 
 <span class="sd">    &gt;&gt;&gt; with so.Workspace(&#39;w&#39;) as w:</span>
 <span class="sd">    &gt;&gt;&gt;     s = so.Set(name=&#39;S&#39;, value=so.exp_range(1, 6))</span>
@@ -369,7 +370,7 @@
 <span class="sd">        create data example from [i] = {1..3} x;</span>
 <span class="sd">    quit;</span>
 
-<span class="sd">    Append column with index</span>
+<span class="sd">    Append column with index:</span>
 
 <span class="sd">    &gt;&gt;&gt; from sasoptpy.util import iterate, concat</span>
 <span class="sd">    &gt;&gt;&gt; with so.Workspace(&#39;w&#39;, session=session) as w:</span>
@@ -391,7 +392,7 @@
 <span class="sd">        create data example from [i] = {{1..3}} {j in alph} &lt; col(&#39;x&#39; || j)=(x[i, j]) &gt;;</span>
 <span class="sd">    quit;</span>
 
-<span class="sd">    Multiple column indices</span>
+<span class="sd">    Multiple column indices:</span>
 
 <span class="sd">    &gt;&gt;&gt; from sasoptpy.util import concat, iterate</span>
 <span class="sd">    &gt;&gt;&gt; with so.Workspace(&#39;w&#39;) as w:</span>
@@ -440,8 +441,8 @@
 <span class="sd">        options (except `with`) is passed directly to the solver.</span>
 
 <span class="sd">    primalin : bool, optional</span>
-<span class="sd">        Switch for using existing variable values as an initial point in MILP</span>
-<span class="sd">        solver</span>
+<span class="sd">        When set to `True`, uses existing variable values as an initial point</span>
+<span class="sd">        in MILP solver</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -454,20 +455,20 @@
 <span class="sd">    * `qp` : Quadratic programming</span>
 <span class="sd">    * `blackbox` : Black-box optimization</span>
 
-<span class="sd">    SAS Optimization also has Constraint Programming (clp) and Network</span>
-<span class="sd">    Solver (network) but they are not currently supported.</span>
+<span class="sd">    SAS Optimization also has a constraint programming solver (clp), and network</span>
+<span class="sd">    solver (network) but they are not currently supported by sasoptpy.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    ss : :class:`sasoptpy.abstract.statement.SolveStatement`</span>
 <span class="sd">        Solve statement object.</span>
 
-<span class="sd">        Contents of the response can be grabbed using `get_response` function.</span>
+<span class="sd">        Contents of the response can be retrieved using `get_response` function.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 
-<span class="sd">    Regular solve</span>
+<span class="sd">    Regular solve:</span>
 
 <span class="sd">    &gt;&gt;&gt; with so.Workspace(&#39;w&#39;) as w:</span>
 <span class="sd">    &gt;&gt;&gt;     x = so.Variable(name=&#39;x&#39;, lb=1, ub=10)</span>
@@ -482,7 +483,7 @@
 <span class="sd">        print x;</span>
 <span class="sd">    quit;</span>
 
-<span class="sd">    Option alternatives</span>
+<span class="sd">    Option alternatives:</span>
 
 <span class="sd">    &gt;&gt;&gt; with so.Workspace(&#39;w&#39;) as w:</span>
 <span class="sd">    &gt;&gt;&gt;     # Problem declaration, etc..</span>
@@ -507,12 +508,12 @@
 <div class="viewcode-block" id="for_loop"><a class="viewcode-back" href="../../api/generated/sasoptpy.actions.for_loop.html#sasoptpy.actions.for_loop">[docs]</a><span class="nd">@sasoptpy</span><span class="o">.</span><span class="n">containable</span><span class="p">(</span><span class="n">standalone</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">for_loop</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Creates a for-loop container that is to be executed on server-side</span>
+<span class="sd">    Creates a for-loop container to be executed on the server</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    args : :class:`sasoptpy.abstract.Set` objects</span>
-<span class="sd">        Any number of Set objects can be given</span>
+<span class="sd">        Any number of :class:`sasoptpy.abstract.Set` objects can be given</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -522,7 +523,7 @@
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 
-<span class="sd">    Regular for loop</span>
+<span class="sd">    Regular for loop:</span>
 
 <span class="sd">    &gt;&gt;&gt; with so.Workspace(&#39;w&#39;) as w:</span>
 <span class="sd">    &gt;&gt;&gt;     r = so.exp_range(1, 11)</span>
@@ -537,7 +538,7 @@
 <span class="sd">        end;</span>
 <span class="sd">    quit;</span>
 
-<span class="sd">    Nested for loops</span>
+<span class="sd">    Nested for loops:</span>
 
 <span class="sd">    &gt;&gt;&gt; from sasoptpy.actions import put_item</span>
 <span class="sd">    &gt;&gt;&gt; with so.Workspace(&#39;w&#39;) as w:</span>
@@ -553,7 +554,7 @@
 <span class="sd">        end;</span>
 <span class="sd">    quit;</span>
 
-<span class="sd">    Multiple set for-loops</span>
+<span class="sd">    Multiple set for-loops:</span>
 
 <span class="sd">    &gt;&gt;&gt; with so.Workspace(&#39;w&#39;) as w:</span>
 <span class="sd">    &gt;&gt;&gt;     r = so.Set(name=&#39;R&#39;, value=range(1, 11))</span>
@@ -588,12 +589,12 @@
 <div class="viewcode-block" id="cofor_loop"><a class="viewcode-back" href="../../api/generated/sasoptpy.actions.cofor_loop.html#sasoptpy.actions.cofor_loop">[docs]</a><span class="nd">@sasoptpy</span><span class="o">.</span><span class="n">containable</span><span class="p">(</span><span class="n">standalone</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">cofor_loop</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Creates a cofor-loop that is to be executed on server-side concurrently</span>
+<span class="sd">    Creates a cofor-loop to be executed on the server concurrently</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    args : :class:`sasoptpy.abstract.Set` objects</span>
-<span class="sd">        Any number of Set objects can be given</span>
+<span class="sd">        Any number of :class:`sasoptpy.abstract.Set` objects can be specified</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -662,7 +663,7 @@
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 
-<span class="sd">    Regular condition</span>
+<span class="sd">    Regular condition:</span>
 
 <span class="sd">    &gt;&gt;&gt; with so.Workspace(&#39;w&#39;) as w:</span>
 <span class="sd">    &gt;&gt;&gt;     x = so.Variable(name=&#39;x&#39;)</span>
@@ -684,7 +685,7 @@
 <span class="sd">        end;</span>
 <span class="sd">    quit;</span>
 
-<span class="sd">    Combined conditions</span>
+<span class="sd">    Combined conditions:</span>
 
 <span class="sd">    &gt;&gt;&gt; with so.Workspace(&#39;w&#39;) as w:</span>
 <span class="sd">    &gt;&gt;&gt;     p = so.Parameter(name=&#39;p&#39;)</span>
@@ -713,15 +714,16 @@
 <div class="viewcode-block" id="switch_conditions"><a class="viewcode-back" href="../../api/generated/sasoptpy.actions.switch_conditions.html#sasoptpy.actions.switch_conditions">[docs]</a><span class="nd">@sasoptpy</span><span class="o">.</span><span class="n">containable</span><span class="p">(</span><span class="n">standalone</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">switch_conditions</span><span class="p">(</span><span class="o">**</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Creates several if-else blocks using given arguments</span>
+<span class="sd">    Creates several if-else blocks by using the specified arguments</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    args :</span>
 <span class="sd">        Several arguments can be passed to the function</span>
 
-<span class="sd">        If an argument is a Constraint or Condition (combined Constraints)</span>
-<span class="sd">        the following callable argument is used as a case</span>
+<span class="sd">        Each case should follow a condition.</span>
+<span class="sd">        You can use :class:`sasoptpy.Constraint` objects as conditions, and</span>
+<span class="sd">        Python functions for the cases.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -806,7 +808,7 @@
 <div class="viewcode-block" id="fix"><a class="viewcode-back" href="../../api/generated/sasoptpy.actions.fix.html#sasoptpy.actions.fix">[docs]</a><span class="nd">@sasoptpy</span><span class="o">.</span><span class="n">containable</span><span class="p">(</span><span class="n">standalone</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">fix</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Fixes values of variables to given values</span>
+<span class="sd">    Fixes values of variables to the specified values</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -819,7 +821,7 @@
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 
-<span class="sd">    Regular fix statement</span>
+<span class="sd">    Regular fix statement:</span>
 
 <span class="sd">    &gt;&gt;&gt; with so.Workspace(&#39;w&#39;) as w:</span>
 <span class="sd">    &gt;&gt;&gt;     x = so.Variable(name=&#39;x&#39;)</span>
@@ -834,7 +836,7 @@
 <span class="sd">        unfix x;</span>
 <span class="sd">    quit;</span>
 
-<span class="sd">    Multiple fix-unfix</span>
+<span class="sd">    Multiple fix-unfix:</span>
 
 <span class="sd">    &gt;&gt;&gt; with so.Workspace(&#39;w&#39;) as w:</span>
 <span class="sd">    &gt;&gt;&gt;     x = so.VariableGroup(4, name=&#39;x&#39;)</span>
@@ -874,7 +876,7 @@
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 
-<span class="sd">    Regular unfix statement</span>
+<span class="sd">    Regular unfix statement:</span>
 
 <span class="sd">    &gt;&gt;&gt; with so.Workspace(&#39;w&#39;) as w:</span>
 <span class="sd">    &gt;&gt;&gt;     x = so.Variable(name=&#39;x&#39;)</span>
@@ -889,7 +891,7 @@
 <span class="sd">        unfix x;</span>
 <span class="sd">    quit;</span>
 
-<span class="sd">    Multiple fix-unfix</span>
+<span class="sd">    Multiple fix-unfix:</span>
 
 <span class="sd">    &gt;&gt;&gt; with so.Workspace(&#39;w&#39;) as w:</span>
 <span class="sd">    &gt;&gt;&gt;     x = so.VariableGroup(4, name=&#39;x&#39;)</span>
@@ -919,7 +921,7 @@
 <div class="viewcode-block" id="set_objective"><a class="viewcode-back" href="../../api/generated/sasoptpy.actions.set_objective.html#sasoptpy.actions.set_objective">[docs]</a><span class="nd">@sasoptpy</span><span class="o">.</span><span class="n">containable</span><span class="p">(</span><span class="n">standalone</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">set_objective</span><span class="p">(</span><span class="n">expression</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">sense</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Sets objective function</span>
+<span class="sd">    Specifies the objective function</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -951,14 +953,14 @@
 <div class="viewcode-block" id="print_item"><a class="viewcode-back" href="../../api/generated/sasoptpy.actions.print_item.html#sasoptpy.actions.print_item">[docs]</a><span class="nd">@sasoptpy</span><span class="o">.</span><span class="n">containable</span><span class="p">(</span><span class="n">standalone</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">print_item</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Prints given argument list on server-side</span>
+<span class="sd">    Prints the specified argument list on server</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    args : :class:`sasoptpy.Variable`, :class:`sasoptpy.Expression`</span>
 <span class="sd">        Arbitrary number of arguments to be printed</span>
 
-<span class="sd">        These values are printed on server-side, but can be grabbed after</span>
+<span class="sd">        These values are printed on the server, but can be retrieved after</span>
 <span class="sd">        execution</span>
 
 <span class="sd">    Returns</span>
@@ -966,7 +968,7 @@
 <span class="sd">    ps : :class:`sasoptpy.abstract.statement.PrintStatement`</span>
 <span class="sd">        Print statement object.</span>
 
-<span class="sd">        Contents of the response can be grabbed using `get_response` function.</span>
+<span class="sd">        Contents of the response can be retrieved using `get_response` function.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -994,21 +996,21 @@
 <div class="viewcode-block" id="put_item"><a class="viewcode-back" href="../../api/generated/sasoptpy.actions.put_item.html#sasoptpy.actions.put_item">[docs]</a><span class="nd">@sasoptpy</span><span class="o">.</span><span class="n">containable</span><span class="p">(</span><span class="n">standalone</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">put_item</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Prints given item values to output log</span>
+<span class="sd">    Prints the specified item values to the output log</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    args : :class:`sasoptpy.Expression`, string</span>
 <span class="sd">        Arbitrary elements to be put into log</span>
 
-<span class="sd">        Variables, variable groups, expressions can be printed to log</span>
+<span class="sd">        Variables, variable groups, and expressions can be printed to log</span>
 <span class="sd">    names : bool, optional</span>
-<span class="sd">        Whether name of the arguments be printed in the log</span>
+<span class="sd">        When set to `True`, prints the name of the arguments in the log</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 
-<span class="sd">    Regular operation</span>
+<span class="sd">    Regular operation:</span>
 
 <span class="sd">    &gt;&gt;&gt; with so.Workspace(&#39;w&#39;) as w:</span>
 <span class="sd">    &gt;&gt;&gt;     for i in for_loop(range(1, 3)):</span>
@@ -1023,7 +1025,7 @@
 <span class="sd">        end;</span>
 <span class="sd">    quit;</span>
 
-<span class="sd">    Print with names</span>
+<span class="sd">    Print with names:</span>
 
 <span class="sd">    &gt;&gt;&gt; with so.Workspace(&#39;w&#39;) as w:</span>
 <span class="sd">    &gt;&gt;&gt;     x = so.VariableGroup(6, name=&#39;x&#39;, lb=0)</span>
@@ -1089,7 +1091,7 @@
 <div class="viewcode-block" id="drop"><a class="viewcode-back" href="../../api/generated/sasoptpy.actions.drop.html#sasoptpy.actions.drop">[docs]</a><span class="nd">@sasoptpy</span><span class="o">.</span><span class="n">containable</span><span class="p">(</span><span class="n">standalone</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">drop</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Drops given constraints or constraint groups from model</span>
+<span class="sd">    Drops the specified constraints or constraint groups from model</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1173,7 +1175,7 @@
 <div class="viewcode-block" id="union"><a class="viewcode-back" href="../../api/generated/sasoptpy.actions.union.html#sasoptpy.actions.union">[docs]</a><span class="nd">@sasoptpy</span><span class="o">.</span><span class="n">containable</span><span class="p">(</span><span class="n">standalone</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">union</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Aggregates given sets and set expressions</span>
+<span class="sd">    Aggregates the specified sets and set expressions</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1239,7 +1241,7 @@
 <div class="viewcode-block" id="substring"><a class="viewcode-back" href="../../api/generated/sasoptpy.actions.substring.html#sasoptpy.actions.substring">[docs]</a><span class="nd">@sasoptpy</span><span class="o">.</span><span class="n">containable</span><span class="p">(</span><span class="n">standalone</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">substring</span><span class="p">(</span><span class="n">main_string</span><span class="p">,</span> <span class="n">first_pos</span><span class="p">,</span> <span class="n">last_pos</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Gets the substring of given positions</span>
+<span class="sd">    Gets the substring of the specified positions</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1365,8 +1367,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

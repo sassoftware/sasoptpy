@@ -87,8 +87,8 @@
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">substring</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">main_string</span><span class="p">,</span> <span class="n">first_pos</span><span class="p">,</span> <span class="n">last_pos</span><span class="p">):</span>
         <span class="n">first_el</span> <span class="o">=</span> <span class="n">_to_sas_string</span><span class="p">(</span><span class="n">main_string</span><span class="p">)</span>
-        <span class="n">pos</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{first_pos}</span><span class="s1">, </span><span class="si">{last_pos}</span><span class="s1">&#39;</span>
-        <span class="n">ss</span> <span class="o">=</span> <span class="n">LiteralStatement</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;substr(</span><span class="si">{first_el}</span><span class="s1">, </span><span class="si">{pos}</span><span class="s1">)&#39;</span><span class="p">,</span> <span class="n">internal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">first_pos</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">last_pos</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">ss</span> <span class="o">=</span> <span class="n">LiteralStatement</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;substr(</span><span class="si">{</span><span class="n">first_el</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">pos</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">,</span> <span class="n">internal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">ss</span><span class="o">.</span><span class="n">set_internal</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ss</span>
         <span class="c1">#</span>
@@ -159,8 +159,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

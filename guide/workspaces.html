@@ -18,7 +18,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Handling Data" href="input-data.html" />
-    <link rel="prev" title="Model components" href="components.html" />
+    <link rel="prev" title="Model Components" href="components.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="../_static/js/version.js"></script>
 
@@ -36,7 +36,7 @@
           <a href="input-data.html" title="Handling Data"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="components.html" title="Model components"
+          <a href="components.html" title="Model Components"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="user-guide.html" accesskey="U">User Guide</a> &#187;</li> 
@@ -54,21 +54,21 @@
 models in a single call. You can read a common data set once, or parallelize solve steps for
 similar subproblems by using this ability.</p>
 <p>The newly introduced <a class="reference internal" href="../api/generated/sasoptpy.Workspace.html#sasoptpy.Workspace" title="sasoptpy.Workspace"><code class="xref py py-class docutils literal notranslate"><span class="pre">Workspace</span></code></a> provides this ability in a familiar syntax. Compared to <a class="reference internal" href="../api/generated/sasoptpy.Model.html#sasoptpy.Model" title="sasoptpy.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></a> objects,
-a <a class="reference internal" href="../api/generated/sasoptpy.Workspace.html#sasoptpy.Workspace" title="sasoptpy.Workspace"><code class="xref py py-class docutils literal notranslate"><span class="pre">Workspace</span></code></a> can consist of several models and is able to use server-side data and OPTMODEL statements in a
+a <a class="reference internal" href="../api/generated/sasoptpy.Workspace.html#sasoptpy.Workspace" title="sasoptpy.Workspace"><code class="xref py py-class docutils literal notranslate"><span class="pre">Workspace</span></code></a> can consist of several models and can use server-side data and OPTMODEL statements in a
 more detailed way.</p>
+<p>You can create several models in the same workspace, and you can solve problems sequentially and concurrently.
+All the statements are sent to the server after <a class="reference internal" href="../api/generated/sasoptpy.Workspace.submit.html#sasoptpy.Workspace.submit" title="sasoptpy.Workspace.submit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Workspace.submit()</span></code></a> is called.</p>
 <div class="section" id="creating-a-workspace">
 <h2>Creating a workspace<a class="headerlink" href="#creating-a-workspace" title="Permalink to this headline">¶</a></h2>
-<p>A <a class="reference internal" href="../api/generated/sasoptpy.Workspace.html#sasoptpy.Workspace" title="sasoptpy.Workspace"><code class="xref py py-class docutils literal notranslate"><span class="pre">Workspace</span></code></a> should be called by using the <cite>with</cite> keyword of Python as follows:</p>
+<p>A <a class="reference internal" href="../api/generated/sasoptpy.Workspace.html#sasoptpy.Workspace" title="sasoptpy.Workspace"><code class="xref py py-class docutils literal notranslate"><span class="pre">Workspace</span></code></a> should be called by using the <code class="docutils literal notranslate"><span class="pre">with</span></code> Python keyword as follows:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">so</span><span class="o">.</span><span class="n">Workspace</span><span class="p">(</span><span class="s1">&#39;my_workspace&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
 <span class="gp">&gt;&gt;&gt; </span>   <span class="o">...</span>
 </pre></div>
 </div>
-<p>You can define several models in the same workspace, and solve problems multiple times. All the statements are sent
-to the server after <a class="reference internal" href="../api/generated/sasoptpy.Workspace.submit.html#sasoptpy.Workspace.submit" title="sasoptpy.Workspace.submit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Workspace.submit()</span></code></a> is called.</p>
 </div>
 <div class="section" id="adding-components">
 <h2>Adding components<a class="headerlink" href="#adding-components" title="Permalink to this headline">¶</a></h2>
-<p>Unlike <a class="reference internal" href="../api/generated/sasoptpy.Model.html#sasoptpy.Model" title="sasoptpy.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></a> objects, where components are added explicitly, objects defined inside a <a class="reference internal" href="../api/generated/sasoptpy.Workspace.html#sasoptpy.Workspace" title="sasoptpy.Workspace"><code class="xref py py-class docutils literal notranslate"><span class="pre">Workspace</span></code></a> are
+<p>Unlike <a class="reference internal" href="../api/generated/sasoptpy.Model.html#sasoptpy.Model" title="sasoptpy.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></a> objects, whose components are added explicitly, objects that are defined inside a <a class="reference internal" href="../api/generated/sasoptpy.Workspace.html#sasoptpy.Workspace" title="sasoptpy.Workspace"><code class="xref py py-class docutils literal notranslate"><span class="pre">Workspace</span></code></a> are
 added automatically.</p>
 <p>For example, adding a new variable is performed as follows:</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="k">with</span> <span class="n">so</span><span class="o">.</span><span class="n">Workspace</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;my_workspace&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
@@ -83,8 +83,9 @@ added automatically.</p>
 <span class="go">quit;</span>
 </pre></div>
 </div>
-<p>See the following full example where data are loaded into the server, and a problem is solved by using a Workspace:</p>
-<p>Create CAS session:</p>
+<p>In the following example, data are loaded into the server and a problem is solved by using a workspace:</p>
+<ol class="arabic">
+<li><p>Create CAS session:</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [3]: </span><span class="kn">import</span> <span class="nn">os</span>
 
 <span class="gp">In [4]: </span><span class="n">hostname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;CASHOST&#39;</span><span class="p">)</span>
@@ -100,7 +101,8 @@ added automatically.</p>
 <span class="gp">In [9]: </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 </pre></div>
 </div>
-<p>Upload data:</p>
+</li>
+<li><p>Upload data:</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [10]: </span><span class="k">def</span> <span class="nf">send_data</span><span class="p">():</span>
 <span class="gp">   ....: </span>   <span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
 <span class="gp">   ....: </span>      <span class="p">[</span><span class="s1">&#39;clock&#39;</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
@@ -117,7 +119,8 @@ added automatically.</p>
 <span class="go">NOTE: The table MYDATA has been created in caslib CASUSER(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 </pre></div>
 </div>
-<p>Model workspace:</p>
+</li>
+<li><p>Create workspace and model:</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [11]: </span><span class="kn">from</span> <span class="nn">sasoptpy.actions</span> <span class="kn">import</span> <span class="n">read_data</span><span class="p">,</span> <span class="n">solve</span>
 
 <span class="gp">In [12]: </span><span class="k">def</span> <span class="nf">create_workspace</span><span class="p">():</span>
@@ -147,7 +150,8 @@ added automatically.</p>
 <span class="gp">In [13]: </span><span class="n">my_workspace</span> <span class="o">=</span> <span class="n">create_workspace</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Print content:</p>
+</li>
+<li><p>Print content:</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [14]: </span><span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">(</span><span class="n">my_workspace</span><span class="p">))</span>
 <span class="go">proc optmodel;</span>
 <span class="go">   set &lt;str&gt; ITEMS;</span>
@@ -164,7 +168,8 @@ added automatically.</p>
 <span class="go">quit;</span>
 </pre></div>
 </div>
-<p>Submit:</p>
+</li>
+<li><p>Submit:</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [15]: </span><span class="n">my_workspace</span><span class="o">.</span><span class="n">submit</span><span class="p">()</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
 <span class="go">NOTE: There were 5 rows read from table &#39;MYDATA&#39; in caslib &#39;CASUSER(casuser)&#39;.</span>
@@ -203,28 +208,34 @@ added automatically.</p>
 <span class="go">4  5.0        get[pen]    5.0 -0.0  1.797693e+308 NaN</span>
 </pre></div>
 </div>
+</li>
+</ol>
 </div>
 <div class="section" id="abstract-actions">
 <span id="id2"></span><h2>Abstract actions<a class="headerlink" href="#abstract-actions" title="Permalink to this headline">¶</a></h2>
-<p>As shown in the previous example, a <a class="reference internal" href="../api/generated/sasoptpy.Workspace.html#sasoptpy.Workspace" title="sasoptpy.Workspace"><code class="xref py py-class docutils literal notranslate"><span class="pre">Workspace</span></code></a> can have statements such as <a class="reference internal" href="../api/generated/sasoptpy.actions.read_data.html#sasoptpy.actions.read_data" title="sasoptpy.actions.read_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">actions.read_data()</span></code></a>
+<p>As shown in the previous example, a <a class="reference internal" href="../api/generated/sasoptpy.Workspace.html#sasoptpy.Workspace" title="sasoptpy.Workspace"><code class="xref py py-class docutils literal notranslate"><span class="pre">Workspace</span></code></a> can contain statements such as <a class="reference internal" href="../api/generated/sasoptpy.actions.read_data.html#sasoptpy.actions.read_data" title="sasoptpy.actions.read_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">actions.read_data()</span></code></a>
 and <a class="reference internal" href="../api/generated/sasoptpy.actions.solve.html#sasoptpy.actions.solve" title="sasoptpy.actions.solve"><code class="xref py py-func docutils literal notranslate"><span class="pre">actions.solve()</span></code></a>.</p>
-<p>These statements are called “Abstract Statements” and are fully supported inside <a class="reference internal" href="../api/generated/sasoptpy.Workspace.html#sasoptpy.Workspace" title="sasoptpy.Workspace"><code class="xref py py-class docutils literal notranslate"><span class="pre">Workspace</span></code></a> objects.</p>
+<p>These statements are called “Abstract Statements” and are fully supported inside <a class="reference internal" href="../api/generated/sasoptpy.Workspace.html#sasoptpy.Workspace" title="sasoptpy.Workspace"><code class="xref py py-class docutils literal notranslate"><span class="pre">Workspace</span></code></a> objects.
+These actions are performed on the server at runtime.</p>
+<p>A list of abstract actions is available in the <a class="reference internal" href="../api/functions.html#abstract-action-list"><span class="std std-ref">API section</span></a>.</p>
 <div class="section" id="adding-abstract-actions">
 <h3>Adding abstract actions<a class="headerlink" href="#adding-abstract-actions" title="Permalink to this headline">¶</a></h3>
-<p>You can import abstract actions through <cite>sasoptpy.actions</cite> as follows:</p>
+<p>You can import abstract actions through <code class="docutils literal notranslate"><span class="pre">sasoptpy.actions</span></code> as follows:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sasoptpy.actions</span> <span class="kn">import</span> <span class="n">read_data</span><span class="p">,</span> <span class="n">create_data</span>
 </pre></div>
 </div>
 <p>These abstract actions are performed on the server side by generating equivalent OPTMODEL code at execution.</p>
 </div>
-<div class="section" id="grabbing-results">
-<h3>Grabbing results<a class="headerlink" href="#grabbing-results" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="retrieving-results">
+<h3>Retrieving results<a class="headerlink" href="#retrieving-results" title="Permalink to this headline">¶</a></h3>
 <p>In order to solve a problem, you need to use the <a class="reference internal" href="../api/generated/sasoptpy.actions.solve.html#sasoptpy.actions.solve" title="sasoptpy.actions.solve"><code class="xref py py-func docutils literal notranslate"><span class="pre">actions.solve()</span></code></a> function explicitly.
 Because <a class="reference internal" href="../api/generated/sasoptpy.Workspace.html#sasoptpy.Workspace" title="sasoptpy.Workspace"><code class="xref py py-class docutils literal notranslate"><span class="pre">Workspace</span></code></a> objects allow several models and solve statements to be included,
-each of these solve statements are retrieved
-separately. You can return the solution after each solve by using the <code class="xref py py-func docutils literal notranslate"><span class="pre">actions.print()</span></code> function or creating a
-table by using the <a class="reference internal" href="../api/generated/sasoptpy.actions.create_data.html#sasoptpy.actions.create_data" title="sasoptpy.actions.create_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">actions.create_data()</span></code></a> function.</p>
-<p>See the following example where a parameter is changed and the same problem solved twice:</p>
+each of these solve statements is retrieved
+separately. You can return the solution after each solve by using the <code class="xref py py-func docutils literal notranslate"><span class="pre">actions.print()</span></code> function or
+by using the <a class="reference internal" href="../api/generated/sasoptpy.actions.create_data.html#sasoptpy.actions.create_data" title="sasoptpy.actions.create_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">actions.create_data()</span></code></a> function to create table.</p>
+<p>In the following example, a parameter is changed and the same problem is solved twice:</p>
+<ol class="arabic">
+<li><p>Create workspace and components:</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [16]: </span><span class="kn">from</span> <span class="nn">sasoptpy.actions</span> <span class="kn">import</span> <span class="n">read_data</span><span class="p">,</span> <span class="n">solve</span><span class="p">,</span> <span class="n">print_item</span>
 
 <span class="gp">In [17]: </span><span class="k">def</span> <span class="nf">create_multi_solve_workspace</span><span class="p">():</span>
@@ -251,7 +262,8 @@ table by using the <a class="reference internal" href="../api/generated/sasoptpy
 <span class="gp">In [18]: </span><span class="p">(</span><span class="n">my_workspace</span><span class="p">,</span> <span class="n">solve1</span><span class="p">,</span> <span class="n">print1</span><span class="p">,</span> <span class="n">solve2</span><span class="p">,</span> <span class="n">print2</span><span class="p">)</span> <span class="o">=</span> <span class="n">create_multi_solve_workspace</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Submit:</p>
+</li>
+<li><p>Submit to the server:</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [19]: </span><span class="n">my_workspace</span><span class="o">.</span><span class="n">submit</span><span class="p">()</span>
 <span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
 <span class="go">NOTE: There were 5 rows read from table &#39;MYDATA&#39; in caslib &#39;CASUSER(casuser)&#39;.</span>
@@ -312,7 +324,8 @@ table by using the <a class="reference internal" href="../api/generated/sasoptpy
 <span class="go">4  5.0        get[pen]    2.0 -0.0  1.797693e+308 NaN</span>
 </pre></div>
 </div>
-<p>Print results:</p>
+</li>
+<li><p>Print results:</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [20]: </span><span class="nb">print</span><span class="p">(</span><span class="n">solve1</span><span class="o">.</span><span class="n">get_solution_summary</span><span class="p">())</span>
 <span class="go">Solution Summary</span>
 
@@ -369,7 +382,7 @@ table by using the <a class="reference internal" href="../api/generated/sasoptpy
 <span class="go">Solutions Found                     4</span>
 <span class="go">Iterations                          3</span>
 <span class="go">Presolve Time                    0.00</span>
-<span class="go">Solution Time                    0.17</span>
+<span class="go">Solution Time                    0.18</span>
 </pre></div>
 </div>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [23]: </span><span class="nb">print</span><span class="p">(</span><span class="n">print2</span><span class="o">.</span><span class="n">get_response</span><span class="p">())</span>
@@ -381,10 +394,8 @@ table by using the <a class="reference internal" href="../api/generated/sasoptpy
 <span class="go">4        pen  2.0</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="list-of-abstract-actions">
-<h3>List of abstract actions<a class="headerlink" href="#list-of-abstract-actions" title="Permalink to this headline">¶</a></h3>
-<p>A list of abstract actions is available in the <a class="reference internal" href="../api/functions.html#abstract-action-list"><span class="std std-ref">API section</span></a>.</p>
+</li>
+</ol>
 </div>
 </div>
 </div>
@@ -411,17 +422,16 @@ table by using the <a class="reference internal" href="../api/generated/sasoptpy
 <li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="user-guide.html">User Guide</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="intro.html">Introduction to Optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="basics.html">Basic Functionality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basics.html">Quick Reference</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sessions.html">Sessions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="components.html">Model components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components.html">Model Components</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Workspaces</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#creating-a-workspace">Creating a workspace</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#adding-components">Adding components</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#abstract-actions">Abstract actions</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#adding-abstract-actions">Adding abstract actions</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#grabbing-results">Grabbing results</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#list-of-abstract-actions">List of abstract actions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#retrieving-results">Retrieving results</a></li>
 </ul>
 </li>
 </ul>
@@ -462,7 +472,7 @@ table by using the <a class="reference internal" href="../api/generated/sasoptpy
           <a href="input-data.html" title="Handling Data"
              >next</a> |</li>
         <li class="right" >
-          <a href="components.html" title="Model components"
+          <a href="components.html" title="Model Components"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="user-guide.html" >User Guide</a> &#187;</li> 
@@ -471,8 +481,8 @@ table by using the <a class="reference internal" href="../api/generated/sasoptpy
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

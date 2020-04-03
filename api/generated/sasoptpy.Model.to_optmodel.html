@@ -54,7 +54,17 @@
 <dl class="method">
 <dt id="sasoptpy.Model.to_optmodel">
 <code class="sig-prename descclassname">Model.</code><code class="sig-name descname">to_optmodel</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/sasoptpy/core/model.html#Model.to_optmodel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.Model.to_optmodel" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the model in OPTMODEL format</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">())</span>
+<span class="go">proc optmodel;</span>
+<span class="go">var y init 2;</span>
+<span class="go">min myobj = 2 * y;</span>
+<span class="go">solve;</span>
+<span class="go">quit;</span>
+</pre></div>
+</div>
+</dd></dl>
 
 </div>
 
@@ -96,7 +106,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../expression.html">Expression</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../objective.html">Variable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../objective.html">Objective</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../variable.html">Variable</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../variable_group.html">Variable Group</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../constraint.html">Constraint</a></li>
@@ -150,8 +160,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

@@ -75,16 +75,19 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Constraint.get_value.html#sasoptpy.Constraint.get_value" title="sasoptpy.Constraint.get_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Constraint.get_value</span></code></a>(self[, rhs])</p></td>
 <td><p>Returns the current value of the constraint</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Constraint.set_block.html#sasoptpy.Constraint.set_block" title="sasoptpy.Constraint.set_block"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Constraint.set_block</span></code></a>(self, block_number)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Constraint.get_dual.html#sasoptpy.Constraint.get_dual" title="sasoptpy.Constraint.get_dual"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Constraint.get_dual</span></code></a>(self)</p></td>
+<td><p>Returns the dual value if exists</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Constraint.set_block.html#sasoptpy.Constraint.set_block" title="sasoptpy.Constraint.set_block"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Constraint.set_block</span></code></a>(self, block_number)</p></td>
 <td><p>Sets the decomposition block number for a constraint</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Constraint.set_direction.html#sasoptpy.Constraint.set_direction" title="sasoptpy.Constraint.set_direction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Constraint.set_direction</span></code></a>(self, direction)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Constraint.set_direction.html#sasoptpy.Constraint.set_direction" title="sasoptpy.Constraint.set_direction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Constraint.set_direction</span></code></a>(self, direction)</p></td>
 <td><p>Changes the direction of a constraint</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Constraint.set_rhs.html#sasoptpy.Constraint.set_rhs" title="sasoptpy.Constraint.set_rhs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Constraint.set_rhs</span></code></a>(self, value)</p></td>
-<td><p>Changes the RHS of a constraint</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Constraint.set_rhs.html#sasoptpy.Constraint.set_rhs" title="sasoptpy.Constraint.set_rhs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Constraint.set_rhs</span></code></a>(self, value)</p></td>
+<td><p>Changes the constant value (right-hand side) of a constraint</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Constraint.update_var_coef.html#sasoptpy.Constraint.update_var_coef" title="sasoptpy.Constraint.update_var_coef"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Constraint.update_var_coef</span></code></a>(self, var, value)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Constraint.update_var_coef.html#sasoptpy.Constraint.update_var_coef" title="sasoptpy.Constraint.update_var_coef"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Constraint.update_var_coef</span></code></a>(self, var, value)</p></td>
 <td><p>Updates the coefficient of a variable inside the constraint</p></td>
 </tr>
 </tbody>
@@ -118,7 +121,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="api.html#core">Core</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="model.html">Model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="expression.html">Expression</a></li>
-<li class="toctree-l3"><a class="reference internal" href="objective.html">Variable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="objective.html">Objective</a></li>
 <li class="toctree-l3"><a class="reference internal" href="variable.html">Variable</a></li>
 <li class="toctree-l3"><a class="reference internal" href="variable_group.html">Variable Group</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Constraint</a><ul>
@@ -128,6 +131,7 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="#methods">Methods</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Constraint.get_value.html">sasoptpy.Constraint.get_value</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Constraint.get_dual.html">sasoptpy.Constraint.get_dual</a></li>
 <li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Constraint.set_block.html">sasoptpy.Constraint.set_block</a></li>
 <li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Constraint.set_direction.html">sasoptpy.Constraint.set_direction</a></li>
 <li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Constraint.set_rhs.html">sasoptpy.Constraint.set_rhs</a></li>
@@ -185,8 +189,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

@@ -52,8 +52,8 @@
 <span id="examples-multiobjective"></span><h1>Multiobjective<a class="headerlink" href="#multiobjective" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="reference">
 <h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="https://go.documentation.sas.com/?cdcId=pgmsascdc&amp;cdcVersion=9.4_3.4&amp;docsetId=ormpug&amp;docsetTarget=ormpug_lsosolver_examples07.htm&amp;locale=en">https://go.documentation.sas.com/?cdcId=pgmsascdc&amp;cdcVersion=9.4_3.4&amp;docsetId=ormpug&amp;docsetTarget=ormpug_lsosolver_examples07.htm&amp;locale=en</a></p>
-<p><a class="reference external" href="http://support.sas.com/documentation/onlinedoc/or/ex_code/151/lsoe10.html">http://support.sas.com/documentation/onlinedoc/or/ex_code/151/lsoe10.html</a></p>
+<p>SAS/OR example: <a class="reference external" href="https://go.documentation.sas.com/?cdcId=pgmsascdc&amp;cdcVersion=9.4_3.4&amp;docsetId=ormpug&amp;docsetTarget=ormpug_lsosolver_examples07.htm&amp;locale=en">https://go.documentation.sas.com/?cdcId=pgmsascdc&amp;cdcVersion=9.4_3.4&amp;docsetId=ormpug&amp;docsetTarget=ormpug_lsosolver_examples07.htm&amp;locale=en</a></p>
+<p>SAS/OR code for example: <a class="reference external" href="http://support.sas.com/documentation/onlinedoc/or/ex_code/151/lsoe10.html">http://support.sas.com/documentation/onlinedoc/or/ex_code/151/lsoe10.html</a></p>
 </div>
 <div class="section" id="model">
 <h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
@@ -127,13 +127,13 @@
 <span class="go">                   1         4               .                0       84        0</span>
 <span class="go">                  51       877       0.0000811                0     2876        0</span>
 <span class="go">                 101      1654       0.0000123                0     5576        1</span>
-<span class="go">                 151      2290  0.000003230545                0     8181        1</span>
+<span class="go">                 151      2290  0.000003230545                0     8181        2</span>
 <span class="go">                 201      2874       0.0000182                0    10796        2</span>
 <span class="go">                 251      3422  0.000003148003                0    13447        3</span>
-<span class="go">                 301      3847  0.000001559509                0    16046        4</span>
-<span class="go">                 351      4282  0.000001159917                0    18733        5</span>
-<span class="go">                 401      4712  0.000002423148                0    21315        7</span>
-<span class="go">                 428      4932  0.000000704951                0    22734        7</span>
+<span class="go">                 301      3847  0.000001559509                0    16046        5</span>
+<span class="go">                 351      4282  0.000001159917                0    18733        6</span>
+<span class="go">                 401      4712  0.000002423148                0    21315        8</span>
+<span class="go">                 428      4932  0.000000704951                0    22734        9</span>
 <span class="go">NOTE: Function convergence criteria reached.</span>
 <span class="go">NOTE: The output table &#39;SOLUTION&#39; in caslib &#39;CASUSER(casuser)&#39; has 2 rows and 6 columns.</span>
 <span class="go">NOTE: The output table &#39;DUAL&#39; in caslib &#39;CASUSER(casuser)&#39; has 0 rows and 4 columns.</span>
@@ -173,7 +173,7 @@
 <span class="gp">In [22]: </span><span class="n">f</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Multiobjective: Plot of Pareto-Optimal Set&#39;</span><span class="p">);</span>
 
 <span class="gp">In [23]: </span><span class="n">f</span>
-<span class="gh">Out[23]: </span><span class="go">&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f0fa035d9e8&gt;</span>
+<span class="gh">Out[23]: </span><span class="go">&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f56c6addba8&gt;</span>
 </pre></div>
 </div>
 <img alt="../_images/multiobj.png" src="../_images/multiobj.png" />
@@ -202,7 +202,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guide/user-guide.html">User Guide</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="examples.html">Examples</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="examples.html#viya-examples-concrete">Viya Examples / Concrete</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="examples.html#sas-viya-examples-concrete">SAS Viya Examples (Concrete)</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="food_manufacture_1.html">Food Manufacture 1</a></li>
 <li class="toctree-l3"><a class="reference internal" href="food_manufacture_2.html">Food Manufacture 2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="factory_planning_1.html">Factory Planning 1</a></li>
@@ -225,8 +225,8 @@
 <li class="toctree-l3"><a class="reference internal" href="efficiency_analysis.html">Efficiency Analysis</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#viya-examples-abstract">Viya Examples / Abstract</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-viya-examples-abstract">SAS Viya Examples (Abstract)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-9-4-examples">SAS 9.4 Examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api.html">API Reference</a></li>
@@ -269,8 +269,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

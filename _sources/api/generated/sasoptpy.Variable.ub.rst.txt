@@ -1,6 +1,0 @@
-sasoptpy.Variable.ub
-====================
-
-.. currentmodule:: sasoptpy
-
-.. autoproperty:: Variable.ub

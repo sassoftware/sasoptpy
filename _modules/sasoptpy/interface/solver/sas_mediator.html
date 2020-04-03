@@ -57,7 +57,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    caller : :class:`Model` or :class:`Workspace`</span>
+<span class="sd">    caller : :class:`sasoptpy.Model` or :class:`sasoptpy.Workspace`</span>
 <span class="sd">        Model or workspace that mediator belongs to</span>
 <span class="sd">    sas_session : :class:`saspy.SASsession`</span>
 <span class="sd">        SAS session object</span>
@@ -65,7 +65,7 @@
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 
-<span class="sd">    * SAS Mediator is used by :class:`Model` and :class:`Workspace` objects</span>
+<span class="sd">    * SASMediator is used by :class:`sasoptpy.Model` and :class:`sasoptpy.Workspace` objects</span>
 <span class="sd">      internally.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -91,7 +91,7 @@
 
 <div class="viewcode-block" id="SASMediator.submit"><a class="viewcode-back" href="../../../../api/generated/sasoptpy.interface.SASMediator.submit.html#sasoptpy.interface.SASMediator.submit">[docs]</a>    <span class="k">def</span> <span class="nf">submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Submit action for custom input and :class:`Workspace` objects</span>
+<span class="sd">        Submit action for custom input and :class:`sasoptpy.Workspace` objects</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_optmodel_code</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
@@ -418,7 +418,7 @@
 
 <div class="viewcode-block" id="SASMediator.submit_optmodel_code"><a class="viewcode-back" href="../../../../api/generated/sasoptpy.interface.SASMediator.submit_optmodel_code.html#sasoptpy.interface.SASMediator.submit_optmodel_code">[docs]</a>    <span class="k">def</span> <span class="nf">submit_optmodel_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Submits given :class:`Workspace` object in OPTMODEL format</span>
+<span class="sd">        Submits given :class:`sasoptpy.Workspace` object in OPTMODEL format</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -503,7 +503,7 @@
 
 <div class="viewcode-block" id="SASMediator.set_workspace_variable_values"><a class="viewcode-back" href="../../../../api/generated/sasoptpy.interface.SASMediator.set_workspace_variable_values.html#sasoptpy.interface.SASMediator.set_workspace_variable_values">[docs]</a>    <span class="k">def</span> <span class="nf">set_workspace_variable_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solution</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Performs post-solve assignment of :class:`Workspace` variable values</span>
+<span class="sd">        Performs post-solve assignment of :class:`sasoptpy.Workspace` variable values</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">caller</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">caller</span>
         <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">solution</span><span class="o">.</span><span class="n">itertuples</span><span class="p">():</span>
@@ -565,8 +565,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

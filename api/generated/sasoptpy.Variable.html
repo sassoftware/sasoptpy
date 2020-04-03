@@ -17,7 +17,7 @@
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="sasoptpy.Variable.lb" href="sasoptpy.Variable.lb.html" />
+    <link rel="next" title="sasoptpy.Variable.set_bounds" href="sasoptpy.Variable.set_bounds.html" />
     <link rel="prev" title="Variable" href="../variable.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="../../_static/js/version.js"></script>
@@ -33,7 +33,7 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="sasoptpy.Variable.lb.html" title="sasoptpy.Variable.lb"
+          <a href="sasoptpy.Variable.set_bounds.html" title="sasoptpy.Variable.set_bounds"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="../variable.html" title="Variable"
@@ -61,17 +61,15 @@
 <dd class="field-odd"><dl class="simple">
 <dt><strong>name</strong><span class="classifier">string</span></dt><dd><p>Name of the variable</p>
 </dd>
-<dt><strong>vartype</strong><span class="classifier">string, optional</span></dt><dd><p>Type of the variable, default is continuous</p>
+<dt><strong>vartype</strong><span class="classifier">string, optional</span></dt><dd><p>Type of the variable</p>
 </dd>
-<dt><strong>lb</strong><span class="classifier">float, optional</span></dt><dd><p>Lower bound of the variable, default is -inf</p>
+<dt><strong>lb</strong><span class="classifier">float, optional</span></dt><dd><p>Lower bound of the variable</p>
 </dd>
-<dt><strong>ub</strong><span class="classifier">float, optional</span></dt><dd><p>Upper bound of the variable, default is inf</p>
+<dt><strong>ub</strong><span class="classifier">float, optional</span></dt><dd><p>Upper bound of the variable</p>
 </dd>
 <dt><strong>init</strong><span class="classifier">float, optional</span></dt><dd><p>Initial value of the variable</p>
 </dd>
-<dt><strong>abstract</strong><span class="classifier">boolean, optional</span></dt><dd><p>Indicator of whether the variable is abstract or not</p>
-</dd>
-<dt><strong>shadow</strong><span class="classifier">boolean, optional</span></dt><dd><p>Indicator of whether the variable is shadow or not        Used for internal purposes</p>
+<dt><strong>abstract</strong><span class="classifier">boolean, optional</span></dt><dd><p>When set to <cite>True</cite>, indicates that the variable is abstract</p>
 </dd>
 </dl>
 </dd>
@@ -96,9 +94,9 @@
 <dl class="field-list simple">
 <dt class="field-odd">Attributes</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><a class="reference internal" href="sasoptpy.Variable.lb.html#sasoptpy.Variable.lb" title="sasoptpy.Variable.lb"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lb</span></code></a></dt><dd><p>Lower bound of the variable</p>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">lb</span></code></dt><dd><p>Lower bound of the variable</p>
 </dd>
-<dt><a class="reference internal" href="sasoptpy.Variable.ub.html#sasoptpy.Variable.ub" title="sasoptpy.Variable.ub"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ub</span></code></a></dt><dd><p>Upper bound of the variable</p>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">ub</span></code></dt><dd><p>Upper bound of the variable</p>
 </dd>
 </dl>
 </dd>
@@ -133,13 +131,12 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../api.html#core">Core</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../model.html">Model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../expression.html">Expression</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../objective.html">Variable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../objective.html">Objective</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="../variable.html">Variable</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="../variable.html#constructor">Constructor</a><ul class="current">
 <li class="toctree-l5 current"><a class="current reference internal" href="#">sasoptpy.Variable</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../variable.html#attributes">Attributes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../variable.html#methods">Methods</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../variable.html#inherited-methods">Inherited Methods</a></li>
 </ul>
@@ -183,7 +180,7 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="sasoptpy.Variable.lb.html" title="sasoptpy.Variable.lb"
+          <a href="sasoptpy.Variable.set_bounds.html" title="sasoptpy.Variable.set_bounds"
              >next</a> |</li>
         <li class="right" >
           <a href="../variable.html" title="Variable"
@@ -196,8 +193,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

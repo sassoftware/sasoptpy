@@ -17,7 +17,7 @@
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Basic Functionality" href="basics.html" />
+    <link rel="next" title="Quick Reference" href="basics.html" />
     <link rel="prev" title="User Guide" href="user-guide.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="../_static/js/version.js"></script>
@@ -33,7 +33,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="basics.html" title="Basic Functionality"
+          <a href="basics.html" title="Quick Reference"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="user-guide.html" title="User Guide"
@@ -50,70 +50,69 @@
             
   <div class="section" id="introduction-to-optimization">
 <span id="intro"></span><h1>Introduction to Optimization<a class="headerlink" href="#introduction-to-optimization" title="Permalink to this headline">¶</a></h1>
-<p>Optimization is an umbrella term for maximizing or minimizing a given target, which
-can be represented as a function.
-It is often used in real-life problems from finance to aviation, from chemistry to sports analytics.</p>
+<p>Optimization is an umbrella term for maximizing or minimizing a specified target; given as a mathematical function.
+Optimization is often used in real-life problems from finance to aviation, from chemistry to sports analytics.</p>
 <p>Optimization problems can describe a business problem or a physical concept.
-Any phenomena that can be represented as a function can be optimized by several algorithms.
-It lies at the heart of several tools we use every day, from routing to Machine Learning.</p>
+Any phenomenon that can be represented as a function can be optimized by several algorithms.
+Optimization lies at the heart of several tools you use every day, from routing to machine learning.</p>
 <div class="section" id="steps-of-optimization">
 <h2>Steps of Optimization<a class="headerlink" href="#steps-of-optimization" title="Permalink to this headline">¶</a></h2>
-<p>Optimization problems often consists of the following steps <a class="footnote-reference brackets" href="#id6" id="id1">1</a> <a class="footnote-reference brackets" href="#id7" id="id2">2</a>:</p>
+<p>Optimization problems often consist of the following steps: <a class="footnote-reference brackets" href="#id5" id="id1">1</a> <a class="footnote-reference brackets" href="#id6" id="id2">2</a></p>
 <ol class="arabic simple">
-<li><p>Observe the system and define the problem</p></li>
-<li><p>Gather relevant data</p></li>
-<li><p>Develop a formulation</p></li>
-<li><p>Solve the model</p></li>
-<li><p>Interpret the solution</p></li>
+<li><p>Observe the system and define the problem.</p></li>
+<li><p>Gather relevant data.</p></li>
+<li><p>Develop a formulation.</p></li>
+<li><p>Solve the model.</p></li>
+<li><p>Interpret the solution.</p></li>
 </ol>
-<p>Often, a process is observed by the modeler to identify the problems.
-Several examples are finding the shortest path between two locations, maximizing a profit,
+<p>A modeler observes the process in order to identify the problems and potential improvements.
+Several examples of optimization problems are finding the shortest path between two locations, maximizing a profit,
 and maximizing the accuracy of a handwriting recognition algorithm.</p>
 <p>Collecting data is often the most daunting process.
 In the age of big data, it is often difficult to distinguish noise from relevant data.
 After data are gathered, you can write a formulation.
 A proper formulation is critical because features such as linearity and convexity greatly impact
 the performance of solution algorithms, especially for large problems.</p>
-<p>Solving a model requires an optimization algorithm.
-SAS Optimization provides several optimization algorithms to solve a variety of different formulations.
-See <a class="reference external" href="#types-of-optimization">types of optimization</a> for more information on this topic.</p>
-<p>Finally, the modeler should decide whether the result of an optimization process is valid.
-If not, the process should be repeated by adding the missing pieces until a satisfactory result is obtained.</p>
+<p>Solving a problem requires an optimization algorithm.
+SAS Optimization provides several optimization algorithms to solve a variety of different problem types.
+For more information, see <a class="reference external" href="#types-of-optimization">Types of Optimization</a>.</p>
+<p>Finally, the modeler decides whether the result of an optimization process is valid.
+If not, the process is repeated by adding the missing pieces until a satisfactory result is obtained.</p>
 </div>
 <div class="section" id="basic-elements">
 <h2>Basic Elements<a class="headerlink" href="#basic-elements" title="Permalink to this headline">¶</a></h2>
-<p>There might be several elements in the definition of an optimization formulation.
-To clarify these elements, consider an optimization problem of finding a route from your home to the airport.</p>
-<ol class="arabic simple">
-<li><p><strong>Variables</strong>: Variables are parameters that the optimization algorithm tunes.
-In the example, the decisions of which roads to be used are decision variables.
-An optimization algorithm determines optimal values for variables in the problem.</p></li>
-<li><p><strong>Objective</strong>: An objective is the measure of performance that is to be maximized or minimized.
-An objective is a function of variables in a problem, meaning an objective value is obtained for given
-values of variables in an optimization problem.
-In the example, the objective function is the time to reach the airport.
-The optimization algorithm should decide which roads to use in order to minimize the travel time.</p></li>
-<li><p><strong>Constraints</strong>: Constraints are restrictions on variables that prevent illogical solutions.
-In the example, the amount of fuel in the car places a restriction on how far you can drive.
+<p>An optimization formulation has the following elements:</p>
+<ul class="simple">
+<li><p><em>Variables</em> are parameters that the optimization algorithm tunes.
+An optimization algorithm determines optimal values for variables in the problem.
+As an example, in an optimization problem of finding a route from your home to the airport,
+which roads to use are decision variables.</p></li>
+<li><p>An <em>objective</em> is a performance measure that is to be maximized or minimized.
+An objective is a function of variables in an optimization problem, meaning an objective value is obtained for
+specified values of variables.
+In the home to airport route example, the objective function is the time to reach the airport.
+The optimization algorithm decides which roads to use in order to minimize the travel time.</p></li>
+<li><p><em>Constraints</em> are restrictions on variables that are added in order to prevent illogical or undesired solutions.
+In the example, the amount of fuel in the car restricts how far you can drive.
 You can the force optimization algorithm to find a solution under a certain mileage, even if there are other
-solutions which could be shorter in terms of travel time.</p></li>
-</ol>
-<p>In short, <em>optimization</em> is choosing <strong>variable</strong> values to maximize or minimize an <strong>objective</strong> function subject
-to certain <strong>constraints</strong>.</p>
+solutions that might be shorter in terms of travel time.</p></li>
+</ul>
+<p>In short, <em>optimization</em> consists of choosing <em>variable</em> values to maximize or minimize an <em>objective</em> function subject
+to certain <em>constraints</em>.</p>
 </div>
 <div class="section" id="simple-problem">
 <h2>Simple Problem<a class="headerlink" href="#simple-problem" title="Permalink to this headline">¶</a></h2>
-<p>Let us consider a simple example. The following problem (Brewer’s Dilemma) is a simplified Resource Allocation problem,
-presented by Robert G. Bland <a class="footnote-reference brackets" href="#id8" id="id3">3</a>.</p>
-<p>In the problem, a brewer has limited corn, hops, and barley malt inventory. The brewer wants to produce Ale and Beer that
-will maximize the total profit. Each product requires a certain amount of these three ingredients, as follows:</p>
+<p>Consider a simple example. The following problem (brewer’s dilemma) is a simplified resource allocation problem,
+presented by Robert G. Bland. <a class="footnote-reference brackets" href="#id7" id="id3">3</a></p>
+<p>In the problem, a brewer has limited corn, hops, and barley malt inventory. The brewer wants to produce ale and beer
+that will maximize the total profit. Each product requires a certain amount of these three ingredients, as follows:</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 29%" />
+<col style="width: 23%" />
 <col style="width: 18%" />
 <col style="width: 18%" />
-<col style="width: 22%" />
-<col style="width: 12%" />
+<col style="width: 27%" />
+<col style="width: 14%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>(per barrel)</p></th>
@@ -121,138 +120,136 @@ will maximize the total profit. Each product requires a certain amount of these 
 <th class="head"></th>
 </tr>
 <tr class="row-even"><th class="head"><p>Product</p></th>
-<th class="head"><p>Corn</p></th>
-<th class="head"><p>Hops</p></th>
-<th class="head"><p>Barley Malt</p></th>
-<th class="head"><p>Profit</p></th>
+<th class="head"><p>Corn (Pounds)</p></th>
+<th class="head"><p>Hops (Ounces)</p></th>
+<th class="head"><p>Barley Malt (Pounds)</p></th>
+<th class="head"><p>Profit ($)</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-odd"><td><p>Ale</p></td>
-<td><p>5 pounds</p></td>
-<td><p>4 ounces</p></td>
-<td><p>35 pounds</p></td>
-<td><p>$13</p></td>
+<td><p>5</p></td>
+<td><p>4</p></td>
+<td><p>35</p></td>
+<td><p>13</p></td>
 </tr>
 <tr class="row-even"><td><p>Beer</p></td>
-<td><p>15 pounds</p></td>
-<td><p>4 ounces</p></td>
-<td><p>20 pounds</p></td>
-<td><p>$23</p></td>
+<td><p>15</p></td>
+<td><p>4</p></td>
+<td><p>20</p></td>
+<td><p>23</p></td>
 </tr>
 <tr class="row-odd"><td><p>(Total Available)</p></td>
-<td><p>480 pounds</p></td>
-<td><p>160 ounces</p></td>
-<td><p>1,190 pounds</p></td>
+<td><p>480</p></td>
+<td><p>160</p></td>
+<td><p>1,190</p></td>
 <td></td>
 </tr>
 </tbody>
 </table>
-<p>The <strong>variables</strong> in this problem are to decide how many barrels of ale and beer to produce. Let us call them <cite>ale</cite> and
-<cite>beer</cite>. It might be intuitive to prefer beer to ale due to its higher profit rate. However, doing so might deplete all
-the resources faster and might leave you with excess amount of hops and barley malt.</p>
-<p>The <strong>objective</strong> in this problem is to maximize the total profit function, which is
-<span class="math notranslate nohighlight">\(13 \cdot \text{ale} + 23 \cdot \text{beer}\)</span>.</p>
-<p>Each limitation on ingredients is a <strong>constraint</strong>. For corn, hops, and barley malt, the following constrains apply:</p>
+<p>The variables (<cite>ale</cite> and <cite>beer</cite>) in this problem are the number of barrels of ale and beer to produce.
+It might be intuitive to prefer beer to ale because of its higher profit rate. However, doing so might deplete all
+the resources faster and might leave you with an excess amount of hops and barley malt.</p>
+<p>The objective in this problem is to maximize the total profit function, which is
+<span class="math notranslate nohighlight">\(13 \times \text{ale} + 23 \times \text{beer}\)</span>.</p>
+<p>Each limitation on ingredients is a constraint. For corn, hops, and barley malt, the following constrains apply:</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}5 \cdot \text{ale} + 15 \cdot \text{beer} &amp;\leq 480 \\
-4 \cdot \text{ale} + 4 \cdot \text{beer} &amp;\leq 160 \\
-35 \cdot \text{ale} + 20 \cdot \text{beer} &amp;\leq 1,190 \\\end{split}\]</div>
+\[\begin{split}5 \times \text{ale} + 15 \times \text{beer} &amp;\leq 480 \\
+4 \times \text{ale} + 4 \times \text{beer} &amp;\leq 160 \\
+35 \times \text{ale} + 20 \times \text{beer} &amp;\leq 1,190 \\\end{split}\]</div>
 <p>Combining all items, the optimization formulation is written as follows:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{array}{rllcl}
-\displaystyle \text{maximize:} &amp; 13 \cdot \text{ale} &amp;+ 23 \cdot \text{beer} \\
+\displaystyle \text{maximize:} &amp; 13 \times \text{ale} &amp;+ 23 \times \text{beer} \\
 \textrm{subject to:}  \\
-&amp;5 \cdot \text{ale} &amp;+ \; 15 \cdot \text{beer} &amp;\leq&amp; 480 \\
-&amp;4 \cdot \text{ale} &amp;+ \; 4 \cdot \text{beer} &amp;\leq&amp; 160 \\
-&amp;35 \cdot \text{ale} &amp;+ \; 20 \cdot \text{beer} &amp;\leq&amp; 1,190 \\
+&amp;5 \times \text{ale} &amp;+ \; 15 \times \text{beer} &amp;\leq&amp; 480 \\
+&amp;4 \times \text{ale} &amp;+ \; 4 \times \text{beer} &amp;\leq&amp; 160 \\
+&amp;35 \times \text{ale} &amp;+ \; 20 \times \text{beer} &amp;\leq&amp; 1,190 \\
 &amp; &amp; \text{ale} &amp; \geq &amp; 0 \\
 &amp; &amp; \text{beer} &amp; \geq &amp; 0
 \end{array}\end{split}\]</div>
-<p>This problem is small enough to be solved by hand, but let us consider some alternatives.</p>
+<p>This problem is small enough to be solved by hand, but consider some alternatives.</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 11%" />
-<col style="width: 29%" />
-<col style="width: 32%" />
-<col style="width: 29%" />
+<col style="width: 9%" />
+<col style="width: 25%" />
+<col style="width: 28%" />
+<col style="width: 38%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"></th>
-<th class="head" colspan="2"><p>Barrels produced</p></th>
+<th class="head" colspan="2"><p>Barrels Produced</p></th>
 <th class="head"></th>
 </tr>
 <tr class="row-even"><th class="head"><p>#</p></th>
 <th class="head"><p>Ale</p></th>
 <th class="head"><p>Beer</p></th>
-<th class="head"><p>Profit</p></th>
+<th class="head"><p>Profit ($)</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-odd"><td><p>1</p></td>
 <td><p>34</p></td>
 <td><p>0</p></td>
-<td><p>$442</p></td>
+<td><p>442</p></td>
 </tr>
 <tr class="row-even"><td><p>2</p></td>
 <td><p>0</p></td>
 <td><p>32</p></td>
-<td><p>$736</p></td>
+<td><p>736</p></td>
 </tr>
 <tr class="row-odd"><td><p>3</p></td>
 <td><p>15</p></td>
 <td><p>25</p></td>
-<td><p>$770</p></td>
+<td><p>770</p></td>
 </tr>
 <tr class="row-even"><td><p>4</p></td>
 <td><p>12</p></td>
 <td><p>28</p></td>
-<td><p>$800</p></td>
+<td><p>800</p></td>
 </tr>
 </tbody>
 </table>
-<p>Producing only ale or beer is inferior to producing a combination of the two, for obvious reasons. Finding the exact ratio
-that will maximize the profit might be tricky, as seen in solutions 3 and 4. Indeed, solution 4 gives the optimal
+<p>The preceding table indicates that producing only ale or beer creates less profit than producing a combination of the two.
+Alternative solution 4 gives the optimal
 values that maximize the profit in this example.</p>
-<p>Some additional examples of problems that can be formulated as optimization problems are as follows:</p>
+<p>Following are additional examples of problems that can be formulated as optimization problems:</p>
 <ul class="simple">
-<li><p>Scheduling project steps to minimize total completion, where tasks might depend on completion of earlier tasks</p></li>
-<li><p>Choosing distribution centers for retailers to minimize total cost while satisfying customer demands on time</p></li>
-<li><p>Assigning soccer players to a squad to maximize the total rating of the team under foreign player rules</p></li>
-<li><p>Finding the cheapest travel option and shortest route between two cities</p></li>
-<li><p>Blending chemical products to minimize the total cost while achieving a certain efficiency of detergents</p></li>
-<li><p>Choosing a price that will maximize the total profit in a competitive market</p></li>
+<li><p>scheduling project steps to minimize total completion time, where some tasks might depend on completion of earlier tasks</p></li>
+<li><p>choosing distribution centers for retailers to minimize total cost while satisfying customer demands on delivery time</p></li>
+<li><p>assigning soccer players to a squad to maximize the total rating of the team under foreign player rules</p></li>
+<li><p>finding the cheapest travel option and shortest route between two cities</p></li>
+<li><p>blending chemical products to minimize the total cost while achieving a certain efficiency of detergents</p></li>
+<li><p>choosing a price that will maximize the total profit in a competitive market</p></li>
 </ul>
-<p>See the related section of SAS Optimization 8.5 Mathematical Optimization Procedures <a class="footnote-reference brackets" href="#id9" id="id4">4</a> for more information about
-optimization problems and examples.</p>
+<p>For more information about optimization problems and examples,
+see the related section of
+<a class="reference external" href="https://go.documentation.sas.com/?cdcId=pgmsascdc&amp;cdcVersion=9.4_3.5&amp;docsetId=casmopt&amp;docsetTarget=casmopt_intro_toc.htm&amp;locale=en">SAS Optimization Mathematical Optimization Procedures</a>.</p>
 </div>
-<div class="section" id="id5">
-<h2>Types of Optimization<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id4">
+<h2>Types of Optimization<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <p>The structure of a formulation affects which algorithms can be deployed to solve a problem.
 The most common optimization types are as follows:</p>
 <ul class="simple">
 <li><p><strong>Linear optimization</strong>: If the objective function and all constraints of a problem can be described
-by linear mathematical relations, and if all decision variables are continuous, the formulation is called a
-Linear problem (LP). LPs are one of the easiest problems in terms of solution time and well-studied in literature.</p></li>
-<li><p><strong>Mixed integer linear optimization</strong>: If a linear formulation involves binary (on/off type decisions) or integer variables,
-that problem is an Integer Linear Problem (ILP) or Mixed Integer Linear Problem (MILP) depending on variables.
+by linear mathematical relations and if all decision variables are continuous, the formulation is called a
+linear problem (LP). LPs are among the easiest problems in terms of solution time and are well-studied in literature.</p></li>
+<li><p><strong>Mixed integer linear optimization</strong>: If a linear formulation involves binary (yes or no type decisions), or integer variables,
+the problem is an integer linear problem (ILP) or mixed integer linear problem (MILP), depending on the variables.
 MILPs are very popular as many real-life problems can be represented as MILPs.</p></li>
 <li><p><strong>Nonlinear optimization</strong>: If a problem involves nonlinear objectives or constraints (such as
-exponential, polynomial, absolute values) the problem is called a nonlinear problem (NLP).</p></li>
+exponential, polynomial, or absolute values), the problem is called a nonlinear problem (NLP).</p></li>
 </ul>
 <p><strong>References</strong></p>
 <dl class="footnote brackets">
-<dt class="label" id="id6"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dt class="label" id="id5"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
 <dd><p>Hillier, Frederick S., and Gerald J. Lieberman. Introduction to operations research. McGraw-Hill Science, Engineering &amp; Mathematics, 1995.</p>
 </dd>
-<dt class="label" id="id7"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dt class="label" id="id6"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
 <dd><p>SAS Institute. SAS/OR 15.1 User’s Guide: Mathematical Programming Examples. SAS institute, 2018.</p>
 </dd>
-<dt class="label" id="id8"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
+<dt class="label" id="id7"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
 <dd><p>Bland, Robert G. “The Allocation of Resources by Linear Programming.” Scientific American 244 (1981): 126-144.</p>
-</dd>
-<dt class="label" id="id9"><span class="brackets"><a class="fn-backref" href="#id4">4</a></span></dt>
-<dd><p><a class="reference external" href="https://go.documentation.sas.com/?cdcId=pgmsascdc&amp;cdcVersion=9.4_3.5&amp;docsetId=casmopt&amp;docsetTarget=casmopt_intro_toc.htm&amp;locale=en">https://go.documentation.sas.com/?cdcId=pgmsascdc&amp;cdcVersion=9.4_3.5&amp;docsetId=casmopt&amp;docsetTarget=casmopt_intro_toc.htm&amp;locale=en</a></p>
 </dd>
 </dl>
 </div>
@@ -283,13 +280,13 @@ exponential, polynomial, absolute values) the problem is called a nonlinear prob
 <li class="toctree-l3"><a class="reference internal" href="#steps-of-optimization">Steps of Optimization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#basic-elements">Basic Elements</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#simple-problem">Simple Problem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id5">Types of Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Types of Optimization</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="basics.html">Basic Functionality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basics.html">Quick Reference</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sessions.html">Sessions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models.html">Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="components.html">Model components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components.html">Model Components</a></li>
 <li class="toctree-l2"><a class="reference internal" href="workspaces.html">Workspaces</a></li>
 <li class="toctree-l2"><a class="reference internal" href="input-data.html">Handling Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="workflow.html">Workflows</a></li>
@@ -324,7 +321,7 @@ exponential, polynomial, absolute values) the problem is called a nonlinear prob
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="basics.html" title="Basic Functionality"
+          <a href="basics.html" title="Quick Reference"
              >next</a> |</li>
         <li class="right" >
           <a href="user-guide.html" title="User Guide"
@@ -336,8 +333,8 @@ exponential, polynomial, absolute values) the problem is called a nonlinear prob
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

@@ -56,7 +56,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    name : string</span>
 <span class="sd">        Name of the parameter</span>
-<span class="sd">    init : Expression, optional</span>
+<span class="sd">    init : :class:`Expression`, optional</span>
 <span class="sd">        Initial value expression of the parameter</span>
 <span class="sd">    settype : list, optional</span>
 <span class="sd">        List of types for the set, consisting of &#39;num&#39; and &#39;str&#39; values</span>
@@ -178,16 +178,16 @@
         <span class="n">member_defs</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sasoptpy</span><span class="o">.</span><span class="n">to_definition</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="p">)</span>
         <span class="n">conditions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">get_conditions_str</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">conditions</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;{{</span><span class="si">{member_defs}</span><span class="s1">: </span><span class="si">{conditions}</span><span class="s1">}}&#39;</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">{{</span><span class="si">{</span><span class="n">member_defs</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">conditions</span><span class="si">}</span><span class="se">}}</span><span class="s1">&#39;</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;{{</span><span class="si">{member_defs}</span><span class="s1">}}&#39;</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">{{</span><span class="si">{</span><span class="n">member_defs</span><span class="si">}</span><span class="se">}}</span><span class="s1">&#39;</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;sasoptpy.InlineSet(&#39;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">s</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_expr</span><span class="p">()</span>
         <span class="k">except</span><span class="p">:</span>
-            <span class="n">s</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;id={id(self)}&#39;</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;id=</span><span class="si">{</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
         <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;}&#39;</span>
         <span class="k">return</span> <span class="n">s</span>
 </pre></div>
@@ -247,8 +247,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

@@ -17,7 +17,7 @@
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="sasoptpy.get_solution_table" href="sasoptpy.get_solution_table.html" />
+    <link rel="next" title="sasoptpy.get_value_table" href="sasoptpy.get_value_table.html" />
     <link rel="prev" title="sasoptpy.exp_range" href="sasoptpy.exp_range.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="../../_static/js/version.js"></script>
@@ -33,7 +33,7 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="sasoptpy.get_solution_table.html" title="sasoptpy.get_solution_table"
+          <a href="sasoptpy.get_value_table.html" title="sasoptpy.get_value_table"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="sasoptpy.exp_range.html" title="sasoptpy.exp_range"
@@ -54,11 +54,11 @@
 <dl class="function">
 <dt id="sasoptpy.flatten_frame">
 <code class="sig-name descname">flatten_frame</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">swap=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/sasoptpy/util/user_utils.html#flatten_frame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.flatten_frame" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> object into <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v1.0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code></a></p>
+<dd><p>Converts a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> object into <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v1.0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code></a></p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl>
-<dt><strong>df</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></span></dt><dd><p>DataFrame to be flattened</p>
+<dt><strong>df</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></span></dt><dd><p>DataFrame to be flattened</p>
 </dd>
 <dt><strong>swap</strong><span class="classifier">boolean, optional</span></dt><dd><p>Option to use columns as first index</p>
 </dd>
@@ -66,7 +66,7 @@
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl>
-<dt><strong>new_frame</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></span></dt><dd><p>A new DataFrame where indices consist of index and columns names as
+<dt><strong>new_frame</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></span></dt><dd><p>A new DataFrame where indices consist of index and columns names as
 tuples</p>
 </dd>
 </dl>
@@ -135,7 +135,8 @@ tuples</p>
 <li class="toctree-l5"><a class="reference internal" href="sasoptpy.dict_to_frame.html">sasoptpy.dict_to_frame</a></li>
 <li class="toctree-l5"><a class="reference internal" href="sasoptpy.exp_range.html">sasoptpy.exp_range</a></li>
 <li class="toctree-l5 current"><a class="current reference internal" href="#">sasoptpy.flatten_frame</a></li>
-<li class="toctree-l5"><a class="reference internal" href="sasoptpy.get_solution_table.html">sasoptpy.get_solution_table</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.get_value_table.html">sasoptpy.get_value_table</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.expr_sum.html">sasoptpy.expr_sum</a></li>
 <li class="toctree-l5"><a class="reference internal" href="sasoptpy.quick_sum.html">sasoptpy.quick_sum</a></li>
 <li class="toctree-l5"><a class="reference internal" href="sasoptpy.reset.html">sasoptpy.reset</a></li>
 </ul>
@@ -176,7 +177,7 @@ tuples</p>
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="sasoptpy.get_solution_table.html" title="sasoptpy.get_solution_table"
+          <a href="sasoptpy.get_value_table.html" title="sasoptpy.get_value_table"
              >next</a> |</li>
         <li class="right" >
           <a href="sasoptpy.exp_range.html" title="sasoptpy.exp_range"
@@ -189,8 +190,8 @@ tuples</p>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

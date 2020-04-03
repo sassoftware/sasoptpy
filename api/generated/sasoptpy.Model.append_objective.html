@@ -55,20 +55,20 @@
 <dt id="sasoptpy.Model.append_objective">
 <code class="sig-prename descclassname">Model.</code><code class="sig-name descname">append_objective</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">expression</em>, <em class="sig-param">name</em>, <em class="sig-param">sense=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/sasoptpy/core/model.html#Model.append_objective"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.Model.append_objective" title="Permalink to this definition">¶</a></dt>
 <dd><p>Appends a new objective to the model</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>expression</strong><span class="classifier">Expression</span></dt><dd><p>The objective function as an Expression</p>
+<dd class="field-odd"><dl>
+<dt><strong>expression</strong><span class="classifier"><a class="reference internal" href="sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a></span></dt><dd><p>The objective function as an Expression</p>
 </dd>
 <dt><strong>name</strong><span class="classifier">string</span></dt><dd><p>Name of the objective value</p>
 </dd>
-<dt><strong>sense</strong><span class="classifier">string, optional</span></dt><dd><p>Objective value direction, ‘MIN’ or ‘MAX’</p>
+<dt><strong>sense</strong><span class="classifier">string, optional</span></dt><dd><p>Objective value direction, <cite>sasoptpy.MIN</cite> or <cite>sasoptpy.MAX</cite></p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>objective</strong><span class="classifier">Expression</span></dt><dd><p>Objective function as an <a class="reference internal" href="sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a> object</p>
+<dd class="field-even"><dl>
+<dt><strong>objective</strong><span class="classifier"><a class="reference internal" href="sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a></span></dt><dd><p>Objective function as an <a class="reference internal" href="sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a> object</p>
 </dd>
 </dl>
 </dd>
@@ -81,7 +81,7 @@
 </div>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li><p>Default objective sense is minimization (MIN)</p></li>
+<li><p>Default objective sense is minimization <cite>MIN</cite>.</p></li>
 </ul>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f1</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MIN</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;f1&#39;</span><span class="p">)</span>
@@ -170,7 +170,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../expression.html">Expression</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../objective.html">Variable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../objective.html">Objective</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../variable.html">Variable</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../variable_group.html">Variable Group</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../constraint.html">Constraint</a></li>
@@ -224,8 +224,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

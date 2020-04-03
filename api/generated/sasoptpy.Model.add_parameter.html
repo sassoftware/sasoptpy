@@ -54,11 +54,11 @@
 <dl class="method">
 <dt id="sasoptpy.Model.add_parameter">
 <code class="sig-prename descclassname">Model.</code><code class="sig-name descname">add_parameter</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">*argv</em>, <em class="sig-param">name=None</em>, <em class="sig-param">init=None</em>, <em class="sig-param">value=None</em>, <em class="sig-param">p_type=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/sasoptpy/core/model.html#Model.add_parameter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.Model.add_parameter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a parameter to the model</p>
+<dd><p>Adds a <a class="reference internal" href="sasoptpy.abstract.Parameter.html#sasoptpy.abstract.Parameter" title="sasoptpy.abstract.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">abstract.Parameter</span></code></a> object to the model</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl>
-<dt><strong>argv</strong><span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">Set</span></code>, optional</span></dt><dd><p>Key set of the parameter</p>
+<dt><strong>argv</strong><span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">Set</span></code>, optional</span></dt><dd><p>Index or indices of the parameter</p>
 </dd>
 <dt><strong>name</strong><span class="classifier">string, optional</span></dt><dd><p>Name of the parameter</p>
 </dd>
@@ -68,12 +68,25 @@
 </dd>
 </dl>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl>
+<dt><strong>p</strong><span class="classifier"><a class="reference internal" href="sasoptpy.abstract.Parameter.html#sasoptpy.abstract.Parameter" title="sasoptpy.abstract.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">abstract.Parameter</span></code></a> or <a class="reference internal" href="sasoptpy.abstract.ParameterGroup.html#sasoptpy.abstract.ParameterGroup" title="sasoptpy.abstract.ParameterGroup"><code class="xref py py-class docutils literal notranslate"><span class="pre">abstract.ParameterGroup</span></code></a></span></dt><dd><p>A single parameter or a parameter group</p>
+</dd>
+</dl>
+</dd>
 </dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">I</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;I&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="n">I</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">_defn</span><span class="p">())</span>
 <span class="go">num a {I} init 5 ;</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">I</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;I&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">J</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;J&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="n">I</span><span class="p">,</span> <span class="n">J</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;p&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">_defn</span><span class="p">())</span>
+<span class="go">num p {{I,J}};</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -148,7 +161,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../expression.html">Expression</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../objective.html">Variable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../objective.html">Objective</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../variable.html">Variable</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../variable_group.html">Variable Group</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../constraint.html">Constraint</a></li>
@@ -202,8 +215,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

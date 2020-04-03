@@ -50,13 +50,11 @@
             
   <div class="section" id="what-s-new">
 <span id="whatsnew"></span><h1>What’s New<a class="headerlink" href="#what-s-new" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="v1-0-0-alpha-tbd">
-<h2>v1.0.0-alpha (TBD)<a class="headerlink" href="#v1-0-0-alpha-tbd" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="new-features">
-<h3>New Features<a class="headerlink" href="#new-features" title="Permalink to this headline">¶</a></h3>
+<h2>New Features<a class="headerlink" href="#new-features" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p>Added workspaces; see more info in <a class="reference internal" href="../guide/workspaces.html#workspaces"><span class="std std-ref">User Guide</span></a> and <a class="reference internal" href="../examples/efficiency_analysis.html#efficiency-analysis"><span class="std std-ref">example</span></a></p></li>
-<li><p>Added <a class="reference internal" href="../guide/basics.html#configurations"><span class="std std-ref">configurations</span></a></p></li>
+<li><p>Added workspaces; for more information, see <a class="reference internal" href="../guide/workspaces.html#workspaces"><span class="std std-ref">Workspaces in User Guide</span></a> and <a class="reference internal" href="../examples/efficiency_analysis.html#efficiency-analysis"><span class="std std-ref">Efficiency Analysis example</span></a></p></li>
+<li><p>Added <a class="reference internal" href="../guide/basics.html#configurations"><span class="std std-ref">package configurations</span></a></p></li>
 <li><p>Added <a class="reference internal" href="../guide/workspaces.html#abstract-actions"><span class="std std-ref">abstract actions</span></a> that allow server-side operations. Highlights include:</p>
 <ul>
 <li><p><a class="reference internal" href="../api/generated/sasoptpy.actions.read_data.html#sasoptpy.actions.read_data" title="sasoptpy.actions.read_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">actions.read_data()</span></code></a> and <a class="reference internal" href="../api/generated/sasoptpy.actions.create_data.html#sasoptpy.actions.create_data" title="sasoptpy.actions.create_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">actions.create_data()</span></code></a></p></li>
@@ -69,18 +67,18 @@
 </ul>
 </div>
 <div class="section" id="changes">
-<h3>Changes<a class="headerlink" href="#changes" title="Permalink to this headline">¶</a></h3>
+<h2>Changes<a class="headerlink" href="#changes" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p>Refactored the entire package. sasoptpy now has <cite>core</cite>, <cite>abstract</cite>, <cite>interface</cite>,
+<li><p>Refactored the entire package; sasoptpy now has <cite>core</cite>, <cite>abstract</cite>, <cite>interface</cite>,
 <cite>session</cite>, and <cite>util</cite> directories</p></li>
 <li><p>Experimental RESTful API was dropped</p></li>
 <li><p><cite>get_obj_by_name</cite> function was removed</p></li>
-<li><p><cite>lso</cite> solver was renamed to <cite>blackbox</cite></p></li>
+<li><p><cite>lso</cite> solver was renamed <cite>blackbox</cite></p></li>
 <li><p>Because of the use of literal strings (<span class="target" id="index-0"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0498"><strong>PEP 498</strong></a>), only Python 3.6 or later versions are supported</p></li>
 </ul>
 </div>
 <div class="section" id="bug-fixes">
-<h3>Bug Fixes<a class="headerlink" href="#bug-fixes" title="Permalink to this headline">¶</a></h3>
+<h2>Bug Fixes<a class="headerlink" href="#bug-fixes" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed: Arithmetic operations with powers are generating incorrect results</p></li>
 <li><p>Fixed: Variable groups with space in their index are not getting values</p></li>
@@ -88,7 +86,6 @@
 <li><p>Fixed: Documentation does not mention conda-forge library requirement</p></li>
 <li><p>Fixed: Single-dimensional parameters are hard to access</p></li>
 </ul>
-</div>
 </div>
 </div>
 
@@ -113,12 +110,9 @@
 <li class="toctree-l1 current"><a class="reference internal" href="overview.html">Overview</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="about.html">About sasoptpy</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">What’s New</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#v1-0-0-alpha-tbd">v1.0.0-alpha (TBD)</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#new-features">New Features</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#changes">Changes</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#bug-fixes">Bug Fixes</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="#new-features">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#changes">Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bug-fixes">Bug Fixes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="license.html">License</a></li>
@@ -167,8 +161,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

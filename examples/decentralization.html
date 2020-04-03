@@ -17,7 +17,7 @@
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Optimal Wedding" href="optimal_wedding.html" />
+    <link rel="next" title="Optimal Wedding Seating" href="optimal_wedding.html" />
     <link rel="prev" title="Economic Planning" href="economic_planning.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="../_static/js/version.js"></script>
@@ -33,7 +33,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="optimal_wedding.html" title="Optimal Wedding"
+          <a href="optimal_wedding.html" title="Optimal Wedding Seating"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="economic_planning.html" title="Economic Planning"
@@ -52,8 +52,8 @@
 <span id="examples-decentralization"></span><h1>Decentralization<a class="headerlink" href="#decentralization" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="reference">
 <h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex10_toc.htm&amp;docsetVersion=15.1&amp;locale=en">http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex10_toc.htm&amp;docsetVersion=15.1&amp;locale=en</a></p>
-<p><a class="reference external" href="http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex10.html">http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex10.html</a></p>
+<p>SAS/OR example: <a class="reference external" href="http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex10_toc.htm&amp;docsetVersion=15.1&amp;locale=en">http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex10_toc.htm&amp;docsetVersion=15.1&amp;locale=en</a></p>
+<p>SAS/OR code for example: <a class="reference external" href="http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex10.html">http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex10.html</a></p>
 </div>
 <div class="section" id="model">
 <h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
@@ -122,18 +122,18 @@
             <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">k</span><span class="p">]</span>
     <span class="n">product</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">IJKL</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">BIN</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;product&#39;</span><span class="p">)</span>
 
-    <span class="n">totalBenefit</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">benefit</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">assign</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+    <span class="n">totalBenefit</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">benefit</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">assign</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
                                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">DEPTS</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">CITIES</span><span class="p">)</span>
 
-    <span class="n">totalCost</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">comm</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">cost</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span> <span class="o">*</span> <span class="n">product</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span>
+    <span class="n">totalCost</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">comm</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">cost</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span> <span class="o">*</span> <span class="n">product</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span>
                              <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span> <span class="ow">in</span> <span class="n">IJKL</span><span class="p">)</span>
 
     <span class="n">m</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">totalBenefit</span><span class="o">-</span><span class="n">totalCost</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;netBenefit&#39;</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MAX</span><span class="p">)</span>
 
-    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">assign</span><span class="p">[</span><span class="n">dept</span><span class="p">,</span> <span class="n">city</span><span class="p">]</span> <span class="k">for</span> <span class="n">city</span> <span class="ow">in</span> <span class="n">CITIES</span><span class="p">)</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">assign</span><span class="p">[</span><span class="n">dept</span><span class="p">,</span> <span class="n">city</span><span class="p">]</span> <span class="k">for</span> <span class="n">city</span> <span class="ow">in</span> <span class="n">CITIES</span><span class="p">)</span>
                       <span class="o">==</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">dept</span> <span class="ow">in</span> <span class="n">DEPTS</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;assign_dept&#39;</span><span class="p">)</span>
 
-    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">assign</span><span class="p">[</span><span class="n">dept</span><span class="p">,</span> <span class="n">city</span><span class="p">]</span> <span class="k">for</span> <span class="n">dept</span> <span class="ow">in</span> <span class="n">DEPTS</span><span class="p">)</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">assign</span><span class="p">[</span><span class="n">dept</span><span class="p">,</span> <span class="n">city</span><span class="p">]</span> <span class="k">for</span> <span class="n">dept</span> <span class="ow">in</span> <span class="n">DEPTS</span><span class="p">)</span>
                       <span class="o">&lt;=</span> <span class="n">max_num_depts</span> <span class="k">for</span> <span class="n">city</span> <span class="ow">in</span> <span class="n">CITIES</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;cardinality&#39;</span><span class="p">)</span>
 
     <span class="n">product_def1</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">assign</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">assign</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
@@ -157,13 +157,13 @@
     <span class="n">m</span><span class="o">.</span><span class="n">drop_constraints</span><span class="p">(</span><span class="n">product_def3</span><span class="p">)</span>
 
     <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span>
-        <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">product</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span>
+        <span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">product</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span>
                      <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">CITIES</span> <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span> <span class="ow">in</span> <span class="n">IJKL</span><span class="p">)</span> <span class="o">==</span> <span class="n">assign</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">DEPTS</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">DEPTS</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">CITIES</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">k</span><span class="p">),</span>
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;pd4&#39;</span><span class="p">)</span>
 
     <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span>
-        <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">product</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span>
+        <span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">product</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span>
                      <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">CITIES</span> <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span> <span class="ow">in</span> <span class="n">IJKL</span><span class="p">)</span> <span class="o">==</span> <span class="n">assign</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">DEPTS</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">DEPTS</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">CITIES</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">k</span><span class="p">),</span>
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;pd5&#39;</span><span class="p">)</span>
@@ -373,7 +373,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guide/user-guide.html">User Guide</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="examples.html">Examples</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="examples.html#viya-examples-concrete">Viya Examples / Concrete</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="examples.html#sas-viya-examples-concrete">SAS Viya Examples (Concrete)</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="food_manufacture_1.html">Food Manufacture 1</a></li>
 <li class="toctree-l3"><a class="reference internal" href="food_manufacture_2.html">Food Manufacture 2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="factory_planning_1.html">Factory Planning 1</a></li>
@@ -396,8 +396,8 @@
 <li class="toctree-l3"><a class="reference internal" href="efficiency_analysis.html">Efficiency Analysis</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#viya-examples-abstract">Viya Examples / Abstract</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-viya-examples-abstract">SAS Viya Examples (Abstract)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-9-4-examples">SAS 9.4 Examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api.html">API Reference</a></li>
@@ -428,7 +428,7 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="optimal_wedding.html" title="Optimal Wedding"
+          <a href="optimal_wedding.html" title="Optimal Wedding Seating"
              >next</a> |</li>
         <li class="right" >
           <a href="economic_planning.html" title="Economic Planning"
@@ -440,8 +440,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

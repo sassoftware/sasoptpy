@@ -1,29 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
 sasoptpy.abstract.statement.DropStatement
 =========================================
 
 .. currentmodule:: sasoptpy.abstract.statement
 
 .. autoclass:: DropStatement
-
-   
-   .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~DropStatement.__init__
-      ~DropStatement.append
-      ~DropStatement.drop_constraint
-      ~DropStatement.get_response
-      ~DropStatement.is_internal
-      ~DropStatement.model_drop_constraint
-      ~DropStatement.set_internal
-      ~DropStatement.set_response
-   
-   
-
-   
-   
-   

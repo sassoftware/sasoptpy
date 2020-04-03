@@ -52,8 +52,8 @@
 <h1>Economic Planning<a class="headerlink" href="#economic-planning" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="reference">
 <h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex9_toc.htm&amp;docsetVersion=15.1&amp;locale=en">http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex9_toc.htm&amp;docsetVersion=15.1&amp;locale=en</a></p>
-<p><a class="reference external" href="http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex09.html">http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex09.html</a></p>
+<p>SAS/OR example: <a class="reference external" href="http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex9_toc.htm&amp;docsetVersion=15.1&amp;locale=en">http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex9_toc.htm&amp;docsetVersion=15.1&amp;locale=en</a></p>
+<p>SAS/OR code for example: <a class="reference external" href="http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex09.html">http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex09.html</a></p>
 </div>
 <div class="section" id="model">
 <h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
@@ -106,7 +106,7 @@
                                         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;static_production&#39;</span><span class="p">)</span>
     <span class="n">m</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MIN</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Zero&#39;</span><span class="p">)</span>
     <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">static_production</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">demand</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span>
-                       <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span>
+                       <span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span>
                            <span class="n">production_coeff</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">static_production</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
                            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">INDUSTRIES</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">INDUSTRIES</span><span class="p">),</span>
                       <span class="n">name</span><span class="o">=</span><span class="s1">&#39;static_con&#39;</span><span class="p">)</span>
@@ -126,7 +126,7 @@
 
     <span class="n">productive_capacity</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ImplicitVar</span><span class="p">(</span>
         <span class="p">(</span><span class="n">init_productive_capacity</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span>
-         <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">extra_capacity</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">year</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+         <span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">extra_capacity</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">year</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
          <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">INDUSTRIES</span> <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_years</span><span class="o">+</span><span class="mi">2</span><span class="p">)),</span>
         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;productive_capacity&#39;</span>
     <span class="p">)</span>
@@ -137,9 +137,9 @@
 
     <span class="n">total_productive_capacity</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">productive_capacity</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">num_years</span><span class="p">]</span>
                                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">INDUSTRIES</span><span class="p">)</span>
-    <span class="n">total_production</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">production</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">year</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">INDUSTRIES</span>
+    <span class="n">total_production</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">production</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">year</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">INDUSTRIES</span>
                                     <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
-    <span class="n">total_manpower</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">production_coeff</span><span class="p">[</span><span class="s1">&#39;manpower&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">*</span>
+    <span class="n">total_manpower</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">production_coeff</span><span class="p">[</span><span class="s1">&#39;manpower&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">*</span>
                                   <span class="n">production</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">year</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span>
                                   <span class="n">productive_capacity_coeff</span><span class="p">[</span><span class="s1">&#39;manpower&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">*</span>
                                   <span class="n">extra_capacity</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">year</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span>
@@ -148,14 +148,14 @@
     <span class="n">continuity_con</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span>
         <span class="n">stock</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">year</span><span class="p">]</span> <span class="o">+</span> <span class="n">production</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">year</span><span class="p">]</span> <span class="o">==</span>
         <span class="p">(</span><span class="n">demand</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">year</span> <span class="ow">in</span> <span class="n">YEARS</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span>
-        <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">production_coeff</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">production</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">year</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span>
+        <span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">production_coeff</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">production</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">year</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span>
                      <span class="n">productive_capacity_coeff</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span>
                      <span class="n">extra_capacity</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">year</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">INDUSTRIES</span><span class="p">)</span> <span class="o">+</span>
         <span class="n">stock</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">year</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">INDUSTRIES</span> <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="n">YEARS0</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;continuity_con&#39;</span><span class="p">)</span>
 
     <span class="n">manpower_con</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span>
-        <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">production_coeff</span><span class="p">[</span><span class="s1">&#39;manpower&#39;</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">production</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">year</span><span class="p">]</span> <span class="o">+</span>
+        <span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">production_coeff</span><span class="p">[</span><span class="s1">&#39;manpower&#39;</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">production</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">year</span><span class="p">]</span> <span class="o">+</span>
                      <span class="n">productive_capacity_coeff</span><span class="p">[</span><span class="s1">&#39;manpower&#39;</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span>
                      <span class="n">extra_capacity</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">year</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
                      <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">INDUSTRIES</span><span class="p">)</span>
@@ -283,7 +283,7 @@
 <span class="go">          P 2         42    2.141875E+03         0</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 2141.8751967.</span>
-<span class="go">NOTE: The Dual Simplex solve time is 0.04 seconds.</span>
+<span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
 <span class="go">NOTE: The output table &#39;SOLUTION&#39; in caslib &#39;CASUSER(casuser)&#39; has 60 rows and 6 columns.</span>
 <span class="go">NOTE: The output table &#39;DUAL&#39; in caslib &#39;CASUSER(casuser)&#39; has 42 rows and 4 columns.</span>
 <span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSER(casuser)&#39; has 13 rows and 4 columns.</span>
@@ -469,7 +469,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guide/user-guide.html">User Guide</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="examples.html">Examples</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="examples.html#viya-examples-concrete">Viya Examples / Concrete</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="examples.html#sas-viya-examples-concrete">SAS Viya Examples (Concrete)</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="food_manufacture_1.html">Food Manufacture 1</a></li>
 <li class="toctree-l3"><a class="reference internal" href="food_manufacture_2.html">Food Manufacture 2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="factory_planning_1.html">Factory Planning 1</a></li>
@@ -492,8 +492,8 @@
 <li class="toctree-l3"><a class="reference internal" href="efficiency_analysis.html">Efficiency Analysis</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#viya-examples-abstract">Viya Examples / Abstract</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-viya-examples-abstract">SAS Viya Examples (Abstract)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-9-4-examples">SAS 9.4 Examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api.html">API Reference</a></li>
@@ -536,8 +536,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

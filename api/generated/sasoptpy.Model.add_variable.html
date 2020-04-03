@@ -57,12 +57,13 @@
 <dd><p>Adds a new variable to the model</p>
 <p>New variables can be created via this method or existing variables
 can be added to the model.</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>name</strong><span class="classifier">string, optional</span></dt><dd><p>Name of the variable to be created</p>
+<dt><strong>name</strong><span class="classifier">string</span></dt><dd><p>Name of the variable to be created</p>
 </dd>
-<dt><strong>vartype</strong><span class="classifier">string, optional</span></dt><dd><p>Type of the variable, either ‘BIN’, ‘INT’ or ‘CONT’</p>
+<dt><strong>vartype</strong><span class="classifier">string, optional</span></dt><dd><p>Type of the variable, either <cite>sasoptpy.BIN</cite>, <cite>sasoptpy.INT</cite> or
+<cite>sasoptpy.CONT</cite></p>
 </dd>
 <dt><strong>lb</strong><span class="classifier">float, optional</span></dt><dd><p>Lower bound of the variable</p>
 </dd>
@@ -73,8 +74,8 @@ can be added to the model.</p>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>var</strong><span class="classifier">Variable</span></dt><dd><p>Variable that is added to the model</p>
+<dd class="field-even"><dl>
+<dt><strong>var</strong><span class="classifier"><a class="reference internal" href="sasoptpy.Variable.html#sasoptpy.Variable" title="sasoptpy.Variable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Variable</span></code></a></span></dt><dd><p>Variable that is added to the model</p>
 </dd>
 </dl>
 </dd>
@@ -87,8 +88,7 @@ can be added to the model.</p>
 </div>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li><p>If argument <em>var</em> is not None, then all other arguments are ignored.</p></li>
-<li><p>A generic variable name is generated if name argument is None.</p></li>
+<li><p><cite>name</cite> is a mandatory field for this method.</p></li>
 </ul>
 <p class="rubric">Examples</p>
 <p>Adding a variable on the fly</p>
@@ -177,7 +177,7 @@ can be added to the model.</p>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../expression.html">Expression</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../objective.html">Variable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../objective.html">Objective</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../variable.html">Variable</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../variable_group.html">Variable Group</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../constraint.html">Constraint</a></li>
@@ -231,8 +231,8 @@ can be added to the model.</p>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

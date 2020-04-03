@@ -55,6 +55,19 @@
 <dt id="sasoptpy.Model.get_sets">
 <code class="sig-prename descclassname">Model.</code><code class="sig-name descname">get_sets</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/sasoptpy/core/model.html#Model.get_sets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.Model.get_sets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Set</span></code> objects in the model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>set_list</strong><span class="classifier">list</span></dt><dd><p>List of sets in the model</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">m</span><span class="o">.</span><span class="n">get_sets</span><span class="p">()</span>
+<span class="go">[sasoptpy.abstract.Set(name=W, settype=[&#39;str&#39;, &#39;num&#39;]), sasoptpy.abstract.Set(name=I, settype=[&#39;num&#39;]), sasoptpy.abstract.Set(name=J, settype=[&#39;num&#39;])]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </div>
@@ -127,7 +140,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../expression.html">Expression</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../objective.html">Variable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../objective.html">Objective</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../variable.html">Variable</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../variable_group.html">Variable Group</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../constraint.html">Constraint</a></li>
@@ -181,8 +194,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

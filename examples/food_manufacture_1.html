@@ -52,8 +52,8 @@
 <h1>Food Manufacture 1<a class="headerlink" href="#food-manufacture-1" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="reference">
 <h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex1_toc.htm&amp;docsetVersion=15.1&amp;locale=en">http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex1_toc.htm&amp;docsetVersion=15.1&amp;locale=en</a></p>
-<p><a class="reference external" href="http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex01.html">http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex01.html</a></p>
+<p>SAS/OR example: <a class="reference external" href="http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex1_toc.htm&amp;docsetVersion=15.1&amp;locale=en">http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex1_toc.htm&amp;docsetVersion=15.1&amp;locale=en</a></p>
+<p>SAS/OR code for example: <a class="reference external" href="http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex01.html">http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex01.html</a></p>
 </div>
 <div class="section" id="model">
 <h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
@@ -102,10 +102,10 @@
         <span class="n">store</span><span class="p">[</span><span class="n">oil</span><span class="p">,</span> <span class="n">last_period</span><span class="p">]</span><span class="o">.</span><span class="n">set_bounds</span><span class="p">(</span><span class="n">lb</span><span class="o">=</span><span class="n">init_storage</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">init_storage</span><span class="p">)</span>
     <span class="n">VEG</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">OILS</span> <span class="k">if</span> <span class="s1">&#39;veg&#39;</span> <span class="ow">in</span> <span class="n">i</span><span class="p">]</span>
     <span class="n">NONVEG</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">OILS</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">VEG</span><span class="p">]</span>
-    <span class="n">revenue</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">revenue_per_ton</span> <span class="o">*</span> <span class="n">manufacture</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">)</span>
-    <span class="n">rawcost</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">cost</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="o">*</span> <span class="n">buy</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span>
+    <span class="n">revenue</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">revenue_per_ton</span> <span class="o">*</span> <span class="n">manufacture</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">)</span>
+    <span class="n">rawcost</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">cost</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="o">*</span> <span class="n">buy</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span>
                            <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">OILS</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">)</span>
-    <span class="n">storagecost</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">storage_cost_per_ton</span> <span class="o">*</span> <span class="n">store</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span>
+    <span class="n">storagecost</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">storage_cost_per_ton</span> <span class="o">*</span> <span class="n">store</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span>
                                <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">OILS</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">)</span>
     <span class="n">m</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">revenue</span> <span class="o">-</span> <span class="n">rawcost</span> <span class="o">-</span> <span class="n">storagecost</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MAX</span><span class="p">,</span>
                     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;profit&#39;</span><span class="p">)</span>
@@ -118,10 +118,10 @@
     <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">store</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">buy</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="o">==</span> <span class="n">use</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="o">+</span> <span class="n">store</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span>
                       <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">OILS</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">),</span>
                       <span class="n">name</span><span class="o">=</span><span class="s1">&#39;flow_balance&#39;</span><span class="p">)</span>
-    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">hardness</span><span class="p">[</span><span class="n">o</span><span class="p">]</span><span class="o">*</span><span class="n">use</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">OILS</span><span class="p">)</span> <span class="o">&gt;=</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">hardness</span><span class="p">[</span><span class="n">o</span><span class="p">]</span><span class="o">*</span><span class="n">use</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">OILS</span><span class="p">)</span> <span class="o">&gt;=</span>
                       <span class="n">hardness_lb</span> <span class="o">*</span> <span class="n">manufacture</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">),</span>
                       <span class="n">name</span><span class="o">=</span><span class="s1">&#39;hardness_ub&#39;</span><span class="p">)</span>
-    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">so</span><span class="o">.</span><span class="n">quick_sum</span><span class="p">(</span><span class="n">hardness</span><span class="p">[</span><span class="n">o</span><span class="p">]</span><span class="o">*</span><span class="n">use</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">OILS</span><span class="p">)</span> <span class="o">&lt;=</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">hardness</span><span class="p">[</span><span class="n">o</span><span class="p">]</span><span class="o">*</span><span class="n">use</span><span class="p">[</span><span class="n">o</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">OILS</span><span class="p">)</span> <span class="o">&lt;=</span>
                       <span class="n">hardness_ub</span> <span class="o">*</span> <span class="n">manufacture</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">),</span>
                       <span class="n">name</span><span class="o">=</span><span class="s1">&#39;hardness_lb&#39;</span><span class="p">)</span>
 
@@ -242,7 +242,7 @@
 <span class="go">            6  9.9400E-01  5.6526E-04  7.9112E-07  4.2798E-07  7.7185E-07      0</span>
 <span class="go">            7  9.9572E-03  5.6615E-06  7.9420E-09  4.2964E-09  7.7239E-09      0</span>
 <span class="go">            8  0.0000E+00  1.8686E-08  1.6613E-07  1.1864E-10  6.2833E-07      0</span>
-<span class="go">NOTE: The Interior Point solve time is 0.03 seconds.</span>
+<span class="go">NOTE: The Interior Point solve time is 0.01 seconds.</span>
 <span class="go">NOTE: The CROSSOVER option is enabled.</span>
 <span class="go">NOTE: The crossover basis contains 11 primal and 3 dual superbasic variables.</span>
 <span class="go">                              Objective</span>
@@ -358,7 +358,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guide/user-guide.html">User Guide</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="examples.html">Examples</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="examples.html#viya-examples-concrete">Viya Examples / Concrete</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="examples.html#sas-viya-examples-concrete">SAS Viya Examples (Concrete)</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Food Manufacture 1</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#reference">Reference</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#model">Model</a></li>
@@ -381,8 +381,8 @@
 <li class="toctree-l3"><a class="reference internal" href="efficiency_analysis.html">Efficiency Analysis</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#viya-examples-abstract">Viya Examples / Abstract</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-saspy-examples">SAS (saspy) Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-viya-examples-abstract">SAS Viya Examples (Abstract)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-9-4-examples">SAS 9.4 Examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api.html">API Reference</a></li>
@@ -425,8 +425,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

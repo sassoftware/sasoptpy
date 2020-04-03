@@ -1,28 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
 sasoptpy.abstract.statement.ObjectiveStatement
 ==============================================
 
 .. currentmodule:: sasoptpy.abstract.statement
 
 .. autoclass:: ObjectiveStatement
-
-   
-   .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-   
-      ~ObjectiveStatement.__init__
-      ~ObjectiveStatement.append
-      ~ObjectiveStatement.get_response
-      ~ObjectiveStatement.is_internal
-      ~ObjectiveStatement.set_internal
-      ~ObjectiveStatement.set_objective
-      ~ObjectiveStatement.set_response
-   
-   
-
-   
-   
-   

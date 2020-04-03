@@ -1,6 +1,0 @@
-sasoptpy.Variable.lb
-====================
-
-.. currentmodule:: sasoptpy
-
-.. autoproperty:: Variable.lb

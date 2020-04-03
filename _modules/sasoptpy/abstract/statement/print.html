@@ -48,12 +48,12 @@
 
 <div class="viewcode-block" id="PrintStatement"><a class="viewcode-back" href="../../../../api/generated/sasoptpy.abstract.statement.PrintStatement.html#sasoptpy.abstract.statement.PrintStatement">[docs]</a><span class="k">class</span> <span class="nc">PrintStatement</span><span class="p">(</span><span class="n">Statement</span><span class="p">):</span>
 
-<div class="viewcode-block" id="PrintStatement.__init__"><a class="viewcode-back" href="../../../../api/generated/sasoptpy.abstract.statement.PrintStatement.html#sasoptpy.abstract.statement.PrintStatement.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_print_type</span> <span class="o">=</span> <span class="s1">&#39;print&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_print_names</span> <span class="o">=</span> <span class="kc">False</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_print_names</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
@@ -65,7 +65,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_print_names</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="k">def</span> <span class="nf">_defn</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">keyword</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{self._print_type}</span><span class="s1">&#39;</span>
+        <span class="n">keyword</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_print_type</span><span class="si">}</span><span class="s1">&#39;</span>
         <span class="n">items</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="p">:</span>
             <span class="n">word</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">to_expression</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
@@ -143,8 +143,8 @@
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

@@ -17,7 +17,7 @@
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="sasoptpy.Constraint.set_block" href="sasoptpy.Constraint.set_block.html" />
+    <link rel="next" title="sasoptpy.Constraint.get_dual" href="sasoptpy.Constraint.get_dual.html" />
     <link rel="prev" title="sasoptpy.Constraint" href="sasoptpy.Constraint.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="../../_static/js/version.js"></script>
@@ -33,7 +33,7 @@
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="sasoptpy.Constraint.set_block.html" title="sasoptpy.Constraint.set_block"
+          <a href="sasoptpy.Constraint.get_dual.html" title="sasoptpy.Constraint.get_dual"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="sasoptpy.Constraint.html" title="sasoptpy.Constraint"
@@ -58,8 +58,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>rhs</strong><span class="classifier">boolean, optional</span></dt><dd><p>Whether constant values (RHS) will be included in the value or not.
-Default is false</p>
+<dt><strong>rhs</strong><span class="classifier">boolean, optional</span></dt><dd><p>When set to <cite>True</cite>, includes constant values to the value of the
+constraint. Default is <cite>False</cite>.</p>
 </dd>
 </dl>
 </dd>
@@ -103,13 +103,14 @@ Default is false</p>
 <li class="toctree-l2 current"><a class="reference internal" href="../api.html#core">Core</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../model.html">Model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../expression.html">Expression</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../objective.html">Variable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../objective.html">Objective</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../variable.html">Variable</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../variable_group.html">Variable Group</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="../constraint.html">Constraint</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="../constraint.html#constructor">Constructor</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="../constraint.html#methods">Methods</a><ul class="current">
 <li class="toctree-l5 current"><a class="current reference internal" href="#">sasoptpy.Constraint.get_value</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Constraint.get_dual.html">sasoptpy.Constraint.get_dual</a></li>
 <li class="toctree-l5"><a class="reference internal" href="sasoptpy.Constraint.set_block.html">sasoptpy.Constraint.set_block</a></li>
 <li class="toctree-l5"><a class="reference internal" href="sasoptpy.Constraint.set_direction.html">sasoptpy.Constraint.set_direction</a></li>
 <li class="toctree-l5"><a class="reference internal" href="sasoptpy.Constraint.set_rhs.html">sasoptpy.Constraint.set_rhs</a></li>
@@ -155,7 +156,7 @@ Default is false</p>
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="sasoptpy.Constraint.set_block.html" title="sasoptpy.Constraint.set_block"
+          <a href="sasoptpy.Constraint.get_dual.html" title="sasoptpy.Constraint.get_dual"
              >next</a> |</li>
         <li class="right" >
           <a href="sasoptpy.Constraint.html" title="sasoptpy.Constraint"
@@ -168,8 +169,8 @@ Default is false</p>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>

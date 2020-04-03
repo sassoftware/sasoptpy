@@ -50,9 +50,9 @@ Notes
 +++++
 
 - A Jupyter notebook example of the Diet Problem is added
-- A new example is added to show usage of experiment RESTful API
+- A new example is added to show usage of experimental RESTful API
 - Unit tests are added for development repository
-- CD/CI integration is added for the development repository on Gitlab
+- CI/CD integration is added for the development repository on Gitlab
 - Generated models can be checked by using the hash values inside tests.responses
 
 v0.2.0 (July 30, 2018)
@@ -61,21 +61,21 @@ v0.2.0 (July 30, 2018)
 New Features
 ++++++++++++
 
-- Support for the new `runOptmodel` CAS action is added
+- Support for the new runOptmodel CAS action is added
 - Nonlinear optimization model building support is added for both SAS 9.4 and
   SAS Viya solvers
-- Abstract model building support is added when by using SAS Viya solvers
+- Abstract model building support is added when using SAS Viya solvers
 - New object types, :class:`Set`, :class:`SetIterator`, :class:`Parameter`,
   :class:`ParameterValue`, :class:`ImplicitVar`, :class:`ExpressionDict`, and
   :class:`Statement` are added for abstract model building
 - :meth:`Model.to_optmodel` method is added for exporting model objects into
-  PROC OPTMODEL codes as a string
+  PROC OPTMODEL code as a string
 - Wrapper functions :func:`read_table` and :func:`read_data` are added to
   read CASTable and DataFrame objects into the models
 - Math function wrappers are added
 - :code:`_expr` and :code:`_defn` methods are added to all object types for
   producing OPTMODEL expression and definitions
-- Multiple solutions are now being returned when by using `solveMilp` action and
+- Multiple solutions are now returned when using `solveMilp` action and
   can be retrieved by using :meth:`Model.get_solution` method
 - :meth:`Model.get_variable_value` is added to get solution values of abstract
   variables
@@ -85,20 +85,20 @@ Changes
 
 - Variable and constraint naming schemes are replaced with OPTMODEL equivalent
   versions
-- Variables and constraints now preserve the order they are inserted to the
+- Variables and constraints now preserve the order in which they are inserted to the
   problem
-- :meth:`Model.to_frame` method is updated to reflect changes to VG and CG
-  orderings
-- Two solve methods, :meth:`Model.solve_on_cas` and
-  :meth:`Model.solve_on_viya` are merged into :meth:`Model.solve`
+- :meth:`Model.to_frame` method is updated to reflect changes to VariableGroup and
+  ConstraintGroup orderings
+- Two solve methods, `solve_on_cas` and
+  `solve_on_viya` are merged into :meth:`Model.solve`
 - :meth:`Model.solve` method checks the available CAS actions and uses
-  `runOptmodel` whenever possible
+  the runOptmodel action whenever possible
 - As part of the merging process, :code:`lp` and :code:`milp` arguments are
   replaced with :code:`options` argument in :meth:`Model.solve` and
   :meth:`Model.to_optmodel`
 - An optional argument :code:`frame` is added to :meth:`Model.solve` for
-  forcing to use MPS mode and `solveLp`-`solveMilp` actions
-- Minor changes are applied to :code:`__str__` and :code:`__repr__` methods
+  forcing use of MPS mode and `solveLp`-`solveMilp` actions
+- Minor changes are applied to `__str__` and `__repr__` methods
 - Creation indices for objects are being kept by using the return of the
   :func:`register_name` function
 - Objective constant values are now being passed by using new CAS action arguments
@@ -114,7 +114,7 @@ Bug Fixes
 Notes
 +++++
 
-- Abstract and nonlinear models can be solved on Viya only if `runOptmodel`
+- Abstract and nonlinear models can be solved on Viya only if the runOptmodel
   action is available on the CAS server.
 - Three new examples are added which demonstrate abstract model building.
 - Some minor changes are applied to the existing examples.
@@ -125,14 +125,14 @@ v0.1.2 (April 24, 2018)
 New Features
 ++++++++++++
 
-- As an experimental feature, *sasoptpy* supports *saspy* connections now
+- As an experimental feature, sasoptpy now supports *SASPy* connections
 - :meth:`Model.solve_local` method is added for solving optimization
   problems by using SAS 9.4 installations
 - :meth:`Model.drop_variable`, :meth:`Model.drop_variables`,
   :meth:`Model.drop_constraint`, :meth:`Model.drop_constraints` methods are
   added
 - :meth:`Model.get_constraint` and :meth:`Model.get_constraints` methods are
-  added to grab :class:`Constraint` objects in a model
+  added to retrieve :class:`Constraint` objects in a model
 - :meth:`Model.get_variables` method is added
 - :code:`_dual` attribute is added to the :class:`Expression` objects
 - :meth:`Variable.get_dual` and :meth:`Constraint.get_dual` methods are added
@@ -160,10 +160,10 @@ Notes
 +++++
 
 - A .gitignore file is added to the repository.
-- A new example is added: Decentralization.
-- Both :ref:`CAS/Viya <examples/decentralization>` and
+- A new example is added: Decentralization. Both
+  :ref:`CAS <examples/decentralization>` and
   :ref:`SAS <examples/decentralization-saspy>` versions of the new example
-  are available.
+  are added.
 - There is a known issue with the nondeterministic behavior when creating MPS
   tables. This will be fixed with a hotfix after the release.
 - A new option (no-ex) is added to makedocs script for skipping examples when
@@ -179,15 +179,15 @@ New Features
 - Initial value argument 'init' is added for :class:`Variable` objects
 - :meth:`Variable.set_init` method is added for variables
 - Initial value option 'primalin' is added to :meth:`Model.solve` method
-- Table name argument 'name', table drop option 'drop' and replace
+- Table name argument 'name', table drop option 'drop', and replace
   option 'replace' are added to :meth:`Model.solve` method
-- Decomposition block implementation is rewritten, block numbers does
+- Decomposition block implementation is rewritten; block numbers does
   not need to be consecutive and ordered :meth:`Model.upload_user_blocks`
 - :meth:`VariableGroup.get_name` and :meth:`ConstraintGroup.get_name` methods
   are added
 - :meth:`Model.test_session` method is added for checking if session is defined
   for models
-- :func:`quick_sum` function is added for faster summation of
+- :func:`expr_sum` function is added for faster summation of
   :class:`Expression` objects
 
 Changes

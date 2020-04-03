@@ -54,11 +54,11 @@
 <dl class="method">
 <dt id="sasoptpy.Model.get_variable_value">
 <code class="sig-prename descclassname">Model.</code><code class="sig-name descname">get_variable_value</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">var</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/sasoptpy/core/model.html#Model.get_variable_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.Model.get_variable_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the value of a variable.</p>
-<dl class="field-list simple">
+<dd><p>Returns the value of a variable</p>
+<dl class="field-list">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>var</strong><span class="classifier">Variable or string</span></dt><dd><p>Variable reference</p>
+<dd class="field-odd"><dl>
+<dt><strong>var</strong><span class="classifier"><a class="reference internal" href="sasoptpy.Variable.html#sasoptpy.Variable" title="sasoptpy.Variable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Variable</span></code></a> or string</span></dt><dd><p>Variable reference</p>
 </dd>
 </dl>
 </dd>
@@ -66,9 +66,10 @@
 <p class="rubric">Notes</p>
 <ul class="simple">
 <li><p>It is possible to get a variable’s value by using the
-<a class="reference internal" href="sasoptpy.Variable.get_value.html#sasoptpy.Variable.get_value" title="sasoptpy.Variable.get_value"><code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.get_value()</span></code></a> method, if the variable is not abstract.</p></li>
+<a class="reference internal" href="sasoptpy.Variable.get_value.html#sasoptpy.Variable.get_value" title="sasoptpy.Variable.get_value"><code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.get_value()</span></code></a> method, as long as the variable is not
+abstract.</p></li>
 <li><p>This method is a wrapper around <a class="reference internal" href="sasoptpy.Variable.get_value.html#sasoptpy.Variable.get_value" title="sasoptpy.Variable.get_value"><code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.get_value()</span></code></a> and an
-overlook function for model components</p></li>
+overlook function for model components.</p></li>
 </ul>
 </dd></dl>
 
@@ -120,7 +121,7 @@ overlook function for model components</p></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../expression.html">Expression</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../objective.html">Variable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../objective.html">Objective</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../variable.html">Variable</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../variable_group.html">Variable Group</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../constraint.html">Constraint</a></li>
@@ -174,8 +175,8 @@ overlook function for model components</p></li>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Feb 19, 2020 (Timestamp: 1.0.0-alpha-20200219190743).
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.2.
+      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>
