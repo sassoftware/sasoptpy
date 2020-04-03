@@ -48,6 +48,7 @@ push_to_conda:
     - conda config --set always_yes yes
     - conda config --add channels conda-forge
     - conda install conda-build
+    - conda update -n base -c defaults conda
     - conda install anaconda-client
   script:
     - conda build --python 3.6 conda/
