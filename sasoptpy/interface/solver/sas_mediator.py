@@ -1,7 +1,7 @@
 # SAS MVA interface for sasoptpy
 
 import sasoptpy
-from sasoptpy._libs import np
+from sasoptpy.libs import np
 from sasoptpy.interface import Mediator
 from saspy import SASsession
 from sasoptpy.interface.util import wrap_long_lines, replace_long_names

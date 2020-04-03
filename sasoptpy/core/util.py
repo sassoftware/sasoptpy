@@ -3,7 +3,7 @@ from math import inf
 import warnings
 
 import sasoptpy
-from sasoptpy._libs import np, pd
+from sasoptpy.libs import np, pd
 
 
 def is_expression(obj):

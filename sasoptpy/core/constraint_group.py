@@ -3,7 +3,7 @@ from collections import OrderedDict
 from types import GeneratorType
 
 import sasoptpy
-from sasoptpy._libs import pd
+from sasoptpy.libs import pd
 from sasoptpy.core import Group
 
 

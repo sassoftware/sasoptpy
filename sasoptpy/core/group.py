@@ -1,5 +1,5 @@
 import sasoptpy
-from sasoptpy._libs import pd
+from sasoptpy.libs import pd
 from abc import ABC, abstractmethod
 from collections import OrderedDict
 
