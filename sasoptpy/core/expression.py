@@ -20,7 +20,7 @@ from collections import OrderedDict
 from math import copysign
 import warnings
 
-from sasoptpy._libs import np
+from sasoptpy.libs import np
 
 import sasoptpy
 
@@ -31,12 +31,10 @@ class Expression:
 
     Parameters
     ----------
-    exp : Expression, optional
+    exp : :class:`Expression`, optional
         An existing expression where arguments are being passed
     name : string, optional
         A local name for the expression
-    temp : boolean, optional
-        A boolean shows whether expression is temporary or permanent
 
     Examples
     --------
@@ -124,7 +122,7 @@ class Expression:
 
         Returns
         -------
-        r : Expression
+        r : :class:`Expression`
             Copy of the object
 
         Examples
@@ -164,7 +162,7 @@ class Expression:
 
     def get_member(self, key):
         """
-        Returns the requested member using the key
+        Returns the requested member of the expression
 
         Parameters
         ----------
@@ -185,13 +183,13 @@ class Expression:
         Parameters
         ----------
         key : string
-            Identifier of the member
+            Identifier of the new or existing member
         ref : Object
-            A reference to the new member
+            A reference to the new or existing member
         val : float
-            Initial coefficient of the element
+            Initial coefficient of the new or existing member
         op : string, optional
-            Operator, if member consists of multiple children
+            Operator, if member has multiple children
         """
         self._linCoef[key] = {'ref': ref, 'val': val}
         if op:
@@ -205,7 +203,7 @@ class Expression:
 
     def copy_member(self, key, exp):
         """
-        Copies member of another expression
+        Copies the member of another expression
 
         Parameters
         ----------
@@ -293,7 +291,7 @@ class Expression:
 
     def add_to_member_value(self, key, value):
         """
-        Adds given value to the coefficient of the requested member
+        Adds `value` to the coefficient of the requested member
 
         Parameters
         ----------
@@ -307,7 +305,8 @@ class Expression:
 
     def mult_member_value(self, key, value):
         """
-        Multiplies coefficient of the requested member with given value
+        Multiplies the coefficient of the requested member by the specified
+        `value`
 
         Parameters
         ----------
@@ -321,12 +320,12 @@ class Expression:
 
     def get_dual(self):
         """
-        Returns the dual value if exists
+        Returns the dual value
 
         Returns
         -------
         dual : float
-            Dual value of the variable
+            Dual value of the object
 
         """
         return self._dual
@@ -336,7 +335,7 @@ class Expression:
 
     def set_name(self, name=None):
         """
-        Sets the name of the expression
+        Specifies the name of the expression
 
         Parameters
         ----------
@@ -364,12 +363,12 @@ class Expression:
 
     def get_name(self):
         """
-        Returns the name of the expression
+        Returns the name of the object
 
         Returns
         -------
         name : string
-            Name of the expression
+            Name of the object
 
         Examples
         --------
@@ -394,7 +393,7 @@ class Expression:
 
     def set_temporary(self):
         """
-        Converts expression into temporary to enable in-place operations
+        Converts expression into a temporary expression to enable in-place operations
         """
         self._temp = True
 
@@ -553,7 +552,7 @@ class Expression:
 
     def _expr(self):
         """
-        Generates the OPTMODEL compatible string representation of the object.
+        Generates the OPTMODEL-compatible string representation of the object
 
         Examples
         --------
@@ -572,7 +571,7 @@ class Expression:
 
     def __repr__(self):
         """
-        Returns a string representation of the object.
+        Returns a string representation of the object
 
         Examples
         --------
@@ -594,7 +593,7 @@ class Expression:
 
     def __str__(self):
         """
-        Generates a representation string that is Python compatible
+        Generates a representation string that is Python-compatible
 
         Examples
         --------
@@ -617,7 +616,7 @@ class Expression:
 
         Parameters
         ----------
-        var : Variable
+        var : :class:`Variable`
             Variable object whose value will be changed
         key : string
             Name of the variable object
@@ -635,20 +634,27 @@ class Expression:
 
         Parameters
         ----------
-        other : float or Expression
+        other : float or :class:`Expression`
             Second expression or constant value to be added
         sign : int, optional
             Sign of the addition, 1 or -1
 
         Returns
         -------
-        r : Expression
+        r : :class:`Expression`
             Reference to the outcome of the operation
 
         Notes
         -----
-        * Adding an expression is equivalent to calling this method:
-          (x-y)+(3*x-2*y) and (x-y).add(3*x-2*y) result the same.
+        * It is preferable to use regular Python operation, instead of calling
+          this method:
+
+          >>> e = x - y
+          >>> f = 3 * x + 2 * y
+          >>> g = e + f
+          >>> print(g)
+          4 * x + y
+
         """
         if self._temp and type(self) is Expression:
             r = self
@@ -678,23 +684,29 @@ class Expression:
 
     def mult(self, other):
         """
-        Multiplies the :class:`Expression` with a scalar value
+        Multiplies the :class:`Expression` by a scalar value
 
         Parameters
         ----------
-        other : Expression or int
+        other : :class:`Expression` or int
             Second expression to be multiplied
 
         Returns
         -------
-        r : Expression
+        r : :class:`Expression`
             A new :class:`Expression` that represents the multiplication
 
         Notes
         -----
         * This method is mainly for internal use.
-        * Multiplying an expression is equivalent to calling this method:
-          3*(x-y) and (x-y).mult(3) are interchangeable.
+        * It is preferable to use regular Python operation, instead of calling
+          this method:
+
+          >>> e = 3 * (x-y)
+          >>> f = 3
+          >>> g = e*f
+          >>> print(g)
+          9 * x - 9 * y
 
         """
         if isinstance(other, Expression):
@@ -727,14 +739,14 @@ class Expression:
 
         Parameters
         ----------
-        other : Expression
-            Expression on the other side of the relation wrt self
+        other : :class:`Expression`
+            Expression on the other side of the relation with respect to self
         direction_ : string
-            Direction of the logical relation, either 'E', 'L', or 'G'
+            Direction of the logical relation, either `E`, `L`, or `G`
 
         Returns
         -------
-        generated_constraint : Constraint
+        generated_constraint : :class:`Constraint`
             Constraint generated as a result of linear relation
 
         """
@@ -742,7 +754,7 @@ class Expression:
 
     def _is_linear(self):
         """
-        Checks if the expression is composed of linear components
+        Checks whether the expression is composed of linear components
 
         Returns
         -------
@@ -970,9 +982,9 @@ class Symbol(Expression):
 
     Notes
     -----
-    * Symbol objects can be used for values that does not translate to a value
-      on client-side, but have meaning on execution. For example, `_N_` is a
-      SAS symbol, which can be used in OPTMODEL strings.
+    * A Symbol object can be used for any values that does not translate to a value
+      on client-side, but has meaning on execution. For example, `_N_` is a
+      SAS symbol, which can be used in PROC OPTMODEL strings.
     """
 
     def __init__(self, name):

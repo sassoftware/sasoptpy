@@ -35,8 +35,8 @@ setup(
     author_email='Sertalp.Cay@sas.com',
     license='Apache v2.0',
     install_requires=[
-        'pandas >= 0.25.1',
-        'swat >= 1.4.0',
+        'pandas >= 1.0.0',
+        'swat >= 1.6.1',
         'saspy >= 3.1.0',
         'numpy >= 1.15.4'
         ],
@@ -50,4 +50,5 @@ setup(
         "Operating System :: OS Independent",
         "Topic :: Scientific/Engineering :: Mathematics"
     ],
+    include_package_data=True,
 )

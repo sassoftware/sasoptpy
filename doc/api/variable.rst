@@ -13,14 +13,6 @@ Constructor
 
    Variable
 
-Attributes
-~~~~~~~~~~
-
-.. autosummary::
-   :toctree: generated/
-   
-   Variable.lb
-   Variable.ub
 
 Methods
 ~~~~~~~

@@ -25,20 +25,23 @@ import sasoptpy as so
 
 
 class TestVariable(unittest.TestCase):
+    """
+    Unit tests for :class:`sasoptpy.Variable` objects
+    """
 
     def setUp(self):
         pass
 
     def test_repr(self):
         x = so.Variable(name='x')
-        self.assertEqual(repr(x), "sasoptpy.Variable(name='x',  vartype='CONT')")
+        self.assertEqual(repr(x), "sasoptpy.Variable(name='x', vartype='CONT')")
 
         y = so.Variable(name='y', lb=1, ub=10, init=3)
-        self.assertEqual(repr(y), "sasoptpy.Variable(name='y', lb=1, ub=10, init=3,  vartype='CONT')")
+        self.assertEqual(repr(y), "sasoptpy.Variable(name='y', lb=1, ub=10, init=3, vartype='CONT')")
 
         I = so.Set(name='I')
         z = so.VariableGroup(I, name='z')
-        self.assertEqual(repr(z[0]), "sasoptpy.Variable(name='z', abstract=True, shadow=True,  vartype='CONT')")
+        self.assertEqual(repr(z[0]), "sasoptpy.Variable(name='z', abstract=True, vartype='CONT')")
 
     def test_string(self):
         x = so.VariableGroup([1,2,3], name='x')

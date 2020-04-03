@@ -27,6 +27,9 @@ import sasoptpy as so
 
 
 class TestObjective(unittest.TestCase):
+    """
+    Unit tests for :class:`sasoptpy.Objective` objects
+    """
 
     @classmethod
     def setUpClass(cls):

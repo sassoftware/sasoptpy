@@ -25,6 +25,9 @@ import sasoptpy as so
 
 
 class TestExpression(unittest.TestCase):
+    """
+    Unit tests for :class:`sasoptpy.Expression` objects
+    """
 
     def setUp(self):
         pass
@@ -71,7 +74,7 @@ class TestExpression(unittest.TestCase):
 
         setI = so.abstract.Set(name='I')
         z = so.VariableGroup(setI, name='z')
-        g = so.quick_sum(z[i] for i in setI) + 5
+        g = so.expr_sum(z[i] for i in setI) + 5
         g_exp = g._expr()
         self.assertEqual(g_exp, 'sum {i in I} (z[i]) + 5')
 
@@ -97,7 +100,7 @@ class TestExpression(unittest.TestCase):
         from sasoptpy.abstract import Set
         setI = Set(name='setI')
         y = so.VariableGroup(setI, name='y')
-        e = - so.quick_sum(y[i] * i for i in setI)
+        e = - so.expr_sum(y[i] * i for i in setI)
         self.assertEqual(str(e), '- (sum(y[i] * i for i in setI))')
 
         e = 2 * x ** y[0]

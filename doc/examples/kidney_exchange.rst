@@ -5,7 +5,7 @@ Kidney Exchange
 Reference
 ---------
 
-SAS Blog: https://blogs.sas.com/content/operations/2015/02/06/the-kidney-exchange-problem/
+SAS blog: https://blogs.sas.com/content/operations/2015/02/06/the-kidney-exchange-problem/
 
 Model
 -----

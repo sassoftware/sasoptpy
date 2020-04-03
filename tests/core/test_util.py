@@ -34,6 +34,9 @@ def match_ratio(a, b):
 
 
 class TestUtil(unittest.TestCase):
+    """
+    Unit tests for core utility functions
+    """
 
     @classmethod
     def setUpClass(cls):
@@ -149,7 +152,7 @@ class TestUtil(unittest.TestCase):
 
         y = TestUtil.y
         S1 = TestUtil.S1
-        e1 = so.quick_sum(y[i, 'a', 1] for i in S1)
+        e1 = so.expr_sum(y[i, 'a', 1] for i in S1)
         c = so.core.util.expression_to_constraint(e1, 'G', 5)
         self.assertEqual(so.to_definition(c), "con None : sum {i in S1} "
                                               "(y[i, 'a', 1]) >= 5;")

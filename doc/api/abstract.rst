@@ -17,14 +17,19 @@ Main classes
    SetIterator
    SetIteratorGroup
    Statement
+   ImplicitVar
 
 .. currentmodule:: sasoptpy.abstract.statement
 
 Statements
 ~~~~~~~~~~
 
+The following list of classes define the underlying structure for the abstract functions.
+See :ref:`abstract-action-list` to see how you can use abstract functions and statements.
+
 .. autosummary::
    :toctree: generated/
+   :template: autosummary/class_without_autosummary.rst
 
    Assignment
    CoForLoopStatement

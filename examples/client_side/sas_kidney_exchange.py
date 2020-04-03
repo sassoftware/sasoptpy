@@ -34,7 +34,7 @@ def test(cas_conn, **kwargs):
     print('Setting objective...')
 
     # Objective
-    model.set_objective(so.quick_sum((ARCS[i, j] * UseArc[i, j, m]
+    model.set_objective(so.expr_sum((ARCS[i, j] * UseArc[i, j, m]
                                       for [i, j] in ARCS for m in MATCHINGS)),
                         name="total_weight", sense=so.MAX)
 

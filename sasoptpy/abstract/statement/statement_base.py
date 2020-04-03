@@ -23,6 +23,11 @@ import sasoptpy
 
 
 class Statement(ABC):
+    """
+    Creates a statement to be executed at the server
+
+    This class is an abstract base class for all statement types.
+    """
 
     def __init__(self):
         import sasoptpy.util

@@ -27,7 +27,7 @@ import warnings
 from contextlib import contextmanager
 
 import sasoptpy
-from sasoptpy._libs import (pd, np)
+from sasoptpy.libs import (pd, np)
 from threading import RLock
 
 
@@ -427,12 +427,12 @@ def get_mutable(exp):
 
     Parameters
     ----------
-    exp : Variable or Expression
+    exp : :class:`Variable` or :class:`Expression`
         Object to be wrapped
 
     Returns
     -------
-    r : Expression
+    r : :class:`Expression`
         Mutable copy of the expression, if the original is immutable
     """
     if isinstance(exp, sasoptpy.Variable):

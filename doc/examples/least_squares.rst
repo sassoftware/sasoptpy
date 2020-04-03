@@ -5,9 +5,9 @@ Least Squares
 Reference
 ---------
 
-https://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_nlpsolver_gettingstarted05.htm&docsetVersion=15.1&locale=en
+SAS/OR example: https://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_nlpsolver_gettingstarted05.htm&docsetVersion=15.1&locale=en
 
-https://support.sas.com/documentation/onlinedoc/or/ex_code/151/nlpsg01.html
+SAS/OR code for example: https://support.sas.com/documentation/onlinedoc/or/ex_code/151/nlpsg01.html
 
 Model
 -----

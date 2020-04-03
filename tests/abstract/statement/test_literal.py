@@ -26,6 +26,9 @@ from inspect import cleandoc
 
 
 class TestLiteral(unittest.TestCase):
+    """
+    Unit tests for literal statements
+    """
 
     def test_literal_expr(self):
         literal = so.LiteralStatement('expand;')

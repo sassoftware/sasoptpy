@@ -27,7 +27,7 @@ import warnings
 from contextlib import contextmanager
 
 import sasoptpy
-from sasoptpy._libs import (pd, np)
+from sasoptpy.libs import (pd, np)
 from .package_utils import (
     wrap_expression, _wrap_expression_with_iterators,
     get_first_member, pack_to_tuple)
@@ -49,15 +49,15 @@ def iterate(set, name):
 
 def exp_range(start, stop, step=1):
     """
-    Creates a set within given range
+    Creates a set within specified range
 
     Parameters
     ----------
-    start : Expression
+    start : :class:`Expression`
         First value of the range
-    stop : Expression
+    stop : :class:`Expression`
         Last value of the range
-    step : Expression, optional
+    step : :class:`Expression`, optional
         Step size of the range
 
     Returns
@@ -198,6 +198,16 @@ def submit_for_tune(caller, **kwargs):
 
 
 def quick_sum(argv):
+    """
+    Summation function for :class:`Expression` objects
+
+    Notes
+    -----
+
+    This method will deprecate in future versions.
+    Use :func:`expr_sum` instead.
+
+    """
     return sasoptpy.util.expr_sum(argv)
 
 
@@ -207,14 +217,14 @@ def expr_sum(argv):
 
     Returns
     -------
-    exp : Expression
+    exp : :class:`Expression`
         Sum of given arguments
 
     Examples
     --------
 
     >>> x = so.VariableGroup(10000, name='x')
-    >>> y = so.quick_sum(2*x[i] for i in range(10000))
+    >>> y = so.expr_sum(2*x[i] for i in range(10000))
 
     Notes
     -----

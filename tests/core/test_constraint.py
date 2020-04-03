@@ -25,6 +25,9 @@ import sasoptpy as so
 
 
 class TestConstraint(unittest.TestCase):
+    """
+    Unit tests for :class:`sasoptpy.Constraint` objects
+    """
 
     def setUp(self):
         pass

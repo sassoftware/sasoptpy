@@ -33,7 +33,7 @@ def containable(func=None, standalone=True):
 
         if not standalone and not sasoptpy.container:
             warnings.warn('This function is not intended to be used without any'
-                          'container', UserWarning)
+                          ' container', UserWarning)
 
         if sasoptpy.container:
             try:

@@ -13,7 +13,7 @@ class Set:
     ----------
     name : string
         Name of the parameter
-    init : Expression, optional
+    init : :class:`Expression`, optional
         Initial value expression of the parameter
     settype : list, optional
         List of types for the set, consisting of 'num' and 'str' values

@@ -20,6 +20,7 @@ Methods
    :toctree: generated/
 
    Constraint.get_value
+   Constraint.get_dual
    Constraint.set_block
    Constraint.set_direction
    Constraint.set_rhs

@@ -102,11 +102,11 @@ def test(cas_conn):
                       for p in PERIODS), name='overmanning')
     # Objectives
     redundancy = so.Expression(numRedundant.sum('*', '*'), name='redundancy')
-    cost = so.Expression(so.quick_sum(redundancy_cost[w] * numRedundant[w, p] +
+    cost = so.Expression(so.expr_sum(redundancy_cost[w] * numRedundant[w, p] +
                                       shorttime_cost[w] * numShortTime[w, p] +
                                       overmanning_cost[w] * numExcess[w, p]
                                       for w in WORKERS for p in PERIODS)
-                         + so.quick_sum(
+                         + so.expr_sum(
                              retrain_cost.loc[i, j] * numRetrain[i, j, p]
                              for i, j in RETRAIN_PAIRS for p in PERIODS),
                          name='cost')

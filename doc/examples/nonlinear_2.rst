@@ -5,9 +5,9 @@ Nonlinear 2
 Reference
 ---------
 
-http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_nlpsolver_examples02.htm&docsetVersion=15.1&locale=en
+SAS/OR example: http://go.documentation.sas.com/?docsetId=ormpug&docsetTarget=ormpug_nlpsolver_examples02.htm&docsetVersion=15.1&locale=en
 
-http://support.sas.com/documentation/onlinedoc/or/ex_code/151/nlpse02.html
+SAS/OR code for example: http://support.sas.com/documentation/onlinedoc/or/ex_code/151/nlpse02.html
 
 Model
 -----

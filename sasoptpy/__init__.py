@@ -24,7 +24,7 @@ This file includes static methods and imports.
 
 """
 
-from sasoptpy._libs import *
+from sasoptpy.libs import *
 import sasoptpy.util
 
 from sasoptpy.util import (
@@ -68,4 +68,4 @@ load_default_mediators()
 from sasoptpy.session import Workspace
 
 name = "sasoptpy"
-__version__ = '1.0.0-alpha'
+__version__ = '1.0.0-beta'

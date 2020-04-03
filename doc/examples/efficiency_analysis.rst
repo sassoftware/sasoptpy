@@ -7,9 +7,9 @@ Efficiency Analysis
 Reference
 ---------
 
-https://go.documentation.sas.com/?docsetId=ormpex&docsetTarget=ormpex_ex22_toc.htm&docsetVersion=15.1&locale=en
+SAS/OR example: https://go.documentation.sas.com/?docsetId=ormpex&docsetTarget=ormpex_ex22_toc.htm&docsetVersion=15.1&locale=en
 
-http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex22.html
+SAS/OR code for example: http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex22.html
 
 Model
 -----

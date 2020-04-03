@@ -6,9 +6,16 @@ Examples
 
 Examples are provided from `SAS/OR documentation <http://go.documentation.sas.com/?docsetId=ormpex&docsetTarget=titlepage.htm&docsetVersion=15.1&locale=en>`_.
 
+This chapter is split into 3 parts.
 
-Viya Examples / Concrete
-------------------------
+- The :ref:`first part <sas-viya-concrete>` of examples demonstrate using SAS Viya (SAS Optimization) solvers with concrete problem formulation.
+- The :ref:`second part <sas-viya-abstract>` of examples demonstrate using SAS Viya (SAS Optimization) solvers with abstract problem formulation.
+- The :ref:`third part <sas-94>` of examples demonstrate using SAS 9.4 (SAS/OR) solvers.
+
+.. _sas-viya-concrete:
+
+SAS Viya Examples (Concrete)
+----------------------------
 
 .. toctree::
    :maxdepth: 1
@@ -35,8 +42,10 @@ Viya Examples / Concrete
 
    Efficiency Analysis <efficiency_analysis.rst>
 
-Viya Examples / Abstract
-------------------------
+.. _sas-viya-abstract:
+
+SAS Viya Examples (Abstract)
+----------------------------
 
 .. toctree::
    :maxdepth: 1
@@ -45,8 +54,10 @@ Viya Examples / Abstract
    Nonlinear 1 <nonlinear_1.rst>
    Nonlinear 2 <nonlinear_2.rst>
 
-SAS (saspy) Examples
---------------------
+.. _sas-94:
+
+SAS 9.4 Examples
+----------------
 
 .. toctree::
    :maxdepth: 1

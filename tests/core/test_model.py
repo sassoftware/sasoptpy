@@ -44,6 +44,9 @@ class SASsession:
         self.sascfg = MockSASconfig(name=cfgname)
 
 class TestModel(unittest.TestCase):
+    """
+    Unit tests for :class:`sasoptpy.Model` objects
+    """
 
     @classmethod
     def setUpClass(cls):
@@ -558,9 +561,9 @@ class TestModel(unittest.TestCase):
         value = data['value']
         weight = data['weight']
         ub = data['ub']
-        m.set_objective(so.quick_sum(get[i] * value[i] for i in items),
+        m.set_objective(so.expr_sum(get[i] * value[i] for i in items),
                         sense=so.MAX, name='obj1')
-        m.add_constraint(so.quick_sum(get[i] * weight[i] for i in items)
+        m.add_constraint(so.expr_sum(get[i] * weight[i] for i in items)
                          <= 210, name='value_total')
         m.add_constraints((get[i] <= ub[i] for i in items), name='upper_bound')
 

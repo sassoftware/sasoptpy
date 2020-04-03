@@ -1,7 +1,7 @@
 # SAS MVA interface for sasoptpy
 
 import sasoptpy
-from sasoptpy._libs import np
+from sasoptpy.libs import np
 from sasoptpy.interface import Mediator
 from saspy import SASsession
 from sasoptpy.interface.util import wrap_long_lines, replace_long_names
@@ -14,7 +14,7 @@ class SASMediator(Mediator):
 
     Parameters
     ----------
-    caller : :class:`Model` or :class:`Workspace`
+    caller : :class:`sasoptpy.Model` or :class:`sasoptpy.Workspace`
         Model or workspace that mediator belongs to
     sas_session : :class:`saspy.SASsession`
         SAS session object
@@ -22,7 +22,7 @@ class SASMediator(Mediator):
     Notes
     -----
 
-    * SAS Mediator is used by :class:`Model` and :class:`Workspace` objects
+    * SASMediator is used by :class:`sasoptpy.Model` and :class:`sasoptpy.Workspace` objects
       internally.
 
     """
@@ -48,7 +48,7 @@ class SASMediator(Mediator):
 
     def submit(self, **kwargs):
         """
-        Submit action for custom input and :class:`Workspace` objects
+        Submit action for custom input and :class:`sasoptpy.Workspace` objects
         """
         return self.submit_optmodel_code(**kwargs)
 
@@ -375,7 +375,7 @@ class SASMediator(Mediator):
 
     def submit_optmodel_code(self, **kwargs):
         """
-        Submits given :class:`Workspace` object in OPTMODEL format
+        Submits given :class:`sasoptpy.Workspace` object in OPTMODEL format
 
         Parameters
         ----------
@@ -460,7 +460,7 @@ class SASMediator(Mediator):
 
     def set_workspace_variable_values(self, solution):
         """
-        Performs post-solve assignment of :class:`Workspace` variable values
+        Performs post-solve assignment of :class:`sasoptpy.Workspace` variable values
         """
         caller = self.caller
         for row in solution.itertuples():

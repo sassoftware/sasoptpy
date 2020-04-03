@@ -35,6 +35,9 @@ from tests.swat_config import create_cas_connection
 
 
 class TestSetIterator(unittest.TestCase):
+    """
+    Unit tests for :class:`sasoptpy.abstract.SetIterator` objects
+    """
 
     @classmethod
     def setUpClass(cls):

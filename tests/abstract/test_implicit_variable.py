@@ -36,6 +36,9 @@ from tests.swat_config import create_cas_connection
 
 
 class TestImplicitVariable(unittest.TestCase):
+    """
+    Unit tests for :class:`sasoptpy.abstract.ImplicitVar` objects
+    """
 
     @classmethod
     def setUpClass(cls):

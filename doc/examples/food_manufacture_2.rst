@@ -5,9 +5,9 @@ Food Manufacture 2
 Reference
 ---------
 
-http://go.documentation.sas.com/?docsetId=ormpex&docsetTarget=ormpex_ex2_toc.htm&docsetVersion=15.1&locale=en
+SAS/OR example: http://go.documentation.sas.com/?docsetId=ormpex&docsetTarget=ormpex_ex2_toc.htm&docsetVersion=15.1&locale=en
 
-http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex02.html
+SAS/OR code for example: http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex02.html
 
 Model
 -----

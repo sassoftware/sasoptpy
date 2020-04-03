@@ -32,6 +32,9 @@ from util import assert_equal_wo_temps
 
 
 class TestConstraintGroup(unittest.TestCase):
+    """
+    Unit tests for :class:`sasoptpy.ConstraintGroup` objects
+    """
 
     def setUp(self):
         pass
@@ -124,7 +127,7 @@ class TestConstraintGroup(unittest.TestCase):
             m = so.Model(name='test_cg_invalid_con', session=None)
             x = m.add_variables(3, ub=4)
             c = m.add_constraints(
-                (so.quick_sum((i + j) * x[i] for i in range(3)) for j in
+                (so.expr_sum((i + j) * x[i] for i in range(3)) for j in
                  range(5)), name='c')
 
         self.assertRaises(ValueError, con_with_no_direction)

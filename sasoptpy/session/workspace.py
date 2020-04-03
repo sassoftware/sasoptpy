@@ -31,13 +31,13 @@ class Workspace:
 
     def get_elements(self):
         """
-        Returns a list of elements in the Workspace
+        Returns a list of elements in the workspace
         """
         return self._elements
 
     def set_active_model(self, model):
         """
-        Marks given model as active, to be used in solve statements
+        Marks the specified model as active; to be used in solve statements
 
         Parameters
         ----------
@@ -64,7 +64,7 @@ class Workspace:
 
     def append(self, element):
         """
-        Appends a new element (operation or statement) to the Workspace
+        Appends a new element (operation or statement) to the workspace
 
         Parameters
         ----------
@@ -81,13 +81,13 @@ class Workspace:
 
     def submit(self, **kwargs):
         """
-        Submits the Workspace as an OPTMODEL block and returns solutions
+        Submits the workspace as an OPTMODEL block and returns solutions
         """
         return sasoptpy.util.submit(self, **kwargs)
 
     def parse_solve_responses(self):
         """
-        Grabs the solutions to all solve statements
+        Retrieves the solutions to all solve statements
         """
         keys = self.response.keys()
         solve_statements = [i for i in self.get_elements() if
@@ -111,7 +111,7 @@ class Workspace:
 
     def parse_print_responses(self):
         """
-        Grabs responses to all print statements
+        Retrieves responses to all print statements
         """
         keys = self.response.keys()
         print_statements = [i for i in self.get_elements() if
@@ -142,7 +142,7 @@ class Workspace:
 
     def get_variable(self, name):
         """
-        Obtains the value of a given variable name
+        Obtains the value of a specified variable name
 
         Parameters
         ----------
@@ -178,7 +178,7 @@ class Workspace:
 
     def set_variable_value(self, name, value):
         """
-        Sets variable value
+        Specifies the value of a variable
 
         Parameters
         ----------
@@ -193,7 +193,7 @@ class Workspace:
 
     def to_optmodel(self):
         """
-        Returns equivalent OPTMODEL code of given workspace
+        Returns equivalent OPTMODEL code of the workspace
 
         Returns
         -------

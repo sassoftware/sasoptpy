@@ -52,8 +52,8 @@ def math_func(exp, op, *args):
 
     Parameters
     ----------
-    exp : Expression
-        Expression where the math func will be applied
+    exp : :class:`Expression`
+        Expression where the math function will be applied
     op : string
         String representation of the math function
     args : float, optional
@@ -84,14 +84,14 @@ def log(exp):
 
 def log2(exp):
     """
-    Logarithm function to the base 2
+    Logarithm function in base 2
     """
     return math_func(exp, 'log2')
 
 
 def log10(exp):
     """
-    Logarithm function to the base 10
+    Logarithm function in base 10
     """
     return math_func(exp, 'log10')
 
@@ -116,9 +116,9 @@ def mod(exp, divisor):
 
     Parameters
     ----------
-    exp : Expression
+    exp : :class:`Expression`
         Dividend
-    divisor : Expression
+    divisor : :class:`Expression`
         Divisor
     """
     return math_func(exp, 'mod', divisor)

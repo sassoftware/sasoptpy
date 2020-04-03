@@ -1,6 +1,6 @@
 
-Variable
-========
+Objective
+=========
 
 .. currentmodule:: sasoptpy
 

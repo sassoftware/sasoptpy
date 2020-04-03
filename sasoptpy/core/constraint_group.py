@@ -3,7 +3,7 @@ from collections import OrderedDict
 from types import GeneratorType
 
 import sasoptpy
-from sasoptpy._libs import pd
+from sasoptpy.libs import pd
 from sasoptpy.core import Group
 
 
@@ -127,12 +127,13 @@ class ConstraintGroup(Group):
         Parameters
         ----------
         rhs : boolean, optional
-            Whether to pass the constant part (rhs) of the constraint or not
+            When set to `True`, passes the the constant part (rhs) of the
+            constraint
 
         Returns
         -------
         df : :class:`pandas.DataFrame`
-            Returns a DataFrame consisting of constraints as expressions
+            Returns a DataFrame that consists of constraints as expressions
 
         Examples
         --------
@@ -178,7 +179,7 @@ class ConstraintGroup(Group):
 
         Returns
         -------
-        item : Constraint
+        item : :class:`Constraint`
             Reference to the constraint
         """
         key = sasoptpy.util.pack_to_tuple(key)

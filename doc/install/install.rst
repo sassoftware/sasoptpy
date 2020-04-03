@@ -6,37 +6,37 @@
 Installation
 ============
 
-Python version support and dependencies
+Python Version Support and Dependencies
 ---------------------------------------
 
-*sasoptpy* is developed and tested for Python version 3.6+.
+Current version is developed and tested for Python 3.6 and later.
 
 It requires the following packages:
 
-* numpy
-* saspy
-* swat
+* NumPy
+* SASPy
+* SWAT
 * pandas
 
 Getting sasoptpy
 ----------------
 
-You can install *sasoptpy* by using `pip` or `conda`::
+You can install sasoptpy by using `pip` or `conda`::
 
    pip install sasoptpy
 
    conda install -c sas-institute sasoptpy
 
-Any dependencies should be installed automatically.
+Any dependencies are installed automatically.
 
-Depending on your installation, you might need to add `conda-forge` channel to `conda` by using::
+Depending on your installation, you might need to add the `conda-forge` channel to `conda`::
 
     conda config --append channels conda-forge
    
 GitHub repository
 +++++++++++++++++
 
-You can also get stable and development versions of *sasoptpy* from the GitHub repository.
+You can also get stable and development versions of sasoptpy from the GitHub repository.
 To get the latest version,  call::
 
   git clone https://github.com/sassoftware/sasoptpy.git

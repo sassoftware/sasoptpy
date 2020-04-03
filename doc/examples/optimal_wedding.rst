@@ -1,11 +1,11 @@
 
-Optimal Wedding
-===============
+Optimal Wedding Seating
+=======================
 
 Reference
 ---------
 
-SAS Blog: https://blogs.sas.com/content/operations/2014/11/10/do-you-have-an-uncle-louie-optimal-wedding-seat-assignments/
+SAS blog: https://blogs.sas.com/content/operations/2014/11/10/do-you-have-an-uncle-louie-optimal-wedding-seat-assignments/
 
 Model
 -----

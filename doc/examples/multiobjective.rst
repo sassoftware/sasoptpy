@@ -7,9 +7,9 @@ Multiobjective
 Reference
 ---------
 
-https://go.documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.4&docsetId=ormpug&docsetTarget=ormpug_lsosolver_examples07.htm&locale=en
+SAS/OR example: https://go.documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.4&docsetId=ormpug&docsetTarget=ormpug_lsosolver_examples07.htm&locale=en
 
-http://support.sas.com/documentation/onlinedoc/or/ex_code/151/lsoe10.html
+SAS/OR code for example: http://support.sas.com/documentation/onlinedoc/or/ex_code/151/lsoe10.html
 
 
 Model

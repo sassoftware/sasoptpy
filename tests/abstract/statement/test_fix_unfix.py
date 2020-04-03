@@ -33,6 +33,9 @@ from util import assert_equal_wo_temps
 from sasoptpy.actions import fix, unfix
 
 class TestFix(unittest.TestCase):
+    """
+    Unit tests for FIX and UNFIX statements
+    """
 
     def setUp(self):
         so.reset()

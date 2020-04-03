@@ -45,10 +45,10 @@ def test(cas_conn):
         store[oil, last_period].set_bounds(lb=init_storage, ub=init_storage)
     VEG = [i for i in OILS if 'veg' in i]
     NONVEG = [i for i in OILS if i not in VEG]
-    revenue = so.quick_sum(revenue_per_ton * manufacture[p] for p in PERIODS)
-    rawcost = so.quick_sum(cost.at[o, p] * buy[o, p]
+    revenue = so.expr_sum(revenue_per_ton * manufacture[p] for p in PERIODS)
+    rawcost = so.expr_sum(cost.at[o, p] * buy[o, p]
                            for o in OILS for p in PERIODS)
-    storagecost = so.quick_sum(storage_cost_per_ton * store[o, p]
+    storagecost = so.expr_sum(storage_cost_per_ton * store[o, p]
                                for o in OILS for p in PERIODS)
     m.set_objective(revenue - rawcost - storagecost, sense=so.MAX,
                     name='profit')
@@ -61,10 +61,10 @@ def test(cas_conn):
     m.add_constraints((store[o, p-1] + buy[o, p] == use[o, p] + store[o, p]
                       for o in OILS for p in PERIODS),
                       name='flow_balance')
-    m.add_constraints((so.quick_sum(hardness[o]*use[o, p] for o in OILS) >=
+    m.add_constraints((so.expr_sum(hardness[o]*use[o, p] for o in OILS) >=
                       hardness_lb * manufacture[p] for p in PERIODS),
                       name='hardness_ub')
-    m.add_constraints((so.quick_sum(hardness[o]*use[o, p] for o in OILS) <=
+    m.add_constraints((so.expr_sum(hardness[o]*use[o, p] for o in OILS) <=
                       hardness_ub * manufacture[p] for p in PERIODS),
                       name='hardness_lb')
 

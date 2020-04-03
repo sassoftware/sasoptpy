@@ -31,6 +31,9 @@ sys.path.append(os.path.abspath(os.path.join(current_dir, '..')))
 from util import assert_equal_wo_temps
 
 class TestSet(unittest.TestCase):
+    """
+    Unit tests for :class:`sasoptpy.abstract.Set` objects
+    """
 
     def setUp(self):
         so.reset()
