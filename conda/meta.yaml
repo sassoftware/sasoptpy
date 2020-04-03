@@ -1,0 +1,43 @@
+{% set name = "sasoptpy" %}
+{% set version = "v1.0.0a" %}
+
+package:
+  name: "{{ name|lower }}"
+  version: "{{ version }}"
+
+source:
+  git_tag: "{{ version }}"
+  git_url: https://github.com/sassoftware/sasoptpy
+
+build:
+  number: 0
+  script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv "
+
+requirements:
+  host:
+    - pandas >= 1.0.0
+    - swat >= 1.6.1
+    - saspy >= 3.10
+    - numpy >= 1.15.4
+  run:
+    - pandas >= 1.0.0
+    - swat >= 1.6.1
+    - saspy >= 3.10
+    - numpy >= 1.15.4
+
+test:
+  imports:
+    - sasoptpy
+
+about:
+  home: https://github.com/sassoftware/sasoptpy
+  license: Apache-2.0
+  license_family: APACHE
+  license_file: LICENSE
+  summary: "SAS Optimization Interface for Python"
+  doc_url: https://sassoftware.github.io/sasoptpy
+  dev_url: https://github.com/sassoftware/sasoptpy
+
+extra:
+  recipe-maintainers:
+    - "Sertalp B. Cay <sertalpbilal@gmail.com>"

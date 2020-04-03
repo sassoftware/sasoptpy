@@ -36,3 +36,26 @@ push_to_pypi:
     - echo $PYPI_URL
     - python -m twine upload --skip-existing -u __token__ -p $PYPI_TOKEN --repository-url $PYPI_URL dist/*
   when: manual
+
+push_to_conda:
+  image: python:latest
+  stage: deploy
+  before_script:
+    - apt-get update -qq
+    - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+    - bash miniconda.sh -b -p $HOME/miniconda
+    - PATH=$PATH:$HOME/miniconda/bin
+    - conda config --set always_yes yes
+    - conda config --add channels conda-forge
+    - conda install conda-build
+    - conda install anaconda-client
+  script:
+    - conda build --python 3.6 conda/
+    - conda build --python 3.7 conda/
+    - conda convert -p all `ls linux-64/*-py3*.tar.bz2`
+    - anaconda -t $ANACONDA_TOKEN upload --force `ls linux-64/*-py3*.tar.bz2`
+    - anaconda -t $ANACONDA_TOKEN upload --force `ls linux-32/*-py3*.tar.bz2`
+    - anaconda -t $ANACONDA_TOKEN upload --force `ls win-32/*-py3*.tar.bz2`
+    - anaconda -t $ANACONDA_TOKEN upload --force `ls win-64/*-py3*.tar.bz2`
+    - anaconda -t $ANACONDA_TOKEN upload --force `ls osx-64/*-py6*.tar.bz2` 
+  when: manual
