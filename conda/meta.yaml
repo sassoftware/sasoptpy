@@ -1,5 +1,5 @@
 {% set name = "sasoptpy" %}
-{% set version = "v1.0.0a2" %}
+{% set version = "v1.0.0b" %}
 
 package:
   name: "{{ name|lower }}"
@@ -17,12 +17,12 @@ requirements:
   host:
     - pandas >=1.0.0
     - swat >=1.6.1
-    - saspy >=3.10
+    - saspy >=3.3.0
     - numpy >=1.15.4
   run:
     - pandas >=1.0.0
     - swat >=1.6.1
-    - saspy >=3.10
+    - saspy >=3.3.0
     - numpy >=1.15.4
 
 test:
