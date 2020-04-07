@@ -170,7 +170,7 @@ class Model:
         self.include(var)
         return var
 
-    def add_variables(self, *argv, name=None,
+    def add_variables(self, *argv, name,
                       vartype=None,
                       lb=None, ub=None, init=None):
         """
@@ -180,7 +180,7 @@ class Model:
         ----------
         argv : list, dict, :class:`pandas.Index`
             Loop index for variable group
-        name : string, optional
+        name : string
             Name of the variables
         vartype : string, optional
             Type of variables, `BIN`, `INT`, or `CONT`
@@ -226,7 +226,7 @@ class Model:
         ----------
         c : :class:`Constraint`
             Constraint to be added to the model
-        name : string, optional
+        name : string
             Name of the constraint
 
         Returns
@@ -264,7 +264,7 @@ class Model:
         self.include(c)
         return c
 
-    def add_constraints(self, argv, name=None):
+    def add_constraints(self, argv, name):
         """
         Adds a set of constraints to the model
 
@@ -272,7 +272,7 @@ class Model:
         ----------
         argv : Generator-type object
             List of constraints as a generator-type Python object
-        name : string, optional
+        name : string
             Name for the constraint group and individual constraint prefix
 
         Returns
@@ -375,7 +375,7 @@ class Model:
         self.include(new_set)
         return new_set
 
-    def add_parameter(self, *argv, name=None, init=None, value=None, p_type=None):
+    def add_parameter(self, *argv, name, init=None, value=None, p_type=None):
         """
         Adds a :class:`abstract.Parameter` object to the model
 
@@ -383,7 +383,7 @@ class Model:
         ----------
         argv : :class:`Set`, optional
             Index or indices of the parameter
-        name : string, optional
+        name : string
             Name of the parameter
         init : float or expression, optional
             Initial value of the parameter
@@ -431,7 +431,7 @@ class Model:
         ----------
         argv : Generator-type object
             Generator object where each item is an entry
-        name : string, optional
+        name : string
             Name of the implicit variable
 
         Examples
@@ -456,6 +456,8 @@ class Model:
           or abstract expression, they can appear in generated OPTMODEL codes.
 
         """
+        if name is None:
+            name = sasoptpy.util.get_next_name()
         iv = sasoptpy.abstract.ImplicitVar(argv=argv, name=name)
         self.include(iv)
         return iv

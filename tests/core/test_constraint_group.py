@@ -125,7 +125,7 @@ class TestConstraintGroup(unittest.TestCase):
     def test_invalid_con(self):
         def con_with_no_direction():
             m = so.Model(name='test_cg_invalid_con', session=None)
-            x = m.add_variables(3, ub=4)
+            x = m.add_variables(3, ub=4, name='x')
             c = m.add_constraints(
                 (so.expr_sum((i + j) * x[i] for i in range(3)) for j in
                  range(5)), name='c')
