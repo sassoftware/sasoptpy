@@ -86,6 +86,9 @@ class Parameter(Expression):
     def set_value(self, value):
         self._fix_value = value
 
+    def get_value(self):
+        return self._fix_value
+
     def _expr(self):
         if self._parent:
             return self._parent.get_element_name(self._key)

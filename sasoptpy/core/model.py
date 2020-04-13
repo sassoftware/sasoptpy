@@ -1003,7 +1003,7 @@ class Model:
           variable values, you can use :code:`m.get_objective().get_value()`.
 
         """
-        if self._objval:
+        if self._objval is not None:
             return sasoptpy.util.get_in_digit_format(self._objval)
         else:
             return self.get_objective().get_value()
@@ -2064,7 +2064,7 @@ class Model:
         """
         original_name = sasoptpy.util.get_group_name(name)
         group = self.get_variable_group(original_name)
-        if group:
+        if group is not None:
             v = group.get_member_by_name(name)
             v.set_value(value)
 

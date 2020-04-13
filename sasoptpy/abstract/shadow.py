@@ -26,6 +26,8 @@ class ShadowVariable(Shadow, Variable):
     def set_group_key(self, vg, key):
         self._parent = vg
         self._iterkey = key
+        if not sasoptpy.abstract.util.is_key_abstract(key):
+            self._abstract = False
 
     def _expr(self):
         keylist = sasoptpy.util.package_utils._to_iterator_expression(
