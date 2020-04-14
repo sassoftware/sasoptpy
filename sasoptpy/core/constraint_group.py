@@ -236,6 +236,10 @@ class ConstraintGroup(Group):
         """
         return self._condict
 
+    def get_member_by_name(self, name):
+        keys = sasoptpy.abstract.util.get_key_from_name(name)
+        return self[keys]
+
     def get_shadow_members(self):
         return self._shadows
 

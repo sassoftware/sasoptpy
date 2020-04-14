@@ -143,7 +143,7 @@ class CASMediator(Mediator):
 
         # Find problem type and initial values
         ptype = 1  # LP
-        for v in model._variables:
+        for v in model.get_grouped_variables().values():
             if v._type != sasoptpy.CONT:
                 ptype = 2
                 break
@@ -161,7 +161,7 @@ class CASMediator(Mediator):
             init_values = []
             var_names = []
             if ptype == 2:
-                for v in model._variables:
+                for v in model.loop_variables():
                     if v._init is not None:
                         var_names.append(v.get_name())
                         init_values.append(v._init)
@@ -229,8 +229,7 @@ class CASMediator(Mediator):
             for _, row in model._primalSolution.iterrows():
                 if ('_SOL_' in model._primalSolution and row['_SOL_'] == 1)\
                      or '_SOL_' not in model._primalSolution:
-                    model._variableDict[row['_VAR_']]._value =\
-                        row['_VALUE_']
+                    model.get_variable(row['_VAR_']).set_value(row['_VALUE_'])
 
             # Capturing dual values for LP problems
             if ptype == 1:
@@ -243,9 +242,9 @@ class CASMediator(Mediator):
                     ['_ROW_', '_ACTIVITY_', '_VALUE_']]
                 model._dualSolution.columns = ['con', 'value', 'dual']
                 for row in model._primalSolution.itertuples():
-                    model._variableDict[row.var]._dual = row.rc
+                    model.get_variable(row.var)._dual = row.rc
                 for row in model._dualSolution.itertuples():
-                    model._constraintDict[row.con]._dual = row.dual
+                    model.get_constraint(row.con)._dual = row.dual
             elif ptype == 2:
                 model._primalSolution = model._primalSolution[
                     ['_VAR_', '_LBOUND_', '_UBOUND_', '_VALUE_',
@@ -284,7 +283,7 @@ class CASMediator(Mediator):
             if('OPTIMAL' in response.solutionStatus):
                 model._objval = response.objective
                 # Replace initial values with current values
-                for v in model._variables:
+                for v in model.loop_variables():
                     v._init = v._value
                 return model._primalSolution
             else:
@@ -452,7 +451,7 @@ class CASMediator(Mediator):
         """
         caller = self.caller
         if sasoptpy.core.util.is_model(caller):
-            for v in caller.get_variables():
+            for v in caller.loop_variables():
                 v.set_init(v.get_value())
 
     def upload_user_blocks(self):
@@ -477,7 +476,7 @@ class CASMediator(Mediator):
         blocks_dict = {}
         block_counter = 0
         decomp_table = []
-        for c in model._constraints:
+        for c in model.loop_constraints():
             if c._block is not None:
                 if c._block not in blocks_dict:
                     blocks_dict[c._block] = block_counter

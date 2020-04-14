@@ -113,6 +113,22 @@ class TestModel(unittest.TestCase):
         self.assertIs(m.get_variable('x'), x)
         self.assertIs(m.get_variable('t'), None)
 
+    def test_duplicate_variables(self):
+
+        m = so.Model(name='test_duplicate_variables')
+
+        def add_multi_var():
+            x = m.add_variable(name='x', lb=2)
+            x2 = m.add_variable(name='x', lb=1)
+
+        self.assertWarns(UserWarning, add_multi_var)
+        self.assertEqual(m.to_optmodel(), cleandoc("""
+            proc optmodel;
+               min test_duplicate_variables_obj = 0;
+               var x >= 1;
+               solve;
+            quit;"""))
+
     def test_dropping_variable(self):
         m = so.Model(name='test_drop_variable')
         x = m.add_variable(name='x')
@@ -126,6 +142,39 @@ class TestModel(unittest.TestCase):
         m.drop(x)
         self.assertEqual(m.get_variable_dict(), {})
 
+    def test_drop_restore_var(self):
+        m = so.Model(name='test_drop_restore')
+        x = m.add_variable(name='x')
+        y = m.add_variables(5, name='y')
+        m.set_objective(y[3], sense=so.minimize, name='obj')
+        self.assertEqual(m.to_optmodel(), cleandoc('''
+            proc optmodel;
+               var x;
+               var y {{0,1,2,3,4}};
+               min obj = y[3];
+               solve;
+            quit;'''))
+        m.drop_variable(x)
+        m.drop_variable(y[1])
+        m.drop_variable(y[2])
+        self.assertEqual(m.to_optmodel(), cleandoc('''
+            proc optmodel;
+               var y {{0,1,2,3,4}};
+               min obj = y[3];
+               drop y[1] y[2];
+               solve;
+            quit;'''))
+        m.restore_variable(x)
+        m.restore_variable(y[2])
+        self.assertEqual(m.to_optmodel(), cleandoc('''
+            proc optmodel;
+               var x;
+               var y {{0,1,2,3,4}};
+               min obj = y[3];
+               drop y[1];
+               solve;
+            quit;'''))
+
     def test_adding_vargroup(self):
         m = so.Model(name='test_add_vg')
 
@@ -137,7 +186,7 @@ class TestModel(unittest.TestCase):
         m.include(w)
         vars = [('x', x), ('y', y), ('z', z), ('w', w)]
         self.assertEqual(m.get_grouped_variables(), OrderedDict(vars))
-        self.assertIs(m.get_variable('x[0]'), x[0])
+        self.assertIs(m.get_variable('x')[0], x[0])
 
     def test_dropping_vargroup(self):
         m = so.Model(name='test_drop_vg')
@@ -169,6 +218,79 @@ class TestModel(unittest.TestCase):
         cy = m.get_constraint('c3')
         self.assertEqual(cy, None)
 
+    def test_duplicate_constraints(self):
+
+        m = so.Model(name='test_duplicate_constraints')
+
+        def add_multi_con():
+            x = m.add_variable(name='x')
+
+            c1 = m.add_constraint(x <= 5, name='c')
+            c2 = m.add_constraint(x <= 5, name='c')
+
+        self.assertWarns(UserWarning, add_multi_con)
+        self.assertEqual(m.to_optmodel(), cleandoc("""
+            proc optmodel;
+               min test_duplicate_constraints_obj = 0;
+               var x;
+               con c : x <= 5;
+               solve;
+            quit;"""))
+
+    def test_drop_restore_cons(self):
+        m = so.Model(name='test_drop_restore_constraints')
+        x = m.add_variable(name='x')
+        y = m.add_variables(5, name='y')
+        m.set_objective(y[3], sense=so.minimize, name='obj')
+
+        c1 = m.add_constraint(x <= 5, name='c1')
+        c2 = m.add_constraints((y[i] <= i for i in range(5)), name='c2')
+        self.assertEqual(m.to_optmodel(), cleandoc("""
+            proc optmodel;
+               var x;
+               var y {{0,1,2,3,4}};
+               min obj = y[3];
+               con c1 : x <= 5;
+               con c2_0 : y[0] <= 0;
+               con c2_1 : y[1] <= 1;
+               con c2_2 : y[2] <= 2;
+               con c2_3 : y[3] <= 3;
+               con c2_4 : y[4] <= 4;
+               solve;
+            quit;"""))
+        m.drop_constraint(c1)
+        m.drop_constraint(c2[1])
+        m.drop_constraint(c2[2])
+        self.assertEqual(m.to_optmodel(), cleandoc("""
+            proc optmodel;
+               var x;
+               var y {{0,1,2,3,4}};
+               min obj = y[3];
+               con c2_0 : y[0] <= 0;
+               con c2_1 : y[1] <= 1;
+               con c2_2 : y[2] <= 2;
+               con c2_3 : y[3] <= 3;
+               con c2_4 : y[4] <= 4;
+               drop c2_1 c2_2;
+               solve;
+            quit;"""))
+        m.restore_constraint(c1)
+        m.restore_constraint(c2[2])
+        self.assertEqual(m.to_optmodel(), cleandoc("""
+            proc optmodel;
+               var x;
+               var y {{0,1,2,3,4}};
+               min obj = y[3];
+               con c1 : x <= 5;
+               con c2_0 : y[0] <= 0;
+               con c2_1 : y[1] <= 1;
+               con c2_2 : y[2] <= 2;
+               con c2_3 : y[3] <= 3;
+               con c2_4 : y[4] <= 4;
+               drop c2_1;
+               solve;
+            quit;"""))
+
     def test_dropping_constraint(self):
         m = so.Model(name='test_drop_constraint')
         x = m.add_variable(name='x')
@@ -181,18 +303,13 @@ class TestModel(unittest.TestCase):
         m.drop(c1)
         self.assertEqual({}, m.get_constraints_dict())
 
-        def invalid_constraint():
-            c2 = so.Constraint(x ** 2 - 2 * x <= 5, name='c2')
-            m.drop_constraint(c2)
-        self.assertRaises(KeyError, invalid_constraint)
-
     def test_adding_constraints(self):
         m = so.Model(name='test_add_cg')
         x = m.add_variables(5, name='x')
 
         c1 = m.add_constraints((x[i] >= i for i in range(5)), name='c1')
         self.assertEqual(OrderedDict([('c1', c1)]), m.get_grouped_constraints())
-        self.assertEqual(c1, m.get_constraint_group('c1'))
+        self.assertEqual(c1, m.get_constraint('c1'))
 
         c2 = so.ConstraintGroup((i * x[i] <= 10 for i in range(5)), name='c2')
         m.include(c2)
@@ -568,7 +685,7 @@ class TestModel(unittest.TestCase):
         m.add_constraints((get[i] <= ub[i] for i in items), name='upper_bound')
 
         # Regular solve and regular get
-        m.solve()
+        m.solve(verbose=True)
         self.assertEqual(m.get_solution().to_string(), inspect.cleandoc(
             """
                  i         var  value   lb             ub  rc
@@ -781,7 +898,7 @@ class TestModel(unittest.TestCase):
 
         u = m.add_variable(name='u')
         t = m.add_variable(name='t', vartype=so.BIN)
-        m.drop_constraints([c1, c2])
+        m.drop_constraints(c1, c2)
         m.add_constraint(x + 2*y[0] == [3, 8], name='range_con')
         self.assertEqual(m.to_mps().to_string(), inspect.cleandoc(
         """

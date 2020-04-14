@@ -138,7 +138,7 @@ class SASMediator(Mediator):
 
         # Find problem type and initial values
         ptype = 1  # LP
-        for v in model._variables:
+        for v in model.get_grouped_variables().values():
             if v._type != sasoptpy.CONT:
                 ptype = 2
                 break
@@ -370,7 +370,7 @@ class SASMediator(Mediator):
 
         # Variable init values
         if sasoptpy.core.util.is_model(caller):
-            for v in caller.get_variables():
+            for v in caller.loop_variables():
                 v.set_init(v.get_value())
 
     def submit_optmodel_code(self, **kwargs):

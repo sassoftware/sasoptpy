@@ -43,6 +43,7 @@ def is_create_data_statement(i):
 
 
 def get_key_from_name(name):
+    name = name.replace('\'', '').replace('"', '')
     keys = name.split('[')[1].split(']')[0]
     keys = keys.split(',')
     keys = tuple(int(k) if k.isdigit() else k

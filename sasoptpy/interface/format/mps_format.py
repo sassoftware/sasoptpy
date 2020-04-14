@@ -56,11 +56,6 @@ def to_mps(model, **kwargs):
         datarows.append(row + [len(datarows) + 1])
         return len(datarows)
 
-    # Create a dictionary of variables with constraint names
-    var_con = {}
-    for c in model._constraints:
-        for v in c._linCoef:
-            var_con.setdefault(v, []).append(c.get_name())
     # Check if objective has a constant field
     if constant and model._objective._linCoef['CONST']['val'] != 0:
         obj_constant = model.add_variable('obj_constant')
@@ -74,18 +69,27 @@ def to_mps(model, **kwargs):
                       ' constant term, an auxiliary variable is added.',
                       UserWarning)
 
+    all_vars = model._get_all_variables()
+    all_cons = model._get_all_constraints()
+
+    # Create a dictionary of variables with constraint names
+    var_con = {}
+    for c in all_cons.values():
+        for v in c._linCoef:
+            var_con.setdefault(v, []).append(c.get_name())
+
     append_row(['NAME', '', model.get_name(), 0, '', 0])
 
     append_row(['ROWS', '', '', '', '', ''])
     if model._objective.get_name() is not None:
         append_row([model._objective._sense, model._objective.get_name(),
                           '', '', '', ''])
-    for c in model._constraints:
+    for c in all_cons.values():
         append_row([c._direction, c.get_name(), '', '', '', ''])
 
     append_row(['COLUMNS', '', '', '', '', ''])
     curtype = sasoptpy.CONT
-    for v in model._variables:
+    for v in all_vars.values():
         f5 = 0
         if v._type is sasoptpy.INT and \
                 curtype is sasoptpy.CONT:
@@ -106,8 +110,8 @@ def to_mps(model, **kwargs):
             f5 = 1
             var_con[v.get_name()] = []
         for cn in var_con.get(v.get_name(), []):
-            if cn in model._constraintDict:
-                c = model._constraintDict[cn]
+            if cn in all_cons:
+                c = all_cons[cn]
                 if v.get_name() in c._linCoef:
                     if f5 == 0:
                         current_row = ['', v.get_name(), c.get_name(),
@@ -128,7 +132,7 @@ def to_mps(model, **kwargs):
 
     append_row(['RHS', '', '', '', '', ''])
     f5 = 0
-    for c in model._constraints:
+    for c in all_cons.values():
         if c._direction == 'L' and c._linCoef['CONST']['val'] == -inf:
             continue
         if c._direction == 'G' and c._linCoef['CONST']['val'] == 0:
@@ -149,12 +153,12 @@ def to_mps(model, **kwargs):
         append_row(current_row)
 
     append_row(['RANGES', '', '', '', '', ''])
-    for c in model._constraints:
+    for c in all_cons.values():
         if c._range != 0:
             append_row(['', 'rng', c.get_name(), c._range, '', ''])
 
     append_row(['BOUNDS', '', '', '', '', ''])
-    for v in model._variables:
+    for v in all_vars.values():
         if v._lb == v._ub:
             append_row(['FX', 'BND', v.get_name(), v._ub, '', ''])
         if v._lb is not None and v._type is not sasoptpy.BIN:

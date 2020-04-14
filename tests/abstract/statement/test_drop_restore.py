@@ -112,8 +112,6 @@ class TestDropRestore(unittest.TestCase):
 
     def test_drop_in_model(self):
 
-        from sasoptpy.util import iterate
-
         m = so.Model(name='m')
         x = m.add_variables(3, name='x')
         c = m.add_constraints((x[i] <= i**2 for i in range(3)), name='c')
