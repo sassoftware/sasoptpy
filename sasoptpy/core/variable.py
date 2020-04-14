@@ -90,6 +90,9 @@ class Variable(Expression):
         self._parent = parent
         self._key = key
 
+    def get_parent_reference(self):
+        return self._parent, self._key
+
     @sasoptpy.containable
     def set_bounds(self, *, lb=None, ub=None):
         """

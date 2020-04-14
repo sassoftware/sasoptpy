@@ -29,19 +29,20 @@ def to_optmodel_for_solve(model, **kwargs):
     if header:
         s = 'proc optmodel;\n'
     body = ''
-    allcomp = (
-        model._sets +
-        model._parameters +
-        model._statements +
-        model._vargroups +
-        model._variables +
-        model._impvars +
-        model._congroups +
-        model._constraints +
-        [model._objective] +
-        model._multiobjs
-        )
-    sorted_comp = sorted(allcomp, key=lambda i: i._objorder)
+
+    all_components_dict = {
+        **model._setDict,
+        **model._parameterDict,
+        **model._statementDict,
+        **model._variableDict,
+        **model._impvarDict,
+        **model._constraintDict,
+        **model._objectiveDict,
+    }
+
+    all_components = list(all_components_dict.values()) + [model._objective]
+
+    sorted_comp = sorted(all_components, key=lambda i: i._objorder)
     for cm in sorted_comp:
         if (sasoptpy.core.util.is_regular_component(cm)):
             body += cm._defn() + '\n'
@@ -49,6 +50,11 @@ def to_optmodel_for_solve(model, **kwargs):
                 mdefn = cm._member_defn()
                 if mdefn != '':
                     body += mdefn + '\n'
+
+    dropped_comps = ' '.join(list(model._get_dropped_vars().keys()) +
+                             list(model._get_dropped_cons().keys()))
+    if dropped_comps != '':
+        body += mdefn + 'drop ' + dropped_comps + ';\n'
 
     # Solve block
     if solve:
@@ -103,7 +109,7 @@ def to_optmodel_for_solve(model, **kwargs):
         body += 'create data allsols from [s]=(1.._NVAR_) name=_VAR_[s].name {j in 1.._NSOL_} <col(\'sol_\'||j)=_VAR_[s].sol[j]>;\n'
 
     # After-solve statements
-    for i in model._postsolve_statements:
+    for i in model._postSolveDict.values():
         body += i._defn() + '\n'
 
     s += sasoptpy.util.addSpaces(body, 3)

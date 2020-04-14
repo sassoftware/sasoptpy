@@ -115,6 +115,9 @@ class Constraint(Expression):
         self._temp = False
         self._shadow = False
 
+    def get_parent_reference(self):
+        return self._parent, self._key
+
     def update_var_coef(self, var, value):
         """
         Updates the coefficient of a variable inside the constraint
@@ -291,6 +294,14 @@ class Constraint(Expression):
 
     def _cond_expr(self):
         return self._get_constraint_expr()
+
+    def _get_optmodel_name(self):
+        if self._parent is not None:
+            return self.get_parent_reference()[0].get_name() + \
+                   sasoptpy.util.package_utils._to_optmodel_loop(
+                           self._key, self)
+        else:
+            return self._name
 
     def _get_definition_tag(self):
         if self._parent is None:
