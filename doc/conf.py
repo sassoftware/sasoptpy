@@ -267,3 +267,9 @@ def setup(app):
 
 add_module_names = False
 
+
+reference = re.sub('^v', '', os.popen('git describe --tags').read().strip())
+rst_epilog = f"""
+.. |reference| replace:: {reference}
+"""
+
