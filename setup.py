@@ -20,12 +20,16 @@
 
 from setuptools import setup
 
+__version__ = None
+with open('./sasoptpy/version.py') as f:
+    exec(f.read())
+
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
     name='sasoptpy',
-    version='1.0.0-beta.2',
+    version=__version__,
     packages=['sasoptpy'],
     description='sasoptpy: SAS Optimization Interface for Python',
     long_description=long_description,

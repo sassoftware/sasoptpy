@@ -1,12 +1,12 @@
 {% set name = "sasoptpy" %}
-{% set version = "v1.0.0b.2" %}
+{% set data = load_setup_py_data() %}
 
 package:
-  name: "{{ name|lower }}"
-  version: "{{ version }}"
+  name: "{{ name }}"
+  version: "{{ data.get('version') }}"
 
 source:
-  git_tag: "{{ version }}"
+  git_tag: "{{ data.get('version') }}"
   git_url: https://github.com/sassoftware/sasoptpy
 
 build:
