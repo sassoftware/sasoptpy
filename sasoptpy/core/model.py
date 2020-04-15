@@ -1019,7 +1019,7 @@ class Model:
         Returns
         -------
         constraint : :class:`Constraint`
-            Requested :class:`Constraint object
+            Requested object
 
         Examples
         --------
@@ -1969,14 +1969,14 @@ class Model:
 
            Acceptable values are:
 
-           * `milpParameters <https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=cas-optimization-tuner.htm&docsetVersion=8.5&locale=en#PYTHON.cas-optimization-tuner-milpparameters>`_ :
-              Parameters for the solveMilp action, such as
+           - `milpParameters <https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=cas-optimization-tuner.htm&docsetVersion=8.5&locale=en#PYTHON.cas-optimization-tuner-milpparameters>`_:
+             Parameters for the solveMilp action, such as
              `maxTime`, `heuristics`, `feasTol`
-           * `tunerParameters <https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=cas-optimization-tuner.htm&docsetVersion=8.5&locale=en#PYTHON.cas-optimization-tuner-tunerparameters>`_ :
-              Parameters for the tuner itself, such as
+           - `tunerParameters <https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=cas-optimization-tuner.htm&docsetVersion=8.5&locale=en#PYTHON.cas-optimization-tuner-tunerparameters>`_:
+             Parameters for the tuner itself, such as
              `maxConfigs`, `printLevel`, `logFreq`
-           * `tuningParameters <https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=cas-optimization-tuner.htm&docsetVersion=8.5&locale=en#PYTHON.cas-optimization-tuner-tuningparameters>`_ :
-              List of parameters to be tuned, such as
+           - `tuningParameters <https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=cas-optimization-tuner.htm&docsetVersion=8.5&locale=en#PYTHON.cas-optimization-tuner-tuningparameters>`_:
+             List of parameters to be tuned, such as
              `cutStrategy`, `presolver`, `restarts`
 
         Returns
