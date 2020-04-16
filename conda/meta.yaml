@@ -1,29 +1,31 @@
 {% set name = "sasoptpy" %}
-{% set data = load_setup_py_data() %}
 
 package:
   name: "{{ name }}"
-  version: "{{ data.get('version') }}"
+  version: "{{ environ.get('GIT_DESCRIBE_TAG', 'untagged')|string|replace('-','_') }}"
 
 source:
-  git_tag: "{{ data.get('version') }}"
-  git_url: https://github.com/sassoftware/sasoptpy
+  git_url: ../
 
 build:
-  number: 0
-  script: "python3 -m pip install . --no-deps --ignore-installed -vv "
+  number: {{ environ.get('GIT_DESCRIBE_NUMBER', 0) }}
+  script: "{{ PYTHON }} -m pip install . -vv"
 
 requirements:
   host:
-    - pandas >=1.0.0
-    - swat >=1.6.1
-    - saspy >=3.3.0
     - numpy >=1.15.4
+    - pandas >=1.0.0
+    - pip
+    - python
+    - saspy >=3.3.0
+    - swat >=1.6.1
   run:
-    - pandas >=1.0.0
-    - swat >=1.6.1
-    - saspy >=3.3.0
     - numpy >=1.15.4
+    - pandas >=1.0.0
+    - pip
+    - python
+    - saspy >=3.3.0
+    - swat >=1.6.1
 
 test:
   imports:
