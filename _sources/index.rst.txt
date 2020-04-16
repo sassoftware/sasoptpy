@@ -7,7 +7,7 @@ SAS Optimization Interface for Python
 
 .. module:: sasoptpy
 
-**Date**: |today| **Version**: |version|
+**Date**: |today| | **Version**: |version| | **Release**: |release| | **Reference**: |reference|
 
 **Links**: `Repository <https://github.com/sassoftware/sasoptpy>`_ |
 `Issues <https://github.com/sassoftware/sasoptpy/issues>`_ |

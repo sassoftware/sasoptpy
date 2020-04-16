@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Model &#8212; sasoptpy 1.0.0-alpha documentation</title>
+    <title>Model &#8212; sasoptpy 1.0.0-beta.2 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/sasoptpy.css" />
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="api.html" title="API Reference"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0-beta.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="api.html" accesskey="U">API Reference</a> &#187;</li> 
       </ul>
     </div>  
@@ -99,7 +99,7 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.add_variable.html#sasoptpy.Model.add_variable" title="sasoptpy.Model.add_variable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.add_variable</span></code></a>(self, name[, vartype, …])</p></td>
 <td><p>Adds a new variable to the model</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.add_variables.html#sasoptpy.Model.add_variables" title="sasoptpy.Model.add_variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.add_variables</span></code></a>(self, \*argv[, name, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.add_variables.html#sasoptpy.Model.add_variables" title="sasoptpy.Model.add_variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.add_variables</span></code></a>(self, \*argv, name[, …])</p></td>
 <td><p>Adds a group of variables to the model</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.add_implicit_variable.html#sasoptpy.Model.add_implicit_variable" title="sasoptpy.Model.add_implicit_variable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.add_implicit_variable</span></code></a>(self[, argv, name])</p></td>
@@ -123,13 +123,13 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.drop_variable.html#sasoptpy.Model.drop_variable" title="sasoptpy.Model.drop_variable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.drop_variable</span></code></a>(self, variable)</p></td>
 <td><p>Drops a variable from the model</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.drop_variables.html#sasoptpy.Model.drop_variables" title="sasoptpy.Model.drop_variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.drop_variables</span></code></a>(self, variables)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.drop_variables.html#sasoptpy.Model.drop_variables" title="sasoptpy.Model.drop_variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.drop_variables</span></code></a>(self, \*variables)</p></td>
 <td><p>Drops a variable group from the model</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.add_constraint.html#sasoptpy.Model.add_constraint" title="sasoptpy.Model.add_constraint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.add_constraint</span></code></a>(self, c, name)</p></td>
 <td><p>Adds a single constraint to the model</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.add_constraints.html#sasoptpy.Model.add_constraints" title="sasoptpy.Model.add_constraints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.add_constraints</span></code></a>(self, argv[, name])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.add_constraints.html#sasoptpy.Model.add_constraints" title="sasoptpy.Model.add_constraints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.add_constraints</span></code></a>(self, argv, name)</p></td>
 <td><p>Adds a set of constraints to the model</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.get_constraint.html#sasoptpy.Model.get_constraint" title="sasoptpy.Model.get_constraint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.get_constraint</span></code></a>(self, name)</p></td>
@@ -144,13 +144,13 @@
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.drop_constraint.html#sasoptpy.Model.drop_constraint" title="sasoptpy.Model.drop_constraint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.drop_constraint</span></code></a>(self, constraint)</p></td>
 <td><p>Drops a constraint from the model</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.drop_constraints.html#sasoptpy.Model.drop_constraints" title="sasoptpy.Model.drop_constraints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.drop_constraints</span></code></a>(self, constraints)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.drop_constraints.html#sasoptpy.Model.drop_constraints" title="sasoptpy.Model.drop_constraints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.drop_constraints</span></code></a>(self, \*constraints)</p></td>
 <td><p>Drops a constraint group from the model</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.add_set.html#sasoptpy.Model.add_set" title="sasoptpy.Model.add_set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.add_set</span></code></a>(self, name[, init, value, settype])</p></td>
 <td><p>Adds a set to the model</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.add_parameter.html#sasoptpy.Model.add_parameter" title="sasoptpy.Model.add_parameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.add_parameter</span></code></a>(self, \*argv[, name, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.add_parameter.html#sasoptpy.Model.add_parameter" title="sasoptpy.Model.add_parameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.add_parameter</span></code></a>(self, \*argv, name[, …])</p></td>
 <td><p>Adds a <a class="reference internal" href="generated/sasoptpy.abstract.Parameter.html#sasoptpy.abstract.Parameter" title="sasoptpy.abstract.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">abstract.Parameter</span></code></a> object to the model</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.add_statement.html#sasoptpy.Model.add_statement" title="sasoptpy.Model.add_statement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.add_statement</span></code></a>(self, statement[, …])</p></td>
@@ -402,14 +402,14 @@
         <li class="right" >
           <a href="api.html" title="API Reference"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0-beta.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="api.html" >API Reference</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Last updated on Apr 16, 2020 (Timestamp: 1.0-20200416174528).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->

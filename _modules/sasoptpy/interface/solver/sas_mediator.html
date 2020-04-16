@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>sasoptpy.interface.solver.sas_mediator &#8212; sasoptpy 1.0.0-alpha documentation</title>
+    <title>sasoptpy.interface.solver.sas_mediator &#8212; sasoptpy 1.0.0-beta.2 documentation</title>
     <link rel="stylesheet" href="../../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/css/sasoptpy.css" />
@@ -30,7 +30,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">sasoptpy 1.0.0-beta.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -44,7 +44,7 @@
 <span></span><span class="c1"># SAS MVA interface for sasoptpy</span>
 
 <span class="kn">import</span> <span class="nn">sasoptpy</span>
-<span class="kn">from</span> <span class="nn">sasoptpy._libs</span> <span class="kn">import</span> <span class="n">np</span>
+<span class="kn">from</span> <span class="nn">sasoptpy.libs</span> <span class="kn">import</span> <span class="n">np</span>
 <span class="kn">from</span> <span class="nn">sasoptpy.interface</span> <span class="kn">import</span> <span class="n">Mediator</span>
 <span class="kn">from</span> <span class="nn">saspy</span> <span class="kn">import</span> <span class="n">SASsession</span>
 <span class="kn">from</span> <span class="nn">sasoptpy.interface.util</span> <span class="kn">import</span> <span class="n">wrap_long_lines</span><span class="p">,</span> <span class="n">replace_long_names</span>
@@ -181,7 +181,7 @@
 
         <span class="c1"># Find problem type and initial values</span>
         <span class="n">ptype</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># LP</span>
-        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">_variables</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">get_grouped_variables</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">_type</span> <span class="o">!=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">CONT</span><span class="p">:</span>
                 <span class="n">ptype</span> <span class="o">=</span> <span class="mi">2</span>
                 <span class="k">break</span>
@@ -413,7 +413,7 @@
 
         <span class="c1"># Variable init values</span>
         <span class="k">if</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_model</span><span class="p">(</span><span class="n">caller</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">caller</span><span class="o">.</span><span class="n">get_variables</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">caller</span><span class="o">.</span><span class="n">loop_variables</span><span class="p">():</span>
                 <span class="n">v</span><span class="o">.</span><span class="n">set_init</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">get_value</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="SASMediator.submit_optmodel_code"><a class="viewcode-back" href="../../../../api/generated/sasoptpy.interface.SASMediator.submit_optmodel_code.html#sasoptpy.interface.SASMediator.submit_optmodel_code">[docs]</a>    <span class="k">def</span> <span class="nf">submit_optmodel_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -558,14 +558,14 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">sasoptpy 1.0.0-alpha documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">sasoptpy 1.0.0-beta.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Apr 03, 2020 (Timestamp: 1.0.0-alpha-20200403025621).
+      Last updated on Apr 16, 2020 (Timestamp: 1.0-20200416174528).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
