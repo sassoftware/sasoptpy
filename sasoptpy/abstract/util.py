@@ -1,4 +1,5 @@
 import sasoptpy
+import re
 
 
 def is_abstract(arg):
@@ -43,9 +44,11 @@ def is_create_data_statement(i):
 
 
 def get_key_from_name(name):
-    name = name.replace('\'', '').replace('"', '')
+    name = name.replace('"', '')
     keys = name.split('[')[1].split(']')[0]
-    keys = keys.split(',')
+    keys = re.split("(?!\B'[^']*),(?![^']*'\B)", keys)
+    keys = [k.replace('\'', '') for k in keys]
+    #keys = keys.split(',')
     keys = tuple(int(k) if k.isdigit() else k
                  for k in keys)
     return keys

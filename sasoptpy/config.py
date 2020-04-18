@@ -76,6 +76,7 @@ def _get_default_config():
         sasoptpy.INT: {'lb': -inf, 'ub': inf},
         sasoptpy.BIN: {'lb': 0, 'ub': 1}
     }
+    config['generic_naming'] = False
 
     return config
 

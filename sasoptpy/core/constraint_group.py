@@ -252,9 +252,14 @@ class ConstraintGroup(Group):
     def _defn(self):
         from sasoptpy.util.package_utils import _to_optmodel_loop
         groups = []
+        con_no = 0
         for key_ in self._condict:
             current_constraint = self._condict[key_]
-            con_name = self.get_name() + _to_optmodel_loop(key_, current_constraint)
+            if sasoptpy.config['generic_naming']:
+                con_name = self.get_name() + f'_{con_no}'
+                con_no += 1
+            else:
+                con_name = self.get_name() + _to_optmodel_loop(key_, current_constraint)
             group_str = 'con {}'.format(con_name)
             group_str += ' : ' + self._condict[key_]._defn()
             group_str += ';'
