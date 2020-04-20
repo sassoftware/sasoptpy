@@ -5,27 +5,35 @@ Manpower Planning
 Reference
 ---------
 
-http://go.documentation.sas.com/?docsetId=ormpex&docsetTarget=ormpex_ex5_toc.htm&docsetVersion=14.3&locale=en
+SAS/OR example: http://go.documentation.sas.com/?docsetId=ormpex&docsetTarget=ormpex_ex5_toc.htm&docsetVersion=15.1&locale=en
 
-http://support.sas.com/documentation/onlinedoc/or/ex_code/143/mpex05.html
+SAS/OR code for example: http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex05.html
 
 Model
 -----
 
-.. literalinclude:: ../../examples/manpower_planning.py
+.. literalinclude:: ../../examples/client_side/manpower_planning.py
 
 Output
 ------
 
 .. ipython:: python
-   :suppress:
-   
+
+   import os
+   hostname = os.getenv('CASHOST')
+   port = os.getenv('CASPORT')
+   from swat import CAS
+   cas_conn = CAS(hostname, port)
    import sasoptpy
-   sasoptpy.reset_globals()
+
+.. ipython:: python
+   :suppress:
+
+   sasoptpy.reset()
 
 
 .. ipython:: python
 
-   from examples.manpower_planning import test
+   from examples.client_side.manpower_planning import test
    test(cas_conn)
 

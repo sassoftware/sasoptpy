@@ -13,6 +13,7 @@ Constructor
 
    Variable
 
+
 Methods
 ~~~~~~~
 
@@ -21,6 +22,8 @@ Methods
 
    Variable.set_bounds
    Variable.set_init
+   Variable.get_type
+   Variable.get_attributes
 
 Inherited Methods
 ~~~~~~~~~~~~~~~~~
@@ -28,7 +31,6 @@ Inherited Methods
 .. autosummary::
    :toctree: generated/
 
-   Variable.add
    Variable.copy
    Variable.get_dual
    Variable.get_name

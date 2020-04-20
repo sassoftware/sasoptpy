@@ -8,6 +8,8 @@
 # Compiled files
 __pycache__/
 *.py[cod]
+*.egg-info
+dist/
 
 # Eclipse-related files
 .classpath
@@ -19,4 +21,12 @@ __pycache__/
 .buildinfo
 /doc/_build/
 /doc/generated/
+/doc/api/generated/
+/doc/savefig/
 
+# Coverage
+*.coverage*
+htmlcov/
+
+# Jupyter
+*.ipynb_checkpoints/

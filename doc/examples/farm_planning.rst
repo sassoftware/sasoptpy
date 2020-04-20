@@ -5,28 +5,36 @@ Farm Planning
 Reference
 ---------
 
-http://go.documentation.sas.com/?docsetId=ormpex&docsetTarget=ormpex_ex8_toc.htm&docsetVersion=14.3&locale=en
+SAS/OR example: http://go.documentation.sas.com/?docsetId=ormpex&docsetTarget=ormpex_ex8_toc.htm&docsetVersion=15.1&locale=en
 
-http://support.sas.com/documentation/onlinedoc/or/ex_code/143/mpex08.html
+SAS/OR code for example: http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex08.html
 
 
 Model
 -----
 
-.. literalinclude:: ../../examples/farm_planning.py
+.. literalinclude:: ../../examples/client_side/farm_planning.py
 
 Output
 ------
 
 .. ipython:: python
-   :suppress:
-   
+
+   import os
+   hostname = os.getenv('CASHOST')
+   port = os.getenv('CASPORT')
+   from swat import CAS
+   cas_conn = CAS(hostname, port)
    import sasoptpy
-   sasoptpy.reset_globals()
+
+.. ipython:: python
+   :suppress:
+
+   sasoptpy.reset()
 
 
 .. ipython:: python
 
-   from examples.farm_planning import test
+   from examples.client_side.farm_planning import test
    test(cas_conn)
 

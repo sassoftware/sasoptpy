@@ -1,55 +1,52 @@
 .. sasoptpy documentation master file
 
-sasoptpy: SAS Optimization Interface for Python
-***********************************************
+SAS Optimization Interface for Python
+*************************************
 
 `PDF Version <sasoptpy.pdf>`_
 
 .. module:: sasoptpy
 
-**Date**: |today| **Version**: |version|
+**Date**: |today| | **Version**: |version| | **Release**: |release| | **Reference**: |reference|
 
+**Links**: `Repository <https://github.com/sassoftware/sasoptpy>`_ |
+`Issues <https://github.com/sassoftware/sasoptpy/issues>`_ |
+`Releases <https://github.com/sassoftware/sasoptpy/releases>`_ |
+`Community <https://communities.sas.com/t5/Mathematical-Optimization/bd-p/operations_research>`_
 
-*sasoptpy* is a Python package providing a modeling interface for 
-`SAS Viya <https://www.sas.com/en_us/software/viya.html>`_  and SAS/OR
-Optimization solvers. 
+sasoptpy is a Python package that provides a modeling interface for
+SAS Optimization  and SAS/OR
+optimization solvers.
 It provides a quick way for users to deploy optimization models and
-solve them using
-`SAS Viya Optimization Action Set <http://go.documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.3&docsetId=casactmopt&docsetTarget=casactmopt_optimization_toc.htm&locale=en>`_.
+solve them using SAS Viya and SAS 9.4.
 
-*sasoptpy* can handle linear optimization, mixed integer linear optimization,
-and nonlinear optimization problems. Users can benefit from native Python
-structures like dictionaries, tuples, and lists to define an optimization
-problem. *sasoptpy* supports `Pandas <http://pandas.pydata.org/>`_
-objects extensively.
+sasoptpy can handle linear, mixed integer linear, nonlinear, and black-box
+optimization problems. You can use native Python
+structures such as dictionaries, tuples, and lists to define an optimization
+problem. sasoptpy offers extensive support of `pandas <http://pandas.pydata.org/>`_
+objects.
 
-Under the hood, *sasoptpy* uses the
-`swat package <https://sassoftware.github.io/python-swat/>`_ to communicate with
+Under the hood, sasoptpy uses the `SAS Scripting Wrapper for Analytic Transfer
+(SWAT) package <https://sassoftware.github.io/python-swat/>`_ to communicate with
 SAS Viya, and uses the
-`saspy package <https://sassoftware.github.io/saspy/>`_ to communicate with SAS 9.4
+`SASPy package <https://sassoftware.github.io/saspy/>`_ to communicate with SAS 9.4
 installations.
 
-*sasoptpy* is an interface to SAS Optimization solvers. Check
-`SAS/OR <http://go.documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.3&docsetId=casmopt&docsetTarget=titlepage.htm&locale=en>`_
-and 
-`PROC OPTMODEL <http://go.documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.3&docsetId=casmopt&docsetTarget=casmopt_optmodel_toc.htm&locale=en>`_ 
-for more details about optimization tools provided by SAS and an interface to
-model optimization problems inside SAS.
+sasoptpy is an interface to SAS Optimization solvers. See
+`SAS Optimization: Mathematical Optimization Procedures <https://go.documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.5&docsetId=casmopt&docsetTarget=titlepage.htm&locale=en>`_
+for more information about SAS optimization tools.
 
-See our SAS Global Forum paper: `Optimization Modeling with Python and SAS Viya <https://www.sas.com/content/dam/SAS/support/en/sas-global-forum-proceedings/2018/1814-2018.pdf>`_
+See the SAS Global Forum paper: `Optimization Modeling with Python and SAS Viya <https://www.sas.com/content/dam/SAS/support/en/sas-global-forum-proceedings/2018/1814-2018.pdf>`_
 
 .. toctree::
    :glob:
    :name: mastertoc
    :maxdepth: 2
 
-   overview
-   getting-started
-   input-data
-   models
-   components
-   workflow
-   examples
+   overview/overview
+   install/install
+   guide/user-guide
+   examples/examples
    api/api
-   web-api
+   version-history
 

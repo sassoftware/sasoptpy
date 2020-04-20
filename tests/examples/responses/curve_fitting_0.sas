@@ -1,0 +1,15 @@
+proc optmodel;
+   set POINTS;
+   num x {POINTS};
+   num y {POINTS};
+   read data XY_DATA into POINTS=[_N_] x y;
+   num order init 1;
+   var beta {{0..order}};
+   impvar estimate {o8 in POINTS} = beta[0] + sum {k in 1..order} (beta[k] * (x[o8]) ^ (k));
+   var surplus {{POINTS}} >= 0;
+   var slack {{POINTS}} >= 0;
+   con abs_dev_con {o32 in POINTS} : y[o32] - estimate[o32] + surplus[o32] - slack[o32] = 0;
+   min L1obj = sum {i in POINTS} (surplus[i] + slack[i]);
+   solve;
+   print x y estimate surplus slack;
+quit;

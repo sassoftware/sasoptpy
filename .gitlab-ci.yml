@@ -1,20 +1,74 @@
+
+stages:
+  - test1
+  - test2
+  - deploy
+
+default:
+  before_script:
+    - apt-get update -qq
+    - 'which ssh-agent || ( apt-get install -qq -y openssh-client )'
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - scp $CASCOPY ~/
+
+py36:
+  stage: test1
+  image: python:3.6
+  script:
+  - python setup.py install
+  - pip install coverage
+  - cd tests
+  - ./test_coverage.sh
+
 py37:
+  stage: test2
   image: python:3.7
   script:
   - python setup.py install
+  - pip install coverage
   - cd tests
-  - python test_generators.py
+  - ./test_coverage.sh
 
-#py36:
-#  image: python:3.6
-#  script:
-#  - python setup.py install
-#  - cd tests
-#  - python test_generators.py
-#
-#py35:
-#  image: python:3.5
-#  script:
-#  - python setup.py install
-#  - cd tests
-#  - python test_generators.py
+push_to_pypi:
+  image: python:latest
+  stage: deploy
+  before_script:
+    - apt-get update -qq
+  script:
+    - python -m pip install --upgrade setuptools wheel
+    - python setup.py sdist bdist_wheel
+    - python -m pip install --upgrade twine
+    - echo $PYPI_URL
+    - python -m twine upload --skip-existing -u __token__ -p $PYPI_TOKEN --repository-url $PYPI_URL dist/*
+  when: manual
+
+push_to_conda:
+  image: python:latest
+  stage: deploy
+  before_script:
+    - apt-get update -qq
+    - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+    - bash miniconda.sh -b -p $HOME/miniconda
+    - PATH=$PATH:$HOME/miniconda/bin
+    - conda config --set always_yes yes
+    - conda config --add channels conda-forge
+    - conda config --add channels sas-institute
+    - conda install conda-build
+    - conda update -n base -c defaults conda
+    - conda install anaconda-client
+    - conda install conda-verify
+    - mkdir build
+  script:
+    - conda build -c conda-forge -c sas-institute --output-folder build/ --python 3.6 conda/
+    - conda build -c conda-forge -c sas-institute --output-folder build/ --python 3.7 conda/
+    - cd build
+    - conda convert -p all `ls linux-64/*-py3*.tar.bz2`
+    - anaconda -t $ANACONDA_TOKEN upload -u sas-institute --force `ls linux-64/*-py3*.tar.bz2`
+    - anaconda -t $ANACONDA_TOKEN upload -u sas-institute --force `ls linux-32/*-py3*.tar.bz2`
+    - anaconda -t $ANACONDA_TOKEN upload -u sas-institute --force `ls win-32/*-py3*.tar.bz2`
+    - anaconda -t $ANACONDA_TOKEN upload -u sas-institute --force `ls win-64/*-py3*.tar.bz2`
+    - anaconda -t $ANACONDA_TOKEN upload -u sas-institute --force `ls osx-64/*-py3*.tar.bz2`
+  when: manual

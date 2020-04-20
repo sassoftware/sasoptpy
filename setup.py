@@ -20,12 +20,16 @@
 
 from setuptools import setup
 
+__version__ = None
+with open('./sasoptpy/version.py') as f:
+    exec(f.read())
+
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
     name='sasoptpy',
-    version='0.2.1',
+    version=__version__,
     packages=['sasoptpy'],
     description='sasoptpy: SAS Optimization Interface for Python',
     long_description=long_description,
@@ -35,21 +39,20 @@ setup(
     author_email='Sertalp.Cay@sas.com',
     license='Apache v2.0',
     install_requires=[
-        'pandas >= 0.23.3',
-        'swat >= 1.4.0',
-        'numpy >= 1.14.5',
-        'flask >= 1.0.2',
-        'flask_restful >= 0.3.6',
-        'itsdangerous >= 0.24',
-        'gevent >= 1.4.0'
+        'pandas >= 1.0.0',
+        'swat >= 1.6.1',
+        'saspy >= 3.3.0',
+        'numpy >= 1.15.4'
         ],
     setup_requires=[
         'numpy'
         ],
-    classifiers=(
+    python_requires='>=3.6',
+    classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
         "Topic :: Scientific/Engineering :: Mathematics"
-    ),
+    ],
+    include_package_data=True,
 )
