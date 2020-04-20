@@ -49,7 +49,7 @@ Problem is fully generated at the client side, and the expensive part is handled
 </div>
 
 If you have the data available on the server, you can model an abstract problem and cut the model generation time significantly.
-You can also benefit from solveing several problems concurrently.
+You can also benefit from solving several problems concurrently.
 
 ## Install
 
