@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Handling Data &#8212; sasoptpy 1.0.0-beta.3 documentation</title>
+    <title>Handling Data &#8212; sasoptpy 1.0.0 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/sasoptpy.css" />
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="workspaces.html" title="Workspaces"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0-beta.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="user-guide.html" accesskey="U">User Guide</a> &#187;</li> 
       </ul>
     </div>  
@@ -229,12 +229,12 @@ and abstract data requires SAS Viya 3.4 or later.</p>
 </pre></div>
 </div>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [32]: </span><span class="n">table</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">upload_frame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMPPZB8XWP_ in caslib CASUSER(casuser).</span>
-<span class="go">NOTE: The table TMPPZB8XWP_ has been created in caslib CASUSER(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table TMP7KCLLDMF in caslib CASUSER(casuser).</span>
+<span class="go">NOTE: The table TMP7KCLLDMF has been created in caslib CASUSER(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 </pre></div>
 </div>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [33]: </span><span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">table</span><span class="p">),</span> <span class="n">table</span><span class="p">)</span>
-<span class="go">&lt;class &#39;swat.cas.table.CASTable&#39;&gt; CASTable(&#39;TMPPZB8XWP_&#39;, caslib=&#39;CASUSER(casuser)&#39;)</span>
+<span class="go">&lt;class &#39;swat.cas.table.CASTable&#39;&gt; CASTable(&#39;TMP7KCLLDMF&#39;, caslib=&#39;CASUSER(casuser)&#39;)</span>
 </pre></div>
 </div>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [34]: </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;item&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">,</span> <span class="s1">&#39;limit&#39;</span><span class="p">])</span>
@@ -411,14 +411,14 @@ such as <a class="reference internal" href="../api/generated/sasoptpy.VariableGr
         <li class="right" >
           <a href="workspaces.html" title="Workspaces"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0-beta.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="user-guide.html" >User Guide</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Apr 16, 2020 (Timestamp: 1.0-20200416203455).
+      Last updated on Apr 20, 2020 (Timestamp: 1.0-20200420201950).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->

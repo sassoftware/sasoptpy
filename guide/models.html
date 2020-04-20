@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Models &#8212; sasoptpy 1.0.0-beta.3 documentation</title>
+    <title>Models &#8212; sasoptpy 1.0.0 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/sasoptpy.css" />
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="sessions.html" title="Sessions"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0-beta.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="user-guide.html" accesskey="U">User Guide</a> &#187;</li> 
       </ul>
     </div>  
@@ -394,18 +394,18 @@ for mixed integer linear optimization problems.</p>
 <span class="go">NOTE: The table KNAPSACK_WITH_TUNER has been created in caslib CASUSER(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Start to tune the MILP</span>
 <span class="go">         SolveCalls  Configurations    BestTime        Time</span>
-<span class="go">                  1               1        0.19*       0.23</span>
-<span class="go">                  2               2        0.19*       0.45</span>
-<span class="go">                  3               3        0.19*       0.65</span>
-<span class="go">                  4               4        0.19*       0.84</span>
-<span class="go">                  5               5        0.19*       1.05</span>
-<span class="go">                  6               6        0.19*       1.25</span>
-<span class="go">                  7               7        0.19*       1.46</span>
-<span class="go">                  8               8        0.19*       1.66</span>
-<span class="go">                  9               9        0.19*       1.86</span>
-<span class="go">                 10              10        0.19*       2.07</span>
+<span class="go">                  1               1        0.21*       0.27</span>
+<span class="go">                  2               2        0.21*       0.49</span>
+<span class="go">                  3               3        0.21*       0.69</span>
+<span class="go">                  4               4        0.21*       0.89</span>
+<span class="go">                  5               5        0.21*       1.09</span>
+<span class="go">                  6               6        0.21*       1.28</span>
+<span class="go">                  7               7        0.21*       1.48</span>
+<span class="go">                  8               8        0.21*       1.68</span>
+<span class="go">                  9               9        0.21*       1.88</span>
+<span class="go">                 10              10        0.21*       2.09</span>
 <span class="go">NOTE: Configuration limit reached.</span>
-<span class="go">NOTE: The tuning time is 2.07 seconds.</span>
+<span class="go">NOTE: The tuning time is 2.09 seconds.</span>
 </pre></div>
 </div>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [34]: </span><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
@@ -418,32 +418,32 @@ for mixed integer linear optimization problems.</p>
 <span class="go">5            5.0     aggressive       none        none  aggressive   </span>
 <span class="go">6            6.0       moderate       none   automatic    moderate   </span>
 <span class="go">7            7.0           none   moderate    moderate        none   </span>
-<span class="go">8            8.0           none   moderate        none   automatic   </span>
-<span class="go">9            9.0           none   moderate        none   automatic   </span>
+<span class="go">8            8.0      automatic       none        none   automatic   </span>
+<span class="go">9            9.0      automatic       none        none   automatic   </span>
 
-<span class="go">  cutZeroHalf  heuristics           nodelSel  presolver      probe   restarts  \</span>
-<span class="go">0   automatic   automatic          automatic  automatic  automatic  automatic   </span>
-<span class="go">1        none   automatic          automatic       none       none      basic   </span>
-<span class="go">2        none   automatic  bestEstimatedepth   moderate       none      basic   </span>
-<span class="go">3    moderate   automatic          automatic       none  automatic       none   </span>
-<span class="go">4    moderate   automatic          bestBound   moderate  automatic       none   </span>
-<span class="go">5    moderate        none              depth  automatic  automatic       none   </span>
-<span class="go">6  aggressive        none          bestBound   moderate  automatic       none   </span>
-<span class="go">7  aggressive        none              depth  automatic  automatic  automatic   </span>
-<span class="go">8   automatic  aggressive          bestBound   moderate       none      basic   </span>
-<span class="go">9   automatic  aggressive          bestBound  automatic       none      basic   </span>
+<span class="go">  cutZeroHalf heuristics           nodelSel  presolver      probe   restarts  \</span>
+<span class="go">0   automatic  automatic          automatic  automatic  automatic  automatic   </span>
+<span class="go">1        none  automatic          automatic       none       none      basic   </span>
+<span class="go">2        none  automatic  bestEstimatedepth   moderate       none      basic   </span>
+<span class="go">3    moderate  automatic          automatic       none  automatic       none   </span>
+<span class="go">4    moderate  automatic          bestBound   moderate  automatic       none   </span>
+<span class="go">5    moderate       none              depth  automatic  automatic       none   </span>
+<span class="go">6  aggressive       none          bestBound   moderate  automatic       none   </span>
+<span class="go">7  aggressive       none              depth  automatic  automatic  automatic   </span>
+<span class="go">8   automatic       none              depth   moderate      basic   moderate   </span>
+<span class="go">9   automatic       none              depth  automatic      basic   moderate   </span>
 
 <span class="go">     symmetry      varSel  Mean of Run Times  Sum of Run Times  \</span>
-<span class="go">0   automatic   automatic               0.19              0.19   </span>
+<span class="go">0   automatic   automatic               0.20              0.20   </span>
 <span class="go">1   automatic      pseudo               0.17              0.17   </span>
-<span class="go">2        none   automatic               0.18              0.18   </span>
+<span class="go">2        none   automatic               0.17              0.17   </span>
 <span class="go">3       basic   minInfeas               0.17              0.17   </span>
 <span class="go">4    moderate  ryanFoster               0.17              0.17   </span>
 <span class="go">5  aggressive   minInfeas               0.17              0.17   </span>
 <span class="go">6   automatic  ryanFoster               0.17              0.17   </span>
-<span class="go">7        none   minInfeas               0.18              0.18   </span>
-<span class="go">8        none      strong               0.18              0.18   </span>
-<span class="go">9        none      strong               0.17              0.17   </span>
+<span class="go">7        none   minInfeas               0.19              0.19   </span>
+<span class="go">8       basic      pseudo               0.18              0.18   </span>
+<span class="go">9       basic      pseudo               0.17              0.17   </span>
 
 <span class="go">   Percentage Successful  </span>
 <span class="go">0                    0.0  </span>
@@ -482,12 +482,12 @@ candidate values, and limit the maximum number of configurations and maximum run
 <span class="go">NOTE: The table KNAPSACK_WITH_TUNER has been created in caslib CASUSER(casuser) from binary data uploaded to Cloud Analytic Services.</span>
 <span class="go">NOTE: Start to tune the MILP</span>
 <span class="go">         SolveCalls  Configurations    BestTime        Time</span>
-<span class="go">                  5               5        0.18*       1.02</span>
-<span class="go">                 10              10        0.18*       2.05</span>
-<span class="go">                 15              15        0.18*       3.08</span>
-<span class="go">                 20              20        0.18*       4.10</span>
+<span class="go">                  5               5        0.21*       1.07</span>
+<span class="go">                 10              10        0.21*       2.09</span>
+<span class="go">                 15              15        0.21*       3.10</span>
+<span class="go">                 20              20        0.21*       4.12</span>
 <span class="go">NOTE: Configuration limit reached.</span>
-<span class="go">NOTE: The tuning time is 4.10 seconds.</span>
+<span class="go">NOTE: The tuning time is 4.12 seconds.</span>
 </pre></div>
 </div>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [36]: </span><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
@@ -500,62 +500,62 @@ candidate values, and limit the maximum number of configurations and maximum run
 <span class="go">5             5.0     aggressive       none        none  aggressive   </span>
 <span class="go">6             6.0       moderate       none   automatic    moderate   </span>
 <span class="go">7             7.0           none   moderate    moderate        none   </span>
-<span class="go">8             8.0           none  automatic   automatic  aggressive   </span>
-<span class="go">9             9.0           none  automatic   automatic  aggressive   </span>
-<span class="go">10           10.0           none  automatic  aggressive  aggressive   </span>
-<span class="go">11           11.0           none  automatic   automatic  aggressive   </span>
-<span class="go">12           12.0           none  automatic   automatic  aggressive   </span>
-<span class="go">13           13.0           none       none   automatic  aggressive   </span>
-<span class="go">14           14.0           none  automatic   automatic  aggressive   </span>
-<span class="go">15           15.0           none  automatic   automatic  aggressive   </span>
-<span class="go">16           16.0           none  automatic   automatic  aggressive   </span>
+<span class="go">8             8.0      automatic  automatic  aggressive        none   </span>
+<span class="go">9             9.0      automatic  automatic  aggressive        none   </span>
+<span class="go">10           10.0      automatic  automatic    moderate        none   </span>
+<span class="go">11           11.0      automatic  automatic  aggressive        none   </span>
+<span class="go">12           12.0      automatic  automatic  aggressive        none   </span>
+<span class="go">13           13.0      automatic       none  aggressive        none   </span>
+<span class="go">14           14.0      automatic  automatic  aggressive        none   </span>
+<span class="go">15           15.0      automatic  automatic  aggressive        none   </span>
+<span class="go">16           16.0      automatic  automatic  aggressive        none   </span>
 <span class="go">17           17.0      automatic  automatic   automatic   automatic   </span>
 <span class="go">18           18.0      automatic  automatic   automatic   automatic   </span>
 <span class="go">19           19.0      automatic  automatic   automatic   automatic   </span>
 
-<span class="go">   cutZeroHalf  heuristics           nodelSel  presolver       probe  \</span>
-<span class="go">0    automatic   automatic          automatic  automatic   automatic   </span>
-<span class="go">1         none   automatic          automatic       none        none   </span>
-<span class="go">2         none   automatic  bestEstimatedepth   moderate        none   </span>
-<span class="go">3     moderate   automatic          automatic       none   automatic   </span>
-<span class="go">4     moderate   automatic          bestBound   moderate   automatic   </span>
-<span class="go">5     moderate        none              depth  automatic   automatic   </span>
-<span class="go">6   aggressive        none          bestBound   moderate   automatic   </span>
-<span class="go">7   aggressive        none              depth  automatic   automatic   </span>
-<span class="go">8     moderate        none              depth      basic  aggressive   </span>
-<span class="go">9   aggressive        none  bestEstimatedepth      basic  aggressive   </span>
-<span class="go">10    moderate        none  bestEstimatedepth      basic  aggressive   </span>
-<span class="go">11    moderate        none  bestEstimatedepth      basic  aggressive   </span>
-<span class="go">12    moderate        none  bestEstimatedepth      basic        none   </span>
-<span class="go">13    moderate        none  bestEstimatedepth      basic  aggressive   </span>
-<span class="go">14    moderate        none          automatic      basic  aggressive   </span>
-<span class="go">15    moderate        none  bestEstimatedepth   moderate  aggressive   </span>
-<span class="go">16    moderate        none  bestEstimatedepth      basic  aggressive   </span>
-<span class="go">17   automatic   automatic          bestBound  automatic   automatic   </span>
-<span class="go">18   automatic  aggressive          automatic  automatic   automatic   </span>
-<span class="go">19   automatic   automatic          automatic  automatic   automatic   </span>
+<span class="go">   cutZeroHalf  heuristics           nodelSel   presolver       probe  \</span>
+<span class="go">0    automatic   automatic          automatic   automatic   automatic   </span>
+<span class="go">1         none   automatic          automatic        none        none   </span>
+<span class="go">2         none   automatic  bestEstimatedepth    moderate        none   </span>
+<span class="go">3     moderate   automatic          automatic        none   automatic   </span>
+<span class="go">4     moderate   automatic          bestBound    moderate   automatic   </span>
+<span class="go">5     moderate        none              depth   automatic   automatic   </span>
+<span class="go">6   aggressive        none          bestBound    moderate   automatic   </span>
+<span class="go">7   aggressive        none              depth   automatic   automatic   </span>
+<span class="go">8   aggressive  aggressive              depth  aggressive  aggressive   </span>
+<span class="go">9     moderate  aggressive          bestBound  aggressive  aggressive   </span>
+<span class="go">10  aggressive  aggressive          bestBound  aggressive  aggressive   </span>
+<span class="go">11  aggressive  aggressive          bestBound  aggressive  aggressive   </span>
+<span class="go">12  aggressive  aggressive          bestBound  aggressive        none   </span>
+<span class="go">13  aggressive  aggressive          bestBound  aggressive  aggressive   </span>
+<span class="go">14  aggressive  aggressive          automatic  aggressive  aggressive   </span>
+<span class="go">15  aggressive  aggressive          bestBound       basic  aggressive   </span>
+<span class="go">16  aggressive  aggressive          bestBound  aggressive  aggressive   </span>
+<span class="go">17   automatic   automatic          bestBound   automatic   automatic   </span>
+<span class="go">18   automatic  aggressive          automatic   automatic   automatic   </span>
+<span class="go">19   automatic   automatic          automatic   automatic   automatic   </span>
 
 <span class="go">     restarts    symmetry      varSel  Mean of Run Times  Sum of Run Times  \</span>
-<span class="go">0   automatic   automatic   automatic               0.17              0.17   </span>
+<span class="go">0   automatic   automatic   automatic               0.20              0.20   </span>
 <span class="go">1       basic   automatic      pseudo               0.18              0.18   </span>
-<span class="go">2       basic        none   automatic               0.18              0.18   </span>
+<span class="go">2       basic        none   automatic               0.17              0.17   </span>
 <span class="go">3        none       basic   minInfeas               0.18              0.18   </span>
-<span class="go">4        none    moderate  ryanFoster               0.18              0.18   </span>
+<span class="go">4        none    moderate  ryanFoster               0.17              0.17   </span>
 <span class="go">5        none  aggressive   minInfeas               0.17              0.17   </span>
-<span class="go">6        none   automatic  ryanFoster               0.18              0.18   </span>
-<span class="go">7   automatic        none   minInfeas               0.17              0.17   </span>
-<span class="go">8   automatic        none   automatic               0.18              0.18   </span>
-<span class="go">9   automatic        none   automatic               0.17              0.17   </span>
-<span class="go">10  automatic        none   automatic               0.18              0.18   </span>
-<span class="go">11  automatic        none   minInfeas               0.19              0.19   </span>
-<span class="go">12  automatic        none   automatic               0.18              0.18   </span>
-<span class="go">13  automatic        none   automatic               0.17              0.17   </span>
-<span class="go">14  automatic        none   automatic               0.17              0.17   </span>
-<span class="go">15  automatic        none   automatic               0.18              0.18   </span>
-<span class="go">16  automatic        none   automatic               0.18              0.18   </span>
+<span class="go">6        none   automatic  ryanFoster               0.17              0.17   </span>
+<span class="go">7   automatic        none   minInfeas               0.18              0.18   </span>
+<span class="go">8   automatic       basic   minInfeas               0.18              0.18   </span>
+<span class="go">9   automatic       basic   minInfeas               0.17              0.17   </span>
+<span class="go">10  automatic       basic   minInfeas               0.17              0.17   </span>
+<span class="go">11  automatic       basic   maxInfeas               0.17              0.17   </span>
+<span class="go">12  automatic       basic   minInfeas               0.17              0.17   </span>
+<span class="go">13  automatic       basic   minInfeas               0.19              0.19   </span>
+<span class="go">14  automatic       basic   minInfeas               0.17              0.17   </span>
+<span class="go">15  automatic       basic   minInfeas               0.17              0.17   </span>
+<span class="go">16  automatic       basic   minInfeas               0.17              0.17   </span>
 <span class="go">17  automatic   automatic   automatic               0.17              0.17   </span>
-<span class="go">18  automatic   automatic   automatic               0.18              0.18   </span>
-<span class="go">19  automatic        none   automatic               0.17              0.17   </span>
+<span class="go">18  automatic   automatic   automatic               0.17              0.17   </span>
+<span class="go">19  automatic        none   automatic               0.18              0.18   </span>
 
 <span class="go">    Percentage Successful  </span>
 <span class="go">0                     0.0  </span>
@@ -665,14 +665,14 @@ candidate values, and limit the maximum number of configurations and maximum run
         <li class="right" >
           <a href="sessions.html" title="Sessions"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0-beta.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="user-guide.html" >User Guide</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Apr 16, 2020 (Timestamp: 1.0-20200416203455).
+      Last updated on Apr 20, 2020 (Timestamp: 1.0-20200420201950).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->
