@@ -68,4 +68,4 @@ load_default_mediators()
 from sasoptpy.session import Workspace
 
 name = "sasoptpy"
-__version__ = '1.0.0-beta'
+from sasoptpy.version import __version__

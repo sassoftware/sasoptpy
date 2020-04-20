@@ -85,6 +85,19 @@ class TestObjective(unittest.TestCase):
                solve with milp relaxint / primalin;
             quit;'''))
 
+    def test_value(self):
+        x = TestObjective.x
+        all_params = so.Objective(x ** 2 + 2 * x - 1, name='all_params',
+                                  sense=so.MIN)
+        x.set_value(2)
+        self.assertEqual(all_params.get_value(), 7)
+
+        y = so.Variable(name='y')
+        y._abstract = True
+        new_obj = so.Objective(y ** 2 - 1, name='new_obj')
+        self.assertRaises(ValueError, new_obj.get_value)
+
+
     @classmethod
     def tearDownClass(self):
         so.reset()

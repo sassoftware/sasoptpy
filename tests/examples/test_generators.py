@@ -84,6 +84,9 @@ def mock_solve(model, **kwargs):
     optmodel_code = model.to_optmodel(**kwargs)
     records.append([optmodel_code, expected_response[ctr]])
     ctr += 1
+    if so.core.util.is_model(model):
+        if model._objval is None:
+            model.set_objective_value(0)
     return None
 
 

@@ -68,3 +68,8 @@ class TestParameter(unittest.TestCase):
                   p[TEMP1] = 1;
                end;
             quit;'''))
+
+    def test_value(self):
+
+        p = so.Parameter(name='p', value=5)
+        self.assertEqual(p.get_value(), 5)

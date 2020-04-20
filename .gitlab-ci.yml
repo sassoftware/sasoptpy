@@ -1,3 +1,9 @@
+
+stages:
+  - test1
+  - test2
+  - deploy
+
 default:
   before_script:
     - apt-get update -qq
@@ -8,16 +14,18 @@ default:
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - scp $CASCOPY ~/
 
-py37:
-  image: python:3.7
+py36:
+  stage: test1
+  image: python:3.6
   script:
   - python setup.py install
   - pip install coverage
   - cd tests
   - ./test_coverage.sh
 
-py36:
-  image: python:3.6
+py37:
+  stage: test2
+  image: python:3.7
   script:
   - python setup.py install
   - pip install coverage
@@ -47,16 +55,20 @@ push_to_conda:
     - PATH=$PATH:$HOME/miniconda/bin
     - conda config --set always_yes yes
     - conda config --add channels conda-forge
+    - conda config --add channels sas-institute
     - conda install conda-build
     - conda update -n base -c defaults conda
     - conda install anaconda-client
+    - conda install conda-verify
+    - mkdir build
   script:
-    - conda build --python 3.6 conda/
-    - conda build --python 3.7 conda/
+    - conda build -c conda-forge -c sas-institute --output-folder build/ --python 3.6 conda/
+    - conda build -c conda-forge -c sas-institute --output-folder build/ --python 3.7 conda/
+    - cd build
     - conda convert -p all `ls linux-64/*-py3*.tar.bz2`
-    - anaconda -t $ANACONDA_TOKEN upload --force `ls linux-64/*-py3*.tar.bz2`
-    - anaconda -t $ANACONDA_TOKEN upload --force `ls linux-32/*-py3*.tar.bz2`
-    - anaconda -t $ANACONDA_TOKEN upload --force `ls win-32/*-py3*.tar.bz2`
-    - anaconda -t $ANACONDA_TOKEN upload --force `ls win-64/*-py3*.tar.bz2`
-    - anaconda -t $ANACONDA_TOKEN upload --force `ls osx-64/*-py6*.tar.bz2` 
+    - anaconda -t $ANACONDA_TOKEN upload -u sas-institute --force `ls linux-64/*-py3*.tar.bz2`
+    - anaconda -t $ANACONDA_TOKEN upload -u sas-institute --force `ls linux-32/*-py3*.tar.bz2`
+    - anaconda -t $ANACONDA_TOKEN upload -u sas-institute --force `ls win-32/*-py3*.tar.bz2`
+    - anaconda -t $ANACONDA_TOKEN upload -u sas-institute --force `ls win-64/*-py3*.tar.bz2`
+    - anaconda -t $ANACONDA_TOKEN upload -u sas-institute --force `ls osx-64/*-py3*.tar.bz2`
   when: manual

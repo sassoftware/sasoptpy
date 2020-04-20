@@ -90,6 +90,9 @@ class Variable(Expression):
         self._parent = parent
         self._key = key
 
+    def get_parent_reference(self):
+        return self._parent, self._key
+
     @sasoptpy.containable
     def set_bounds(self, *, lb=None, ub=None):
         """
@@ -156,7 +159,7 @@ class Variable(Expression):
         return attributes
 
     def get_name(self):
-        if self._abstract:
+        if self._abstract or self._shadow:
             return str(self)
         else:
             return self._name
@@ -192,6 +195,8 @@ class Variable(Expression):
         20
 
         """
+        if self._abstract:
+            raise ValueError('Abstract variable cannot have a value.')
         return self._value
 
     @sasoptpy.containable
@@ -221,7 +226,7 @@ class Variable(Expression):
         """
         Returns a string representation of the object.
         """
-        st = 'sasoptpy.Variable(name=\'{}\''.format(self._name)
+        st = 'sasoptpy.Variable(name=\'{}\''.format(self.get_name())
         if self._lb != -inf:
             st += ', lb={}'.format(self._lb)
         if self._ub != inf:

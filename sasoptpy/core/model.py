@@ -67,15 +67,19 @@ class Model:
         self._name = name
         self._objorder = sasoptpy.util.get_creation_id()
         self._session = session
-        self._variables = []
-        self._constraints = []
-        self._vargroups = []
-        self._congroups = []
-        self._objective = Objective(
-            0, name=name+'_obj', default=True, internal=True)
-        self._multiobjs = []
-        self._variableDict = {}
-        self._constraintDict = {}
+
+        self._members = {}
+
+        self._variableDict = OrderedDict()
+        self._constraintDict = OrderedDict()
+        self._objectiveDict = OrderedDict()
+
+        self._setDict = OrderedDict()
+        self._parameterDict = OrderedDict()
+        self._impvarDict = OrderedDict()
+        self._statementDict = OrderedDict()
+        self._postSolveDict = OrderedDict()
+
         self._soltime = 0
         self._objval = None
         self._status = ''
@@ -83,17 +87,18 @@ class Model:
         self._mpsmode = 0
         self._problemSummary = None
         self._solutionSummary = None
-        self._primalSolution = None #pd.DataFrame()
-        self._dualSolution = None #pd.DataFrame()
+        self._primalSolution = None
+        self._dualSolution = None
         self._tunerResults = None
         self._milp_opts = {}
         self._lp_opts = {}
-        self._sets = []
-        self._parameters = []
-        self._impvars = []
-        self._statements = []
-        self._postsolve_statements = []
         self.response = None
+
+        self._droppedCons = OrderedDict()
+        self._droppedVars = OrderedDict()
+
+        self._objective = Objective(0, name=name + '_obj', default=True,
+                                    internal=True)
 
         print('NOTE: Initialized model {}.'.format(name))
 
@@ -517,9 +522,9 @@ class Model:
 
     def _save_statement(self, st, after_solve=None):
         if after_solve is None or after_solve is False:
-            self._statements.append(st)
+            self._statementDict[id(st)] = st
         else:
-            self._postsolve_statements.append(st)
+            self._postSolveDict[id(st)] = st
 
     def drop_variable(self, variable):
         """
@@ -548,11 +553,16 @@ class Model:
         :func:`Model.drop_constraints`
 
         """
-        for i, v in enumerate(self._variables):
-            if id(variable) == id(v):
-                del self._variableDict[variable.get_name()]
-                del self._variables[i]
-                return
+        vname = variable.get_name()
+        if self._variableDict.pop(vname, None) is None:
+            self._droppedVars[vname] = True
+
+    def restore_variable(self, variable):
+        vname = variable.get_name()
+        if variable.get_parent_reference()[0] is not None:
+            self._droppedVars.pop(vname, None)
+        else:
+            self.include(variable)
 
     @sasoptpy.containable
     def drop_constraint(self, constraint):
@@ -581,22 +591,19 @@ class Model:
         :func:`Model.drop_variables`
 
         """
-        try:
-            del self._constraintDict[constraint.get_name()]
-            for i, c in enumerate(self._constraints):
-                if c.get_name() == constraint.get_name():
-                    deleted_constraint = self._constraints[i]
-                    del self._constraints[i]
 
-                    if deleted_constraint._parent is not None:
-                        if deleted_constraint._parent in self._congroups:
-                            self.add_statement(
-                                sasoptpy.abstract.DropStatement.model_drop_constraint(
-                                    self, deleted_constraint))
-        except KeyError:
-            raise KeyError('Given constraint is not part of the model')
+        cname = constraint.get_name()
+        if self._constraintDict.pop(cname, None) is None:
+            self._droppedCons[constraint._get_optmodel_name()] = True
 
-    def drop_variables(self, variables):
+    def restore_constraint(self, constraint):
+        cname = constraint.get_name()
+        if constraint.get_parent_reference()[0] is not None:
+            self._droppedCons.pop(constraint._get_optmodel_name(), None)
+        else:
+            self.include(constraint)
+
+    def drop_variables(self, *variables):
         """
         Drops a variable group from the model
 
@@ -625,17 +632,15 @@ class Model:
         """
         for v in variables:
             self.drop_variable(v)
-        if variables in self._vargroups:
-            self._vargroups.remove(variables)
 
-    def drop_constraints(self, constraints):
+    def drop_constraints(self, *constraints):
         """
         Drops a constraint group from the model
 
         Parameters
         ----------
-        constraints : :class:`ConstraintGroup`
-            The constraint group to be dropped from the model
+        constraints : :class:`Constraint` or :class:`ConstraintGroup`
+            Arbitrary number of constraints to be dropped
 
         Examples
         --------
@@ -655,8 +660,6 @@ class Model:
         :func:`Model.drop_variables`
 
         """
-        if constraints in self._congroups:
-            self._congroups.remove(constraints)
         for c in constraints:
             self.drop_constraint(c)
 
@@ -750,60 +753,56 @@ class Model:
                 meth(c)
 
     def _include_variable(self, var):
-        if sasoptpy.core.util.has_parent(var):
-            return
-        self._variables.append(var)
-        self._variableDict[var.get_name()] = var
+        vname = var.get_name()
+        if vname in self._variableDict:
+            warnings.warn(f"Variable name {vname} exists in the model."
+                          "New declaration will override the existing value.",
+                          UserWarning)
+        self._variableDict[vname] = var
 
     def _include_vargroup(self, vg):
-        for i in vg:
-           self._variables.append(i)
-           self._variableDict[i.get_name()] = i
-        self._vargroups.append(vg)
+        self._variableDict[vg.get_name()] = vg
 
     def _include_constraint(self, con):
         if sasoptpy.core.util.has_parent(con):
             return
-        self._constraints.append(con)
+        name = con.get_name()
+        if con.get_name() in self._constraintDict:
+            warnings.warn(f"Constraint name {name} exists in the model."
+                          "New declaration will override the existing value.",
+                          UserWarning)
         self._constraintDict[con.get_name()] = con
 
     def _include_congroup(self, cg):
-        for i in cg:
-            self._constraints.append(i)
-            self._constraintDict[i.get_name()] = i
-        self._congroups.append(cg)
+        self._constraintDict[cg.get_name()] = cg
 
     def _set_objective(self, ob):
         self._objective = ob
 
     def _include_set(self, st):
-        self._sets.append(st)
+        self._setDict[id(st)] = st
 
     def _include_parameter(self, p):
-        self._parameters.append(p)
+        self._parameterDict[p.get_name()] = p
 
     def _include_parameter_group(self, pg):
-        self._parameters.append(pg)
+        self._parameterDict[pg.get_name()] = pg
 
     def _include_statement(self, os):
         self._save_statement(os)
 
     def _include_expdict(self, ed):
-        self._impvars.append(ed)
+        self._impvarDict[ed.get_name()] = ed
 
     def _include_model(self, model):
-        self._sets.extend(s for s in model._sets)
-        self._parameters.extend(s for s in model._parameters)
-        self._statements.extend(s for s in model._statements)
-        self._postsolve_statements.extend(s for s in model._postsolve_statements)
-        self._impvars.extend(s for s in model._impvars)
-        for s in model._vargroups:
-            self._include_vargroup(s)
-        for s in model._variables:
+        self._setDict.update(model._setDict)
+        self._parameterDict.update(model._parameterDict)
+        self._statementDict.update(model._statementDict)
+        self._postSolveDict.update(model._postSolveDict)
+        self._impvarDict.update(model._impvarDict)
+        for s in model.get_grouped_variables().values():
             self._include_variable(s)
-        for s in model._congroups:
-            self._include_congroup(s)
-        for s in model._constraints:
+        for s in model.get_grouped_constraints().values():
             self._include_constraint(s)
         self._objective = model._objective
 
@@ -817,15 +816,12 @@ class Model:
         elif isinstance(obj, sasoptpy.Constraint):
             self.drop_constraint(obj)
         elif isinstance(obj, sasoptpy.Set):
-            if obj in self._sets:
-                self._sets.remove(obj)
+            self._setDict.pop(id(obj), None)
         elif isinstance(obj, sasoptpy.Parameter) or\
              isinstance(obj, sasoptpy.ParameterGroup):
-            if obj in self._parameters:
-                self._parameters.remove(obj)
+            self._parameterDict.pop(obj.get_name(), None)
         elif isinstance(obj, sasoptpy.abstract.Statement):
-            if obj in self._statements:
-                self._statements.remove(obj)
+            self._statementDict.pop(id(obj), None)
 
     def set_objective(self, expression, name, sense=None):
         """
@@ -931,7 +927,7 @@ class Model:
 
         """
         obj = Objective(expression, name=name, sense=sense)
-        self._multiobjs.append(obj)
+        self._objectiveDict[id(obj)] = obj
         return obj
 
     def get_objective(self):
@@ -974,7 +970,7 @@ class Model:
         True
 
         """
-        all_objs = list(self._multiobjs)
+        all_objs = list(self._objectiveDict.values())
         all_objs.append(self._objective)
         return sorted(all_objs, key=lambda i: i._objorder)
 
@@ -1003,7 +999,7 @@ class Model:
           variable values, you can use :code:`m.get_objective().get_value()`.
 
         """
-        if self._objval:
+        if self._objval is not None:
             return sasoptpy.util.get_in_digit_format(self._objval)
         else:
             return self.get_objective().get_value()
@@ -1023,7 +1019,7 @@ class Model:
         Returns
         -------
         constraint : :class:`Constraint`
-            Requested :class:`Constraint object
+            Requested object
 
         Examples
         --------
@@ -1033,16 +1029,38 @@ class Model:
         2.0 * x  +  y  <=  15
 
         """
-        if name in self._constraintDict:
-            return self._constraintDict[name]
+        # return self._constraintDict.get(name, None)
+        constraints = self.get_constraints_dict()
+        safe_name = name.replace('\'', '')
+        if name in constraints:
+            return constraints[name]
+        elif safe_name in constraints:
+            return constraints[safe_name]
+        elif '[' in name:
+            first_part = name.split('[')[0]
+            if constraints.get(first_part, None) is not None:
+                vg = constraints.get(first_part)
+                return vg.get_member_by_name(name)
         else:
-            return self.get_constraint_group(name)
+            return None
 
-    def get_constraint_group(self, name):
-        for i in self._congroups:
-            if i.get_name() == name:
-                return i
-        return None
+    def loop_constraints(self):
+        for i in self._constraintDict.values():
+            if isinstance(i, sasoptpy.Constraint):
+                yield i
+            elif isinstance(i, sasoptpy.ConstraintGroup):
+                for j in i.get_members().values():
+                    yield j
+
+    def _get_all_constraints(self):
+        all_cons = OrderedDict()
+        for c in self._constraintDict.values():
+            if isinstance(c, sasoptpy.Constraint):
+                all_cons[c.get_name()] = c
+            elif isinstance(c, sasoptpy.ConstraintGroup):
+                for sc in c.get_members().values():
+                    all_cons[sc.get_name()] = sc
+        return all_cons
 
     def get_constraints(self):
         """
@@ -1064,7 +1082,7 @@ class Model:
          sasoptpy.Constraint( 2.0 * x[1]  -  y  >=  1, name='c2_1')]
 
         """
-        return self._constraints
+        return list(self.loop_constraints())
 
     def get_constraints_dict(self):
         return self._constraintDict
@@ -1095,14 +1113,7 @@ class Model:
         :meth:`Model.get_constraints`, :meth:`Model.get_grouped_variables`
 
         """
-        all_cons = [*self._congroups, *self._constraints]
-        all_cons = sorted(all_cons, key=lambda i: i._objorder)
-        grouped_cons = OrderedDict()
-        for i in all_cons:
-            if sasoptpy.core.util.has_parent(i):
-                continue
-            grouped_cons[i.get_name()] = i
-        return grouped_cons
+        return self.get_constraints_dict()
 
     def get_variable(self, name):
         """
@@ -1133,19 +1144,31 @@ class Model:
             return variables[name]
         elif safe_name in variables:
             return variables[safe_name]
+        elif '[' in name:
+            first_part = name.split('[')[0]
+            if variables.get(first_part, None) is not None:
+                vg = variables.get(first_part)
+                return vg.get_member_by_name(name)
         else:
-            # Search for safe names
-            for v in variables.values():
-                if v.get_name() == name:
-                    return v
-            else:
-                return self.get_variable_group(name)
+            return None
 
-    def get_variable_group(self, name):
-        for i in self._vargroups:
-            if i.get_name() == name:
-                return i
-        return None
+    def loop_variables(self):
+        for i in self._variableDict.values():
+            if isinstance(i, sasoptpy.Variable):
+                yield i
+            elif isinstance(i, sasoptpy.VariableGroup):
+                for j in i.get_members().values():
+                    yield j
+
+    def _get_all_variables(self):
+        all_vars = OrderedDict()
+        for v in self._variableDict.values():
+            if isinstance(v, sasoptpy.Variable):
+                all_vars[v.get_name()] = v
+            elif isinstance(v, sasoptpy.VariableGroup):
+                for sc in v.get_members().values():
+                    all_vars[sc.get_name()] = sc
+        return all_vars
 
     def get_variables(self):
         """
@@ -1167,7 +1190,7 @@ class Model:
          sasoptpy.Variable(name='y',  vartype='CONT')]
 
         """
-        return self._variables
+        return list(self.loop_variables())
 
     def get_variable_dict(self):
         return self._variableDict
@@ -1196,14 +1219,7 @@ class Model:
         :meth:`Model.get_variables`, :meth:`Model.get_grouped_constraints`
 
         """
-        all_vars = [*self._vargroups, *self._variables]
-        all_vars = sorted(all_vars, key=lambda i: i._objorder)
-        grouped_vars = OrderedDict()
-        for i in all_vars:
-            if sasoptpy.core.util.has_parent(i):
-                continue
-            grouped_vars[i.get_name()] = i
-        return grouped_vars
+        return self.get_variable_dict()
 
     def get_variable_coef(self, var):
         """
@@ -1604,7 +1620,7 @@ class Model:
         [sasoptpy.abstract.Set(name=W, settype=['str', 'num']), sasoptpy.abstract.Set(name=I, settype=['num']), sasoptpy.abstract.Set(name=J, settype=['num'])]
 
         """
-        return self._sets
+        return list(self._setDict.values())
 
     def get_parameters(self):
         """
@@ -1625,7 +1641,7 @@ class Model:
         r <class 'sasoptpy.abstract.parameter.Parameter'>
 
         """
-        return self._parameters
+        return list(self._parameterDict.values())
 
     def get_statements(self):
         """
@@ -1651,7 +1667,7 @@ class Model:
         quit;
 
         """
-        return self._statements
+        return list(self._statementDict.values())
 
     def get_implicit_variables(self):
         """
@@ -1673,7 +1689,13 @@ class Model:
         True
 
         """
-        return self._impvars
+        return list(self._impvarDict.values())
+
+    def _get_dropped_cons(self):
+        return self._droppedCons
+
+    def _get_dropped_vars(self):
+        return self._droppedVars
 
     def print_solution(self):
         """
@@ -1698,7 +1720,7 @@ class Model:
           models.
 
         """
-        for v in self._variables:
+        for v in self.loop_variables():
             print('{}: {}'.format(v.get_name(), v._value))
 
     def to_frame(self, **kwargs):
@@ -1785,12 +1807,12 @@ class Model:
                                              self._session._port)
         s += '  Objective: {} [{}]\n'.format(self.get_objective().get_sense(),
                                              self.get_objective())
-        s += '  Variables ({}): [\n'.format(len(self._variables))
-        for i in self._variables:
+        s += '  Variables ({}): [\n'.format(len(self.get_variables()))
+        for i in self.loop_variables():
             s += '    {}\n'.format(i)
         s += '  ]\n'
-        s += '  Constraints ({}): [\n'.format(len(self._constraints))
-        for i in self._constraints:
+        s += '  Constraints ({}): [\n'.format(len(self.get_constraints()))
+        for i in self.loop_constraints():
             s += '    {}\n'.format(i)
         s += '  ]\n'
         s += ']'
@@ -1850,7 +1872,7 @@ class Model:
             True if model does not have any nonlinear components or abstract\
             operations, False otherwise
         """
-        for c in self._constraints:
+        for c in self.loop_constraints():
             if not c._is_linear():
                 return False
         if not self._objective._is_linear():
@@ -1858,7 +1880,7 @@ class Model:
         return True
 
     def _has_integer_vars(self):
-        for v in self._variables:
+        for v in self._variableDict.values():
             if v._type != sasoptpy.CONT:
                 return True
         return False
@@ -1947,14 +1969,14 @@ class Model:
 
            Acceptable values are:
 
-           * `milpParameters <https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=cas-optimization-tuner.htm&docsetVersion=8.5&locale=en#PYTHON.cas-optimization-tuner-milpparameters>`_ :
-              Parameters for the solveMilp action, such as
+           - `milpParameters <https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=cas-optimization-tuner.htm&docsetVersion=8.5&locale=en#PYTHON.cas-optimization-tuner-milpparameters>`_:
+             Parameters for the solveMilp action, such as
              `maxTime`, `heuristics`, `feasTol`
-           * `tunerParameters <https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=cas-optimization-tuner.htm&docsetVersion=8.5&locale=en#PYTHON.cas-optimization-tuner-tunerparameters>`_ :
-              Parameters for the tuner itself, such as
+           - `tunerParameters <https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=cas-optimization-tuner.htm&docsetVersion=8.5&locale=en#PYTHON.cas-optimization-tuner-tunerparameters>`_:
+             Parameters for the tuner itself, such as
              `maxConfigs`, `printLevel`, `logFreq`
-           * `tuningParameters <https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=cas-optimization-tuner.htm&docsetVersion=8.5&locale=en#PYTHON.cas-optimization-tuner-tuningparameters>`_ :
-              List of parameters to be tuned, such as
+           - `tuningParameters <https://go.documentation.sas.com/?docsetId=casactmopt&docsetTarget=cas-optimization-tuner.htm&docsetVersion=8.5&locale=en#PYTHON.cas-optimization-tuner-tuningparameters>`_:
+             List of parameters to be tuned, such as
              `cutStrategy`, `presolver`, `restarts`
 
         Returns
@@ -2063,8 +2085,8 @@ class Model:
         Searches for the missing/abstract variable names and set their values
         """
         original_name = sasoptpy.util.get_group_name(name)
-        group = self.get_variable_group(original_name)
-        if group:
+        group = self.get_variable(original_name)
+        if group is not None:
             v = group.get_member_by_name(name)
             v.set_value(value)
 
