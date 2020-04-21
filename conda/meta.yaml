@@ -2,7 +2,7 @@
 
 package:
   name: "{{ name }}"
-  version: "{{ environ.get('GIT_DESCRIBE_TAG', 'untagged')|string|replace('-','_') }}"
+  version: "{{ environ.get('GIT_DESCRIBE_TAG', 'untagged')|string|replace('-','_')|replace('v', '') }}"
 
 source:
   git_url: ../
