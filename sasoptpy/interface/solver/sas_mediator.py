@@ -162,7 +162,8 @@ class SASMediator(Mediator):
 
         logs = c['LOG']
         for line in logs.split('\n'):
-            if not line[0:1].isdigit():
+            first_word = line[0:1]
+            if sasoptpy.config['debug'] or not first_word.isdigit():
                 print(line)
 
         return self.parse_sas_mps_solution()
@@ -230,7 +231,7 @@ class SASMediator(Mediator):
         # Print output
         for line in response['LOG'].split('\n'):
             first_word = line[0:1]
-            if not first_word.isdigit():
+            if sasoptpy.config['debug'] or not first_word.isdigit():
                 print(line)
             if 'WARNING 524' in line:
                 raise RuntimeError(
@@ -415,7 +416,7 @@ class SASMediator(Mediator):
         # Print output
         for line in response['LOG'].split('\n'):
             first_word = line[0:1]
-            if not first_word.isdigit():
+            if sasoptpy.config['debug'] or not first_word.isdigit():
                 print(line)
 
         if session.SYSERR() != 0:
