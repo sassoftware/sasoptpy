@@ -4,7 +4,7 @@ import sasoptpy
 from sasoptpy.libs import np
 from sasoptpy.interface import Mediator
 from saspy import SASsession
-from sasoptpy.interface.util import wrap_long_lines, replace_long_names
+from sasoptpy.interface.util import wrap_long_lines, replace_long_names, wrap_long_lines_python
 
 import warnings
 
@@ -208,7 +208,10 @@ class SASMediator(Mediator):
         wrap_lines = kwargs.get('wrap_lines', False)
         if wrap_lines:
             max_length = kwargs.get('max_line_length', 30000)
-            optmodel_string = wrap_long_lines(optmodel_string, max_length)
+            if sasoptpy.config['wrap_method'] == 'python':
+                optmodel_string = wrap_long_lines_python(optmodel_string, max_length)
+            elif sasoptpy.config['wrap_method'] == 'regex':
+                optmodel_string = wrap_long_lines(optmodel_string, max_length)
 
         if verbose:
             print(optmodel_string)

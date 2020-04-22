@@ -26,6 +26,20 @@ def wrap_long_lines(code, max_length=30000):
             line_lengths = new_line_lengths
     return code
 
+
+def wrap_long_lines_python(code, max_length=30000):
+    import textwrap
+    code_list = code.splitlines()
+    replaced_code = []
+    for line_no, line in enumerate(code_list):
+        if len(line) < max_length:
+            replaced_code.append(line)
+        else:
+            multi_lines = textwrap.wrap(line, width=max_length, break_long_words=False, replace_whitespace=False)
+            replaced_code.extend(multi_lines)
+    return '\n'.join(replaced_code)
+
+
 def replace_long_names(code):
     conversion = dict()
     matches = re.findall(r'[a-zA-Z\_\d]{32,}', code)

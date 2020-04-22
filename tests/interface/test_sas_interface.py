@@ -96,6 +96,12 @@ class TestSASInterface(unittest.TestCase):
 
         self.assertEqual(x[0].get_value(), 2)
 
+        so.config['wrap_method'] = 'python'
+
+        m.solve(wrap_lines=True)
+
+        self.assertEqual(x[0].get_value(), 2)
+
     def test_mps_on_sas(self):
         if TestSASInterface.conn is None:
             self.skipTest('SAS session is not available')
