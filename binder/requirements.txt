@@ -1,4 +1,7 @@
+pandas
 swat
+saspy
+numpy
 matplotlib
 ipycanvas
 ipywidgets
