@@ -1,0 +1,5 @@
+swat
+matplotlib
+ipycanvas
+ipywidgets
+voila
