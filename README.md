@@ -17,18 +17,18 @@
 
 ## Overview
 
-sasoptpy is the Python interface for SAS Optimization and SAS/OR solvers. It allows developers to quickly deploy mathematical optimization problems using native Python data structures. sasoptpy works with both client-side and server-side data, and allows concurrency which makes it a great tool for working with both small and large projects.
+sasoptpy is the Python interface for SAS Optimization and SAS/OR solvers. It enables developers to quickly deploy mathematical optimization problems by using native Python data structures. sasoptpy works with both client-side and server-side data, and it allows concurrency, making it a great tool for working with both small and large projects.
 
 ## Features
 
-- Supports several optimization problem tyeps:
+- Supports several optimization problem types:
   - Linear optimization (LP)
   - Mixed integer linear optimization (MILP)
   - Nonlinear optimization (NLP)
   - Quadratic optimization (QP)
 - Works with both client-side and server-side data
-- Allows abstract modeling with runtime actions
-- Supports workspaces, which allows running multiple problems concurrently
+- Allows abstract modeling with run-time actions
+- Supports workspaces, enabling you to run multiple problems concurrently
 - Provides wrapper for tuning MILP solver parameters
 
 ## Flow
@@ -39,8 +39,8 @@ sasoptpy is the Python interface for SAS Optimization and SAS/OR solvers. It all
 	<img src="img/flow-animation-concrete.gif">
 </div>
 
-Using native Python functionality, you can model an optimization problem on the client, and solve it on SAS Viya or SAS 9.4.
-Problem is fully generated at the client side, and the expensive part is handled by the optimization solver.
+Using native Python functionality, you can model an optimization problem on the client and solve it in SAS Viya or SAS 9.4.
+The problem is fully generated on the client side, and the expensive part is handled by the optimization solver.
 
 #### Abstract Model
 
@@ -84,19 +84,18 @@ You can install sasoptpy via PyPI, via Conda, or by cloning from the repository.
 <img align="right" src="img/example_main.png">
 </a>
 
-In many team sports, such as soccer, basketball, and e-sports, choosing a squad among potential players is a common task. In the following example, consider a generic problem, where the decision maker is trying to sign 3 players among hundreds of applicants. The objective is to maximize the total rating of the squad.
+In many team sports, such as soccer, basketball, and e-sports, a commont task is to choose team members from available players. In the following example, consider a generic problem, where the decision maker is trying to sign three players from hundreds of candidates. The objective is to maximize the total rating of the team.
 
 The problem summary is as follows:
 
-  - Data:
-    - List of players, their attributes, desired position(s), and contract price
-    - List of positions and the weight of each attribute
-    - A budget limit
-  - Decision:
+  - Data
+    - List of players along with their attributes, desired position(s), and contract price
+    - Budget limit
+  - Decision
     - Choosing a player to sign for each position
-  - Constraint:
-    - Total signing cost should not exceed the budget
-    - Players can only play in their desired position
+  - Constraints
+    - Total signing cost should not exceed the budget limit
+    - Players can play only their desired position
 
 <div align="center">
   <img src="img/squad_problem_table.png">
@@ -106,11 +105,15 @@ The problem summary is as follows:
 **Objective** is to maximize the team rating. The team rating is the quadratic sum of position pair ratings.
 
 <div align="center">
-  <img src="img/squad_problem.png"> <br\><br\>
+  <img src="img/squad_problem.png">
+</div>
+
+<div align="center">
   <img src="img/squad_problem_obj.png">
 </div>
 
-See the [Jupyter notebook](https://github.com/sassoftware/sasoptpy/blob/master/examples/notebooks/SquadSelection.ipynb) how this problem is solved using a simple linearization and SAS Optimization MILP solver. [(nbviewer)](https://nbviewer.jupyter.org/github/sassoftware/sasoptpy/blob/master/examples/notebooks/SquadSelection.ipynb)
+
+[Jupyter notebook](https://github.com/sassoftware/sasoptpy/blob/master/examples/notebooks/SquadSelection.ipynb) shows how this problem is solved using a simple linearization and the SAS Optimization MILP solver. [(nbviewer)](https://nbviewer.jupyter.org/github/sassoftware/sasoptpy/blob/master/examples/notebooks/SquadSelection.ipynb)
 
 <div align="center">
   <a href="https://nbviewer.jupyter.org/github/sassoftware/sasoptpy/blob/master/examples/notebooks/SquadSelection.ipynb">
@@ -121,11 +124,11 @@ See the [Jupyter notebook](https://github.com/sassoftware/sasoptpy/blob/master/e
 
 ### 2. Diet Problem
 
-Diet problem, also known as Stigler diet problem, is one of the earliest optimization problems in the literature. George J. Stigler originally posed the question of finding the cheapest diet, while satisfying the minimum nutritionial requirements (Stigler, 1945).
+The diet problem, also known as the Stigler diet problem, is one of the earliest optimization problems in the literature. George J. Stigler originally posed the question of how to find the cheapest diet while satisfying the minimum nutritional requirements (Stigler 1945).
 
-This well-known problem can be solved with Linear Optimization easily. Since methodology was not developed in 1937, Stigler solved this problem using heuristics, albeit his solution was not the optimal (best) solution. He only missed the best solution by 24 cents (per year).
+This well-known problem can be solved easily with linear optimization. Because the methodology had not been developed in 1937, Stigler solved this problem by using heuristics. And although his solution was not the optimal (best) solution, he missed the best solution by only 24 cents (per year).
 
-You can see how this problem can written in terms of mathematical equations and fed into SAS Viya Optimization solvers using the modeling capabilities of sasoptpy package in the [Jupyter Notebook](https://github.com/sassoftware/sasoptpy/blob/master/examples/notebooks/DietProblem.ipynb). [(nbviewer)](https://nbviewer.jupyter.org/github/sassoftware/sasoptpy/blob/master/examples/notebooks/DietProblem.ipynb)
+You can see how this problem can be written in terms of mathematical equations and fed into SAS Optimization solvers by using the modeling capabilities of the sasoptpy package in [Jupyter Notebook](https://github.com/sassoftware/sasoptpy/blob/master/examples/notebooks/DietProblem.ipynb). [(nbviewer)](https://nbviewer.jupyter.org/github/sassoftware/sasoptpy/blob/master/examples/notebooks/DietProblem.ipynb)
 
 <div align="center">
   <a href="https://nbviewer.jupyter.org/github/sassoftware/sasoptpy/blob/master/examples/notebooks/DietProblem.ipynb">
@@ -139,30 +142,30 @@ You can see how this problem can written in terms of mathematical equations and 
 </div>
 
 
-## Contribution
+## Contributions
 
-We welcome all contributions including bug reports, new features, documentation fixes, performance enchancements, and new ideas.
+We welcome all contributions, including bug reports, new features, documentation fixes, performance enchancements, and new ideas.
 
-If you have someting to share, we accept pull requests on Github. See [Contributing instructions](CONTRIBUTING.md) for more details. See [Contributor Agreement](ContributorAgreement.txt) for more details about our code of conduct.
+If you have something to share, we accept pull requests on Github. See the [Contributing instructions](CONTRIBUTING.md) for more details. See the [Contributor Agreement](ContributorAgreement.txt) for more details about our code of conduct.
 
 ## Tests
 
-Unit tests are mainly inteded for internal testing purposes. If your environment variables are set, you can use `unittest` to test the health of a commit, or the code coverage. See [tests README](tests/README.md) for more details.
+Unit tests are mainly intended for internal testing purposes. If your environment variables are set, you can use `unittest` to test the health of a commit or to test the code coverage. See [tests README](tests/README.md) for more details.
 
 ## Documentation
 
-The official documentation is hosted at Github Pages: https://sassoftware.github.io/sasoptpy/
+The official documentation is hosted at Github Pages: https://sassoftware.github.io/sasoptpy/.
 
-The PDF version is also available: https://sassoftware.github.io/sasoptpy/sasoptpy.pdf
+The PDF version is also available: https://sassoftware.github.io/sasoptpy/sasoptpy.pdf.
 
-The documentation is automatically generated using [Sphinx](https://www.sphinx-doc.org/en/master/). All class, method and function APIs are provided in the source code, while main structure can be found under `doc` folder.
+The documentation is automatically generated using [Sphinx](https://www.sphinx-doc.org/en/master/). All class, method, and function APIs are provided in the source code. The main structure can be found in the `doc` folder.
 
 ## License
 
-This package is published under Apache 2.0 license. See [LICENSE](LICENSE.md) for the details.
+This package is published under Apache 2.0 license. See [LICENSE](LICENSE.md) for details.
 
 
 ---
 
 
-Copyright SAS Institute
+Copyright © SAS Institute Inc.
