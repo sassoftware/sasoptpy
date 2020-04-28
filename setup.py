@@ -24,15 +24,23 @@ __version__ = None
 with open('./sasoptpy/version.py') as f:
     exec(f.read())
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+long_desc = '''
+sasoptpy: SAS Optimization Interface for Python
+
+- Repository: https://github.com/sassoftware/sasoptpy
+- Issues: https://github.com/sassoftware/sasoptpy/issues
+- Releases: https://github.com/sassoftware/sasoptpy/releases
+- Community: https://communities.sas.com/t5/Mathematical-Optimization/bd-p/operations_research
+
+Copyright (C) SAS Institute Inc.
+'''
 
 setup(
     name='sasoptpy',
     version=__version__,
     packages=['sasoptpy'],
     description='sasoptpy: SAS Optimization Interface for Python',
-    long_description=long_description,
+    long_description=long_desc,
     long_description_content_type="text/markdown",
     url='https://github.com/sassoftware/sasoptpy',
     author='Sertalp B. Cay (SAS Institute)',
