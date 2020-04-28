@@ -135,13 +135,12 @@ Solving a model
 ~~~~~~~~~~~~~~~
 
 A model is solved by using the :meth:`Model.solve` method. This method converts
-Python definitions into an MPS file and uploads it to a CAS server for the optimization
-action. The type of the optimization problem is determined according to the variable types and expressions.
+Python definitions into OPTMODEL language and submits using SWAT or SASPy packages.
 
 >>> m.solve()
 NOTE: Initialized model model_1
-NOTE: Converting model model_1 to DataFrame
 NOTE: Added action set 'optimization'.
+NOTE: Converting model model_1 to OPTMODEL.
 ...
 NOTE: Optimal.
 NOTE: Objective = 124.343.
