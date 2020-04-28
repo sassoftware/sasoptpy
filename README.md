@@ -17,7 +17,7 @@
 
 ## Overview
 
-sasoptpy is the Python interface for SAS Optimization and SAS/OR solvers. It enables developers to quickly deploy mathematical optimization problems by using native Python data structures. sasoptpy works with both client-side and server-side data, and it allows concurrency, making it a great tool for working with both small and large projects.
+sasoptpy is the Python interface for SAS Optimization and SAS/OR solvers. It enables developers to quickly formulate and solve mathematical optimization problems by using native Python data structures. sasoptpy works with both client-side and server-side data, and it allows concurrency, making it a great tool for working with both small and large projects.
 
 ## Features
 
@@ -40,7 +40,7 @@ sasoptpy is the Python interface for SAS Optimization and SAS/OR solvers. It ena
 </div>
 
 Using native Python functionality, you can model an optimization problem on the client and solve it in SAS Viya or SAS 9.4.
-The problem is fully generated on the client side, and the expensive part is handled by the optimization solver.
+The problem is fully generated on the client side, and the computationally expensive part is handled by the optimization solver.
 
 #### Abstract Model
 
@@ -51,7 +51,7 @@ The problem is fully generated on the client side, and the expensive part is han
 If you have the data available on the server, you can model an abstract problem and cut the model generation time significantly.
 You can also benefit from solving several problems concurrently.
 
-## Install
+## Installation
 
 You can install sasoptpy via PyPI, via Conda, or by cloning from the repository.
 
@@ -77,14 +77,14 @@ You can install sasoptpy via PyPI, via Conda, or by cloning from the repository.
 
 ## Examples
 
-### 1. Squad Selection Problem
+### 1. Team Selection Problem
 
 
 <a href="#">
 <img align="right" src="img/example_main.png">
 </a>
 
-In many team sports, such as soccer, basketball, and e-sports, a commont task is to choose team members from available players. In the following example, consider a generic problem, where the decision maker is trying to sign three players from hundreds of candidates. The objective is to maximize the total rating of the team.
+In many team sports, such as soccer, basketball, and e-sports, a common task is to choose team members from the pool of available players. In the following example, consider a generic problem, where the decision maker is trying to sign three players from hundreds of candidates. The objective is to maximize the total rating of the team.
 
 The problem summary is as follows:
 
@@ -113,10 +113,10 @@ The problem summary is as follows:
 </div>
 
 
-[Jupyter notebook](https://github.com/sassoftware/sasoptpy/blob/master/examples/notebooks/SquadSelection.ipynb) shows how this problem is solved using a simple linearization and the SAS Optimization MILP solver. [(nbviewer)](https://nbviewer.jupyter.org/github/sassoftware/sasoptpy/blob/master/examples/notebooks/SquadSelection.ipynb)
+[Jupyter notebook](https://github.com/sassoftware/sasoptpy/blob/master/examples/notebooks/TeamSelection.ipynb) shows how this problem is solved using a simple linearization and the SAS Optimization MILP solver. [(nbviewer)](https://nbviewer.jupyter.org/github/sassoftware/sasoptpy/blob/master/examples/notebooks/SquadSelection.ipynb)
 
 <div align="center">
-  <a href="https://nbviewer.jupyter.org/github/sassoftware/sasoptpy/blob/master/examples/notebooks/SquadSelection.ipynb">
+  <a href="https://nbviewer.jupyter.org/github/sassoftware/sasoptpy/blob/master/examples/notebooks/TeamSelection.ipynb">
   <img src="img/squad_example.gif">
   </a>
 </div>
@@ -146,7 +146,7 @@ You can see how this problem can be written in terms of mathematical equations a
 
 We welcome all contributions, including bug reports, new features, documentation fixes, performance enchancements, and new ideas.
 
-If you have something to share, we accept pull requests on Github. See the [Contributing instructions](CONTRIBUTING.md) for more details. See the [Contributor Agreement](ContributorAgreement.txt) for more details about our code of conduct.
+If you have something to share, we accept pull requests on Github. See the [Contributing Instructions](CONTRIBUTING.md) for more details. See the [Contributor Agreement](ContributorAgreement.txt) for more details about our code of conduct.
 
 ## Tests
 
@@ -156,7 +156,7 @@ Unit tests are mainly intended for internal testing purposes. If your environmen
 
 The official documentation is hosted at Github Pages: https://sassoftware.github.io/sasoptpy/.
 
-The PDF version is also available: https://sassoftware.github.io/sasoptpy/sasoptpy.pdf.
+A PDF version is also available: https://sassoftware.github.io/sasoptpy/sasoptpy.pdf.
 
 The documentation is automatically generated using [Sphinx](https://www.sphinx-doc.org/en/master/). All class, method, and function APIs are provided in the source code. The main structure can be found in the `doc` folder.
 
