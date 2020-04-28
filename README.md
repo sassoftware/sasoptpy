@@ -113,7 +113,7 @@ The problem summary is as follows:
 </div>
 
 
-[Jupyter notebook](https://github.com/sassoftware/sasoptpy/blob/master/examples/notebooks/TeamSelection.ipynb) shows how this problem is solved using a simple linearization and the SAS Optimization MILP solver. [(nbviewer)](https://nbviewer.jupyter.org/github/sassoftware/sasoptpy/blob/master/examples/notebooks/SquadSelection.ipynb)
+[Jupyter notebook](https://github.com/sassoftware/sasoptpy/blob/master/examples/notebooks/TeamSelection.ipynb) shows how this problem is solved using a simple linearization and the SAS Optimization MILP solver. [(nbviewer)](https://nbviewer.jupyter.org/github/sassoftware/sasoptpy/blob/master/examples/notebooks/TeamSelection.ipynb)
 
 <div align="center">
   <a href="https://nbviewer.jupyter.org/github/sassoftware/sasoptpy/blob/master/examples/notebooks/TeamSelection.ipynb">
