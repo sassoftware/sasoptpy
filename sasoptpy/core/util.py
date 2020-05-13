@@ -213,10 +213,7 @@ def get_name_from_keys(name, keys):
 
 def get_generator_names(argv):
     keys = tuple()
-    if argv.gi_code.co_nlocals == 1:
-        vnames = argv.gi_code.co_cellvars
-    else:
-        vnames = argv.gi_code.co_varnames
+    vnames = argv.gi_code.co_cellvars + argv.gi_code.co_varnames
     vdict = argv.gi_frame.f_locals
     for ky in vnames:
         if ky != '.0':
