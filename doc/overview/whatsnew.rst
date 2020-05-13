@@ -10,16 +10,12 @@ What's New
 New Features
 ++++++++++++
 
-- X
-
 
 Changes
 +++++++
 
-- Y
 
 Bug Fixes
 +++++++++
 
-- Z
-
+- Fixed: Multiple generator objects with if conditions are generating missing object names
