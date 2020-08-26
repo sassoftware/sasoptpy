@@ -422,11 +422,7 @@ class CASMediator(Mediator):
             Primal solution of the problem
         """
         caller = self.caller
-        solver = ''
-        try:
-            solver = caller.get_solution_summary().loc['Solver', 'Value']
-        except:
-            pass
+        solver = caller.get_solution_summary().loc['Solver', 'Value']
         if solver == 'LP':
             for row in solution.itertuples():
                 con = caller.get_constraint(row.con)
