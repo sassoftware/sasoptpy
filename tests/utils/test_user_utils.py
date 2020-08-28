@@ -187,28 +187,28 @@ class TestUserUtils(unittest.TestCase):
         ff = so.flatten_frame(df)
         self.assertEqual(ff.to_string(), cleandoc(
             '''
-            (coal, period1)      1
-            (coal, period2)      5
-            (coal, period3)      7
-            (steel, period1)     8
-            (steel, period2)     4
-            (steel, period3)     3
-            (copper, period1)    5
-            (copper, period2)    7
-            (copper, period3)    9
+            coal    period1    1
+                    period2    5
+                    period3    7
+            steel   period1    8
+                    period2    4
+                    period3    3
+            copper  period1    5
+                    period2    7
+                    period3    9
             '''))
         ffs = so.flatten_frame(df, swap=True)
         self.assertEqual(ffs.to_string(), cleandoc(
             '''
-            (period1, coal)      1
-            (period2, coal)      5
-            (period3, coal)      7
-            (period1, steel)     8
-            (period2, steel)     4
-            (period3, steel)     3
-            (period1, copper)    5
-            (period2, copper)    7
-            (period3, copper)    9
+            period1  coal      1
+            period2  coal      5
+            period3  coal      7
+            period1  steel     8
+            period2  steel     4
+            period3  steel     3
+            period1  copper    5
+            period2  copper    7
+            period3  copper    9
             '''))
 
 
