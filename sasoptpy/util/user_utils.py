@@ -352,7 +352,7 @@ def flatten_frame(df, swap=False):
     new_frame = df.stack()
     if swap:
         new_frame = new_frame.swaplevel()
-    new_frame.index = new_frame.index.to_series()
+    #new_frame.index = new_frame.index.to_series()
     return new_frame
 
 
