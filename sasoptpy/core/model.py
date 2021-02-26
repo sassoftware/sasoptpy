@@ -1751,7 +1751,7 @@ class Model:
         """
         return sasoptpy.interface.to_mps(self, **kwargs)
 
-    def export_mps(self, **kwargs):
+    def export_mps(self, filename=None, fetch=False, **kwargs):
         """
         Exports model in MPS format
 
@@ -1762,7 +1762,9 @@ class Model:
 
         """
         if self._is_linear():
-            return sasoptpy.util.export_to_mps(self, **kwargs)
+            mps = sasoptpy.util.export_to_mps(self, filename=filename, **kwargs)
+            if fetch:
+                return mps
         else:
             raise ValueError("Model is linear or has abstract components")
 

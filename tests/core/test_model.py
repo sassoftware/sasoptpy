@@ -1128,7 +1128,7 @@ class TestModel(unittest.TestCase):
     def test_export(self):
         m = TestModel.get_standard_model('test_model_export')
         x = m.get_variable('x')
-        mps_text = m.export_mps()
+        mps_text = m.export_mps(fetch=True)
         print(mps_text)
         self.assertEqual(mps_text.replace(' ', ''), inspect.cleandoc(
             """
