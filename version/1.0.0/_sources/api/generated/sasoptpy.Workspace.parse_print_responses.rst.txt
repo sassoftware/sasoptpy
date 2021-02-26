@@ -1,0 +1,6 @@
+sasoptpy.Workspace.parse\_print\_responses
+==========================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Workspace.parse_print_responses

@@ -1,0 +1,6 @@
+sasoptpy.Workspace.submit
+=========================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Workspace.submit

@@ -1,0 +1,279 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>sasoptpy.abstract.implicit_variable &#8212; sasoptpy 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/sasoptpy.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/js/url.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../../../_static/js/version.js"></script>
+    <script src="../../../../../_static/js/version.js"></script>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for sasoptpy.abstract.implicit_variable</h1><div class="highlight"><pre>
+<span></span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">GeneratorType</span>
+
+<span class="kn">import</span> <span class="nn">sasoptpy</span>
+<span class="kn">import</span> <span class="nn">sasoptpy.abstract</span>
+<span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="n">is_abstract</span>
+<span class="kn">from</span> <span class="nn">sasoptpy.core.util</span> <span class="kn">import</span> <span class="p">(</span><span class="n">is_expression</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">sasoptpy.util</span> <span class="kn">import</span> <span class="n">to_expression</span><span class="p">,</span> <span class="n">wrap_expression</span>
+
+
+<div class="viewcode-block" id="ImplicitVar"><a class="viewcode-back" href="../../../api/generated/sasoptpy.abstract.ImplicitVar.html#sasoptpy.abstract.ImplicitVar">[docs]</a><span class="k">class</span> <span class="nc">ImplicitVar</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates an implicit variable</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    argv : Generator, optional</span>
+<span class="sd">        Generator object for the implicit variable</span>
+<span class="sd">    name : string, optional</span>
+<span class="sd">        Name of the implicit variable</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+
+<span class="sd">    - If the loop inside generator is over an abstract object, a definition</span>
+<span class="sd">      for the object will be created inside :meth:`Model.to_optmodel` method.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    Regular Implicit Variable</span>
+
+<span class="sd">    &gt;&gt;&gt; I = range(5)</span>
+<span class="sd">    &gt;&gt;&gt; x = so.Variable(name=&#39;x&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; y = so.VariableGroup(I, name=&#39;y&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; z = so.ImplicitVar((x + i * y[i] for i in I), name=&#39;z&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; for i in z:</span>
+<span class="sd">    &gt;&gt;&gt;     print(i, z[i])</span>
+<span class="sd">    (0,) x</span>
+<span class="sd">    (1,) x + y[1]</span>
+<span class="sd">    (2,) x + 2 * y[2]</span>
+<span class="sd">    (3,) x + 3 * y[3]</span>
+<span class="sd">    (4,) x + 4 * y[4]</span>
+
+<span class="sd">    Abstract Implicit Variable</span>
+
+<span class="sd">    &gt;&gt;&gt; I = so.Set(name=&#39;I&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; x = so.Variable(name=&#39;x&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; y = so.VariableGroup(I, name=&#39;y&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; z = so.ImplicitVar((x + i * y[i] for i in I), name=&#39;z&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; print(z._defn())</span>
+<span class="sd">    impvar z {i_1 in I} = x + i_1 * y[i_1];</span>
+<span class="sd">    &gt;&gt;&gt; for i in z:</span>
+<span class="sd">    &gt;&gt;&gt;     print(i, z[i])</span>
+<span class="sd">    (sasoptpy.abstract.SetIterator(name=i_1, ...),) x + i_1 * y[i_1]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@sasoptpy</span><span class="o">.</span><span class="n">class_containable</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_objorder</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">get_creation_id</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dict</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conditions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_shadows</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">argv</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Generator type - multi</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span> <span class="o">==</span> <span class="n">GeneratorType</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">argv</span><span class="p">:</span>
+                    <span class="n">keynames</span> <span class="o">=</span> <span class="p">()</span>
+                    <span class="n">keyrefs</span> <span class="o">=</span> <span class="p">()</span>
+                    <span class="k">if</span> <span class="n">argv</span><span class="o">.</span><span class="n">gi_code</span><span class="o">.</span><span class="n">co_nlocals</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">itlist</span> <span class="o">=</span> <span class="n">argv</span><span class="o">.</span><span class="n">gi_code</span><span class="o">.</span><span class="n">co_cellvars</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">itlist</span> <span class="o">=</span> <span class="n">argv</span><span class="o">.</span><span class="n">gi_code</span><span class="o">.</span><span class="n">co_cellvars</span> <span class="o">+</span> <span class="n">argv</span><span class="o">.</span><span class="n">gi_code</span><span class="o">.</span><span class="n">co_varnames</span>
+                    <span class="n">localdict</span> <span class="o">=</span> <span class="n">argv</span><span class="o">.</span><span class="n">gi_frame</span><span class="o">.</span><span class="n">f_locals</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">itlist</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="s1">&#39;.0&#39;</span><span class="p">:</span>
+                            <span class="n">keynames</span> <span class="o">+=</span> <span class="p">(</span><span class="n">i</span><span class="p">,)</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">keynames</span><span class="p">:</span>
+                        <span class="n">keyrefs</span> <span class="o">+=</span> <span class="p">(</span><span class="n">localdict</span><span class="p">[</span><span class="n">i</span><span class="p">],)</span>
+                    <span class="bp">self</span><span class="p">[</span><span class="n">keyrefs</span><span class="p">]</span> <span class="o">=</span> <span class="n">wrap_expression</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">is_expression</span><span class="p">(</span><span class="n">argv</span><span class="p">):</span>
+                <span class="n">exp</span> <span class="o">=</span> <span class="n">wrap_expression</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span>
+                <span class="n">exp</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+                <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exp</span>
+                <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_objorder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objorder</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">exp</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">Expression</span><span class="o">.</span><span class="n">to_expression</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span>
+                <span class="n">exp</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+                <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exp</span>
+                <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_objorder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objorder</span>
+
+    <span class="k">def</span> <span class="nf">_expr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_defn</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">member_defn</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dict</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">member_defn</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;impvar </span><span class="si">{}</span><span class="s1"> = </span><span class="si">{}</span><span class="s1">;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">i</span><span class="o">.</span><span class="n">get_name_with_keys</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_name</span><span class="p">()),</span>
+                <span class="n">to_expression</span><span class="p">(</span><span class="n">i</span><span class="p">)))</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">member_defn</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">s</span>
+
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">pack_to_tuple</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">value</span><span class="o">.</span><span class="n">set_permanent</span><span class="p">()</span>
+        <span class="n">value</span><span class="o">.</span><span class="n">_iterkey</span> <span class="o">=</span> <span class="n">key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">pack_to_tuple</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dict</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shadows</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shadows</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tuple_key</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">pack_to_tuple</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="n">pv</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">abstract</span><span class="o">.</span><span class="n">ParameterValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tuple_key</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_shadows</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">pv</span>
+            <span class="k">return</span> <span class="n">pv</span>
+
+    <span class="k">def</span> <span class="nf">get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
+
+    <span class="k">def</span> <span class="nf">get_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dict</span>
+
+    <span class="k">def</span> <span class="nf">get_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the dictionary keys</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        d : dict_keys</span>
+<span class="sd">            Dictionary keys stored in the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dict</span><span class="o">.</span><span class="fm">__iter__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span></div>
+
+
+
+
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="1.0.0">1.0.0</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="../../../index.html">Table of Contents</a></h3>
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../version-history.html">Version History</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2020, SAS Institute.
+      Last updated on Apr 28, 2020 (Timestamp: 1.0-20200428203611).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+    </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-155356999-1');
+</script>
+
+
+  </body>
+</html>

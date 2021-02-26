@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+sasoptpy.abstract.SetIteratorGroup
+==================================
+
+.. currentmodule:: sasoptpy.abstract
+
+.. autoclass:: SetIteratorGroup

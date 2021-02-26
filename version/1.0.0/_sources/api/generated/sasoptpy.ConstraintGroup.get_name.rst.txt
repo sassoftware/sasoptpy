@@ -1,0 +1,6 @@
+sasoptpy.ConstraintGroup.get\_name
+==================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: ConstraintGroup.get_name

@@ -1,0 +1,6 @@
+sasoptpy.interface.CASMediator.parse\_cas\_solution
+===================================================
+
+.. currentmodule:: sasoptpy.interface
+
+.. automethod:: CASMediator.parse_cas_solution

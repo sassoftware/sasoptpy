@@ -1,0 +1,6 @@
+sasoptpy.math.tan
+=================
+
+.. currentmodule:: sasoptpy.math
+
+.. autofunction:: tan

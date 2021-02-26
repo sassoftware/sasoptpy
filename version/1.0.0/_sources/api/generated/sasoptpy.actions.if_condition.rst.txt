@@ -1,0 +1,6 @@
+sasoptpy.actions.if\_condition
+==============================
+
+.. currentmodule:: sasoptpy.actions
+
+.. autofunction:: if_condition

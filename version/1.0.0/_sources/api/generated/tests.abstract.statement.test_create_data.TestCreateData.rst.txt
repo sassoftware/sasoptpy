@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+tests.abstract.statement.test_create_data.TestCreateData
+========================================================
+
+.. currentmodule:: tests.abstract.statement.test_create_data
+
+.. autoclass:: TestCreateData

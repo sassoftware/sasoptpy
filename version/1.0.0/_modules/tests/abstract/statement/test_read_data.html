@@ -1,0 +1,657 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>tests.abstract.statement.test_read_data &#8212; sasoptpy 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/sasoptpy.css" />
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
+    <script src="../../../../_static/js/url.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../../../../_static/js/version.js"></script>
+    <script src="../../../../../../_static/js/version.js"></script>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for tests.abstract.statement.test_read_data</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># encoding: utf-8</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright SAS Institute</span>
+<span class="c1">#</span>
+<span class="c1">#  Licensed under the Apache License, Version 2.0 (the License);</span>
+<span class="c1">#  you may not use this file except in compliance with the License.</span>
+<span class="c1">#  You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#      http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1">#  Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1">#  distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1">#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1">#  See the License for the specific language governing permissions and</span>
+<span class="c1">#  limitations under the License.</span>
+<span class="c1">#</span>
+
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">unittest</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
+<span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">cleandoc</span>
+<span class="kn">from</span> <span class="nn">sasoptpy.actions</span> <span class="kn">import</span> <span class="n">read_data</span>
+
+<span class="kn">from</span> <span class="nn">tests.swat_config</span> <span class="kn">import</span> <span class="n">create_cas_connection</span>
+
+
+<div class="viewcode-block" id="TestReadData"><a class="viewcode-back" href="../../../../api/generated/tests.abstract.statement.test_read_data.TestReadData.html#tests.abstract.statement.test_read_data.TestReadData">[docs]</a><span class="k">class</span> <span class="nc">TestReadData</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Unit tests for READ DATA statements</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">setUpClass</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="n">so</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">conn</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="kn">from</span> <span class="nn">swat</span> <span class="kn">import</span> <span class="n">CAS</span><span class="p">,</span> <span class="n">SWATError</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">conn</span> <span class="o">=</span> <span class="n">create_cas_connection</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">SWATError</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;CAS connection is not available&#39;</span><span class="p">,</span> <span class="ne">RuntimeWarning</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;CAS variables are not available&#39;</span><span class="p">,</span> <span class="ne">RuntimeWarning</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">tearDownClass</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">conn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">test_read_regular_existing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="kn">from</span> <span class="nn">sasoptpy</span> <span class="kn">import</span> <span class="n">Workspace</span><span class="p">,</span> <span class="n">VariableGroup</span>
+        <span class="kn">from</span> <span class="nn">sasoptpy.abstract</span> <span class="kn">import</span> <span class="n">Set</span><span class="p">,</span> <span class="n">ParameterGroup</span>
+        <span class="kn">from</span> <span class="nn">sasoptpy.actions</span> <span class="kn">import</span> <span class="n">solve</span>
+
+        <span class="k">with</span> <span class="n">Workspace</span><span class="p">(</span><span class="s1">&#39;test_workspace&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ws</span><span class="p">:</span>
+
+            <span class="n">ITEMS</span> <span class="o">=</span> <span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ITEMS&#39;</span><span class="p">)</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">ParameterGroup</span><span class="p">(</span><span class="n">ITEMS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">get</span> <span class="o">=</span> <span class="n">VariableGroup</span><span class="p">(</span><span class="n">ITEMS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+            <span class="n">read_data</span><span class="p">(</span>
+                <span class="n">table</span><span class="o">=</span><span class="s2">&quot;values&quot;</span><span class="p">,</span>
+                <span class="n">index</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">ITEMS</span><span class="p">,</span> <span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+                <span class="n">columns</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">value</span><span class="p">}])</span>
+
+            <span class="n">solve</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;with&#39;</span><span class="p">:</span> <span class="n">so</span><span class="o">.</span><span class="n">BLACKBOX</span><span class="p">,</span> <span class="s1">&#39;maxgen&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
+
+        <span class="n">optmodel_code</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">(</span><span class="n">ws</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">optmodel_code</span><span class="p">,</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            proc optmodel;</span>
+<span class="s2">               set ITEMS;</span>
+<span class="s2">               num value </span><span class="si">{ITEMS}</span><span class="s2"> init 0;</span>
+<span class="s2">               var get {{ITEMS}} integer &gt;= 0;</span>
+<span class="s2">               read data values into ITEMS value;</span>
+<span class="s2">               solve with blackbox / maxgen=10;</span>
+<span class="s2">            quit;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">test_read_data_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">with</span> <span class="n">so</span><span class="o">.</span><span class="n">Workspace</span><span class="p">(</span><span class="s1">&#39;test_read_data_n&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ws</span><span class="p">:</span>
+            <span class="n">ASSETS</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ASSETS&#39;</span><span class="p">)</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ParameterGroup</span><span class="p">(</span><span class="n">ASSETS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;return&#39;</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">NUM</span><span class="p">)</span>
+            <span class="n">read_data</span><span class="p">(</span>
+                <span class="n">table</span><span class="o">=</span><span class="s1">&#39;means&#39;</span><span class="p">,</span>
+                <span class="n">index</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">ASSETS</span><span class="p">,</span> <span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="n">so</span><span class="o">.</span><span class="n">N</span><span class="p">},</span>
+                <span class="n">columns</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">ret</span><span class="p">}]</span>
+            <span class="p">)</span>
+        <span class="n">optmodel_code</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">(</span><span class="n">ws</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">optmodel_code</span><span class="p">,</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            proc optmodel;</span>
+<span class="s2">               set ASSETS;</span>
+<span class="s2">               num return </span><span class="si">{ASSETS}</span><span class="s2">;</span>
+<span class="s2">               read data means into ASSETS=[_N_] return;</span>
+<span class="s2">            quit;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">test_read_data_no_index_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="kn">from</span> <span class="nn">sasoptpy.util</span> <span class="kn">import</span> <span class="n">iterate</span>
+
+        <span class="k">with</span> <span class="n">so</span><span class="o">.</span><span class="n">Workspace</span><span class="p">(</span><span class="s1">&#39;test_read_data_no_index_expression&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ws</span><span class="p">:</span>
+            <span class="n">ASSETS</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ASSETS&#39;</span><span class="p">)</span>
+            <span class="n">cov</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ParameterGroup</span><span class="p">(</span><span class="n">ASSETS</span><span class="p">,</span> <span class="n">ASSETS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;cov&#39;</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">iterate</span><span class="p">(</span><span class="n">ASSETS</span><span class="p">,</span> <span class="s1">&#39;asset1&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">asset1</span><span class="p">,</span> <span class="n">iterate</span><span class="p">(</span><span class="n">ASSETS</span><span class="p">,</span> <span class="s1">&#39;asset2&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">asset2</span><span class="p">:</span>
+                <span class="n">read_data</span><span class="p">(</span>
+                    <span class="n">table</span><span class="o">=</span><span class="s1">&#39;covdata&#39;</span><span class="p">,</span>
+                    <span class="n">index</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">asset1</span><span class="p">,</span> <span class="n">asset2</span><span class="p">]},</span>
+                    <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+                        <span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">cov</span><span class="p">},</span>
+                        <span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">cov</span><span class="p">[</span><span class="n">asset2</span><span class="p">,</span> <span class="n">asset1</span><span class="p">],</span>
+                         <span class="s1">&#39;column&#39;</span><span class="p">:</span> <span class="s1">&#39;cov&#39;</span><span class="p">}</span>
+                    <span class="p">]</span>
+                <span class="p">)</span>
+
+        <span class="n">optmodel_code</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">(</span><span class="n">ws</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">optmodel_code</span><span class="p">,</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            proc optmodel;</span>
+<span class="s2">               set ASSETS;</span>
+<span class="s2">               num cov {ASSETS, ASSETS} init 0;</span>
+<span class="s2">               read data covdata into [asset1 asset2] cov cov[asset2, asset1]=cov;</span>
+<span class="s2">            quit;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">test_read_data_col</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="kn">from</span> <span class="nn">sasoptpy.util</span> <span class="kn">import</span> <span class="n">concat</span>
+
+        <span class="k">with</span> <span class="n">so</span><span class="o">.</span><span class="n">Workspace</span><span class="p">(</span><span class="s1">&#39;test_read_data_col&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ws</span><span class="p">:</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">indx</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;indx&#39;</span><span class="p">,</span> <span class="n">settype</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;num&#39;</span><span class="p">])</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ParameterGroup</span><span class="p">(</span><span class="n">indx</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;p&#39;</span><span class="p">)</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ParameterGroup</span><span class="p">(</span><span class="n">indx</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;q&#39;</span><span class="p">)</span>
+
+            <span class="n">read_data</span><span class="p">(</span>
+                <span class="n">table</span><span class="o">=</span><span class="s1">&#39;exdata&#39;</span><span class="p">,</span>
+                <span class="n">index</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">indx</span><span class="p">,</span>
+                    <span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="n">so</span><span class="o">.</span><span class="n">N</span>
+                <span class="p">},</span>
+                <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+                    <span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">p</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">:</span> <span class="s1">&#39;column1&#39;</span><span class="p">},</span>
+                    <span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">q</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">:</span> <span class="n">concat</span><span class="p">(</span><span class="s1">&#39;column&#39;</span><span class="p">,</span> <span class="n">n</span><span class="p">)}</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="n">optmodel_code</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">(</span><span class="n">ws</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">optmodel_code</span><span class="p">,</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            proc optmodel;</span>
+<span class="s2">               num n init 2;</span>
+<span class="s2">               set indx;</span>
+<span class="s2">               num p </span><span class="si">{indx}</span><span class="s2">;</span>
+<span class="s2">               num q </span><span class="si">{indx}</span><span class="s2">;</span>
+<span class="s2">               read data exdata into indx=[_N_] p=column1 q=col(&#39;column&#39; || n);</span>
+<span class="s2">            quit;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">test_read_data_indexed_column</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="kn">from</span> <span class="nn">sasoptpy.util</span> <span class="kn">import</span> <span class="n">iterate</span><span class="p">,</span> <span class="n">concat</span>
+
+        <span class="k">with</span> <span class="n">so</span><span class="o">.</span><span class="n">Workspace</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;test_read_data_idx_col&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ws</span><span class="p">:</span>
+            <span class="n">dow</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;DOW&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">exp_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+            <span class="n">locs</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;LOCS&#39;</span><span class="p">,</span> <span class="n">settype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">STR</span><span class="p">)</span>
+            <span class="n">demand</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ParameterGroup</span><span class="p">(</span><span class="n">locs</span><span class="p">,</span> <span class="n">dow</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;demand&#39;</span><span class="p">)</span>
+
+            <span class="k">with</span> <span class="n">iterate</span><span class="p">(</span><span class="n">locs</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;loc&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">loc</span><span class="p">:</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">read_data</span><span class="p">(</span>
+                    <span class="n">table</span><span class="o">=</span><span class="s1">&#39;dmnd&#39;</span><span class="p">,</span>
+                    <span class="n">index</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">locs</span><span class="p">,</span> <span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="n">loc</span><span class="p">}</span>
+                <span class="p">)</span>
+                <span class="k">with</span> <span class="n">iterate</span><span class="p">(</span><span class="n">dow</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">d</span><span class="p">:</span>
+                    <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                        <span class="s1">&#39;index&#39;</span><span class="p">:</span> <span class="n">d</span><span class="p">,</span>
+                        <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">demand</span><span class="p">[</span><span class="n">loc</span><span class="p">,</span> <span class="n">d</span><span class="p">],</span>
+                        <span class="s1">&#39;column&#39;</span><span class="p">:</span> <span class="n">concat</span><span class="p">(</span><span class="s1">&#39;day&#39;</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+                    <span class="p">})</span>
+
+        <span class="n">optmodel_code</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">(</span><span class="n">ws</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">optmodel_code</span><span class="p">,</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            proc optmodel;</span>
+<span class="s2">               set DOW = 1..5;</span>
+<span class="s2">               set &lt;str&gt; LOCS;</span>
+<span class="s2">               num demand {LOCS, DOW};</span>
+<span class="s2">               read data dmnd into LOCS=[loc] {d in DOW} &lt; demand[loc, d]=col(&#39;day&#39; || d) &gt;;</span>
+<span class="s2">            quit;&quot;&quot;&quot;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">test_with_cas_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">TestReadData</span><span class="o">.</span><span class="n">conn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">skipTest</span><span class="p">(</span><span class="s1">&#39;No session is available&#39;</span><span class="p">)</span>
+
+        <span class="kn">from</span> <span class="nn">sasoptpy.util</span> <span class="kn">import</span> <span class="n">concat</span>
+        <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+            <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+        <span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;column1&#39;</span><span class="p">,</span> <span class="s1">&#39;column2&#39;</span><span class="p">])</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="n">TestReadData</span><span class="o">.</span><span class="n">conn</span>
+        <span class="n">exdata</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">upload_frame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">casout</span><span class="o">=</span><span class="s1">&#39;exdata&#39;</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">so</span><span class="o">.</span><span class="n">Workspace</span><span class="p">(</span><span class="s1">&#39;test_read_data_col&#39;</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="n">s</span><span class="p">)</span> <span class="k">as</span> <span class="n">ws</span><span class="p">:</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">indx</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;indx&#39;</span><span class="p">,</span> <span class="n">settype</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;num&#39;</span><span class="p">])</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ParameterGroup</span><span class="p">(</span><span class="n">indx</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;p&#39;</span><span class="p">)</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ParameterGroup</span><span class="p">(</span><span class="n">indx</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;q&#39;</span><span class="p">)</span>
+
+            <span class="n">read_data</span><span class="p">(</span>
+                <span class="n">table</span><span class="o">=</span><span class="n">exdata</span><span class="p">,</span>
+                <span class="n">index</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">indx</span><span class="p">,</span>
+                    <span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="n">so</span><span class="o">.</span><span class="n">N</span>
+                <span class="p">},</span>
+                <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+                    <span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">p</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">:</span> <span class="s1">&#39;column1&#39;</span><span class="p">},</span>
+                    <span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">q</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">:</span> <span class="n">concat</span><span class="p">(</span><span class="s1">&#39;column&#39;</span><span class="p">,</span> <span class="n">n</span><span class="p">)}</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+
+            <span class="kn">from</span> <span class="nn">sasoptpy.actions</span> <span class="kn">import</span> <span class="n">print_item</span>
+            <span class="n">print_item</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+
+        <span class="n">optmodel_code</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">(</span><span class="n">ws</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">optmodel_code</span><span class="p">,</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            proc optmodel;</span>
+<span class="s2">               num n init 2;</span>
+<span class="s2">               set indx;</span>
+<span class="s2">               num p </span><span class="si">{indx}</span><span class="s2">;</span>
+<span class="s2">               num q </span><span class="si">{indx}</span><span class="s2">;</span>
+<span class="s2">               read data EXDATA into indx=[_N_] p=column1 q=col(&#39;column&#39; || n);</span>
+<span class="s2">               print p q;</span>
+<span class="s2">            quit;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+        <span class="n">ws</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ws</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;Print1.PrintTable&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_string</span><span class="p">(),</span> <span class="n">cleandoc</span><span class="p">(</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">               COL1    p    q</span>
+<span class="sd">            0   1.0  1.0  2.0</span>
+<span class="sd">            1   2.0  3.0  4.0</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+        <span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">test_read_data_no_index_target</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">with</span> <span class="n">so</span><span class="o">.</span><span class="n">Workspace</span><span class="p">(</span><span class="s1">&#39;test_no_index_target&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ws</span><span class="p">:</span>
+            <span class="n">NODES</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;NODES&#39;</span><span class="p">,</span> <span class="n">settype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">STR</span><span class="p">)</span>
+            <span class="n">nodesByPri</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ParameterGroup</span><span class="p">(</span><span class="n">NODES</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;nodesByPri&#39;</span><span class="p">)</span>
+
+            <span class="n">read_data</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="s1">&#39;temppri&#39;</span><span class="p">,</span>
+                      <span class="n">index</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="n">so</span><span class="o">.</span><span class="n">N</span><span class="p">},</span>
+                      <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+                          <span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">nodesByPri</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">:</span> <span class="s1">&#39;id&#39;</span><span class="p">}</span>
+                      <span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">(</span><span class="n">ws</span><span class="p">),</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            proc optmodel;</span>
+<span class="s2">               set &lt;str&gt; NODES;</span>
+<span class="s2">               num nodesByPri </span><span class="si">{NODES}</span><span class="s2">;</span>
+<span class="s2">               read data temppri into [_N_] nodesByPri=id;</span>
+<span class="s2">            quit;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">test_read_data_same_name_cols</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="kn">from</span> <span class="nn">sasoptpy.actions</span> <span class="kn">import</span> <span class="n">set_objective</span><span class="p">,</span> <span class="n">solve</span>
+
+        <span class="k">with</span> <span class="n">so</span><span class="o">.</span><span class="n">Workspace</span><span class="p">(</span><span class="s1">&#39;test_same_name_cols&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ws</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+            <span class="n">c_xx</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;c_xx&#39;</span><span class="p">)</span>
+            <span class="n">c_x</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;c_x&#39;</span><span class="p">)</span>
+            <span class="n">c_y</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;c_y&#39;</span><span class="p">)</span>
+            <span class="n">c_xy</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;c_xy&#39;</span><span class="p">)</span>
+            <span class="n">c_yy</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;c_yy&#39;</span><span class="p">)</span>
+            <span class="n">read_data</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="s1">&#39;coeff&#39;</span><span class="p">,</span>
+                      <span class="n">index</span><span class="o">=</span><span class="p">{},</span>
+                      <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+                          <span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">c_xx</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">:</span> <span class="s1">&#39;c_xx&#39;</span><span class="p">},</span>
+                          <span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">c_x</span><span class="p">},</span>
+                          <span class="p">{</span><span class="s1">&#39;column&#39;</span><span class="p">:</span> <span class="s1">&#39;c_y&#39;</span><span class="p">},</span>
+                          <span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">c_xy</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">:</span> <span class="s1">&#39;c_xy&#39;</span><span class="p">},</span>
+                          <span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">c_yy</span><span class="p">}</span>
+                      <span class="p">])</span>
+            <span class="n">set_objective</span><span class="p">(</span><span class="n">c_xx</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">c_x</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">c_xy</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span> <span class="o">+</span> <span class="n">c_yy</span> <span class="o">*</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span>
+                          <span class="n">name</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MIN</span><span class="p">)</span>
+            <span class="n">solve</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">(</span><span class="n">ws</span><span class="p">),</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            proc optmodel;</span>
+<span class="s2">               var x;</span>
+<span class="s2">               var y;</span>
+<span class="s2">               num c_xx;</span>
+<span class="s2">               num c_x;</span>
+<span class="s2">               num c_y;</span>
+<span class="s2">               num c_xy;</span>
+<span class="s2">               num c_yy;</span>
+<span class="s2">               read data coeff into c_xx c_x c_y c_xy c_yy;</span>
+<span class="s2">               MIN z = c_xx * (x) ^ (2) + c_x * x + c_xy * x * y + c_yy * (y) ^ (2);</span>
+<span class="s2">               solve;</span>
+<span class="s2">            quit;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">test_read_data_var_bound</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="kn">from</span> <span class="nn">sasoptpy.util</span> <span class="kn">import</span> <span class="n">iterate</span>
+
+        <span class="k">with</span> <span class="n">so</span><span class="o">.</span><span class="n">Workspace</span><span class="p">(</span><span class="s1">&#39;test_read_data_var_bound&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ws</span><span class="p">:</span>
+            <span class="n">plants</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;plants&#39;</span><span class="p">,</span> <span class="n">settype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">STR</span><span class="p">)</span>
+            <span class="n">prod</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">VariableGroup</span><span class="p">(</span><span class="n">plants</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;prod&#39;</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">cost</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;cost&#39;</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">NUM</span><span class="p">)</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">SetIterator</span><span class="p">(</span><span class="n">plants</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;p&#39;</span><span class="p">)</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">read_data</span><span class="p">(</span>
+                <span class="n">table</span><span class="o">=</span><span class="s1">&#39;pdat&#39;</span><span class="p">,</span>
+                <span class="n">index</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">plants</span><span class="p">,</span> <span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="n">p</span><span class="p">},</span>
+                <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+                    <span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">prod</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">ub</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">:</span> <span class="s1">&#39;maxprod&#39;</span><span class="p">},</span>
+                    <span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">cost</span><span class="p">}</span>
+                <span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">(</span><span class="n">ws</span><span class="p">),</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            proc optmodel;</span>
+<span class="s2">               set &lt;str&gt; plants;</span>
+<span class="s2">               var prod {{plants}} &gt;= 0;</span>
+<span class="s2">               num cost;</span>
+<span class="s2">               read data pdat into plants=[p] prod[p].ub=maxprod cost;</span>
+<span class="s2">            quit;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">test_read_data_with_exp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">with</span> <span class="n">so</span><span class="o">.</span><span class="n">Workspace</span><span class="p">(</span><span class="s1">&#39;test_read_data_with_exp&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ws</span><span class="p">:</span>
+
+            <span class="n">ss</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;subscripts&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">exp_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">settype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">NUM</span><span class="p">)</span>
+            <span class="n">letter</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ParameterGroup</span><span class="p">(</span><span class="n">ss</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;letter&#39;</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">STR</span><span class="p">)</span>
+            <span class="n">read_data</span><span class="p">(</span>
+                <span class="n">table</span><span class="o">=</span><span class="s1">&#39;abcd&#39;</span><span class="p">,</span>
+                <span class="n">index</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="n">so</span><span class="o">.</span><span class="n">N</span><span class="p">},</span>
+                <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+                    <span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">letter</span><span class="p">[</span><span class="mi">5</span><span class="o">-</span><span class="n">so</span><span class="o">.</span><span class="n">N</span><span class="p">]}</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">(</span><span class="n">ws</span><span class="p">),</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            proc optmodel;</span>
+<span class="s2">               set subscripts = 1..4;</span>
+<span class="s2">               str letter </span><span class="si">{subscripts}</span><span class="s2">;</span>
+<span class="s2">               read data abcd into [_N_] letter[- _N_ + 5];</span>
+<span class="s2">            quit;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">test_read_data_append_later</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="kn">from</span> <span class="nn">sasoptpy.util</span> <span class="kn">import</span> <span class="n">concat</span><span class="p">,</span> <span class="n">iterate</span>
+
+        <span class="k">with</span> <span class="n">so</span><span class="o">.</span><span class="n">Workspace</span><span class="p">(</span><span class="s1">&#39;let&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ws</span><span class="p">:</span>
+            <span class="n">actors</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ACTORS&#39;</span><span class="p">)</span>
+            <span class="n">actor_name</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ParameterGroup</span><span class="p">(</span><span class="n">actors</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">STR</span><span class="p">,</span>
+                                           <span class="n">name</span><span class="o">=</span><span class="s1">&#39;actor_name&#39;</span><span class="p">)</span>
+            <span class="n">daily_fee</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ParameterGroup</span><span class="p">(</span><span class="n">actors</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;daily_fee&#39;</span><span class="p">)</span>
+            <span class="n">most_scenes</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;most_scenes&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+            <span class="n">scene_list</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ParameterGroup</span><span class="p">(</span><span class="n">actors</span><span class="p">,</span> <span class="n">so</span><span class="o">.</span><span class="n">exp_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">most_scenes</span><span class="p">),</span>
+                                           <span class="n">name</span><span class="o">=</span><span class="s1">&#39;scene_list&#39;</span><span class="p">)</span>
+
+            <span class="n">r</span> <span class="o">=</span> <span class="n">read_data</span><span class="p">(</span>
+                <span class="n">table</span><span class="o">=</span><span class="s1">&#39;scene&#39;</span><span class="p">,</span>
+                <span class="n">index</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">actors</span><span class="p">,</span>
+                    <span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="n">so</span><span class="o">.</span><span class="n">N</span>
+                <span class="p">},</span>
+                <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">actor_name</span><span class="p">,</span>
+                        <span class="s1">&#39;column&#39;</span><span class="p">:</span> <span class="s1">&#39;Actor&#39;</span>
+                    <span class="p">},</span>
+                    <span class="p">{</span>
+                        <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">daily_fee</span><span class="p">,</span>
+                        <span class="s1">&#39;column&#39;</span><span class="p">:</span> <span class="s1">&#39;DailyFee&#39;</span>
+                    <span class="p">}</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+            <span class="k">with</span> <span class="n">iterate</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">exp_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">most_scenes</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;j&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">j</span><span class="p">:</span>
+                <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                    <span class="s1">&#39;index&#39;</span><span class="p">:</span> <span class="n">j</span><span class="p">,</span>
+                    <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">scene_list</span><span class="p">[</span><span class="n">so</span><span class="o">.</span><span class="n">N</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span>
+                    <span class="s1">&#39;column&#39;</span><span class="p">:</span> <span class="n">concat</span><span class="p">(</span><span class="s1">&#39;S_Var&#39;</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+                <span class="p">})</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">(</span><span class="n">ws</span><span class="p">),</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            proc optmodel;</span>
+<span class="s2">               set ACTORS;</span>
+<span class="s2">               str actor_name </span><span class="si">{ACTORS}</span><span class="s2">;</span>
+<span class="s2">               num daily_fee </span><span class="si">{ACTORS}</span><span class="s2">;</span>
+<span class="s2">               num most_scenes = 9;</span>
+<span class="s2">               num scene_list {ACTORS, 1..most_scenes};</span>
+<span class="s2">               read data scene into ACTORS=[_N_] actor_name=Actor daily_fee=DailyFee {j in 1..most_scenes} &lt; scene_list[_N_, j]=col(&#39;S_Var&#39; || j) &gt;;</span>
+<span class="s2">            quit;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">test_read_data_multi_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">with</span> <span class="n">so</span><span class="o">.</span><span class="n">Workspace</span><span class="p">(</span><span class="s1">&#39;test_read_data_multi_index&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ws</span><span class="p">:</span>
+            <span class="n">arcs</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ARCS&#39;</span><span class="p">,</span> <span class="n">settype</span><span class="o">=</span><span class="p">[</span><span class="n">so</span><span class="o">.</span><span class="n">STR</span><span class="p">,</span> <span class="n">so</span><span class="o">.</span><span class="n">STR</span><span class="p">])</span>
+            <span class="n">arc_lower</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ParameterGroup</span><span class="p">(</span><span class="n">arcs</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;arcLower&#39;</span><span class="p">)</span>
+            <span class="n">arc_upper</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ParameterGroup</span><span class="p">(</span><span class="n">arcs</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;arcUpper&#39;</span><span class="p">)</span>
+            <span class="n">arc_cost</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ParameterGroup</span><span class="p">(</span><span class="n">arcs</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;arcCost&#39;</span><span class="p">)</span>
+
+            <span class="n">read_data</span><span class="p">(</span>
+                <span class="n">table</span><span class="o">=</span><span class="s1">&#39;arcdata&#39;</span><span class="p">,</span>
+                <span class="n">index</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">arcs</span><span class="p">,</span>
+                    <span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;_tail_&#39;</span><span class="p">,</span> <span class="s1">&#39;_head_&#39;</span><span class="p">]</span>
+                <span class="p">},</span>
+                <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+                    <span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">arc_lower</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">:</span> <span class="s1">&#39;_lo_&#39;</span><span class="p">},</span>
+                    <span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">arc_upper</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">:</span> <span class="s1">&#39;_capac_&#39;</span><span class="p">},</span>
+                    <span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">arc_cost</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">:</span> <span class="s1">&#39;_cost_&#39;</span><span class="p">}</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">(</span><span class="n">ws</span><span class="p">),</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            proc optmodel;</span>
+<span class="s2">               set &lt;str, str&gt; ARCS;</span>
+<span class="s2">               num arcLower </span><span class="si">{ARCS}</span><span class="s2">;</span>
+<span class="s2">               num arcUpper </span><span class="si">{ARCS}</span><span class="s2">;</span>
+<span class="s2">               num arcCost </span><span class="si">{ARCS}</span><span class="s2">;</span>
+<span class="s2">               read data arcdata into ARCS=[_tail_ _head_] arcLower=_lo_ arcUpper=_capac_ arcCost=_cost_;</span>
+<span class="s2">            quit;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">test_read_data_single_col</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="kn">from</span> <span class="nn">sasoptpy.util</span> <span class="kn">import</span> <span class="n">concat</span><span class="p">,</span> <span class="n">iterate</span>
+
+        <span class="k">with</span> <span class="n">so</span><span class="o">.</span><span class="n">Workspace</span><span class="p">(</span><span class="s1">&#39;test_read_data_single_col&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ws</span><span class="p">:</span>
+            <span class="n">daily_employee_slots</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="s1">&#39;DailyEmployeeSlots&#39;</span><span class="p">,</span> <span class="n">settype</span><span class="o">=</span><span class="p">[</span><span class="n">so</span><span class="o">.</span><span class="n">STR</span><span class="p">,</span> <span class="n">so</span><span class="o">.</span><span class="n">NUM</span><span class="p">])</span>
+            <span class="n">weekdays</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="s1">&#39;WeekDays&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mon&#39;</span><span class="p">,</span> <span class="s1">&#39;tue&#39;</span><span class="p">,</span> <span class="s1">&#39;wed&#39;</span><span class="p">,</span> <span class="s1">&#39;thu&#39;</span><span class="p">,</span> <span class="s1">&#39;fri&#39;</span><span class="p">])</span>
+            <span class="n">preference_weights</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ParameterGroup</span><span class="p">(</span>
+                <span class="n">daily_employee_slots</span><span class="p">,</span> <span class="n">weekdays</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;PreferenceWeights&#39;</span><span class="p">)</span>
+
+            <span class="k">with</span> <span class="n">iterate</span><span class="p">(</span><span class="n">daily_employee_slots</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;slot&#39;</span><span class="p">])</span> <span class="k">as</span> <span class="n">keys</span><span class="p">:</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">read_data</span><span class="p">(</span>
+                    <span class="n">table</span><span class="o">=</span><span class="s1">&#39;preferences&#39;</span><span class="p">,</span>
+                    <span class="n">index</span><span class="o">=</span><span class="p">{</span>
+                        <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">daily_employee_slots</span><span class="p">,</span>
+                        <span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="n">keys</span>
+                    <span class="p">}</span>
+                <span class="p">)</span>
+                <span class="k">with</span> <span class="n">iterate</span><span class="p">(</span><span class="n">weekdays</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;day&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">day</span><span class="p">:</span>
+                    <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                        <span class="s1">&#39;index&#39;</span><span class="p">:</span> <span class="n">day</span><span class="p">,</span>
+                        <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">preference_weights</span><span class="p">[</span><span class="n">keys</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">keys</span><span class="p">[</span><span class="s1">&#39;slot&#39;</span><span class="p">],</span> <span class="n">day</span><span class="p">],</span>
+                        <span class="s1">&#39;column&#39;</span><span class="p">:</span> <span class="n">day</span>
+                    <span class="p">})</span>
+
+        <span class="n">optmodel_code</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">(</span><span class="n">ws</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">optmodel_code</span><span class="p">,</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            proc optmodel;</span>
+<span class="s2">               set &lt;str, num&gt; DailyEmployeeSlots;</span>
+<span class="s2">               set WeekDays = {&#39;mon&#39;,&#39;tue&#39;,&#39;wed&#39;,&#39;thu&#39;,&#39;fri&#39;};</span>
+<span class="s2">               num PreferenceWeights {DailyEmployeeSlots, WeekDays};</span>
+<span class="s2">               read data preferences into DailyEmployeeSlots=[name slot] {day in WeekDays} &lt; PreferenceWeights[name, slot, day]=col(day) &gt;;</span>
+<span class="s2">            quit;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">test_read_data_N_in_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="kn">from</span> <span class="nn">sasoptpy.util</span> <span class="kn">import</span> <span class="n">concat</span>
+
+        <span class="k">with</span> <span class="n">so</span><span class="o">.</span><span class="n">Workspace</span><span class="p">(</span><span class="s1">&#39;read_data_N_as_index&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ws</span><span class="p">:</span>
+            <span class="n">tasks</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;TASKS&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">exp_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">25</span><span class="p">))</span>
+            <span class="n">machines</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;MACHINES&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">exp_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+            <span class="n">profit</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ParameterGroup</span><span class="p">(</span><span class="n">machines</span><span class="p">,</span> <span class="n">tasks</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;profit&#39;</span><span class="p">)</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">SetIterator</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;j&#39;</span><span class="p">)</span>
+            <span class="n">read_data</span><span class="p">(</span>
+                <span class="n">table</span><span class="o">=</span><span class="s1">&#39;profit_data&#39;</span><span class="p">,</span>
+                <span class="n">index</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="n">so</span><span class="o">.</span><span class="n">N</span><span class="p">},</span>
+                <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+                    <span class="p">{</span><span class="s1">&#39;index&#39;</span><span class="p">:</span> <span class="n">j</span><span class="p">,</span> <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">profit</span><span class="p">[</span><span class="n">so</span><span class="o">.</span><span class="n">N</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="s1">&#39;column&#39;</span><span class="p">:</span> <span class="n">concat</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="n">j</span><span class="p">)}</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">(</span><span class="n">ws</span><span class="p">),</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            proc optmodel;</span>
+<span class="s2">               set TASKS = 1..24;</span>
+<span class="s2">               set MACHINES = 1..8;</span>
+<span class="s2">               num profit {MACHINES, TASKS};</span>
+<span class="s2">               read data profit_data into [_N_] {j in TASKS} &lt; profit[_N_, j]=col(&#39;p&#39; || j) &gt;;</span>
+<span class="s2">            quit;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">test_with_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">m</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">)</span>
+        <span class="n">ITEMS</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ITEMS&#39;</span><span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="n">ITEMS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">weight</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="n">ITEMS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;weight&#39;</span><span class="p">)</span>
+        <span class="n">limit</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="n">ITEMS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;limit&#39;</span><span class="p">)</span>
+        <span class="n">get</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">ITEMS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">m</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">get</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ITEMS</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;max_get&#39;</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MAX</span><span class="p">)</span>
+
+        <span class="n">m</span><span class="o">.</span><span class="n">include</span><span class="p">(</span><span class="n">read_data</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="s1">&#39;values&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">ITEMS</span><span class="p">,</span> <span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+                            <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">value</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">limit</span><span class="p">]))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span>
+            <span class="n">so</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;with&#39;</span><span class="p">:</span> <span class="n">so</span><span class="o">.</span><span class="n">BLACKBOX</span><span class="p">,</span> <span class="s1">&#39;maxgen&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">}),</span>
+            <span class="n">cleandoc</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            proc optmodel;</span>
+<span class="s1">               set ITEMS;</span>
+<span class="s1">               num value {{ITEMS}} init 0;</span>
+<span class="s1">               num weight {{ITEMS}};</span>
+<span class="s1">               num limit {{ITEMS}};</span>
+<span class="s1">               var get {{ITEMS}} integer &gt;= 0;</span>
+<span class="s1">               max max_get = sum {i in ITEMS} (get[i]);</span>
+<span class="s1">               read data values into ITEMS value weight limit;</span>
+<span class="s1">               solve with blackbox / maxgen=10;</span>
+<span class="s1">            quit;&#39;&#39;&#39;</span><span class="p">))</span>
+
+
+    <span class="k">def</span> <span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="1.0.0">1.0.0</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="../../../../index.html">Table of Contents</a></h3>
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../overview/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../version-history.html">Version History</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2020, SAS Institute.
+      Last updated on Apr 28, 2020 (Timestamp: 1.0-20200428203611).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+    </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-155356999-1');
+</script>
+
+
+  </body>
+</html>

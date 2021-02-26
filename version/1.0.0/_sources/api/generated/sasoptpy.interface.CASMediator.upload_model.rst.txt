@@ -1,0 +1,6 @@
+sasoptpy.interface.CASMediator.upload\_model
+============================================
+
+.. currentmodule:: sasoptpy.interface
+
+.. automethod:: CASMediator.upload_model

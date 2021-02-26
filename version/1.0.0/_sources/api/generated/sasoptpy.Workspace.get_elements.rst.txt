@@ -1,0 +1,6 @@
+sasoptpy.Workspace.get\_elements
+================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Workspace.get_elements

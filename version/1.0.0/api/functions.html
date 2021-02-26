@@ -1,0 +1,366 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Functions &#8212; sasoptpy 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/sasoptpy.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/js/url.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="sasoptpy.dict_to_frame" href="generated/sasoptpy.dict_to_frame.html" />
+    <link rel="prev" title="sasoptpy.interface.SASMediator.set_workspace_variable_values" href="generated/sasoptpy.interface.SASMediator.set_workspace_variable_values.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../_static/js/version.js"></script>
+    <script src="../../../_static/js/version.js"></script>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/sasoptpy.dict_to_frame.html" title="sasoptpy.dict_to_frame"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="generated/sasoptpy.interface.SASMediator.set_workspace_variable_values.html" title="sasoptpy.interface.SASMediator.set_workspace_variable_values"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="api.html" accesskey="U">API Reference</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="functions">
+<h1>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="utility-functions">
+<h2>Utility Functions<a class="headerlink" href="#utility-functions" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.dict_to_frame.html#sasoptpy.dict_to_frame" title="sasoptpy.dict_to_frame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dict_to_frame</span></code></a>(dictobj[, cols])</p></td>
+<td><p>Converts dictionaries to DataFrame objects for pretty printing</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.exp_range.html#sasoptpy.exp_range" title="sasoptpy.exp_range"><code class="xref py py-obj docutils literal notranslate"><span class="pre">exp_range</span></code></a>(start, stop[, step])</p></td>
+<td><p>Creates a set within specified range</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.flatten_frame.html#sasoptpy.flatten_frame" title="sasoptpy.flatten_frame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flatten_frame</span></code></a>(df[, swap])</p></td>
+<td><p>Converts a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> object into <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v1.0.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Series</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.get_value_table.html#sasoptpy.get_value_table" title="sasoptpy.get_value_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_value_table</span></code></a>(\*args, \*\*kwargs)</p></td>
+<td><p>Returns values of the given arguments as a merged pandas DataFrame</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.expr_sum.html#sasoptpy.expr_sum" title="sasoptpy.expr_sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expr_sum</span></code></a>(argv)</p></td>
+<td><p>Summation function for <a class="reference internal" href="generated/sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a> objects</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.quick_sum.html#sasoptpy.quick_sum" title="sasoptpy.quick_sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quick_sum</span></code></a>(argv)</p></td>
+<td><p>Summation function for <a class="reference internal" href="generated/sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a> objects</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.reset.html#sasoptpy.reset" title="sasoptpy.reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code></a>()</p></td>
+<td><p>Resets package configs and internal counters</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="abstract-actions">
+<span id="abstract-action-list"></span><h2>Abstract Actions<a class="headerlink" href="#abstract-actions" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.actions.read_data.html#sasoptpy.actions.read_data" title="sasoptpy.actions.read_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.read_data</span></code></a>(table, index, columns)</p></td>
+<td><p>Reads data tables inside Set and Parameter objects</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.actions.create_data.html#sasoptpy.actions.create_data" title="sasoptpy.actions.create_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.create_data</span></code></a>(table, index, columns)</p></td>
+<td><p>Creates data tables from variables, parameters, and expressions</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.actions.solve.html#sasoptpy.actions.solve" title="sasoptpy.actions.solve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.solve</span></code></a>([options, primalin])</p></td>
+<td><p>Solves the active optimization problem and generates results</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.actions.for_loop.html#sasoptpy.actions.for_loop" title="sasoptpy.actions.for_loop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.for_loop</span></code></a>(\*args)</p></td>
+<td><p>Creates a for-loop container to be executed on the server</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.actions.cofor_loop.html#sasoptpy.actions.cofor_loop" title="sasoptpy.actions.cofor_loop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.cofor_loop</span></code></a>(\*args)</p></td>
+<td><p>Creates a cofor-loop to be executed on the server concurrently</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.actions.if_condition.html#sasoptpy.actions.if_condition" title="sasoptpy.actions.if_condition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.if_condition</span></code></a>(logic_expression, …)</p></td>
+<td><p>Creates an if-else block</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.actions.switch_conditions.html#sasoptpy.actions.switch_conditions" title="sasoptpy.actions.switch_conditions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.switch_conditions</span></code></a>(\*\*args)</p></td>
+<td><p>Creates several if-else blocks by using the specified arguments</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.actions.set_value.html#sasoptpy.actions.set_value" title="sasoptpy.actions.set_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.set_value</span></code></a>(left, right)</p></td>
+<td><p>Creates an assignment statement</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.actions.fix.html#sasoptpy.actions.fix" title="sasoptpy.actions.fix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.fix</span></code></a>(\*args)</p></td>
+<td><p>Fixes values of variables to the specified values</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.actions.unfix.html#sasoptpy.actions.unfix" title="sasoptpy.actions.unfix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.unfix</span></code></a>(\*args)</p></td>
+<td><p>Unfixes values of variables</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.actions.set_objective.html#sasoptpy.actions.set_objective" title="sasoptpy.actions.set_objective"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.set_objective</span></code></a>(expression, name, sense)</p></td>
+<td><p>Specifies the objective function</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.actions.print_item.html#sasoptpy.actions.print_item" title="sasoptpy.actions.print_item"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.print_item</span></code></a>(\*args)</p></td>
+<td><p>Prints the specified argument list on server</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.actions.put_item.html#sasoptpy.actions.put_item" title="sasoptpy.actions.put_item"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.put_item</span></code></a>(\*args[, names])</p></td>
+<td><p>Prints the specified item values to the output log</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.actions.expand.html#sasoptpy.actions.expand" title="sasoptpy.actions.expand"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.expand</span></code></a>()</p></td>
+<td><p>Prints expanded problem to output</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.actions.drop.html#sasoptpy.actions.drop" title="sasoptpy.actions.drop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.drop</span></code></a>(\*args)</p></td>
+<td><p>Drops the specified constraints or constraint groups from model</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.actions.restore.html#sasoptpy.actions.restore" title="sasoptpy.actions.restore"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.restore</span></code></a>(\*args)</p></td>
+<td><p>Restores dropped constraint and constraint groups</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.actions.union.html#sasoptpy.actions.union" title="sasoptpy.actions.union"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.union</span></code></a>(\*args)</p></td>
+<td><p>Aggregates the specified sets and set expressions</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.actions.diff.html#sasoptpy.actions.diff" title="sasoptpy.actions.diff"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.diff</span></code></a>(left, right)</p></td>
+<td><p>Gets the difference between set and set expressions</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.actions.substring.html#sasoptpy.actions.substring" title="sasoptpy.actions.substring"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.substring</span></code></a>(main_string, first_pos, …)</p></td>
+<td><p>Gets the substring of the specified positions</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.actions.use_problem.html#sasoptpy.actions.use_problem" title="sasoptpy.actions.use_problem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">actions.use_problem</span></code></a>(problem)</p></td>
+<td><p>Changes the currently active problem</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="math-functions">
+<span id="id1"></span><h2>Math Functions<a class="headerlink" href="#math-functions" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.math.math_func.html#sasoptpy.math.math_func" title="sasoptpy.math.math_func"><code class="xref py py-obj docutils literal notranslate"><span class="pre">math.math_func</span></code></a>(exp, op, \*args)</p></td>
+<td><p>Function wrapper for math functions</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.math.abs.html#sasoptpy.math.abs" title="sasoptpy.math.abs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">math.abs</span></code></a>(exp)</p></td>
+<td><p>Absolute value function</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.math.log.html#sasoptpy.math.log" title="sasoptpy.math.log"><code class="xref py py-obj docutils literal notranslate"><span class="pre">math.log</span></code></a>(exp)</p></td>
+<td><p>Natural logarithm function</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.math.log2.html#sasoptpy.math.log2" title="sasoptpy.math.log2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">math.log2</span></code></a>(exp)</p></td>
+<td><p>Logarithm function in base 2</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.math.log10.html#sasoptpy.math.log10" title="sasoptpy.math.log10"><code class="xref py py-obj docutils literal notranslate"><span class="pre">math.log10</span></code></a>(exp)</p></td>
+<td><p>Logarithm function in base 10</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.math.exp.html#sasoptpy.math.exp" title="sasoptpy.math.exp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">math.exp</span></code></a>(exp)</p></td>
+<td><p>Exponential function</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.math.sqrt.html#sasoptpy.math.sqrt" title="sasoptpy.math.sqrt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">math.sqrt</span></code></a>(exp)</p></td>
+<td><p>Square root function</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.math.mod.html#sasoptpy.math.mod" title="sasoptpy.math.mod"><code class="xref py py-obj docutils literal notranslate"><span class="pre">math.mod</span></code></a>(exp, divisor)</p></td>
+<td><p>Modulo function</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.math.int.html#sasoptpy.math.int" title="sasoptpy.math.int"><code class="xref py py-obj docutils literal notranslate"><span class="pre">math.int</span></code></a>(exp)</p></td>
+<td><p>Integer value function</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.math.sign.html#sasoptpy.math.sign" title="sasoptpy.math.sign"><code class="xref py py-obj docutils literal notranslate"><span class="pre">math.sign</span></code></a>(exp)</p></td>
+<td><p>Sign value function</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.math.max.html#sasoptpy.math.max" title="sasoptpy.math.max"><code class="xref py py-obj docutils literal notranslate"><span class="pre">math.max</span></code></a>(exp, \*args)</p></td>
+<td><p>Largest value function</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.math.min.html#sasoptpy.math.min" title="sasoptpy.math.min"><code class="xref py py-obj docutils literal notranslate"><span class="pre">math.min</span></code></a>(exp, \*args)</p></td>
+<td><p>Smallest value function</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.math.sin.html#sasoptpy.math.sin" title="sasoptpy.math.sin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">math.sin</span></code></a>(exp)</p></td>
+<td><p>Sine function</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.math.cos.html#sasoptpy.math.cos" title="sasoptpy.math.cos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">math.cos</span></code></a>(exp)</p></td>
+<td><p>Cosine function</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.math.tan.html#sasoptpy.math.tan" title="sasoptpy.math.tan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">math.tan</span></code></a>(exp)</p></td>
+<td><p>Tangent function</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="1.0.0">1.0.0</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="api.html#core">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#abstract">Abstract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#interface">Interface</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="api.html#functions">Functions</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#utility-functions">Utility Functions</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.dict_to_frame.html">sasoptpy.dict_to_frame</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.exp_range.html">sasoptpy.exp_range</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.flatten_frame.html">sasoptpy.flatten_frame</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.get_value_table.html">sasoptpy.get_value_table</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.expr_sum.html">sasoptpy.expr_sum</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.quick_sum.html">sasoptpy.quick_sum</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.reset.html">sasoptpy.reset</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#abstract-actions">Abstract Actions</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.actions.read_data.html">sasoptpy.actions.read_data</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.actions.create_data.html">sasoptpy.actions.create_data</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.actions.solve.html">sasoptpy.actions.solve</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.actions.for_loop.html">sasoptpy.actions.for_loop</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.actions.cofor_loop.html">sasoptpy.actions.cofor_loop</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.actions.if_condition.html">sasoptpy.actions.if_condition</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.actions.switch_conditions.html">sasoptpy.actions.switch_conditions</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.actions.set_value.html">sasoptpy.actions.set_value</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.actions.fix.html">sasoptpy.actions.fix</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.actions.unfix.html">sasoptpy.actions.unfix</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.actions.set_objective.html">sasoptpy.actions.set_objective</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.actions.print_item.html">sasoptpy.actions.print_item</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.actions.put_item.html">sasoptpy.actions.put_item</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.actions.expand.html">sasoptpy.actions.expand</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.actions.drop.html">sasoptpy.actions.drop</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.actions.restore.html">sasoptpy.actions.restore</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.actions.union.html">sasoptpy.actions.union</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.actions.diff.html">sasoptpy.actions.diff</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.actions.substring.html">sasoptpy.actions.substring</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.actions.use_problem.html">sasoptpy.actions.use_problem</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#math-functions">Math Functions</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.math.math_func.html">sasoptpy.math.math_func</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.math.abs.html">sasoptpy.math.abs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.math.log.html">sasoptpy.math.log</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.math.log2.html">sasoptpy.math.log2</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.math.log10.html">sasoptpy.math.log10</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.math.exp.html">sasoptpy.math.exp</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.math.sqrt.html">sasoptpy.math.sqrt</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.math.mod.html">sasoptpy.math.mod</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.math.int.html">sasoptpy.math.int</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.math.sign.html">sasoptpy.math.sign</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.math.max.html">sasoptpy.math.max</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.math.min.html">sasoptpy.math.min</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.math.sin.html">sasoptpy.math.sin</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.math.cos.html">sasoptpy.math.cos</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.math.tan.html">sasoptpy.math.tan</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#tests">Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../version-history.html">Version History</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/sasoptpy.dict_to_frame.html" title="sasoptpy.dict_to_frame"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="generated/sasoptpy.interface.SASMediator.set_workspace_variable_values.html" title="sasoptpy.interface.SASMediator.set_workspace_variable_values"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="api.html" >API Reference</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2020, SAS Institute.
+      Last updated on Apr 28, 2020 (Timestamp: 1.0-20200428203611).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+    </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-155356999-1');
+</script>
+
+
+  </body>
+</html>

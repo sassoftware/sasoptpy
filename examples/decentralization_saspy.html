@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Decentralization (SASPy) &#8212; sasoptpy 1.0.0 documentation</title>
+    <title>Decentralization (SASPy) &#8212; sasoptpy 1.0.3 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/sasoptpy.css" />
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="nonlinear_2.html" title="Nonlinear 2"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="examples.html" accesskey="U">Examples</a> &#187;</li> 
       </ul>
     </div>  
@@ -189,7 +189,7 @@
 
 <span class="gp">In [4]: </span><span class="n">sas_conn</span> <span class="o">=</span> <span class="n">saspy</span><span class="o">.</span><span class="n">SASsession</span><span class="p">(</span><span class="n">cfgfile</span><span class="o">=</span><span class="n">config_file</span><span class="p">)</span>
 <span class="go">Using SAS Config named: sshsas</span>
-<span class="go">SAS Connection established. Subprocess id is 141</span>
+<span class="go">SAS Connection established. Subprocess id is 158</span>
 
 
 <span class="gp">In [5]: </span><span class="kn">import</span> <span class="nn">sasoptpy</span>
@@ -223,23 +223,20 @@
 <span class="go">          Node   Active   Sols    BestInteger      BestBound      Gap    Time</span>
 <span class="go">             0        1      2    -14.9000000    135.0000000  111.04%       0</span>
 <span class="go">             0        1      2    -14.9000000     67.5000000  122.07%       0</span>
-<span class="go">             0        1      2    -14.9000000     52.0000000  128.65%       0</span>
-<span class="go">             0        1      3      8.1000000     52.0000000   84.42%       0</span>
-<span class="go">             0        1      3      8.1000000     50.0000000   83.80%       0</span>
-<span class="go">             0        1      3      8.1000000     48.2500000   83.21%       0</span>
-<span class="go">             0        1      3      8.1000000     40.0000000   79.75%       0</span>
-<span class="go">             0        1      3      8.1000000     39.2500000   79.36%       0</span>
-<span class="go">             0        1      3      8.1000000     34.2000000   76.32%       0</span>
-<span class="go">             0        1      3      8.1000000     33.6187500   75.91%       0</span>
-<span class="go">             0        1      3      8.1000000     33.0761905   75.51%       0</span>
-<span class="go">             0        1      3      8.1000000     32.6521739   75.19%       0</span>
-<span class="go">             0        1      3      8.1000000     32.0142857   74.70%       0</span>
-<span class="go">             0        1      3      8.1000000     31.8222222   74.55%       0</span>
-<span class="go">             0        1      3      8.1000000     31.3333333   74.15%       0</span>
-<span class="go">             0        1      3      8.1000000     30.0000000   73.00%       0</span>
+<span class="go">             0        1      2    -14.9000000     55.0000000  127.09%       0</span>
+<span class="go">             0        1      3      8.1000000     55.0000000   85.27%       0</span>
+<span class="go">             0        1      3      8.1000000     48.0000000   83.12%       0</span>
+<span class="go">             0        1      3      8.1000000     44.8375000   81.93%       0</span>
+<span class="go">             0        1      3      8.1000000     42.0000000   80.71%       0</span>
+<span class="go">             0        1      3      8.1000000     39.0666667   79.27%       0</span>
+<span class="go">             0        1      3      8.1000000     34.7500000   76.69%       0</span>
+<span class="go">             0        1      3      8.1000000     33.7285714   75.98%       0</span>
+<span class="go">             0        1      3      8.1000000     30.9500000   73.83%       0</span>
+<span class="go">             0        1      3      8.1000000     30.5142857   73.46%       0</span>
+<span class="go">             0        1      3      8.1000000     28.5000000   71.58%       0</span>
 <span class="go">             0        1      3      8.1000000     28.5000000   71.58%       0</span>
 <span class="go">             0        1      4     14.9000000     14.9000000    0.00%       0</span>
-<span class="go">NOTE: The MILP solver added 28 cuts with 146 cut coefficients at the root.</span>
+<span class="go">NOTE: The MILP solver added 33 cuts with 177 cut coefficients at the root.</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 14.9.</span>
 <span class="go">NOTE: The data set WORK.PROB_SUMMARY has 20 observations and 3 variables.</span>
@@ -247,8 +244,8 @@
 <span class="go">NOTE: The data set WORK.SOLUTION has 105 observations and 6 variables.</span>
 <span class="go">NOTE: The data set WORK.DUAL has 278 observations and 4 variables.</span>
 <span class="go">NOTE: PROCEDURE OPTMODEL used (Total process time):</span>
-<span class="go">      real time           0.17 seconds</span>
-<span class="go">      cpu time            0.15 seconds</span>
+<span class="go">      real time           0.20 seconds</span>
+<span class="go">      cpu time            0.23 seconds</span>
 <span class="go">      </span>
 
 <span class="go">                                Value</span>
@@ -297,7 +294,9 @@
 <span class="go">             0        1      2    -28.1000000    135.0000000  120.81%       0</span>
 <span class="go">             0        1      2    -28.1000000     30.0000000  193.67%       0</span>
 <span class="go">             0        1      3    -16.3000000     30.0000000  154.33%       0</span>
-<span class="go">             0        1      4     14.9000000     14.9000000    0.00%       0</span>
+<span class="go">             0        1      3    -16.3000000     30.0000000  154.33%       0</span>
+<span class="go">NOTE: The MILP solver added 4 cuts with 24 cut coefficients at the root.</span>
+<span class="go">             2        0      4     14.9000000     14.9000000    0.00%       0</span>
 <span class="go">NOTE: Optimal.</span>
 <span class="go">NOTE: Objective = 14.9.</span>
 <span class="go">NOTE: The data set WORK.PROB_SUMMARY has 20 observations and 3 variables.</span>
@@ -305,8 +304,8 @@
 <span class="go">NOTE: The data set WORK.SOLUTION has 105 observations and 6 variables.</span>
 <span class="go">NOTE: The data set WORK.DUAL has 68 observations and 4 variables.</span>
 <span class="go">NOTE: PROCEDURE OPTMODEL used (Total process time):</span>
-<span class="go">      real time           0.10 seconds</span>
-<span class="go">      cpu time            0.09 seconds</span>
+<span class="go">      real time           0.11 seconds</span>
+<span class="go">      cpu time            0.10 seconds</span>
 <span class="go">      </span>
 
 <span class="go">                                Value</span>
@@ -332,23 +331,23 @@
 <span class="go">                                     </span>
 <span class="go">Constraint Coefficients           270</span>
 <span class="go">   totalBenefit  totalCost</span>
-<span class="go">-          80.0       65.1</span>
-<span class="go">assign  (A, Bristol)     1.0</span>
-<span class="go">        (A, Brighton)    0.0</span>
-<span class="go">        (A, London)      0.0</span>
-<span class="go">        (B, Bristol)     0.0</span>
-<span class="go">        (B, Brighton)    1.0</span>
-<span class="go">        (B, London)      0.0</span>
-<span class="go">        (C, Bristol)     0.0</span>
-<span class="go">        (C, Brighton)    1.0</span>
-<span class="go">        (C, London)      0.0</span>
-<span class="go">        (D, Bristol)     1.0</span>
-<span class="go">        (D, Brighton)    0.0</span>
-<span class="go">        (D, London)      0.0</span>
-<span class="go">        (E, Bristol)     0.0</span>
-<span class="go">        (E, Brighton)    1.0</span>
-<span class="go">        (E, London)      0.0</span>
-<span class="go">dtype: float64</span>
+<span class="go">-            80       65.1</span>
+<span class="go">assign  (A, Bristol)     1</span>
+<span class="go">        (A, Brighton)    0</span>
+<span class="go">        (A, London)      0</span>
+<span class="go">        (B, Bristol)     0</span>
+<span class="go">        (B, Brighton)    1</span>
+<span class="go">        (B, London)      0</span>
+<span class="go">        (C, Bristol)     0</span>
+<span class="go">        (C, Brighton)    1</span>
+<span class="go">        (C, London)      0</span>
+<span class="go">        (D, Bristol)     1</span>
+<span class="go">        (D, Brighton)    0</span>
+<span class="go">        (D, London)      0</span>
+<span class="go">        (E, Bristol)     0</span>
+<span class="go">        (E, Brighton)    1</span>
+<span class="go">        (E, London)      0</span>
+<span class="go">dtype: int64</span>
 <span class="gh">Out[7]: </span><span class="go">14.9</span>
 </pre></div>
 </div>
@@ -364,6 +363,7 @@
 <span id="version_switch">
 <select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
 <option value="latest">Latest</option>
+<option value="1.0.0">1.0.0</option>
 <option value="0.2.1">0.2.1</option>
 <option value="0.2.0">0.2.0</option>
 <option value="0.1.2">0.1.2</option>
@@ -423,14 +423,14 @@
         <li class="right" >
           <a href="nonlinear_2.html" title="Nonlinear 2"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="examples.html" >Examples</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Apr 28, 2020 (Timestamp: 1.0-20200428203611).
+        &#169; Copyright 2017-2021, SAS Institute.
+      Last updated on Feb 26, 2021 (Timestamp: 1.0-20210226213136).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->

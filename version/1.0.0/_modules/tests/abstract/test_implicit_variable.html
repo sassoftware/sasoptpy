@@ -1,0 +1,398 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>tests.abstract.test_implicit_variable &#8212; sasoptpy 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/sasoptpy.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/js/url.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../../../_static/js/version.js"></script>
+    <script src="../../../../../_static/js/version.js"></script>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for tests.abstract.test_implicit_variable</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># encoding: utf-8</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright SAS Institute</span>
+<span class="c1">#</span>
+<span class="c1">#  Licensed under the Apache License, Version 2.0 (the License);</span>
+<span class="c1">#  you may not use this file except in compliance with the License.</span>
+<span class="c1">#  You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#      http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1">#  Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1">#  distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1">#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1">#  See the License for the specific language governing permissions and</span>
+<span class="c1">#  limitations under the License.</span>
+<span class="c1">#</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Unit tests for implicit variables.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">unittest</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
+<span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">cleandoc</span>
+
+<span class="n">current_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_dir</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">)))</span>
+<span class="kn">from</span> <span class="nn">util</span> <span class="kn">import</span> <span class="n">assert_equal_wo_temps</span>
+
+<span class="kn">from</span> <span class="nn">tests.swat_config</span> <span class="kn">import</span> <span class="n">create_cas_connection</span>
+
+
+
+<div class="viewcode-block" id="TestImplicitVariable"><a class="viewcode-back" href="../../../api/generated/tests.abstract.test_implicit_variable.TestImplicitVariable.html#tests.abstract.test_implicit_variable.TestImplicitVariable">[docs]</a><span class="k">class</span> <span class="nc">TestImplicitVariable</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Unit tests for :class:`sasoptpy.abstract.ImplicitVar` objects</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">setUpClass</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="n">so</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">conn</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="kn">from</span> <span class="nn">swat</span> <span class="kn">import</span> <span class="n">CAS</span><span class="p">,</span> <span class="n">SWATError</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">conn</span> <span class="o">=</span> <span class="n">create_cas_connection</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">SWATError</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;CAS connection is not available&#39;</span><span class="p">,</span> <span class="ne">RuntimeWarning</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;CAS variables are not available&#39;</span><span class="p">,</span> <span class="ne">RuntimeWarning</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">tearDownClass</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">conn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">test_impvar_defn</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ImplicitVar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">get_name</span><span class="p">(),</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_definition</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;impvar x = 0;&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_impvar_setitem</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Regular assignment</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ImplicitVar</span><span class="p">((</span><span class="n">i</span> <span class="o">*</span> <span class="n">x</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_expression</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="s2">&quot;2 * x&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_definition</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            impvar y_0 = 0;</span>
+<span class="s2">            impvar y_1 = x;</span>
+<span class="s2">            impvar y_2 = 2 * x;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+        <span class="n">p</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ImplicitVar</span><span class="p">((</span><span class="n">i</span> <span class="o">*</span> <span class="n">p</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">so</span><span class="o">.</span><span class="n">exp_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_definition</span><span class="p">(</span><span class="n">z</span><span class="p">),</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            impvar z_1 = p;</span>
+<span class="s2">            impvar z_2 = 2 * p;</span>
+<span class="s2">            impvar z_3 = 3 * p;</span>
+<span class="s2">            impvar z_4 = 4 * p;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+        <span class="n">t</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ImplicitVar</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;t&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_definition</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="s1">&#39;impvar t = p;&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_impvar_combinations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Constant</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ImplicitVar</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_definition</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;impvar x = 4;&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Single N</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ImplicitVar</span><span class="p">((</span><span class="n">i</span> <span class="o">**</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_definition</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            impvar y_0 = 0;</span>
+<span class="s2">            impvar y_1 = 1;</span>
+<span class="s2">            impvar y_2 = 4;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Single S</span>
+        <span class="n">so</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;S&#39;</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ImplicitVar</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">S</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_definition</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            impvar y {o2 in S} = 2.0 * o2;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Double NN</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ImplicitVar</span><span class="p">((</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_definition</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            impvar y_0_0 = 0;</span>
+<span class="s2">            impvar y_0_1 = 1;</span>
+<span class="s2">            impvar y_1_0 = 1;</span>
+<span class="s2">            impvar y_1_1 = 2;</span>
+<span class="s2">            impvar y_2_0 = 2;</span>
+<span class="s2">            impvar y_2_1 = 3;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Double NS</span>
+        <span class="n">so</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ImplicitVar</span><span class="p">((</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">S</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+        <span class="n">assert_equal_wo_temps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">so</span><span class="o">.</span><span class="n">to_definition</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            impvar y_0 {o1 in S} = o1;</span>
+<span class="s2">            impvar y_1 {o2 in S} = o2 + 1;</span>
+<span class="s2">            impvar y_2 {o3 in S} = o3 + 2;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Double SN</span>
+        <span class="n">so</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ImplicitVar</span><span class="p">((</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">S</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_definition</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            impvar y_0 {o1 in S} = o1;</span>
+<span class="s2">            impvar y_1 {o1 in S} = o1 + 1;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Double SS</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">itemid</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ImplicitVar</span><span class="p">((</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">S</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">S</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+        <span class="n">assert_equal_wo_temps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">so</span><span class="o">.</span><span class="n">to_definition</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            impvar y {o8 in S, o11 in S} = o8 + o11;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Triple NNN</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ImplicitVar</span><span class="p">((</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">j</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">]),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_definition</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            impvar y_0_0_A = 0;</span>
+<span class="s2">            impvar y_0_0_B = 0;</span>
+<span class="s2">            impvar y_0_1_A = 2;</span>
+<span class="s2">            impvar y_0_1_B = 2;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Triple NNS</span>
+        <span class="n">so</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">itemid</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ImplicitVar</span><span class="p">((</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span> <span class="o">+</span> <span class="n">k</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">S</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+        <span class="n">assert_equal_wo_temps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">so</span><span class="o">.</span><span class="n">to_definition</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            impvar y_0_0 {o2 in S} = o2;</span>
+<span class="s2">            impvar y_0_1 {o6 in S} = o6 + 1;</span>
+<span class="s2">            impvar y_0_2 {o10 in S} = o10 + 2;</span>
+<span class="s2">            impvar y_1_0 {o14 in S} = o14 + 1;</span>
+<span class="s2">            impvar y_1_1 {o18 in S} = o18 + 2;</span>
+<span class="s2">            impvar y_1_2 {o22 in S} = o22 + 3;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Triple NSN</span>
+        <span class="n">so</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ImplicitVar</span><span class="p">((</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span> <span class="o">+</span> <span class="n">k</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">S</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+        <span class="n">assert_equal_wo_temps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">so</span><span class="o">.</span><span class="n">to_definition</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            impvar y_0_0 {o2 in S} = o2;</span>
+<span class="s2">            impvar y_0_1 {o2 in S} = o2 + 1;</span>
+<span class="s2">            impvar y_0_2 {o2 in S} = o2 + 2;</span>
+<span class="s2">            impvar y_1_0 {o10 in S} = o10 + 1;</span>
+<span class="s2">            impvar y_1_1 {o10 in S} = o10 + 2;</span>
+<span class="s2">            impvar y_1_2 {o10 in S} = o10 + 3;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Triple NSS</span>
+        <span class="n">so</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ImplicitVar</span><span class="p">((</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span> <span class="o">+</span> <span class="n">k</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">S</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">S</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+        <span class="n">assert_equal_wo_temps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">so</span><span class="o">.</span><span class="n">to_definition</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            impvar y_0 {o2 in S, o4 in S} = o2 + o4;</span>
+<span class="s2">            impvar y_1 {o8 in S, o10 in S} = o8 + o10 + 1;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Triple SNN</span>
+        <span class="n">so</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ImplicitVar</span><span class="p">((</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span> <span class="o">+</span> <span class="n">k</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">S</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+        <span class="n">assert_equal_wo_temps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">so</span><span class="o">.</span><span class="n">to_definition</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            impvar y_0_0 {o1 in S} = o1;</span>
+<span class="s2">            impvar y_0_1 {o1 in S} = o1 + 1;</span>
+<span class="s2">            impvar y_0_2 {o1 in S} = o1 + 2;</span>
+<span class="s2">            impvar y_1_0 {o1 in S} = o1 + 1;</span>
+<span class="s2">            impvar y_1_1 {o1 in S} = o1 + 2;</span>
+<span class="s2">            impvar y_1_2 {o1 in S} = o1 + 3;</span>
+<span class="s2">            impvar y_2_0 {o1 in S} = o1 + 2;</span>
+<span class="s2">            impvar y_2_1 {o1 in S} = o1 + 3;</span>
+<span class="s2">            impvar y_2_2 {o1 in S} = o1 + 4;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Triple SNS</span>
+        <span class="n">so</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ImplicitVar</span><span class="p">((</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span> <span class="o">+</span> <span class="n">k</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">S</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">S</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+        <span class="n">assert_equal_wo_temps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">so</span><span class="o">.</span><span class="n">to_definition</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            impvar y_0 {o1 in S, o4 in S} = o1 + o4;</span>
+<span class="s2">            impvar y_1 {o1 in S, o8 in S} = o1 + o8 + 1;</span>
+<span class="s2">            impvar y_2 {o1 in S, o12 in S} = o1 + o12 + 2;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Triple SSN</span>
+        <span class="n">so</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ImplicitVar</span><span class="p">((</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span> <span class="o">+</span> <span class="n">k</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">S</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">S</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+        <span class="n">assert_equal_wo_temps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">so</span><span class="o">.</span><span class="n">to_definition</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            impvar y_0 {o1 in S, o4 in S} = o1 + o4;</span>
+<span class="s2">            impvar y_1 {o1 in S, o4 in S} = o1 + o4 + 1;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Triple SSS</span>
+        <span class="n">so</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ImplicitVar</span><span class="p">((</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span> <span class="o">+</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">S</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">S</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">S</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+        <span class="n">assert_equal_wo_temps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">so</span><span class="o">.</span><span class="n">to_definition</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">cleandoc</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            impvar y {o1 in S, o4 in S, o6 in S} = o1 + o4 + o6 + 2;</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">test_impvar_power</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;p&#39;</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ImplicitVar</span><span class="p">((</span><span class="n">i</span> <span class="o">+</span> <span class="n">p</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="s1">&#39;(p) ** (2) + (p + 1) ** (2)&#39;</span><span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">p</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="p">),</span> <span class="s1">&#39;(p) / (p) + (p + 1) / (p)&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_impvar_shadow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ImplicitVar</span><span class="p">((</span><span class="n">p</span> <span class="o">**</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;S&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">S</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">assert_equal_wo_temps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="s1">&#39;x[o13]&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_impvar_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ImplicitVar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">get_keys</span><span class="p">()),</span> <span class="p">[(</span><span class="s1">&#39;&#39;</span><span class="p">,)])</span>
+
+        <span class="n">y</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ImplicitVar</span><span class="p">((</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">get_keys</span><span class="p">()),</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,)])</span>
+
+        <span class="n">S</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;S&#39;</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ImplicitVar</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">S</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">)</span>
+        <span class="n">first_key</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">get_keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">first_key</span><span class="p">,</span> <span class="n">so</span><span class="o">.</span><span class="n">SetIterator</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">y</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">so</span><span class="o">.</span><span class="n">Expression</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">test_impvar_expr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">VariableGroup</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ImplicitVar</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_definition</span><span class="p">(</span><span class="n">y</span><span class="p">),</span>
+                         <span class="s1">&#39;impvar y_0 = - x[0] + 1;&#39;</span><span class="p">)</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">100</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_expression</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+                         <span class="s1">&#39;x[1] - (- x[0] + 1) + 100&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="1.0.0">1.0.0</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="../../../index.html">Table of Contents</a></h3>
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../version-history.html">Version History</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2020, SAS Institute.
+      Last updated on Apr 28, 2020 (Timestamp: 1.0-20200428203611).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+    </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-155356999-1');
+</script>
+
+
+  </body>
+</html>

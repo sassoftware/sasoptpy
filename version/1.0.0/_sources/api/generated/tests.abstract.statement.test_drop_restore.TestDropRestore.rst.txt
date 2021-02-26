@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+tests.abstract.statement.test_drop_restore.TestDropRestore
+==========================================================
+
+.. currentmodule:: tests.abstract.statement.test_drop_restore
+
+.. autoclass:: TestDropRestore

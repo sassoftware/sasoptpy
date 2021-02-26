@@ -1,0 +1,6 @@
+sasoptpy.Expression.set\_permanent
+==================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Expression.set_permanent

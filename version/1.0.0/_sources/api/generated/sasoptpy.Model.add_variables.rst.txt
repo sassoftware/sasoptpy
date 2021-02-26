@@ -1,0 +1,6 @@
+sasoptpy.Model.add\_variables
+=============================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.add_variables

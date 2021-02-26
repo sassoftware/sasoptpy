@@ -1,0 +1,332 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>sasoptpy.session.workspace &#8212; sasoptpy 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/sasoptpy.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/js/url.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../../../_static/js/version.js"></script>
+    <script src="../../../../../_static/js/version.js"></script>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for sasoptpy.session.workspace</h1><div class="highlight"><pre>
+<span></span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">import</span> <span class="nn">sasoptpy</span>
+<span class="kn">from</span> <span class="nn">sasoptpy.abstract.util</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">is_solve_statement</span><span class="p">,</span> <span class="n">is_print_statement</span><span class="p">,</span> <span class="n">is_create_data_statement</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Workspace"><a class="viewcode-back" href="../../../api/generated/sasoptpy.Workspace.html#sasoptpy.Workspace">[docs]</a><span class="k">class</span> <span class="nc">Workspace</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Workspace represents an OPTMODEL block that allows multiple solves</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : string</span>
+<span class="sd">        Name of the workspace</span>
+<span class="sd">    session : :class:`saspy.SASsession` or :class:`swat.cas.connection.CAS`, optional</span>
+<span class="sd">        Session to be submitted</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load_workspace_defaults</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_session</span> <span class="o">=</span> <span class="n">session</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_primalSolution</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dualSolution</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active_model</span> <span class="o">=</span> <span class="s1">&#39;_start_&#39;</span>
+
+    <span class="k">def</span> <span class="nf">_load_workspace_defaults</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_elements</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="Workspace.get_elements"><a class="viewcode-back" href="../../../api/generated/sasoptpy.Workspace.get_elements.html#sasoptpy.Workspace.get_elements">[docs]</a>    <span class="k">def</span> <span class="nf">get_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of elements in the workspace</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elements</span></div>
+
+<div class="viewcode-block" id="Workspace.set_active_model"><a class="viewcode-back" href="../../../api/generated/sasoptpy.Workspace.set_active_model.html#sasoptpy.Workspace.set_active_model">[docs]</a>    <span class="k">def</span> <span class="nf">set_active_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Marks the specified model as active; to be used in solve statements</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        model : :class:`Model`</span>
+<span class="sd">            Model to be activated</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active_model</span> <span class="o">=</span> <span class="n">model</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;Workspace[ID=</span><span class="si">{}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;sasoptpy.Workspace(</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">sasoptpy</span><span class="o">.</span><span class="n">lock</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">original</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">container</span>
+        <span class="n">sasoptpy</span><span class="o">.</span><span class="n">container</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
+        <span class="n">sasoptpy</span><span class="o">.</span><span class="n">container</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">original</span>
+        <span class="n">sasoptpy</span><span class="o">.</span><span class="n">lock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Workspace.append"><a class="viewcode-back" href="../../../api/generated/sasoptpy.Workspace.append.html#sasoptpy.Workspace.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Appends a new element (operation or statement) to the workspace</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        element : :class:`sasoptpy.abstract.Statement`</span>
+<span class="sd">            Any statement that can be appended</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">element</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">set_session</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_session</span> <span class="o">=</span> <span class="n">session</span>
+
+    <span class="k">def</span> <span class="nf">get_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span>
+
+<div class="viewcode-block" id="Workspace.submit"><a class="viewcode-back" href="../../../api/generated/sasoptpy.Workspace.submit.html#sasoptpy.Workspace.submit">[docs]</a>    <span class="k">def</span> <span class="nf">submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Submits the workspace as an OPTMODEL block and returns solutions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Workspace.parse_solve_responses"><a class="viewcode-back" href="../../../api/generated/sasoptpy.Workspace.parse_solve_responses.html#sasoptpy.Workspace.parse_solve_responses">[docs]</a>    <span class="k">def</span> <span class="nf">parse_solve_responses</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves the solutions to all solve statements</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="n">solve_statements</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_elements</span><span class="p">()</span> <span class="k">if</span>
+                            <span class="n">is_solve_statement</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">solve</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">solve_statements</span><span class="p">):</span>
+            <span class="n">ps_key</span> <span class="o">=</span> <span class="s1">&#39;Solve</span><span class="si">{}</span><span class="s1">.ProblemSummary&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">ss_key</span> <span class="o">=</span> <span class="s1">&#39;Solve</span><span class="si">{}</span><span class="s1">.SolutionSummary&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">ps</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">ss</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">ps_key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+                <span class="n">ps</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">parse_optmodel_table</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="n">ps_key</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">ss_key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+                <span class="n">ss</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">parse_optmodel_table</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="n">ss_key</span><span class="p">])</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">solve</span><span class="p">,</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">abstract</span><span class="o">.</span><span class="n">SolveStatement</span><span class="p">):</span>
+                <span class="n">solve</span><span class="o">.</span><span class="n">set_response</span><span class="p">(</span><span class="n">problem_summary</span><span class="o">=</span><span class="n">ps</span><span class="p">,</span> <span class="n">solution_summary</span><span class="o">=</span><span class="n">ss</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">solve</span><span class="p">,</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">abstract</span><span class="o">.</span><span class="n">Statement</span><span class="p">):</span>
+                <span class="n">solve</span><span class="o">.</span><span class="n">set_response</span><span class="p">(</span><span class="n">ss</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Workspace.parse_print_responses"><a class="viewcode-back" href="../../../api/generated/sasoptpy.Workspace.parse_print_responses.html#sasoptpy.Workspace.parse_print_responses">[docs]</a>    <span class="k">def</span> <span class="nf">parse_print_responses</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves responses to all print statements</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="n">print_statements</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_elements</span><span class="p">()</span> <span class="k">if</span>
+                            <span class="n">is_print_statement</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">print_statements</span><span class="p">):</span>
+            <span class="n">pp_key</span> <span class="o">=</span> <span class="s1">&#39;Print</span><span class="si">{}</span><span class="s1">.PrintTable&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">pp_key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">abstract</span><span class="o">.</span><span class="n">Statement</span><span class="p">):</span>
+                    <span class="n">p</span><span class="o">.</span><span class="n">set_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="n">pp_key</span><span class="p">])</span></div>
+
+    <span class="k">def</span> <span class="nf">parse_create_data_responses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mediator</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Grabs responses to all print statements</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="n">cd_statements</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_elements</span><span class="p">()</span> <span class="k">if</span>
+                            <span class="n">is_create_data_statement</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cd_statements</span><span class="p">):</span>
+            <span class="n">table</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get_table_expr</span><span class="p">()</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">tabledf</span> <span class="o">=</span> <span class="n">mediator</span><span class="o">.</span><span class="n">parse_table</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">set_response</span><span class="p">(</span><span class="n">tabledf</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+<div class="viewcode-block" id="Workspace.get_variable"><a class="viewcode-back" href="../../../api/generated/sasoptpy.Workspace.get_variable.html#sasoptpy.Workspace.get_variable">[docs]</a>    <span class="k">def</span> <span class="nf">get_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Obtains the value of a specified variable name</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name : string</span>
+<span class="sd">            Name of the variable</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">vars</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">Variable</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_elements</span><span class="p">())</span>
+        <span class="n">variable</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">i</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span> <span class="o">==</span> <span class="n">name</span><span class="p">,</span> <span class="nb">vars</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">variable</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;More than one variable has name </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">),</span>
+                          <span class="ne">UserWarning</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">variable</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">variable</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">vg</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">VariableGroup</span><span class="p">)</span> <span class="ow">and</span>
+                      <span class="n">i</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span> <span class="o">==</span> <span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_elements</span><span class="p">()))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vg</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s1">&#39;More than one variable group has name </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">),</span>
+                <span class="ne">UserWarning</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vg</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">vg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="s1">&#39;[&#39;</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+            <span class="n">group_name</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">get_group_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">group_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">group</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">group</span><span class="o">.</span><span class="n">get_member_by_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Workspace.set_variable_value"><a class="viewcode-back" href="../../../api/generated/sasoptpy.Workspace.set_variable_value.html#sasoptpy.Workspace.set_variable_value">[docs]</a>    <span class="k">def</span> <span class="nf">set_variable_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Specifies the value of a variable</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name : string</span>
+<span class="sd">            Name of the variable</span>
+<span class="sd">        value : float</span>
+<span class="sd">            New value of the variable</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">variable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">variable</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">variable</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Workspace.to_optmodel"><a class="viewcode-back" href="../../../api/generated/sasoptpy.Workspace.to_optmodel.html#sasoptpy.Workspace.to_optmodel">[docs]</a>    <span class="k">def</span> <span class="nf">to_optmodel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns equivalent OPTMODEL code of the workspace</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        optmodel : string</span>
+<span class="sd">            Generated OPTMODEL code of the workspace object</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="1.0.0">1.0.0</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="../../../index.html">Table of Contents</a></h3>
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../version-history.html">Version History</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2020, SAS Institute.
+      Last updated on Apr 28, 2020 (Timestamp: 1.0-20200428203611).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+    </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-155356999-1');
+</script>
+
+
+  </body>
+</html>

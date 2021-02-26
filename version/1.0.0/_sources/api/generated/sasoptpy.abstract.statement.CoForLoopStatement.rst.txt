@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+sasoptpy.abstract.statement.CoForLoopStatement
+==============================================
+
+.. currentmodule:: sasoptpy.abstract.statement
+
+.. autoclass:: CoForLoopStatement

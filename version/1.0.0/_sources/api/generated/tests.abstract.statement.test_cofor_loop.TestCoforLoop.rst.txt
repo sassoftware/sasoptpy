@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+tests.abstract.statement.test_cofor_loop.TestCoforLoop
+======================================================
+
+.. currentmodule:: tests.abstract.statement.test_cofor_loop
+
+.. autoclass:: TestCoforLoop

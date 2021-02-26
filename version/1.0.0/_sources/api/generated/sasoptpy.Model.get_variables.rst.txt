@@ -1,0 +1,6 @@
+sasoptpy.Model.get\_variables
+=============================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.get_variables

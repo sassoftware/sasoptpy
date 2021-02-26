@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+sasoptpy.Auxiliary
+==================
+
+.. currentmodule:: sasoptpy
+
+.. autoclass:: Auxiliary

@@ -1,0 +1,6 @@
+sasoptpy.Workspace.set\_active\_model
+=====================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Workspace.set_active_model

@@ -1,0 +1,6 @@
+sasoptpy.Expression.set\_member\_value
+======================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Expression.set_member_value

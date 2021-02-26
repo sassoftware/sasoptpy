@@ -1,0 +1,701 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Models &#8212; sasoptpy 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/sasoptpy.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/js/url.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Model Components" href="components.html" />
+    <link rel="prev" title="Sessions" href="sessions.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../_static/js/version.js"></script>
+    <script src="../../../_static/js/version.js"></script>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="components.html" title="Model Components"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="sessions.html" title="Sessions"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="user-guide.html" accesskey="U">User Guide</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="models">
+<span id="id1"></span><h1>Models<a class="headerlink" href="#models" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="creating-a-model">
+<h2>Creating a model<a class="headerlink" href="#creating-a-model" title="Permalink to this headline">¶</a></h2>
+<p>You can create an empty model by using the <a class="reference internal" href="../api/generated/sasoptpy.Model.html#sasoptpy.Model" title="sasoptpy.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></a> constructor:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
+
+<span class="gp">In [2]: </span><span class="n">m</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;model1&#39;</span><span class="p">)</span>
+<span class="go">NOTE: Initialized model model1.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="adding-new-components-to-a-model">
+<h2>Adding new components to a model<a class="headerlink" href="#adding-new-components-to-a-model" title="Permalink to this headline">¶</a></h2>
+<p>Add a variable:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [3]: </span><span class="n">x</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">BIN</span><span class="p">)</span>
+
+<span class="gp">In [4]: </span><span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="go">Model: [</span>
+<span class="go">  Name: model1</span>
+<span class="go">  Objective: MIN [0]</span>
+<span class="go">  Variables (1): [</span>
+<span class="go">    x</span>
+<span class="go">  ]</span>
+<span class="go">  Constraints (0): [</span>
+<span class="go">  ]</span>
+<span class="go">]</span>
+
+<span class="gp">In [5]: </span><span class="n">y</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="gp">In [6]: </span><span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="go">Model: [</span>
+<span class="go">  Name: model1</span>
+<span class="go">  Objective: MIN [0]</span>
+<span class="go">  Variables (2): [</span>
+<span class="go">    x</span>
+<span class="go">    y</span>
+<span class="go">  ]</span>
+<span class="go">  Constraints (0): [</span>
+<span class="go">  ]</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+<p>Add a constraint:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [7]: </span><span class="n">c1</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;c1&#39;</span><span class="p">)</span>
+
+<span class="gp">In [8]: </span><span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="go">Model: [</span>
+<span class="go">  Name: model1</span>
+<span class="go">  Objective: MIN [0]</span>
+<span class="go">  Variables (2): [</span>
+<span class="go">    x</span>
+<span class="go">    y</span>
+<span class="go">  ]</span>
+<span class="go">  Constraints (1): [</span>
+<span class="go">    x + 2 * y &lt;=  10</span>
+<span class="go">  ]</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="adding-existing-components-to-a-model">
+<h2>Adding existing components to a model<a class="headerlink" href="#adding-existing-components-to-a-model" title="Permalink to this headline">¶</a></h2>
+<p>A new model can use existing variables. The typical way to include a variable
+is to use the <a class="reference internal" href="../api/generated/sasoptpy.Model.include.html#sasoptpy.Model.include" title="sasoptpy.Model.include"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.include()</span></code></a> method:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [9]: </span><span class="n">new_model</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;new_model&#39;</span><span class="p">)</span>
+<span class="go">NOTE: Initialized model new_model.</span>
+
+<span class="gp">In [10]: </span><span class="n">new_model</span><span class="o">.</span><span class="n">include</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="gp">In [11]: </span><span class="nb">print</span><span class="p">(</span><span class="n">new_model</span><span class="p">)</span>
+<span class="go">Model: [</span>
+<span class="go">  Name: new_model</span>
+<span class="go">  Objective: MIN [0]</span>
+<span class="go">  Variables (2): [</span>
+<span class="go">    x</span>
+<span class="go">    y</span>
+<span class="go">  ]</span>
+<span class="go">  Constraints (0): [</span>
+<span class="go">  ]</span>
+<span class="go">]</span>
+
+<span class="gp">In [12]: </span><span class="n">new_model</span><span class="o">.</span><span class="n">include</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span>
+
+<span class="gp">In [13]: </span><span class="nb">print</span><span class="p">(</span><span class="n">new_model</span><span class="p">)</span>
+<span class="go">Model: [</span>
+<span class="go">  Name: new_model</span>
+<span class="go">  Objective: MIN [0]</span>
+<span class="go">  Variables (2): [</span>
+<span class="go">    x</span>
+<span class="go">    y</span>
+<span class="go">  ]</span>
+<span class="go">  Constraints (1): [</span>
+<span class="go">    x + 2 * y &lt;=  10</span>
+<span class="go">  ]</span>
+<span class="go">]</span>
+
+<span class="gp">In [14]: </span><span class="n">z</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="gp">In [15]: </span><span class="n">new_model</span><span class="o">.</span><span class="n">include</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+
+<span class="gp">In [16]: </span><span class="nb">print</span><span class="p">(</span><span class="n">new_model</span><span class="p">)</span>
+<span class="go">Model: [</span>
+<span class="go">  Name: new_model</span>
+<span class="go">  Objective: MIN [0]</span>
+<span class="go">  Variables (3): [</span>
+<span class="go">    x</span>
+<span class="go">    y</span>
+<span class="go">    z</span>
+<span class="go">  ]</span>
+<span class="go">  Constraints (1): [</span>
+<span class="go">    x + 2 * y &lt;=  10</span>
+<span class="go">  ]</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+<p>Note that variables are added to <a class="reference internal" href="../api/generated/sasoptpy.Model.html#sasoptpy.Model" title="sasoptpy.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></a> objects by reference.
+Therefore, after <a class="reference internal" href="../api/generated/sasoptpy.Model.solve.html#sasoptpy.Model.solve" title="sasoptpy.Model.solve"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.solve()</span></code></a> is called, the values of variables are
+replaced with optimal values.</p>
+</div>
+<div class="section" id="accessing-components">
+<h2>Accessing components<a class="headerlink" href="#accessing-components" title="Permalink to this headline">¶</a></h2>
+<p>You can access a list of model variables by using the <a class="reference internal" href="../api/generated/sasoptpy.Model.get_variables.html#sasoptpy.Model.get_variables" title="sasoptpy.Model.get_variables"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.get_variables()</span></code></a>
+method:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [17]: </span><span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">get_variables</span><span class="p">())</span>
+<span class="go">[sasoptpy.Variable(name=&#39;x&#39;, lb=0, ub=1, vartype=&#39;BIN&#39;), sasoptpy.Variable(name=&#39;y&#39;, lb=1, ub=10, vartype=&#39;CONT&#39;)]</span>
+</pre></div>
+</div>
+<p>Similarly, you can access a list of constraints by using the
+<a class="reference internal" href="../api/generated/sasoptpy.Model.get_constraints.html#sasoptpy.Model.get_constraints" title="sasoptpy.Model.get_constraints"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.get_constraints()</span></code></a> method:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [18]: </span><span class="n">c2</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">-</span> <span class="n">y</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;c2&#39;</span><span class="p">)</span>
+
+<span class="gp">In [19]: </span><span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">get_constraints</span><span class="p">())</span>
+<span class="go">[sasoptpy.Constraint(x + 2 * y &lt;=  10, name=&#39;c1&#39;), sasoptpy.Constraint(2 * x - y &gt;=  1, name=&#39;c2&#39;)]</span>
+</pre></div>
+</div>
+<p>To access a certain constraint by using its name, you can use the
+<a class="reference internal" href="../api/generated/sasoptpy.Model.get_constraint.html#sasoptpy.Model.get_constraint" title="sasoptpy.Model.get_constraint"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.get_constraint()</span></code></a> method:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [20]: </span><span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">get_constraint</span><span class="p">(</span><span class="s1">&#39;c2&#39;</span><span class="p">))</span>
+<span class="go">2 * x - y &gt;=  1</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="dropping-components">
+<h2>Dropping components<a class="headerlink" href="#dropping-components" title="Permalink to this headline">¶</a></h2>
+<p>You can drop a variable inside a model by using
+<a class="reference internal" href="../api/generated/sasoptpy.Model.drop_variable.html#sasoptpy.Model.drop_variable" title="sasoptpy.Model.drop_variable"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.drop_variable()</span></code></a> method. Similarly, you can drop a set of variables
+by using the <a class="reference internal" href="../api/generated/sasoptpy.Model.drop_variables.html#sasoptpy.Model.drop_variables" title="sasoptpy.Model.drop_variables"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.drop_variables()</span></code></a> method.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [21]: </span><span class="n">m</span><span class="o">.</span><span class="n">drop_variable</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+<span class="gp">In [22]: </span><span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="go">Model: [</span>
+<span class="go">  Name: model1</span>
+<span class="go">  Objective: MIN [0]</span>
+<span class="go">  Variables (1): [</span>
+<span class="go">    x</span>
+<span class="go">  ]</span>
+<span class="go">  Constraints (2): [</span>
+<span class="go">    x + 2 * y &lt;=  10</span>
+<span class="go">    2 * x - y &gt;=  1</span>
+<span class="go">  ]</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+<p>You can drop a constraint by using the <a class="reference internal" href="../api/generated/sasoptpy.Model.drop_constraint.html#sasoptpy.Model.drop_constraint" title="sasoptpy.Model.drop_constraint"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.drop_constraint()</span></code></a> method.
+Similarly, you can drop a set of constraints by using the
+<a class="reference internal" href="../api/generated/sasoptpy.Model.drop_constraints.html#sasoptpy.Model.drop_constraints" title="sasoptpy.Model.drop_constraints"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.drop_constraints()</span></code></a> method.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [23]: </span><span class="n">m</span><span class="o">.</span><span class="n">drop_constraint</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span>
+
+<span class="gp">In [24]: </span><span class="n">m</span><span class="o">.</span><span class="n">drop_constraint</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span>
+
+<span class="gp">In [25]: </span><span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="go">Model: [</span>
+<span class="go">  Name: model1</span>
+<span class="go">  Objective: MIN [0]</span>
+<span class="go">  Variables (2): [</span>
+<span class="go">    x</span>
+<span class="go">    y</span>
+<span class="go">  ]</span>
+<span class="go">  Constraints (0): [</span>
+<span class="go">  ]</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [26]: </span><span class="n">m</span><span class="o">.</span><span class="n">include</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span>
+
+<span class="gp">In [27]: </span><span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="go">Model: [</span>
+<span class="go">  Name: model1</span>
+<span class="go">  Objective: MIN [0]</span>
+<span class="go">  Variables (2): [</span>
+<span class="go">    x</span>
+<span class="go">    y</span>
+<span class="go">  ]</span>
+<span class="go">  Constraints (1): [</span>
+<span class="go">    x + 2 * y &lt;=  10</span>
+<span class="go">  ]</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="copying-a-model">
+<h2>Copying a model<a class="headerlink" href="#copying-a-model" title="Permalink to this headline">¶</a></h2>
+<p>You can copy an existing model by including the <a class="reference internal" href="../api/generated/sasoptpy.Model.html#sasoptpy.Model" title="sasoptpy.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></a> object itself.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [28]: </span><span class="n">copy_model</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;copy_model&#39;</span><span class="p">)</span>
+<span class="go">NOTE: Initialized model copy_model.</span>
+
+<span class="gp">In [29]: </span><span class="n">copy_model</span><span class="o">.</span><span class="n">include</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+
+<span class="gp">In [30]: </span><span class="nb">print</span><span class="p">(</span><span class="n">copy_model</span><span class="p">)</span>
+<span class="go">Model: [</span>
+<span class="go">  Name: copy_model</span>
+<span class="go">  Objective: MIN [0]</span>
+<span class="go">  Variables (2): [</span>
+<span class="go">    x</span>
+<span class="go">    y</span>
+<span class="go">  ]</span>
+<span class="go">  Constraints (1): [</span>
+<span class="go">    x + 2 * y &lt;=  10</span>
+<span class="go">  ]</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+<p>Note that all variables and constraints are included by reference.</p>
+</div>
+<div class="section" id="solving-a-model">
+<span id="solving-model"></span><h2>Solving a model<a class="headerlink" href="#solving-a-model" title="Permalink to this headline">¶</a></h2>
+<p>A model is solved by using the <a class="reference internal" href="../api/generated/sasoptpy.Model.solve.html#sasoptpy.Model.solve" title="sasoptpy.Model.solve"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.solve()</span></code></a> method. This method converts
+Python definitions into OPTMODEL language and submits using SWAT or SASPy packages.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">m</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+<span class="go">NOTE: Initialized model model_1</span>
+<span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
+<span class="go">NOTE: Converting model model_1 to OPTMODEL.</span>
+<span class="gp">...</span>
+<span class="go">NOTE: Optimal.</span>
+<span class="go">NOTE: Objective = 124.343.</span>
+<span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="solve-options">
+<h2>Solve options<a class="headerlink" href="#solve-options" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="solver-options">
+<span id="id2"></span><h3>Solver Options<a class="headerlink" href="#solver-options" title="Permalink to this headline">¶</a></h3>
+<p>You can pass either solve options from the OPTMODEL procedure or solve parameter from the <code class="docutils literal notranslate"><span class="pre">solveLp</span></code> and <code class="docutils literal notranslate"><span class="pre">solveMilp</span></code>
+actions by using the <code class="docutils literal notranslate"><span class="pre">options</span></code> parameter of the <a class="reference internal" href="../api/generated/sasoptpy.Model.solve.html#sasoptpy.Model.solve" title="sasoptpy.Model.solve"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.solve()</span></code></a> method.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">m</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;with&#39;</span><span class="p">:</span> <span class="s1">&#39;milp&#39;</span><span class="p">,</span> <span class="s1">&#39;maxtime&#39;</span><span class="p">:</span> <span class="mi">600</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;with&#39;</span><span class="p">:</span> <span class="s1">&#39;lp&#39;</span><span class="p">,</span> <span class="s1">&#39;algorithm&#39;</span><span class="p">:</span> <span class="s1">&#39;ipm&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>The parameter <code class="docutils literal notranslate"><span class="pre">with</span></code> is used to specificy the optimization solver in OPTMODEL procedure.
+If the <code class="docutils literal notranslate"><span class="pre">with</span></code> parameter is not passed, PROC OPTMODEL chooses a solver that depends on the problem type.
+Possible <code class="docutils literal notranslate"><span class="pre">with</span></code> values are listed in the <a class="reference external" href="http://go.documentation.sas.com/?docsetId=ormpug&amp;docsetTarget=ormpug_optmodel_syntax11.htm&amp;docsetVersion=15.1&amp;locale=en#ormpug.optmodel.npxsolvestmt">SAS/OR documentation</a>.</p>
+<p>You can find specific solver options in the SAS Optimization documentation:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://go.documentation.sas.com/?docsetId=ormpug&amp;docsetTarget=ormpug_lpsolver_syntax02.htm&amp;docsetVersion=15.1&amp;locale=en">LP solver options</a></p></li>
+<li><p><a class="reference external" href="https://go.documentation.sas.com/?docsetId=ormpug&amp;docsetTarget=ormpug_milpsolver_syntax02.htm&amp;docsetVersion=15.1&amp;locale=en">MILP solver options</a></p></li>
+<li><p><a class="reference external" href="https://go.documentation.sas.com/?docsetId=ormpug&amp;docsetTarget=ormpug_nlpsolver_syntax02.htm&amp;docsetVersion=15.1&amp;locale=en">NLP solver options</a></p></li>
+<li><p><a class="reference external" href="https://go.documentation.sas.com/?docsetId=ormpug&amp;docsetTarget=ormpug_qpsolver_syntax02.htm&amp;docsetVersion=15.1&amp;locale=en">QP solver options</a></p></li>
+<li><p><a class="reference external" href="https://go.documentation.sas.com/?docsetId=ormpug&amp;docsetTarget=ormpug_lsosolver_syntax02.htm&amp;docsetVersion=15.1&amp;locale=en">Black-box solver options</a> (formerly called LSO solver)</p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">options</span></code> parameter can also pass <code class="docutils literal notranslate"><span class="pre">solveLp</span></code> and <code class="docutils literal notranslate"><span class="pre">solveMilp</span></code> action
+parameter when <code class="docutils literal notranslate"><span class="pre">frame=True</span></code> is used when the <a class="reference internal" href="../api/generated/sasoptpy.Model.solve.html#sasoptpy.Model.solve" title="sasoptpy.Model.solve"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.solve()</span></code></a> method is called.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://go.documentation.sas.com/?docsetId=casactmopt&amp;docsetTarget=cas-optimization-solvelp.htm&amp;docsetVersion=8.5&amp;locale=en">solveLp options</a></p></li>
+<li><p><a class="reference external" href="https://go.documentation.sas.com/?docsetId=casactmopt&amp;docsetTarget=cas-optimization-solvemilp.htm&amp;docsetVersion=8.5&amp;locale=en">solveMilp options</a></p></li>
+</ul>
+</div>
+<div class="section" id="call-parameters">
+<h3>Call parameters<a class="headerlink" href="#call-parameters" title="Permalink to this headline">¶</a></h3>
+<p>Besides the <code class="docutils literal notranslate"><span class="pre">options</span></code> parameter, you can pass following parameters into the <a class="reference internal" href="../api/generated/sasoptpy.Model.solve.html#sasoptpy.Model.solve" title="sasoptpy.Model.solve"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.solve()</span></code></a> method:</p>
+<ul class="simple">
+<li><p>name: Name of the uploaded problem information</p></li>
+<li><p>drop: Drops the data from server after the solve</p></li>
+<li><p>replace: Replaces an existing data with the same name</p></li>
+<li><dl class="simple">
+<dt>primalin: Uses the current values of the variables as an initial solution.</dt><dd><p>When the value of this parameter is <code class="docutils literal notranslate"><span class="pre">True</span></code>, the solve method grabs <a class="reference internal" href="../api/generated/sasoptpy.Variable.html#sasoptpy.Variable" title="sasoptpy.Variable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Variable</span></code></a> objects’
+<code class="docutils literal notranslate"><span class="pre">_init</span></code> fields. You can modify this field by using the <a class="reference internal" href="../api/generated/sasoptpy.Variable.set_init.html#sasoptpy.Variable.set_init" title="sasoptpy.Variable.set_init"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Variable.set_init()</span></code></a> method.</p>
+</dd>
+</dl>
+</li>
+<li><p>submit: Calls the CAS action or SAS procedure</p></li>
+<li><p>frame: Uses the frame (MPS) method. If the value of this parameter is <code class="docutils literal notranslate"><span class="pre">False</span></code>, then the method uses OPTMODEL codes.</p></li>
+<li><p>verbose: Prints the generated PROC OPTMODEL code or MPS DataFrame object before the solve</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="getting-solutions">
+<h2>Getting solutions<a class="headerlink" href="#getting-solutions" title="Permalink to this headline">¶</a></h2>
+<p>After the solve is completed, all variable and constraint values are parsed
+automatically.
+You can access a summary of the problem by using the
+<a class="reference internal" href="../api/generated/sasoptpy.Model.get_problem_summary.html#sasoptpy.Model.get_problem_summary" title="sasoptpy.Model.get_problem_summary"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.get_problem_summary()</span></code></a> method,
+and a summary of the solution by using the
+<a class="reference internal" href="../api/generated/sasoptpy.Model.get_solution_summary.html#sasoptpy.Model.get_solution_summary" title="sasoptpy.Model.get_solution_summary"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.get_solution_summary()</span></code></a>
+method.</p>
+<p>To print the values of any object, you can use the <code class="xref py py-func docutils literal notranslate"><span class="pre">get_solution_table()</span></code> method:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>All variables and constraints that are passed into this method are returned on
+the basis of their indices. See <a class="reference internal" href="../examples/examples.html#examples"><span class="std std-ref">Examples</span></a> for more details.</p>
+</div>
+<div class="section" id="tuning-milp-model-parameters">
+<h2>Tuning MILP model parameters<a class="headerlink" href="#tuning-milp-model-parameters" title="Permalink to this headline">¶</a></h2>
+<p>SAS Optimization solvers provide a variety of settings.
+However, it might be difficult to find the best settings for a
+particular model. In order to compare parameters and make a good choice, you can use the <cite>optimization.tune</cite> action
+for mixed integer linear optimization problems.</p>
+<p>The <a class="reference internal" href="../api/generated/sasoptpy.Model.tune_parameters.html#sasoptpy.Model.tune_parameters" title="sasoptpy.Model.tune_parameters"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.tune_parameters()</span></code></a> method is a wrapper for the tune action. Consider the following knapsack problem example:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [31]: </span><span class="k">def</span> <span class="nf">get_model</span><span class="p">():</span>
+<span class="gp">   ....: </span>   <span class="n">m</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;knapsack_with_tuner&#39;</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="n">cas_conn</span><span class="p">)</span>
+<span class="gp">   ....: </span>   <span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">   ....: </span>       <span class="p">[</span><span class="s1">&#39;clock&#39;</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+<span class="gp">   ....: </span>       <span class="p">[</span><span class="s1">&#39;mug&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+<span class="gp">   ....: </span>       <span class="p">[</span><span class="s1">&#39;headphone&#39;</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+<span class="gp">   ....: </span>       <span class="p">[</span><span class="s1">&#39;book&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+<span class="gp">   ....: </span>       <span class="p">[</span><span class="s1">&#39;pen&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">]</span>
+<span class="gp">   ....: </span>   <span class="p">]</span>
+<span class="gp">   ....: </span>   <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;item&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">,</span> <span class="s1">&#39;limit&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;item&#39;</span><span class="p">])</span>
+<span class="gp">   ....: </span>   <span class="n">ITEMS</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span>
+<span class="gp">   ....: </span>   <span class="n">value</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+<span class="gp">   ....: </span>   <span class="n">weight</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span>
+<span class="gp">   ....: </span>   <span class="n">limit</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;limit&#39;</span><span class="p">]</span>
+<span class="gp">   ....: </span>   <span class="n">total_weight</span> <span class="o">=</span> <span class="mi">55</span>
+<span class="gp">   ....: </span>   <span class="n">get</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">ITEMS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">INT</span><span class="p">)</span>
+<span class="gp">   ....: </span>   <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">get</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">limit</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ITEMS</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;limit_con&#39;</span><span class="p">)</span>
+<span class="gp">   ....: </span>   <span class="n">m</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">weight</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">get</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ITEMS</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">total_weight</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;weight_con&#39;</span><span class="p">)</span>
+<span class="gp">   ....: </span>   <span class="n">total_value</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">get</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ITEMS</span><span class="p">)</span>
+<span class="gp">   ....: </span>   <span class="n">m</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">total_value</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;total_value&#39;</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MAX</span><span class="p">)</span>
+<span class="gp">   ....: </span>   <span class="k">return</span> <span class="n">m</span>
+<span class="gp">   ....: </span>
+
+<span class="gp">In [32]: </span><span class="n">m</span> <span class="o">=</span> <span class="n">get_model</span><span class="p">()</span>
+<span class="go">NOTE: Initialized model knapsack_with_tuner.</span>
+</pre></div>
+</div>
+<p>For this problem, you can compare configurations as follows:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [33]: </span><span class="n">results</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">tune_parameters</span><span class="p">(</span><span class="n">tunerParameters</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;maxConfigs&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
+<span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
+<span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table KNAPSACK_WITH_TUNER in caslib CASUSER(casuser).</span>
+<span class="go">NOTE: The table KNAPSACK_WITH_TUNER has been created in caslib CASUSER(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: Start to tune the MILP</span>
+<span class="go">         SolveCalls  Configurations    BestTime        Time</span>
+<span class="go">                  1               1        0.20*       0.27</span>
+<span class="go">                  2               2        0.20*       0.49</span>
+<span class="go">                  3               3        0.20*       0.70</span>
+<span class="go">                  4               4        0.20*       0.92</span>
+<span class="go">                  5               5        0.20*       1.13</span>
+<span class="go">                  6               6        0.20*       1.33</span>
+<span class="go">                  7               7        0.20*       1.54</span>
+<span class="go">                  8               8        0.20*       1.75</span>
+<span class="go">                  9               9        0.20*       1.96</span>
+<span class="go">                 10              10        0.20*       2.17</span>
+<span class="go">NOTE: Configuration limit reached.</span>
+<span class="go">NOTE: The tuning time is 2.17 seconds.</span>
+</pre></div>
+</div>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [34]: </span><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+<span class="go">   Configuration conflictSearch   cutGomory cutMiLifted cutStrategy  \</span>
+<span class="go">0            0.0      automatic   automatic   automatic   automatic   </span>
+<span class="go">1            1.0       moderate        none   automatic   automatic   </span>
+<span class="go">2            2.0           none        none    moderate  aggressive   </span>
+<span class="go">3            3.0      automatic        none        none    moderate   </span>
+<span class="go">4            4.0     aggressive        none  aggressive        none   </span>
+<span class="go">5            5.0     aggressive        none        none  aggressive   </span>
+<span class="go">6            6.0       moderate        none   automatic    moderate   </span>
+<span class="go">7            7.0           none    moderate    moderate        none   </span>
+<span class="go">8            8.0     aggressive  aggressive  aggressive  aggressive   </span>
+<span class="go">9            9.0     aggressive  aggressive  aggressive  aggressive   </span>
+
+<span class="go">  cutZeroHalf heuristics           nodelSel  presolver      probe   restarts  \</span>
+<span class="go">0   automatic  automatic          automatic  automatic  automatic  automatic   </span>
+<span class="go">1        none  automatic          automatic       none       none      basic   </span>
+<span class="go">2        none  automatic  bestEstimatedepth   moderate       none      basic   </span>
+<span class="go">3    moderate  automatic          automatic       none  automatic       none   </span>
+<span class="go">4    moderate  automatic          bestBound   moderate  automatic       none   </span>
+<span class="go">5    moderate       none              depth  automatic  automatic       none   </span>
+<span class="go">6  aggressive       none          bestBound   moderate  automatic       none   </span>
+<span class="go">7  aggressive       none              depth  automatic  automatic  automatic   </span>
+<span class="go">8   automatic   moderate          automatic   moderate      basic       none   </span>
+<span class="go">9   automatic   moderate          automatic      basic      basic       none   </span>
+
+<span class="go">     symmetry      varSel  Mean of Run Times  Sum of Run Times  \</span>
+<span class="go">0   automatic   automatic               0.20              0.20   </span>
+<span class="go">1   automatic      pseudo               0.18              0.18   </span>
+<span class="go">2        none   automatic               0.18              0.18   </span>
+<span class="go">3       basic   minInfeas               0.18              0.18   </span>
+<span class="go">4    moderate  ryanFoster               0.18              0.18   </span>
+<span class="go">5  aggressive   minInfeas               0.18              0.18   </span>
+<span class="go">6   automatic  ryanFoster               0.18              0.18   </span>
+<span class="go">7        none   minInfeas               0.19              0.19   </span>
+<span class="go">8       basic   minInfeas               0.18              0.18   </span>
+<span class="go">9       basic   minInfeas               0.17              0.17   </span>
+
+<span class="go">   Percentage Successful  </span>
+<span class="go">0                    0.0  </span>
+<span class="go">1                    0.0  </span>
+<span class="go">2                    0.0  </span>
+<span class="go">3                    0.0  </span>
+<span class="go">4                    0.0  </span>
+<span class="go">5                    0.0  </span>
+<span class="go">6                    0.0  </span>
+<span class="go">7                    0.0  </span>
+<span class="go">8                    0.0  </span>
+<span class="go">9                    0.0  </span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="../api/generated/sasoptpy.Model.tune_parameters.html#sasoptpy.Model.tune_parameters" title="sasoptpy.Model.tune_parameters"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.tune_parameters()</span></code></a> accepts three main arguments</p>
+<ul class="simple">
+<li><p>milpParameters</p></li>
+<li><p>tunerParameters</p></li>
+<li><p>tuningParameters</p></li>
+</ul>
+<p>For a full set of tuning parameters and acceptable values of these arguments, see the <a class="reference external" href="https://go.documentation.sas.com/?cdcId=pgmsascdc&amp;cdcVersion=9.4_3.5&amp;docsetId=casactmopt&amp;docsetTarget=casactmopt_optimization_details37.html">SAS Optimization documentation</a>.</p>
+<p>For the example problem, you can tune the <cite>presolver</cite>, <cite>cutStrategy</cite>, and <cite>strongIter</cite> settings, by using initial values and
+candidate values, and limit the maximum number of configurations and maximum running time as follows:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [35]: </span><span class="n">results</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">tune_parameters</span><span class="p">(</span>
+<span class="gp">   ....: </span>   <span class="n">milpParameters</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;maxtime&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">},</span>
+<span class="gp">   ....: </span>   <span class="n">tunerParameters</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;maxConfigs&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="s1">&#39;logfreq&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">},</span>
+<span class="gp">   ....: </span>   <span class="n">tuningParameters</span><span class="o">=</span><span class="p">[</span>
+<span class="gp">   ....: </span>      <span class="p">{</span><span class="s1">&#39;option&#39;</span><span class="p">:</span> <span class="s1">&#39;presolver&#39;</span><span class="p">,</span> <span class="s1">&#39;initial&#39;</span><span class="p">:</span> <span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="s1">&#39;values&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;basic&#39;</span><span class="p">,</span> <span class="s1">&#39;aggressive&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">]},</span>
+<span class="gp">   ....: </span>      <span class="p">{</span><span class="s1">&#39;option&#39;</span><span class="p">:</span> <span class="s1">&#39;cutStrategy&#39;</span><span class="p">},</span>
+<span class="gp">   ....: </span>      <span class="p">{</span><span class="s1">&#39;option&#39;</span><span class="p">:</span> <span class="s1">&#39;strongIter&#39;</span><span class="p">,</span> <span class="s1">&#39;initial&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;values&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1000</span><span class="p">]}</span>
+<span class="gp">   ....: </span>   <span class="p">])</span>
+<span class="gp">   ....: </span>
+<span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
+<span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table KNAPSACK_WITH_TUNER in caslib CASUSER(casuser).</span>
+<span class="go">NOTE: The table KNAPSACK_WITH_TUNER has been created in caslib CASUSER(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: Start to tune the MILP</span>
+<span class="go">         SolveCalls  Configurations    BestTime        Time</span>
+<span class="go">                  5               5        0.19*       1.05</span>
+<span class="go">                 10              10        0.19*       2.07</span>
+<span class="go">                 15              15        0.19*       3.13</span>
+<span class="go">                 20              20        0.19*       4.19</span>
+<span class="go">NOTE: Configuration limit reached.</span>
+<span class="go">NOTE: The tuning time is 4.19 seconds.</span>
+</pre></div>
+</div>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [36]: </span><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+<span class="go">    Configuration conflictSearch  cutGomory cutMiLifted cutStrategy  \</span>
+<span class="go">0             0.0      automatic  automatic   automatic   automatic   </span>
+<span class="go">1             1.0       moderate       none   automatic   automatic   </span>
+<span class="go">2             2.0           none       none    moderate  aggressive   </span>
+<span class="go">3             3.0      automatic       none        none    moderate   </span>
+<span class="go">4             4.0     aggressive       none  aggressive        none   </span>
+<span class="go">5             5.0     aggressive       none        none  aggressive   </span>
+<span class="go">6             6.0       moderate       none   automatic    moderate   </span>
+<span class="go">7             7.0           none   moderate    moderate        none   </span>
+<span class="go">8             8.0       moderate  automatic  aggressive    moderate   </span>
+<span class="go">9             9.0       moderate  automatic  aggressive    moderate   </span>
+<span class="go">10           10.0       moderate  automatic    moderate    moderate   </span>
+<span class="go">11           11.0       moderate  automatic  aggressive    moderate   </span>
+<span class="go">12           12.0       moderate  automatic  aggressive    moderate   </span>
+<span class="go">13           13.0       moderate       none  aggressive    moderate   </span>
+<span class="go">14           14.0       moderate  automatic  aggressive    moderate   </span>
+<span class="go">15           15.0       moderate  automatic  aggressive    moderate   </span>
+<span class="go">16           16.0       moderate  automatic  aggressive    moderate   </span>
+<span class="go">17           17.0      automatic  automatic   automatic   automatic   </span>
+<span class="go">18           18.0      automatic  automatic   automatic   automatic   </span>
+<span class="go">19           19.0      automatic  automatic   automatic   automatic   </span>
+
+<span class="go">   cutZeroHalf  heuristics           nodelSel  presolver      probe  \</span>
+<span class="go">0    automatic   automatic          automatic  automatic  automatic   </span>
+<span class="go">1         none   automatic          automatic       none       none   </span>
+<span class="go">2         none   automatic  bestEstimatedepth   moderate       none   </span>
+<span class="go">3     moderate   automatic          automatic       none  automatic   </span>
+<span class="go">4     moderate   automatic          bestBound   moderate  automatic   </span>
+<span class="go">5     moderate        none              depth  automatic  automatic   </span>
+<span class="go">6   aggressive        none          bestBound   moderate  automatic   </span>
+<span class="go">7   aggressive        none              depth  automatic  automatic   </span>
+<span class="go">8   aggressive  aggressive              depth      basic       none   </span>
+<span class="go">9     moderate  aggressive          automatic      basic       none   </span>
+<span class="go">10  aggressive  aggressive          automatic      basic       none   </span>
+<span class="go">11  aggressive  aggressive          automatic      basic       none   </span>
+<span class="go">12  aggressive  aggressive          automatic      basic      basic   </span>
+<span class="go">13  aggressive  aggressive          automatic      basic       none   </span>
+<span class="go">14  aggressive  aggressive          bestBound      basic       none   </span>
+<span class="go">15  aggressive  aggressive          automatic   moderate       none   </span>
+<span class="go">16  aggressive  aggressive          automatic      basic       none   </span>
+<span class="go">17   automatic   automatic          bestBound  automatic  automatic   </span>
+<span class="go">18   automatic  aggressive          automatic  automatic  automatic   </span>
+<span class="go">19   automatic   automatic          automatic  automatic  automatic   </span>
+
+<span class="go">     restarts    symmetry      varSel  Mean of Run Times  Sum of Run Times  \</span>
+<span class="go">0   automatic   automatic   automatic               0.18              0.18   </span>
+<span class="go">1       basic   automatic      pseudo               0.17              0.17   </span>
+<span class="go">2       basic        none   automatic               0.18              0.18   </span>
+<span class="go">3        none       basic   minInfeas               0.17              0.17   </span>
+<span class="go">4        none    moderate  ryanFoster               0.18              0.18   </span>
+<span class="go">5        none  aggressive   minInfeas               0.18              0.18   </span>
+<span class="go">6        none   automatic  ryanFoster               0.17              0.17   </span>
+<span class="go">7   automatic        none   minInfeas               0.18              0.18   </span>
+<span class="go">8       basic  aggressive      pseudo               0.19              0.19   </span>
+<span class="go">9       basic  aggressive      pseudo               0.18              0.18   </span>
+<span class="go">10      basic  aggressive      pseudo               0.19              0.19   </span>
+<span class="go">11      basic  aggressive   maxInfeas               0.18              0.18   </span>
+<span class="go">12      basic  aggressive      pseudo               0.18              0.18   </span>
+<span class="go">13      basic  aggressive      pseudo               0.18              0.18   </span>
+<span class="go">14      basic  aggressive      pseudo               0.19              0.19   </span>
+<span class="go">15      basic  aggressive      pseudo               0.18              0.18   </span>
+<span class="go">16      basic  aggressive      pseudo               0.17              0.17   </span>
+<span class="go">17  automatic   automatic   automatic               0.19              0.19   </span>
+<span class="go">18  automatic   automatic   automatic               0.18              0.18   </span>
+<span class="go">19  automatic        none   automatic               0.18              0.18   </span>
+
+<span class="go">    Percentage Successful  </span>
+<span class="go">0                     0.0  </span>
+<span class="go">1                     0.0  </span>
+<span class="go">2                     0.0  </span>
+<span class="go">3                     0.0  </span>
+<span class="go">4                     0.0  </span>
+<span class="go">5                     0.0  </span>
+<span class="go">6                     0.0  </span>
+<span class="go">7                     0.0  </span>
+<span class="go">8                     0.0  </span>
+<span class="go">9                     0.0  </span>
+<span class="go">10                    0.0  </span>
+<span class="go">11                    0.0  </span>
+<span class="go">12                    0.0  </span>
+<span class="go">13                    0.0  </span>
+<span class="go">14                    0.0  </span>
+<span class="go">15                    0.0  </span>
+<span class="go">16                    0.0  </span>
+<span class="go">17                    0.0  </span>
+<span class="go">18                    0.0  </span>
+<span class="go">19                    0.0  </span>
+</pre></div>
+</div>
+<p>You can retrieve full details by using the <a class="reference internal" href="../api/generated/sasoptpy.Model.get_tuner_results.html#sasoptpy.Model.get_tuner_results" title="sasoptpy.Model.get_tuner_results"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.get_tuner_results()</span></code></a> method.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="1.0.0">1.0.0</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="user-guide.html">User Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="intro.html">Introduction to Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basics.html">Quick Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sessions.html">Sessions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#creating-a-model">Creating a model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adding-new-components-to-a-model">Adding new components to a model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adding-existing-components-to-a-model">Adding existing components to a model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#accessing-components">Accessing components</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dropping-components">Dropping components</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#copying-a-model">Copying a model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#solving-a-model">Solving a model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#solve-options">Solve options</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#solver-options">Solver Options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#call-parameters">Call parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#getting-solutions">Getting solutions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tuning-milp-model-parameters">Tuning MILP model parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="components.html">Model Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workspaces.html">Workspaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="input-data.html">Handling Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflow.html">Workflows</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../version-history.html">Version History</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="components.html" title="Model Components"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="sessions.html" title="Sessions"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="user-guide.html" >User Guide</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2020, SAS Institute.
+      Last updated on Apr 28, 2020 (Timestamp: 1.0-20200428203611).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+    </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-155356999-1');
+</script>
+
+
+  </body>
+</html>

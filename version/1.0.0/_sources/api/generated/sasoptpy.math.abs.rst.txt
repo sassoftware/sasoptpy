@@ -1,0 +1,6 @@
+sasoptpy.math.abs
+=================
+
+.. currentmodule:: sasoptpy.math
+
+.. autofunction:: abs

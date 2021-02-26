@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+tests.abstract.statement.test_assignment.TestAssignment
+=======================================================
+
+.. currentmodule:: tests.abstract.statement.test_assignment
+
+.. autoclass:: TestAssignment

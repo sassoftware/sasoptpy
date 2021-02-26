@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>sasoptpy.util.user_utils &#8212; sasoptpy 1.0.0 documentation</title>
+    <title>sasoptpy.util.user_utils &#8212; sasoptpy 1.0.3 documentation</title>
     <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/sasoptpy.css" />
@@ -30,7 +30,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">sasoptpy 1.0.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -395,7 +395,7 @@
     <span class="n">new_frame</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">stack</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">swap</span><span class="p">:</span>
         <span class="n">new_frame</span> <span class="o">=</span> <span class="n">new_frame</span><span class="o">.</span><span class="n">swaplevel</span><span class="p">()</span>
-    <span class="n">new_frame</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">new_frame</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_series</span><span class="p">()</span>
+    <span class="c1">#new_frame.index = new_frame.index.to_series()</span>
     <span class="k">return</span> <span class="n">new_frame</span></div>
 
 
@@ -405,6 +405,42 @@
 
 <span class="k">def</span> <span class="nf">has_integer_variables</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">item</span><span class="o">.</span><span class="n">_has_integer_vars</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">export_to_mps</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">mps</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_mps</span><span class="p">()</span>
+    <span class="c1"># Convert to standard MPS format</span>
+    <span class="n">mps</span><span class="o">.</span><span class="n">_set_value</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Field2&#39;</span><span class="p">,</span> <span class="n">mps</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Field3&#39;</span><span class="p">])</span>
+    <span class="n">mps</span><span class="o">.</span><span class="n">_set_value</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Field3&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">mps</span><span class="o">.</span><span class="n">_set_value</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Field4&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="n">mps</span><span class="o">.</span><span class="n">_set_value</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Field6&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="n">mps</span><span class="o">.</span><span class="n">_set_value</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mps</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Field4&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="n">mps</span><span class="o">.</span><span class="n">_set_value</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mps</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Field6&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="n">mps</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">&quot;_id_&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">add_space</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;NAME&#39;</span><span class="p">,</span> <span class="s1">&#39;ROWS&#39;</span><span class="p">,</span> <span class="s1">&#39;COLUMNS&#39;</span><span class="p">,</span> <span class="s1">&#39;RHS&#39;</span><span class="p">,</span> <span class="s1">&#39;BOUNDS&#39;</span><span class="p">,</span> <span class="s1">&#39;RANGES&#39;</span><span class="p">,</span> <span class="s1">&#39;ENDATA&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">r</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">r</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">r</span>
+    <span class="n">mps</span><span class="p">[</span><span class="s1">&#39;Field1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mps</span><span class="p">[</span><span class="s1">&#39;Field1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">add_space</span><span class="p">)</span>
+
+    <span class="n">formatters</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">&#39;Field1&#39;</span><span class="p">:</span> <span class="s1">&#39;{{:&lt;</span><span class="si">{}</span><span class="s1">s}}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mps</span><span class="p">[</span><span class="s1">&#39;Field1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">len</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="o">.</span><span class="n">format</span><span class="p">,</span>
+        <span class="s1">&#39;Field2&#39;</span><span class="p">:</span> <span class="s1">&#39;{{:&lt;</span><span class="si">{}</span><span class="s1">s}}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mps</span><span class="p">[</span><span class="s1">&#39;Field2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">len</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="o">.</span><span class="n">format</span><span class="p">,</span>
+        <span class="s1">&#39;Field3&#39;</span><span class="p">:</span> <span class="s1">&#39;{{:&lt;</span><span class="si">{}</span><span class="s1">s}}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mps</span><span class="p">[</span><span class="s1">&#39;Field3&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">len</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="o">.</span><span class="n">format</span><span class="p">,</span>
+        <span class="s1">&#39;Field5&#39;</span><span class="p">:</span> <span class="s1">&#39;{{:&lt;</span><span class="si">{}</span><span class="s1">s}}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mps</span><span class="p">[</span><span class="s1">&#39;Field5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">len</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="o">.</span><span class="n">format</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="n">mps_str</span> <span class="o">=</span> <span class="n">mps</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">formatters</span><span class="o">=</span><span class="n">formatters</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">na_rep</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mps_str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot; &quot;</span><span class="p">:</span>
+        <span class="n">mps_str</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">mps_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)])</span>
+
+    <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">mps_str</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">mps_str</span>
 </pre></div>
 
           </div>
@@ -415,6 +451,7 @@
 <span id="version_switch">
 <select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
 <option value="latest">Latest</option>
+<option value="1.0.0">1.0.0</option>
 <option value="0.2.1">0.2.1</option>
 <option value="0.2.0">0.2.0</option>
 <option value="0.1.2">0.1.2</option>
@@ -455,14 +492,14 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">sasoptpy 1.0.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Apr 28, 2020 (Timestamp: 1.0-20200428203611).
+        &#169; Copyright 2017-2021, SAS Institute.
+      Last updated on Feb 26, 2021 (Timestamp: 1.0-20210226213136).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->

@@ -1,0 +1,6 @@
+sasoptpy.expr\_sum
+==================
+
+.. currentmodule:: sasoptpy
+
+.. autofunction:: expr_sum

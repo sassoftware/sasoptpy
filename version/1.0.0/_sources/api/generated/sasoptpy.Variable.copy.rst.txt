@@ -1,0 +1,6 @@
+sasoptpy.Variable.copy
+======================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Variable.copy

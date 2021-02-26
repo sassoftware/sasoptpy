@@ -1,0 +1,6 @@
+sasoptpy.math.log
+=================
+
+.. currentmodule:: sasoptpy.math
+
+.. autofunction:: log

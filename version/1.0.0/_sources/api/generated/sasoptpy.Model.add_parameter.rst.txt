@@ -1,0 +1,6 @@
+sasoptpy.Model.add\_parameter
+=============================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.add_parameter

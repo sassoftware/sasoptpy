@@ -1,0 +1,6 @@
+sasoptpy.Model.get\_grouped\_constraints
+========================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.get_grouped_constraints

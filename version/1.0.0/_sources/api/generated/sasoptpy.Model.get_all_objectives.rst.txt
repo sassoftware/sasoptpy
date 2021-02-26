@@ -1,0 +1,6 @@
+sasoptpy.Model.get\_all\_objectives
+===================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.get_all_objectives

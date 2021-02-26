@@ -1,0 +1,6 @@
+sasoptpy.Model.add\_statement
+=============================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.add_statement

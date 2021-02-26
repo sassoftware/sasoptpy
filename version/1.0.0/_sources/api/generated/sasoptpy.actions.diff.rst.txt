@@ -1,0 +1,6 @@
+sasoptpy.actions.diff
+=====================
+
+.. currentmodule:: sasoptpy.actions
+
+.. autofunction:: diff

@@ -1,0 +1,6 @@
+sasoptpy.math.sqrt
+==================
+
+.. currentmodule:: sasoptpy.math
+
+.. autofunction:: sqrt

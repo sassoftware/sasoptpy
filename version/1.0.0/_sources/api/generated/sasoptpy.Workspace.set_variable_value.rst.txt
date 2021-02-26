@@ -1,0 +1,6 @@
+sasoptpy.Workspace.set\_variable\_value
+=======================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Workspace.set_variable_value

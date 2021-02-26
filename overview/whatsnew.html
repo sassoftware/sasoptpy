@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>What’s New &#8212; sasoptpy 1.0.0 documentation</title>
+    <title>What’s New &#8212; sasoptpy 1.0.3 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/sasoptpy.css" />
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="about.html" title="About sasoptpy"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="overview.html" accesskey="U">Overview</a> &#187;</li> 
       </ul>
     </div>  
@@ -52,39 +52,14 @@
 <span id="whatsnew"></span><h1>What’s New<a class="headerlink" href="#what-s-new" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="new-features">
 <h2>New Features<a class="headerlink" href="#new-features" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><p>Added workspaces; for more information, see <a class="reference internal" href="../guide/workspaces.html#workspaces"><span class="std std-ref">Workspaces in User Guide</span></a> and <a class="reference internal" href="../examples/efficiency_analysis.html#efficiency-analysis"><span class="std std-ref">Efficiency Analysis example</span></a></p></li>
-<li><p>Added <a class="reference internal" href="../guide/basics.html#configurations"><span class="std std-ref">package configurations</span></a></p></li>
-<li><p>Added <a class="reference internal" href="../guide/workspaces.html#abstract-actions"><span class="std std-ref">abstract actions</span></a> that allow server-side operations. Highlights include:</p>
-<ul>
-<li><p><a class="reference internal" href="../api/generated/sasoptpy.actions.read_data.html#sasoptpy.actions.read_data" title="sasoptpy.actions.read_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">actions.read_data()</span></code></a> and <a class="reference internal" href="../api/generated/sasoptpy.actions.create_data.html#sasoptpy.actions.create_data" title="sasoptpy.actions.create_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">actions.create_data()</span></code></a></p></li>
-<li><p><a class="reference internal" href="../api/generated/sasoptpy.actions.for_loop.html#sasoptpy.actions.for_loop" title="sasoptpy.actions.for_loop"><code class="xref py py-func docutils literal notranslate"><span class="pre">actions.for_loop()</span></code></a> and <a class="reference internal" href="../api/generated/sasoptpy.actions.cofor_loop.html#sasoptpy.actions.cofor_loop" title="sasoptpy.actions.cofor_loop"><code class="xref py py-func docutils literal notranslate"><span class="pre">actions.cofor_loop()</span></code></a></p></li>
-<li><p><a class="reference internal" href="../api/generated/sasoptpy.actions.print_item.html#sasoptpy.actions.print_item" title="sasoptpy.actions.print_item"><code class="xref py py-func docutils literal notranslate"><span class="pre">actions.print_item()</span></code></a></p></li>
-<li><p><a class="reference internal" href="../api/generated/sasoptpy.actions.solve.html#sasoptpy.actions.solve" title="sasoptpy.actions.solve"><code class="xref py py-func docutils literal notranslate"><span class="pre">actions.solve()</span></code></a></p></li>
-</ul>
-</li>
-<li><p>Added structure decorators for better control of submissions</p></li>
-</ul>
 </div>
 <div class="section" id="changes">
 <h2>Changes<a class="headerlink" href="#changes" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><p>Refactored the entire package; sasoptpy now has <cite>core</cite>, <cite>abstract</cite>, <cite>interface</cite>,
-<cite>session</cite>, and <cite>util</cite> directories</p></li>
-<li><p>Experimental RESTful API was dropped</p></li>
-<li><p><cite>get_obj_by_name</cite> function was removed</p></li>
-<li><p><cite>lso</cite> solver was renamed <cite>blackbox</cite></p></li>
-<li><p>Because of the use of literal strings (<span class="target" id="index-0"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0498"><strong>PEP 498</strong></a>), only Python 3.6 or later versions are supported</p></li>
-</ul>
 </div>
 <div class="section" id="bug-fixes">
 <h2>Bug Fixes<a class="headerlink" href="#bug-fixes" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p>Fixed: Arithmetic operations with powers are generating incorrect results</p></li>
-<li><p>Fixed: Variable groups with space in their index are not getting values</p></li>
-<li><p>Fixed: Constraints without directions do not produce an error</p></li>
-<li><p>Fixed: Documentation does not mention conda-forge library requirement</p></li>
-<li><p>Fixed: Single-dimensional parameters are hard to access</p></li>
+<li><p>Fixed: Multiple generator objects with if conditions are generating missing object names</p></li>
 </ul>
 </div>
 </div>
@@ -98,6 +73,7 @@
 <span id="version_switch">
 <select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
 <option value="latest">Latest</option>
+<option value="1.0.0">1.0.0</option>
 <option value="0.2.1">0.2.1</option>
 <option value="0.2.0">0.2.0</option>
 <option value="0.1.2">0.1.2</option>
@@ -154,14 +130,14 @@
         <li class="right" >
           <a href="about.html" title="About sasoptpy"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="overview.html" >Overview</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017-2020, SAS Institute.
-      Last updated on Apr 28, 2020 (Timestamp: 1.0-20200428203611).
+        &#169; Copyright 2017-2021, SAS Institute.
+      Last updated on Feb 26, 2021 (Timestamp: 1.0-20210226213136).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->

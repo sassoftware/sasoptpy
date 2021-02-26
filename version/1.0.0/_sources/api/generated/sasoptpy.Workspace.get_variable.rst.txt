@@ -1,0 +1,6 @@
+sasoptpy.Workspace.get\_variable
+================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Workspace.get_variable

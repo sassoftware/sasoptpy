@@ -1,0 +1,6 @@
+sasoptpy.VariableGroup.set\_bounds
+==================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: VariableGroup.set_bounds

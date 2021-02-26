@@ -1,0 +1,6 @@
+sasoptpy.interface.CASMediator.tune\_problem
+============================================
+
+.. currentmodule:: sasoptpy.interface
+
+.. automethod:: CASMediator.tune_problem

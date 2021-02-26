@@ -1,0 +1,6 @@
+sasoptpy.math.int
+=================
+
+.. currentmodule:: sasoptpy.math
+
+.. autofunction:: int

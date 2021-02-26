@@ -1,0 +1,6 @@
+sasoptpy.get\_value\_table
+==========================
+
+.. currentmodule:: sasoptpy
+
+.. autofunction:: get_value_table

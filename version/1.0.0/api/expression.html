@@ -1,0 +1,345 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Expression &#8212; sasoptpy 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/sasoptpy.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/js/url.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="sasoptpy.Expression" href="generated/sasoptpy.Expression.html" />
+    <link rel="prev" title="sasoptpy.Model.to_frame" href="generated/sasoptpy.Model.to_frame.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../_static/js/version.js"></script>
+    <script src="../../../_static/js/version.js"></script>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/sasoptpy.Expression.html" title="sasoptpy.Expression"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="generated/sasoptpy.Model.to_frame.html" title="sasoptpy.Model.to_frame"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="api.html" accesskey="U">API Reference</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="expression">
+<h1>Expression<a class="headerlink" href="#expression" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="constructor">
+<h2>Constructor<a class="headerlink" href="#constructor" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression</span></code></a>([exp, name])</p></td>
+<td><p>Creates a mathematical expression to represent model components</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Auxiliary.html#sasoptpy.Auxiliary" title="sasoptpy.Auxiliary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Auxiliary</span></code></a>(base[, prefix, suffix, operator, …])</p></td>
+<td><p>Represents an auxiliary expression, often as a symbolic attribute</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Symbol.html#sasoptpy.Symbol" title="sasoptpy.Symbol"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Symbol</span></code></a>(name)</p></td>
+<td><p>Represents a symbolic string, to be evaluated on server-side</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="general-methods">
+<h2>General methods<a class="headerlink" href="#general-methods" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.set_name.html#sasoptpy.Expression.set_name" title="sasoptpy.Expression.set_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.set_name</span></code></a>(self[, name])</p></td>
+<td><p>Specifies the name of the expression</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.set_permanent.html#sasoptpy.Expression.set_permanent" title="sasoptpy.Expression.set_permanent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.set_permanent</span></code></a>(self)</p></td>
+<td><p>Converts a temporary expression into a permanent one</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.set_temporary.html#sasoptpy.Expression.set_temporary" title="sasoptpy.Expression.set_temporary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.set_temporary</span></code></a>(self)</p></td>
+<td><p>Converts expression into a temporary expression to enable in-place operations</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.get_name.html#sasoptpy.Expression.get_name" title="sasoptpy.Expression.get_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.get_name</span></code></a>(self)</p></td>
+<td><p>Returns the name of the object</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.get_value.html#sasoptpy.Expression.get_value" title="sasoptpy.Expression.get_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.get_value</span></code></a>(self)</p></td>
+<td><p>Calculates and returns the value of the linear expression</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.get_dual.html#sasoptpy.Expression.get_dual" title="sasoptpy.Expression.get_dual"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.get_dual</span></code></a>(self)</p></td>
+<td><p>Returns the dual value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="operations">
+<h2>Operations<a class="headerlink" href="#operations" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.add.html#sasoptpy.Expression.add" title="sasoptpy.Expression.add"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.add</span></code></a>(self, other[, sign])</p></td>
+<td><p>Combines two expressions and produces a new one</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.copy.html#sasoptpy.Expression.copy" title="sasoptpy.Expression.copy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.copy</span></code></a>(self[, name])</p></td>
+<td><p>Returns a copy of the <a class="reference internal" href="generated/sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a> object</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.mult.html#sasoptpy.Expression.mult" title="sasoptpy.Expression.mult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.mult</span></code></a>(self, other)</p></td>
+<td><p>Multiplies the <a class="reference internal" href="generated/sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a> by a scalar value</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.get_member.html#sasoptpy.Expression.get_member" title="sasoptpy.Expression.get_member"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.get_member</span></code></a>(self, key)</p></td>
+<td><p>Returns the requested member of the expression</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.get_member_dict.html#sasoptpy.Expression.get_member_dict" title="sasoptpy.Expression.get_member_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.get_member_dict</span></code></a>(self)</p></td>
+<td><p>Returns an ordered dictionary of elements</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.get_member_value.html#sasoptpy.Expression.get_member_value" title="sasoptpy.Expression.get_member_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.get_member_value</span></code></a>(self, key)</p></td>
+<td><p>Returns coefficient of requested member</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.get_constant.html#sasoptpy.Expression.get_constant" title="sasoptpy.Expression.get_constant"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.get_constant</span></code></a>(self)</p></td>
+<td><p>Returns the constant term in the expression</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.set_member.html#sasoptpy.Expression.set_member" title="sasoptpy.Expression.set_member"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.set_member</span></code></a>(self, key, ref, val[, op])</p></td>
+<td><p>Adds a new member or changes an existing member</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.set_member_value.html#sasoptpy.Expression.set_member_value" title="sasoptpy.Expression.set_member_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.set_member_value</span></code></a>(self, key, value)</p></td>
+<td><p>Changes the coefficient of the requested member</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.add_to_member_value.html#sasoptpy.Expression.add_to_member_value" title="sasoptpy.Expression.add_to_member_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.add_to_member_value</span></code></a>(self, key, value)</p></td>
+<td><p>Adds <cite>value</cite> to the coefficient of the requested member</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.mult_member_value.html#sasoptpy.Expression.mult_member_value" title="sasoptpy.Expression.mult_member_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.mult_member_value</span></code></a>(self, key, value)</p></td>
+<td><p>Multiplies the coefficient of the requested member by the specified <cite>value</cite></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.copy_member.html#sasoptpy.Expression.copy_member" title="sasoptpy.Expression.copy_member"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.copy_member</span></code></a>(self, key, exp)</p></td>
+<td><p>Copies the member of another expression</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.delete_member.html#sasoptpy.Expression.delete_member" title="sasoptpy.Expression.delete_member"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.delete_member</span></code></a>(self, key)</p></td>
+<td><p>Deletes the requested member from the core dictionary</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="class-methods">
+<h2>Class methods<a class="headerlink" href="#class-methods" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.to_expression.html#sasoptpy.Expression.to_expression" title="sasoptpy.Expression.to_expression"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.to_expression</span></code></a>(obj)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="private-methods">
+<h2>Private Methods<a class="headerlink" href="#private-methods" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Expression._expr.html#sasoptpy.Expression._expr" title="sasoptpy.Expression._expr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression._expr</span></code></a>(self)</p></td>
+<td><p>Generates the OPTMODEL-compatible string representation of the object</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Expression._is_linear.html#sasoptpy.Expression._is_linear" title="sasoptpy.Expression._is_linear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression._is_linear</span></code></a>(self)</p></td>
+<td><p>Checks whether the expression is composed of linear components</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Expression._relational.html#sasoptpy.Expression._relational" title="sasoptpy.Expression._relational"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression._relational</span></code></a>(self, other, direction_)</p></td>
+<td><p>Creates a logical relation between <a class="reference internal" href="generated/sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a> objects</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.__repr__.html#sasoptpy.Expression.__repr__" title="sasoptpy.Expression.__repr__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.__repr__</span></code></a>(self)</p></td>
+<td><p>Returns a string representation of the object</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Expression.__str__.html#sasoptpy.Expression.__str__" title="sasoptpy.Expression.__str__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expression.__str__</span></code></a>(self)</p></td>
+<td><p>Generates a representation string that is Python-compatible</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="1.0.0">1.0.0</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="api.html#core">Core</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="model.html">Model</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Expression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#constructor">Constructor</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Expression.html">sasoptpy.Expression</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Auxiliary.html">sasoptpy.Auxiliary</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Symbol.html">sasoptpy.Symbol</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#general-methods">General methods</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Expression.set_name.html">sasoptpy.Expression.set_name</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Expression.set_permanent.html">sasoptpy.Expression.set_permanent</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Expression.set_temporary.html">sasoptpy.Expression.set_temporary</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Expression.get_name.html">sasoptpy.Expression.get_name</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Expression.get_value.html">sasoptpy.Expression.get_value</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Expression.get_dual.html">sasoptpy.Expression.get_dual</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#operations">Operations</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Expression.add.html">sasoptpy.Expression.add</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Expression.copy.html">sasoptpy.Expression.copy</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Expression.mult.html">sasoptpy.Expression.mult</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Expression.get_member.html">sasoptpy.Expression.get_member</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Expression.get_member_dict.html">sasoptpy.Expression.get_member_dict</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Expression.get_member_value.html">sasoptpy.Expression.get_member_value</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Expression.get_constant.html">sasoptpy.Expression.get_constant</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Expression.set_member.html">sasoptpy.Expression.set_member</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Expression.set_member_value.html">sasoptpy.Expression.set_member_value</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Expression.add_to_member_value.html">sasoptpy.Expression.add_to_member_value</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Expression.mult_member_value.html">sasoptpy.Expression.mult_member_value</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Expression.copy_member.html">sasoptpy.Expression.copy_member</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Expression.delete_member.html">sasoptpy.Expression.delete_member</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#class-methods">Class methods</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Expression.to_expression.html">sasoptpy.Expression.to_expression</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#private-methods">Private Methods</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Expression._expr.html">sasoptpy.Expression._expr</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Expression._is_linear.html">sasoptpy.Expression._is_linear</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Expression._relational.html">sasoptpy.Expression._relational</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Expression.__repr__.html">sasoptpy.Expression.__repr__</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Expression.__str__.html">sasoptpy.Expression.__str__</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="objective.html">Objective</a></li>
+<li class="toctree-l3"><a class="reference internal" href="variable.html">Variable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="variable_group.html">Variable Group</a></li>
+<li class="toctree-l3"><a class="reference internal" href="constraint.html">Constraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="constraint_group.html">Constraint Group</a></li>
+<li class="toctree-l3"><a class="reference internal" href="workspace.html">Workspace</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#abstract">Abstract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#interface">Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#tests">Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../version-history.html">Version History</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/sasoptpy.Expression.html" title="sasoptpy.Expression"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="generated/sasoptpy.Model.to_frame.html" title="sasoptpy.Model.to_frame"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="api.html" >API Reference</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2020, SAS Institute.
+      Last updated on Apr 28, 2020 (Timestamp: 1.0-20200428203611).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+    </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-155356999-1');
+</script>
+
+
+  </body>
+</html>

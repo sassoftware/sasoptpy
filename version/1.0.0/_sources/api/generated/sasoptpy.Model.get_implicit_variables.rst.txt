@@ -1,0 +1,6 @@
+sasoptpy.Model.get\_implicit\_variables
+=======================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.get_implicit_variables

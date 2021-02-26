@@ -1,0 +1,6 @@
+sasoptpy.Model.add\_set
+=======================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.add_set

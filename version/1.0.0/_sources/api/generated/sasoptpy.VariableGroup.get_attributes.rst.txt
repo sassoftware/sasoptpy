@@ -1,0 +1,6 @@
+sasoptpy.VariableGroup.get\_attributes
+======================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: VariableGroup.get_attributes

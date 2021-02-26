@@ -1,0 +1,6 @@
+sasoptpy.interface.SASMediator.parse\_sas\_solution
+===================================================
+
+.. currentmodule:: sasoptpy.interface
+
+.. automethod:: SASMediator.parse_sas_solution

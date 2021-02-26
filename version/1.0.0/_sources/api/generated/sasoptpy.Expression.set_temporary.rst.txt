@@ -1,0 +1,6 @@
+sasoptpy.Expression.set\_temporary
+==================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Expression.set_temporary

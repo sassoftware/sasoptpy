@@ -1,0 +1,6 @@
+sasoptpy.math.max
+=================
+
+.. currentmodule:: sasoptpy.math
+
+.. autofunction:: max

@@ -1,0 +1,460 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Decentralization (SASPy) &#8212; sasoptpy 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/sasoptpy.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/js/url.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API Reference" href="../api/api.html" />
+    <link rel="prev" title="Nonlinear 2" href="nonlinear_2.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../_static/js/version.js"></script>
+    <script src="../../../_static/js/version.js"></script>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../api/api.html" title="API Reference"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="nonlinear_2.html" title="Nonlinear 2"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="examples.html" accesskey="U">Examples</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="decentralization-saspy">
+<span id="examples-decentralization-saspy"></span><h1>Decentralization (SASPy)<a class="headerlink" href="#decentralization-saspy" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="reference">
+<h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
+<p>SAS/OR example: <a class="reference external" href="http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex10_toc.htm&amp;docsetVersion=15.1&amp;locale=en">http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex10_toc.htm&amp;docsetVersion=15.1&amp;locale=en</a></p>
+<p>SAS/OR code for example: <a class="reference external" href="http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex10.html">http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex10.html</a></p>
+</div>
+<div class="section" id="model">
+<h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+
+<span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">):</span>
+
+    <span class="n">m</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;decentralization&#39;</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="n">cas_conn</span><span class="p">)</span>
+
+    <span class="n">DEPTS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">]</span>
+    <span class="n">CITIES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Bristol&#39;</span><span class="p">,</span> <span class="s1">&#39;Brighton&#39;</span><span class="p">,</span> <span class="s1">&#39;London&#39;</span><span class="p">]</span>
+
+    <span class="n">benefit_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+        <span class="p">[</span><span class="s1">&#39;Bristol&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;Brighton&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">]],</span>
+        <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;city&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">DEPTS</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;city&#39;</span><span class="p">)</span>
+
+    <span class="n">comm_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+        <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">]],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="s1">&#39;j&#39;</span><span class="p">,</span> <span class="s1">&#39;comm&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="s1">&#39;j&#39;</span><span class="p">])</span>
+
+    <span class="n">cost_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+        <span class="p">[</span><span class="s1">&#39;Bristol&#39;</span><span class="p">,</span> <span class="s1">&#39;Bristol&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;Bristol&#39;</span><span class="p">,</span> <span class="s1">&#39;Brighton&#39;</span><span class="p">,</span> <span class="mi">14</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;Bristol&#39;</span><span class="p">,</span> <span class="s1">&#39;London&#39;</span><span class="p">,</span> <span class="mi">13</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;Brighton&#39;</span><span class="p">,</span> <span class="s1">&#39;Brighton&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;Brighton&#39;</span><span class="p">,</span> <span class="s1">&#39;London&#39;</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;London&#39;</span><span class="p">,</span> <span class="s1">&#39;London&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">]],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="s1">&#39;j&#39;</span><span class="p">,</span> <span class="s1">&#39;cost&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span>
+            <span class="p">[</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="s1">&#39;j&#39;</span><span class="p">])</span>
+
+    <span class="n">max_num_depts</span> <span class="o">=</span> <span class="mi">3</span>
+
+    <span class="n">benefit</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">city</span> <span class="ow">in</span> <span class="n">CITIES</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">dept</span> <span class="ow">in</span> <span class="n">DEPTS</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">benefit</span><span class="p">[</span><span class="n">dept</span><span class="p">,</span> <span class="n">city</span><span class="p">]</span> <span class="o">=</span> <span class="n">benefit_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">city</span><span class="p">,</span> <span class="n">dept</span><span class="p">]</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">benefit</span><span class="p">[</span><span class="n">dept</span><span class="p">,</span> <span class="n">city</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">comm</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">comm_data</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">comm</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;comm&#39;</span><span class="p">]</span>
+        <span class="n">comm</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">comm</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+
+    <span class="n">cost</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">cost_data</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">cost</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;cost&#39;</span><span class="p">]</span>
+        <span class="n">cost</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">cost</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+
+    <span class="n">assign</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">DEPTS</span><span class="p">,</span> <span class="n">CITIES</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">BIN</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;assign&#39;</span><span class="p">)</span>
+    <span class="n">IJKL</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">DEPTS</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">CITIES</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">DEPTS</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">CITIES</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">k</span><span class="p">]</span>
+    <span class="n">product</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">IJKL</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">BIN</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;product&#39;</span><span class="p">)</span>
+
+    <span class="n">totalBenefit</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">benefit</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">assign</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+                                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">DEPTS</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">CITIES</span><span class="p">)</span>
+
+    <span class="n">totalCost</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">comm</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">cost</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span> <span class="o">*</span> <span class="n">product</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span>
+                             <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span> <span class="ow">in</span> <span class="n">IJKL</span><span class="p">)</span>
+
+    <span class="n">m</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">totalBenefit</span><span class="o">-</span><span class="n">totalCost</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;netBenefit&#39;</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MAX</span><span class="p">)</span>
+
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">assign</span><span class="p">[</span><span class="n">dept</span><span class="p">,</span> <span class="n">city</span><span class="p">]</span> <span class="k">for</span> <span class="n">city</span> <span class="ow">in</span> <span class="n">CITIES</span><span class="p">)</span>
+                      <span class="o">==</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">dept</span> <span class="ow">in</span> <span class="n">DEPTS</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;assign_dept&#39;</span><span class="p">)</span>
+
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">assign</span><span class="p">[</span><span class="n">dept</span><span class="p">,</span> <span class="n">city</span><span class="p">]</span> <span class="k">for</span> <span class="n">dept</span> <span class="ow">in</span> <span class="n">DEPTS</span><span class="p">)</span>
+                      <span class="o">&lt;=</span> <span class="n">max_num_depts</span> <span class="k">for</span> <span class="n">city</span> <span class="ow">in</span> <span class="n">CITIES</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;cardinality&#39;</span><span class="p">)</span>
+
+    <span class="n">product_def1</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">assign</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">assign</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+                                     <span class="o">&lt;=</span> <span class="n">product</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span>
+                                     <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span> <span class="ow">in</span> <span class="n">IJKL</span><span class="p">),</span>
+                                     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;pd1&#39;</span><span class="p">)</span>
+
+    <span class="n">product_def2</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">product</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">assign</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+                                      <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span> <span class="ow">in</span> <span class="n">IJKL</span><span class="p">),</span>
+                                     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;pd2&#39;</span><span class="p">)</span>
+
+    <span class="n">product_def3</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">product</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">assign</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span>
+                                      <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span> <span class="ow">in</span> <span class="n">IJKL</span><span class="p">),</span>
+                                     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;pd3&#39;</span><span class="p">)</span>
+
+    <span class="n">m</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">get_problem_summary</span><span class="p">())</span>
+
+    <span class="n">m</span><span class="o">.</span><span class="n">drop_constraints</span><span class="p">(</span><span class="n">product_def1</span><span class="p">)</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">drop_constraints</span><span class="p">(</span><span class="n">product_def2</span><span class="p">)</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">drop_constraints</span><span class="p">(</span><span class="n">product_def3</span><span class="p">)</span>
+
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span>
+        <span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">product</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span>
+                     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">CITIES</span> <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span> <span class="ow">in</span> <span class="n">IJKL</span><span class="p">)</span> <span class="o">==</span> <span class="n">assign</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">DEPTS</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">DEPTS</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">CITIES</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">k</span><span class="p">),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;pd4&#39;</span><span class="p">)</span>
+
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span>
+        <span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">product</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span>
+                     <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">CITIES</span> <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span> <span class="ow">in</span> <span class="n">IJKL</span><span class="p">)</span> <span class="o">==</span> <span class="n">assign</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">DEPTS</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">DEPTS</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">CITIES</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">k</span><span class="p">),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;pd5&#39;</span><span class="p">)</span>
+
+    <span class="n">m</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">get_problem_summary</span><span class="p">())</span>
+    <span class="n">totalBenefit</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s1">&#39;totalBenefit&#39;</span><span class="p">)</span>
+    <span class="n">totalCost</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s1">&#39;totalCost&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">totalBenefit</span><span class="p">,</span> <span class="n">totalCost</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">assign</span><span class="p">)</span><span class="o">.</span><span class="n">unstack</span><span class="p">(</span><span class="n">level</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="n">get_objective_value</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="output">
+<h2>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="gp">In [2]: </span><span class="kn">import</span> <span class="nn">saspy</span>
+
+<span class="gp">In [3]: </span><span class="n">config_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;../tests/examples/saspy_config.py&#39;</span><span class="p">)</span>
+
+<span class="gp">In [4]: </span><span class="n">sas_conn</span> <span class="o">=</span> <span class="n">saspy</span><span class="o">.</span><span class="n">SASsession</span><span class="p">(</span><span class="n">cfgfile</span><span class="o">=</span><span class="n">config_file</span><span class="p">)</span>
+<span class="go">Using SAS Config named: sshsas</span>
+<span class="go">SAS Connection established. Subprocess id is 141</span>
+
+
+<span class="gp">In [5]: </span><span class="kn">import</span> <span class="nn">sasoptpy</span>
+</pre></div>
+</div>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [6]: </span><span class="kn">from</span> <span class="nn">examples.client_side.decentralization</span> <span class="kn">import</span> <span class="n">test</span>
+
+<span class="gp">In [7]: </span><span class="n">test</span><span class="p">(</span><span class="n">sas_conn</span><span class="p">)</span>
+<span class="go">NOTE: Initialized model decentralization.</span>
+<span class="go">NOTE: Converting model decentralization to OPTMODEL.</span>
+<span class="go">NOTE: Submitting OPTMODEL code to SAS instance.</span>
+
+<span class="go">NOTE: Writing HTML5(SASPY_INTERNAL) Body file: STDOUT</span>
+<span class="go">NOTE: Problem generation will use 4 threads.</span>
+<span class="go">NOTE: The problem has 105 variables (0 free, 0 fixed).</span>
+<span class="go">NOTE: The problem has 105 binary and 0 integer variables.</span>
+<span class="go">NOTE: The problem has 278 linear constraints (183 LE, 5 EQ, 90 GE, 0 range).</span>
+<span class="go">NOTE: The problem has 660 linear constraint coefficients.</span>
+<span class="go">NOTE: The problem has 0 nonlinear constraints (0 LE, 0 EQ, 0 GE, 0 range).</span>
+<span class="go">NOTE: The OPTMODEL presolver is disabled for linear problems.</span>
+<span class="go">NOTE: The initial MILP heuristics are applied.</span>
+<span class="go">NOTE: The MILP presolver value AUTOMATIC is applied.</span>
+<span class="go">NOTE: The MILP presolver removed 0 variables and 120 constraints.</span>
+<span class="go">NOTE: The MILP presolver removed 120 constraint coefficients.</span>
+<span class="go">NOTE: The MILP presolver added 120 constraint coefficients.</span>
+<span class="go">NOTE: The MILP presolver modified 0 constraint coefficients.</span>
+<span class="go">NOTE: The presolved problem has 105 variables, 158 constraints, and 540 constraint coefficients.</span>
+<span class="go">NOTE: The MILP solver is called.</span>
+<span class="go">NOTE: The parallel Branch and Cut algorithm is used.</span>
+<span class="go">NOTE: The Branch and Cut algorithm is using up to 4 threads.</span>
+<span class="go">          Node   Active   Sols    BestInteger      BestBound      Gap    Time</span>
+<span class="go">             0        1      2    -14.9000000    135.0000000  111.04%       0</span>
+<span class="go">             0        1      2    -14.9000000     67.5000000  122.07%       0</span>
+<span class="go">             0        1      2    -14.9000000     52.0000000  128.65%       0</span>
+<span class="go">             0        1      3      8.1000000     52.0000000   84.42%       0</span>
+<span class="go">             0        1      3      8.1000000     50.0000000   83.80%       0</span>
+<span class="go">             0        1      3      8.1000000     48.2500000   83.21%       0</span>
+<span class="go">             0        1      3      8.1000000     40.0000000   79.75%       0</span>
+<span class="go">             0        1      3      8.1000000     39.2500000   79.36%       0</span>
+<span class="go">             0        1      3      8.1000000     34.2000000   76.32%       0</span>
+<span class="go">             0        1      3      8.1000000     33.6187500   75.91%       0</span>
+<span class="go">             0        1      3      8.1000000     33.0761905   75.51%       0</span>
+<span class="go">             0        1      3      8.1000000     32.6521739   75.19%       0</span>
+<span class="go">             0        1      3      8.1000000     32.0142857   74.70%       0</span>
+<span class="go">             0        1      3      8.1000000     31.8222222   74.55%       0</span>
+<span class="go">             0        1      3      8.1000000     31.3333333   74.15%       0</span>
+<span class="go">             0        1      3      8.1000000     30.0000000   73.00%       0</span>
+<span class="go">             0        1      3      8.1000000     28.5000000   71.58%       0</span>
+<span class="go">             0        1      4     14.9000000     14.9000000    0.00%       0</span>
+<span class="go">NOTE: The MILP solver added 28 cuts with 146 cut coefficients at the root.</span>
+<span class="go">NOTE: Optimal.</span>
+<span class="go">NOTE: Objective = 14.9.</span>
+<span class="go">NOTE: The data set WORK.PROB_SUMMARY has 20 observations and 3 variables.</span>
+<span class="go">NOTE: The data set WORK.SOL_SUMMARY has 18 observations and 3 variables.</span>
+<span class="go">NOTE: The data set WORK.SOLUTION has 105 observations and 6 variables.</span>
+<span class="go">NOTE: The data set WORK.DUAL has 278 observations and 4 variables.</span>
+<span class="go">NOTE: PROCEDURE OPTMODEL used (Total process time):</span>
+<span class="go">      real time           0.17 seconds</span>
+<span class="go">      cpu time            0.15 seconds</span>
+<span class="go">      </span>
+
+<span class="go">                                Value</span>
+<span class="go">Label                                </span>
+<span class="go">Objective Sense          Maximization</span>
+<span class="go">Objective Function         netBenefit</span>
+<span class="go">Objective Type                 Linear</span>
+<span class="go">                                     </span>
+<span class="go">Number of Variables               105</span>
+<span class="go">Bounded Above                       0</span>
+<span class="go">Bounded Below                       0</span>
+<span class="go">Bounded Below and Above           105</span>
+<span class="go">Free                                0</span>
+<span class="go">Fixed                               0</span>
+<span class="go">Binary                            105</span>
+<span class="go">Integer                             0</span>
+<span class="go">                                     </span>
+<span class="go">Number of Constraints             278</span>
+<span class="go">Linear LE (&lt;=)                    183</span>
+<span class="go">Linear EQ (=)                       5</span>
+<span class="go">Linear GE (&gt;=)                     90</span>
+<span class="go">Linear Range                        0</span>
+<span class="go">                                     </span>
+<span class="go">Constraint Coefficients           660</span>
+<span class="go">NOTE: Converting model decentralization to OPTMODEL.</span>
+<span class="go">NOTE: Submitting OPTMODEL code to SAS instance.</span>
+
+<span class="go">NOTE: Writing HTML5(SASPY_INTERNAL) Body file: STDOUT</span>
+<span class="go">NOTE: Problem generation will use 4 threads.</span>
+<span class="go">NOTE: The problem has 105 variables (0 free, 0 fixed).</span>
+<span class="go">NOTE: The problem has 105 binary and 0 integer variables.</span>
+<span class="go">NOTE: The problem has 68 linear constraints (3 LE, 65 EQ, 0 GE, 0 range).</span>
+<span class="go">NOTE: The problem has 270 linear constraint coefficients.</span>
+<span class="go">NOTE: The problem has 0 nonlinear constraints (0 LE, 0 EQ, 0 GE, 0 range).</span>
+<span class="go">NOTE: The OPTMODEL presolver is disabled for linear problems.</span>
+<span class="go">NOTE: The initial MILP heuristics are applied.</span>
+<span class="go">NOTE: The MILP presolver value AUTOMATIC is applied.</span>
+<span class="go">NOTE: The MILP presolver removed 0 variables and 0 constraints.</span>
+<span class="go">NOTE: The MILP presolver removed 0 constraint coefficients.</span>
+<span class="go">NOTE: The MILP presolver modified 0 constraint coefficients.</span>
+<span class="go">NOTE: The presolved problem has 105 variables, 68 constraints, and 270 constraint coefficients.</span>
+<span class="go">NOTE: The MILP solver is called.</span>
+<span class="go">NOTE: The parallel Branch and Cut algorithm is used.</span>
+<span class="go">NOTE: The Branch and Cut algorithm is using up to 4 threads.</span>
+<span class="go">          Node   Active   Sols    BestInteger      BestBound      Gap    Time</span>
+<span class="go">             0        1      2    -28.1000000    135.0000000  120.81%       0</span>
+<span class="go">             0        1      2    -28.1000000     30.0000000  193.67%       0</span>
+<span class="go">             0        1      3    -16.3000000     30.0000000  154.33%       0</span>
+<span class="go">             0        1      4     14.9000000     14.9000000    0.00%       0</span>
+<span class="go">NOTE: Optimal.</span>
+<span class="go">NOTE: Objective = 14.9.</span>
+<span class="go">NOTE: The data set WORK.PROB_SUMMARY has 20 observations and 3 variables.</span>
+<span class="go">NOTE: The data set WORK.SOL_SUMMARY has 18 observations and 3 variables.</span>
+<span class="go">NOTE: The data set WORK.SOLUTION has 105 observations and 6 variables.</span>
+<span class="go">NOTE: The data set WORK.DUAL has 68 observations and 4 variables.</span>
+<span class="go">NOTE: PROCEDURE OPTMODEL used (Total process time):</span>
+<span class="go">      real time           0.10 seconds</span>
+<span class="go">      cpu time            0.09 seconds</span>
+<span class="go">      </span>
+
+<span class="go">                                Value</span>
+<span class="go">Label                                </span>
+<span class="go">Objective Sense          Maximization</span>
+<span class="go">Objective Function         netBenefit</span>
+<span class="go">Objective Type                 Linear</span>
+<span class="go">                                     </span>
+<span class="go">Number of Variables               105</span>
+<span class="go">Bounded Above                       0</span>
+<span class="go">Bounded Below                       0</span>
+<span class="go">Bounded Below and Above           105</span>
+<span class="go">Free                                0</span>
+<span class="go">Fixed                               0</span>
+<span class="go">Binary                            105</span>
+<span class="go">Integer                             0</span>
+<span class="go">                                     </span>
+<span class="go">Number of Constraints              68</span>
+<span class="go">Linear LE (&lt;=)                      3</span>
+<span class="go">Linear EQ (=)                      65</span>
+<span class="go">Linear GE (&gt;=)                      0</span>
+<span class="go">Linear Range                        0</span>
+<span class="go">                                     </span>
+<span class="go">Constraint Coefficients           270</span>
+<span class="go">   totalBenefit  totalCost</span>
+<span class="go">-          80.0       65.1</span>
+<span class="go">assign  (A, Bristol)     1.0</span>
+<span class="go">        (A, Brighton)    0.0</span>
+<span class="go">        (A, London)      0.0</span>
+<span class="go">        (B, Bristol)     0.0</span>
+<span class="go">        (B, Brighton)    1.0</span>
+<span class="go">        (B, London)      0.0</span>
+<span class="go">        (C, Bristol)     0.0</span>
+<span class="go">        (C, Brighton)    1.0</span>
+<span class="go">        (C, London)      0.0</span>
+<span class="go">        (D, Bristol)     1.0</span>
+<span class="go">        (D, Brighton)    0.0</span>
+<span class="go">        (D, London)      0.0</span>
+<span class="go">        (E, Bristol)     0.0</span>
+<span class="go">        (E, Brighton)    1.0</span>
+<span class="go">        (E, London)      0.0</span>
+<span class="go">dtype: float64</span>
+<span class="gh">Out[7]: </span><span class="go">14.9</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="1.0.0">1.0.0</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/user-guide.html">User Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="examples.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-viya-examples-concrete">SAS Viya Examples (Concrete)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-viya-examples-abstract">SAS Viya Examples (Abstract)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="examples.html#sas-9-4-examples">SAS 9.4 Examples</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Decentralization</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#reference">Reference</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#model">Model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#output">Output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../version-history.html">Version History</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../api/api.html" title="API Reference"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="nonlinear_2.html" title="Nonlinear 2"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="examples.html" >Examples</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2020, SAS Institute.
+      Last updated on Apr 28, 2020 (Timestamp: 1.0-20200428203611).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+    </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-155356999-1');
+</script>
+
+
+  </body>
+</html>

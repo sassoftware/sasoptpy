@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+tests.abstract.test_math.TestAbstractMath
+=========================================
+
+.. currentmodule:: tests.abstract.test_math
+
+.. autoclass:: TestAbstractMath

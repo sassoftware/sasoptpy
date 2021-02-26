@@ -1,0 +1,6 @@
+sasoptpy.Model.\_is\_linear
+===========================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model._is_linear

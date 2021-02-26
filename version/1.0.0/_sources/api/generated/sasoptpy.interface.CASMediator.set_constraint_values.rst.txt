@@ -1,0 +1,6 @@
+sasoptpy.interface.CASMediator.set\_constraint\_values
+======================================================
+
+.. currentmodule:: sasoptpy.interface
+
+.. automethod:: CASMediator.set_constraint_values

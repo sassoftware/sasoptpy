@@ -1,0 +1,6 @@
+sasoptpy.Expression.get\_member
+===============================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Expression.get_member

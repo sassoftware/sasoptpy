@@ -1,0 +1,308 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>sasoptpy.Model.tune_parameters &#8212; sasoptpy 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/sasoptpy.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/js/url.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="sasoptpy.Model.get_solution" href="sasoptpy.Model.get_solution.html" />
+    <link rel="prev" title="sasoptpy.Model.solve" href="sasoptpy.Model.solve.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../../_static/js/version.js"></script>
+    <script src="../../../../_static/js/version.js"></script>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="sasoptpy.Model.get_solution.html" title="sasoptpy.Model.get_solution"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="sasoptpy.Model.solve.html" title="sasoptpy.Model.solve"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../api.html" >API Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../model.html" accesskey="U">Model</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="sasoptpy-model-tune-parameters">
+<h1>sasoptpy.Model.tune_parameters<a class="headerlink" href="#sasoptpy-model-tune-parameters" title="Permalink to this headline">¶</a></h1>
+<dl class="method">
+<dt id="sasoptpy.Model.tune_parameters">
+<code class="sig-prename descclassname">Model.</code><code class="sig-name descname">tune_parameters</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/sasoptpy/core/model.html#Model.tune_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.Model.tune_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tunes the model to find ideal solver parameters</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>kwargs :</strong></dt><dd><p>Keyword arguments as defined in the optimization.tuner action.</p>
+<p>Acceptable values are:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://go.documentation.sas.com/?docsetId=casactmopt&amp;docsetTarget=cas-optimization-tuner.htm&amp;docsetVersion=8.5&amp;locale=en#PYTHON.cas-optimization-tuner-milpparameters">milpParameters</a>:
+Parameters for the solveMilp action, such as
+<cite>maxTime</cite>, <cite>heuristics</cite>, <cite>feasTol</cite></p></li>
+<li><p><a class="reference external" href="https://go.documentation.sas.com/?docsetId=casactmopt&amp;docsetTarget=cas-optimization-tuner.htm&amp;docsetVersion=8.5&amp;locale=en#PYTHON.cas-optimization-tuner-tunerparameters">tunerParameters</a>:
+Parameters for the tuner itself, such as
+<cite>maxConfigs</cite>, <cite>printLevel</cite>, <cite>logFreq</cite></p></li>
+<li><p><a class="reference external" href="https://go.documentation.sas.com/?docsetId=casactmopt&amp;docsetTarget=cas-optimization-tuner.htm&amp;docsetVersion=8.5&amp;locale=en#PYTHON.cas-optimization-tuner-tuningparameters">tuningParameters</a>:
+List of parameters to be tuned, such as
+<cite>cutStrategy</cite>, <cite>presolver</cite>, <cite>restarts</cite></p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl>
+<dt><strong>tunerResults</strong><span class="classifier"><a class="reference external" href="https://sassoftware.github.io/python-swat/generated/swat.dataframe.SASDataFrame.html#swat.dataframe.SASDataFrame" title="(in SWAT v1.6.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">swat.dataframe.SASDataFrame</span></code></a></span></dt><dd><p>Tuning results as a table</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="sasoptpy.Model.get_tuner_results.html#sasoptpy.Model.get_tuner_results" title="sasoptpy.Model.get_tuner_results"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.get_tuner_results()</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>See <a class="reference external" href="https://go.documentation.sas.com/?docsetId=casactmopt&amp;docsetTarget=cas-optimization-tuner.htm&amp;docsetVersion=8.5&amp;locale=en#PYTHON.cas-optimization-tuner-tunerparameters">SAS Optimization documentation</a>
+for a full list of tunable parameters.</p></li>
+<li><p>See <a class="reference external" href="https://go.documentation.sas.com/?docsetId=casactmopt&amp;docsetTarget=casactmopt_optimization_details35.htm&amp;docsetVersion=8.5&amp;locale=en">Optimization Action Set documentation</a>.</p></li>
+</ul>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;model1&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">results</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">tune_parameters</span><span class="p">(</span><span class="n">tunerParameters</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;maxConfigs&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
+<span class="go">NOTE: Initialized model knapsack_with_tuner.</span>
+<span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
+<span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table KNAPSACK_WITH_TUNER in caslib CASUSER(casuser).</span>
+<span class="go">NOTE: The table KNAPSACK_WITH_TUNER has been created in caslib CASUSER(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: Start to tune the MILP</span>
+<span class="go">         SolveCalls  Configurations    BestTime        Time</span>
+<span class="go">                  1               1        0.21        0.26</span>
+<span class="go">                  2               2        0.19        0.50</span>
+<span class="go">                  3               3        0.19        0.72</span>
+<span class="go">                  4               4        0.19        0.95</span>
+<span class="go">                  5               5        0.19        1.17</span>
+<span class="go">                  6               6        0.19        1.56</span>
+<span class="go">                  7               7        0.18        1.76</span>
+<span class="go">                  8               8        0.17        1.96</span>
+<span class="go">                  9               9        0.17        2.16</span>
+<span class="go">                 10              10        0.17        2.35</span>
+<span class="go">NOTE: Configuration limit reached.</span>
+<span class="go">NOTE: The tuning time is 2.35 seconds.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+<span class="go">   Configuration conflictSearch  ... Sum of Run Times Percentage Successful</span>
+<span class="go">0            0.0      automatic  ...             0.20                 100.0</span>
+<span class="go">1            1.0           none  ...             0.17                 100.0</span>
+<span class="go">2            2.0           none  ...             0.17                 100.0</span>
+<span class="go">3            3.0       moderate  ...             0.17                 100.0</span>
+<span class="go">4            4.0           none  ...             0.18                 100.0</span>
+<span class="go">5            5.0           none  ...             0.18                 100.0</span>
+<span class="go">6            6.0     aggressive  ...             0.18                 100.0</span>
+<span class="go">7            7.0       moderate  ...             0.18                 100.0</span>
+<span class="go">8            8.0     aggressive  ...             0.19                 100.0</span>
+<span class="go">9            9.0      automatic  ...             0.36                 100.0</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">results</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">tune_parameters</span><span class="p">(</span>
+<span class="go">       milpParameters={&#39;maxtime&#39;: 10},</span>
+<span class="go">       tunerParameters={&#39;maxConfigs&#39;: 20, &#39;logfreq&#39;: 5},</span>
+<span class="go">       tuningParameters=[</span>
+<span class="go">          {&#39;option&#39;: &#39;presolver&#39;, &#39;initial&#39;: &#39;none&#39;, &#39;values&#39;: [&#39;basic&#39;, &#39;aggressive&#39;, &#39;none&#39;]},</span>
+<span class="go">          {&#39;option&#39;: &#39;cutStrategy&#39;},</span>
+<span class="go">          {&#39;option&#39;: &#39;strongIter&#39;, &#39;initial&#39;: -1, &#39;values&#39;: [-1, 100, 1000]}</span>
+<span class="go">       ])</span>
+<span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
+<span class="go">NOTE: Uploading the problem DataFrame to the server.</span>
+<span class="go">NOTE: Cloud Analytic Services made the uploaded file available as table KNAPSACK_WITH_TUNER in caslib CASUSER(casuser).</span>
+<span class="go">NOTE: The table KNAPSACK_WITH_TUNER has been created in caslib CASUSER(casuser) from binary data uploaded to Cloud Analytic Services.</span>
+<span class="go">NOTE: Start to tune the MILP</span>
+<span class="go">         SolveCalls  Configurations    BestTime        Time</span>
+<span class="go">                  5               5        0.17        1.01</span>
+<span class="go">                 10              10        0.17        2.00</span>
+<span class="go">                 15              15        0.17        2.98</span>
+<span class="go">                 20              20        0.17        3.95</span>
+<span class="go">NOTE: Configuration limit reached.</span>
+<span class="go">NOTE: The tuning time is 3.95 seconds.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+<span class="go">    Configuration conflictSearch  ... Sum of Run Times Percentage Successful</span>
+<span class="go">0             0.0      automatic  ...             0.17                 100.0</span>
+<span class="go">1             1.0           none  ...             0.16                 100.0</span>
+<span class="go">2             2.0           none  ...             0.16                 100.0</span>
+<span class="go">3             3.0           none  ...             0.16                 100.0</span>
+<span class="go">4             4.0           none  ...             0.16                 100.0</span>
+<span class="go">5             5.0           none  ...             0.17                 100.0</span>
+<span class="go">6             6.0           none  ...             0.17                 100.0</span>
+<span class="go">7             7.0           none  ...             0.17                 100.0</span>
+<span class="go">8             8.0           none  ...             0.17                 100.0</span>
+<span class="go">9             9.0           none  ...             0.17                 100.0</span>
+<span class="go">10           10.0           none  ...             0.17                 100.0</span>
+<span class="go">11           11.0     aggressive  ...             0.17                 100.0</span>
+<span class="go">12           12.0           none  ...             0.17                 100.0</span>
+<span class="go">13           13.0     aggressive  ...             0.17                 100.0</span>
+<span class="go">14           14.0      automatic  ...             0.17                 100.0</span>
+<span class="go">15           15.0           none  ...             0.17                 100.0</span>
+<span class="go">16           16.0           none  ...             0.17                 100.0</span>
+<span class="go">17           17.0       moderate  ...             0.17                 100.0</span>
+<span class="go">18           18.0       moderate  ...             0.17                 100.0</span>
+<span class="go">19           19.0           none  ...             0.17                 100.0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="1.0.0">1.0.0</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../overview/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#core">Core</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../model.html">Model</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../model.html#constructor">Constructor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../model.html#components">Components</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../model.html#solver-calls">Solver calls</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.solve.html">sasoptpy.Model.solve</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">sasoptpy.Model.tune_parameters</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.get_solution.html">sasoptpy.Model.get_solution</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.get_variable_value.html">sasoptpy.Model.get_variable_value</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.get_objective_value.html">sasoptpy.Model.get_objective_value</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.get_solution_summary.html">sasoptpy.Model.get_solution_summary</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.get_problem_summary.html">sasoptpy.Model.get_problem_summary</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.get_tuner_results.html">sasoptpy.Model.get_tuner_results</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.print_solution.html">sasoptpy.Model.print_solution</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.Model.clear_solution.html">sasoptpy.Model.clear_solution</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../model.html#export">Export</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../model.html#internal-functions">Internal functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../model.html#deprecated">Deprecated</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../expression.html">Expression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../objective.html">Objective</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../variable.html">Variable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../variable_group.html">Variable Group</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../constraint.html">Constraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../constraint_group.html">Constraint Group</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../workspace.html">Workspace</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#abstract">Abstract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#interface">Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#tests">Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../version-history.html">Version History</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="sasoptpy.Model.get_solution.html" title="sasoptpy.Model.get_solution"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="sasoptpy.Model.solve.html" title="sasoptpy.Model.solve"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../api.html" >API Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../model.html" >Model</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2020, SAS Institute.
+      Last updated on Apr 28, 2020 (Timestamp: 1.0-20200428203611).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+    </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-155356999-1');
+</script>
+
+
+  </body>
+</html>

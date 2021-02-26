@@ -1,0 +1,6 @@
+sasoptpy.math.mod
+=================
+
+.. currentmodule:: sasoptpy.math
+
+.. autofunction:: mod

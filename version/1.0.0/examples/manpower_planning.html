@@ -1,0 +1,456 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Manpower Planning &#8212; sasoptpy 1.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/sasoptpy.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/js/url.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Refinery Optimization" href="refinery_optimization.html" />
+    <link rel="prev" title="Factory Planning 2" href="factory_planning_2.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../_static/js/version.js"></script>
+    <script src="../../../_static/js/version.js"></script>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="refinery_optimization.html" title="Refinery Optimization"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="factory_planning_2.html" title="Factory Planning 2"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="examples.html" accesskey="U">Examples</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="manpower-planning">
+<h1>Manpower Planning<a class="headerlink" href="#manpower-planning" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="reference">
+<h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
+<p>SAS/OR example: <a class="reference external" href="http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex5_toc.htm&amp;docsetVersion=15.1&amp;locale=en">http://go.documentation.sas.com/?docsetId=ormpex&amp;docsetTarget=ormpex_ex5_toc.htm&amp;docsetVersion=15.1&amp;locale=en</a></p>
+<p>SAS/OR code for example: <a class="reference external" href="http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex05.html">http://support.sas.com/documentation/onlinedoc/or/ex_code/151/mpex05.html</a></p>
+</div>
+<div class="section" id="model">
+<h2>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sasoptpy</span> <span class="k">as</span> <span class="nn">so</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+
+<span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">):</span>
+    <span class="c1"># Input data</span>
+    <span class="n">demand_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="mi">1500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">1400</span><span class="p">,</span> <span class="mi">1000</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="mi">1500</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2500</span><span class="p">,</span> <span class="mi">2000</span><span class="p">]</span>
+        <span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;period&#39;</span><span class="p">,</span> <span class="s1">&#39;unskilled&#39;</span><span class="p">,</span> <span class="s1">&#39;semiskilled&#39;</span><span class="p">,</span> <span class="s1">&#39;skilled&#39;</span><span class="p">])</span>\
+        <span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;period&#39;</span><span class="p">])</span>
+    <span class="n">worker_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+        <span class="p">[</span><span class="s1">&#39;unskilled&#39;</span><span class="p">,</span>   <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">1500</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">500</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;semiskilled&#39;</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">400</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;skilled&#39;</span><span class="p">,</span>     <span class="mf">0.10</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">3000</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">400</span><span class="p">]</span>
+        <span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;worker&#39;</span><span class="p">,</span> <span class="s1">&#39;waste_new&#39;</span><span class="p">,</span> <span class="s1">&#39;waste_old&#39;</span><span class="p">,</span> <span class="s1">&#39;recruit_ub&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;redundancy_cost&#39;</span><span class="p">,</span> <span class="s1">&#39;overmanning_cost&#39;</span><span class="p">,</span> <span class="s1">&#39;shorttime_ub&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;shorttime_cost&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;worker&#39;</span><span class="p">])</span>
+    <span class="n">retrain_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+        <span class="p">[</span><span class="s1">&#39;unskilled&#39;</span><span class="p">,</span> <span class="s1">&#39;semiskilled&#39;</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">400</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;semiskilled&#39;</span><span class="p">,</span> <span class="s1">&#39;skilled&#39;</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="mi">500</span><span class="p">],</span>
+        <span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;worker1&#39;</span><span class="p">,</span> <span class="s1">&#39;worker2&#39;</span><span class="p">,</span> <span class="s1">&#39;retrain_ub&#39;</span><span class="p">,</span> <span class="s1">&#39;retrain_cost&#39;</span><span class="p">])</span><span class="o">.</span>\
+        <span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;worker1&#39;</span><span class="p">,</span> <span class="s1">&#39;worker2&#39;</span><span class="p">])</span>
+    <span class="n">downgrade_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+        <span class="p">[</span><span class="s1">&#39;semiskilled&#39;</span><span class="p">,</span> <span class="s1">&#39;unskilled&#39;</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;skilled&#39;</span><span class="p">,</span> <span class="s1">&#39;semiskilled&#39;</span><span class="p">],</span>
+        <span class="p">[</span><span class="s1">&#39;skilled&#39;</span><span class="p">,</span> <span class="s1">&#39;unskilled&#39;</span><span class="p">]</span>
+        <span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;worker1&#39;</span><span class="p">,</span> <span class="s1">&#39;worker2&#39;</span><span class="p">])</span>
+
+    <span class="n">semiskill_retrain_frac_ub</span> <span class="o">=</span> <span class="mf">0.25</span>
+    <span class="n">downgrade_leave_frac</span> <span class="o">=</span> <span class="mf">0.5</span>
+    <span class="n">overmanning_ub</span> <span class="o">=</span> <span class="mi">150</span>
+    <span class="n">shorttime_frac</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+    <span class="c1"># Sets</span>
+    <span class="n">WORKERS</span> <span class="o">=</span> <span class="n">worker_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">PERIODS0</span> <span class="o">=</span> <span class="n">demand_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">PERIODS</span> <span class="o">=</span> <span class="n">PERIODS0</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">RETRAIN_PAIRS</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">retrain_data</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()]</span>
+    <span class="n">DOWNGRADE_PAIRS</span> <span class="o">=</span> <span class="p">[(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;worker1&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;worker2&#39;</span><span class="p">])</span>
+                       <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">downgrade_data</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()]</span>
+
+    <span class="n">waste_old</span> <span class="o">=</span> <span class="n">worker_data</span><span class="p">[</span><span class="s1">&#39;waste_old&#39;</span><span class="p">]</span>
+    <span class="n">waste_new</span> <span class="o">=</span> <span class="n">worker_data</span><span class="p">[</span><span class="s1">&#39;waste_new&#39;</span><span class="p">]</span>
+    <span class="n">redundancy_cost</span> <span class="o">=</span> <span class="n">worker_data</span><span class="p">[</span><span class="s1">&#39;redundancy_cost&#39;</span><span class="p">]</span>
+    <span class="n">overmanning_cost</span> <span class="o">=</span> <span class="n">worker_data</span><span class="p">[</span><span class="s1">&#39;overmanning_cost&#39;</span><span class="p">]</span>
+    <span class="n">shorttime_cost</span> <span class="o">=</span> <span class="n">worker_data</span><span class="p">[</span><span class="s1">&#39;shorttime_cost&#39;</span><span class="p">]</span>
+    <span class="n">retrain_cost</span> <span class="o">=</span> <span class="n">retrain_data</span><span class="p">[</span><span class="s1">&#39;retrain_cost&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unstack</span><span class="p">(</span><span class="n">level</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Initialization</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;manpower_planning&#39;</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="n">cas_conn</span><span class="p">)</span>
+
+    <span class="c1"># Variables</span>
+    <span class="n">numWorkers</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">WORKERS</span><span class="p">,</span> <span class="n">PERIODS0</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;numWorkers&#39;</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">demand0</span> <span class="o">=</span> <span class="n">demand_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">WORKERS</span><span class="p">:</span>
+        <span class="n">numWorkers</span><span class="p">[</span><span class="n">w</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_bounds</span><span class="p">(</span><span class="n">lb</span><span class="o">=</span><span class="n">demand0</span><span class="p">[</span><span class="n">w</span><span class="p">],</span> <span class="n">ub</span><span class="o">=</span><span class="n">demand0</span><span class="p">[</span><span class="n">w</span><span class="p">])</span>
+    <span class="n">numRecruits</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">WORKERS</span><span class="p">,</span> <span class="n">PERIODS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;numRecruits&#39;</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">worker_ub</span> <span class="o">=</span> <span class="n">worker_data</span><span class="p">[</span><span class="s1">&#39;recruit_ub&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">WORKERS</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">:</span>
+            <span class="n">numRecruits</span><span class="p">[</span><span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">set_bounds</span><span class="p">(</span><span class="n">ub</span><span class="o">=</span><span class="n">worker_ub</span><span class="p">[</span><span class="n">w</span><span class="p">])</span>
+    <span class="n">numRedundant</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">WORKERS</span><span class="p">,</span> <span class="n">PERIODS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;numRedundant&#39;</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">numShortTime</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">WORKERS</span><span class="p">,</span> <span class="n">PERIODS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;numShortTime&#39;</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">shorttime_ub</span> <span class="o">=</span> <span class="n">worker_data</span><span class="p">[</span><span class="s1">&#39;shorttime_ub&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">WORKERS</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">:</span>
+            <span class="n">numShortTime</span><span class="o">.</span><span class="n">set_bounds</span><span class="p">(</span><span class="n">ub</span><span class="o">=</span><span class="n">shorttime_ub</span><span class="p">[</span><span class="n">w</span><span class="p">])</span>
+    <span class="n">numExcess</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">WORKERS</span><span class="p">,</span> <span class="n">PERIODS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;numExcess&#39;</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">retrain_ub</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">:</span>
+        <span class="n">retrain_ub</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">retrain_data</span><span class="p">[</span><span class="s1">&#39;retrain_ub&#39;</span><span class="p">]</span>
+    <span class="n">numRetrain</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">RETRAIN_PAIRS</span><span class="p">,</span> <span class="n">PERIODS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;numRetrain&#39;</span><span class="p">,</span>
+                                 <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">retrain_ub</span><span class="p">)</span>
+
+    <span class="n">numDowngrade</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">DOWNGRADE_PAIRS</span><span class="p">,</span> <span class="n">PERIODS</span><span class="p">,</span>
+                                   <span class="n">name</span><span class="o">=</span><span class="s1">&#39;numDowngrade&#39;</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># Constraints</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">numWorkers</span><span class="p">[</span><span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span>
+                      <span class="o">-</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">shorttime_frac</span><span class="p">)</span> <span class="o">*</span> <span class="n">numShortTime</span><span class="p">[</span><span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span>
+                      <span class="o">-</span> <span class="n">numExcess</span><span class="p">[</span><span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="o">==</span> <span class="n">demand_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="n">w</span><span class="p">]</span>
+                      <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">WORKERS</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;demand&#39;</span><span class="p">)</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">numWorkers</span><span class="p">[</span><span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="o">==</span>
+                      <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">waste_old</span><span class="p">[</span><span class="n">w</span><span class="p">])</span> <span class="o">*</span> <span class="n">numWorkers</span><span class="p">[</span><span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                      <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">waste_new</span><span class="p">[</span><span class="n">w</span><span class="p">])</span> <span class="o">*</span> <span class="n">numRecruits</span><span class="p">[</span><span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span>
+                      <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">waste_old</span><span class="p">[</span><span class="n">w</span><span class="p">])</span> <span class="o">*</span> <span class="n">numRetrain</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+                      <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">downgrade_leave_frac</span><span class="p">)</span> <span class="o">*</span>
+                      <span class="n">numDowngrade</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+                      <span class="o">-</span> <span class="n">numRetrain</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+                      <span class="o">-</span> <span class="n">numDowngrade</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+                      <span class="o">-</span> <span class="n">numRedundant</span><span class="p">[</span><span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span>
+                      <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">WORKERS</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">),</span>
+                      <span class="n">name</span><span class="o">=</span><span class="s1">&#39;flow_balance&#39;</span><span class="p">)</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">numRetrain</span><span class="p">[</span><span class="s1">&#39;semiskilled&#39;</span><span class="p">,</span> <span class="s1">&#39;skilled&#39;</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="o">&lt;=</span>
+                      <span class="n">semiskill_retrain_frac_ub</span> <span class="o">*</span> <span class="n">numWorkers</span><span class="p">[</span><span class="s1">&#39;skilled&#39;</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span>
+                      <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;semiskill_retrain&#39;</span><span class="p">)</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">add_constraints</span><span class="p">((</span><span class="n">numExcess</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">overmanning_ub</span>
+                      <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;overmanning&#39;</span><span class="p">)</span>
+    <span class="c1"># Objectives</span>
+    <span class="n">redundancy</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="n">numRedundant</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;redundancy&#39;</span><span class="p">)</span>
+    <span class="n">cost</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="n">redundancy_cost</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="o">*</span> <span class="n">numRedundant</span><span class="p">[</span><span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="o">+</span>
+                                      <span class="n">shorttime_cost</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="o">*</span> <span class="n">numShortTime</span><span class="p">[</span><span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span> <span class="o">+</span>
+                                      <span class="n">overmanning_cost</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="o">*</span> <span class="n">numExcess</span><span class="p">[</span><span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span>
+                                      <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">WORKERS</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">)</span>
+                         <span class="o">+</span> <span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span>
+                             <span class="n">retrain_cost</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">numRetrain</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span>
+                             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">RETRAIN_PAIRS</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">PERIODS</span><span class="p">),</span>
+                         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;cost&#39;</span><span class="p">)</span>
+
+    <span class="n">m</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">redundancy</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MIN</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;redundancy_obj&#39;</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Redundancy:&#39;</span><span class="p">,</span> <span class="n">redundancy</span><span class="o">.</span><span class="n">get_value</span><span class="p">())</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Cost:&#39;</span><span class="p">,</span> <span class="n">cost</span><span class="o">.</span><span class="n">get_value</span><span class="p">())</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span>
+            <span class="n">numWorkers</span><span class="p">,</span> <span class="n">numRecruits</span><span class="p">,</span> <span class="n">numRedundant</span><span class="p">,</span> <span class="n">numShortTime</span><span class="p">,</span> <span class="n">numExcess</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">numRetrain</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">numDowngrade</span><span class="p">))</span>
+
+    <span class="n">m</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">cost</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MIN</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;cost_obj&#39;</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Redundancy:&#39;</span><span class="p">,</span> <span class="n">redundancy</span><span class="o">.</span><span class="n">get_value</span><span class="p">())</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Cost:&#39;</span><span class="p">,</span> <span class="n">cost</span><span class="o">.</span><span class="n">get_value</span><span class="p">())</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">numWorkers</span><span class="p">,</span> <span class="n">numRecruits</span><span class="p">,</span> <span class="n">numRedundant</span><span class="p">,</span>
+                                    <span class="n">numShortTime</span><span class="p">,</span> <span class="n">numExcess</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">numRetrain</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">get_solution_table</span><span class="p">(</span><span class="n">numDowngrade</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="n">get_objective_value</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="output">
+<h2>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="gp">In [2]: </span><span class="n">hostname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;CASHOST&#39;</span><span class="p">)</span>
+
+<span class="gp">In [3]: </span><span class="n">port</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;CASPORT&#39;</span><span class="p">)</span>
+
+<span class="gp">In [4]: </span><span class="kn">from</span> <span class="nn">swat</span> <span class="kn">import</span> <span class="n">CAS</span>
+
+<span class="gp">In [5]: </span><span class="n">cas_conn</span> <span class="o">=</span> <span class="n">CAS</span><span class="p">(</span><span class="n">hostname</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+
+<span class="gp">In [6]: </span><span class="kn">import</span> <span class="nn">sasoptpy</span>
+</pre></div>
+</div>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [7]: </span><span class="kn">from</span> <span class="nn">examples.client_side.manpower_planning</span> <span class="kn">import</span> <span class="n">test</span>
+
+<span class="gp">In [8]: </span><span class="n">test</span><span class="p">(</span><span class="n">cas_conn</span><span class="p">)</span>
+<span class="go">NOTE: Initialized model manpower_planning.</span>
+<span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
+<span class="go">NOTE: Converting model manpower_planning to OPTMODEL.</span>
+<span class="go">NOTE: Submitting OPTMODEL code to CAS server.</span>
+<span class="go">NOTE: Problem generation will use 8 threads.</span>
+<span class="go">NOTE: The problem has 63 variables (0 free, 3 fixed).</span>
+<span class="go">NOTE: The problem has 24 linear constraints (6 LE, 18 EQ, 0 GE, 0 range).</span>
+<span class="go">NOTE: The problem has 108 linear constraint coefficients.</span>
+<span class="go">NOTE: The problem has 0 nonlinear constraints (0 LE, 0 EQ, 0 GE, 0 range).</span>
+<span class="go">NOTE: The OPTMODEL presolver is disabled for linear problems.</span>
+<span class="go">NOTE: The LP presolver value AUTOMATIC is applied.</span>
+<span class="go">NOTE: The LP presolver time is 0.01 seconds.</span>
+<span class="go">NOTE: The LP presolver removed 36 variables and 12 constraints.</span>
+<span class="go">NOTE: The LP presolver removed 52 constraint coefficients.</span>
+<span class="go">NOTE: The presolved problem has 27 variables, 12 constraints, and 56 constraint coefficients.</span>
+<span class="go">NOTE: The LP solver is called.</span>
+<span class="go">NOTE: The Dual Simplex algorithm is used.</span>
+<span class="go">                              Objective</span>
+<span class="go">         Phase Iteration        Value         Time</span>
+<span class="go">          D 2          1   -1.032250E+03         0</span>
+<span class="go">          P 2         17    8.417969E+02         0</span>
+<span class="go">NOTE: Optimal.</span>
+<span class="go">NOTE: Objective = 841.796875.</span>
+<span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
+<span class="go">NOTE: The output table &#39;SOLUTION&#39; in caslib &#39;CASUSER(casuser)&#39; has 63 rows and 6 columns.</span>
+<span class="go">NOTE: The output table &#39;DUAL&#39; in caslib &#39;CASUSER(casuser)&#39; has 24 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSER(casuser)&#39; has 13 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSER(casuser)&#39; has 18 rows and 4 columns.</span>
+<span class="go">Redundancy: 841.796875</span>
+<span class="go">Cost: 1668750.0</span>
+<span class="go">               numWorkers  numRecruits  numRedundant  numShortTime  numExcess</span>
+<span class="go">unskilled   0  2000.00000          NaN           NaN           NaN        NaN</span>
+<span class="go">unskilled   1  1157.03125          0.0    442.968750          50.0  132.03125</span>
+<span class="go">unskilled   2   675.00000          0.0    166.328125          50.0  150.00000</span>
+<span class="go">unskilled   3   175.00000          0.0    232.500000          50.0  150.00000</span>
+<span class="go">semiskilled 0  1500.00000          NaN           NaN           NaN        NaN</span>
+<span class="go">semiskilled 1  1442.96875          0.0      0.000000          50.0   17.96875</span>
+<span class="go">semiskilled 2  2025.00000        800.0      0.000000          50.0    0.00000</span>
+<span class="go">semiskilled 3  2500.00000        800.0      0.000000           0.0    0.00000</span>
+<span class="go">skilled     0  1000.00000          NaN           NaN           NaN        NaN</span>
+<span class="go">skilled     1  1025.00000          0.0      0.000000          50.0    0.00000</span>
+<span class="go">skilled     2  1500.00000        500.0      0.000000           0.0    0.00000</span>
+<span class="go">skilled     3  2000.00000        500.0      0.000000           0.0    0.00000</span>
+<span class="go">                             numRetrain</span>
+<span class="go">(unskilled, semiskilled, 1)  200.000000</span>
+<span class="go">(unskilled, semiskilled, 2)  200.000000</span>
+<span class="go">(unskilled, semiskilled, 3)  200.000000</span>
+<span class="go">(semiskilled, skilled, 1)    256.250000</span>
+<span class="go">(semiskilled, skilled, 2)    262.276786</span>
+<span class="go">(semiskilled, skilled, 3)    364.285714</span>
+<span class="go">                             numDowngrade</span>
+<span class="go">(semiskilled, unskilled, 1)  0.000000e+00</span>
+<span class="go">(semiskilled, unskilled, 2) -1.421085e-14</span>
+<span class="go">(semiskilled, unskilled, 3)  0.000000e+00</span>
+<span class="go">(skilled, semiskilled, 1)    1.684375e+02</span>
+<span class="go">(skilled, semiskilled, 2)    1.729129e+02</span>
+<span class="go">(skilled, semiskilled, 3)    2.210714e+02</span>
+<span class="go">(skilled, unskilled, 1)      0.000000e+00</span>
+<span class="go">(skilled, unskilled, 2)      0.000000e+00</span>
+<span class="go">(skilled, unskilled, 3)      0.000000e+00</span>
+<span class="go">NOTE: Added action set &#39;optimization&#39;.</span>
+<span class="go">NOTE: Converting model manpower_planning to OPTMODEL.</span>
+<span class="go">NOTE: Submitting OPTMODEL code to CAS server.</span>
+<span class="go">NOTE: Problem generation will use 8 threads.</span>
+<span class="go">NOTE: The problem has 63 variables (0 free, 3 fixed).</span>
+<span class="go">NOTE: The problem has 24 linear constraints (6 LE, 18 EQ, 0 GE, 0 range).</span>
+<span class="go">NOTE: The problem has 108 linear constraint coefficients.</span>
+<span class="go">NOTE: The problem has 0 nonlinear constraints (0 LE, 0 EQ, 0 GE, 0 range).</span>
+<span class="go">NOTE: The OPTMODEL presolver is disabled for linear problems.</span>
+<span class="go">NOTE: The LP presolver value AUTOMATIC is applied.</span>
+<span class="go">NOTE: The LP presolver time is 0.00 seconds.</span>
+<span class="go">NOTE: The LP presolver removed 38 variables and 13 constraints.</span>
+<span class="go">NOTE: The LP presolver removed 56 constraint coefficients.</span>
+<span class="go">NOTE: The presolved problem has 25 variables, 11 constraints, and 52 constraint coefficients.</span>
+<span class="go">NOTE: The LP solver is called.</span>
+<span class="go">NOTE: The Dual Simplex algorithm is used.</span>
+<span class="go">                              Objective</span>
+<span class="go">         Phase Iteration        Value         Time</span>
+<span class="go">          D 2          1   -4.018114E+04         0</span>
+<span class="go">          D 2          6    4.986773E+05         0</span>
+<span class="go">NOTE: Optimal.</span>
+<span class="go">NOTE: Objective = 498677.28532.</span>
+<span class="go">NOTE: The Dual Simplex solve time is 0.01 seconds.</span>
+<span class="go">NOTE: The output table &#39;SOLUTION&#39; in caslib &#39;CASUSER(casuser)&#39; has 63 rows and 6 columns.</span>
+<span class="go">NOTE: The output table &#39;DUAL&#39; in caslib &#39;CASUSER(casuser)&#39; has 24 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;solutionSummary&#39; in caslib &#39;CASUSER(casuser)&#39; has 13 rows and 4 columns.</span>
+<span class="go">NOTE: The CAS table &#39;problemSummary&#39; in caslib &#39;CASUSER(casuser)&#39; has 18 rows and 4 columns.</span>
+<span class="go">Redundancy: 1423.7188365650968</span>
+<span class="go">Cost: 498677.2853185596</span>
+<span class="go">               numWorkers  numRecruits  numRedundant  numShortTime  numExcess</span>
+<span class="go">unskilled   0      2000.0          NaN           NaN           NaN        NaN</span>
+<span class="go">unskilled   1      1000.0     0.000000    812.500000           0.0        0.0</span>
+<span class="go">unskilled   2       500.0     0.000000    257.617729           0.0        0.0</span>
+<span class="go">unskilled   3         0.0     0.000000    353.601108           0.0        0.0</span>
+<span class="go">semiskilled 0      1500.0          NaN           NaN           NaN        NaN</span>
+<span class="go">semiskilled 1      1400.0     0.000000      0.000000           0.0        0.0</span>
+<span class="go">semiskilled 2      2000.0   800.000000      0.000000           0.0        0.0</span>
+<span class="go">semiskilled 3      2500.0   800.000000      0.000000           0.0        0.0</span>
+<span class="go">skilled     0      1000.0          NaN           NaN           NaN        NaN</span>
+<span class="go">skilled     1      1000.0    55.555556      0.000000           0.0        0.0</span>
+<span class="go">skilled     2      1500.0   500.000000      0.000000           0.0        0.0</span>
+<span class="go">skilled     3      2000.0   500.000000      0.000000           0.0        0.0</span>
+<span class="go">                             numRetrain</span>
+<span class="go">(unskilled, semiskilled, 1)    0.000000</span>
+<span class="go">(unskilled, semiskilled, 2)  142.382271</span>
+<span class="go">(unskilled, semiskilled, 3)   96.398892</span>
+<span class="go">(semiskilled, skilled, 1)      0.000000</span>
+<span class="go">(semiskilled, skilled, 2)    105.263158</span>
+<span class="go">(semiskilled, skilled, 3)    131.578947</span>
+<span class="go">                             numDowngrade</span>
+<span class="go">(semiskilled, unskilled, 1)  2.500000e+01</span>
+<span class="go">(semiskilled, unskilled, 2)  2.842171e-14</span>
+<span class="go">(semiskilled, unskilled, 3) -2.842171e-14</span>
+<span class="go">(skilled, semiskilled, 1)    0.000000e+00</span>
+<span class="go">(skilled, semiskilled, 2)    0.000000e+00</span>
+<span class="go">(skilled, semiskilled, 3)    0.000000e+00</span>
+<span class="go">(skilled, unskilled, 1)      0.000000e+00</span>
+<span class="go">(skilled, unskilled, 2)      1.136868e-13</span>
+<span class="go">(skilled, unskilled, 3)      1.421085e-14</span>
+<span class="gh">Out[8]: </span><span class="go">498677.2853185596</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="1.0.0">1.0.0</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/user-guide.html">User Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="examples.html">Examples</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="examples.html#sas-viya-examples-concrete">SAS Viya Examples (Concrete)</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="food_manufacture_1.html">Food Manufacture 1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="food_manufacture_2.html">Food Manufacture 2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="factory_planning_1.html">Factory Planning 1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="factory_planning_2.html">Factory Planning 2</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Manpower Planning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#reference">Reference</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#model">Model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#output">Output</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="refinery_optimization.html">Refinery Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mining_optimization.html">Mining Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="farm_planning.html">Farm Planning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="economic_planning.html">Economic Planning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="decentralization.html">Decentralization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="optimal_wedding.html">SAS/OR Blog: Optimal Wedding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kidney_exchange.html">SAS/OR Blog: Kidney Exchange</a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiobjective.html">Multiobjective</a></li>
+<li class="toctree-l3"><a class="reference internal" href="least_squares.html">Least Squares</a></li>
+<li class="toctree-l3"><a class="reference internal" href="efficiency_analysis.html">Efficiency Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-viya-examples-abstract">SAS Viya Examples (Abstract)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#sas-9-4-examples">SAS 9.4 Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../version-history.html">Version History</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="refinery_optimization.html" title="Refinery Optimization"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="factory_planning_2.html" title="Factory Planning 2"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="examples.html" >Examples</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2020, SAS Institute.
+      Last updated on Apr 28, 2020 (Timestamp: 1.0-20200428203611).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+    </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-155356999-1');
+</script>
+
+
+  </body>
+</html>
