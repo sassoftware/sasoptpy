@@ -1751,6 +1751,21 @@ class Model:
         """
         return sasoptpy.interface.to_mps(self, **kwargs)
 
+    def export_mps(self, **kwargs):
+        """
+        Exports model in MPS format
+
+        Examples
+        --------
+
+        >>> m.export_to_mps('my_problem.mps')
+
+        """
+        if self._is_linear():
+            return sasoptpy.util.export_to_mps(self, **kwargs)
+        else:
+            raise ValueError("Model is linear or has abstract components")
+
     def to_optmodel(self, **kwargs):
         """
         Returns the model in OPTMODEL format
