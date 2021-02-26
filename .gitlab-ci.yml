@@ -2,7 +2,6 @@
 stages:
   - test1
   - test2
-  - test3
   - deploy
 
 default:
@@ -19,7 +18,6 @@ py36:
   stage: test1
   image: python:3.6
   script:
-  - pip install --upgrade Cython
   - python setup.py install
   - pip install coverage
   - cd tests
@@ -29,17 +27,6 @@ py37:
   stage: test2
   image: python:3.7
   script:
-  - pip install --upgrade Cython
-  - python setup.py install
-  - pip install coverage
-  - cd tests
-  - ./test_coverage.sh
-
-py38:
-  stage: test3
-  image: python:3.8
-  script:
-  - pip install --upgrade Cython
   - python setup.py install
   - pip install coverage
   - cd tests
