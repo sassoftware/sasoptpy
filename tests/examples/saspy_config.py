@@ -7,7 +7,7 @@ sshsas = {'saspath': os.environ.get('SASPATH'),
           'ssh': '/usr/bin/ssh',
           'host': os.environ.get('SASHOST'),
           'encoding': 'latin1',
-          'options': ['-t', 'dev/mva-v940m6', '-box', 'laxno', '-nopp',
+          'options': ['-t', 'dev/mva-v940m8', '-box', 'laxno', '-nopp',
                       '-encoding', 'latin1'
                      ],
           'tunnel': 15001

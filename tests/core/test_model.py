@@ -1125,6 +1125,40 @@ class TestModel(unittest.TestCase):
         for i in a:
             self.assertEqual(x[i].get_value(), 1.0)
 
+    def test_export(self):
+        m = TestModel.get_standard_model('test_model_export')
+        x = m.get_variable('x')
+        mps_text = m.export_mps(fetch=True)
+        print(mps_text)
+        self.assertEqual(mps_text.replace(' ', ''), inspect.cleandoc(
+            """
+            NAME     test_model_export
+            ROWS
+             MIN     test_model_export_obj
+             L       c1
+             L       c2[0]
+             L       c2[1]
+            COLUMNS
+                     x                      c1     1.0
+                     y[0]                   c2[0]  1.0
+                     y[1]                   c2[1]  1.0
+            RHS
+                     RHS                    c1     5.0  c2[0]  3.0
+                     RHS                    c2[1]  3.0
+            RANGES
+            BOUNDS
+             FR      BND                    x
+             FR      BND                    y[0]
+             FR      BND                    y[1]
+            ENDATA"""
+        ).replace(' ', ''))
+        
+        m.add_constraint(x ** 2 + x <= 10, name='qb')
+        def generate_error():
+            m.export_mps()
+        self.assertRaises(ValueError, generate_error)
+
+
     def tearDown(self):
         so.reset()
 
