@@ -1,0 +1,787 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>sasoptpy.interface.solver.cas_mediator &#8212; sasoptpy 1.0.3 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/sasoptpy.css" />
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
+    <script src="../../../../_static/js/url.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../../../../_static/js/version.js"></script>
+    <script src="../../../../../../_static/js/version.js"></script>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">sasoptpy 1.0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for sasoptpy.interface.solver.cas_mediator</h1><div class="highlight"><pre>
+<span></span><span class="c1"># CAS (SAS Viya) interface for sasoptpy</span>
+
+<span class="kn">import</span> <span class="nn">inspect</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">import</span> <span class="nn">sasoptpy</span>
+<span class="kn">from</span> <span class="nn">sasoptpy.interface</span> <span class="kn">import</span> <span class="n">Mediator</span>
+
+<div class="viewcode-block" id="CASMediator"><a class="viewcode-back" href="../../../../api/generated/sasoptpy.interface.CASMediator.html#sasoptpy.interface.CASMediator">[docs]</a><span class="k">class</span> <span class="nc">CASMediator</span><span class="p">(</span><span class="n">Mediator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Handles the connection between sasoptpy and the SAS Viya (CAS) server</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    caller : :class:`sasoptpy.Model` or :class:`sasoptpy.Workspace`</span>
+<span class="sd">        Model or workspace that mediator belongs to</span>
+<span class="sd">    cas_session : :class:`swat.cas.connection.CAS`</span>
+<span class="sd">        CAS connection</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+
+<span class="sd">    * CAS Mediator is used by :class:`sasoptpy.Model` and :class:`sasoptpy.Workspace` objects</span>
+<span class="sd">      internally.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">caller</span><span class="p">,</span> <span class="n">cas_session</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">caller</span> <span class="o">=</span> <span class="n">caller</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">cas_session</span>
+
+<div class="viewcode-block" id="CASMediator.solve"><a class="viewcode-back" href="../../../../api/generated/sasoptpy.interface.CASMediator.solve.html#sasoptpy.interface.CASMediator.solve">[docs]</a>    <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Solve action for :class:`Model` objects</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">loadactionset</span><span class="p">(</span><span class="n">actionset</span><span class="o">=</span><span class="s1">&#39;optimization&#39;</span><span class="p">)</span>
+
+        <span class="n">has_user_called_mps</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mps&#39;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;frame&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;options&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+
+        <span class="n">mps_indicator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_mps_format_needed</span><span class="p">(</span>
+            <span class="n">has_user_called_mps</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">mps_indicator</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solve_with_mps</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solve_with_optmodel</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CASMediator.submit"><a class="viewcode-back" href="../../../../api/generated/sasoptpy.interface.CASMediator.submit.html#sasoptpy.interface.CASMediator.submit">[docs]</a>    <span class="k">def</span> <span class="nf">submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Submit action for custom input and :class:`sasoptpy.Workspace` objects</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">loadactionset</span><span class="p">(</span><span class="n">actionset</span><span class="o">=</span><span class="s1">&#39;optimization&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_optmodel_code</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CASMediator.tune"><a class="viewcode-back" href="../../../../api/generated/sasoptpy.interface.CASMediator.tune.html#sasoptpy.interface.CASMediator.tune">[docs]</a>    <span class="k">def</span> <span class="nf">tune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Wrapper for the MILP tuner</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">loadactionset</span><span class="p">(</span><span class="n">actionset</span><span class="o">=</span><span class="s1">&#39;optimization&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="s1">&#39;optimization.tuner&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Current CAS session version do not have tuner capability.&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tune_problem</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">is_mps_format_needed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mps_option</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+
+        <span class="n">enforced</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">mps_option</span> <span class="o">=</span> <span class="n">mps_option</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span>
+        <span class="n">caller</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">caller</span>
+
+        <span class="n">model</span> <span class="o">=</span> <span class="n">caller</span>
+
+        <span class="c1"># If runOptmodel action is not available on server</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">optimization</span><span class="p">,</span> <span class="s1">&#39;runoptmodel&#39;</span><span class="p">):</span>
+            <span class="n">mps_option</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">enforced</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="s1">&#39;decomp&#39;</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
+            <span class="n">mps_option</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">enforced</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">mps_option</span><span class="p">:</span>
+            <span class="n">switch</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="c1"># Sets and parameter belong to abstract models</span>
+            <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">get_sets</span><span class="p">()</span> <span class="ow">or</span> <span class="n">model</span><span class="o">.</span><span class="n">get_parameters</span><span class="p">():</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s1">&#39;INFO: Model </span><span class="si">{}</span><span class="s1"> has abstract elements, &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">model</span><span class="o">.</span><span class="n">get_name</span><span class="p">())</span> <span class="o">+</span>
+                    <span class="s1">&#39;switching to OPTMODEL mode.&#39;</span><span class="p">,</span> <span class="ne">UserWarning</span><span class="p">)</span>
+                <span class="n">switch</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="c1"># MPS format cannot represent nonlinear problems</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">is_linear</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s1">&#39;INFO: Model </span><span class="si">{}</span><span class="s1"> includes nonlinear or abstract &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">model</span><span class="o">.</span><span class="n">get_name</span><span class="p">())</span> <span class="o">+</span>
+                    <span class="s1">&#39;components, switching to OPTMODEL mode.&#39;</span><span class="p">,</span> <span class="ne">UserWarning</span><span class="p">)</span>
+                <span class="n">switch</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="k">if</span> <span class="n">switch</span> <span class="ow">and</span> <span class="n">enforced</span> <span class="ow">and</span> <span class="n">mps_option</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Problem requires runOptmodel action which &#39;</span>
+                                   <span class="s1">&#39;is not available or appropriate&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">switch</span><span class="p">:</span>
+                <span class="n">mps_option</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="n">mps_option</span>
+
+<div class="viewcode-block" id="CASMediator.solve_with_mps"><a class="viewcode-back" href="../../../../api/generated/sasoptpy.interface.CASMediator.solve_with_mps.html#sasoptpy.interface.CASMediator.solve_with_mps">[docs]</a>    <span class="k">def</span> <span class="nf">solve_with_mps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Submits the problem in MPS (DataFrame) format, supported by old versions</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        kwargs : dict</span>
+<span class="sd">            Keyword arguments for solver settings and options</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        primal_solution : :class:`swat.dataframe.SASDataFrame`</span>
+<span class="sd">            Solution of the model or None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">caller</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span>
+        <span class="n">verbose</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;verbose&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">submit</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;submit&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;options&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+        <span class="n">primalin</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;primalin&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">replace</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;replace&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">drop</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;drop&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">user_blocks</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;NOTE: Converting model </span><span class="si">{}</span><span class="s1"> to DataFrame.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">get_name</span><span class="p">()))</span>
+        <span class="c1"># Pre-upload argument parse</span>
+
+        <span class="c1"># Find problem type and initial values</span>
+        <span class="n">ptype</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># LP</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">get_grouped_variables</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">_type</span> <span class="o">!=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">CONT</span><span class="p">:</span>
+                <span class="n">ptype</span> <span class="o">=</span> <span class="mi">2</span>
+                <span class="k">break</span>
+
+        <span class="c1"># Decomp check</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">options</span><span class="p">[</span><span class="s1">&#39;decomp&#39;</span><span class="p">][</span><span class="s1">&#39;method&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;user&#39;</span><span class="p">:</span>
+                        <span class="n">user_blocks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_user_blocks</span><span class="p">()</span>
+                        <span class="n">options</span><span class="p">[</span><span class="s1">&#39;decomp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;blocks&#39;</span><span class="p">:</span> <span class="n">user_blocks</span><span class="p">}</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="c1"># Initial value check for MIP</span>
+        <span class="k">if</span> <span class="n">primalin</span><span class="p">:</span>
+            <span class="n">init_values</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">var_names</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="n">ptype</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">loop_variables</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">_init</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">var_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">get_name</span><span class="p">())</span>
+                        <span class="n">init_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">_init</span><span class="p">)</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">init_values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span>
+                   <span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;primalin&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+                    <span class="n">primalinTable</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+                        <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;_VAR_&#39;</span><span class="p">:</span> <span class="n">var_names</span><span class="p">,</span> <span class="s1">&#39;_VALUE_&#39;</span><span class="p">:</span> <span class="n">init_values</span><span class="p">})</span>
+                    <span class="n">session</span><span class="o">.</span><span class="n">upload_frame</span><span class="p">(</span>
+                        <span class="n">primalinTable</span><span class="p">,</span> <span class="n">casout</span><span class="o">=</span><span class="p">{</span>
+                            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;PRIMALINTABLE&#39;</span><span class="p">,</span> <span class="s1">&#39;replace&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+                    <span class="n">options</span><span class="p">[</span><span class="s1">&#39;primalin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;PRIMALINTABLE&#39;</span>
+
+        <span class="c1"># Check if objective constant workaround is needed</span>
+        <span class="n">sfunc</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">solveLp</span> <span class="k">if</span> <span class="n">ptype</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">session</span><span class="o">.</span><span class="n">solveMilp</span>
+        <span class="n">has_arg</span> <span class="o">=</span> <span class="s1">&#39;objconstant&#39;</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">sfunc</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span>
+        <span class="k">if</span> <span class="n">has_arg</span> <span class="ow">and</span> <span class="s1">&#39;objconstant&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">options</span><span class="p">:</span>
+            <span class="n">objconstant</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_objective</span><span class="p">()</span><span class="o">.</span><span class="n">_linCoef</span><span class="p">[</span><span class="s1">&#39;CONST&#39;</span><span class="p">][</span><span class="s1">&#39;val&#39;</span><span class="p">]</span>
+            <span class="n">options</span><span class="p">[</span><span class="s1">&#39;objconstant&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">objconstant</span>
+
+        <span class="c1"># Upload the problem</span>
+        <span class="n">mps_table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upload_model</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="n">replace</span><span class="p">,</span>
+                                      <span class="n">constant</span><span class="o">=</span><span class="ow">not</span> <span class="n">has_arg</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">mps_table</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">submit</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">mps_table</span>
+
+        <span class="k">if</span> <span class="n">ptype</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">valid_opts</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">solveLp</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span>
+            <span class="n">lp_opts</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">options</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">valid_opts</span><span class="p">:</span>
+                    <span class="n">lp_opts</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">solveLp</span><span class="p">(</span>
+                <span class="n">data</span><span class="o">=</span><span class="n">mps_table</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">lp_opts</span><span class="p">,</span>
+                <span class="n">primalOut</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;caslib&#39;</span><span class="p">:</span> <span class="s1">&#39;CASUSER&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;primal&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;replace&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+                <span class="n">dualOut</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;caslib&#39;</span><span class="p">:</span> <span class="s1">&#39;CASUSER&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;dual&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;replace&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+                <span class="n">objSense</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">get_objective</span><span class="p">()</span><span class="o">.</span><span class="n">get_sense</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="n">ptype</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">valid_opts</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">solveMilp</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span>
+            <span class="n">milp_opts</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">options</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">valid_opts</span><span class="p">:</span>
+                    <span class="n">milp_opts</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">solveMilp</span><span class="p">(</span>
+                <span class="n">data</span><span class="o">=</span><span class="n">mps_table</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">milp_opts</span><span class="p">,</span>
+                <span class="n">primalOut</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;caslib&#39;</span><span class="p">:</span> <span class="s1">&#39;CASUSER&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;primal&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;replace&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+                <span class="n">dualOut</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;caslib&#39;</span><span class="p">:</span> <span class="s1">&#39;CASUSER&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;dual&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;replace&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+                <span class="n">objSense</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">get_objective</span><span class="p">()</span><span class="o">.</span><span class="n">get_sense</span><span class="p">())</span>
+
+        <span class="n">model</span><span class="o">.</span><span class="n">response</span> <span class="o">=</span> <span class="n">response</span>
+
+        <span class="c1"># Parse solution</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get_tables</span><span class="p">(</span><span class="s1">&#39;status&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;OK&#39;</span><span class="p">):</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">_primalSolution</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">CASTable</span><span class="p">(</span>
+                <span class="s1">&#39;primal&#39;</span><span class="p">,</span> <span class="n">caslib</span><span class="o">=</span><span class="s1">&#39;CASUSER&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">_dualSolution</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">CASTable</span><span class="p">(</span>
+                <span class="s1">&#39;dual&#39;</span><span class="p">,</span> <span class="n">caslib</span><span class="o">=</span><span class="s1">&#39;CASUSER&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+            <span class="c1"># Bring solution to variables</span>
+            <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">_primalSolution</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+                <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;_SOL_&#39;</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">_primalSolution</span> <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;_SOL_&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>\
+                     <span class="ow">or</span> <span class="s1">&#39;_SOL_&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">_primalSolution</span><span class="p">:</span>
+                    <span class="n">model</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;_VAR_&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;_VALUE_&#39;</span><span class="p">])</span>
+
+            <span class="c1"># Capturing dual values for LP problems</span>
+            <span class="k">if</span> <span class="n">ptype</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">_primalSolution</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">_primalSolution</span><span class="p">[</span>
+                    <span class="p">[</span><span class="s1">&#39;_VAR_&#39;</span><span class="p">,</span> <span class="s1">&#39;_LBOUND_&#39;</span><span class="p">,</span> <span class="s1">&#39;_UBOUND_&#39;</span><span class="p">,</span> <span class="s1">&#39;_VALUE_&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;_R_COST_&#39;</span><span class="p">]]</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">_primalSolution</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;var&#39;</span><span class="p">,</span> <span class="s1">&#39;lb&#39;</span><span class="p">,</span> <span class="s1">&#39;ub&#39;</span><span class="p">,</span>
+                                                <span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;rc&#39;</span><span class="p">]</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">_dualSolution</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">_dualSolution</span><span class="p">[</span>
+                    <span class="p">[</span><span class="s1">&#39;_ROW_&#39;</span><span class="p">,</span> <span class="s1">&#39;_ACTIVITY_&#39;</span><span class="p">,</span> <span class="s1">&#39;_VALUE_&#39;</span><span class="p">]]</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">_dualSolution</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;con&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;dual&#39;</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">_primalSolution</span><span class="o">.</span><span class="n">itertuples</span><span class="p">():</span>
+                    <span class="n">model</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">var</span><span class="p">)</span><span class="o">.</span><span class="n">_dual</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">rc</span>
+                <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">_dualSolution</span><span class="o">.</span><span class="n">itertuples</span><span class="p">():</span>
+                    <span class="n">model</span><span class="o">.</span><span class="n">get_constraint</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">con</span><span class="p">)</span><span class="o">.</span><span class="n">_dual</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">dual</span>
+            <span class="k">elif</span> <span class="n">ptype</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">_primalSolution</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">_primalSolution</span><span class="p">[</span>
+                    <span class="p">[</span><span class="s1">&#39;_VAR_&#39;</span><span class="p">,</span> <span class="s1">&#39;_LBOUND_&#39;</span><span class="p">,</span> <span class="s1">&#39;_UBOUND_&#39;</span><span class="p">,</span> <span class="s1">&#39;_VALUE_&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;_SOL_&#39;</span><span class="p">]]</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">_primalSolution</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;var&#39;</span><span class="p">,</span> <span class="s1">&#39;lb&#39;</span><span class="p">,</span> <span class="s1">&#39;ub&#39;</span><span class="p">,</span>
+                                                <span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;solution&#39;</span><span class="p">]</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">_dualSolution</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">_dualSolution</span><span class="p">[</span>
+                    <span class="p">[</span><span class="s1">&#39;_ROW_&#39;</span><span class="p">,</span> <span class="s1">&#39;_ACTIVITY_&#39;</span><span class="p">,</span> <span class="s1">&#39;_SOL_&#39;</span><span class="p">]]</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">_dualSolution</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;con&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span>
+                                              <span class="s1">&#39;solution&#39;</span><span class="p">]</span>
+
+        <span class="c1"># Drop tables</span>
+        <span class="k">if</span> <span class="n">drop</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">droptable</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">mps_table</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">user_blocks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">session</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">droptable</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">user_blocks</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">primalin</span><span class="p">:</span>
+                <span class="n">session</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">droptable</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="s1">&#39;PRIMALINTABLE&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Post-solve parse</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get_tables</span><span class="p">(</span><span class="s1">&#39;status&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;OK&#39;</span><span class="p">):</span>
+            <span class="c1"># Print problem and solution summaries</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">_problemSummary</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">ProblemSummary</span><span class="p">[[</span><span class="s1">&#39;Label1&#39;</span><span class="p">,</span>
+                                                            <span class="s1">&#39;cValue1&#39;</span><span class="p">]]</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">_solutionSummary</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">SolutionSummary</span><span class="p">[[</span><span class="s1">&#39;Label1&#39;</span><span class="p">,</span>
+                                                              <span class="s1">&#39;cValue1&#39;</span><span class="p">]]</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">_problemSummary</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;Label1&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">_problemSummary</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">]</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">_problemSummary</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Label&#39;</span><span class="p">]</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">_solutionSummary</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;Label1&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">_solutionSummary</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">]</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">_solutionSummary</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Label&#39;</span><span class="p">]</span>
+            <span class="c1"># Record status and time</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">_status</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">solutionStatus</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">_soltime</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">solutionTime</span>
+            <span class="k">if</span><span class="p">(</span><span class="s1">&#39;OPTIMAL&#39;</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">solutionStatus</span><span class="p">):</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">_objval</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">objective</span>
+                <span class="c1"># Replace initial values with current values</span>
+                <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">loop_variables</span><span class="p">():</span>
+                    <span class="n">v</span><span class="o">.</span><span class="n">_init</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">_value</span>
+                <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">_primalSolution</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Solution message is not OPTIMAL: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">solutionStatus</span><span class="p">),</span> <span class="ne">UserWarning</span><span class="p">)</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">_objval</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Solve came back with message: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">response</span><span class="o">.</span><span class="n">get_tables</span><span class="p">(</span><span class="s1">&#39;status&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span></div>
+
+<div class="viewcode-block" id="CASMediator.solve_with_optmodel"><a class="viewcode-back" href="../../../../api/generated/sasoptpy.interface.CASMediator.solve_with_optmodel.html#sasoptpy.interface.CASMediator.solve_with_optmodel">[docs]</a>    <span class="k">def</span> <span class="nf">solve_with_optmodel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Submits the problem in OPTMODEL format</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        kwargs : dict</span>
+<span class="sd">            Keyword arguments for solver settings and options</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        primal_solution : :class:`swat.dataframe.SASDataFrame`</span>
+<span class="sd">            Solution of the model or None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">caller</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span>
+        <span class="n">verbose</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;verbose&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">submit</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;submit&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;NOTE: Converting model </span><span class="si">{}</span><span class="s1"> to OPTMODEL.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">get_name</span><span class="p">()))</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;options&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+        <span class="n">primalin</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;primalin&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">optmodel_string</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
+                                           <span class="n">ods</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">primalin</span><span class="o">=</span><span class="n">primalin</span><span class="p">,</span>
+                                            <span class="n">parse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">optmodel_string</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">submit</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">optmodel_string</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;NOTE: Submitting OPTMODEL code to CAS server.&#39;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">runOptmodel</span><span class="p">(</span>
+            <span class="n">optmodel_string</span><span class="p">,</span>
+            <span class="n">outputTables</span><span class="o">=</span><span class="p">{</span>
+                <span class="s1">&#39;names&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;solutionSummary&#39;</span><span class="p">:</span> <span class="s1">&#39;solutionSummary&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;problemSummary&#39;</span><span class="p">:</span> <span class="s1">&#39;problemSummary&#39;</span><span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+
+        <span class="n">model</span><span class="o">.</span><span class="n">response</span> <span class="o">=</span> <span class="n">response</span>
+
+        <span class="c1"># Parse solution</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_cas_solution</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="CASMediator.parse_cas_solution"><a class="viewcode-back" href="../../../../api/generated/sasoptpy.interface.CASMediator.parse_cas_solution.html#sasoptpy.interface.CASMediator.parse_cas_solution">[docs]</a>    <span class="k">def</span> <span class="nf">parse_cas_solution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs post-solve operations</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        solution : :class:`swat.dataframe.SASDataFrame`</span>
+<span class="sd">            Solution of the problem</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">caller</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">caller</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">caller</span><span class="o">.</span><span class="n">response</span>
+
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s1">&#39;Syntax Error&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">SyntaxError</span><span class="p">(</span><span class="s1">&#39;An invalid symbol is generated, check object names&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s1">&#39;Semantic Error&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;A semantic error has occured, check statements and object types&#39;</span><span class="p">)</span>
+
+        <span class="n">solution</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">CASTable</span><span class="p">(</span><span class="s1">&#39;solution&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+        <span class="n">dual_solution</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">CASTable</span><span class="p">(</span><span class="s1">&#39;dual&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+
+        <span class="n">caller</span><span class="o">.</span><span class="n">_primalSolution</span> <span class="o">=</span> <span class="n">solution</span>
+        <span class="n">caller</span><span class="o">.</span><span class="n">_dualSolution</span> <span class="o">=</span> <span class="n">dual_solution</span>
+
+        <span class="n">caller</span><span class="o">.</span><span class="n">_problemSummary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_cas_table</span><span class="p">(</span><span class="s1">&#39;problemSummary&#39;</span><span class="p">)</span>
+        <span class="n">caller</span><span class="o">.</span><span class="n">_solutionSummary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_cas_table</span><span class="p">(</span><span class="s1">&#39;solutionSummary&#39;</span><span class="p">)</span>
+
+        <span class="n">caller</span><span class="o">.</span><span class="n">_status</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">solutionStatus</span>
+        <span class="n">caller</span><span class="o">.</span><span class="n">_soltime</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">solutionTime</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_variable_values</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_constraint_values</span><span class="p">(</span><span class="n">dual_solution</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_model_objective_value</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_variable_init_values</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">solution</span></div>
+
+    <span class="k">def</span> <span class="nf">parse_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">CASTable</span><span class="p">(</span><span class="n">table</span><span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">table</span>
+
+<div class="viewcode-block" id="CASMediator.parse_cas_table"><a class="viewcode-back" href="../../../../api/generated/sasoptpy.interface.CASMediator.parse_cas_table.html#sasoptpy.interface.CASMediator.parse_cas_table">[docs]</a>    <span class="k">def</span> <span class="nf">parse_cas_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts requested :class:`swat.cas.table.CASTable` objects to</span>
+<span class="sd">        :class:`swat.dataframe.SASDataFrame`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">CASTable</span><span class="p">(</span><span class="n">table</span><span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">interface</span><span class="o">.</span><span class="n">parse_optmodel_table</span><span class="p">(</span><span class="n">table</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CASMediator.set_variable_values"><a class="viewcode-back" href="../../../../api/generated/sasoptpy.interface.CASMediator.set_variable_values.html#sasoptpy.interface.CASMediator.set_variable_values">[docs]</a>    <span class="k">def</span> <span class="nf">set_variable_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solution</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs post-solve assignment of variable values</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        solution : class:`swat.dataframe.SASDataFrame`</span>
+<span class="sd">            Primal solution of the problem</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">caller</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">caller</span>
+        <span class="n">solver</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">solver</span> <span class="o">=</span> <span class="n">caller</span><span class="o">.</span><span class="n">get_solution_summary</span><span class="p">()</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Solver&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">solution</span><span class="o">.</span><span class="n">itertuples</span><span class="p">():</span>
+            <span class="n">caller</span><span class="o">.</span><span class="n">set_variable_value</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">var</span><span class="p">,</span> <span class="n">row</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">solver</span> <span class="o">==</span> <span class="s1">&#39;LP&#39;</span><span class="p">:</span>
+                <span class="n">caller</span><span class="o">.</span><span class="n">set_dual_value</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">var</span><span class="p">,</span> <span class="n">row</span><span class="o">.</span><span class="n">rc</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CASMediator.set_constraint_values"><a class="viewcode-back" href="../../../../api/generated/sasoptpy.interface.CASMediator.set_constraint_values.html#sasoptpy.interface.CASMediator.set_constraint_values">[docs]</a>    <span class="k">def</span> <span class="nf">set_constraint_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solution</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs post-solve assignment of constraint values</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        solution : class:`swat.dataframe.SASDataFrame`</span>
+<span class="sd">            Primal solution of the problem</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">caller</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">caller</span>
+        <span class="n">solver</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">solver</span> <span class="o">=</span> <span class="n">caller</span><span class="o">.</span><span class="n">get_solution_summary</span><span class="p">()</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Solver&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">if</span> <span class="n">solver</span> <span class="o">==</span> <span class="s1">&#39;LP&#39;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">solution</span><span class="o">.</span><span class="n">itertuples</span><span class="p">():</span>
+                <span class="n">con</span> <span class="o">=</span> <span class="n">caller</span><span class="o">.</span><span class="n">get_constraint</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">con</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">con</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">con</span><span class="o">.</span><span class="n">set_dual</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">dual</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CASMediator.set_model_objective_value"><a class="viewcode-back" href="../../../../api/generated/sasoptpy.interface.CASMediator.set_model_objective_value.html#sasoptpy.interface.CASMediator.set_model_objective_value">[docs]</a>    <span class="k">def</span> <span class="nf">set_model_objective_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs post-solve assignment of objective values</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        solution : class:`swat.dataframe.SASDataFrame`</span>
+<span class="sd">            Primal solution of the problem</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">caller</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">caller</span>
+        <span class="k">if</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_model</span><span class="p">(</span><span class="n">caller</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">caller</span><span class="o">.</span><span class="n">response</span><span class="p">,</span> <span class="s1">&#39;objective&#39;</span><span class="p">):</span>
+                <span class="n">objval</span> <span class="o">=</span> <span class="n">caller</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">objective</span>
+                <span class="n">caller</span><span class="o">.</span><span class="n">set_objective_value</span><span class="p">(</span><span class="n">objval</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CASMediator.set_variable_init_values"><a class="viewcode-back" href="../../../../api/generated/sasoptpy.interface.CASMediator.set_variable_init_values.html#sasoptpy.interface.CASMediator.set_variable_init_values">[docs]</a>    <span class="k">def</span> <span class="nf">set_variable_init_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs post-solve assignment of variable initial values</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        solution : class:`swat.dataframe.SASDataFrame`</span>
+<span class="sd">            Primal solution of the problem</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">caller</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">caller</span>
+        <span class="k">if</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_model</span><span class="p">(</span><span class="n">caller</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">caller</span><span class="o">.</span><span class="n">loop_variables</span><span class="p">():</span>
+                <span class="n">v</span><span class="o">.</span><span class="n">set_init</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">get_value</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="CASMediator.upload_user_blocks"><a class="viewcode-back" href="../../../../api/generated/sasoptpy.interface.CASMediator.upload_user_blocks.html#sasoptpy.interface.CASMediator.upload_user_blocks">[docs]</a>    <span class="k">def</span> <span class="nf">upload_user_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Uploads user-defined decomposition blocks to the CAS server</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        name : string</span>
+<span class="sd">            CAS table name of the user-defined decomposition blocks</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+
+<span class="sd">        &gt;&gt;&gt; userblocks = m.upload_user_blocks()</span>
+<span class="sd">        &gt;&gt;&gt; m.solve(milp={&#39;decomp&#39;: {&#39;blocks&#39;: userblocks}})</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sess</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">caller</span>
+
+        <span class="n">blocks_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">block_counter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">decomp_table</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">loop_constraints</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">_block</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">_block</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">blocks_dict</span><span class="p">:</span>
+                    <span class="n">blocks_dict</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">_block</span><span class="p">]</span> <span class="o">=</span> <span class="n">block_counter</span>
+                    <span class="n">block_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">block_no</span> <span class="o">=</span> <span class="n">blocks_dict</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">_block</span><span class="p">]</span>
+                <span class="n">decomp_table</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">get_name</span><span class="p">(),</span> <span class="n">block_no</span><span class="p">])</span>
+        <span class="n">frame_decomp_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">decomp_table</span><span class="p">,</span>
+                                          <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_ROW_&#39;</span><span class="p">,</span> <span class="s1">&#39;_BLOCK_&#39;</span><span class="p">])</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">upload_frame</span><span class="p">(</span><span class="n">frame_decomp_table</span><span class="p">,</span>
+                                     <span class="n">casout</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;BLOCKSTABLE&#39;</span><span class="p">,</span>
+                                             <span class="s1">&#39;replace&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CASMediator.upload_model"><a class="viewcode-back" href="../../../../api/generated/sasoptpy.interface.CASMediator.upload_model.html#sasoptpy.interface.CASMediator.upload_model">[docs]</a>    <span class="k">def</span> <span class="nf">upload_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">constant</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                     <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts internal model to MPS table and upload to CAS session</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name : string, optional</span>
+<span class="sd">            Desired name of the MPS table on the server</span>
+<span class="sd">        replace : boolean, optional</span>
+<span class="sd">            Option to replace the existing MPS table</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        frame : :class:`swat.cas.table.CASTable`</span>
+<span class="sd">            Reference to the uploaded CAS Table</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+
+<span class="sd">        - This method returns None if the model session is not valid.</span>
+<span class="sd">        - Name of the table is randomly assigned if name argument is None</span>
+<span class="sd">          or not given.</span>
+<span class="sd">        - This method should not be used if :func:`Model.solve` is going</span>
+<span class="sd">          to be used. :func:`Model.solve` calls this method internally.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">caller</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_mps</span><span class="p">(</span><span class="n">constant</span><span class="o">=</span><span class="n">constant</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;NOTE: Uploading the problem DataFrame to the server.&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">upload_frame</span><span class="p">(</span>
+                <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">casout</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s1">&#39;replace&#39;</span><span class="p">:</span> <span class="n">replace</span><span class="p">})</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">upload_frame</span><span class="p">(</span>
+                <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">casout</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;replace&#39;</span><span class="p">:</span> <span class="n">replace</span><span class="p">})</span></div>
+
+<div class="viewcode-block" id="CASMediator.submit_optmodel_code"><a class="viewcode-back" href="../../../../api/generated/sasoptpy.interface.CASMediator.submit_optmodel_code.html#sasoptpy.interface.CASMediator.submit_optmodel_code">[docs]</a>    <span class="k">def</span> <span class="nf">submit_optmodel_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts caller into OPTMODEL code and submits using</span>
+<span class="sd">        optimization.runOptmodel action</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        kwargs :</span>
+<span class="sd">            Solver settings and options</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">caller</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">caller</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span>
+        <span class="n">optmodel_code</span> <span class="o">=</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">(</span><span class="n">caller</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">parse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">verbose</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;verbose&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">sasoptpy</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">(</span><span class="n">caller</span><span class="p">))</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">runOptmodel</span><span class="p">(</span>
+            <span class="n">optmodel_code</span>
+        <span class="p">)</span>
+
+        <span class="n">caller</span><span class="o">.</span><span class="n">response</span> <span class="o">=</span> <span class="n">response</span>
+        <span class="n">caller</span><span class="o">.</span><span class="n">parse_solve_responses</span><span class="p">()</span>
+        <span class="n">caller</span><span class="o">.</span><span class="n">parse_print_responses</span><span class="p">()</span>
+        <span class="n">caller</span><span class="o">.</span><span class="n">parse_create_data_responses</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_cas_workspace_response</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="CASMediator.parse_cas_workspace_response"><a class="viewcode-back" href="../../../../api/generated/sasoptpy.interface.CASMediator.parse_cas_workspace_response.html#sasoptpy.interface.CASMediator.parse_cas_workspace_response">[docs]</a>    <span class="k">def</span> <span class="nf">parse_cas_workspace_response</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses results of workspace submission</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">caller</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">caller</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">caller</span><span class="o">.</span><span class="n">response</span>
+
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s1">&#39;Syntax Error&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">SyntaxError</span><span class="p">(</span><span class="s1">&#39;An invalid symbol is generated, check object names&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s1">&#39;Semantic Error&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;A semantic error has occured, check statements and object types&#39;</span><span class="p">)</span>
+
+        <span class="n">solution</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">CASTable</span><span class="p">(</span><span class="s1">&#39;solution&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+        <span class="n">dual_solution</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">CASTable</span><span class="p">(</span><span class="s1">&#39;dual&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+
+        <span class="n">caller</span><span class="o">.</span><span class="n">_primalSolution</span> <span class="o">=</span> <span class="n">solution</span>
+        <span class="n">caller</span><span class="o">.</span><span class="n">_dualSolution</span> <span class="o">=</span> <span class="n">dual_solution</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_workspace_variable_values</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span>
+        <span class="c1">#self.set_constraint_values(dual_solution)</span>
+
+        <span class="c1"># self.set_model_objective_value()</span>
+        <span class="c1"># self.set_variable_init_values()</span>
+
+        <span class="k">return</span> <span class="n">solution</span></div>
+
+<div class="viewcode-block" id="CASMediator.set_workspace_variable_values"><a class="viewcode-back" href="../../../../api/generated/sasoptpy.interface.CASMediator.set_workspace_variable_values.html#sasoptpy.interface.CASMediator.set_workspace_variable_values">[docs]</a>    <span class="k">def</span> <span class="nf">set_workspace_variable_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solution</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs post-solve assignment of :class:`sasoptpy.Workspace` variable values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">caller</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">caller</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">solution</span><span class="o">.</span><span class="n">itertuples</span><span class="p">():</span>
+            <span class="n">caller</span><span class="o">.</span><span class="n">set_variable_value</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">var</span><span class="p">,</span> <span class="n">row</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CASMediator.tune_problem"><a class="viewcode-back" href="../../../../api/generated/sasoptpy.interface.CASMediator.tune_problem.html#sasoptpy.interface.CASMediator.tune_problem">[docs]</a>    <span class="k">def</span> <span class="nf">tune_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calls optimization.tuner CAS action to finds out the ideal configuration</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">caller</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">is_linear</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Model </span><span class="si">{}</span><span class="s1"> is not linear&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">get_name</span><span class="p">()))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">sasoptpy</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">has_integer_variables</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Model </span><span class="si">{}</span><span class="s1"> do not have integer or binary variables&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">get_name</span><span class="p">()))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">upload_model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tunerParameters&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;tunerParameters&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;maxconfigs&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">}</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">optimization</span><span class="o">.</span><span class="n">tuner</span><span class="p">(</span>
+            <span class="n">instances</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">}],</span>
+            <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">replace_column_names</span><span class="p">(</span><span class="n">sasdf</span><span class="p">):</span>
+            <span class="n">colnames</span> <span class="o">=</span> <span class="n">sasdf</span><span class="o">.</span><span class="n">columns</span>
+            <span class="n">collabels</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">colnames</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">sasdf</span><span class="o">.</span><span class="n">colinfo</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">collabels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sasdf</span><span class="o">.</span><span class="n">colinfo</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">collabels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="n">sasdf</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">collabels</span>
+            <span class="k">return</span> <span class="n">sasdf</span>
+
+        <span class="n">performance</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">PerformanceInformation</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">TunerInformation</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">TunerSummary</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">TunerResults</span>
+
+        <span class="n">performance</span> <span class="o">=</span> <span class="n">replace_column_names</span><span class="p">(</span><span class="n">performance</span><span class="p">)</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">replace_column_names</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="n">replace_column_names</span><span class="p">(</span><span class="n">summary</span><span class="p">)</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">replace_column_names</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+
+        <span class="n">model</span><span class="o">.</span><span class="n">_tunerResults</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;Performance Information&#39;</span><span class="p">:</span> <span class="n">performance</span><span class="p">,</span>
+            <span class="s1">&#39;Tuner Information&#39;</span><span class="p">:</span> <span class="n">info</span><span class="p">,</span>
+            <span class="s1">&#39;Tuner Summary&#39;</span><span class="p">:</span> <span class="n">summary</span><span class="p">,</span>
+            <span class="s1">&#39;Tuner Results&#39;</span><span class="p">:</span> <span class="n">results</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">results</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="1.0.3">1.0.3</option>
+<option value="1.0.0">1.0.0</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="1.0.0">1.0.0</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="../../../../index.html">Table of Contents</a></h3>
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../overview/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../version-history.html">Version History</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">sasoptpy 1.0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2021, SAS Institute.
+      Last updated on Feb 26, 2021 (Timestamp: 1.0-20210226213136).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+    </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-155356999-1');
+</script>
+
+
+  </body>
+</html>

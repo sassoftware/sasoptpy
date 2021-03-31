@@ -1,0 +1,6 @@
+sasoptpy.Model.drop\_variables
+==============================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.drop_variables

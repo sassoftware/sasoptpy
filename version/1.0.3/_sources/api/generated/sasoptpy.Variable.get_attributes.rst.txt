@@ -1,0 +1,6 @@
+sasoptpy.Variable.get\_attributes
+=================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Variable.get_attributes

@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+sasoptpy.abstract.ParameterGroup
+================================
+
+.. currentmodule:: sasoptpy.abstract
+
+.. autoclass:: ParameterGroup

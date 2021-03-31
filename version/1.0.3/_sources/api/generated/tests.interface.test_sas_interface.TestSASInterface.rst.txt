@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+tests.interface.test_sas_interface.TestSASInterface
+===================================================
+
+.. currentmodule:: tests.interface.test_sas_interface
+
+.. autoclass:: TestSASInterface

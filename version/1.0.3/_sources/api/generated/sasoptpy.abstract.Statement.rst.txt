@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+sasoptpy.abstract.Statement
+===========================
+
+.. currentmodule:: sasoptpy.abstract
+
+.. autoclass:: Statement

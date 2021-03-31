@@ -1,0 +1,6 @@
+sasoptpy.math.exp
+=================
+
+.. currentmodule:: sasoptpy.math
+
+.. autofunction:: exp

@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+tests.abstract.statement.test_literal.TestLiteral
+=================================================
+
+.. currentmodule:: tests.abstract.statement.test_literal
+
+.. autoclass:: TestLiteral

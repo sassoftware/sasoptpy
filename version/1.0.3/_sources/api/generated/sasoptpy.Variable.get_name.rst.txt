@@ -1,0 +1,6 @@
+sasoptpy.Variable.get\_name
+===========================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Variable.get_name

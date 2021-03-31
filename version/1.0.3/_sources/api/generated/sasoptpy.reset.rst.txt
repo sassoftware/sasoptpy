@@ -1,0 +1,6 @@
+sasoptpy.reset
+==============
+
+.. currentmodule:: sasoptpy
+
+.. autofunction:: reset

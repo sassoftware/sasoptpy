@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+tests.core.test_expression.TestExpression
+=========================================
+
+.. currentmodule:: tests.core.test_expression
+
+.. autoclass:: TestExpression

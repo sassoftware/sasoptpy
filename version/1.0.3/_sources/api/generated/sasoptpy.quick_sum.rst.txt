@@ -1,0 +1,6 @@
+sasoptpy.quick\_sum
+===================
+
+.. currentmodule:: sasoptpy
+
+.. autofunction:: quick_sum

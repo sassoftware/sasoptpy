@@ -1,0 +1,6 @@
+sasoptpy.VariableGroup.get\_members
+===================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: VariableGroup.get_members

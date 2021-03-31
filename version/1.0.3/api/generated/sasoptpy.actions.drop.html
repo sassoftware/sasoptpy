@@ -1,0 +1,228 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>sasoptpy.actions.drop &#8212; sasoptpy 1.0.3 documentation</title>
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/sasoptpy.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/js/url.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="sasoptpy.actions.restore" href="sasoptpy.actions.restore.html" />
+    <link rel="prev" title="sasoptpy.actions.expand" href="sasoptpy.actions.expand.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../../_static/js/version.js"></script>
+    <script src="../../../../_static/js/version.js"></script>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="sasoptpy.actions.restore.html" title="sasoptpy.actions.restore"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="sasoptpy.actions.expand.html" title="sasoptpy.actions.expand"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 1.0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../api.html" >API Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../functions.html" accesskey="U">Functions</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="sasoptpy-actions-drop">
+<h1>sasoptpy.actions.drop<a class="headerlink" href="#sasoptpy-actions-drop" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="sasoptpy.actions.drop">
+<code class="sig-name descname">drop</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/sasoptpy/actions.html#drop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.actions.drop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drops the specified constraints or constraint groups from model</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>args</strong><span class="classifier"><a class="reference internal" href="sasoptpy.Constraint.html#sasoptpy.Constraint" title="sasoptpy.Constraint"><code class="xref py py-class docutils literal notranslate"><span class="pre">sasoptpy.Constraint</span></code></a>, <a class="reference internal" href="sasoptpy.ConstraintGroup.html#sasoptpy.ConstraintGroup" title="sasoptpy.ConstraintGroup"><code class="xref py py-class docutils literal notranslate"><span class="pre">sasoptpy.ConstraintGroup</span></code></a></span></dt><dd><p>Constraints to be dropped</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="sasoptpy.actions.restore.html#sasoptpy.actions.restore" title="sasoptpy.actions.restore"><code class="xref py py-func docutils literal notranslate"><span class="pre">sasoptpy.actions.restore()</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">so</span><span class="o">.</span><span class="n">Workspace</span><span class="p">(</span><span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">x</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">y</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">c</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Constraint</span><span class="p">(</span><span class="n">sm</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">o</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Objective</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MIN</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;obj&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">s</span> <span class="o">=</span> <span class="n">solve</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">drop</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">o2</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Objective</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">MIN</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;obj2&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">s2</span> <span class="o">=</span> <span class="n">solve</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">(</span><span class="n">w</span><span class="p">))</span>
+<span class="go">proc optmodel;</span>
+<span class="go">    var x &gt;= 1;</span>
+<span class="go">    var y &gt;= 0;</span>
+<span class="go">    con c : sqrt(x) &gt;= 5;</span>
+<span class="go">    min obj = x + y;</span>
+<span class="go">    solve;</span>
+<span class="go">    drop c;</span>
+<span class="go">    min obj2 = x;</span>
+<span class="go">    solve;</span>
+<span class="go">quit;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="1.0.3">1.0.3</option>
+<option value="1.0.0">1.0.0</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="1.0.0">1.0.0</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../overview/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#core">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#abstract">Abstract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#interface">Interface</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#functions">Functions</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../functions.html">Functions</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../functions.html#utility-functions">Utility Functions</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../functions.html#abstract-actions">Abstract Actions</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.read_data.html">sasoptpy.actions.read_data</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.create_data.html">sasoptpy.actions.create_data</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.solve.html">sasoptpy.actions.solve</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.for_loop.html">sasoptpy.actions.for_loop</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.cofor_loop.html">sasoptpy.actions.cofor_loop</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.if_condition.html">sasoptpy.actions.if_condition</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.switch_conditions.html">sasoptpy.actions.switch_conditions</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.set_value.html">sasoptpy.actions.set_value</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.fix.html">sasoptpy.actions.fix</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.unfix.html">sasoptpy.actions.unfix</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.set_objective.html">sasoptpy.actions.set_objective</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.print_item.html">sasoptpy.actions.print_item</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.put_item.html">sasoptpy.actions.put_item</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.expand.html">sasoptpy.actions.expand</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">sasoptpy.actions.drop</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.restore.html">sasoptpy.actions.restore</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.union.html">sasoptpy.actions.union</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.diff.html">sasoptpy.actions.diff</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.substring.html">sasoptpy.actions.substring</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.use_problem.html">sasoptpy.actions.use_problem</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../functions.html#math-functions">Math Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#tests">Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../version-history.html">Version History</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="sasoptpy.actions.restore.html" title="sasoptpy.actions.restore"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="sasoptpy.actions.expand.html" title="sasoptpy.actions.expand"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 1.0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../api.html" >API Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../functions.html" >Functions</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2021, SAS Institute.
+      Last updated on Feb 26, 2021 (Timestamp: 1.0-20210226213136).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+    </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-155356999-1');
+</script>
+
+
+  </body>
+</html>

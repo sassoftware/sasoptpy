@@ -1,0 +1,6 @@
+sasoptpy.Expression.\_is\_linear
+================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Expression._is_linear

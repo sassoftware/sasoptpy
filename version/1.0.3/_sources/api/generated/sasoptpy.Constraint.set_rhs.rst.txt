@@ -1,0 +1,6 @@
+sasoptpy.Constraint.set\_rhs
+============================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Constraint.set_rhs

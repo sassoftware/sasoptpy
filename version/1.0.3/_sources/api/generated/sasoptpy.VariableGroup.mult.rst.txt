@@ -1,0 +1,6 @@
+sasoptpy.VariableGroup.mult
+===========================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: VariableGroup.mult

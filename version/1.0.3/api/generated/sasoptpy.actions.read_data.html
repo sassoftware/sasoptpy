@@ -1,0 +1,354 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>sasoptpy.actions.read_data &#8212; sasoptpy 1.0.3 documentation</title>
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/sasoptpy.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/js/url.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="sasoptpy.actions.create_data" href="sasoptpy.actions.create_data.html" />
+    <link rel="prev" title="sasoptpy.reset" href="sasoptpy.reset.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../../_static/js/version.js"></script>
+    <script src="../../../../_static/js/version.js"></script>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="sasoptpy.actions.create_data.html" title="sasoptpy.actions.create_data"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="sasoptpy.reset.html" title="sasoptpy.reset"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 1.0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../api.html" >API Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../functions.html" accesskey="U">Functions</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="sasoptpy-actions-read-data">
+<h1>sasoptpy.actions.read_data<a class="headerlink" href="#sasoptpy-actions-read-data" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="sasoptpy.actions.read_data">
+<code class="sig-name descname">read_data</code><span class="sig-paren">(</span><em class="sig-param">table</em>, <em class="sig-param">index</em>, <em class="sig-param">columns</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/sasoptpy/actions.html#read_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.actions.read_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads data tables inside Set and Parameter objects</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>table</strong><span class="classifier">string or <a class="reference external" href="https://sassoftware.github.io/python-swat/generated/swat.cas.table.CASTable.html#swat.cas.table.CASTable" title="(in SWAT v1.8.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">swat.cas.table.CASTable</span></code></a></span></dt><dd><p>Table object or name to be read, case-insensitive</p>
+</dd>
+<dt><strong>index</strong><span class="classifier">dict</span></dt><dd><p>Index properties of the table</p>
+<p>Has two main members:</p>
+<ul>
+<li><dl>
+<dt>target<span class="classifier"><a class="reference internal" href="sasoptpy.abstract.Set.html#sasoptpy.abstract.Set" title="sasoptpy.abstract.Set"><code class="xref py py-class docutils literal notranslate"><span class="pre">sasoptpy.abstract.Set</span></code></a></span></dt><dd><p>Target Set object to be read into</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>key<span class="classifier">string, list or None</span></dt><dd><p>Column name to be be read from.</p>
+<p>For multiple indices, key should be a list of string or
+<a class="reference internal" href="sasoptpy.abstract.SetIterator.html#sasoptpy.abstract.SetIterator" title="sasoptpy.abstract.SetIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">sasoptpy.abstract.SetIterator</span></code></a> objects</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>For a given set <cite>YEAR</cite> and column name <cite>year_no</cite>, the index dictionary
+should be written as:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">YEAR</span><span class="p">,</span> <span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="s1">&#39;year_no&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>If index is simply the row number, use <cite>‘key’: so.N</cite> which is equivalent
+to the special <cite>_N_</cite> character in the SAS language.</p>
+</dd>
+<dt><strong>columns</strong><span class="classifier">list</span></dt><dd><p>A list of dictionaries, each holding column properties.</p>
+<p>Columns are printed in the specified order. Each column should be
+represented as a dictionary with following fields:</p>
+<ul>
+<li><dl>
+<dt>target<span class="classifier"><a class="reference internal" href="sasoptpy.abstract.ParameterGroup.html#sasoptpy.abstract.ParameterGroup" title="sasoptpy.abstract.ParameterGroup"><code class="xref py py-class docutils literal notranslate"><span class="pre">sasoptpy.abstract.ParameterGroup</span></code></a></span></dt><dd><p>Target parameter object to be read into</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>column<span class="classifier">string</span></dt><dd><p>Column name to be read from</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>index<span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">sasoptpy.SetIterator</span></code>, optional</span></dt><dd><p>Subindex for specific column, needed for complex operations</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>If the name of the <a class="reference internal" href="sasoptpy.abstract.Parameter.html#sasoptpy.abstract.Parameter" title="sasoptpy.abstract.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">sasoptpy.abstract.Parameter</span></code></a> object is same
+as the column name, the following call is enough:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;price&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">read_data</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">p</span><span class="p">}])</span>
+</pre></div>
+</div>
+<p>For reading a different column name, <cite>column</cite> field should be
+specified:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">p</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">:</span> <span class="s1">&#39;price_usd&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>When working with <code class="xref py py-class docutils literal notranslate"><span class="pre">ParameterGroup</span></code> objects, sometimes a secondary
+loop is needed. This is achieved by using the <cite>index</cite> field, along with
+the <code class="xref py py-meth docutils literal notranslate"><span class="pre">sasoptpy.abstract.statement.ReadDataStatement.append()</span></code> method.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl>
+<dt><strong>r</strong><span class="classifier"><a class="reference internal" href="sasoptpy.abstract.statement.ReadDataStatement.html#sasoptpy.abstract.statement.ReadDataStatement" title="sasoptpy.abstract.statement.ReadDataStatement"><code class="xref py py-class docutils literal notranslate"><span class="pre">sasoptpy.abstract.statement.ReadDataStatement</span></code></a></span></dt><dd><p>Read data statement object, which includes all properties</p>
+<p>Additional columns can be added using the
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">sasoptpy.abstract.statement.ReadDataStatement.append()</span></code>
+function.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="tests.abstract.statement.test_read_data.TestReadData.html#tests.abstract.statement.test_read_data.TestReadData" title="tests.abstract.statement.test_read_data.TestReadData"><code class="xref py py-class docutils literal notranslate"><span class="pre">tests.abstract.statement.test_read_data.TestReadData</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">Examples</p>
+<p>Reading a regular set:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">Workspace</span><span class="p">(</span><span class="s1">&#39;test_workspace&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ws</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ITEMS</span> <span class="o">=</span> <span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ITEMS&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">value</span> <span class="o">=</span> <span class="n">ParameterGroup</span><span class="p">(</span><span class="n">ITEMS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">get</span> <span class="o">=</span> <span class="n">VariableGroup</span><span class="p">(</span><span class="n">ITEMS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">read_data</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="n">table</span><span class="o">=</span><span class="s2">&quot;values&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">index</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">ITEMS</span><span class="p">,</span> <span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+<span class="gp">... </span>        <span class="n">columns</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">value</span><span class="p">}])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">(</span><span class="n">w</span><span class="p">))</span>
+<span class="go">proc optmodel;</span>
+<span class="go">    set ITEMS;</span>
+<span class="go">    num value {ITEMS} init 0;</span>
+<span class="go">    var get {{ITEMS}} integer &gt;= 0;</span>
+<span class="go">    read data values into ITEMS value;</span>
+<span class="go">quit;</span>
+</pre></div>
+</div>
+<p>Reading with row index:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">so</span><span class="o">.</span><span class="n">Workspace</span><span class="p">(</span><span class="s1">&#39;test_read_data_n&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ws</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ASSETS</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ASSETS&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ret</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ParameterGroup</span><span class="p">(</span><span class="n">ASSETS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;return&#39;</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">NUM</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">read_data</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="n">table</span><span class="o">=</span><span class="s1">&#39;means&#39;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">index</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">ASSETS</span><span class="p">,</span> <span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="n">so</span><span class="o">.</span><span class="n">N</span><span class="p">},</span>
+<span class="gp">... </span>        <span class="n">columns</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">ret</span><span class="p">}]</span>
+<span class="gp">... </span>    <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">(</span><span class="n">w</span><span class="p">))</span>
+<span class="go">proc optmodel;</span>
+<span class="go">    set ASSETS;</span>
+<span class="go">    num return {ASSETS};</span>
+<span class="go">    read data means into ASSETS=[_N_] return;</span>
+<span class="go">quit;</span>
+</pre></div>
+</div>
+<p>Reading with no index set and subindex:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">so</span><span class="o">.</span><span class="n">Workspace</span><span class="p">(</span><span class="s1">&#39;test_read_data_no_index_expression&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ws</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ASSETS</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ASSETS&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">cov</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ParameterGroup</span><span class="p">(</span><span class="n">ASSETS</span><span class="p">,</span> <span class="n">ASSETS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;cov&#39;</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">with</span> <span class="n">iterate</span><span class="p">(</span><span class="n">ASSETS</span><span class="p">,</span> <span class="s1">&#39;asset1&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">asset1</span><span class="p">,</span> <span class="n">iterate</span><span class="p">(</span><span class="n">ASSETS</span><span class="p">,</span> <span class="s1">&#39;asset2&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">asset2</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">read_data</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">table</span><span class="o">=</span><span class="s1">&#39;covdata&#39;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">index</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">asset1</span><span class="p">,</span> <span class="n">asset2</span><span class="p">]},</span>
+<span class="gp">... </span>            <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+<span class="gp">... </span>                <span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">cov</span><span class="p">},</span>
+<span class="gp">... </span>                <span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">cov</span><span class="p">[</span><span class="n">asset2</span><span class="p">,</span> <span class="n">asset1</span><span class="p">],</span>
+<span class="gp">... </span>                <span class="s1">&#39;column&#39;</span><span class="p">:</span> <span class="s1">&#39;cov&#39;</span><span class="p">}])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">(</span><span class="n">w</span><span class="p">))</span>
+<span class="go">proc optmodel;</span>
+<span class="go">    set ASSETS;</span>
+<span class="go">    num cov {ASSETS, ASSETS} init 0;</span>
+<span class="go">    read data covdata into [asset1 asset2] cov cov[asset2, asset1]=cov;</span>
+<span class="go">quit;</span>
+</pre></div>
+</div>
+<p>Reading a column with multiple indices:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">so</span><span class="o">.</span><span class="n">Workspace</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;test_read_data_idx_col&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ws</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">dow</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;DOW&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">exp_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">locs</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;LOCS&#39;</span><span class="p">,</span> <span class="n">settype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">STR</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">demand</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">ParameterGroup</span><span class="p">(</span><span class="n">locs</span><span class="p">,</span> <span class="n">dow</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;demand&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">with</span> <span class="n">iterate</span><span class="p">(</span><span class="n">locs</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;loc&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">loc</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">r</span> <span class="o">=</span> <span class="n">read_data</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">table</span><span class="o">=</span><span class="s1">&#39;dmnd&#39;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">index</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">locs</span><span class="p">,</span> <span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="n">loc</span><span class="p">}</span>
+<span class="gp">... </span>        <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="k">with</span> <span class="n">iterate</span><span class="p">(</span><span class="n">dow</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">d</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>            <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+<span class="gp">... </span>                <span class="s1">&#39;index&#39;</span><span class="p">:</span> <span class="n">d</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="s1">&#39;target&#39;</span><span class="p">:</span> <span class="n">demand</span><span class="p">[</span><span class="n">loc</span><span class="p">,</span> <span class="n">d</span><span class="p">],</span>
+<span class="gp">... </span>                <span class="s1">&#39;column&#39;</span><span class="p">:</span> <span class="n">concat</span><span class="p">(</span><span class="s1">&#39;day&#39;</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="gp">... </span>            <span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">optmodel_code</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">to_optmodel</span><span class="p">(</span><span class="n">ws</span><span class="p">)</span>
+<span class="go">proc optmodel;</span>
+<span class="go">    set DOW = 1..5;</span>
+<span class="go">    set &lt;str&gt; LOCS;</span>
+<span class="go">    num demand {LOCS, DOW};</span>
+<span class="go">    read data dmnd into LOCS=[loc] {d in DOW} &lt; demand[loc, d]=col(&#39;day&#39; || d) &gt;;</span>
+<span class="go">quit;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="1.0.3">1.0.3</option>
+<option value="1.0.0">1.0.0</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="1.0.0">1.0.0</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../overview/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#core">Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#abstract">Abstract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#interface">Interface</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#functions">Functions</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../functions.html">Functions</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../functions.html#utility-functions">Utility Functions</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../functions.html#abstract-actions">Abstract Actions</a><ul class="current">
+<li class="toctree-l5 current"><a class="current reference internal" href="#">sasoptpy.actions.read_data</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.create_data.html">sasoptpy.actions.create_data</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.solve.html">sasoptpy.actions.solve</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.for_loop.html">sasoptpy.actions.for_loop</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.cofor_loop.html">sasoptpy.actions.cofor_loop</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.if_condition.html">sasoptpy.actions.if_condition</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.switch_conditions.html">sasoptpy.actions.switch_conditions</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.set_value.html">sasoptpy.actions.set_value</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.fix.html">sasoptpy.actions.fix</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.unfix.html">sasoptpy.actions.unfix</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.set_objective.html">sasoptpy.actions.set_objective</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.print_item.html">sasoptpy.actions.print_item</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.put_item.html">sasoptpy.actions.put_item</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.expand.html">sasoptpy.actions.expand</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.drop.html">sasoptpy.actions.drop</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.restore.html">sasoptpy.actions.restore</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.union.html">sasoptpy.actions.union</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.diff.html">sasoptpy.actions.diff</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.substring.html">sasoptpy.actions.substring</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.actions.use_problem.html">sasoptpy.actions.use_problem</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../functions.html#math-functions">Math Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#tests">Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../version-history.html">Version History</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="sasoptpy.actions.create_data.html" title="sasoptpy.actions.create_data"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="sasoptpy.reset.html" title="sasoptpy.reset"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 1.0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../api.html" >API Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../functions.html" >Functions</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2021, SAS Institute.
+      Last updated on Feb 26, 2021 (Timestamp: 1.0-20210226213136).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+    </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-155356999-1');
+</script>
+
+
+  </body>
+</html>

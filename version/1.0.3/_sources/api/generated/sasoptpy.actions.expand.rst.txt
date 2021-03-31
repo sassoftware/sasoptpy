@@ -1,0 +1,6 @@
+sasoptpy.actions.expand
+=======================
+
+.. currentmodule:: sasoptpy.actions
+
+.. autofunction:: expand

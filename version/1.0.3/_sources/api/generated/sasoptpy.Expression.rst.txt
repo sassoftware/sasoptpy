@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+sasoptpy.Expression
+===================
+
+.. currentmodule:: sasoptpy
+
+.. autoclass:: Expression

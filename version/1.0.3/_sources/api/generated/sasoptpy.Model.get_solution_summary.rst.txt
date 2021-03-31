@@ -1,0 +1,6 @@
+sasoptpy.Model.get\_solution\_summary
+=====================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.get_solution_summary

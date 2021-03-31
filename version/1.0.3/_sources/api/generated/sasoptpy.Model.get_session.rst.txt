@@ -1,0 +1,6 @@
+sasoptpy.Model.get\_session
+===========================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.get_session

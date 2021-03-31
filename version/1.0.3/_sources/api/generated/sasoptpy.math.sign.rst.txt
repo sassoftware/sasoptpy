@@ -1,0 +1,6 @@
+sasoptpy.math.sign
+==================
+
+.. currentmodule:: sasoptpy.math
+
+.. autofunction:: sign

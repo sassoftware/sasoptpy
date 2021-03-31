@@ -1,0 +1,6 @@
+sasoptpy.Expression.\_\_str\_\_
+===============================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Expression.__str__

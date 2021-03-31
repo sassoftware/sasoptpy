@@ -1,0 +1,6 @@
+sasoptpy.Expression.copy\_member
+================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Expression.copy_member

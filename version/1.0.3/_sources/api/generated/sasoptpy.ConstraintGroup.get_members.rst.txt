@@ -1,0 +1,6 @@
+sasoptpy.ConstraintGroup.get\_members
+=====================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: ConstraintGroup.get_members

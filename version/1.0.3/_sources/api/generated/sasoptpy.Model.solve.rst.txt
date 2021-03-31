@@ -1,0 +1,6 @@
+sasoptpy.Model.solve
+====================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.solve

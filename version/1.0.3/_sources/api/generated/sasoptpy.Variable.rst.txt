@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+sasoptpy.Variable
+=================
+
+.. currentmodule:: sasoptpy
+
+.. autoclass:: Variable

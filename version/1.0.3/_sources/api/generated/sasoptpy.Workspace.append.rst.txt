@@ -1,0 +1,6 @@
+sasoptpy.Workspace.append
+=========================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Workspace.append

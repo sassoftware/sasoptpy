@@ -1,0 +1,6 @@
+sasoptpy.Workspace.parse\_solve\_responses
+==========================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Workspace.parse_solve_responses

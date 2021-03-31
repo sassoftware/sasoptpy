@@ -1,0 +1,6 @@
+sasoptpy.Model.export\_mps
+==========================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.export_mps

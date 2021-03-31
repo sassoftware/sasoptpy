@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+sasoptpy.Symbol
+===============
+
+.. currentmodule:: sasoptpy
+
+.. autoclass:: Symbol

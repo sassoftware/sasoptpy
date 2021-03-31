@@ -1,0 +1,6 @@
+sasoptpy.Model.tune\_parameters
+===============================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.tune_parameters

@@ -1,0 +1,6 @@
+sasoptpy.Model.add\_implicit\_variable
+======================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.add_implicit_variable

@@ -1,0 +1,427 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Version History &#8212; sasoptpy 1.0.3 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/sasoptpy.css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/js/url.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="tests.session.test_workspace.TestWorkspace" href="api/generated/tests.session.test_workspace.TestWorkspace.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="_static/js/version.js"></script>
+    <script src="../../_static/js/version.js"></script>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="api/generated/tests.session.test_workspace.TestWorkspace.html" title="tests.session.test_workspace.TestWorkspace"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">sasoptpy 1.0.3 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="version-history">
+<span id="id1"></span><h1>Version History<a class="headerlink" href="#version-history" title="Permalink to this headline">¶</a></h1>
+<p>This page outlines changes from each release.</p>
+<div class="section" id="v1-0-0-april-20-2020">
+<h2>v1.0.0 (April 20, 2020)<a class="headerlink" href="#v1-0-0-april-20-2020" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="new-features">
+<h3>New Features<a class="headerlink" href="#new-features" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Added workspaces; for more information, see <a class="reference internal" href="guide/workspaces.html#workspaces"><span class="std std-ref">Workspaces in User Guide</span></a> and <a class="reference internal" href="examples/efficiency_analysis.html#efficiency-analysis"><span class="std std-ref">Efficiency Analysis example</span></a></p></li>
+<li><p>Added <a class="reference internal" href="guide/basics.html#configurations"><span class="std std-ref">package configurations</span></a></p></li>
+<li><p>Added <a class="reference internal" href="guide/workspaces.html#abstract-actions"><span class="std std-ref">abstract actions</span></a> that allow server-side operations. Highlights include:</p>
+<ul>
+<li><p><a class="reference internal" href="api/generated/sasoptpy.actions.read_data.html#sasoptpy.actions.read_data" title="sasoptpy.actions.read_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">actions.read_data()</span></code></a> and <a class="reference internal" href="api/generated/sasoptpy.actions.create_data.html#sasoptpy.actions.create_data" title="sasoptpy.actions.create_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">actions.create_data()</span></code></a></p></li>
+<li><p><a class="reference internal" href="api/generated/sasoptpy.actions.for_loop.html#sasoptpy.actions.for_loop" title="sasoptpy.actions.for_loop"><code class="xref py py-func docutils literal notranslate"><span class="pre">actions.for_loop()</span></code></a> and <a class="reference internal" href="api/generated/sasoptpy.actions.cofor_loop.html#sasoptpy.actions.cofor_loop" title="sasoptpy.actions.cofor_loop"><code class="xref py py-func docutils literal notranslate"><span class="pre">actions.cofor_loop()</span></code></a></p></li>
+<li><p><a class="reference internal" href="api/generated/sasoptpy.actions.print_item.html#sasoptpy.actions.print_item" title="sasoptpy.actions.print_item"><code class="xref py py-func docutils literal notranslate"><span class="pre">actions.print_item()</span></code></a></p></li>
+<li><p><a class="reference internal" href="api/generated/sasoptpy.actions.solve.html#sasoptpy.actions.solve" title="sasoptpy.actions.solve"><code class="xref py py-func docutils literal notranslate"><span class="pre">actions.solve()</span></code></a></p></li>
+</ul>
+</li>
+<li><p>Added structure decorators for better control of submissions</p></li>
+</ul>
+</div>
+<div class="section" id="changes">
+<h3>Changes<a class="headerlink" href="#changes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Refactored the entire package; sasoptpy now has <cite>core</cite>, <cite>abstract</cite>, <cite>interface</cite>,
+<cite>session</cite>, and <cite>util</cite> directories</p></li>
+<li><p>Experimental RESTful API was dropped</p></li>
+<li><p><cite>get_obj_by_name</cite> function was removed</p></li>
+<li><p><cite>lso</cite> solver was renamed <cite>blackbox</cite></p></li>
+<li><p>Because of the use of literal strings (<span class="target" id="index-0"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0498"><strong>PEP 498</strong></a>), only Python 3.6 or later versions are supported</p></li>
+</ul>
+</div>
+<div class="section" id="bug-fixes">
+<h3>Bug Fixes<a class="headerlink" href="#bug-fixes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Fixed: Arithmetic operations with powers are generating incorrect results</p></li>
+<li><p>Fixed: Variable groups with space in their index are not getting values</p></li>
+<li><p>Fixed: Constraints without directions do not produce an error</p></li>
+<li><p>Fixed: Documentation does not mention conda-forge library requirement</p></li>
+<li><p>Fixed: Single-dimensional parameters are hard to access</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="v0-2-1-february-26-2019">
+<h2>v0.2.1 (February 26, 2019)<a class="headerlink" href="#v0-2-1-february-26-2019" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id2">
+<h3>New Features<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Support for evaluating nonlinear expressions is added, see
+<a class="reference internal" href="api/generated/sasoptpy.Expression.get_value.html#sasoptpy.Expression.get_value" title="sasoptpy.Expression.get_value"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Expression.get_value()</span></code></a> and <code class="xref py py-func docutils literal notranslate"><span class="pre">utils._evaluate()</span></code></p></li>
+<li><p>Support for multiple objectives is added for LSO solver, see
+<a class="reference internal" href="api/generated/sasoptpy.Model.set_objective.html#sasoptpy.Model.set_objective" title="sasoptpy.Model.set_objective"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.set_objective()</span></code></a> and
+<a class="reference internal" href="examples/multiobjective.html#examples-multiobjective"><span class="std std-ref">Multiobjective</span></a> example</p></li>
+<li><p>Support for spaces inside variable indices is added</p></li>
+<li><p>Experimental RESTful API is added</p></li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h3>Changes<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Dictionaries inside components are replaced with ordered dictionaries
+to preserve deterministic behavior</p></li>
+<li><p>Math operators are added into the keys of linear coefficient dictionaries</p></li>
+<li><p>Some iterators are rewritten by using the <cite>yield</cite> keyword for performance</p></li>
+<li><p><cite>key_name</cite> and <cite>col_names</cite> parameters are added into <code class="xref py py-meth docutils literal notranslate"><span class="pre">read_table()</span></code></p></li>
+</ul>
+</div>
+<div class="section" id="id4">
+<h3>Bug Fixes<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Fixed: Using a single variable as an objective is producing incorrect input</p></li>
+<li><p>Fixed: <a class="reference internal" href="api/generated/sasoptpy.Expression.get_value.html#sasoptpy.Expression.get_value" title="sasoptpy.Expression.get_value"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Expression.get_value()</span></code></a> fails to evaluate expressions with
+operators</p></li>
+<li><p>Fixed: <a class="reference internal" href="api/generated/sasoptpy.Expression.add.html#sasoptpy.Expression.add" title="sasoptpy.Expression.add"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Expression.add()</span></code></a> overrides operators in some instances</p></li>
+<li><p>Fixed: Expressions with same components but different operators get summed
+incorrectly</p></li>
+<li><p>Fixed: New version of Viya complains about <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.2.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> column
+types</p></li>
+<li><p>Syntax fixes for <span class="target" id="index-1"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0008"><strong>PEP 8</strong></a> compliance</p></li>
+</ul>
+</div>
+<div class="section" id="notes">
+<h3>Notes<a class="headerlink" href="#notes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>A Jupyter notebook example of the Diet Problem is added</p></li>
+<li><p>A new example is added to show usage of experimental RESTful API</p></li>
+<li><p>Unit tests are added for development repository</p></li>
+<li><p>CI/CD integration is added for the development repository on Gitlab</p></li>
+<li><p>Generated models can be checked by using the hash values inside tests.responses</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="v0-2-0-july-30-2018">
+<h2>v0.2.0 (July 30, 2018)<a class="headerlink" href="#v0-2-0-july-30-2018" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id5">
+<h3>New Features<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Support for the new runOptmodel CAS action is added</p></li>
+<li><p>Nonlinear optimization model building support is added for both SAS 9.4 and
+SAS Viya solvers</p></li>
+<li><p>Abstract model building support is added when using SAS Viya solvers</p></li>
+<li><p>New object types, <code class="xref py py-class docutils literal notranslate"><span class="pre">Set</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">SetIterator</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code>,
+<code class="xref py py-class docutils literal notranslate"><span class="pre">ParameterValue</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitVar</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ExpressionDict</span></code>, and
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Statement</span></code> are added for abstract model building</p></li>
+<li><p><a class="reference internal" href="api/generated/sasoptpy.Model.to_optmodel.html#sasoptpy.Model.to_optmodel" title="sasoptpy.Model.to_optmodel"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.to_optmodel()</span></code></a> method is added for exporting model objects into
+PROC OPTMODEL code as a string</p></li>
+<li><p>Wrapper functions <code class="xref py py-func docutils literal notranslate"><span class="pre">read_table()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">read_data()</span></code> are added to
+read CASTable and DataFrame objects into the models</p></li>
+<li><p>Math function wrappers are added</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">_expr</span></code> and <code class="code docutils literal notranslate"><span class="pre">_defn</span></code> methods are added to all object types for
+producing OPTMODEL expression and definitions</p></li>
+<li><p>Multiple solutions are now returned when using <cite>solveMilp</cite> action and
+can be retrieved by using <a class="reference internal" href="api/generated/sasoptpy.Model.get_solution.html#sasoptpy.Model.get_solution" title="sasoptpy.Model.get_solution"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.get_solution()</span></code></a> method</p></li>
+<li><p><a class="reference internal" href="api/generated/sasoptpy.Model.get_variable_value.html#sasoptpy.Model.get_variable_value" title="sasoptpy.Model.get_variable_value"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.get_variable_value()</span></code></a> is added to get solution values of abstract
+variables</p></li>
+</ul>
+</div>
+<div class="section" id="id6">
+<h3>Changes<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Variable and constraint naming schemes are replaced with OPTMODEL equivalent
+versions</p></li>
+<li><p>Variables and constraints now preserve the order in which they are inserted to the
+problem</p></li>
+<li><p><a class="reference internal" href="api/generated/sasoptpy.Model.to_frame.html#sasoptpy.Model.to_frame" title="sasoptpy.Model.to_frame"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.to_frame()</span></code></a> method is updated to reflect changes to VariableGroup and
+ConstraintGroup orderings</p></li>
+<li><p>Two solve methods, <cite>solve_on_cas</cite> and
+<cite>solve_on_viya</cite> are merged into <a class="reference internal" href="api/generated/sasoptpy.Model.solve.html#sasoptpy.Model.solve" title="sasoptpy.Model.solve"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.solve()</span></code></a></p></li>
+<li><p><a class="reference internal" href="api/generated/sasoptpy.Model.solve.html#sasoptpy.Model.solve" title="sasoptpy.Model.solve"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.solve()</span></code></a> method checks the available CAS actions and uses
+the runOptmodel action whenever possible</p></li>
+<li><p>As part of the merging process, <code class="code docutils literal notranslate"><span class="pre">lp</span></code> and <code class="code docutils literal notranslate"><span class="pre">milp</span></code> arguments are
+replaced with <code class="code docutils literal notranslate"><span class="pre">options</span></code> argument in <a class="reference internal" href="api/generated/sasoptpy.Model.solve.html#sasoptpy.Model.solve" title="sasoptpy.Model.solve"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.solve()</span></code></a> and
+<a class="reference internal" href="api/generated/sasoptpy.Model.to_optmodel.html#sasoptpy.Model.to_optmodel" title="sasoptpy.Model.to_optmodel"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.to_optmodel()</span></code></a></p></li>
+<li><p>An optional argument <code class="code docutils literal notranslate"><span class="pre">frame</span></code> is added to <a class="reference internal" href="api/generated/sasoptpy.Model.solve.html#sasoptpy.Model.solve" title="sasoptpy.Model.solve"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.solve()</span></code></a> for
+forcing use of MPS mode and <cite>solveLp</cite>-<cite>solveMilp</cite> actions</p></li>
+<li><p>Minor changes are applied to <cite>__str__</cite> and <cite>__repr__</cite> methods</p></li>
+<li><p>Creation indices for objects are being kept by using the return of the
+<code class="xref py py-func docutils literal notranslate"><span class="pre">register_name()</span></code> function</p></li>
+<li><p>Objective constant values are now being passed by using new CAS action arguments
+when posssible</p></li>
+<li><p>A linearity check is added for models</p></li>
+<li><p>Test folder is added to the repository</p></li>
+</ul>
+</div>
+<div class="section" id="id7">
+<h3>Bug Fixes<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Nondeterministic behavior when generating MPS files is fixed.</p></li>
+</ul>
+</div>
+<div class="section" id="id8">
+<h3>Notes<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Abstract and nonlinear models can be solved on Viya only if the runOptmodel
+action is available on the CAS server.</p></li>
+<li><p>Three new examples are added which demonstrate abstract model building.</p></li>
+<li><p>Some minor changes are applied to the existing examples.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="v0-1-2-april-24-2018">
+<h2>v0.1.2 (April 24, 2018)<a class="headerlink" href="#v0-1-2-april-24-2018" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id9">
+<h3>New Features<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>As an experimental feature, sasoptpy now supports <em>SASPy</em> connections</p></li>
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.solve_local()</span></code> method is added for solving optimization
+problems by using SAS 9.4 installations</p></li>
+<li><p><a class="reference internal" href="api/generated/sasoptpy.Model.drop_variable.html#sasoptpy.Model.drop_variable" title="sasoptpy.Model.drop_variable"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.drop_variable()</span></code></a>, <a class="reference internal" href="api/generated/sasoptpy.Model.drop_variables.html#sasoptpy.Model.drop_variables" title="sasoptpy.Model.drop_variables"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.drop_variables()</span></code></a>,
+<a class="reference internal" href="api/generated/sasoptpy.Model.drop_constraint.html#sasoptpy.Model.drop_constraint" title="sasoptpy.Model.drop_constraint"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.drop_constraint()</span></code></a>, <a class="reference internal" href="api/generated/sasoptpy.Model.drop_constraints.html#sasoptpy.Model.drop_constraints" title="sasoptpy.Model.drop_constraints"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.drop_constraints()</span></code></a> methods are
+added</p></li>
+<li><p><a class="reference internal" href="api/generated/sasoptpy.Model.get_constraint.html#sasoptpy.Model.get_constraint" title="sasoptpy.Model.get_constraint"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.get_constraint()</span></code></a> and <a class="reference internal" href="api/generated/sasoptpy.Model.get_constraints.html#sasoptpy.Model.get_constraints" title="sasoptpy.Model.get_constraints"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.get_constraints()</span></code></a> methods are
+added to retrieve <a class="reference internal" href="api/generated/sasoptpy.Constraint.html#sasoptpy.Constraint" title="sasoptpy.Constraint"><code class="xref py py-class docutils literal notranslate"><span class="pre">Constraint</span></code></a> objects in a model</p></li>
+<li><p><a class="reference internal" href="api/generated/sasoptpy.Model.get_variables.html#sasoptpy.Model.get_variables" title="sasoptpy.Model.get_variables"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.get_variables()</span></code></a> method is added</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">_dual</span></code> attribute is added to the <a class="reference internal" href="api/generated/sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a> objects</p></li>
+<li><p><a class="reference internal" href="api/generated/sasoptpy.Variable.get_dual.html#sasoptpy.Variable.get_dual" title="sasoptpy.Variable.get_dual"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Variable.get_dual()</span></code></a> and <a class="reference internal" href="api/generated/sasoptpy.Constraint.get_dual.html#sasoptpy.Constraint.get_dual" title="sasoptpy.Constraint.get_dual"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Constraint.get_dual()</span></code></a> methods are added</p></li>
+<li><p><a class="reference internal" href="api/generated/sasoptpy.Expression.set_name.html#sasoptpy.Expression.set_name" title="sasoptpy.Expression.set_name"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Expression.set_name()</span></code></a> method is added</p></li>
+</ul>
+</div>
+<div class="section" id="id10">
+<h3>Changes<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Session argument accepts <a class="reference external" href="https://sassoftware.github.io/saspy/api.html#saspy.SASsession" title="(in saspy v2.1.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">saspy.SASsession</span></code></a> objects</p></li>
+<li><p><a class="reference internal" href="api/generated/sasoptpy.VariableGroup.mult.html#sasoptpy.VariableGroup.mult" title="sasoptpy.VariableGroup.mult"><code class="xref py py-meth docutils literal notranslate"><span class="pre">VariableGroup.mult()</span></code></a> method now supports <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.2.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></p></li>
+<li><p>Type check for the <a class="reference internal" href="api/generated/sasoptpy.Model.set_session.html#sasoptpy.Model.set_session" title="sasoptpy.Model.set_session"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.set_session()</span></code></a> is removed to support new session
+types</p></li>
+<li><p>Problem and solution summaries are not being printed by default anymore,
+see <a class="reference internal" href="api/generated/sasoptpy.Model.get_problem_summary.html#sasoptpy.Model.get_problem_summary" title="sasoptpy.Model.get_problem_summary"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.get_problem_summary()</span></code></a> and <a class="reference internal" href="api/generated/sasoptpy.Model.get_solution_summary.html#sasoptpy.Model.get_solution_summary" title="sasoptpy.Model.get_solution_summary"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.get_solution_summary()</span></code></a></p></li>
+<li><p>The default behavior of dropping the table after each solve is changed, but
+can be controlled with the <code class="code docutils literal notranslate"><span class="pre">drop</span></code> argument of the <a class="reference internal" href="api/generated/sasoptpy.Model.solve.html#sasoptpy.Model.solve" title="sasoptpy.Model.solve"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.solve()</span></code></a> method</p></li>
+</ul>
+</div>
+<div class="section" id="id11">
+<h3>Bug Fixes<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Fixed: Variables do not appear in MPS files if they are not used in the model</p></li>
+<li><p>Fixed: <a class="reference internal" href="api/generated/sasoptpy.Model.solve.html#sasoptpy.Model.solve" title="sasoptpy.Model.solve"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.solve()</span></code></a> primalin argument does not pass into options</p></li>
+</ul>
+</div>
+<div class="section" id="id12">
+<h3>Notes<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>A .gitignore file is added to the repository.</p></li>
+<li><p>A new example is added: Decentralization. Both
+<a class="reference internal" href="examples/decentralization.html#examples-decentralization"><span class="std std-ref">CAS</span></a> and
+<a class="reference internal" href="examples/decentralization_saspy.html#examples-decentralization-saspy"><span class="std std-ref">SAS</span></a> versions of the new example
+are added.</p></li>
+<li><p>There is a known issue with the nondeterministic behavior when creating MPS
+tables. This will be fixed with a hotfix after the release.</p></li>
+<li><p>A new option (no-ex) is added to makedocs script for skipping examples when
+building docs.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="v0-1-1-february-26-2018">
+<h2>v0.1.1 (February 26, 2018)<a class="headerlink" href="#v0-1-1-february-26-2018" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id13">
+<h3>New Features<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Initial value argument ‘init’ is added for <a class="reference internal" href="api/generated/sasoptpy.Variable.html#sasoptpy.Variable" title="sasoptpy.Variable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Variable</span></code></a> objects</p></li>
+<li><p><a class="reference internal" href="api/generated/sasoptpy.Variable.set_init.html#sasoptpy.Variable.set_init" title="sasoptpy.Variable.set_init"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Variable.set_init()</span></code></a> method is added for variables</p></li>
+<li><p>Initial value option ‘primalin’ is added to <a class="reference internal" href="api/generated/sasoptpy.Model.solve.html#sasoptpy.Model.solve" title="sasoptpy.Model.solve"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.solve()</span></code></a> method</p></li>
+<li><p>Table name argument ‘name’, table drop option ‘drop’, and replace
+option ‘replace’ are added to <a class="reference internal" href="api/generated/sasoptpy.Model.solve.html#sasoptpy.Model.solve" title="sasoptpy.Model.solve"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.solve()</span></code></a> method</p></li>
+<li><p>Decomposition block implementation is rewritten; block numbers does
+not need to be consecutive and ordered <code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.upload_user_blocks()</span></code></p></li>
+<li><p><a class="reference internal" href="api/generated/sasoptpy.VariableGroup.get_name.html#sasoptpy.VariableGroup.get_name" title="sasoptpy.VariableGroup.get_name"><code class="xref py py-meth docutils literal notranslate"><span class="pre">VariableGroup.get_name()</span></code></a> and <a class="reference internal" href="api/generated/sasoptpy.ConstraintGroup.get_name.html#sasoptpy.ConstraintGroup.get_name" title="sasoptpy.ConstraintGroup.get_name"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ConstraintGroup.get_name()</span></code></a> methods
+are added</p></li>
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Model.test_session()</span></code> method is added for checking if session is defined
+for models</p></li>
+<li><p><a class="reference internal" href="api/generated/sasoptpy.expr_sum.html#sasoptpy.expr_sum" title="sasoptpy.expr_sum"><code class="xref py py-func docutils literal notranslate"><span class="pre">expr_sum()</span></code></a> function is added for faster summation of
+<a class="reference internal" href="api/generated/sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a> objects</p></li>
+</ul>
+</div>
+<div class="section" id="id14">
+<h3>Changes<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>methods.py is renamed to utils.py</p></li>
+</ul>
+</div>
+<div class="section" id="id15">
+<h3>Bug Fixes<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Fixed: Crash in VG and CG when a key not in the list is called</p></li>
+<li><p>Fixed: get_value  of pandas is depreceated</p></li>
+<li><p>Fixed: Variables can be set as temporary expressions</p></li>
+<li><p>Fixed: Ordering in <code class="xref py py-func docutils literal notranslate"><span class="pre">get_solution_table()</span></code> is incorrect for multiple entries</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="v0-1-0-december-22-2017">
+<h2>v0.1.0 (December 22, 2017)<a class="headerlink" href="#v0-1-0-december-22-2017" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Initial release</p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="1.0.3">1.0.3</option>
+<option value="1.0.0">1.0.0</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="1.0.0">1.0.0</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guide/user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/api.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Version History</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#v1-0-0-april-20-2020">v1.0.0 (April 20, 2020)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#new-features">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#changes">Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bug-fixes">Bug Fixes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#v0-2-1-february-26-2019">v0.2.1 (February 26, 2019)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Bug Fixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#notes">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#v0-2-0-july-30-2018">v0.2.0 (July 30, 2018)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id5">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">Bug Fixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#v0-1-2-april-24-2018">v0.1.2 (April 24, 2018)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id9">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id10">Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id11">Bug Fixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id12">Notes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#v0-1-1-february-26-2018">v0.1.1 (February 26, 2018)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id13">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id14">Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id15">Bug Fixes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#v0-1-0-december-22-2017">v0.1.0 (December 22, 2017)</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="api/generated/tests.session.test_workspace.TestWorkspace.html" title="tests.session.test_workspace.TestWorkspace"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">sasoptpy 1.0.3 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2021, SAS Institute.
+      Last updated on Feb 26, 2021 (Timestamp: 1.0-20210226213136).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+    </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-155356999-1');
+</script>
+
+
+  </body>
+</html>

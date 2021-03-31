@@ -1,0 +1,6 @@
+sasoptpy.interface.SASMediator.convert\_to\_original
+====================================================
+
+.. currentmodule:: sasoptpy.interface
+
+.. automethod:: SASMediator.convert_to_original

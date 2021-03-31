@@ -1,0 +1,6 @@
+sasoptpy.math.cos
+=================
+
+.. currentmodule:: sasoptpy.math
+
+.. autofunction:: cos

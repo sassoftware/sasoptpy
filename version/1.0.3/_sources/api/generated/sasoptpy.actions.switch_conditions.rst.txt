@@ -1,0 +1,6 @@
+sasoptpy.actions.switch\_conditions
+===================================
+
+.. currentmodule:: sasoptpy.actions
+
+.. autofunction:: switch_conditions

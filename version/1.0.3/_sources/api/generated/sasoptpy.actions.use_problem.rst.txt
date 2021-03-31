@@ -1,0 +1,6 @@
+sasoptpy.actions.use\_problem
+=============================
+
+.. currentmodule:: sasoptpy.actions
+
+.. autofunction:: use_problem

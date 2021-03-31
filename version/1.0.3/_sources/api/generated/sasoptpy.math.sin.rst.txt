@@ -1,0 +1,6 @@
+sasoptpy.math.sin
+=================
+
+.. currentmodule:: sasoptpy.math
+
+.. autofunction:: sin

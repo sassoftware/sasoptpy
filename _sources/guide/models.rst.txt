@@ -297,3 +297,29 @@ candidate values, and limit the maximum number of configurations and maximum run
    print(results)
 
 You can retrieve full details by using the :meth:`Model.get_tuner_results` method.
+
+
+Exporting models
+~~~~~~~~~~~~~~~~
+
+*sasoptpy* can return problem representation as an OPTMODEL string using :meth:`Model.to_optmodel` method:
+
+.. ipython:: python
+
+   print(m.to_optmodel())
+
+An MPS representation of the model is available for LP and MILP problems using :meth:`Model.to_mps` method:
+
+.. ipython:: python
+
+   print(m.to_mps())
+
+Finally, a model can be exported into an MPS file using :meth:`Model.export_mps` method.
+You can use `filename` argument in this method to write the multi-line Python string into a file on disk.
+When `fetch` argument is used, it returns the generated string back to user.
+
+.. ipython:: python
+
+   print(m.export_mps(fetch=True))
+
+

@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+sasoptpy.Workspace
+==================
+
+.. currentmodule:: sasoptpy
+
+.. autoclass:: Workspace

@@ -1,0 +1,6 @@
+sasoptpy.Model.get\_constraints
+===============================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.get_constraints

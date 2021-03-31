@@ -1,0 +1,6 @@
+sasoptpy.interface.SASMediator.set\_workspace\_variable\_values
+===============================================================
+
+.. currentmodule:: sasoptpy.interface
+
+.. automethod:: SASMediator.set_workspace_variable_values

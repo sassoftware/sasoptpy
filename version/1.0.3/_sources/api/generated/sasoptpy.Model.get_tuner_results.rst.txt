@@ -1,0 +1,6 @@
+sasoptpy.Model.get\_tuner\_results
+==================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.get_tuner_results

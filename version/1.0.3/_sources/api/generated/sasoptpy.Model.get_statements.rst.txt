@@ -1,0 +1,6 @@
+sasoptpy.Model.get\_statements
+==============================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.get_statements

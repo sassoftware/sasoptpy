@@ -1,0 +1,9 @@
+
+.. currentmodule:: sasoptpy
+
+tests.core.test_util.TestUtil
+=============================
+
+.. currentmodule:: tests.core.test_util
+
+.. autoclass:: TestUtil

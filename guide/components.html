@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Model Components &#8212; sasoptpy 1.0.3 documentation</title>
+    <title>Model Components &#8212; sasoptpy 1.0.4 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/sasoptpy.css" />
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="models.html" title="Models"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="user-guide.html" accesskey="U">User Guide</a> &#187;</li> 
       </ul>
     </div>  
@@ -155,7 +155,7 @@ sasoptpy provides <a class="reference internal" href="../api/generated/sasoptpy.
 <span class="gp">In [20]: </span><span class="n">e</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">expr_sum</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">))</span>
 
 <span class="gp">In [21]: </span><span class="nb">print</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">t0</span><span class="p">)</span>
-<span class="go">0.04231667518615723</span>
+<span class="go">0.035427093505859375</span>
 </pre></div>
 </div>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [22]: </span><span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
@@ -163,7 +163,7 @@ sasoptpy provides <a class="reference internal" href="../api/generated/sasoptpy.
 <span class="gp">In [23]: </span><span class="n">f</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">))</span>
 
 <span class="gp">In [24]: </span><span class="nb">print</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">t0</span><span class="p">)</span>
-<span class="go">0.9732890129089355</span>
+<span class="go">0.9818449020385742</span>
 </pre></div>
 </div>
 </div>
@@ -285,7 +285,7 @@ You can set also this value at the creation of the variable.</p>
 <div class="section" id="working-with-a-set-of-variables">
 <h3>Working with a set of variables<a class="headerlink" href="#working-with-a-set-of-variables" title="Permalink to this headline">¶</a></h3>
 <p>You can create a set of variables by using a single index or by using multiple indices.
-Valid index sets include list, dict, and <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Index.html#pandas.Index" title="(in pandas v1.2.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Index</span></code></a> objects.
+Valid index sets include list, dict, and <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Index.html#pandas.Index" title="(in pandas v1.2.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Index</span></code></a> objects.
 See <a class="reference internal" href="input-data.html#input-data"><span class="std std-ref">Handling Data</span></a> for more information about allowed index types.</p>
 <p><strong>Creating a set of variables outside a model</strong></p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">production</span> <span class="o">=</span> <span class="n">VariableGroup</span><span class="p">(</span><span class="n">PERIODS</span><span class="p">,</span> <span class="n">vartype</span><span class="o">=</span><span class="n">so</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;production&#39;</span><span class="p">,</span>
@@ -345,7 +345,7 @@ See <a class="reference internal" href="input-data.html#input-data"><span class=
 <div class="section" id="working-with-a-set-of-constraints">
 <h3>Working with a set of constraints<a class="headerlink" href="#working-with-a-set-of-constraints" title="Permalink to this headline">¶</a></h3>
 <p>You can add a set of constraints by using a single index or by using multiple indices.
-Valid index sets include list, dict, and <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Index.html#pandas.Index" title="(in pandas v1.2.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Index</span></code></a> objects.
+Valid index sets include list, dict, and <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Index.html#pandas.Index" title="(in pandas v1.2.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.Index</span></code></a> objects.
 See <a class="reference internal" href="input-data.html#input-data"><span class="std std-ref">Handling Data</span></a> for more information about allowed index types.</p>
 <p><strong>Creating a set of constraints outside a model</strong></p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">VariableGroup</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
@@ -396,6 +396,7 @@ upper bound) after an <cite>==</cite> sign:</p>
 <span id="version_switch">
 <select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
 <option value="latest">Latest</option>
+<option value="1.0.3">1.0.3</option>
 <option value="1.0.0">1.0.0</option>
 <option value="0.2.1">0.2.1</option>
 <option value="0.2.0">0.2.0</option>
@@ -484,14 +485,14 @@ upper bound) after an <cite>==</cite> sign:</p>
         <li class="right" >
           <a href="models.html" title="Models"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="user-guide.html" >User Guide</a> &#187;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017-2021, SAS Institute.
-      Last updated on Feb 26, 2021 (Timestamp: 1.0-20210226213136).
+      Last updated on Mar 31, 2021 (Timestamp: 1.0-20210331210924).
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
 <!-- Global site tag (gtag.js) - Google Analytics -->

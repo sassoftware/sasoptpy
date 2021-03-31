@@ -1,0 +1,6 @@
+sasoptpy.Model.append\_objective
+================================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.append_objective

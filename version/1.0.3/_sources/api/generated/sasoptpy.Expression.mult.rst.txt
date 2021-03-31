@@ -1,0 +1,6 @@
+sasoptpy.Expression.mult
+========================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Expression.mult

@@ -1,0 +1,445 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Model &#8212; sasoptpy 1.0.3 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/sasoptpy.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/js/url.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="sasoptpy.Model" href="generated/sasoptpy.Model.html" />
+    <link rel="prev" title="API Reference" href="api.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../_static/js/version.js"></script>
+    <script src="../../../_static/js/version.js"></script>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/sasoptpy.Model.html" title="sasoptpy.Model"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="api.html" title="API Reference"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="api.html" accesskey="U">API Reference</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="model">
+<h1>Model<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="constructor">
+<h2>Constructor<a class="headerlink" href="#constructor" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.html#sasoptpy.Model" title="sasoptpy.Model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model</span></code></a>(**kwargs)</p></td>
+<td><p>Creates an optimization model</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="components">
+<h2>Components<a class="headerlink" href="#components" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.get_name.html#sasoptpy.Model.get_name" title="sasoptpy.Model.get_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.get_name</span></code></a>(self)</p></td>
+<td><p>Returns model name</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.set_session.html#sasoptpy.Model.set_session" title="sasoptpy.Model.set_session"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.set_session</span></code></a>(self, session)</p></td>
+<td><p>Sets the session of model</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.get_session.html#sasoptpy.Model.get_session" title="sasoptpy.Model.get_session"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.get_session</span></code></a>(self)</p></td>
+<td><p>Returns the session of the model</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.get_session_type.html#sasoptpy.Model.get_session_type" title="sasoptpy.Model.get_session_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.get_session_type</span></code></a>(self)</p></td>
+<td><p>Tests whether the model session is defined and still active</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.set_objective.html#sasoptpy.Model.set_objective" title="sasoptpy.Model.set_objective"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.set_objective</span></code></a>(self, expression, name)</p></td>
+<td><p>Specifies the objective function for the model</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.append_objective.html#sasoptpy.Model.append_objective" title="sasoptpy.Model.append_objective"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.append_objective</span></code></a>(self, expression, name)</p></td>
+<td><p>Appends a new objective to the model</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.get_objective.html#sasoptpy.Model.get_objective" title="sasoptpy.Model.get_objective"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.get_objective</span></code></a>(self)</p></td>
+<td><p>Returns the objective function as an <a class="reference internal" href="generated/sasoptpy.Expression.html#sasoptpy.Expression" title="sasoptpy.Expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">Expression</span></code></a> object</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.get_all_objectives.html#sasoptpy.Model.get_all_objectives" title="sasoptpy.Model.get_all_objectives"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.get_all_objectives</span></code></a>(self)</p></td>
+<td><p>Returns a list of objectives in the model</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.add_variable.html#sasoptpy.Model.add_variable" title="sasoptpy.Model.add_variable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.add_variable</span></code></a>(self, name[, vartype, …])</p></td>
+<td><p>Adds a new variable to the model</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.add_variables.html#sasoptpy.Model.add_variables" title="sasoptpy.Model.add_variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.add_variables</span></code></a>(self, \*argv, name[, …])</p></td>
+<td><p>Adds a group of variables to the model</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.add_implicit_variable.html#sasoptpy.Model.add_implicit_variable" title="sasoptpy.Model.add_implicit_variable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.add_implicit_variable</span></code></a>(self[, argv, name])</p></td>
+<td><p>Adds an implicit variable to the model</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.get_variable.html#sasoptpy.Model.get_variable" title="sasoptpy.Model.get_variable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.get_variable</span></code></a>(self, name)</p></td>
+<td><p>Returns the reference to a variable in the model</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.get_variables.html#sasoptpy.Model.get_variables" title="sasoptpy.Model.get_variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.get_variables</span></code></a>(self)</p></td>
+<td><p>Returns a list of variables</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.get_grouped_variables.html#sasoptpy.Model.get_grouped_variables" title="sasoptpy.Model.get_grouped_variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.get_grouped_variables</span></code></a>(self)</p></td>
+<td><p>Returns an ordered dictionary of variables</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.get_implicit_variables.html#sasoptpy.Model.get_implicit_variables" title="sasoptpy.Model.get_implicit_variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.get_implicit_variables</span></code></a>(self)</p></td>
+<td><p>Returns a list of implicit variables</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.get_variable_coef.html#sasoptpy.Model.get_variable_coef" title="sasoptpy.Model.get_variable_coef"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.get_variable_coef</span></code></a>(self, var)</p></td>
+<td><p>Returns the objective value coefficient of a variable</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.drop_variable.html#sasoptpy.Model.drop_variable" title="sasoptpy.Model.drop_variable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.drop_variable</span></code></a>(self, variable)</p></td>
+<td><p>Drops a variable from the model</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.drop_variables.html#sasoptpy.Model.drop_variables" title="sasoptpy.Model.drop_variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.drop_variables</span></code></a>(self, \*variables)</p></td>
+<td><p>Drops a variable group from the model</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.add_constraint.html#sasoptpy.Model.add_constraint" title="sasoptpy.Model.add_constraint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.add_constraint</span></code></a>(self, c, name)</p></td>
+<td><p>Adds a single constraint to the model</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.add_constraints.html#sasoptpy.Model.add_constraints" title="sasoptpy.Model.add_constraints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.add_constraints</span></code></a>(self, argv, name)</p></td>
+<td><p>Adds a set of constraints to the model</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.get_constraint.html#sasoptpy.Model.get_constraint" title="sasoptpy.Model.get_constraint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.get_constraint</span></code></a>(self, name)</p></td>
+<td><p>Returns the reference to a constraint in the model</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.get_constraints.html#sasoptpy.Model.get_constraints" title="sasoptpy.Model.get_constraints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.get_constraints</span></code></a>(self)</p></td>
+<td><p>Returns a list of constraints in the model</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.get_grouped_constraints.html#sasoptpy.Model.get_grouped_constraints" title="sasoptpy.Model.get_grouped_constraints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.get_grouped_constraints</span></code></a>(self)</p></td>
+<td><p>Returns an ordered dictionary of constraints</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.drop_constraint.html#sasoptpy.Model.drop_constraint" title="sasoptpy.Model.drop_constraint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.drop_constraint</span></code></a>(self, constraint)</p></td>
+<td><p>Drops a constraint from the model</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.drop_constraints.html#sasoptpy.Model.drop_constraints" title="sasoptpy.Model.drop_constraints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.drop_constraints</span></code></a>(self, \*constraints)</p></td>
+<td><p>Drops a constraint group from the model</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.add_set.html#sasoptpy.Model.add_set" title="sasoptpy.Model.add_set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.add_set</span></code></a>(self, name[, init, value, settype])</p></td>
+<td><p>Adds a set to the model</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.add_parameter.html#sasoptpy.Model.add_parameter" title="sasoptpy.Model.add_parameter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.add_parameter</span></code></a>(self, \*argv, name[, …])</p></td>
+<td><p>Adds a <a class="reference internal" href="generated/sasoptpy.abstract.Parameter.html#sasoptpy.abstract.Parameter" title="sasoptpy.abstract.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">abstract.Parameter</span></code></a> object to the model</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.add_statement.html#sasoptpy.Model.add_statement" title="sasoptpy.Model.add_statement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.add_statement</span></code></a>(self, statement[, …])</p></td>
+<td><p>Adds a PROC OPTMODEL statement to the model</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.get_sets.html#sasoptpy.Model.get_sets" title="sasoptpy.Model.get_sets"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.get_sets</span></code></a>(self)</p></td>
+<td><p>Returns a list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Set</span></code> objects in the model</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.get_parameters.html#sasoptpy.Model.get_parameters" title="sasoptpy.Model.get_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.get_parameters</span></code></a>(self)</p></td>
+<td><p>Returns a list of <a class="reference internal" href="generated/sasoptpy.abstract.Parameter.html#sasoptpy.abstract.Parameter" title="sasoptpy.abstract.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">abstract.Parameter</span></code></a> and <a class="reference internal" href="generated/sasoptpy.abstract.ParameterGroup.html#sasoptpy.abstract.ParameterGroup" title="sasoptpy.abstract.ParameterGroup"><code class="xref py py-class docutils literal notranslate"><span class="pre">abstract.ParameterGroup</span></code></a> objects in the model</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.get_statements.html#sasoptpy.Model.get_statements" title="sasoptpy.Model.get_statements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.get_statements</span></code></a>(self)</p></td>
+<td><p>Returns a list of all statements inside the model</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.include.html#sasoptpy.Model.include" title="sasoptpy.Model.include"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.include</span></code></a>(self, \*argv)</p></td>
+<td><p>Adds existing variables and constraints to a model</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="solver-calls">
+<h2>Solver calls<a class="headerlink" href="#solver-calls" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.solve.html#sasoptpy.Model.solve" title="sasoptpy.Model.solve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.solve</span></code></a>(self, \*\*kwargs)</p></td>
+<td><p>Solves the model by calling CAS or SAS optimization solvers</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.tune_parameters.html#sasoptpy.Model.tune_parameters" title="sasoptpy.Model.tune_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.tune_parameters</span></code></a>(self, \*\*kwargs)</p></td>
+<td><p>Tunes the model to find ideal solver parameters</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.get_solution.html#sasoptpy.Model.get_solution" title="sasoptpy.Model.get_solution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.get_solution</span></code></a>(self[, vtype, solution, …])</p></td>
+<td><p>Returns the primal and dual problem solutions</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.get_variable_value.html#sasoptpy.Model.get_variable_value" title="sasoptpy.Model.get_variable_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.get_variable_value</span></code></a>(self, var)</p></td>
+<td><p>Returns the value of a variable</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.get_objective_value.html#sasoptpy.Model.get_objective_value" title="sasoptpy.Model.get_objective_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.get_objective_value</span></code></a>(self)</p></td>
+<td><p>Returns the optimal objective value</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.get_solution_summary.html#sasoptpy.Model.get_solution_summary" title="sasoptpy.Model.get_solution_summary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.get_solution_summary</span></code></a>(self)</p></td>
+<td><p>Returns the solution summary table to the user</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.get_problem_summary.html#sasoptpy.Model.get_problem_summary" title="sasoptpy.Model.get_problem_summary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.get_problem_summary</span></code></a>(self)</p></td>
+<td><p>Returns the problem summary table to the user</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.get_tuner_results.html#sasoptpy.Model.get_tuner_results" title="sasoptpy.Model.get_tuner_results"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.get_tuner_results</span></code></a>(self)</p></td>
+<td><p>Returns the tuning results</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.print_solution.html#sasoptpy.Model.print_solution" title="sasoptpy.Model.print_solution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.print_solution</span></code></a>(self)</p></td>
+<td><p>Prints the current values of the variables</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.clear_solution.html#sasoptpy.Model.clear_solution" title="sasoptpy.Model.clear_solution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.clear_solution</span></code></a>(self)</p></td>
+<td><p>Clears the cached solution of the model</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="export">
+<h2>Export<a class="headerlink" href="#export" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.to_mps.html#sasoptpy.Model.to_mps" title="sasoptpy.Model.to_mps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.to_mps</span></code></a>(self, \*\*kwargs)</p></td>
+<td><p>Returns the problem in MPS format</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/sasoptpy.Model.to_optmodel.html#sasoptpy.Model.to_optmodel" title="sasoptpy.Model.to_optmodel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.to_optmodel</span></code></a>(self, \*\*kwargs)</p></td>
+<td><p>Returns the model in OPTMODEL format</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.export_mps.html#sasoptpy.Model.export_mps" title="sasoptpy.Model.export_mps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.export_mps</span></code></a>(self[, filename, fetch])</p></td>
+<td><p>Exports model in MPS format</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="internal-functions">
+<h2>Internal functions<a class="headerlink" href="#internal-functions" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model._is_linear.html#sasoptpy.Model._is_linear" title="sasoptpy.Model._is_linear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model._is_linear</span></code></a>(self)</p></td>
+<td><p>Checks whether the model can be written as a linear model (in MPS format)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="deprecated">
+<h2>Deprecated<a class="headerlink" href="#deprecated" title="Permalink to this headline">¶</a></h2>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 1.0.0.</span></p>
+</div>
+<p>The following method(s) are deprecated and will be removed in future minor updates.</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/sasoptpy.Model.to_frame.html#sasoptpy.Model.to_frame" title="sasoptpy.Model.to_frame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model.to_frame</span></code></a>(self, \*\*kwargs)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="1.0.3">1.0.3</option>
+<option value="1.0.0">1.0.0</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="1.0.0">1.0.0</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="api.html#core">Core</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Model</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#constructor">Constructor</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.html">sasoptpy.Model</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#components">Components</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.get_name.html">sasoptpy.Model.get_name</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.set_session.html">sasoptpy.Model.set_session</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.get_session.html">sasoptpy.Model.get_session</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.get_session_type.html">sasoptpy.Model.get_session_type</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.set_objective.html">sasoptpy.Model.set_objective</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.append_objective.html">sasoptpy.Model.append_objective</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.get_objective.html">sasoptpy.Model.get_objective</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.get_all_objectives.html">sasoptpy.Model.get_all_objectives</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.add_variable.html">sasoptpy.Model.add_variable</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.add_variables.html">sasoptpy.Model.add_variables</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.add_implicit_variable.html">sasoptpy.Model.add_implicit_variable</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.get_variable.html">sasoptpy.Model.get_variable</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.get_variables.html">sasoptpy.Model.get_variables</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.get_grouped_variables.html">sasoptpy.Model.get_grouped_variables</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.get_implicit_variables.html">sasoptpy.Model.get_implicit_variables</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.get_variable_coef.html">sasoptpy.Model.get_variable_coef</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.drop_variable.html">sasoptpy.Model.drop_variable</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.drop_variables.html">sasoptpy.Model.drop_variables</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.add_constraint.html">sasoptpy.Model.add_constraint</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.add_constraints.html">sasoptpy.Model.add_constraints</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.get_constraint.html">sasoptpy.Model.get_constraint</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.get_constraints.html">sasoptpy.Model.get_constraints</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.get_grouped_constraints.html">sasoptpy.Model.get_grouped_constraints</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.drop_constraint.html">sasoptpy.Model.drop_constraint</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.drop_constraints.html">sasoptpy.Model.drop_constraints</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.add_set.html">sasoptpy.Model.add_set</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.add_parameter.html">sasoptpy.Model.add_parameter</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.add_statement.html">sasoptpy.Model.add_statement</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.get_sets.html">sasoptpy.Model.get_sets</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.get_parameters.html">sasoptpy.Model.get_parameters</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.get_statements.html">sasoptpy.Model.get_statements</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.include.html">sasoptpy.Model.include</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#solver-calls">Solver calls</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.solve.html">sasoptpy.Model.solve</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.tune_parameters.html">sasoptpy.Model.tune_parameters</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.get_solution.html">sasoptpy.Model.get_solution</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.get_variable_value.html">sasoptpy.Model.get_variable_value</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.get_objective_value.html">sasoptpy.Model.get_objective_value</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.get_solution_summary.html">sasoptpy.Model.get_solution_summary</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.get_problem_summary.html">sasoptpy.Model.get_problem_summary</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.get_tuner_results.html">sasoptpy.Model.get_tuner_results</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.print_solution.html">sasoptpy.Model.print_solution</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.clear_solution.html">sasoptpy.Model.clear_solution</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#export">Export</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.to_mps.html">sasoptpy.Model.to_mps</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.to_optmodel.html">sasoptpy.Model.to_optmodel</a></li>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.export_mps.html">sasoptpy.Model.export_mps</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#internal-functions">Internal functions</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model._is_linear.html">sasoptpy.Model._is_linear</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#deprecated">Deprecated</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="generated/sasoptpy.Model.to_frame.html">sasoptpy.Model.to_frame</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="expression.html">Expression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="objective.html">Objective</a></li>
+<li class="toctree-l3"><a class="reference internal" href="variable.html">Variable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="variable_group.html">Variable Group</a></li>
+<li class="toctree-l3"><a class="reference internal" href="constraint.html">Constraint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="constraint_group.html">Constraint Group</a></li>
+<li class="toctree-l3"><a class="reference internal" href="workspace.html">Workspace</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#abstract">Abstract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#interface">Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#tests">Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../version-history.html">Version History</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/sasoptpy.Model.html" title="sasoptpy.Model"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="api.html" title="API Reference"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">sasoptpy 1.0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="api.html" >API Reference</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2021, SAS Institute.
+      Last updated on Feb 26, 2021 (Timestamp: 1.0-20210226213136).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+    </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-155356999-1');
+</script>
+
+
+  </body>
+</html>

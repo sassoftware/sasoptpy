@@ -1,0 +1,6 @@
+sasoptpy.actions.print\_item
+============================
+
+.. currentmodule:: sasoptpy.actions
+
+.. autofunction:: print_item

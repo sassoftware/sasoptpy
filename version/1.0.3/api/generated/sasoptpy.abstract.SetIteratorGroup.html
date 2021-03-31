@@ -1,0 +1,201 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>sasoptpy.abstract.SetIteratorGroup &#8212; sasoptpy 1.0.3 documentation</title>
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/sasoptpy.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/js/url.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="sasoptpy.abstract.Statement" href="sasoptpy.abstract.Statement.html" />
+    <link rel="prev" title="sasoptpy.abstract.SetIterator" href="sasoptpy.abstract.SetIterator.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../../_static/js/version.js"></script>
+    <script src="../../../../_static/js/version.js"></script>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="sasoptpy.abstract.Statement.html" title="sasoptpy.abstract.Statement"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="sasoptpy.abstract.SetIterator.html" title="sasoptpy.abstract.SetIterator"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 1.0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../api.html" >API Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../abstract.html" accesskey="U">Abstract</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="sasoptpy-abstract-setiteratorgroup">
+<h1>sasoptpy.abstract.SetIteratorGroup<a class="headerlink" href="#sasoptpy-abstract-setiteratorgroup" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="sasoptpy.abstract.SetIteratorGroup">
+<em class="property">class </em><code class="sig-name descname">SetIteratorGroup</code><span class="sig-paren">(</span><em class="sig-param">initset</em>, <em class="sig-param">datatype=None</em>, <em class="sig-param">names=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/sasoptpy/abstract/set_iterator.html#SetIteratorGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sasoptpy.abstract.SetIteratorGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/collections.html#collections.OrderedDict" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">collections.OrderedDict</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">sasoptpy.core.expression.Expression</span></code></p>
+<p>Creates a group of set iterator objects for multi-dimensional sets</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>initset</strong><span class="classifier"><a class="reference internal" href="sasoptpy.abstract.Set.html#sasoptpy.abstract.Set" title="sasoptpy.abstract.Set"><code class="xref py py-class docutils literal notranslate"><span class="pre">Set</span></code></a></span></dt><dd><p>Set to be iterated on</p>
+</dd>
+<dt><strong>names</strong><span class="classifier">string, optional</span></dt><dd><p>Names of the iterators</p>
+</dd>
+<dt><strong>datatype</strong><span class="classifier">string, optional</span></dt><dd><p>Types of the iterators</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">T</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;T&#39;</span><span class="p">,</span> <span class="n">settype</span><span class="o">=</span><span class="p">[</span><span class="n">so</span><span class="o">.</span><span class="n">STR</span><span class="p">,</span> <span class="n">so</span><span class="o">.</span><span class="n">NUM</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">T</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">j</span><span class="o">.</span><span class="n">get_name</span><span class="p">(),</span> <span class="nb">type</span><span class="p">(</span><span class="n">j</span><span class="p">))</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">j</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">get_name</span><span class="p">(),</span> <span class="nb">type</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+<span class="go">o5 &lt;class &#39;sasoptpy.abstract.set_iterator.SetIteratorGroup&#39;&gt;</span>
+<span class="go">o6 &lt;class &#39;sasoptpy.abstract.set_iterator.SetIterator&#39;&gt;</span>
+<span class="go">o8 &lt;class &#39;sasoptpy.abstract.set_iterator.SetIterator&#39;&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="1.0.3">1.0.3</option>
+<option value="1.0.0">1.0.0</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+<span id="version_switch">
+<select onchange="chooseVersion(this);" style="background-color: transparent; color: black; min-width: 33%; margin: 0px 0px 10px 10px;">
+<option value="latest">Latest</option>
+<option value="1.0.0">1.0.0</option>
+<option value="0.2.1">0.2.1</option>
+<option value="0.2.0">0.2.0</option>
+<option value="0.1.2">0.1.2</option>
+<option value="0.1.1">0.1.1</option>
+<option value="0.1.0">0.1.0</option>
+</select>
+</span>
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../overview/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide/user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#core">Core</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#abstract">Abstract</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../abstract.html">Abstract</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../abstract.html#main-classes">Main classes</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.abstract.Parameter.html">sasoptpy.abstract.Parameter</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.abstract.ParameterGroup.html">sasoptpy.abstract.ParameterGroup</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.abstract.Set.html">sasoptpy.abstract.Set</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.abstract.SetIterator.html">sasoptpy.abstract.SetIterator</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">sasoptpy.abstract.SetIteratorGroup</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.abstract.Statement.html">sasoptpy.abstract.Statement</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sasoptpy.abstract.ImplicitVar.html">sasoptpy.abstract.ImplicitVar</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../abstract.html#statements">Statements</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#interface">Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#tests">Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../version-history.html">Version History</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="sasoptpy.abstract.Statement.html" title="sasoptpy.abstract.Statement"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="sasoptpy.abstract.SetIterator.html" title="sasoptpy.abstract.SetIterator"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">sasoptpy 1.0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../api.html" >API Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../abstract.html" >Abstract</a> &#187;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017-2021, SAS Institute.
+      Last updated on Feb 26, 2021 (Timestamp: 1.0-20210226213136).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+    </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-155356999-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-155356999-1');
+</script>
+
+
+  </body>
+</html>

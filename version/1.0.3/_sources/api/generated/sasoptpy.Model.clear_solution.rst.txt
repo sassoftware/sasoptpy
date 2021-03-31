@@ -1,0 +1,6 @@
+sasoptpy.Model.clear\_solution
+==============================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Model.clear_solution

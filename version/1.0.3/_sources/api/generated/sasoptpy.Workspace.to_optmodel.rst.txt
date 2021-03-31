@@ -1,0 +1,6 @@
+sasoptpy.Workspace.to\_optmodel
+===============================
+
+.. currentmodule:: sasoptpy
+
+.. automethod:: Workspace.to_optmodel
