@@ -1759,9 +1759,11 @@ class Model:
         --------
 
         - Writing a linear optimization or mixed integer linear optimization model into MPS file
+          
           >>> m.export_mps('my_problem.mps')
 
         - Returning the MPS string as a Python variable
+          
           >>> m.export_mps(fetch=True)
 
         """
