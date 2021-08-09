@@ -48,7 +48,7 @@ setup(
     license='Apache v2.0',
     install_requires=[
         'pandas',
-        'swat == 1.6.1',
+        'swat',
         'saspy',
         'numpy'
         ],
