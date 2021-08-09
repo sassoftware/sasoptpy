@@ -93,6 +93,8 @@ def load_package_globals():
         sasoptpy.abstract.Statement
         ]
 
+    sasoptpy.loop_operator_tags = ['sum', 'min', 'max']
+
 def get_creation_id():
     sasoptpy.itemid += 1
     return sasoptpy.itemid
@@ -299,6 +301,37 @@ def _wrap_expression_with_iterators(exp, operator, iterators):
     wrapper.set_member(key=r.get_name(), ref=r, val=1)
     wrapper._abstract = True
     return wrapper
+
+
+def expr_nested(argv, operator):
+    clocals = argv.gi_frame.f_locals.copy()
+
+    exp = sasoptpy.core.Expression()
+    refs = []
+    iterators = []
+    for i in argv:
+        if sasoptpy.core.util.is_expression(i):
+            refs.append(i)
+            newlocals = argv.gi_frame.f_locals
+            for nl in newlocals.keys():
+                if nl not in clocals and\
+                        (type(newlocals[nl]) == sasoptpy.abstract.SetIterator or
+                         type(newlocals[nl]) == sasoptpy.abstract.SetIteratorGroup):
+                    iterators.append(newlocals[nl])
+                    newlocals[nl].set_name(nl)
+    if iterators:
+        iterators = sorted(iterators, key=lambda i: i._objorder)
+        exp = exp + refs[0]
+        exp = _wrap_expression_with_iterators(exp, operator, iterators)
+    else:
+        exp.set_member(key=get_next_name(), ref=refs, op=', ', val=1)
+        exp._operator = 'min'
+        exp._abstract = True
+        wrapper = sasoptpy.core.Expression()
+        wrapper.set_member(key=exp.get_name(), ref=exp, val=1)
+        wrapper._abstract = True
+        exp = wrapper
+    return exp
 
 
 def get_subindices(keys):

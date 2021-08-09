@@ -14,7 +14,7 @@ def to_optmodel(caller, **kwargs):
 
 
 def to_optmodel_for_solve(model, **kwargs):
-    solve_option_keys = ('with', 'obj', 'objective', 'noobj', 'noobjective', 'relaxint', 'primalin')
+    solve_option_keys = ('with', 'obj', 'objective', 'noobj', 'noobjective', 'relaxint', 'primalin', 'linearize')
 
     header = kwargs.get('header', True)
     ods = kwargs.get('ods', False)
@@ -78,6 +78,8 @@ def to_optmodel_for_solve(model, **kwargs):
                     elif key == 'primalin' and options[key] is True:
                         pos_opts.append('primalin')
                         primalin_set = True
+                    elif key == 'linearize' and options[key] is True:
+                        pre_opts.append('linearize')
                 else:
                     if type(value) is dict:
                         pos_opts.append('{}=('.format(key) + ','.join(
