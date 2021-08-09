@@ -47,10 +47,10 @@ setup(
     author_email='Sertalp.Cay@sas.com',
     license='Apache v2.0',
     install_requires=[
-        'pandas >= 1.1.0',
-        'swat >= 1.6.1',
-        'saspy == 3.3.7',
-        'numpy >= 1.15.4'
+        'pandas',
+        'swat == 1.6.1',
+        'saspy',
+        'numpy'
         ],
     setup_requires=[
         'numpy'

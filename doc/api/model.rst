@@ -85,6 +85,7 @@ Export
 
    Model.to_mps
    Model.to_optmodel
+   Model.export_mps
 
 
 Internal functions

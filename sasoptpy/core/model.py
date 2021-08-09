@@ -1751,6 +1751,29 @@ class Model:
         """
         return sasoptpy.interface.to_mps(self, **kwargs)
 
+    def export_mps(self, filename=None, fetch=False, **kwargs):
+        """
+        Exports model in MPS format
+
+        Examples
+        --------
+
+        - Writing a linear optimization or mixed integer linear optimization model into MPS file
+          
+          >>> m.export_mps('my_problem.mps')
+
+        - Returning the MPS string as a Python variable
+          
+          >>> m.export_mps(fetch=True)
+
+        """
+        if self._is_linear():
+            mps = sasoptpy.util.export_to_mps(self, filename=filename, **kwargs)
+            if fetch:
+                return mps
+        else:
+            raise ValueError("Model is linear or has abstract components")
+
     def to_optmodel(self, **kwargs):
         """
         Returns the model in OPTMODEL format

@@ -362,3 +362,39 @@ def is_linear(item):
 
 def has_integer_variables(item):
     return item._has_integer_vars()
+
+
+def export_to_mps(model, filename=None):
+    mps = model.to_mps()
+    # Convert to standard MPS format
+    mps._set_value(0, 'Field2', mps.loc[0, 'Field3'])
+    mps._set_value(0, 'Field3', '')
+    mps._set_value(0, 'Field4', np.nan)
+    mps._set_value(0, 'Field6', np.nan)
+    mps._set_value(len(mps)-1, 'Field4', np.nan)
+    mps._set_value(len(mps)-1, 'Field6', np.nan)
+    mps.drop(columns="_id_", inplace=True)
+    def add_space(r):
+        keywords = ['NAME', 'ROWS', 'COLUMNS', 'RHS', 'BOUNDS', 'RANGES', 'ENDATA']
+        if r not in keywords:
+            return " " + r
+        else:
+            return r
+    mps['Field1'] = mps['Field1'].apply(add_space)
+
+    formatters={
+        'Field1': '{{:<{}s}}'.format(mps['Field1'].str.len().max()).format,
+        'Field2': '{{:<{}s}}'.format(mps['Field2'].str.len().max()).format,
+        'Field3': '{{:<{}s}}'.format(mps['Field3'].str.len().max()).format,
+        'Field5': '{{:<{}s}}'.format(mps['Field5'].str.len().max()).format,
+        }
+
+    mps_str = mps.to_string(formatters=formatters, index=False, header=False, na_rep='')
+    if mps_str[0] == " ":
+        mps_str = '\n'.join([i[1:] for i in mps_str.split('\n')])
+
+    if filename is not None:
+        with open(filename, 'w') as file:
+            file.write(mps_str)
+
+    return mps_str

@@ -32,7 +32,7 @@ from sasoptpy.util import (
     flatten_frame, get_value_table,
     get_solution_table, dict_to_frame, exp_range,
     to_expression, to_definition, to_optmodel, is_linear,
-    load_package_globals)
+    load_package_globals, export_to_mps)
 
 from sasoptpy.structure import (containable, class_containable, set_container)
 
