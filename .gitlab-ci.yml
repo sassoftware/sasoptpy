@@ -18,7 +18,7 @@ py36:
   stage: test1
   image: python:3.6
   script:
-  - python setup.py install
+  - python -m pip install setup.py
   - pip install coverage
   - cd tests
   - ./test_coverage.sh
@@ -27,7 +27,7 @@ py37:
   stage: test2
   image: python:3.7
   script:
-  - python setup.py install
+  - python -m pip install setup.py
   - pip install coverage
   - cd tests
   - ./test_coverage.sh
