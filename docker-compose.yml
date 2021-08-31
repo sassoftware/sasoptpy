@@ -1,0 +1,14 @@
+version: '3'
+services:
+  live:
+    build: 
+      context: .
+      dockerfile: Dockerfile-base
+    stdin_open: true
+    tty: true
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LANG=C.UTF-8
+    env_file: .env
+    volumes:
+      - .:/sasoptpy

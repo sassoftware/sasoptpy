@@ -13,19 +13,19 @@ build:
 
 requirements:
   host:
-    - numpy >=1.15.4
-    - pandas >=1.0.0
+    - numpy
+    - pandas
     - pip
     - python
-    - saspy ==3.3.7
-    - swat >=1.6.1
+    - saspy
+    - swat
   run:
-    - numpy >=1.15.4
-    - pandas >=1.0.0
+    - numpy
+    - pandas
     - pip
     - python
-    - saspy ==3.3.7
-    - swat >=1.6.1
+    - saspy
+    - swat
 
 test:
   imports:

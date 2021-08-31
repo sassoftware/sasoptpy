@@ -30,7 +30,7 @@ import sasoptpy
 from sasoptpy.libs import (pd, np)
 from .package_utils import (
     wrap_expression, _wrap_expression_with_iterators,
-    get_first_member, pack_to_tuple)
+    get_first_member, pack_to_tuple, expr_nested)
 
 
 def concat(exp1, exp2):
@@ -254,6 +254,44 @@ def expr_sum(argv):
         exp = _wrap_expression_with_iterators(exp, 'sum', iterators)
     exp.set_permanent()
     return exp
+
+
+def expr_min(argv):
+    """
+    Min aggregator function for :class:`Expression` objects
+
+    Returns
+    -------
+    exp : :class:`Expression`
+        Min of given arguments
+
+    Examples
+    --------
+
+    >>> x = so.VariableGroup(10, name='x')
+    >>> y = so.expr_min(2*x[i] for i in range(10))
+
+    """
+    return expr_nested(argv, 'min')
+
+
+def expr_max(argv):
+    """
+    Max aggregator function for :class:`Expression` objects
+
+    Returns
+    -------
+    exp : :class:`Expression`
+        Max of given arguments
+
+    Examples
+    --------
+
+    >>> x = so.VariableGroup(10, name='x')
+    >>> y = so.expr_max(2*x[i] for i in range(10))
+
+    """
+    return expr_nested(argv, 'max')
 
 
 def reset():

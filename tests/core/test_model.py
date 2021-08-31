@@ -617,6 +617,8 @@ class TestModel(unittest.TestCase):
         m.solve()
         self.assertEqual(m.get_problem_summary().to_string(),
                          inspect.cleandoc("""
+                            Selected Rows from Table PROBLEMSUMMARY
+
                                                             Value
                             Label                                
                             Objective Sense          Minimization
@@ -641,6 +643,8 @@ class TestModel(unittest.TestCase):
         seq = SequenceMatcher(None, m.get_solution_summary().to_string(),
                               inspect.cleandoc(
             """
+            Selected Rows from Table SOLUTIONSUMMARY
+
                                          Value
             Label                             
             Solver                          LP
@@ -688,6 +692,8 @@ class TestModel(unittest.TestCase):
         m.solve(verbose=True)
         self.assertEqual(m.get_solution().to_string(), inspect.cleandoc(
             """
+            Selected Rows from Table SOLUTION
+
                  i         var  value   lb             ub  rc
             0  1.0    get[pen]    2.0 -0.0  1.797693e+308 NaN
             1  2.0    get[mug]   -0.0 -0.0  1.797693e+308 NaN
@@ -699,6 +705,8 @@ class TestModel(unittest.TestCase):
         self.assertEqual(m.get_solution(vtype='dual').to_string(),
                          inspect.cleandoc(
             """
+            Selected Rows from Table DUAL
+
                  j                con  value  dual
             0  1.0        value_total  210.0   NaN
             1  2.0    upper_bound_pen    2.0   NaN
@@ -711,6 +719,8 @@ class TestModel(unittest.TestCase):
         m.solve(mps=True, options={'maxpoolsols': 3}, verbose=True)
         self.assertEqual(m.get_solution().to_string(), inspect.cleandoc(
             """
+            Selected Rows from Table PRIMAL
+
                        var   lb             ub  value  solution
             0     get[pen]  0.0  1.797693e+308    2.0       1.0
             1     get[mug]  0.0  1.797693e+308    0.0       1.0
@@ -728,6 +738,8 @@ class TestModel(unittest.TestCase):
         ))
         self.assertEqual(m.get_solution('dual').to_string(), inspect.cleandoc(
             """
+            Selected Rows from Table DUAL
+
                                  con  value  solution
             0            value_total  210.0       1.0
             1     upper_bound['pen']    2.0       1.0
@@ -749,8 +761,10 @@ class TestModel(unittest.TestCase):
         self.assertEqual(m.get_solution(pivot=True).to_string(),
                          inspect.cleandoc(
             """
-            solution    1.0  2.0  3.0
-            var                      
+            Selected Rows from Table PRIMAL
+
+            Fetch       1.0  2.0  3.0
+            Fetch                    
             get[mug]    0.0  0.0  0.0
             get[pc]     1.0  1.0  0.0
             get[pen]    2.0  1.0  0.0
@@ -760,8 +774,10 @@ class TestModel(unittest.TestCase):
         self.assertEqual(m.get_solution('dual', pivot=True).to_string(),
                          inspect.cleandoc(
             """
-            solution                1.0    2.0  3.0
-            con                                    
+            Selected Rows from Table DUAL
+
+            Fetch                   1.0    2.0  3.0
+            Fetch                                  
             upper_bound['mug']      0.0    0.0  0.0
             upper_bound['pc']       1.0    1.0  0.0
             upper_bound['pen']      2.0    1.0  0.0
@@ -772,6 +788,8 @@ class TestModel(unittest.TestCase):
         self.assertEqual(m.get_solution('primal', solution=2).to_string(),
                          inspect.cleandoc(
             """
+            Selected Rows from Table PRIMAL
+
                       var   lb             ub  value  solution
             4    get[pen]  0.0  1.797693e+308    1.0       2.0
             5    get[mug]  0.0  1.797693e+308    0.0       2.0
@@ -782,6 +800,8 @@ class TestModel(unittest.TestCase):
         self.assertEqual(m.get_solution('dual', solution=3).to_string(),
                          inspect.cleandoc(
             """
+            Selected Rows from Table DUAL
+
                                  con  value  solution
             10           value_total    0.0       3.0
             11    upper_bound['pen']    0.0       3.0

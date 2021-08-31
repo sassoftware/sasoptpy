@@ -33,6 +33,7 @@ class TestSASInterface(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        raise unittest.SkipTest('Disabling saspy tests for alpha release')
         cls.conn = None
         try:
             cls.conn = None

@@ -271,6 +271,8 @@ class TestCreateData(unittest.TestCase):
         w.submit()
         self.assertEqual(
             session.CASTable('example').to_frame().to_string(), cleandoc('''
+            Selected Rows from Table EXAMPLE
+            
                  i   xa   xb   xc
             0  1.0  2.0  2.0  2.0
             1  2.0  2.0  2.0  2.0
@@ -337,12 +339,16 @@ class TestCreateData(unittest.TestCase):
         w.submit()
         response = session.CASTable('out').to_frame()
         self.assertEqual(response.to_string(), cleandoc('''
+            Selected Rows from Table OUT
+
                  i   a1   a2   a3    a4    b
             0  2.0  2.0  4.0  6.0   8.0  4.0
             1  3.0  3.0  6.0  9.0  12.0  9.0'''))
 
         response2 = cd.get_response()
         self.assertEqual(response2.to_string(), cleandoc('''
+            Selected Rows from Table OUT
+            
                  i   a1   a2   a3    a4    b
             0  2.0  2.0  4.0  6.0   8.0  4.0
             1  3.0  3.0  6.0  9.0  12.0  9.0'''))

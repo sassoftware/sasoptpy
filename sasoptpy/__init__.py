@@ -28,7 +28,7 @@ from sasoptpy.libs import *
 import sasoptpy.util
 
 from sasoptpy.util import (
-    quick_sum, expr_sum, reset, reset, reset_globals,
+    quick_sum, expr_sum, expr_min, reset, reset, reset_globals,
     flatten_frame, get_value_table,
     get_solution_table, dict_to_frame, exp_range,
     to_expression, to_definition, to_optmodel, is_linear,

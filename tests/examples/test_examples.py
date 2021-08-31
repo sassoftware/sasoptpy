@@ -143,7 +143,7 @@ class TestExamples(unittest.TestCase):
     def test_nl1(self):
         from nonlinear_1 import test
         obj = self.run_instance(test)
-        self.assertAlmostEqual(obj, 3.951157967716, self.digits)
+        self.assertAlmostEqual(obj, 3.951157967716, 3)
 
     def test_nl2(self):
         from nonlinear_2 import test

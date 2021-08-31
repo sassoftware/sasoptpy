@@ -1,7 +1,6 @@
 
 stages:
-  - test1
-  - test2
+  - test
   - deploy
 
 default:
@@ -14,21 +13,47 @@ default:
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - scp $CASCOPY ~/
 
-py36:
-  stage: test1
-  image: python:3.6
+py37:
+  stage: test
+  image: python:3.7
   script:
-  - python setup.py install
-  - pip install coverage
+  - python -m pip install --upgrade pip coverage
+  - pip install build
+  - python -m build
+  - pip install dist/*.whl
   - cd tests
   - ./test_coverage.sh
 
-py37:
-  stage: test2
-  image: python:3.7
+py38:
+  stage: test
+  image: python:3.8
   script:
-  - python setup.py install
-  - pip install coverage
+  - python -m pip install --upgrade pip coverage
+  - pip install build
+  - python -m build
+  - pip install dist/*.whl
+  - cd tests
+  - ./test_coverage.sh
+
+py39:
+  stage: test
+  image: python:3.9
+  script:
+  - python -m pip install --upgrade pip coverage
+  - pip install build
+  - python -m build
+  - pip install dist/*.whl
+  - cd tests
+  - ./test_coverage.sh
+
+pylatest:
+  stage: test
+  image: python:latest
+  script:
+  - python -m pip install --upgrade pip coverage
+  - pip install build
+  - python -m build
+  - pip install dist/*.whl
   - cd tests
   - ./test_coverage.sh
 

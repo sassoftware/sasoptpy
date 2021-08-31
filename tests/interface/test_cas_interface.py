@@ -189,6 +189,8 @@ class TestCASInterface(unittest.TestCase):
         self.assertEqual(
             session.CASTable('PRIMALINTABLE').to_frame().to_string(), cleandoc(
                 '''
+                Selected Rows from Table PRIMALINTABLE
+
                   _VAR_  _VALUE_
                 0     x      6.0
                 1     y      2.0
@@ -251,6 +253,8 @@ class TestCASInterface(unittest.TestCase):
         self.assertEqual(s.get_solution_summary().loc['Solver', 'Value'], 'LP')
 
         self.assertEqual(r.to_string(), cleandoc('''
+        Selected Rows from Table SOLUTION
+        
              i   var  value             lb             ub   rc
         0  1.0  x[0]    0.0 -1.797693e+308  1.797693e+308  0.0
         1  2.0  x[1]    1.0 -1.797693e+308  1.797693e+308  0.0
