@@ -87,8 +87,7 @@ push_to_conda:
     - conda install conda-verify
     - mkdir build
   script:
-    - conda build -c conda-forge -c sas-institute --output-folder build/ --python 3.6 conda/
-    - conda build -c conda-forge -c sas-institute --output-folder build/ --python 3.7 conda/
+    - conda build -c conda-forge -c sas-institute --output-folder build/ conda/
     - cd build
     - conda convert -p all `ls linux-64/*-py3*.tar.bz2`
     - anaconda -t $ANACONDA_TOKEN upload -u sas-institute --force `ls linux-64/*-py3*.tar.bz2`
