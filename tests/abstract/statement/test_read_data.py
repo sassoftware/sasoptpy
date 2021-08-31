@@ -241,6 +241,8 @@ class TestReadData(unittest.TestCase):
         ws.submit(verbose=True)
         self.assertEqual(ws.response['Print1.PrintTable'].to_string(), cleandoc(
             """
+            Print Table
+            
                COL1    p    q
             0   1.0  1.0  2.0
             1   2.0  3.0  4.0

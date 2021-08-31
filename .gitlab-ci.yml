@@ -1,7 +1,6 @@
 
 stages:
-  - test1
-  - test2
+  - test
   - deploy
 
 default:
@@ -15,13 +14,46 @@ default:
     - scp $CASCOPY ~/
 
 py37:
-  stage: test3.7
+  stage: test
   image: python:3.7
   script:
   - python -m pip install --upgrade pip coverage
   - pip install build
   - python -m build
-  - pip install dist/*
+  - pip install dist/*.whl
+  - cd tests
+  - ./test_coverage.sh
+
+py38:
+  stage: test
+  image: python:3.8
+  script:
+  - python -m pip install --upgrade pip coverage
+  - pip install build
+  - python -m build
+  - pip install dist/*.whl
+  - cd tests
+  - ./test_coverage.sh
+
+py39:
+  stage: test
+  image: python:3.9
+  script:
+  - python -m pip install --upgrade pip coverage
+  - pip install build
+  - python -m build
+  - pip install dist/*.whl
+  - cd tests
+  - ./test_coverage.sh
+
+pylatest:
+  stage: test
+  image: python:latest
+  script:
+  - python -m pip install --upgrade pip coverage
+  - pip install build
+  - python -m build
+  - pip install dist/*.whl
   - cd tests
   - ./test_coverage.sh
 

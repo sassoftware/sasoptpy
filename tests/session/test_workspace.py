@@ -159,7 +159,10 @@ class TestWorkspace(unittest.TestCase):
 
         w.submit()
         self.assertEqual(x.get_value(), 3)
+        print(s1.get_problem_summary().to_string())
         self.assertEqual(s1.get_problem_summary().to_string(), cleandoc('''
+            Problem Summary
+
                                             Value
             Label                                
             Objective Sense          Minimization
@@ -183,9 +186,13 @@ class TestWorkspace(unittest.TestCase):
                                                  
             Constraint Coefficients             3'''))
         self.assertEqual(p1.get_response().to_string(), cleandoc('''
+            x
+
                  x
             0  0.0'''))
         self.assertEqual(p2.get_response().to_string(), cleandoc('''
+            y
+            
                  y
             0  1.0'''))
 
