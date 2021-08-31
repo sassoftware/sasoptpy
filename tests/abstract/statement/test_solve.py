@@ -81,6 +81,8 @@ class TestSolve(unittest.TestCase):
             w.set_session(TestSolve.conn)
             w.submit()
             self.assertEqual(str(p.get_response()), cleandoc('''
+            x
+            
                   x
             0  10.0'''))
             self.assertEqual(str(s.get_response()['Problem Summary']), cleandoc('''
