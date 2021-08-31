@@ -14,6 +14,7 @@ New Features
 Changes
 +++++++
 
+- Relaxed dependencies
 
 Bug Fixes
 +++++++++
