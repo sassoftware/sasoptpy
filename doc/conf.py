@@ -262,7 +262,7 @@ def remove_autosums(app, what, name, obj, options, lines):
 
 def setup(app):
     app.connect('autodoc-process-docstring', remove_autosums)
-    app.add_stylesheet('css/sasoptpy.css') 
+    app.add_css_file('css/sasoptpy.css') 
     app.add_javascript('js/url.js')
 
 add_module_names = False
