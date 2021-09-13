@@ -32,7 +32,6 @@ class TestExamplesLocal(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        raise unittest.SkipTest('Disabling saspy tests for alpha release')
         cls.conn = None
         try:
             cls.conn = None
@@ -68,98 +67,46 @@ class TestExamplesLocal(unittest.TestCase):
 
     def run_instance(self, test, **kwargs):
         t0 = time.time()
-        val = test(TestExamplesLocal.conn, **kwargs)
+        if kwargs:
+            val = test(TestExamplesLocal.conn, **kwargs)
+        else:
+            val = test(TestExamplesLocal.conn)
         if isinstance(val, tuple):
             print(test.__globals__['__file__'], val[0], time.time() - t0)
         else:
             print(test.__globals__['__file__'], val, time.time()-t0)
         return val
 
-    def test_fm1(self):
-        from food_manufacture_1 import test
-        obj = self.run_instance(test)
-        self.assertAlmostEqual(obj, 107842.5925925926, self.digits)
-
-    def test_fm2(self):
-        from food_manufacture_2 import test
-        obj = self.run_instance(test)
-        self.assertAlmostEqual(obj, 100278.7, 1)
-
-    def test_fp1(self):
-        from factory_planning_1 import test
-        obj = self.run_instance(test)
-        self.assertAlmostEqual(obj, 93715.17857142858, self.digits)
-
-    def test_fp2(self):
-        from factory_planning_2 import test
-        obj = self.run_instance(test)
-        self.assertAlmostEqual(obj, 108855.0, 1)
-
-    def test_mp(self):
-        from manpower_planning import test
-        obj = self.run_instance(test)
-        self.assertAlmostEqual(obj, 498677.2853185597, self.digits)
-
-    def test_ro(self):
-        from refinery_optimization import test
-        obj = self.run_instance(test, limit_names=True)
-        self.assertAlmostEqual(obj, 211365.134768933, self.digits)
-
-    def test_mo(self):
-        from mining_optimization import test
-        obj = self.run_instance(test)
-        self.assertAlmostEqual(obj, 146.86, 2)
-
-    def test_farmp(self):
-        from farm_planning import test
-        obj = self.run_instance(test)
-        self.assertAlmostEqual(obj, 121719.17286133641, self.digits)
-
-    def test_econ(self):
-        from economic_planning import test
-        obj = self.run_instance(test)
-        self.assertAlmostEqual(obj, 2450.026622821294, self.digits)
-
-    def test_decentral(self):
-        from decentralization import test
-        obj = self.run_instance(test)
-        self.assertAlmostEqual(obj, 14.9, self.digits)
-
-    def test_kidney_exchange(self):
-        from sas_kidney_exchange import test
-        try:
-            obj = self.run_instance(test)
-        except RuntimeError:
-            obj = self.run_instance(test, wrap_lines=True)
-        self.assertAlmostEqual(obj, 17.11135898487, self.digits)
-
-    def test_optimal_wedding(self):
-        from sas_optimal_wedding import test
-        obj = self.run_instance(test)
-        self.assertAlmostEqual(obj, 13.0, self.digits)
-
-    def test_curve_fitting(self):
-        from curve_fitting import test
-        obj = self.run_instance(test)
-        self.assertAlmostEqual(obj, 1.475, self.digits)
-
-    def test_nl1(self):
-        from nonlinear_1 import test
-        obj = self.run_instance(test)
-        self.assertAlmostEqual(obj, 3.951157967716, self.digits)
-
-    def test_nl2(self):
-        from nonlinear_2 import test
-        obj = self.run_instance(test)
-        self.assertAlmostEqual(obj, -999.0, self.digits)
-
-    def test_least_squares(self):
-        from least_squares import test
-        obj = self.run_instance(test)
-        self.assertAlmostEqual(obj, 7.186296783293, self.digits)
-
-    def test_efficiency_analysis(self):
-        from efficiency_analysis import test
-        obj, ed = self.run_instance(test, get_tables=True)
-        en = ed.set_index('garage_name').loc['Woking', 'efficiency_number']
-        self.assertAlmostEqual(en, 0.867320, self.digits)
+    def test_all(self):
+        problem_list = [
+            {'problem': 'food_manufacture_1', 'obj': 107842.5925925926, 'digits': self.digits},
+            {'problem': 'food_manufacture_2', 'obj': 100278.7, 'digits': 1},
+            {'problem': 'factory_planning_1', 'obj': 93715.17857142858, 'digits': self.digits},
+            {'problem': 'factory_planning_2', 'obj': 108855.0, 'digits': 1},
+            {'problem': 'manpower_planning', 'obj': 498677.2853185597, 'digits': self.digits},
+            {'problem': 'refinery_optimization', 'obj': 211365.134768933, 'digits': self.digits, 'limit_names': True},
+            {'problem': 'mining_optimization', 'obj': 146.86, 'digits': 2},
+            {'problem': 'farm_planning', 'obj': 121719.17286133641, 'digits': self.digits},
+            {'problem': 'economic_planning', 'obj': 2450.026622821294, 'digits': self.digits},
+            {'problem': 'decentralization', 'obj': 14.9, 'digits': self.digits},
+            {'problem': 'sas_kidney_exchange', 'obj': 17.11135898487, 'digits': self.digits, 'wrap_lines': True},
+            {'problem': 'sas_optimal_wedding', 'obj': 13.0, 'digits': self.digits},
+            {'problem': 'curve_fitting', 'obj': 1.475, 'digits': self.digits},
+            {'problem': 'nonlinear_1', 'obj': 3.951157967716, 'digits': self.digits},
+            {'problem': 'nonlinear_2', 'obj': -999.0, 'digits': self.digits},
+            {'problem': 'least_squares', 'obj': 7.186296783293, 'digits': self.digits},
+            # {'problem': 'efficiency_analysis', 'obj': 0.867320, 'digits': self.digits, 'get_tables': True},
+        ]
+        for p in problem_list:
+            example = __import__(p['problem'])
+            test = example.test
+            kwargs = {}
+            if p.get('wrap_lines'):
+                kwargs['wrap_lines'] = True
+            if p.get('limit_names'):
+                kwargs['limit_names'] = True
+            obj = self.run_instance(
+                test,
+                **kwargs
+                )
+            self.assertAlmostEqual(obj, p['obj'], p['digits'])

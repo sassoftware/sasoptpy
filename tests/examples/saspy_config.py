@@ -3,13 +3,13 @@
 
 import os
 
-sshsas = {'saspath': os.environ.get('SASPATH'),
+ssh_conn = {'saspath': os.environ.get('SASPATH'),
           'ssh': '/usr/bin/ssh',
           'host': os.environ.get('SASHOST'),
           'encoding': 'latin1',
-          'options': ['-t', 'dev/mva-v940m8', '-box', 'laxno', '-nopp',
-                      '-encoding', 'latin1'
+          'options': ['-t', 'dev/mva-v940m8', '-box', 'laxnd', '-nopp',
+                         '-encoding', 'latin1'
                      ],
-        #   'tunnel': 15005
+            'tunnel': 15000
           }
-SAS_config_names = ['sshsas']
+SAS_config_names = ['ssh_conn']

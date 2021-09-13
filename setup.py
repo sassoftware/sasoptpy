@@ -49,13 +49,13 @@ setup(
     install_requires=[
         'pandas',
         'swat',
-        'saspy',
+        'saspy==3.3.7',
         'numpy'
         ],
     setup_requires=[
         'numpy'
         ],
-    python_requires='>=3.6',
+    python_requires='>=3.7',
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: Apache Software License",
