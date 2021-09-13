@@ -1,6 +1,8 @@
 
 stages:
-  - test
+  - test.3.8
+  - test.3.9
+  - test.latest
   - deploy
 
 default:
@@ -11,21 +13,12 @@ default:
     - ssh-add <(echo "$SSH_PRIVATE_KEY")
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - echo -e "${SSH_PRIVATE_KEY@E}" | tr -d '"' > ~/.ssh/id_rsa
+    - chmod og-rwx ~/.ssh/id_rsa
     - scp $CASCOPY ~/
 
-py37:
-  stage: test
-  image: python:3.7
-  script:
-  - python -m pip install --upgrade pip coverage
-  - pip install build
-  - python -m build
-  - pip install dist/*.whl
-  - cd tests
-  - ./test_coverage.sh
-
 py38:
-  stage: test
+  stage: test.3.8
   image: python:3.8
   script:
   - python -m pip install --upgrade pip coverage
@@ -36,7 +29,7 @@ py38:
   - ./test_coverage.sh
 
 py39:
-  stage: test
+  stage: test.3.9
   image: python:3.9
   script:
   - python -m pip install --upgrade pip coverage
@@ -47,7 +40,7 @@ py39:
   - ./test_coverage.sh
 
 pylatest:
-  stage: test
+  stage: test.latest
   image: python:latest
   script:
   - python -m pip install --upgrade pip coverage
