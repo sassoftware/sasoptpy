@@ -22,6 +22,7 @@ pylatest:
   stage: test.latest
   image: python:latest
   script:
+  - curl https://bootstrap.pypa.io/get-pip.py | python
   - python -m pip install --upgrade pip coverage
   - pip install build
   - python -m build
@@ -33,6 +34,7 @@ py310:
   stage: test.3.10
   image: python:3.10
   script:
+  - curl https://bootstrap.pypa.io/get-pip.py | python
   - python -m pip install --upgrade pip coverage
   - pip install build
   - python -m build
@@ -44,6 +46,7 @@ py39:
   stage: test.3.9
   image: python:3.9
   script:
+  - curl https://bootstrap.pypa.io/get-pip.py | python
   - python -m pip install --upgrade pip coverage
   - pip install build
   - python -m build
@@ -55,6 +58,7 @@ py38:
   stage: test.3.8
   image: python:3.8
   script:
+  - curl https://bootstrap.pypa.io/get-pip.py | python
   - python -m pip install --upgrade pip coverage
   - pip install build
   - python -m build
