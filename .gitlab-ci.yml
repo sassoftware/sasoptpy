@@ -2,6 +2,7 @@
 stages:
   - test.3.8
   - test.3.9
+  - test.3.10
   - test.latest
   - deploy
 
@@ -31,6 +32,17 @@ py38:
 py39:
   stage: test.3.9
   image: python:3.9
+  script:
+  - python -m pip install --upgrade pip coverage
+  - pip install build
+  - python -m build
+  - pip install dist/*.whl
+  - cd tests
+  - ./test_coverage.sh
+
+py310:
+  stage: test.3.10
+  image: python:3.10
   script:
   - python -m pip install --upgrade pip coverage
   - pip install build
