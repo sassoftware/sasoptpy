@@ -2,5 +2,5 @@ coverage
 build
 numpy
 pandas
-swat
+swat>=1.9.0
 saspy==3.3.7
