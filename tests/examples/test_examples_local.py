@@ -30,47 +30,48 @@ sys.path.append(os.path.abspath(os.path.join(current_dir, '../../examples/server
 
 class TestExamplesLocal(unittest.TestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        cls.conn = None
+    def create_conn(self):
+        self.conn = None
         try:
-            cls.conn = None
+            self.conn = None
             if os.name == 'nt':
-                cls.conn = saspy.SASsession(cfgname='winlocal')
+                self.conn = saspy.SASsession(cfgname='winlocal')
             else:
                 cfg_file = os.path.join(current_dir, 'saspy_config.py')
-                cls.conn = saspy.SASsession(cfgfile=cfg_file)
+                self.conn = saspy.SASsession(cfgfile=cfg_file)
             print('Connected to SAS')
-            cls.conn.upload_frame = TestExamplesLocal.sas_upload
+            self.conn.upload_frame = self.sas_upload
         except TypeError:
             raise unittest.SkipTest('Environment variable may not be defined')
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.conn.endsas()
+    def close_conn(self):
+        time.sleep(3)
+        self.conn.endsas()
+        time.sleep(2)
 
-    @classmethod
-    def sas_upload(cls, data, casout):
+    def sas_upload(self, data, casout):
         if isinstance(casout, str):
             name = casout
         else:
             name = casout.get('name')
-        TestExamplesLocal.conn.df2sd(data, table=name)
+        self.conn.df2sd(data, table=name)
         return name
 
     def setUp(self):
         sasoptpy.config['max_digits'] = 12
         self.digits = 5
+        self.create_conn()
 
     def tearDown(self):
         sasoptpy.reset()
+        self.close_conn()
 
     def run_instance(self, test, **kwargs):
         t0 = time.time()
         if kwargs:
-            val = test(TestExamplesLocal.conn, **kwargs)
+            val = test(self.conn, **kwargs)
         else:
-            val = test(TestExamplesLocal.conn)
+            val = test(self.conn)
         if isinstance(val, tuple):
             print(test.__globals__['__file__'], val[0], time.time() - t0)
         else:
