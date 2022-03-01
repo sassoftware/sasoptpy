@@ -3,4 +3,4 @@ build
 numpy
 pandas
 swat
-saspy==3.3.7
+saspy

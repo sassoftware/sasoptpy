@@ -7,9 +7,10 @@ ssh_conn = {'saspath': os.environ.get('SASPATH'),
           'ssh': '/usr/bin/ssh',
           'host': os.environ.get('SASHOST'),
           'encoding': 'latin1',
-          'options': ['-t', 'dev/mva-v940m8', '-box', 'laxnd', '-nopp',
+          'options': ['-t', 'dev/mva-v940m7', '-box', 'laxnd', '-nopp',
                          '-encoding', 'latin1'
                      ],
-            'tunnel': 15000
+            'tunnel': 15000,
+            'rtunnel': 15001
           }
 SAS_config_names = ['ssh_conn']

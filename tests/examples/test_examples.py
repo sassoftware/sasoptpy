@@ -51,6 +51,9 @@ class TestExamples(unittest.TestCase):
                   + '(CASHOST, CASPORT, AUTHINFO)')
         except TypeError:
             raise unittest.SkipTest('Environment variable may not be defined')
+        except ValueError:
+            print("Protocol error, version info:", sys.version_info)
+            raise unittest.SkipTest('Protocol is not available for testing')
 
     @classmethod
     def tearDownClass(cls):

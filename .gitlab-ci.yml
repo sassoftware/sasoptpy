@@ -1,8 +1,9 @@
 
 stages:
-  - test.3.8
-  - test.3.9
   - test.latest
+  - test.3.10
+  - test.3.9
+  - test.3.8
   - deploy
 
 default:
@@ -17,10 +18,23 @@ default:
     - chmod og-rwx ~/.ssh/id_rsa
     - scp $CASCOPY ~/
 
-py38:
-  stage: test.3.8
-  image: python:3.8
+pylatest:
+  stage: test.latest
+  image: python:latest
   script:
+  - curl https://bootstrap.pypa.io/get-pip.py | python
+  - python -m pip install --upgrade pip coverage
+  - pip install build
+  - python -m build
+  - pip install dist/*.whl
+  - cd tests
+  - ./test_coverage.sh
+
+py310:
+  stage: test.3.10
+  image: python:3.10
+  script:
+  - curl https://bootstrap.pypa.io/get-pip.py | python
   - python -m pip install --upgrade pip coverage
   - pip install build
   - python -m build
@@ -32,6 +46,7 @@ py39:
   stage: test.3.9
   image: python:3.9
   script:
+  - curl https://bootstrap.pypa.io/get-pip.py | python
   - python -m pip install --upgrade pip coverage
   - pip install build
   - python -m build
@@ -39,10 +54,11 @@ py39:
   - cd tests
   - ./test_coverage.sh
 
-pylatest:
-  stage: test.latest
-  image: python:latest
+py38:
+  stage: test.3.8
+  image: python:3.8
   script:
+  - curl https://bootstrap.pypa.io/get-pip.py | python
   - python -m pip install --upgrade pip coverage
   - pip install build
   - python -m build

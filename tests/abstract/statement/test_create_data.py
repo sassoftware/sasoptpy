@@ -48,6 +48,9 @@ class TestCreateData(unittest.TestCase):
             warnings.warn('CAS connection is not available', RuntimeWarning)
         except TypeError:
             warnings.warn('CAS variables are not available', RuntimeWarning)
+        except ValueError:
+            print("Protocol error, version info:", sys.version_info)
+            raise unittest.SkipTest('Protocol is not available for testing')
 
     @classmethod
     def tearDownClass(cls):

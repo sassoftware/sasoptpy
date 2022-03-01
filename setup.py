@@ -49,10 +49,7 @@ setup(
     install_requires=[
         'pandas',
         'swat',
-        'saspy==3.3.7',
-        'numpy'
-        ],
-    setup_requires=[
+        'saspy',
         'numpy'
         ],
     python_requires='>=3.7',
