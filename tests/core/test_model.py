@@ -24,6 +24,7 @@ from collections import OrderedDict
 from difflib import SequenceMatcher
 import inspect
 import os
+import sys
 import unittest
 import warnings
 from inspect import cleandoc

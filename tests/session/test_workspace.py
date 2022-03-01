@@ -21,6 +21,7 @@ Unit tests for workspaces.
 """
 
 import os
+import sys
 import unittest
 import warnings
 from inspect import cleandoc

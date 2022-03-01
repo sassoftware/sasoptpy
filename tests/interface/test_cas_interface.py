@@ -18,6 +18,7 @@
 
 from inspect import cleandoc
 import os
+import sys
 import unittest
 import warnings
 
